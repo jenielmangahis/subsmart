@@ -9,23 +9,32 @@ $(document).on("click", ".time-activity-btn", function(event) {
 });
 
 $(document).on("change", "#time_activity_settings_modal .content input[name='show_service']", function(event) {
-    if ($(this).is(":checked")) {
+    show_service_changed();
+});
+
+function show_service_changed() {
+    if ($("#time_activity_settings_modal .content input[name='show_service']").is(":checked")) {
         $("#time_activity_modal form .services-section").show();
         $("#time_activity_modal form input[name='show_services']").val(1);
     } else {
         $("#time_activity_modal form .services-section").hide();
         $("#time_activity_modal form input[name='show_services']").val(0);
     }
-});
+}
+
 $(document).on("change", "#time_activity_settings_modal .content input[name='make_time_activity_billable']", function(event) {
-    if ($(this).is(":checked")) {
+    make_time_activity_billable_changed();
+});
+
+function make_time_activity_billable_changed() {
+    if ($("#time_activity_settings_modal .content input[name='make_time_activity_billable']").is(":checked")) {
         $("#time_activity_modal form .make_time_activity_billable_section").show();
         $("#time_activity_modal form input[name='make_time_activity_billable']").val(1);
     } else {
         $("#time_activity_modal form .make_time_activity_billable_section").hide();
         $("#time_activity_modal form input[name='make_time_activity_billable']").val(0);
     }
-});
+}
 
 $(document).on("change", "#time_activity_modal form input[name='enter-start-end-times']", function(event) {
     if ($(this).is(":checked")) {
@@ -193,7 +202,7 @@ function start_end_time_changed() {
 
         }
     }
-    if (!$("#time_activity_modal form input[name='billable']").is(":checked")) {
+    if (!$("#time_activity_settings_modal .content input[name='make_time_activity_billable']").is(":checked")) {
         $("#time_activity_modal form .form-sec.sumary-sec").hide();
     }
 }
@@ -293,11 +302,10 @@ function reset_time_activity_modal_form() {
     $("#time_activity_modal form input[name='enter-start-end-times']").prop("checked", fales);
     $("#time_activity_modal form input[name='billable']").prop("checked", true);
     $("#time_activity_modal form input[name='taxable']").prop("checked", true);
-    $("#time_activity_settings_modal .content input[name='show_service']").prop("checked", true);
-    $("#time_activity_settings_modal .content input[name='make_time_activity_billable']").prop("checked", true);
-    $("#time_activity_modal form .make_time_activity_billable_section").show();
-    $("#time_activity_modal form input[name='make_time_activity_billable']").val(1);
     $("#time_activity_modal form .services-section").show();
-    $("#time_activity_modal form input[name='show_services']").val(1);
+    show_service_changed();
+    make_time_activity_billable_changed();
 }
+show_service_changed();
+make_time_activity_billable_changed();
 $('#time_activity_modal').on('hidden.bs.modal', function() { reset_time_activity_modal_form(); });

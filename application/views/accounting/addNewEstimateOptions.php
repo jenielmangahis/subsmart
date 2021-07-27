@@ -1116,11 +1116,14 @@ function initialize() {
 <script>
 
 $(document).ready(function(){
- 
+    <?php if($customer_id > 0){ echo "option_customer_field_changed(".$customer_id.");";} ?>
     $('#sel-customerOptions').change(function(){
     var id  = $(this).val();
     // alert(id);
-
+    option_customer_field_changed(id);
+    });
+    function option_customer_field_changed(id){
+        $('#sel-customerOptions').val(id);
         $.ajax({
             type: 'POST',
             url:"<?php echo base_url(); ?>accounting/addLocationajax",
@@ -1140,7 +1143,7 @@ $(document).ready(function(){
        
                 }
         });
-    });
+    }
 
     $(document).on('click','.setmarkup',function(){
        // alert('yeah');

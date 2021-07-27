@@ -26,8 +26,7 @@ class Expenses extends MY_Controller
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
-            "assets/css/accounting/accounting_includes/create_charge.css",
-            "assets/css/accounting/accounting_includes/time_activity.css",
+            "assets/css/accounting/accounting_includes/create_charge.css"
         ));
 
         add_footer_js(array(
@@ -38,8 +37,7 @@ class Expenses extends MY_Controller
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
-            "assets/js/accounting/sales/customer_includes/create_charge.js",
-            "assets/js/accounting/sales/customer_includes/time_activity.js"
+            "assets/js/accounting/sales/customer_includes/create_charge.js"
         ));
 
         $this->page_data['menu_name'] =

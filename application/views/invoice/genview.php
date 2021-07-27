@@ -41,7 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <a class="btn btn-primary margin-right-sec" class="link-modal-open openPayNow" href="javascript:void(0)" data-toggle="modal" data-target="#modalPayNow_" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-usd fa-margin-right"></span> Pay Now</a>
                                         <?php endif; ?>
                                         <div class="btn-group" role="group" aria-label="...">
-                                            <a class="btn btn-sec" href="<?php echo base_url('invoice/edit/'. $invoice->id) ?>"><span class="fa fa-edit"></span> Edit</a>
+                                            <a class="btn btn-sec" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>"><span class="fa fa-edit"></span> Edit</a>
                                             <a class="btn btn-sec" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank"><span class="fa fa-file-pdf-o fa-margin-right"></span> PDF</a>
                                             <a class="btn btn-sec" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank"><span class="fa fa-print fa-margin-right"></span> Print</a>
                                         </div>
@@ -60,9 +60,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php else: ?>
                                                 <li role="presentation"><a role="menuitem" class="openMarkAsSent" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#markAsSent" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-check-square-o icon"></span> Mark as Sent</a></li>
                                                 <?php endif; ?>    
-                                                <li role="presentation"><a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#convertToWorkOrder" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-file-text-o icon"></span> Convert to Work Order</a></li>
+                                                <li role="presentation"><a role="menuitem" class="openConvertToWorkOrder_" tabindex="-1"  
+                                                                                href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
+                                                                                data-convert-to-invoice-modal="open"
+                                                                                data-id="<?php echo $invoice->id ?>"
+                                                                                data-invoice-number="<?php echo $invoice->invoice_number ?>"><span class="fa fa-file-text-o icon"></span> Convert to Work Order</a></li>
                                                 <li role="presentation"><a role="menuitem" class="openCloneInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cloneModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-files-o icon"></span> Clone Invoice</a></li>
-                                                <li role="presentation"><a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cancelModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-trash-o icon"></span> Delete Invoice</a></li>
+                                                <!-- <li role="presentation"><a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cancelModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><span class="fa fa-trash-o icon"></span> Delete Invoice</a></li> -->
+                                                <li role="presentation">
+                                                    <a role="menuitem" class="openDeleteInvoice" tabindex="-1"
+                                                        href="javascript:void(0)"
+                                                        data-invoice-number="<?php echo $invoice->invoice_number ?>"
+                                                        data-id="<?php echo $invoice->id ?>"
+                                                        id="deleteInvoiceBtnNew">
+                                                        <span class="fa fa-trash-o icon"></span> Delete Invoice
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -662,3 +675,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+// $(document).on('click','#delete_workorder',function(){
+//     // alert('test');
+    
+// });
+
+// function myFunction() {
+// $('#delete_workorder').on('click', function(){
+$(document).on('click touchstart','#deleteInvoiceBtnNew',function(){
+
+    var id = $(this).attr('data-id');
+    // alert(id);
+  
+  var r = confirm("Are you sure you want to delete this Invoice?");
+
+  if (r == true) {
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>invoice/deleteInvoiceBtnNew",
+    data : {id: id},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        sucess("Data Deleted Successfully!");
+    },
+    });
+  }
+
+});
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+</script>

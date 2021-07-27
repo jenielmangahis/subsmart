@@ -316,6 +316,7 @@ $route['accounting/remove-to-print']['post'] = 'accounting_modals/remove_to_prin
 $route['accounting/print-preview-checks']['post'] = 'accounting_modals/print_preview_checks';
 $route['accounting/success-print-checks-modal']['post'] = 'accounting_modals/success_print_checks_form';
 $route['accounting/success-print-checks']['post'] = 'accounting_modals/success_print_checks';
+$route['accounting/update-timesheet-settings/(:any)/(:any)'] = 'accounting_modals/update_timesheet_settings/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 

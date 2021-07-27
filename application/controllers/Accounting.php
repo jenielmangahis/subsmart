@@ -62,8 +62,6 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
-            "assets/css/accounting/accounting_includes/time_activity.css",
-            "assets/css/accounting/accounting_includes/create_estimate.css",
         ));
 
         add_footer_js(array(
@@ -73,9 +71,7 @@ class Accounting extends MY_Controller
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
-            "assets/js/accounting/sales/customer_includes/create_charge.js",
-            "assets/js/accounting/sales/customer_includes/time_activity.js",
-            "assets/js/accounting/sales/customer_includes/create_estimate.js"
+            "assets/js/accounting/sales/customer_includes/create_charge.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -247,17 +243,26 @@ class Accounting extends MY_Controller
     public function customers()
     {
         add_css(array(
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             "assets/css/accounting/customers.css",
             "assets/css/accounting/accounting_includes/create_statement_modal.css",
+            "assets/css/accounting/accounting_includes/create_estimate.css",
+            "assets/css/accounting/accounting_includes/time_activity.css",
+            "assets/css/accounting/accounting_includes/create_invoice.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
             "assets/js/accounting/sales/customer_includes/send_reminder.js",
-            "assets/js/accounting/sales/customer_includes/create_statement_modal.js"
+            "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
+            "assets/js/accounting/sales/customer_includes/create_estimate.js",
+            "assets/js/accounting/sales/customer_includes/time_activity.js",
+            "assets/js/accounting/sales/customer_includes/create_invoice.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         
         $this->page_data['page_title'] = "Customers";
+        $this->page_data['accounting_timesheet_settings'] = $this->accounting_customers_model->get_accounting_timesheet_settings(logged("company_id"));
         $this->load->view('accounting/customers', $this->page_data);
     }
     public function deposits()
@@ -332,7 +337,7 @@ class Accounting extends MY_Controller
         $terms = $this->accounting_terms_model->getCompanyTerms_a($comp_id);
 
         $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
-        $this->page_data['items'] = $this->invoice_model->getItems($id);
+        $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
         $this->page_data['terms'] =  $terms;
         // print_r($this->page_data['invoice']);
@@ -2203,7 +2208,8 @@ class Accounting extends MY_Controller
             // 'payment_schedule' => $this->input->post('payment_schedule'),
             'payment_methods'                   => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
 
-            'sub_total'                         => $this->input->post('sub_total'),//
+            'sub_total'                         => $this->input->post('subtotal'),//
+            'taxes'                             => $this->input->post('taxes'),//
             'adjustment_name'                   => $this->input->post('adjustment_name'),//
             'adjustment_value'                  => $this->input->post('adjustment_input'),//
             'grand_total'                       => $this->input->post('grand_total'),//
@@ -2395,6 +2401,7 @@ class Accounting extends MY_Controller
         $quantity   = $this->input->post('quantity');
         $price      = $this->input->post('price');
         $h          = $this->input->post('tax');
+        $total      = $this->input->post('total');
     
         $i = 0;
         foreach ($a as $row) {
@@ -2402,10 +2409,13 @@ class Accounting extends MY_Controller
             $data['qty'] = $quantity[$i];
             $data['cost'] = $price[$i];
             $data['tax'] = $h[$i];
+            $data['total'] = $total[$i];
             $data['invoice_id '] = $id;
             $addQuery2 = $this->invoice_model->add_invoice_items($data);
             $i++;
         }
+
+        redirect('accounting/invoices');
     }
 
     
@@ -5514,7 +5524,7 @@ class Accounting extends MY_Controller
 
 
     // New Forms
-    public function addNewEstimate()
+    public function addNewEstimate($customer_id=0)
     {
         $this->load->model('AcsProfile_model');
 
@@ -5550,6 +5560,7 @@ class Accounting extends MY_Controller
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['customer_id'] = $customer_id;
         // $this->page_data['items'] = $this->items_model->getItemlist();
         // $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
@@ -5588,7 +5599,7 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/customer_credit_memo_modal', $this->page_data);
     }
 
-    public function addNewEstimateOptions()
+    public function addNewEstimateOptions($customer_id=0)
     {
         $this->load->model('AcsProfile_model');
 
@@ -5624,6 +5635,7 @@ class Accounting extends MY_Controller
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['customer_id'] = $customer_id;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
@@ -5632,7 +5644,7 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/addNewEstimateOptions', $this->page_data);
     }
 
-    public function addNewEstimateBundle()
+    public function addNewEstimateBundle($customer_id=0)
     {
         $this->load->model('AcsProfile_model');
 
@@ -5668,6 +5680,7 @@ class Accounting extends MY_Controller
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
+        $this->page_data['customer_id'] = $customer_id;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
@@ -6799,14 +6812,17 @@ class Accounting extends MY_Controller
             $receivable_payment = 0;
             $total_amount_received =0;
             foreach ($invoices as $inv) {
-                $receivable_payment+=$inv->grand_total;
+                if(is_numeric($inv->grand_total)){
+                    $receivable_payment+=$inv->grand_total;
+                }
                 $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
                 foreach ($receive_payment as $payment) {
                     $total_amount_received += $payment->payment_amount;
                 }
             }
+            
             $first_option ="Create invoice";
-            $first_option_class="customer_craete_invoice";
+            $first_option_class="customer_craete_invoice_btn";
             $amount =($receivable_payment - $total_amount_received);
             if ($amount > 0) {
                 $first_option = "Receive rayment";
@@ -6849,8 +6865,8 @@ class Accounting extends MY_Controller
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="">
-													Create Invoice
+													class="" data-toggle="modal" data-target="#create_invoice_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													Create invoice
 												</a>
 											</li>';
             }
@@ -6863,7 +6879,7 @@ class Accounting extends MY_Controller
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="create-estimate-btn" data-toggle="modal" data-target="#create_estimate_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="create-estimate-btn" data-toggle="modal" data-target="#newJobModal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create estimate
 												</a>
 											</li>
@@ -8137,20 +8153,27 @@ class Accounting extends MY_Controller
             $new_data['break_duration'] = null;
         }
             
-        $data = new stdClass();
-        $data->count_save = 1;
+        $return_data = new stdClass();
+        $return_data->count_save = 1;
         if ($this->input->post("time_activity_id")!="") {
             $new_data['updated_at'] = date("Y-m-d H:i:s");
             $res= $this->accounting_customers_model->update_time_activity($new_data, $time_activity_id);
             if ($res) {
-                $data->count_save = 1;
+                $return_data->count_save = 1;
             } else {
-                $data->count_save = 0;
+                $return_data->count_save = 0;
             }
         } else {
             $time_activity_id = $this->accounting_customers_model->add_time_activity($new_data);
         }
-        $data->time_activity_id =$time_activity_id;
-        echo json_encode($data);
+        $new_data = array(
+            "service" => $this->input->post('show_services'),
+            "billable" => $this->input->post('make_time_activity_billable')
+        );
+        $this->accounting_customers_model->update_accounting_timesheet_settings($new_data);
+        
+        $return_data->show_services = $this->input->post('show_services');
+        $return_data->time_activity_id =$time_activity_id;
+        echo json_encode($return_data);
     }
 }

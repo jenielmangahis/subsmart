@@ -33,7 +33,7 @@ class Invoice_model extends MY_Model
         // $company_id = getLoggedCompanyID();
         // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
 
-        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
 
         $this->db->from('invoices');
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
@@ -61,8 +61,8 @@ class Invoice_model extends MY_Model
     {
         extract($data);
         $this->db->where('id', $id);
-        $this->db->update('estimates', array(
-            'customer_id'               => $customer_id,
+        $this->db->update('invoices', array(
+            // 'customer_id'               => $customer_id,
             'job_location'              => $job_location, //
             'job_name'                  => $job_name,//
             'invoice_type'              => $invoice_type,//
@@ -96,7 +96,7 @@ class Invoice_model extends MY_Model
             // 'invoice_totals'         => $this->input->post('invoice_totals'),
             // 'phone'                     => $this->input->post('phone'),
             'payment_schedule'          => $payment_schedule,
-            'subtotal'                  => $subtotal,
+            'sub_total'                 => $subtotal,
             'taxes'                     => $taxes, 
             'adjustment_name'           => $adjustment_name,
             'adjustment_value'          => $adjustment_value,

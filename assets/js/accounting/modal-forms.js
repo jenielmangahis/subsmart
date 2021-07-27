@@ -3002,7 +3002,7 @@ $(function() {
         today = mm + '/' + dd + '/' + yyyy;
 
         submitType = $(this).attr('id');
-        // $('#modal-container form#modal-form').submit();
+        $('#modal-container form#modal-form').submit();
 
         $('#modal-container .modal select').each(function() {
             $($(this).find('option')[0]).prop('selected', true);
@@ -3069,6 +3069,41 @@ $(function() {
 
         submitType = $(this).attr('id');
         $('#modal-container form#modal-form').submit();
+    });
+
+    $(document).on('click', '#singleTimeModal #time-activity-settings-button', function(e) {
+        e.preventDefault();
+
+        $('#singleTimeModal').parent().prev().modal('show');
+    });
+
+    $(document).on('change', '#time-activity-settings #toggle-service, #time-activity-settings #toggle-billable', function(e) {
+        var field = $(this).attr('id').replace('toggle-', '');
+        var value = $(this).prop('checked') ? 1 : 0;
+        $.get(`/accounting/update-timesheet-settings/${field}/${value}`, function(res) {
+            if(res === 'true') {
+                switch(field) {
+                    case 'service' :
+                        if(value === 1) {
+                            $('#time-activity-settings').next().children('div.modal').find('#service').prop('required', false).parent().show();
+                            $('#time-activity-settings').next().children('div.modal').find('select[name="service[]"]').prop('required', false).next().show();
+                        } else {
+                            $('#time-activity-settings').next().children('div.modal').find('#service').prop('required', false).parent().hide();
+                            $('#time-activity-settings').next().children('div.modal').find('select[name="service[]"]').prop('required', false).next().hide();
+                        }
+                    break;
+                    case 'billable' :
+                        if(value === 1) {
+                            $('#time-activity-settings').next().children('div.modal').find('#billable').parent().show();
+                            $('#time-activity-settings').next().children('div.modal').find('input[name="billable[]"]').parent().show();
+                        } else {
+                            $('#time-activity-settings').next().children('div.modal').find('#billable').parent().hide();
+                            $('#time-activity-settings').next().children('div.modal').find('input[name="billable[]"]').parent().hide();
+                        }
+                    break;
+                }
+            }
+        });
     });
 });
 
@@ -3703,13 +3738,13 @@ const toast = (status = true, text = "Success", position = "top-right") => {
 const showHiddenFields = (el) => {
     if($(el).attr('id') === 'billable') {
         if($(el).prop('checked') === true) {
-            $(el).next().next().removeClass('hide');
-            $(el).next().next().attr('required', 'required');
             $(el).parent().next().removeClass('hide');
+            $(el).parent().next().attr('required', 'required');
+            $(el).parent().parent().next().removeClass('hide');
         } else {
-            $(el).next().next().addClass('hide');
-            $(el).next().next().removeAttr('required');
             $(el).parent().next().addClass('hide');
+            $(el).parent().next().removeAttr('required', 'required');
+            $(el).parent().parent().next().addClass('hide');
         }
     }
 

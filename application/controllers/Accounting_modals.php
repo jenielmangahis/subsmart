@@ -43,6 +43,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_attachments_model');
         $this->load->model('expenses_model');
         $this->load->model('accounting_assigned_checks_model');
+        $this->load->model('accounting_timesheet_settings_model');
 		$this->load->library('form_validation');
     }
 
@@ -69,6 +70,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['creditCards'] = $this->chart_of_accounts_model->get_credit_card_accounts();
                 break;
                 case 'single_time_activity_modal':
+                    $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
@@ -5198,5 +5200,25 @@ class Accounting_modals extends MY_Controller {
                 }
             break;
         }
+    }
+
+    public function update_timesheet_settings($field, $value)
+    {
+        $companyId = logged('company_id');
+        $settingsData = [
+            $field => $value
+        ];
+
+        $settings = $this->accounting_timesheet_settings_model->get_by_company_id($companyId);
+
+        if($settings) {
+            $query = $this->accounting_timesheet_settings_model->update($companyId, $settingsData);
+        } else {
+            $settingsData['company_id'] = $companyId;
+
+            $query = $this->accounting_timesheet_settings_model->create($settingsData);
+        }
+
+        echo json_encode($query ? true : false);
     }
 }

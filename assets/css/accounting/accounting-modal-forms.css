@@ -156,3 +156,20 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
 .full-screen-modal .modal .btn[data-toggle="collapse"]:hover, .full-screen-modal .modal .btn[data-toggle="collapse"]:focus {
     color: unset;
 }
+
+/* Single Time Activity Modal */
+#singleTimeModal .modal-header button#time-activity-settings-button {
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    opacity: 0.5;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    padding: 1rem 1rem;
+    margin: -1rem -1rem -1rem auto;
+}
+
+#singleTimeModal .modal-header button#time-activity-settings-button:hover {
+    opacity: .75;
+}

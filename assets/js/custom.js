@@ -1445,7 +1445,8 @@ $(document).on("focusout", ".qtyest2", function () {
   $("#total_tax_").text(subtotaltax.toFixed(2));
   $("#total_tax_input").val(subtotaltax.toFixed(2));
   $("#span_total_" + in_id).text(o_total);
-  $("#sub_total_text" + in_id).text(o_total);
+  // $("#sub_total_text" + in_id).text(o_total);
+  $("#sub_total_text" + in_id).val(o_total);
   $("#span_sub_total_invoice").text(priceqty.toFixed(2));
   $("#item_total").val(priceqty.toFixed(2));
 
