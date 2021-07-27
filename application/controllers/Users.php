@@ -817,6 +817,7 @@ class Users extends MY_Controller {
     }
     public function addNewEmployee(){
     	$this->load->model('IndustryType_model');
+    	$this->load->model('Clients_model');
 
         $fname = $this->input->post('values[firstname]');
         $lname = $this->input->post('values[lastname]');
@@ -838,57 +839,69 @@ class Users extends MY_Controller {
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
         $cid=logged('company_id');
-        $add = array(
-            'FName' => $fname,
-            'LName' => $lname,
-            'username' => $username,
-            'email' => $username,
-            'password' => hash("sha256",$password),
-            'password_plain' => $password,
-            'role' => $role,
-            'user_type' => $user_type,
-            'status' => $status,
-            'company_id' => $cid,
-            'profile_img' => $profile_img,
-            'address' => $address,
-            'state' => $state,
-            'city' => $city,
-            'postal_code' => $postal_code,
-            'payscale_id' => $payscale_id,
-            'employee_number' => $emp_number
-        );
-        $last_id = $this->users_model->addNewEmployee($add);
 
-        //Create timesheet record
-		$this->load->model('TimesheetTeamMember_model');
-		$this->TimesheetTeamMember_model->create([
-			'user_id' => $last_id,
-			'name' => $fname . ' ' . $lname,
-			'email' => $username,
-			'role' => 'Employee',
-			'department_id' => 0,
-			'department_role' => 'Member',
-			'will_track_location' => 1,
-			'status' => 1,
-			'company_id' => $cid
-		]);
-		//End Timesheet		
-
-		//Create Trac360 record
-		$this->load->model('Trac360_model');
-		$data = [
-			'user_id' => $last_id,
-			'name' => $fname . ' ' . $lname,
-			'company_id' => $cid
-		];
-		$this->Trac360_model->add('trac360_people', $data);
-		//End Trac360
-
-        if ($last_id > 0 ){
-            echo json_encode(1);
+        $company = $this->Clients_model->getById($cid);
+        if( $company->number_of_license <=0 ){
+        	echo json_encode(3);
         }else{
-            echo json_encode(0);
+        	$add = array(
+	            'FName' => $fname,
+	            'LName' => $lname,
+	            'username' => $username,
+	            'email' => $username,
+	            'password' => hash("sha256",$password),
+	            'password_plain' => $password,
+	            'role' => $role,
+	            'user_type' => $user_type,
+	            'status' => $status,
+	            'company_id' => $cid,
+	            'profile_img' => $profile_img,
+	            'address' => $address,
+	            'state' => $state,
+	            'city' => $city,
+	            'postal_code' => $postal_code,
+	            'payscale_id' => $payscale_id,
+	            'employee_number' => $emp_number
+	        );
+	        $last_id = $this->users_model->addNewEmployee($add);
+
+	        //Deduct num license
+	        $new_num_license = $company->number_of_license;
+	        $company_data = ['number_of_license' => $new_num_license];
+	        $this->Clients_model->updateClient($cid, $company_data);
+
+	        //Create timesheet record
+			$this->load->model('TimesheetTeamMember_model');
+			$this->TimesheetTeamMember_model->create([
+				'user_id' => $last_id,
+				'name' => $fname . ' ' . $lname,
+				'email' => $username,
+				'role' => 'Employee',
+				'department_id' => 0,
+				'department_role' => 'Member',
+				'will_track_location' => 1,
+				'status' => 1,
+				'company_id' => $cid
+			]);
+			//End Timesheet		
+
+			//Create Trac360 record
+			$this->load->model('Trac360_model');
+			$data = [
+				'user_id' => $last_id,
+				'name' => $fname . ' ' . $lname,
+				'company_id' => $cid
+			];
+			$this->Trac360_model->add('trac360_people', $data);
+			//End Trac360
+
+	        if ($last_id > 0 ){
+	            echo json_encode(1);
+	        }else{
+	            echo json_encode(0);
+	        }
         }
+        
     }    
     public function getEmployeeData(){
 	    $user_id = $this->input->get('user_id');

@@ -958,6 +958,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 icon: 'success'
                             });
                             location.reload();
+                        }else if( data == 3 ){
+                            Swal.fire({
+                                title: 'Failed',
+                                text: 'Insufficient license. Please purchase license to continue adding user',
+                                icon: 'warning',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Purchase License'
+                            }).then((result) => {
+                                if (result.value) {
+                                   window.location.href= base_url + 'mycrm/membership';
+                                }
+                            });
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
