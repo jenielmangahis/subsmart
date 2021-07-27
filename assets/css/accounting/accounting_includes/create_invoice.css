@@ -1,0 +1,691 @@
+#create_invoice_modal {
+    color: #333333;
+}
+
+#create_invoice_modal .middle-links a {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+#create_invoice_modal form label.faded-info {
+    font-style: italic;
+    color: #333333b3;
+}
+
+#create_invoice_modal form textarea {
+    resize: none;
+}
+
+#create_invoice_modal select,
+#create_invoice_modal input[type="text"],
+#create_invoice_modal input[type="email"],
+#create_invoice_modal input[type="number"],
+#create_invoice_modal input[type="date"],
+#create_invoice_modal textarea {
+    font-size: 12px;
+    font-weight: lighter;
+    padding: 8px;
+    height: auto;
+    border: solid 1px #BABEC5!important;
+    border-radius: 2px;
+    width: 100%;
+    resize: none;
+}
+
+#create_invoice_modal select {
+    display: block!important;
+    visibility: visible;
+    clip: auto!important;
+    position: inherit!important;
+    height: auto!important;
+    padding: 8px!important;
+    width: 100%!important;
+}
+
+#create_invoice_modal form .select2 {
+    display: none;
+}
+
+#create_invoice_modal input:focus,
+#create_invoice_modal select:focus,
+#create_invoice_modal textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8)!important;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03!important;
+    font-style: normal;
+}
+
+div#create_invoice_modal {
+    font-size: 12px;
+}
+
+#create_invoice_modal #add_another_items {
+    font: 12px;
+}
+
+#create_invoice_modal .modal-footer-check {
+    left: 0;
+}
+
+#create_invoice_modal .modal-footer-check button {
+    font-size: 12px;
+    height: auto;
+    padding: 5px 10px;
+}
+
+#create_invoice_modal .modal-footer-check button[data-submit-type='save-send'],
+#create_invoice_modal .modal-footer-check button[data-toggle='dropdown'] {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 13px;
+    border-radius: 28px 0 0 28px;
+    padding: 5px 15px;
+    height: auto;
+    border: solid 1px #2CA01C;
+    margin-right: -5px;
+}
+
+#create_invoice_modal .modal-footer-check button[data-submit-type='save-send']:hover,
+#create_invoice_modal .modal-footer-check button[data-toggle='dropdown']:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+#create_invoice_modal .modal-footer-check .submit-submenu>li:hover,
+#sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li:hover {
+    background-color: #ECEDF1;
+    color: #008A00;
+}
+
+#create_invoice_modal .modal-footer-check .submit-submenu>li button,
+#sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li button {
+    color: #333333;
+}
+
+#create_invoice_modal .modal-footer-check button.cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #ffffff;
+    border: solid 1px #6A6C71;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#create_invoice_modal .modal-footer-check button.cancel-button:hover {
+    background-color: #2A2B2D;
+}
+
+#create_invoice_modal .modal-title,
+#create_invoice_modal .modal-title a {
+    font-weight: 700;
+    color: #333333;
+}
+
+#create_invoice_modal .recurring-form-part .recurring-title {
+    font-size: 20px;
+}
+
+#create_invoice_modal .recurring-form-part .recurring-type {
+    width: 30%;
+    float: left;
+    top: 0;
+}
+
+#create_invoice_modal .recurring-form-part .recuring-label-type {
+    width: 56px;
+    padding: 10px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part .recuring-label-recurring-days-in-advance {
+    width: 110px;
+    padding: 10px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part .recurring-days-in-advance {
+    width: 50px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below {
+    border-bottom: solid 1px #D4D7DC;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .monthly .label-1 {
+    width: 35px;
+    padding: 10px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .monthly .monthly-day {
+    width: 120px;
+    float: left;
+    padding-left: 10px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .monthly .monthly-day-of-week {
+    width: 100px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .monthly .label-2 {
+    padding: 10px;
+    width: 70px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .monthly .monthly-months {
+    float: left;
+    width: 50px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .monthly .label-3 {
+    float: left;
+    padding: 10px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part {
+    position: relative;
+    width: auto;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part {
+    position: relative;
+    width: auto;
+    float: left;
+    border-right: solid 1px #D4D7DC;
+}
+
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-1,
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-2,
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-3 {
+    float: left;
+    padding: 10px;
+}
+
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-2 select {
+    width: 80px;
+}
+
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-3 .by-end-date {
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences {
+    float: left;
+    padding-left: 10px;
+}
+
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences input {
+    float: left;
+    width: 50px;
+}
+
+#create_invoice_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences .label {
+    float: left;
+    padding: 10px;
+}
+
+.padding-tb-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .daily .daily-days {
+    float: left;
+    width: 50px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .daily .label-1,
+#create_invoice_modal .recurring-form-part.below .interval-part .daily .label-2 {
+    padding: 10px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .weekly .label-1,
+#create_invoice_modal .recurring-form-part.below .interval-part .weekly .label-2 {
+    padding: 10px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .weekly .weekly-every {
+    float: left;
+    width: 50px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .weekly .weekly-weeks-on {
+    float: left;
+    width: 100px;
+    padding-right: 10px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .yearly .label-1 {
+    padding: 10px;
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .yearly .yearly-day {
+    float: left;
+    padding-right: 10px;
+    padding-left: 2px;
+    width: 80px;
+}
+
+#create_invoice_modal .recurring-form-part.below .interval-part .yearly .yearly-month {
+    float: left;
+}
+
+#create_invoice_modal .recurring-form-part .reminder-type .label-1,
+#create_invoice_modal .recurring-form-part .reminder-type .label-2 {
+    float: left;
+    padding: 10px;
+}
+
+#create_invoice_modal .recurring-form-part .reminder-type .remind-days-before {
+    float: left;
+    width: 50px;
+}
+
+#create_invoice_modal .recurring-form-part .unschedule-type .label-1 {
+    float: left;
+    width: 300px;
+    padding-left: 10px;
+}
+
+#create_invoice_modal .recurring-form-part {
+    display: none;
+}
+
+#create_invoice_modal .modal-footer-check .middle-links {
+    width: 50%;
+    float: left;
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#create_invoice_modal .modal-footer-check .middle-links.end {
+    text-align: left;
+    border-left: solid 1px #6A6B70;
+}
+
+#create_invoice_modal .modal-footer-check .middle-links:hover {
+    text-shadow: 0 10px 20px #fff;
+}
+
+#create_invoice_modal .customer-info.recurring-customer-info {
+    border-top: solid 1px #D4D7DC;
+    border-bottom: solid 1px #D4D7DC;
+    margin-top: 10px;
+    padding: 0 5px;
+}
+
+#create_invoice_modal .customer-info.recurring-customer-info .divided {
+    border-right: solid 1px #D4D7DC;
+    padding: 10px;
+}
+
+#create_invoice_modal .customer-info.recurring-customer-info .option-part {
+    padding: 10px;
+}
+
+#create_invoice_modal .hidden {
+    visibility: hidden;
+}
+
+div#sales_receipt_pdf_preview_modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: 90%;
+}
+
+#create_invoice_modal .pint-preview-option-section {
+    position: absolute;
+    z-index: 1;
+    top: -100px;
+    background: #ffff;
+    right: 0;
+    color: #000;
+    text-align: left;
+    padding: 10px 0;
+    border: solid 1px #D4D7DC;
+    border-radius: 2px;
+    display: none;
+}
+
+#create_invoice_modal .pint-preview-option-section ul li a {
+    color: #000;
+}
+
+#create_invoice_modal .pint-preview-option-section ul li:hover {
+    background-color: #299A1C;
+    color: #fff;
+}
+
+#create_invoice_modal form label {
+    font-size: 12px;
+}
+
+#create_invoice_modal .pint-preview-option-section ul li:hover a {
+    color: #fff;
+}
+
+#create_invoice_modal .pint-preview-option-section ul li {
+    padding: 10px;
+}
+
+#create_invoice_modal .modal-footer-check .middle-links {
+    position: relative;
+}
+
+#create_invoice_modal .modal-footer-check .pint-preview-option-section .anchor-holder {
+    position: absolute;
+    z-index: 1;
+    width: 20px;
+    bottom: -13px;
+    left: 50px;
+}
+
+div#saved-notification-modal-section {
+    position: absolute;
+    top: 0;
+    z-index: 1060;
+    display: none;
+}
+
+#saved-notification-modal-section .body {
+    background: #ffffff99;
+    width: 500px;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5px;
+    font-size: 12px;
+    box-shadow: 3px 15px 35px #282929b3;
+    display: none;
+}
+
+#saved-notification-modal-section .body .content {
+    padding: 10px;
+    border: solid 1px #299A1C;
+}
+
+#saved-notification-modal-section .body .content h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+#sales_receipt_pdf_preview_modal .pdf-print-preview,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview {
+    height: 65vh;
+}
+
+#sales_receipt_pdf_preview_modal .pdf-print-preview iframe,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#sales_receipt_pdf_preview_modal h5.modal-title {
+    font-weight: 600;
+    color: #393A3D;
+    font-size: 20px;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body p {
+    font-size: 14px;
+    font-weight: 100;
+    color: #393A3D;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body h3 {
+    font-size: 20px;
+    color: #393A3D;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body p a:hover {
+    text-decoration: underline;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body p a {
+    color: #0379C6;
+}
+
+#sales_receipt_pdf_preview_modal .download-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#sales_receipt_pdf_preview_modal .cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+    position: absolute;
+    left: 2rem;
+}
+
+#sales_receipt_pdf_preview_modal .print-button {
+    background-color: #2CA01C;
+    font-size: 13px;
+    color: #fff;
+    border: solid 2px #2CA01C;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input {
+    padding: 10px;
+    width: 100%;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
+}
+
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input:focus,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input[type="email"] {
+    border: none;
+    border-color: none;
+    box-shadow: none;
+    outline: 0 none;
+    box-shadow: none;
+    font-style: normal;
+    background: transparent;
+}
+
+.error-message-section .error-message {
+    border: solid 1px #DC3C1E;
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+
+.error-message-section .error-message h3.title {
+    color: #DC3C1E;
+    font-size: 16px;
+}
+
+.error-message-section .error-message label {
+    font-size: 10px;
+    color: #444444;
+}
+
+.tax-hide {
+    display: none;
+}
+
+#create_invoice_modal form .ship-to-section {
+    display: none;
+}
+
+#create_invoice_modal form .padding-top-70 {
+    padding-top: 70px;
+}
+
+#create_invoice_modal form .padding-top-140 {
+    padding-top: 140px;
+}
+
+#create_invoice_modal form .ship-to-btn {
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0E7EC8;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#create_invoice_modal form .form-group {
+    padding: 5px 0;
+}
+
+#create_invoice_modal form .payment_method_information {
+    padding-top: 20px;
+}
+
+#create_invoice_modal form .payment_method_information .row {
+    margin: 0;
+}
+
+#create_invoice_modal form .payment_method_information .form-group {
+    padding: 5px
+}
+
+#create_invoice_modal form .white-section {
+    background: #fff;
+    padding: 20px 30px;
+}
+
+#create_invoice_modal.modal .modal-body {
+    padding-bottom: 0;
+}
+
+#create_invoice_modal form .tags .manage-tags {
+    font-size: 12px;
+    color: #0E7EC8;
+    cursor: pointer;
+}
+
+div#create_invoice_modal form .default-button {
+    font-size: 13px;
+    font-weight: 100;
+    border: solid 1px #8E9095;
+    padding: 2px 20px;
+    background: transparent;
+    border-radius: 5px;
+    height: auto;
+    color: #333333;
+}
+
+div#create_invoice_modal form .default-button:hover {
+    background: rgba(107, 108, 114, .25);
+    color: #393a3d;
+}
+
+div#create_invoice_modal form .item-buttons {
+    padding: 15px 0;
+    margin-bottom: 10px;
+}
+
+div#create_invoice_modal form .table tbody tr td.item-action {
+    text-align: center;
+    font-size: 18px;
+}
+
+div#create_invoice_modal form .table tbody {
+    border-bottom: solid 2px #C7C7C7;
+}
+
+div#create_invoice_modal form .table tbody td:first-child,
+div#create_invoice_modal form .table tbody td:last-child,
+div#create_invoice_modal form .table thead th:first-child,
+div#create_invoice_modal form .table thead th:last-child {
+    border-left: none;
+    border-right: none;
+}
+
+div#create_invoice_modal form .table tbody td {
+    border-left: dotted 1px #C7C7C7;
+    border-right: dotted 1px #C7C7C7;
+}
+
+div#create_invoice_modal form .table thead th {
+    border-top: none;
+    border-left: solid 1px #C7C7C7;
+    border-right: solid 1px #C7C7C7;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+div#create_invoice_modal form .item-totals .label,
+div#create_invoice_modal form .item-totals .amount {
+    float: left;
+    text-align: right;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+div#create_invoice_modal form .item-totals .label {
+    width: 60%;
+}
+
+div#create_invoice_modal form .item-totals .amount {
+    width: 40%;
+}
+
+div#create_invoice_modal form .item-totals .label .taxable-sub {
+    font-size: 12px;
+}
+
+div#create_invoice_modal form .item-totals .label .taxable-sub span {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+div#create_invoice_modal form .table tbody tr td.item-action a {
+    color: #999999;
+}

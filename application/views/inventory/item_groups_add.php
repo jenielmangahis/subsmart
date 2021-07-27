@@ -29,7 +29,7 @@ add_css(array(
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <form method="post">
+                        <form id="item_group_form">
                             <div class="row ">
                                 <div class="col-md-6">
                                     <div class="row form_line">
@@ -37,7 +37,7 @@ add_css(array(
                                             Group Name
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control " name="groupName" id="groupName" required/>
+                                            <input type="text" class="form-control" name="groupName" id="groupName" required/>
                                         </div>
                                     </div>
                                     <div class="row form_line">
@@ -45,12 +45,12 @@ add_css(array(
                                             Description
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control " name="descriptionItemCat" id="descriptionItemCat" />
+                                            <input type="text" class="form-control" name="descriptionItemCat" id="descriptionItemCat" />
                                         </div>
                                     </div>
                                     <br><br>
                                     <div class="float-right d-md-block" style="position: relative;text-align:right;right: 0;">
-                                        <button type="button" class="btn btn-default"><span class="fa fa-remove"></span> Cancel</button>
+                                        <a href="<?= base_url('inventory/item_groups') ?>" class="btn btn-default"><span class="fa fa-remove"></span> Cancel</a>
                                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
                                     </div>
                                 </div>
@@ -76,3 +76,25 @@ add_footer_js(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 <?php include viewPath('customer/js/add_advance_js'); ?>
+<script>
+    $(document).ready(function() {
+        $("#item_group_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+                //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/inventory/saveItemsCategories",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    document.getElementById('overlay').style.display = "none";
+                    console.log(data);
+                    window.location.href="<?= base_url()?>/inventory/item_groups";
+                    //sucess_add_job(data);
+                }, beforeSend: function() {
+                    document.getElementById('overlay').style.display = "flex";
+                }
+            });
+        });
+    });
+</script>

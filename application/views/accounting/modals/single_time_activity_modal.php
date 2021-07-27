@@ -1,5 +1,37 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
+    <div class="modal right fade" id="time-activity-settings" tabindex="-1" role="dialog" aria-labelledby="tags-modal">
+        <div class="modal-dialog" role="document" style="width: 20%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choose what you use</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <div class="row">
+                        <div class="col">
+                            <div class="label">
+                                Changes you make here apply to all timesheets
+                            </div>
+                            <div class="form-check">
+                                <div class="checkbox checkbox-sec">
+                                    <input type="checkbox" id="toggle-service" value="1" <?=$timesheetSettings->service === "1" ? 'checked' : ''?>>
+                                    <label for="toggle-service">Show service</label>
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <div class="checkbox checkbox-sec">
+                                    <input type="checkbox" id="toggle-billable" value="1" <?=$timesheetSettings->billable === "1" ? 'checked' : ''?>>
+                                    <label for="toggle-billable">Make time activities billable</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <form onsubmit="submitModalForm(event, this)" id="modal-form">
         <div id="singleTimeModal" class="modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
@@ -7,8 +39,10 @@
                 <div class="modal-content" style="height: 100%;">
                     <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                         <h4 class="modal-title">Time Activity</h4>
-                        <button type="button" class="close" data-dismiss="modal"><i
-                                class="fa fa-times fa-lg"></i></button>
+                        <div class="float-right">
+                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                            <button type="button" id="time-activity-settings-button"><i class="fa fa-cog fa-lg"></i></button>
+                        </div>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -17,7 +51,7 @@
                                     <div class="card-body" style="padding-bottom: 1.25rem">
                                         <div class="row">
                                             <div class="col-md-5 offset-md-4">
-                                                <div class="form-check">
+                                                <div class="checkbox checkbox-sec">
                                                     <input type="checkbox" name="start_end_time" id="startEndTime"
                                                         value="1" class="form-check-input"
                                                         onclick="showHiddenFields(this)">
@@ -69,7 +103,7 @@
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" <?=$timesheetSettings->service === "0" ? 'style="display:none"' : ''?>>
                                                     <label for="service">Service</label>
                                                     <select name="service" id="service" class="form-control" required>
                                                         <option value="" disabled selected>Choose the service worked on
@@ -83,16 +117,20 @@
                                                     </select>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" name="billable"
-                                                        id="billable" value="1" onclick="showHiddenFields(this)">
-                                                    <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                                    <div class="checkbox checkbox-sec margin-right" <?=$timesheetSettings->billable === "0" ? 'style="display:none"' : ''?>>
+                                                        <input class="form-check-input" type="checkbox" name="billable"
+                                                            id="billable" value="1" onclick="showHiddenFields(this)">
+                                                        <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                                    </div>
                                                     <input type="number" name="hourly_rate" id="hourlyRate"
                                                         class="w-25 form-control hide">
                                                 </div>
                                                 <div class="form-check hide">
-                                                    <input type="checkbox" name="taxable" id="taxable"
-                                                        class="form-check-input" value="1">
-                                                    <label for="taxable" class="form-check-label">Taxable</label>
+                                                    <div class="checkbox checkbox-sec">
+                                                        <input type="checkbox" name="taxable" id="taxable"
+                                                            class="form-check-input" value="1">
+                                                        <label for="taxable" class="form-check-label">Taxable</label>
+                                                    </div>
                                                 </div>
                                             </div>
 

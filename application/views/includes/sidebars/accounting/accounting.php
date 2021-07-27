@@ -152,13 +152,13 @@
                         <ul id="accounting_employees">
                             <li><a href="#" class="ajax-payroll_modal" data-view="payroll_modal" data-toggle="modal"
                                     data-target="#payrollModal">Payroll</a></li>
-                            <!-- <li><a href="#" class="ajax-single_time_activity_modal"
+                            <li><a href="#" class="ajax-single_time_activity_modal"
                                     data-view="single_time_activity_modal" data-toggle="modal"
-                                    data-target="#singleTimeModal">Single time activity</a></li> -->
-                            <li><a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal"
+                                    data-target="#singleTimeModal">Single time activity</a></li>
+                            <!-- <li><a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal"
                                     data-target="#time_activity_modal">
                                     Single time activity
-                                </a></li>
+                                </a></li> -->
                             <li><a href="#" class="ajax-weekly_timesheet_modal" data-view="weekly_timesheet_modal"
                                     data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
                         </ul>
@@ -232,11 +232,12 @@
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?>
 </div>
 <div>
-    <?php include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
+    <?php //include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
 </div>
 <?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
 
-<?php include viewPath('accounting/customer_includes/create_estimate/create_estimate'); ?>
+<?php include viewPath('accounting/customer_includes/create_invoice/create_invoice_modal'); ?>
+
 
 <?php include viewPath('accounting/add_new_term'); ?>
 

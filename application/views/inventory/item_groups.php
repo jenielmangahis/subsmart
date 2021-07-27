@@ -34,7 +34,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <input type="hidden" id="selectedIds">
                                 <div class="col-md-12" id="feesInventory">
-                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="feesItemsTable">
+                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="item_groups_table">
                                         <thead>
                                         <tr>
                                             <th scope="col"><strong>Name</strong></th>
@@ -45,20 +45,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tbody>
                                         <?php foreach($item_categories as $item) : ?>
                                             <tr>
-                                                    <td><?= $item->name; ?></td>
-                                                    <td><?= $item->description; ?></td>
-                                                    <td style="width:12%" class="pl-3">
-                                                        <div class="dropdown dropdown-btn text-center">
-                                                            <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?= $item->id; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
-                                                                <li role="separator" class="divider"></li>
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
+                                                <td><?= $item->name; ?></td>
+                                                <td><?= $item->description; ?></td>
+                                                <td style="width:12%" class="pl-3">
+                                                    <div class="dropdown dropdown-btn text-center">
+                                                        <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?= $item->id; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                            <li role="separator" class="divider"></li>
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item->id); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                         </tbody>
@@ -75,3 +75,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script>
+    $("#item_groups_table").DataTable({});
+</script>

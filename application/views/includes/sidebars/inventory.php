@@ -37,6 +37,19 @@
     #sidebar ul li {
         font-size: 16px;
     }
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
 </style>
 <nav class="navbar-side">
     <ul class="nav">
@@ -73,3 +86,10 @@
         </li>
     </ul>
 </nav>
+<div id="overlay">
+    <div>
+        <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center><p>Processing...</p></center>
+    </div>
+</div>
+

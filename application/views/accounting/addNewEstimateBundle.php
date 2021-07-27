@@ -1220,11 +1220,13 @@ $(".toggle").each(function () {
 <script>
 
 $(document).ready(function(){
- 
+    <?php if($customer_id > 0){ echo "bundle_customer_field_changed(".$customer_id.");";} ?>
     $('#sel-customerbundle').change(function(){
     var id  = $(this).val();
-    // alert(id);
-
+    bundle_customer_field_changed(id);
+    });
+    function bundle_customer_field_changed(id){
+        $('#sel-customerbundle').val(id);
         $.ajax({
             type: 'POST',
             url:"<?php echo base_url(); ?>accounting/addLocationajax",
@@ -1244,7 +1246,7 @@ $(document).ready(function(){
        
                 }
         });
-    });
+    }
 
     $(document).on('click','.setmarkup',function(){
        // alert('yeah');

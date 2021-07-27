@@ -304,7 +304,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td>
                             <div class="table-nowrap">
-                                <label><?php echo $invoice->status ?></label>
+                                <label><?php echo $invoice->INV_status ?></label>
                             </div>
                         </td>
                         <td>

@@ -152,20 +152,11 @@ class Inventory extends MY_Controller
 
     public function item_groups($page = null)
     {
-        $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
-        $role_id = logged('role');
-
-        $comp = array(
-            'company_id' => $comp_id
-        );
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
 
         // get color settings
         $get_items_categories = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
+            'where' => array('company_id' => $comp_id),
             'table' => 'item_categories',
             'select' => '*',
         );
@@ -313,13 +304,12 @@ class Inventory extends MY_Controller
             'description' => $this->input->post('descriptionItemCat'),
             'parent_id' => $comp_id
         );
-        $this->db->insert($this->items_model->table_categories, $data);
-
-        $this->activity_model->add("New item Categories #$categories Created by User: #" . logged('id'));
-        $this->session->set_flashdata('alert-type', 'success');
-        $this->session->set_flashdata('alert', 'New item Created Successfully');
-
-        redirect('job');
+        if($this->db->insert($this->items_model->table_categories, $data)){
+            echo 'sucess';
+            $this->activity_model->add("New item Categories ".$this->input->post('groupName')." Created by User: #" . logged('id'));
+        }else{
+            echo 'error';
+        }
     }
 
     public function saveItems()

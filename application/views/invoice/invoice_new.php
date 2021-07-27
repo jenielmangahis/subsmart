@@ -222,47 +222,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                         <?php foreach ($invoices as $invoice) { ?>
                                             <tr>
-                                                <td>
-                                                    <div class="table-name">
-                                                        <div class="checkbox checkbox-sm">
-                                                            <input type="checkbox"
-                                                                   name="id[<?php echo $invoice->id ?>]"
-                                                                   value="<?php echo $invoice->id ?>"
-                                                                   class="select-one"
-                                                                   id="invoice_id_<?php echo $invoice->id ?>">
-                                                            <label for="invoice_id_<?php echo $invoice->id ?>"> <a
-                                                                        class="a-default"
-                                                                        href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>"><?php echo $invoice->invoice_number ?></a></label>
-                                                        </div>
+                                            <td>
+                                                <div class="table-name">
+                                                    <div class="checkbox checkbox-sm">
+                                                        <input type="checkbox"
+                                                            name="id[<?php echo $invoice->id ?>]"
+                                                            value="<?php echo $invoice->id ?>"
+                                                            class="select-one"
+                                                            id="invoice_id_<?php echo $invoice->id ?>">
+                                                        <label
+                                                            for="invoice_id_<?php echo $invoice->id ?>">
+                                                            <a class="a-default"
+                                                                href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>"><?php echo $invoice->invoice_number ?></a></label>
                                                     </div>
-                                                </td>
+                                                </div>
+                                            </td>
 
-                                                <td>
-                                                    <div class="table-nowrap">
-                                                      <label for=""><?php echo get_format_date($invoice->date_issued) ?></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="table-nowrap">
-                                                       <label for=""><?php echo get_format_date($invoice->due_date) ?></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="table-nowrap">
-                                                        <p class="mb-0"> <label for=""><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?></label></p>
-                                                        <label for="customer_id_<?php echo $invoice->customer_id ?>"> <a href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>"><?php echo $invoice->job_name ?></a></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="table-nowrap">
-                                                        <label><?php echo $invoice->status ?></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="table-nowrap">
-                                                       <label for="">$<?php echo ($invoice->invoice_totals) ? number_format(unserialize($invoice->invoice_totals)['grand_total'], 2, '.', ',') : '' ?> </label>
-                                                    </div>
-                                                </td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <label for=""><?php echo get_format_date($invoice->date_issued) ?></label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <label for=""><?php echo get_format_date($invoice->due_date) ?></label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <p class="mb-0"> <label for=""><?php echo $invoice->first_name.' '. $invoice->last_name; ?></label>
+                                                    </p>
+                                                    <label
+                                                        for="customer_id_<?php echo $invoice->customer_id ?>">
+                                                        <a
+                                                            href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>"><?php echo $invoice->job_name ?></a>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <label><?php echo $invoice->INV_status ?></label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <label for="">$<?php echo($invoice->grand_total); ?>
+                                                    </label>
+                                                </div>
+                                            </td>
                                                 <td class="text-right">
                                                     <div class="dropdown dropdown-btn open">
                                                         <button class="btn btn-default dropdown-toggle" type="button"
@@ -279,7 +286,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span class="fa fa-envelope-o icon"></span> Send Invoice</a>
                                                             </li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/edit/' . $invoice->id) ?>">
+                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">
                                                                 <span class="fa fa-pencil-square-o icon"></span>
                                                                     Edit
                                                                 </a>
@@ -300,7 +307,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <li role="presentation">
                                                                 <!-- <a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#convertToWorkOrder" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"> -->
                                                                 <a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
+                                                                                href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
                                                                                data-convert-to-invoice-modal="open"
                                                                                data-id="<?php echo $invoice->id ?>"
                                                                                data-invoice-number="<?php echo $invoice->invoice_number ?>">
@@ -312,8 +319,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <span class="fa fa-files-o icon"></span> Clone Invoice
                                                                 </a>
                                                             </li>
-                                                            <li role="presentation">
+                                                            <!-- <li role="presentation">
                                                                 <a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cancelModal" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">
+                                                                    <span class="fa fa-trash-o icon"></span> Delete Invoice
+                                                                </a>
+                                                            </li> -->
+                                                            <li role="presentation">
+                                                                <a role="menuitem" class="openDeleteInvoice" tabindex="-1"
+                                                                    href="javascript:void(0)"
+                                                                    data-invoice-number="<?php echo $invoice->invoice_number ?>"
+                                                                    data-id="<?php echo $invoice->id ?>"
+                                                                    id="deleteInvoiceBtnNew">
                                                                     <span class="fa fa-trash-o icon"></span> Delete Invoice
                                                                 </a>
                                                             </li>
@@ -472,4 +488,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         var switchery = new Switchery(html, {size: 'small'});
     });
 
+</script>
+
+<script>
+// $(document).on('click','#delete_workorder',function(){
+//     // alert('test');
+    
+// });
+
+// function myFunction() {
+// $('#delete_workorder').on('click', function(){
+$(document).on('click touchstart','#deleteInvoiceBtnNew',function(){
+
+    var id = $(this).attr('data-id');
+    // alert(id);
+  
+  var r = confirm("Are you sure you want to delete this Invoice?");
+
+  if (r == true) {
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>invoice/deleteInvoiceBtnNew",
+    data : {id: id},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        sucess("Data Deleted Successfully!");
+    },
+    });
+  }
+
+});
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
 </script>

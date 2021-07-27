@@ -3,22 +3,104 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <style>
-   .but:hover {
-    font-weight: 900;
-    color:black;
-    }
-    .but-red:hover {
-    font-weight: 900;
-    color:red;
-    }
-    .required:after {
-    content:" *";
-    color: red;
-    }
+<?php include viewPath('includes/sidebars/invoice'); ?>
+    <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
 
-    .signature_mobile
+    <style>
+  .custom-signaturepad {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .custom-signaturepad .sigWrapper canvas {
+      width: 100%;
+  }
+  .custom-signaturepad .sigPad  {
+    width: 100% !important;
+  }
+  #group_area{
+    background-color:#F9F9F9;
+  }
+  #group_area:hover{
+    background-color:#EBFFE2;
+  }
+  .pointer {cursor: pointer;}
+/* 
+  #company_representative_approval_signature1a{
+  border: solid 1px blue;  
+  width: 100%;
+} */
+
+#signature-pad {min-height:200px;}
+#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2 {min-height:200px;}
+#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3 {min-height:200px;}
+#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #10ab06;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+.signature_mobile
 {
     display: none;
 }
@@ -215,14 +297,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
   color: black; 
 }
 }
-   </style>
+</style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h3 style="font-family: Sarabun, sans-serif">New Invoice</h3>
+                        <h3 style="font-family: Sarabun, sans-serif">Update Invoice</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
                         </ol>
@@ -245,7 +327,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/addInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('invoice/updateInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
             <div class="row custom__border">
                 <div class="col-xl-12">
@@ -253,6 +335,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="card-body">
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
+                                <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
                                     <label for="invoice_customer">Customer</label>
                                     <!-- <select id="invoice_customer" name="customer_id"
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
@@ -261,7 +344,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <select name="customer_id" id="customer_id" class="form-control" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
-                                    <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                    <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                     <?php endforeach; ?>
                                 </select>
                                 </div>
@@ -272,12 +355,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                                 </div>
                                 <div class="col-md-5 form-group">
-                                    <label for="invoice_job_location">Job Location <small class="help help-sm">(optional, select or add new one)</small></label>
-                                    <!-- <select id="invoice_job_location" name="invoice_job_location_id"
-                                            data-inquiry-source="dropdown" class="form-control searchable-dropdown"
-                                            placeholder="Select Address">
-                                    </select> -->
-                                    <input type="text" class="form-control" name="invoice_job_location" id="job_location" />
+                                    <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
+                                    
+                                    <input type="text" class="form-control" name="jobs_location" id="invoice_jobs_location" value="<?php echo $invoice->job_location; ?>"/>
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <!-- <p>&nbsp;</p>
@@ -287,7 +367,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" />
+                                    <input type="text" class="form-control" name="job_name" id="job_name"  value="<?php echo $invoice->job_name; ?>"/>
                                 </div>
                             </div>
 
@@ -300,49 +380,42 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <option></option>
                                                 <option value="0">Add New</option>
                                                 <?php foreach($terms as $term) : ?>
-                                                <option value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
+                                                <option <?php if(isset($terms)){ if($term->id == $invoice->terms){echo "selected";} } ?> value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Customer email</label>
-                                            <input type="email" class="form-control" id="customer_email" name="customer_email">
+                                            <input type="email" class="form-control" name="customer_email" id="customer_email" value="<?php echo $invoice->customer_email; ?>">
                                             <p><input type="checkbox"> Send later </p>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Location of sale</label>
-                                            <input type="text" class="form-control" name="location_scale">
+                                            <input type="text" class="form-control" name="location_scale" value="<?php echo $invoice->location_scale; ?>">
                                         </div>
                                         <div class="col-md-3">
                                             <label>Tracking no.</label>
-                                            <input type="text" class="form-control" name="tracking_number">
+                                            <input type="text" class="form-control" name="tracking_number" value="<?php echo $invoice->tracking_number; ?>">
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div class="col-md-3">
                                             <label>Ship via</label>
-                                            <input type="text" class="form-control" name="ship_via">
+                                            <input type="text" class="form-control" name="ship_via" value="<?php echo $invoice->ship_via; ?>">
                                         </div>
                                         <div class="col-md-3">
                                             <label>Shipping date</label>
-                                            <input type="date" class="form-control" name="shipping_date">
+                                            <input type="date" class="form-control" name="shipping_date" value="<?php echo $invoice->shipping_date; ?>">
                                         </div>
                                         <div class="col-md-3">
                                         <label>Tags</label> <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
-                                            <input type="text" class="form-control" name="tags">
-                                            <!-- <div class="form-group">
-                                                <div id="label">
-                                                    <label for="tags">Tags</label>
-                                                    <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
-                                                </div>
-                                                <select name="tags[]" id="tags" class="form-control" multiple="multiple"></select>
-                                            </div> -->
+                                            <input type="text" class="form-control" name="tags" value="<?php echo $invoice->tags; ?>">
                                         </div>
                                     <!-- </div>
                                     <div class="row form-group"> -->
                                         <div class="col-md-3">
                                             <label>Billing address</label>
-                                            <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address"></textarea>
+                                            <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address"><?php echo $invoice->billing_address; ?></textarea>
                                         </div>
                                     </div>
 
@@ -364,19 +437,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="work_order">Job# <small class="help help-sm">(optional)</small></label>
                                     <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Field is auto-populated on create Invoice from a Work Order." data-original-title="" title=""></span>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="work_order_number" name="work_order_number">
+                                        <input type="text" class="form-control" id="job_number" name="job_number">
                                     </div>
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label for="purchase_order">Purchase Order# <small class="help help-sm">(optional)</small></label>
                                     <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional if you want to display the purchase order number on invoice." data-original-title="" title=""></span>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="purchase_order" id="purchase_order">
+                                        <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="<?php echo $invoice->purchase_order; ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                             <label>Shipping to</label>
-                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"></textarea>
+                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"><?php echo $invoice->shipping_to_address; ?></textarea>
                                         </div>
 
                                 <!-- <div class="col-md-3 form-group">
@@ -387,39 +460,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <!-- <input type="text" class="form-control" name="invoice_number"
                                            id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
-                                    <input type="text" class="form-control" name="invoice_number"
-                                           id="invoice_number"  value="<?php echo "INV-"; 
-                                           foreach ($number as $num):
-                                                $next = $num->invoice_number;
-                                                $arr = explode("-", $next);
-                                                $date_start = $arr[0];
-                                                $nextNum = $arr[1];
-                                            //    echo $number;
-                                           endforeach;
-                                           $val = $nextNum + 1;
-                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
-                                           ?>" required placeholder="Enter Invoice#"/>
+                                    <!-- <input type="text" class="form-control" name="invoice_number"
+                                           id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
+                                           onChange="jQuery('#customer_id').text(jQuery(this).val());"/> -->
+                                    <input type="text" class="form-control" name="invoice_number" id="invoice_number" value="<?php echo $invoice->invoice_number; ?>" readonly/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="date_issued">Date Issued <span style="color:red;">*</span></label>
-                                    <input type="date" class="form-control" id="start_date_" name="date_issued" required/>
+                                    <input type="date" class="form-control" id="" name="date_issued"  value="<?php echo $invoice->date_issued; ?>"/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="due_date">Due Date <span style="color:red;">*</span></label>
-                                    <input type="date" class="form-control" id="end_date_" name="due_date" required/>
+                                    <input type="date" class="form-control" id="" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="status">Status</label><br/>
                                     <!-- <input type="text" name="status" class="form-control"> -->
                                                 <select name="status" class="form-control">
-                                                    <option value="Draft" selected>Draft</option>
-                                                    <option value="Submitted">Submitted</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Declined">Declined</option>
-                                                    <option value="Schedule">Schedule</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Due"){echo "selected";} } ?> value="Due">Due</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Overdue"){echo "selected";} } ?> value="Overdue">Overdue</option>
                                                 </select>
                                 </div>
                             </div>
@@ -452,75 +517,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
-                                        <!-- <tr>
-                                            <td><input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="item[]">
-                                                <ul class="suggestions"></ul>
-                                            </td>
-                                            <td><select name="item_type[]" class="form-control">
-                                                    <option value="service">Service</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="product">Product</option>
-                                                </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="number" class="form-control price" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td><input type="hidden" class="form-control tax" name="tax[]"
-                                                       data-counter="0" id="tax_0" min="0" value="0">
-                                                       <span id="span_tax_0">0.00 (7.5%)</span></td>
-                                            <td><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr> -->
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                        </tr>
+                                        <?php foreach($itemsDetails as $data){ ?>
+                                                        <tr>
+                                                            <td width="30%">
+                                                            <div class="hidden_mobile_view">
+                                                                <input type="text" class="form-control getItems"
+                                                                    onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
+                                                                <ul class="suggestions"></ul>
+                                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="20%">
+                                                            <div class="hidden_mobile_view">
+                                                            <select name="item_type[]" class="form-control">
+                                                                    <option value="product">Product</option>
+                                                                    <option value="material">Material</option>
+                                                                    <option value="service">Service</option>
+                                                                    <option value="fee">Fee</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item_type; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
+                                                            <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iCost; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->iCost; ?></div></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
+                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
+                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                                    <!-- <span id="span_tax_0">0.0</span> -->
+                                                                    </td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
+                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
+                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                            <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                        </tr>
+                                                    <?php } ?>
                                         </tbody>
                                     </table>
                                     <div class="row">
                                         <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
                                                     class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
-                                        <!-- <a href="#" id="add_another_new_invoice" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a> -->
-                                        <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
-                                    <!-- <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> -->
+                                        <a href="#" id="add_another_new_invoice2" style="color:#02A32C;" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
                                     <!-- <div class="row">
@@ -532,21 +576,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <label style="padding: 0 .75rem;">Subtotal</label>
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
-                                                $ <span id="span_sub_total_invoice">0.00</span>
-                                                <input type="hidden" name="sub_total" id="item_total">
+                                                $ <span id="item_total_text"> <?php echo $invoice->sub_total; ?></span>
+                                                <input type="hidden" name="sub_total" id="item_total" value="<?php echo $invoice->sub_total; ?>">
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
                                             </div>
                                             <div class="col-sm-5">
-                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $invoice->adjustment_name; ?>">
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                $ <input type="number" name="adjustment_input" id="adjustment_input"  value="<?php echo $invoice->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </div>
                                             <div class="col-sm-3 text-right pt-2">
-                                                <label id="adjustment_amount">0.00</label>
+                                                $ <label id="adjustment_amount"><?php echo $invoice->adjustment_value; ?></label>
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
@@ -555,15 +599,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <label style="padding: .375rem .75rem;">Grand Total ($)</label>
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
-                                                <span id="grand_total">0.00</span>
-                                                <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'>
+                                            <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                                $ <span id="grand_total"><?php echo $invoice->grand_total; ?></span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input"  value="<?php echo $invoice->grand_total; ?>">
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
                                             </div>
                                         </div>
                                     </div> -->
+
                                     <div class="row" style="background-color:white;font-size:16px;">
                                         <div class="col-md-7">
                                         </div>
@@ -572,21 +617,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <tr>
                                                     <td>Subtotal</td>
                                                     <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span>
-                                                        <input type="hidden" name="subtotal" id="item_total"></td>
+                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo number_format($invoice->sub_total,2); ?></span>
+                                                        <input type="hidden" name="subtotal" id="item_total" value="<?php echo $invoice->sub_total; ?>"></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Taxes</td>
                                                     <!-- <td></td> -->
-                                                    <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                                    <td colspan="2" align="right">$ <span id="total_tax_"><?php echo number_format($invoice->taxes,2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
+                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
                                                     <td align="center">
-                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($invoice->adjustment_value)){ echo "0"; }else{echo $invoice->adjustment_value; } ?>" class="form-control adjustment_input" style="width:50%;display:inline;">
                                                         <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                                     </td>
-                                                    <td><span id="adjustmentText">0.00</span></td>
+                                                    <td>$ <span id="adjustmentText"><?php echo $invoice->adjustment_value; ?></span></td>
                                                 </tr>
                                                 <!-- <tr>
                                                     <td>Markup $<span id="span_markup"></td> -->
@@ -596,17 +641,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                                     <td>Amount Saved</td>
                                                     <td></td>
-                                                    <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                                    <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input" value="0"></td>
                                                 </tr>
                                                 <tr style="color:blue;font-weight:bold;font-size:16px;">
                                                     <td><b>Grand Total ($)</b></td>
                                                     <td></td>
-                                                    <td><b><span id="grand_total">0.00</span>
-                                                        <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                                    <td><b>$ <span id="grand_total"><?php echo number_format($invoice->grand_total,2); ?></span>
+                                                        <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total; ?>"></b></td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
+
+
                                 </div>
                             </div>
 
@@ -624,7 +671,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <div class="input-group">
-                                        <input type="text" name="deposit_amount" value="0" class="form-control"
+                                        <input type="text" name="deposit_amount"  value="<?php echo $invoice->deposit_request; ?>" class="form-control"
                                                autocomplete="off">
                                     </div>
                                 </div>
@@ -697,13 +744,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-12">
                                     <h5>Message to Customer</h5>
                                     <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
-                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
+                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control"><?php echo $invoice->message_to_customer; ?></textarea>
                                 </div>
                                 <br>
                                 <div class="col-md-12">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"><?php echo $invoice->terms_and_conditions; ?></textarea>
                                 </div>
                             </div>
                             </div>
@@ -735,7 +782,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save as Draft</button>
+                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Update</button>
                                     <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
                                     <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
                                 </div>
@@ -749,8 +796,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <?php echo form_close(); ?>
 
-             <!-- Modal Service Address -->
-             <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
+            <!-- Modal Service Address -->
+            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -769,40 +816,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <!-- <div class="modal right fade" id="tags-modal" tabindex="-1" role="dialog" aria-labelledby="tags-modal">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content" id="tags-list">
+            <!-- Modal New Customer -->
+            <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Manage your tags</h4>
-                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="modal-body pt-3">
-                            <div class="row">
-                                <div class="col-6 d-flex">
-                                    <button type="button" class="btn btn-outline-secondary m-auto" onclick="getTagForm({}, 'create')">Create Tag</button>
-                                </div>
-                                <div class="col-6 d-flex">
-                                    <button type="button" class="btn btn-outline-secondary m-auto" onclick="getGroupTagForm()">Create Group</button>
-                                </div>
-                                <div class="col-12 py-3">
-                                    <input type="text" name="search_tag" id="search-tag" class="form-control" placeholder="Find tag by name">
-                                </div>
-                                <div class="col-12">
-                                    <table id="tags-table" class="table table-bordered table-hover">
-                                        <thead>
-                                            <th>Tags</th>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="modal-body pt-0 pl-3 pb-3"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
-            <!--    Modal for creating rules-->
-            <div class="modal-right-side">
+             <!--    Modal for creating rules-->
+             <div class="modal-right-side">
                                 <div class="modal right fade" id="createTagGroup" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -935,68 +970,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <!--    end of modal-->
 
-                            <!-- Modal Set Markup -->
-                            <div class="modal fade" id="modalSetMarkup" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                                <p>Set percent or fixed markup that will be applied to each item.</p>
-                                                <p>The markup will not be visible to customer estimate.</p>
 
-                                                <div class="btn-group margin-right-sec" role="group" aria-label="...">
-                                                    <button class="btn btn-default" type="button" name="markup_type_percent">%</button>
-                                                    <button class="btn btn-success" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
-                                                    <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
-                                                </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary setmarkup">Set Markup</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <!--    Modal for creating rules-->
-                            <div class="modal-right-side">
-                                <div class="modal right fade" id="createTag" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h3 class="modal-title" id="myModalLabel2" >Create New Tag</h3>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            </div>
-                                            <form id="create-tag-form">
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="">Tag name</label>
-                                                        <input type="text" name="tag_name" class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="">Group</label>
-                                                        <select class="form-control" name="group_id" id="group-tags-select2">
-                                                            <option></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success">Save</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--    end of modal-->
 
                             <div class="modal right fade" id="tags-modal" tabindex="-1" role="dialog" aria-labelledby="tags-modal">
                                 <div class="modal-dialog" role="document">
@@ -1030,9 +1004,41 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
 
+            <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frm_add_new_source" name="modal-form" method="post">
+                                <div class="validation-error" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label>Source Name</label> <span class="form-required">*</span>
+                                    <input type="text" name="title" value="" class="form-control" autocomplete="off">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- page wrapper end -->
+</div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1044,11 +1050,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_estimate_sales" class="table table-hover" style="width: 100%;">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <td>Rebate</td>
+                                            <td> Rebatable</td>
                                             <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
@@ -1059,20 +1065,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
                                                 <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
                                                     </label>
                                                 <?php }else{ ?>
-                                                    <!-- <label class="switch">
+                                                    <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
+                                                    </label>
                                                 <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
@@ -1095,84 +1096,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
-
-            <!-- Modal New Customer -->
-            <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3"></div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Source</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="frm_add_new_source" name="modal-form" method="post">
-                                <div class="validation-error" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label>Source Name</label> <span class="form-required">*</span>
-                                    <input type="text" name="title" value="" class="form-control"
-                                           autocomplete="off">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary save">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- page wrapper end -->
-</div>
 <?php include viewPath('accounting/add_new_term'); ?>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer'); ?>
+
 <script>
-
-    // document.getElementById('contact_mobile').addEventListener('input', function (e) {
-    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    // });
-    // document.getElementById('contact_phone').addEventListener('input', function (e) {
-    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    // });
-
-    // function validatecard() {
-    //     var inputtxt = $('.card-number').val();
-
-    //     if (inputtxt == 4242424242424242) {
-    //         $('.require-validation').submit();
-    //     } else {
-    //         alert("Not a valid card number!");
-    //         return false;
-    //     }
-    // }
-
     $(document).ready(function () {
 	$('#datepickerinv222').datepicker({
       uiLibrary: 'bootstrap'
@@ -1180,10 +1107,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 });
 
 </script>
+
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>
 function initialize() {
-          var input = document.getElementById('job_location');
+          var input = document.getElementById('invoice_jobs_location');
           var autocomplete = new google.maps.places.Autocomplete(input);
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
@@ -1210,34 +1138,8 @@ $(document).ready(function(){
             dataType: 'json',
             success: function(response){
                 // alert('success');
-                // console.log(response['customer']);
-
-                if(response['customer'].cross_street.trim().length == 0){
-                    var cross = '';
-                }else{
-                    var cross = response['customer'].cross_street;
-                }
-
-                if(response['customer'].city.trim().length == 0){
-                    var city = '';
-                }else{
-                    var city = response['customer'].city;
-                }
-
-                if(response['customer'].state.trim().length == 0){
-                    var state = '';
-                }else{
-                    var state = response['customer'].state;
-                }
-
-                if(response['customer'].country.trim().length == 0){
-                    var country = '';
-                }else{
-                    var country = response['customer'].country;
-                }
-
-
-            $("#job_location").val(cross + ' ' + city + ' ' + state + ' ' + country);
+                console.log(response['customer']);
+            $("#invoice_jobs_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
             $("#customer_email").val(response['customer'].email);
             $("#shipping_address").val(response['customer'].mail_add);
             $("#billing_address").val(response['customer'].mail_add);
@@ -1249,19 +1151,9 @@ $(document).ready(function(){
                 }
         });
     });
-    $(document).on('click','.setmarkup',function(){
-       // alert('yeah');
-        var markup_amount = $('#markup_input').val();
-
-        $("#markup_input_form").val(markup_amount);
-        $("#span_markup_input_form").text(markup_amount);
-        $("#span_markup").text(markup_amount);
-
-        $('#modalSetMarkup').modal('toggle');
-    });
 });
-
 </script>
+
 
 <script>
     //dropdown checkbox

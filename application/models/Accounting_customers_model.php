@@ -106,4 +106,20 @@ class Accounting_customers_model extends MY_Model
             return false;
         }
     }
+    public function get_accounting_timesheet_settings($company_id)
+    {
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get('accounting_timesheet_settings');
+        return $query->row();
+    }
+    public function update_accounting_timesheet_settings($data)
+    {
+        if ($this->get_accounting_timesheet_settings(logged("company_id"))>0) {
+            $this->db->where('company_id', logged("company_id"));
+            $this->db->update('accounting_timesheet_settings', $data);
+        } else {
+            $data["company_id"] = logged("company_id");
+            $this->db->insert('accounting_timesheet_settings', $data);
+        }
+    }
 }

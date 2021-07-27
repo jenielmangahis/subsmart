@@ -1,3 +1,19 @@
+<?php 
+                    $show_services_val=0;
+                    $make_time_activity_billable=0;
+                    $show_services_checked="";
+                    $make_time_activity_checked="";
+                    
+                    if($accounting_timesheet_settings->service == 1){
+                        $show_services_val=1;
+                        $show_services_checked="checked";
+                    }
+                    if($accounting_timesheet_settings->billable == 1){
+                        $make_time_activity_billable=1;
+                        $make_time_activity_checked="checked";
+                    }
+                    ?>
+
 <div class="full-screen-modal">
     <div id="time_activity_settings_modal">
         <div class="content">
@@ -15,14 +31,14 @@
                 <div class="options">
                     <div class="form-check">
                         <div class="checkbox checkbox-sec margin-right">
-                            <input type="checkbox" name="show_service" id="show_service" checked>
+                            <input type="checkbox" name="show_service" id="show_service" <?=$show_services_checked?>>
                             <label for="show_service"><span>Show service</span></label>
                         </div>
                     </div>
                     <div class="form-check">
                         <div class="checkbox checkbox-sec margin-right">
                             <input type="checkbox" name="make_time_activity_billable" id="make_time_activity_billable"
-                                checked>
+                                <?=$make_time_activity_checked?>>
                             <label for="make_time_activity_billable"><span>Make time activities billable</span></label>
                         </div>
                     </div>
@@ -46,8 +62,8 @@
                 </div>
                 <form action="#" method="post">
                     <input type="text" name="time_activity_id" style="display: none;">
-                    <input type="text" name="show_services" value="1" style="display: none;">
-                    <input type="text" name="make_time_activity_billable" value="1" style="display: none;">
+                    <input type="text" name="show_services" value="<?=$show_services_val?>" style="display: none;">
+                    <input type="text" name="make_time_activity_billable" value="<?=$make_time_activity_billable?>" style="display: none;">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -61,7 +77,7 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="label">Name</div>
-                                            <select class="form-control required" name="name" required="">
+                                            <select class="form-control required" name="name" id="time_activity_modal_name" required="">
                                                 <option value="" disabled selected>Whose time are you tracking?
                                                 </option>
                                                 <optgroup label="Employees">
@@ -268,5 +284,3 @@
     </div>
     <!--end of modal-->
 </div>
-
-<link rel="stylesheet" href="https://nsmartrac.com/assets/plugins/select2/dist/css/select2.min.css">
