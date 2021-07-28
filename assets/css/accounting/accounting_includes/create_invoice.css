@@ -7,7 +7,11 @@
     font-size: 12px;
 }
 
-#create_invoice_modal form label.faded-info {
+#create_invoice_modal #grand_total_sr_t {
+    font-size: 100px;
+}
+
+#create_invoice_modal form .faded-info {
     font-style: italic;
     color: #333333b3;
 }
@@ -603,7 +607,7 @@ div#saved-notification-modal-section {
     padding-bottom: 0;
 }
 
-#create_invoice_modal form .tags .manage-tags {
+#create_invoice_modal form .manage-tags {
     font-size: 12px;
     color: #0E7EC8;
     cursor: pointer;
@@ -669,12 +673,22 @@ div#create_invoice_modal form .item-totals .amount {
     font-weight: 600;
 }
 
+div#create_invoice_modal form .item-totals div {
+    padding: 3px 0;
+}
+
 div#create_invoice_modal form .item-totals .label {
-    width: 60%;
+    width: 50%;
 }
 
 div#create_invoice_modal form .item-totals .amount {
-    width: 40%;
+    width: 50%;
+}
+
+div#create_invoice_modal form .item-totals .amount .grand-total {
+    padding-top: 10px;
+    font-size: 30px;
+    font-weight: 700;
 }
 
 div#create_invoice_modal form .item-totals .label .taxable-sub {
@@ -688,4 +702,59 @@ div#create_invoice_modal form .item-totals .label .taxable-sub span {
 
 div#create_invoice_modal form .table tbody tr td.item-action a {
     color: #999999;
+}
+
+div#create_invoice_modal form .item-totals input[name="adjustment_value"] {
+    width: 100px!important;
+    margin-left: 10px;
+    text-align: right;
+    border: 1px dashed #d1d1d1!important;
+}
+
+div#create_invoice_modal form .item-totals input[name="adjustment_name"] {
+    width: 150px!important;
+    text-align: right;
+    border: 1px dashed #d1d1d1!important;
+}
+
+div#create_invoice_modal form .item-totals input[name="adjustment_name"]:focus,
+div#create_invoice_modal form .item-totals input[name="adjustment_value"]:focus {
+    border-color: rgba(126, 239, 104, 0.8)!important;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03!important;
+    font-style: normal;
+}
+
+div#create_invoice_modal form .item-totals span.clarification {
+    right: -20px;
+    z-index: 1;
+    position: absolute;
+}
+
+div#create_invoice_modal form .white-section .form-check label {
+    font-size: 15px;
+}
+
+#create_invoice_modal table tr td {
+    position: relative;
+    font-size: 12px;
+}
+
+#create_invoice_modal table .suggestions li:hover {
+    background: #2ca01cd4;
+    color: #fff;
+}
+
+#create_invoice_modal table .suggestions li {
+    border-bottom: solid 1px #DEE2E6;
+    font-size: 12px;
+}
+
+#create_invoice_modal table .suggestions {
+    width: 100%;
+    box-shadow: 3px 6px 20px #2829294d;
+    max-height: 300px;
+    overflow: auto;
 }

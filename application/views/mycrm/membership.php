@@ -134,6 +134,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <?php } ?>                    
                 </div>
             </div>
+            <div class="row margin-bottom-sec">
+                <div class="col-md-4">
+                    <strong>Number of license</strong>
+                </div>
+                <div class="col-md-5"><?= $client->number_of_license; ?><a class="btn-buy-license btn btn-sm btn-primary" href="javascript:void(0);" style="margin-left: 10px;">Buy License</a></div>
+            </div>
             <?php if($client->payment_method == 'offer code'){ ?>
                 <div class="row margin-bottom-sec">
                     <div class="col-md-4">
@@ -485,6 +491,122 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 </div>
 
+<div class="modal fade" id="modal-buy-license" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Buy License</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="frm-buy-license" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-body">                            
+                        <div id="credit_card">
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Price per license
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="text" class="form-control" name="" value="<?= number_format($plan->price_per_license, 2); ?>" id="price-per-license" value="" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Number of license to buy <br>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="num_license" id="num-license" value="1" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Card Number
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="card_number" id="" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    <label for="">Expiration 
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <select id="exp_month" name="exp_month" class="input_select exp_month" required>
+                                                <option  value=""></option>
+                                                <option  value="01">01</option>
+                                                <option  value="02">02</option>
+                                                <option  value="03">03</option>
+                                                <option  value="04">04</option>
+                                                <option  value="05">05</option>
+                                                <option  value="06">06</option>
+                                                <option  value="07">07</option>
+                                                <option  value="08">08</option>
+                                                <option  value="09">09</option>
+                                                <option  value="10">10</option>
+                                                <option  value="11">11</option>
+                                                <option  value="12">12</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select id="exp_year" name="exp_year" class="input_select exp_year" required>
+                                                <option  value=""></option>
+                                                <option  value="2021">2021</option>
+                                                <option  value="2022">2022</option>
+                                                <option  value="2023">2023</option>
+                                                <option  value="2024">2024</option>
+                                                <option  value="2025">2025</option>
+                                                <option  value="2026">2026</option>
+                                                <option  value="2027">2027</option>
+                                                <option  value="2028">2028</option>
+                                                <option  value="2029">2029</option>
+                                                <option  value="2030">2030</option>
+                                                <option  value="2031">2031</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Total Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="total_license" id="license-total-amount" value="<?= number_format($plan->price_per_license, 2); ?>" disabled="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+            <button class="btn btn-primary btn-modal-buy-license" type="submit">Buy</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+
 <div class="modal fade" id="modal-pay-subscription" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -640,6 +762,17 @@ $(function(){
     });
     $(".exp_year").select2({
         placeholder: "Select Year"
+    });
+
+    $(".btn-buy-license").click(function(){
+        $("#modal-buy-license").modal('show');
+    });
+
+    $("#num-license").change(function(){
+        var price = $("#price-per-license").val();
+        var total_price = price * $(this).val();
+
+        $("#license-total-amount").val(total_price.toFixed(2));
     });
 
     /*$('.subscription_plans').on('select2:selecting', function(e) {

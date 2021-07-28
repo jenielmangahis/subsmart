@@ -255,6 +255,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
                 break;
                 case 'weekly_timesheet_modal':
+                    $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -1673,6 +1674,7 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
+            $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
             $name = explode('-', $data['name']);
 
             if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
@@ -1682,13 +1684,14 @@ class Accounting_modals extends MY_Controller {
                     'name_key' => $name[0],
                     'name_id' => $name[1],
                     'customer_id' => $data['customer'],
-                    'service_id' => $data['service'],
-                    'billable' => (isset($data['billable'])) ? 1 : 0,
-                    'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
-                    'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
-                    'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
-                    'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
-                    'time' => $data['time'],
+                    'service_id' => $timesheetSettings->service === "1" ? $data['service'] : null,
+                    'billable' => $timesheetSettings->billable === "1" && isset($data['billable']) ? 1 : 0,
+                    'hourly_rate' => $timesheetSettings->billable === "1" && isset($data['billable']) ? $data['hourly_rate'] : null,
+                    'taxable' => $timesheetSettings->billable === "1" && isset($data['billable']) && isset($data['taxable']) ? 1 : 0,
+                    'start_time' => isset($data['start_end_time']) ? $data['start_time'] : null,
+                    'end_time' => isset($data['start_end_time']) ? $data['end_time'] : null,
+                    'break_duration' => isset($data['start_end_time']) ? $data['time'] : null,
+                    'time' => isset($data['start_end_time']) ? null : $data['time'],
                     'description' => $data['description'],
                     'status' => 1,
                     'created_at' => date('Y-m-d h:i:s'),

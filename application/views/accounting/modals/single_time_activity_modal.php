@@ -103,7 +103,7 @@
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
-                                                <div class="form-group" <?=$timesheetSettings->service === "0" ? 'style="display:none"' : ''?>>
+                                                <div class="form-group <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">
                                                     <label for="service">Service</label>
                                                     <select name="service" id="service" class="form-control" required>
                                                         <option value="" disabled selected>Choose the service worked on
@@ -116,8 +116,9 @@
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <?php if($timesheetSettings->billable === "1") : ?>
                                                 <div class="form-check form-check-inline">
-                                                    <div class="checkbox checkbox-sec margin-right" <?=$timesheetSettings->billable === "0" ? 'style="display:none"' : ''?>>
+                                                    <div class="checkbox checkbox-sec margin-right">
                                                         <input class="form-check-input" type="checkbox" name="billable"
                                                             id="billable" value="1" onclick="showHiddenFields(this)">
                                                         <label class="form-check-label" for="billable">Billable(/hr)</label>
@@ -132,6 +133,7 @@
                                                         <label for="taxable" class="form-check-label">Taxable</label>
                                                     </div>
                                                 </div>
+                                                <?php endif; ?>
                                             </div>
 
                                             <div class="col-md-5">

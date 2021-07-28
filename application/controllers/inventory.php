@@ -52,23 +52,18 @@ class Inventory extends MY_Controller
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
         } else {
-            
             if( $role_id == 1 || $role_id == 2 ){
                 $arg = array('type'=>ucfirst($type), 'is_active'=>1); 
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1); 
             }
-
             $items = $this->items_model->getByWhere($arg);
         }
-
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
             'company_id' => $comp_id
         );
         $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
-        //print_r($this->page_data['items']);
-
         $this->load->view('inventory/list', $this->page_data);
     }
 
@@ -289,6 +284,19 @@ class Inventory extends MY_Controller
             redirect(base_url('inventory'));
         }
 
+        $get_items_categories = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'item_categories',
+            'select' => '*',
+        );
+        $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
+
+        $get_vendors = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'vendor',
+            'select' => '*',
+        );
+        $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
 
         $this->page_data['page_title'] = 'Add Inventory Item';
         $this->load->view('inventory/add', $this->page_data);
@@ -312,9 +320,21 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function  save_new_item()
+    {
+        $input = $this->input->post();
+        $input['is_active'] =  1;
+        $input['company_id'] =  logged('company_id');
+        if ($this->general->add_($input, "items")) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
+
     public function saveItems()
     {
-        postAllowed();
+        //postAllowed();
         $comp_id = logged('company_id');
         $id = $this->input->post('item_id');
         
@@ -580,11 +600,14 @@ class Inventory extends MY_Controller
     }
 
     public function delete() {
-        $get = $this->input->get();
-
-        $this->items_model->delete($get['id']);
-
-        redirect('inventory');
+        $id = $_POST['id'];
+        $remove_item = array(
+            'where' => array('id' =>$id),
+            'table' => 'items'
+        );
+        if ($this->general->delete_($remove_item)) {
+            echo '1';
+        }
     }
 
     public function categorizeNameAlphabetically($items) {

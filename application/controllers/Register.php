@@ -901,6 +901,7 @@ class Register extends MYF_Controller {
     public function ajax_create_registration()
     {
         $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('NsmartPlan_model');
 
         $is_success = true;
         $is_valid   = false;
@@ -936,6 +937,7 @@ class Register extends MYF_Controller {
                 $plan_amount = $post['plan_price_discounted'];
             }
 
+            $plan = $this->NsmartPlan_model->getById($post['plan_id']);
             $next_billing_date = date("Y-m-d", strtotime("+1 month"));
             $today = strtotime(date("Y-m-d"));
             $cid   = $this->Clients_model->create([
@@ -960,6 +962,7 @@ class Register extends MYF_Controller {
                 'is_trial' => $is_trial,
                 'is_startup' => 1,              
                 'is_auto_renew' => 0,  
+                'number_of_license' => $plan->num_license,
                 'next_billing_date' => $next_billing_date,
                 'num_months_discounted' => $num_months_discounted
             ]);

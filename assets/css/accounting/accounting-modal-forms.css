@@ -158,7 +158,7 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
 }
 
 /* Single Time Activity Modal */
-#singleTimeModal .modal-header button#time-activity-settings-button {
+#singleTimeModal .modal-header button#time-activity-settings-button, #weeklyTimesheetModal .modal-header button#time-activity-settings-button {
     border: none;
     font-size: 1.5rem;
     font-weight: 700;
@@ -170,6 +170,6 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     margin: -1rem -1rem -1rem auto;
 }
 
-#singleTimeModal .modal-header button#time-activity-settings-button:hover {
+#singleTimeModal .modal-header button#time-activity-settings-button:hover, #weeklyTimesheetModal .modal-header button#time-activity-settings-button:hover {
     opacity: .75;
 }

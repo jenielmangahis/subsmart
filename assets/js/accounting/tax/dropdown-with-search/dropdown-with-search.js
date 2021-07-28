@@ -7,6 +7,10 @@ class Accounting__DropdownWithSearch {
     this.attachEventListeners();
   }
 
+  set onChange(handler) {
+    this._onChange = handler;
+  }
+
   createOptions() {
     if (this.$element.find(".dropdownWithSearch__options").length > 0) {
       return;
@@ -72,6 +76,10 @@ class Accounting__DropdownWithSearch {
         this.$element.find("input").val($target.attr("data-value"));
         this.hideOptions();
       }
+
+      if (typeof this._onChange === "function") {
+        this._onChange($target);
+      }
     });
 
     // clicking outside will hide options
@@ -102,6 +110,22 @@ class Accounting__DropdownWithSearch {
         this.hideOptions();
       }
     });
+
+    $input.on("focus", (event) => {
+      const { value } = event.target;
+      if (this.isValidOption(value)) {
+        $input.attr("data-prev-value", value);
+      }
+    });
+
+    $input.on("focusout", () => {
+      const value = $input.attr("data-prev-value");
+      $input.val(value ? value : "");
+    });
+  }
+
+  isValidOption(option) {
+    return this.options.some((currOption) => currOption === option);
   }
 
   showOptions() {
