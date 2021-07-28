@@ -3071,10 +3071,14 @@ $(function() {
         $('#modal-container form#modal-form').submit();
     });
 
-    $(document).on('click', '#singleTimeModal #time-activity-settings-button', function(e) {
+    $(document).on('click', '#singleTimeModal #time-activity-settings-button, #weeklyTimesheetModal #time-activity-settings-button', function(e) {
         e.preventDefault();
 
-        $('#singleTimeModal').parent().prev().modal('show');
+        if($('#singleTimeModal').length > 0) {
+            $('#singleTimeModal').parent().prev().modal('show');
+        } else {
+            $('#weeklyTimesheetModal').parent().prev().modal('show');
+        }
     });
 
     $(document).on('change', '#time-activity-settings #toggle-service, #time-activity-settings #toggle-billable', function(e) {
@@ -3085,20 +3089,42 @@ $(function() {
                 switch(field) {
                     case 'service' :
                         if(value === 1) {
-                            $('#time-activity-settings').next().children('div.modal').find('#service').prop('required', false).parent().show();
-                            $('#time-activity-settings').next().children('div.modal').find('select[name="service[]"]').prop('required', false).next().show();
+                            $('#singleTimeModal').find('#service').prop('required', true).parent().removeClass('hide');
+                            $('#weeklyTimesheetModal').find('select[name="service[]"]').prop('required', true).parent().removeClass('hide');
                         } else {
-                            $('#time-activity-settings').next().children('div.modal').find('#service').prop('required', false).parent().hide();
-                            $('#time-activity-settings').next().children('div.modal').find('select[name="service[]"]').prop('required', false).next().hide();
+                            $('#singleTimeModal').find('#service').prop('required', false).parent().addClass('hide');
+                            $('#weeklyTimesheetModal').find('select[name="service[]"]').prop('required', false).parent().addClass('hide');
                         }
                     break;
                     case 'billable' :
                         if(value === 1) {
-                            $('#time-activity-settings').next().children('div.modal').find('#billable').parent().show();
-                            $('#time-activity-settings').next().children('div.modal').find('input[name="billable[]"]').parent().show();
+                            $('#singleTimeModal').next().children('div.modal').find('.card-body').children('.row:nth-child(2)').children('div:first-child()').append(`
+                            <div class="form-check form-check-inline">
+                                <div class="checkbox checkbox-sec margin-right ">
+                                    <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onclick="showHiddenFields(this)">
+                                    <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                </div>
+                                <input type="number" name="hourly_rate" id="hourlyRate" class="w-25 form-control hide">
+                            </div>
+                            <div class="form-check hide">
+                                <div class="checkbox checkbox-sec">
+                                    <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1">
+                                    <label for="taxable" class="form-check-label">Taxable</label>
+                                </div>
+                            </div>
+                            `);
+                            $('#weeklyTimesheetModal').find('#timesheet-table').find('select[name="customer[]"]').parent().next().append(`
+                            <div class="form-check form-check-inline">
+                                <div class="checkbox checkbox-sec margin-right">
+                                    <input class="form-check-input weekly-billable" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                    <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                </div>
+                            </div>
+                            `);
                         } else {
-                            $('#time-activity-settings').next().children('div.modal').find('#billable').parent().hide();
-                            $('#time-activity-settings').next().children('div.modal').find('input[name="billable[]"]').parent().hide();
+                            $('#singleTimeModal').next().children('div.modal').find('#billable').parent().parent().next().remove();
+                            $('#singleTimeModal').next().children('div.modal').find('#billable').parent().parent().remove();
+                            $('#weeklyTimesheetModal').find('input[name="billable[]"]').parent().parent().parent().html('');
                         }
                     break;
                 }
@@ -3766,9 +3792,11 @@ const showHiddenFields = (el) => {
 
     if($(el).hasClass('weekly-billable')) {
         if($(el).prop('checked') === true) {
-            $(el).parent().append(`<input type="number" name="hourly_rate[]" class="ml-2 w-25 form-control">
-            <input type="checkbox" name="taxable[]" class="ml-2 form-check-input" value="1">
-            <label class="form-check-label" for="taxable">Taxable</label>`);
+            $(el).parent().parent().append(`<input type="number" name="hourly_rate[]" class="ml-2 w-25 form-control">
+            <div class="checkbox checkbox-sec">
+                <input type="checkbox" name="taxable[]" class="ml-2 form-check-input" value="1">
+                <label class="form-check-label" for="taxable">Taxable</label>
+            </div>`);
         } else {
             $(el).parent().find('input[name="hourly_rate[]"]').remove();
             $(el).parent().find('input[name="taxable[]"]').remove();

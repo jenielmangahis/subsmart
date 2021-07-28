@@ -29,7 +29,7 @@ add_css(array(
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <form method="post">
+                        <form id="service_form">
                             <div class="row ">
                                 <div class="col-md-6">
                                     <div class="row form_line">
@@ -105,3 +105,24 @@ add_footer_js(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 <?php include viewPath('customer/js/add_advance_js'); ?>
+<script>
+    $(document).ready(function() {
+        $("#service_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/inventory/save_new_item",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    console.log(data);
+                    window.location.href="<?= base_url()?>/inventory";
+                    //sucess_add_job(data);
+                }, beforeSend: function() {
+                    document.getElementById('overlay').style.display = "flex";
+                }
+            });
+        });
+    });
+</script>

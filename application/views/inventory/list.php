@@ -52,17 +52,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     <table class="table table-hover table-bordered table-striped" style="width:100%;" id="inventoryOnHandItems">
                                         <thead>
-                                        <tr>
-                                            <th class="text-center"><input type="checkbox" class="form-control" id="inventoryItemCheckAll" value=""></th>
-                                            <th scope="col"><strong>Item</strong></th>
-                                            <th scope="col"><strong>Model</strong></th>
-                                            <th scope="col"><strong>Brand</strong></th>
-                                            <th scope="col"><strong>QTY-OH</strong></th>
-                                            <th scope="col"><strong>Qty-Ordered</strong></th>
-                                            <th scope="col"><strong>Re-order Point</strong></th>
-                                            <th scope="col"><strong>Locations</strong></th>
-                                            <th scope="col" class="text-center"><strong>Actions</strong></th>
-                                        </tr>
+                                            <tr>
+                                                <th class="text-center"><input type="checkbox" class="form-control" id="inventoryItemCheckAll" value=""></th>
+                                                <th scope="col"><strong>Item</strong></th>
+                                                <th scope="col"><strong>Model</strong></th>
+                                                <th scope="col"><strong>Brand</strong></th>
+                                                <th scope="col"><strong>QTY-OH</strong></th>
+                                                <th scope="col"><strong>Qty-Ordered</strong></th>
+                                                <th scope="col"><strong>Re-order Point</strong></th>
+                                                <th scope="col"><strong>Locations</strong></th>
+                                                <th scope="col" ><strong>Actions</strong></th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                         <?php foreach($items as $item) : ?>
@@ -98,9 +98,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>">
+                                                                        <span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                                </li>
                                                                 <li role="separator" class="divider"></li>
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                                <li role="presentation">
+                                                                    <a href="javascript:void(0)" id="<?= $item[3]; ?>" role="menuitem" tabindex="-1" class="delete_item">
+                                                                        <span class="fa fa-trash-o icon"></span> Delete
+                                                                    </a>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -636,3 +642,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </div>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script>
+    $(".delete_item").on("click", function(event) {
+        var ID = this.id;
+        // alert(ID);
+        Swal.fire({
+            title: 'Continue to remove this Item?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/inventory/delete",
+                    data: { id: ID}, // serializes the form's elements.
+                    success: function(data) {
+                        if (data === "1") {
+                            window.location.reload();
+                        } else {
+                            console.log(data);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

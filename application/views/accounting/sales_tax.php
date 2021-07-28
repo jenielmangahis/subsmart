@@ -100,7 +100,7 @@ include viewPath('includes/header');
                     <div class="dropdownWithSearchContainer" id="dueDateInputs">
                         <div>
                             <label>Due Date Start</label>
-                            <div class="dropdownWithSearch">
+                            <div data-type="due_start" class="dropdownWithSearch">
                                 <input type="text" class="form-control dropdownWithSearch__input">
                                 <button class="dropdownWithSearch__btn">
                                     <i class="fa fa-chevron-down"></i>
@@ -109,7 +109,7 @@ include viewPath('includes/header');
                         </div>
                         <div>
                             <label>Due Date End</label>
-                            <div class="dropdownWithSearch">
+                            <div data-type="due_end" class="dropdownWithSearch">
                                 <input type="text" class="form-control dropdownWithSearch__input">
                                 <button class="dropdownWithSearch__btn">
                                     <i class="fa fa-chevron-down"></i>
@@ -117,7 +117,10 @@ include viewPath('includes/header');
                             </div>
                         </div>
 
-                        <button class="btn btn-primary">Refresh</a>
+                        <button class="btn btn-primary">Refresh</button>
+                        <span class="dropdownWithSearchContainer__error d-none">
+                            Invalid date range, end date must be after start date.
+                        </span>
                     </div>
 
                     <br>
@@ -319,7 +322,7 @@ include viewPath('includes/header');
                 <div class="form-group">
                     <label for="reason">Reason</label>
                     <select class="form-control" id="reason">
-                        <option selected>Reason</option>
+                        <option selected hidden>Reason</option>
                         <option value="credit_or_discount">Credit/Discount</option>
                         <option value="prior_prepayments">Prior prepayments</option>
                         <option value="pre_payments">Pre payments</option>
@@ -344,7 +347,7 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="amount">Amount</label>
-                    <input type="text" class="form-control" id="amount" placeholder="Enter amount">
+                    <input type="number" class="form-control" id="amount" placeholder="Enter amount">
                 </div>
 
                 <div>

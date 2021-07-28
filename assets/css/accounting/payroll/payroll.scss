@@ -1,0 +1,53 @@
+.payrollTaxTab {
+  display: flex;
+  align-items: center;
+
+  &__btn {
+    --size: 40px;
+    --color: rgb(57, 58, 61);
+    --color-border: rgb(57, 58, 61);
+    --color-background: #fff;
+    --color-bg-hover: #e4e4e4;
+
+    border: 0;
+    padding: 0;
+    outline: 0;
+    height: var(--size);
+    font-weight: 700;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-border);
+    background-color: var(--color-background);
+    color: var(--color);
+
+    &--active {
+      --color: #fff;
+      --color-bg-hover: #4c4c4c;
+      --color-background: rgb(57, 58, 61);
+    }
+
+    &--first {
+      border-top-left-radius: var(--size);
+      border-bottom-left-radius: var(--size);
+      border-right: 0;
+    }
+
+    &--last {
+      border-top-right-radius: var(--size);
+      border-bottom-right-radius: var(--size);
+      border-left: 0;
+    }
+
+    &:hover {
+      background-color: var(--color-bg-hover);
+    }
+
+    &:active,
+    &:hover,
+    &:visited {
+      color: var(--color);
+    }
+  }
+}

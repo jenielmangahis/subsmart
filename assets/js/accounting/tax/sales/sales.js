@@ -44,6 +44,8 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 }
 
 (async function Accounting__SalesTax() {
+  console.clear();
+
   const data = [
     {
       date: "July 2020",
@@ -109,21 +111,44 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   });
 
   // setup dropdown with search
-  $("#dueDateInputs .dropdownWithSearch").each((_, element) => {
-    new Accounting__DropdownWithSearch(element, [
-      "August 2020",
-      "September 2020",
-      "October 2020",
-      "November 2020",
-      "December 2020",
-      "January 2021",
-      "February 2021",
-      "March 2021",
-      "April 2021",
-      "May 2021",
-      "June 2021",
-      "July 2021",
-    ]);
+  const $dueStart = $("#dueDateInputs [data-type=due_start]");
+  const $dueEnd = $("#dueDateInputs [data-type=due_end]");
+  const $dueButton = $("#dueDateInputs .btn-primary");
+
+  const $dueStartInput = $dueStart.find("input");
+  const $dueEndInput = $dueEnd.find("input");
+  const $error = $("#dueDateInputs .dropdownWithSearchContainer__error");
+
+  const dates = [
+    "August 2020",
+    "September 2020",
+    "October 2020",
+    "November 2020",
+    "December 2020",
+    "January 2021",
+    "February 2021",
+    "March 2021",
+    "April 2021",
+    "May 2021",
+    "June 2021",
+    "July 2021",
+  ];
+
+  [$dueStart, $dueEnd].forEach(($element) => {
+    const element = $element.get(0);
+    const dropdown = new Accounting__DropdownWithSearch(element, dates);
+    dropdown.onChange = function () {
+      const dueEnd = new Date($dueEndInput.val()).getTime();
+      const dueStart = new Date($dueStartInput.val()).getTime();
+
+      if (isNaN(dueStart) || dueStart > dueEnd) {
+        $dueButton.attr("disabled", true);
+        $error.removeClass("d-none");
+      } else {
+        $dueButton.removeAttr("disabled");
+        $error.addClass("d-none");
+      }
+    };
   });
 
   const creditOrDiscountOptions = [
@@ -253,81 +278,379 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     },
   ];
 
-  const priorPrepayments = [
+  const priorPrepaymentsOptions = creditOrDiscountOptions;
+
+  const prePaymentsOptions = [
+    {
+      text: "Accounting",
+      right_text: "Expenses",
+    },
+    {
+      text: "Advertising/Promotional/Incentives",
+      right_text: "Expenses",
+    },
+    {
+      text: "Auto Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Building Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Commission",
+      right_text: "Expenses",
+    },
+    {
+      text: "Customer Reimbursement",
+      sub_texts: ["Intuit Return", "NMI"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Depreciation Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Donations",
+      right_text: "Expenses",
+    },
+    {
+      text: "Gifts",
+      right_text: "Expenses",
+    },
+    {
+      text: "Legal Exspenses",
+      right_text: "Expenses",
+    },
+    {
+      text: "License",
+      right_text: "Expenses",
+    },
+    {
+      text: "Loan",
+      right_text: "Expenses",
+    },
+    {
+      text: "Loss of Income",
+      sub_texts: ["Collections", "Late - Overdue &gt;90 days"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Merchant Fees",
+      sub_texts: ["Intuit / QuickBooks", "NMI"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Office Expenses",
+      right_text: "Expenses",
+    },
+    {
+      text: "Office/General Administrative E",
+      right_text: "Expenses",
+    },
+    {
+      text: "Payroll Expenses",
+      sub_texts: ["Taxes", "Wages"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Purchases-1",
+      right_text: "Expenses",
+    },
+    {
+      text: "QuickBooks Payments Fees",
+      right_text: "Expenses",
+    },
+    {
+      text: "QuickBooks Payments Fees-1",
+      right_text: "Expenses",
+    },
+    {
+      text: "Reimburstment",
+      right_text: "Expenses",
+    },
+    {
+      text: "Rental Reimbursement",
+      right_text: "Expenses",
+    },
+    {
+      text: "Technician/Installer",
+      right_text: "Expenses",
+    },
+    {
+      text: "Travel Meals",
+      right_text: "Expenses",
+    },
+    {
+      text: "Unapplied Cash Bill Payment Exp",
+      right_text: "Expenses",
+    },
+    {
+      text: "Unapplied Cash Bill Payment Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Uncategorized Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Utilities",
+      right_text: "Expenses",
+    },
+    {
+      text: "Other Miscellaneous Expense",
+      right_text: "Other Expenses",
+    },
+    {
+      text: "Reconciliation Discrepancies",
+      right_text: "Other Expenses",
+    },
+  ];
+
+  const otherOptions = [
+    {
+      text: "Accounting",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Advertising/Promotional/Incentives",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Auto Expense",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Building Expense",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Commission",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Customer Reimbursement",
+      sub_texts: ["Intuit Return", "NMI"],
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Depreciation Expense",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Donations",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Gifts",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Legal Exspenses",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "License",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Loan",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Loss of Income",
+      sub_texts: ["Collections", "Late - Overdue >90 days"],
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Merchant Fees",
+      sub_texts: ["Intuit / QuickBooks", "NMI"],
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Office Expenses",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Office/General Administrative E",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Payroll Expenses",
+      sub_texts: ["Taxes", "Wages"],
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Purchases-1",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "QuickBooks Payments Fees",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "QuickBooks Payments Fees-1",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Reimburstment",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Rental Reimbursement",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Technician/Installer",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Travel Meals",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Unapplied Cash Bill Payment Exp",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Unapplied Cash Bill Payment Expense",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Uncategorized Expense",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Utilities",
+      right_text: "Expenses",
+    },
+
     {
       text: "ACH Settlement / NMI",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Billable Expense Income",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Guardian",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Income - Revenue",
-      right_text: "Income",
       sub_texts: [
         "ACH Settlement",
         "Check Deposits - Regions",
         "Intuit Payments",
         "NMI Processing",
       ],
+      right_text: "Expenses",
     },
+
     {
       text: "Insurance",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Intuit",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Markup",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Reimbursements/Bkcd Charge",
-      right_text: "Income",
       sub_texts: ["ACH Settlement", "Intuit", "NMI"],
+      right_text: "Expenses",
     },
+
     {
       text: "Rental Property Transfer",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Returned payment",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Sales",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Sales of Product Income",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Sales of Product Income-1",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Shipping Income",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Unapplied Cash Payment Income",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
     {
       text: "Unapplied Cash Payment Income-1",
-      right_text: "Income",
+      right_text: "Expenses",
     },
+
+    {
+      text: "Other Miscellaneous Expense",
+      right_text: "Expenses",
+    },
+
+    {
+      text: "Reconciliation Discrepancies",
+      right_text: "Expenses",
+    },
+
     {
       text: "Additional Income",
-      right_text: "Other Income",
       sub_texts: [
         "Activations",
         "Customer Processing Fees",
@@ -342,14 +665,15 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
         "Service Cancellation (BOC)",
         "System Move",
       ],
+      right_text: "Expenses",
     },
   ];
 
   const options = {
     credit_or_discount: creditOrDiscountOptions,
-    prior_prepayments: priorPrepayments,
-    pre_payments: creditOrDiscountOptions,
-    other: priorPrepayments,
+    prior_prepayments: priorPrepaymentsOptions,
+    pre_payments: prePaymentsOptions,
+    other: otherOptions,
   };
 
   const $reasonInput = $("#addAdjustment #reason");
