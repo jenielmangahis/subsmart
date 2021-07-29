@@ -2190,6 +2190,7 @@ class Accounting_modals extends MY_Controller {
             $weekDate = explode('-', $data['week_dates']);
             $weekStartDate = strtotime($weekDate[0]);
             $weekEndDate = strtotime($weekDate[1]);
+            $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
 
             $timeActivityIds = [];
             foreach($data['customer'] as $key => $value) {
@@ -2203,10 +2204,10 @@ class Accounting_modals extends MY_Controller {
                                 'name_key' => $name[0],
                                 'name_id' => $name[1],
                                 'customer_id' => $data['customer'][$key],
-                                'service_id' => $data['service'][$key],
-                                'billable' => $data['billable'][$key],
-                                'hourly_rate' => floatval($data['hourly_rate'][$key]),
-                                'taxable' => $data['taxable'][$key],
+                                'service_id' => $timesheetSettings->service === "1" ? $data['service'][$key] : null,
+                                'billable' => $timesheetSettings->billable === "1" ? 1 : 0,
+                                'hourly_rate' => $timesheetSettings->billable === "1" ? $data['hourly_rate'][$key] : null,
+                                'taxable' => $timesheetSettings->billable === "1" ? 1 : 0,
                                 'time' => $hours,
                                 'description' => $data['description'][$key],
                                 'status' => 1,
@@ -2214,7 +2215,7 @@ class Accounting_modals extends MY_Controller {
                                 'updated_at' => date('Y-m-d h:i:s')
                             ];
 
-                            $timeActivityIds[] = $this->accounting_single_time_activity_model->create($timeActData);
+                            $timeActivityIds[$value][] = $this->accounting_single_time_activity_model->create($timeActData);
                         }
 
                         $count++;
@@ -2245,7 +2246,12 @@ class Accounting_modals extends MY_Controller {
                     $successMessage = 'Entry successful!';
                 } else {
                     $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
-                    $activityIds = json_decode($timeSheet->time_activity_ids, true);
+                    $activityIds = [];
+                    foreach(json_decode($timeSheet->time_activity_ids, true) as $cust => $ids) {
+                        foreach($ids as $id) {
+                            $activityIds[] = $id;
+                        }
+                    }
                     $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($activityIds);
     
                     if($delete) {
@@ -5223,5 +5229,32 @@ class Accounting_modals extends MY_Controller {
         }
 
         echo json_encode($query ? true : false);
+    }
+
+    public function get_last_timesheet($nameType, $nameId)
+    {
+        $lastTimesheet = $this->accounting_weekly_timesheet_model->get_last_timesheet($nameType, $nameId);
+        
+        $return = [];
+        if($lastTimesheet) {
+            $timeActivities = [];
+            foreach(json_decode($lastTimesheet->time_activity_ids, true) as $cust => $timeActs) {
+                foreach($timeActs as $timeAct) {
+                    $timeActivities[$cust][] = $this->accounting_single_time_activity_model->get_by_id($timeAct);
+                }
+            }
+
+            $lastTimesheet->time_activities = $timeActivities;
+
+            $return['data'] = $lastTimesheet;
+            $return['success'] = true;
+            $return['message'] = 'Success.';
+        } else {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'nSmarTrac can’t copy a previous timesheet because one doesn’t exist yet for this employee or vendor.';
+        }
+
+        echo json_encode($return);
     }
 }

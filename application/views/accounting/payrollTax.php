@@ -59,14 +59,86 @@ div.disabled
             </div>
 
             <div class="payrollTax">
+                <div class="payrollTax__title">Payroll Tax Center</div>
+
+                <div class="payrollTax__spacer"></div>
+
                 <div class="payrollTaxTab">
                     <a href="#" class="payrollTaxTab__btn payrollTaxTab__btn--first payrollTaxTab__btn--active">Payments</a>
                     <a href="#" class="payrollTaxTab__btn payrollTaxTab__btn--last">Fillings</a>
                 </div>
+
+                <div class="payrollTax__spacer"></div>
+
+                <div class="payrollTax__title payrollTax__title--sm">Upcoming tax payments</div>
+
+                <div class="payrollTax__spacer"></div>
+
+                <table class="table table-hover">
+                    <template id="taxRowTemplate">
+                        <tr class="payrollTax__row">
+                            <td>
+                                <div class="payrollTax__taxType">
+                                    <button class="payrollTax__taxTypeBtn"><i class="fa fa-chevron-right"></i></button>
+                                    <i class="fa fa-info-circle text-warning payrollTax__taxTypeIcon"></i>
+                                    <div data-type="type.title" class="payrollTax__bold"></div>
+                                    <div data-type="type.date_range" class="payrollTax__taxTypeDateRange"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div data-type="status" class="payrollTax__paymentStatus"></div>
+                            </td>
+                            <td>
+                                <div class="payrollTax__bold">
+                                    $<span data-type="amount"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div data-type="due_date" class="payrollTax__bold"></div>
+                            </td>
+                            <td>
+                                <div class="payrollTax__paymentMethod">
+                                    <div data-type="payment_method.primary_text" class="payrollTax__bold"></div>
+                                    <div data-type="payment_method.secondary_text" class="payrollTax__paymentMethodDate"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="payrollTax__actions d-none">
+                                    <button class="payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Pay</button>
+                                    <button class="payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Mark as paid</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="payrollTax__secondaryRow">
+                            <td colspan="2">
+                                <div class="payrollTax__taxType">
+                                    <div data-type="secondary_data.type.title"></div>
+                                </div>
+                            </td>
+                            <td colspan="4">
+                                <div>
+                                    $<span data-type="secondary_data.amount"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <thead>
+                        <tr>
+                        <th scope="col">Tax type</th>
+                        <th scope="col">Payment status</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Due date</th>
+                        <th scope="col">Payment method</th>
+                        <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taxRowContainer"></tbody>
+                </table>
             </div>
         </div>
     </div>
-	<?php //include viewPath('includes/sidebars/accounting/accounting'); ?>
+	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
 <?php include viewPath('includes/footer_accounting');?>
 

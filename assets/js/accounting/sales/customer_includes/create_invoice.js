@@ -1,6 +1,8 @@
-$(document).on("click", ".first-option.customer_craete_invoice_btn", function(event) {
+$(document).on("click", ".customer_craete_invoice_btn", function(event) {
     event.preventDefault();
     $('#create_invoice_modal').modal('toggle');
+    $("#create_invoice_modal form select[name='customer_id']").val($(this).attr("data-customer-id"));
+    create_invoice_modal_customer_changed($(this).attr("data-customer-id"));
 });
 $(document).on("click", "#create_invoice_modal .item-buttons .add-lines", function(event) {
     $("#create_invoice_modal table tbody").append("<tr>" + $("#create_invoice_modal table tbody tr:last-child").html() + "</tr>");
@@ -51,7 +53,7 @@ function get_search_items(iteam_search, suggestions) {
     });
 }
 $(document).on("click", "#create_invoice_modal table .suggestions li", function(event) {
-    $(this).parent("ul").parent("td").children("input[name='item_ids[]']").val($(this).attr('data-id'));
+    $(this).parent("ul").parent("td").children("input[name='itemid[]']").val($(this).attr('data-id'));
     $(this).parent("ul").parent("td").children("input[name='items[]']").val($(this).html());
     $(this).parent("ul").parent("td").parent("tr").find("input[name='quantity[]']").val(1);
     $(this).parent("ul").parent("td").parent("tr").find("input[name='price[]']").val($(this).attr('data-price'));
@@ -60,6 +62,7 @@ $(document).on("click", "#create_invoice_modal table .suggestions li", function(
     $(this).parent("ul").parent("td").parent("tr").find("input[name='tax[]']").val(Number(tax_computed).toLocaleString('en'));
     $(this).parent("ul").parent("td").parent("tr").find("input.tax-hide").val("7.5");
     var total = tax_computed + parseFloat($(this).attr('data-price'));
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='total[]']").val(total);
     $(this).parent("ul").parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
     $("#create_invoice_modal table .suggestions").html("");
     compute_grand_total();
@@ -111,7 +114,9 @@ function compute_grand_total() {
     $("#create_invoice_modal .item-totals .amount .subtotal").html("$" + Number(subtotal).toLocaleString('en'));
     $("#create_invoice_modal .item-totals .amount .taxes").html("$" + Number(total_taxes).toLocaleString('en'));
     $("#create_invoice_modal .item-totals .amount .grand-total").html("$" + Number(grand_total).toLocaleString('en'));
-    $("#create_invoice_modal form input[name='grand_total_amount']").val(grand_total);
+    $("#create_invoice_modal form input[name='grand_total']").val(grand_total);
+    $("#create_invoice_modal form input[name='subtotal']").val(subtotal);
+    $("#create_invoice_modal form input[name='taxes']").val(total_taxes);
 }
 $(document).on("focus", "#create_invoice_modal table tr td", function(event) {
 
@@ -128,5 +133,133 @@ $(document).on("click", "#create_invoice_modal table tr td a.delete-item", funct
         $(this).parent("td").parent("tr").remove();
         compute_grand_total();
     }
+});
+$(document).on("change", "#create_invoice_modal form select[name='customer_id']", function(event) {
+    create_invoice_modal_customer_changed($(this).val());
+});
 
+
+function create_invoice_modal_customer_changed(id) {
+    if (id == "") {
+        $("#create_invoice_modal form input[name='invoice_job_location']").val('');
+        $("#create_invoice_modal form input[name='customer_email']").val('');
+        $("#create_invoice_modal form textarea[name='shipping_to_address']").html('');
+        $("#create_invoice_modal form textarea[name='billing_address']").html('');
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: baseURL + "accounting/addLocationajax",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function(response) {
+                // alert('success');
+                console.log(response['customer']);
+
+                if (response['customer'].cross_street == null || response['customer'].cross_street.trim().length == 0) {
+                    var cross = '';
+                } else {
+                    var cross = response['customer'].cross_street;
+                }
+
+                if (response['customer'].city == null || response['customer'].city.trim().length == 0) {
+                    var city = '';
+                } else {
+                    var city = response['customer'].city;
+                }
+
+                if (response['customer'].state == null || response['customer'].state.trim().length == 0) {
+                    var state = '';
+                } else {
+                    var state = response['customer'].state;
+                }
+
+                if (response['customer'].country == null || response['customer'].country.trim().length == 0) {
+                    var country = '';
+                } else {
+                    var country = response['customer'].country;
+                }
+
+                $("#create_invoice_modal form input[name='invoice_job_location']").removeAttr("disabled");
+                $("#create_invoice_modal form input[name='invoice_job_location']").val(cross + ' ' + city + ' ' + state + ' ' +
+                    country);
+                $("#create_invoice_modal form input[name='customer_email']").val(response['customer'].email);
+                $("#create_invoice_modal form textarea[name='shipping_to_address']").html(response['customer'].mail_add);
+                $("#create_invoice_modal form textarea[name='billing_address']").html(response['customer'].mail_add);
+
+            },
+            error: function(response) {
+                alert('Error' + response);
+            }
+        });
+    }
+}
+
+
+$("#create_invoice_modal form").submit(function(event) {
+    event.preventDefault();
+});
+$(document).on("click", "#create_invoice_modal form button[data-action='save']", function(event) {
+    $("#create_invoice_modal form input[name='invoice_job_location']").removeAttr("disabled");
+    var submit_type = $(this).attr('data-submit-type');
+    $("#create_invoice_modal form input[name='submit-type']").val("invoice_modal");
+    var customer_id = $("#create_invoice_modal form select[name='customer_id']").val();
+    var empty_flds = 0;
+    $("#create_invoice_modal form  .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+    if (empty_flds == 0) {
+        event.preventDefault();
+        Swal.fire({
+            title: "Save this Invoice?",
+            html: "Are you sure you want to save this?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/folder.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: $(this).html(),
+        }).then((result) => {
+            if (result.value) {
+                $("#loader-modal").show();
+                $.ajax({
+                    url: baseURL + "/accounting/addInvoice",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#create_invoice_modal form").serialize(),
+                    success: function(data) {
+                        if (data.count_save > 0) {
+                            $("#create_invoice_modal form input[name='invoice_id']").val(data.invoice_id);
+                            get_load_customers_table();
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Invoice has been saved.",
+                                icon: "success",
+                            }).then((result) => {
+                                if (submit_type == "save-preview") {
+                                    window.location.href = baseURL + "/accounting/invoices";
+                                } else if (submit_type == "save") {
+
+                                }
+                            });
+
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "No payment saved. Please double check your inputs.",
+                                icon: "error",
+                            });
+                        }
+                    },
+                });
+            }
+        });
+
+    }
 });

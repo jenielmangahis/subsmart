@@ -263,6 +263,22 @@ class Accounting extends MY_Controller
         
         $this->page_data['page_title'] = "Customers";
         $this->page_data['accounting_timesheet_settings'] = $this->accounting_customers_model->get_accounting_timesheet_settings(logged("company_id"));
+        
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+        $terms = $this->accounting_terms_model->getCompanyTerms_a(logged('company_id'));
+        $this->page_data['number'] = $this->invoice_model->getlastInsert();
+
+        if (!empty($setting)) {
+            foreach ($setting as $key => $value) {
+                if (is_serialized($value)) {
+                    $setting->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['setting'] = $setting;
+            $this->page_data['terms'] = $terms;
+        }
+        
         $this->load->view('accounting/customers', $this->page_data);
     }
     public function deposits()
@@ -2134,7 +2150,7 @@ class Accounting extends MY_Controller
 
     public function addInvoice()
     {
-        if ($this->input->post('custocredit_card_paymentsmer_id') == 1) {
+        if ($this->input->post('credit_card_paymentsmer_id') == 1) {
             $credit_card = 'Credit Card';
         } else {
             $credit_card = '0';
@@ -2211,7 +2227,7 @@ class Accounting extends MY_Controller
             'sub_total'                         => $this->input->post('subtotal'),//
             'taxes'                             => $this->input->post('taxes'),//
             'adjustment_name'                   => $this->input->post('adjustment_name'),//
-            'adjustment_value'                  => $this->input->post('adjustment_input'),//
+            'adjustment_value'                  => $this->input->post('adjustment_value'),//
             'grand_total'                       => $this->input->post('grand_total'),//
 
 
@@ -2277,11 +2293,11 @@ class Accounting extends MY_Controller
 
             $i = 0;
             foreach ($a as $row) {
-                $data['items_id'] = $a[$i];
-                $data['qty'] = $quantity[$i];
-                $data['cost'] = $price[$i];
-                $data['tax'] = $h[$i];
-                $data['total'] = $gtotal[$i];
+                $data['items_id'] = str_replace(',', '', $a[$i]);
+                $data['qty'] = str_replace(',', '', $quantity[$i]);
+                $data['cost'] = str_replace(',', '', $price[$i]);
+                $data['tax'] = str_replace(',', '', $h[$i]);
+                $data['total'] = str_replace(',', '', $gtotal[$i]);
                 $data['invoice_id '] = $addQuery;
                 $addQuery2 = $this->invoice_model->add_invoice_items($data);
                 $i++;
@@ -2305,7 +2321,14 @@ class Accounting extends MY_Controller
             //     $notification = $this->estimate_model->save_notification($notif);
 
             // redirect('accounting/banking');
-            redirect('accounting/invoices');
+            if ($this->input->post("submit-type") == "invoice_modal") {
+                $return_data = new stdClass();
+                $return_data->count_save = 1;
+                $return_data->invoice_id = $addQuery;
+                echo json_encode($return_data);
+            } else {
+                redirect('accounting/invoices');
+            }
         } else {
             echo json_encode(0);
         }
@@ -6445,7 +6468,14 @@ class Accounting extends MY_Controller
 
     public function payrollTax()
     {
-        $user_id = logged('id');
+        add_css([
+            'assets/css/accounting/payroll/payroll.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/tax/payroll/payroll.js',
+        ]);
+
         $this->load->view('accounting/payrollTax', $this->page_data);
     }
 
@@ -6812,7 +6842,7 @@ class Accounting extends MY_Controller
             $receivable_payment = 0;
             $total_amount_received =0;
             foreach ($invoices as $inv) {
-                if(is_numeric($inv->grand_total)){
+                if (is_numeric($inv->grand_total)) {
                     $receivable_payment+=$inv->grand_total;
                 }
                 $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
@@ -6865,7 +6895,7 @@ class Accounting extends MY_Controller
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="" data-toggle="modal" data-target="#create_invoice_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="customer_craete_invoice_btn" data-toggle="modal" data-target="#create_invoice_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create invoice
 												</a>
 											</li>';

@@ -27,7 +27,7 @@ class Invoice_model extends MY_Model
     {
         $where = array(
             'invoices.company_id'      => $company_id,
-            'view_flag'                => '0',
+            'invoices.view_flag'                => '0',
           );
 
         // $company_id = getLoggedCompanyID();

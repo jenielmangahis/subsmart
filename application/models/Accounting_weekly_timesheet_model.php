@@ -39,4 +39,15 @@ class Accounting_weekly_timesheet_model extends MY_Model {
 
 		return $update;
 	}
+
+	public function get_last_timesheet($nameType, $nameId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('name_type', $nameType);
+		$this->db->where('name_id', $nameId);
+		$this->db->order_by('created_at', 'desc');
+		$query = $this->db->get($this->table);
+
+		return $query->row();
+	}
 }

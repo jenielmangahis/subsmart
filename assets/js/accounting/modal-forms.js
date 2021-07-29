@@ -628,6 +628,13 @@ $(function() {
             $(`table${table} tbody`).append(`<tr>${rowInputs}</tr>`);
             $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
 
+            $(`table${table} tbody tr:last-child() select`).val(null);
+            $(`table${table} tbody tr:last-child() select`).next('span').remove();
+            $(`table${table} tbody tr:last-child() input:not([type="checkbox"])`).val('');
+            $(`table${table} tbody tr:last-child() textarea`).val('');
+            $(`table${table} tbody tr:last-child() textarea`).html('');
+            $(`table${table} tbody tr:last-child() input[name="billable[]"]`).attr('id', `billable_${lastRowCount}`).prop('checked', false).trigger('change');
+            $(`table${table} tbody tr:last-child() input[name="billable[]"]`).next().attr('for', `billable_${lastRowCount}`);
             $(`table${table} tbody tr:last-child() select`).select2();
         }
     });
@@ -643,6 +650,13 @@ $(function() {
         for(var num = 1; num <= rowCount; num++) {
             $(`table${table} tbody`).append(`<tr>${rowInputs}</tr>`);
             $(`table${table} tbody tr:last-child() td:first-child()`).html(num);
+            $(`table${table} tbody tr:last-child() select`).val(null);
+            $(`table${table} tbody tr:last-child() select`).next('span').remove();
+            $(`table${table} tbody tr:last-child() input:not([type="checkbox"])`).val('');
+            $(`table${table} tbody tr:last-child() textarea`).val('');
+            $(`table${table} tbody tr:last-child() textarea`).html('');
+            $(`table${table} tbody tr:last-child() input[name="billable[]"]`).attr('id', `billable_${num}`).prop('checked', false).trigger('change');
+            $(`table${table} tbody tr:last-child() input[name="billable[]"]`).next().attr('for', `billable_${num}`);
             $(`table${table} tbody tr:last-child() select`).select2();
         }
 
@@ -3081,7 +3095,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#time-activity-settings #toggle-service, #time-activity-settings #toggle-billable', function(e) {
+    $(document).on('change', '#time-activity-settings #toggle-service, #time-activity-settings #toggle-billable, #time-activity-settings #toggle-cost_rates', function(e) {
         var field = $(this).attr('id').replace('toggle-', '');
         var value = $(this).prop('checked') ? 1 : 0;
         $.get(`/accounting/update-timesheet-settings/${field}/${value}`, function(res) {
@@ -3113,23 +3127,55 @@ $(function() {
                                 </div>
                             </div>
                             `);
-                            $('#weeklyTimesheetModal').find('#timesheet-table').find('select[name="customer[]"]').parent().next().append(`
-                            <div class="form-check form-check-inline">
-                                <div class="checkbox checkbox-sec margin-right">
-                                    <input class="form-check-input weekly-billable" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
-                                    <label class="form-check-label" for="billable">Billable(/hr)</label>
+
+                            $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function() {
+                                var number = $(this).find('td:first-child()').html();
+
+                                $(this).find('select[name="customer[]"]').parent().next().append(`
+                                <div class="form-check form-check-inline">
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input class="form-check-input weekly-billable" id="billable_${number}" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                        <label class="form-check-label" for="billable_${number}">Billable(/hr)</label>
+                                    </div>
                                 </div>
-                            </div>
-                            `);
+                                `);
+                            });
                         } else {
                             $('#singleTimeModal').next().children('div.modal').find('#billable').parent().parent().next().remove();
                             $('#singleTimeModal').next().children('div.modal').find('#billable').parent().parent().remove();
                             $('#weeklyTimesheetModal').find('input[name="billable[]"]').parent().parent().parent().html('');
                         }
+
+                        if($('#weeklyTimesheetModal').length > 0) {
+                            rowInputs = $('#weeklyTimesheetModal #timesheet-table tbody tr:first-child()').html();
+                        }
                     break;
                 }
             }
         });
+    });
+
+    $(document).on('click', '#weeklyTimesheetModal #copy-last-timesheet', function(e) {
+        var name = $('#weeklyTimesheetModal #person_tracking').val();
+        if(name !== null) {
+            var nameSplit = name.split('-');
+
+            $.get(`/accounting/get-last-timesheet/${nameSplit[0]}/${nameSplit[1]}`, function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success === false) {
+                    toast(res.success, res.message);
+                } else {
+                    var timesheet = res.data;
+                    var time_activities = timesheet.time_activities;
+
+                    var count = 0;
+                    for(var cust in time_activities) {
+                        
+                    }
+                }
+            });
+        }
     });
 });
 
@@ -3792,15 +3838,16 @@ const showHiddenFields = (el) => {
 
     if($(el).hasClass('weekly-billable')) {
         if($(el).prop('checked') === true) {
+            var id = $(el).attr('id');
+            var number = id.replace('billable_', '');
             $(el).parent().parent().append(`<input type="number" name="hourly_rate[]" class="ml-2 w-25 form-control">
             <div class="checkbox checkbox-sec">
-                <input type="checkbox" name="taxable[]" class="ml-2 form-check-input" value="1">
-                <label class="form-check-label" for="taxable">Taxable</label>
+                <input type="checkbox" name="taxable[]" id="taxable_${number}" class="ml-2 form-check-input" value="1">
+                <label class="form-check-label" for="taxable_${number}">Taxable</label>
             </div>`);
         } else {
-            $(el).parent().find('input[name="hourly_rate[]"]').remove();
-            $(el).parent().find('input[name="taxable[]"]').remove();
-            $(el).parent().find('label[for="taxable"]').remove();
+            $(el).parent().parent().find('input[name="hourly_rate[]"]').remove();
+            $(el).parent().parent().find('input[name="taxable[]"]').parent().remove();
         }
     }
 }

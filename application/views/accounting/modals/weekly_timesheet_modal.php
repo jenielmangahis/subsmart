@@ -301,8 +301,8 @@
                             <div class="col-md-4">
                                 <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                             </div>
-                            <div class="col-md-4">
-                                
+                            <div class="col-md-4 d-flex">
+                                <a href="#" class="text-white m-auto" id="copy-last-timesheet">Copy last timesheet</a>
                             </div>
                             <div class="col-md-4">
                                 <!-- Split dropup button -->
