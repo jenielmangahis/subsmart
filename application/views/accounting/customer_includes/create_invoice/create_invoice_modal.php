@@ -17,7 +17,11 @@
                     <input type="text" style="display: none;" value="" name="recurring_selected">
                     <input type="text" style="display: none;" value="" name="current_sales_recept_number">
                     <input type="text" style="display: none;" value="" name="submit_type">
-                    <input type="text" style="display: none;" value="0" name="grand_total_amount">
+                    <input type="text" style="display: none;" value="0" name="grand_total">
+                    <input type="text" style="display: none;" value="0" name="subtotal">
+                    <input type="text" style="display: none;" value="0" name="taxes">
+                    <input type="text" style="display: none;" value="" name="submit-type">
+                    <input type="text" style="display: none;" value="" name="invoice_id">
                     <div class="modal-body">
                         <div class="customer-info">
                             <div class="row">
@@ -47,7 +51,8 @@
                                                     Job Location <span class="faded-info">(optional, select or add new
                                                         one)</span>
                                                 </div>
-                                                <input type="text" class="form-control " name="invoice_job_location">
+                                                <input type="text" class="form-control " name="invoice_job_location"
+                                                    id="create_invoice_modal_job_location">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -80,6 +85,12 @@
                                             <select class="form-control required" required name="terms">
                                                 <option></option>
                                                 <option value="1">Add new</option>
+                                                <?php foreach ($terms as $term) : ?>
+                                                <option
+                                                    value="<?php echo $term->id; ?>">
+                                                    <?php echo $term->name . ' ' . $term->net_due_days; ?>
+                                                </option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </div>
                                     </div>
@@ -173,14 +184,23 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Invoice# </div>
-                                            <input type="text" class="form-control required" equired=""
-                                                name="invoice_number">
+                                            <input type="text" class="form-control required" required="" value="<?php echo "INV-";
+                                           foreach ($number as $num):
+                                                $next = $num->invoice_number;
+                                                $arr = explode("-", $next);
+                                                $date_start = $arr[0];
+                                                $nextNum = $arr[1];
+                                            //    echo $number;
+                                           endforeach;
+                                           $val = $nextNum + 1;
+                                           echo str_pad($val, 9, "0", STR_PAD_LEFT);
+                                           ?>" name="invoice_number">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Date Issued </div>
-                                            <input type="date" class="form-control required" equired=""
+                                            <input type="date" class="form-control required" required=""
                                                 name="date_issued">
                                         </div>
                                     </div>
@@ -228,7 +248,7 @@
                                         <tbody>
                                             <tr class="item">
                                                 <td>
-                                                    <input type="text" style="display: none;" name="item_ids[]">
+                                                    <input type="text" style="display: none;" name="itemid[]">
                                                     <input type="text" class="form-control required" required=""
                                                         name="items[]" autocomplete="off">
                                                     <ul class="suggestions"></ul>
@@ -260,7 +280,9 @@
                                                 <td width="150px" style="text-align: right;"><input type="hidden"
                                                         class="form-control total_per_input" name="total[]"
                                                         data-counter="0" min="0" value="0">
-                                                    $<span class="total_per_item">0.00</span></td>
+                                                    $<span class="total_per_item">0.00</span>
+                                                    <input type="text" value="0" name="total[]" style="display: none;">
+                                                </td>
                                                 <td class="item-action">
                                                     <a href="#" class="delete-item">
                                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -362,7 +384,7 @@
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="credit_card_payments" id="credit_card_payments"
+                                        <input type="checkbox" name="credit_card_payments" value="1" id="credit_card_payments"
                                             checked>
                                         <label for="credit_card_payments"><span>Credit Card Payments ()</span></label>
                                     </div>
@@ -381,31 +403,31 @@
 
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="bank_transfer" id="bank_transfer" checked>
+                                        <input type="checkbox" name="bank_transfer"  value="1" id="bank_transfer" checked>
                                         <label for="bank_transfer"><span>Bank Transfer</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="instapay" id="instapay" checked>
+                                        <input type="checkbox" name="instapay"  value="1" id="instapay" checked>
                                         <label for="instapay"><span>Instapay</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="check" id="check" checked>
+                                        <input type="checkbox" name="check"  value="1" id="check" checked>
                                         <label for="check"><span>Check</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="cash" id="cash" checked>
+                                        <input type="checkbox" name="cash"  value="1" id="cash" checked>
                                         <label for="cash"><span>Cash</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="deposit" id="deposit" checked>
+                                        <input type="checkbox" name="deposit"  value="1" id="deposit" checked>
                                         <label for="deposit"><span>Deposit</span></label>
                                     </div>
                                 </div>
@@ -458,7 +480,7 @@
                     </div>
                     <div class="modal-footer-check">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="padding-left: 30px;">
                                 <button class="btn btn-dark cancel-button" id="closeCheckModal"
                                     type="button">Cancel</button>
                                 <button class="btn btn-dark cancel-button" id="cancel_recurring" type="button"
@@ -469,25 +491,12 @@
                             </div>
                             <div class="col-md-5" align="center">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3" style="padding-right: 30px;">
                                 <div class="dropdown" style="float: right">
-                                    <button class="btn btn-dark cancel-button px-4" data-submit-type="save"
-                                        type="submit">Save</button>
-                                    <button type="submit" data-submit-type="save-send" class="btn btn-success"
-                                        id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
-                                    <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                        style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                        <span class="fa fa-caret-down"></span>&nbsp;</button>
-                                    <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
-                                        <li>
-                                            <button type="submit" data-submit-type="save-close" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
-                                                ">Save and close</button>
-                                        </li>
-                                        <li>
-                                            <button type="submit" data-submit-type="save-new" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
-                                                ">Save and new</button>
-                                        </li>
-                                    </ul>
+                                    <button class="btn btn-dark cancel-button px-4" data-submit-type="save"  data-action="save" 
+                                        type="submit">Save as draft</button>
+                                    <button type="submit" data-submit-type="save-preview" data-action="save" class="btn btn-success"
+                                        id="checkSaved">Preview</button>
                                 </div>
                             </div>
                         </div>
@@ -507,3 +516,18 @@
     </div>
     <!--end of modal-->
 </div>
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+    function initialize() {
+        var input = document.getElementById('create_invoice_modal_job_location');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            var place = autocomplete.getPlace();
+            document.getElementById('city2').value = place.name;
+            document.getElementById('cityLat').value = place.geometry.location.lat();
+            document.getElementById('cityLng').value = place.geometry.location.lng();
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>

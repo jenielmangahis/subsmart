@@ -134,6 +134,331 @@
     line-height: 1.428571429;
     border-radius: 15px;
 }
+
+/* #regForm {
+  background-color: #ffffff;
+  margin: 100px auto;
+  font-family: Raleway;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
+} */
+
+h1 {
+  text-align: center;  
+}
+
+input {
+  padding: 10px;
+  width: 100%;
+  font-size: 17px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+}
+
+/* Mark input boxes that gets an error on validation: */
+input.invalid {
+  background-color: #ffdddd;
+}
+
+/* Hide all steps by default: */
+.tab {
+  display: none;
+}
+
+button {
+  background-color: #04AA6D;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 17px;
+  font-family: Raleway;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#prevBtn {
+  background-color: #bbbbbb;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border: none;  
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.step.active {
+  opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #04AA6D;
+}
+
+.switch {
+	position: relative;
+	display: block;
+	vertical-align: top;
+	width: 100px;
+	height: 30px;
+	padding: 3px;
+	margin: 0 10px 10px 0;
+	background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+	border-radius: 18px;
+	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+}
+.switch-input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+}
+.switch-label {
+	position: relative;
+	display: block;
+	height: inherit;
+	font-size: 10px;
+	text-transform: uppercase;
+	background: #eceeef;
+	border-radius: inherit;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+}
+.switch-label:before, .switch-label:after {
+	position: absolute;
+	top: 50%;
+	margin-top: -.5em;
+	line-height: 1;
+	-webkit-transition: inherit;
+	-moz-transition: inherit;
+	-o-transition: inherit;
+	transition: inherit;
+}
+.switch-label:before {
+	content: attr(data-off);
+	right: 11px;
+	color: #aaaaaa;
+	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+}
+.switch-label:after {
+	content: attr(data-on);
+	left: 11px;
+	color: #FFFFFF;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+	opacity: 0;
+}
+.switch-input:checked ~ .switch-label {
+	background: #4bb543;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.switch-input:checked ~ .switch-label:before {
+	opacity: 0;
+}
+.switch-input:checked ~ .switch-label:after {
+	opacity: 1;
+}
+.switch-handle {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 28px;
+	height: 28px;
+	background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+	background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+	border-radius: 100%;
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+.switch-handle:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -6px 0 0 -6px;
+	width: 12px;
+	height: 12px;
+	background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
+	background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
+	border-radius: 6px;
+	box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+}
+.switch-input:checked ~ .switch-handle {
+	left: 74px;
+	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+ 
+/* Transition
+========================== */
+.switch-label, .switch-handle {
+	transition: All 0.3s ease;
+	-webkit-transition: All 0.3s ease;
+	-moz-transition: All 0.3s ease;
+	-o-transition: All 0.3s ease;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400);
+
+.font-roboto {
+  font-family: 'roboto condensed';
+}
+
+/* .modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.modal-dialog {
+  position: fixed;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+} */
+
+/* .modal-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border: 2px solid #3c7dcf;
+  border-radius: 0;
+  box-shadow: none;
+} */
+
+/* .modal-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 50px;
+  padding: 10px;
+  background: #ffffff;
+  border: 0;
+} */
+
+.modal-title {
+  font-weight: 300;
+  font-size: 2em;
+  color: #fff;
+  line-height: 30px;
+}
+
+.modal-body {
+  position: absolute;
+  /* top: 50px; */
+  /* bottom: 60px; */
+  width: 100%;
+  font-weight: 300;
+  overflow: auto;
+}
+
+/* .modal-footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 60px;
+  padding: 10px;
+  background: #f1f3f5;
+} */
+
+.btn {
+  height: 40px;
+  border-radius: 0;
+
+}
+
+.btn-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -20px;
+  margin-left: -100px;
+  width: 200px;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: #fff;
+  color: lighten(#484b5b, 20%);
+  color: #fff;
+  text-align: center;
+  background: #60cc69;
+  border: 1px solid #36a940;
+  border-bottom: 3px solid #36a940;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+
+}
+
+.btn-default,
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: #fff;
+  text-align: center;
+  background: darken(#dcdfe4, 10%);
+  border: 1px solid darken(#dcdfe4, 20%);
+  border-bottom: 3px solid darken(#dcdfe4, 20%);
+
+}
+
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  color: #cc7272;
+  background: transparent;
+  border: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: #60cc69;
+  line-height: 1.5;
+
+
+}
+
+p {
+  font-size: 1.4em;
+  line-height: 1.5;
+  color: lighten(#5f6377, 20%);
+
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+  background: #f1f3f5;
+  border-left: 1px solid darken(#f1f3f5, 10%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: darken(#f1f3f5, 20%);
+}
+
 </style>
 <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
@@ -225,12 +550,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	<div class="modal in getQuote" id="" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <!-- <h4 class="modal-title"></h4> -->
+                <!-- <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     	<span aria-hidden="true">&times;</span>
                     </button>
-                </div>
+                </div> -->
                 <div class="modal-body" style="background-color:white;">
 					<!-- <div class="container">
 						<ul class="progressbar">
@@ -240,200 +564,321 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<li>View map</li>
 						</ul>
 					</div> -->
+                    <!-- <div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" style="font-size:24px;">X</span>
+                        </button>
+                    </div> -->
+                    <div style="padding:3%;width:60%;margin:0 20% 0 20%;">
+                        <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"  style="float:right;">
+                            <span aria-hidden="true" style="font-size:24px;">X</span>
+                        </button>
+                    </div>
 					<div class="stepper-wrapper" style="margin:0 10% 0 10%;width:80%;">
 						<div class="stepper-item completed">
 							<div class="step-counter">1</div>
 							<div class="step-name">Get started</div>
 						</div>
-						<div class="stepper-item active">
+						<div class="stepper-item ">
 							<div class="step-counter">2</div>
 							<div class="step-name">Details</div>
 						</div>
-						<div class="stepper-item active">
+						<div class="stepper-item ">
 							<div class="step-counter">3</div>
 							<div class="step-name">Quote</div>
 						</div>
 					</div>
-					<br>
-					<div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
-						<h4>Your business</h4>
-						<p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
+                    
+					<form id="regForm" action="">
+                        <!-- One "tab" for each step in the form: -->
+                        <div class="tab"><br>
+                            <!-- <p><input placeholder="First name..." oninput="this.className = ''" name="fname"></p>
+                            <p><input placeholder="Last name..." oninput="this.className = ''" name="lname"></p> -->
+                            
+                            <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
+                                <h4>Your business</h4>
+                                <p>Finding the right classification for your business ensures that your quote will be as accurate as possible. But don't worry if you don't find an exact match – an agent will review this before anything is finalized.</p>
 
-						<h6><br>General industry</h6>
-						<select class="form-control">
-							<option>Select General industry</option>
-							<option>Advertising, Graphic Design, Photography and Printing</option>
-							<option>Agriculture, Forestry, Fishing and Hunting</option>
-							<option>Arts, Entertainment and Recreation</option>
-							<option>Communications, Electric or Gas Service</option>
-							<option>Educational and Social Services</option>
-							<option>Health Care, Social Assistance and Public Administration</option>
-							<option>Legal, Finance, Insurance and Real Estate</option>
-							<option>Manufacturing</option>
-							<option>Membership, Religious and Fraternal Organizations</option>
-							<option>Personal and Business Services</option>
-							<option>Restaurants and Lodging</option>
-							<option>Retail Trade - Nonstore</option>
-							<option>Retail Trade - Storefront</option>
-							<option>Specialty Trade Contractors</option>
-							<option>Technology, Engineering and Consulting</option>
-							<option>Transportation & Warehousing</option>
-							<option>Wholesale Trade</option>
-							<!-- <option></option> -->
-						</select>
+                                <h6><br>General industry</h6>
+                                <select class="form-control">
+                                    <option>Select General industry</option>
+                                    <option>Advertising, Graphic Design, Photography and Printing</option>
+                                    <option>Agriculture, Forestry, Fishing and Hunting</option>
+                                    <option>Arts, Entertainment and Recreation</option>
+                                    <option>Communications, Electric or Gas Service</option>
+                                    <option>Educational and Social Services</option>
+                                    <option>Health Care, Social Assistance and Public Administration</option>
+                                    <option>Legal, Finance, Insurance and Real Estate</option>
+                                    <option>Manufacturing</option>
+                                    <option>Membership, Religious and Fraternal Organizations</option>
+                                    <option>Personal and Business Services</option>
+                                    <option>Restaurants and Lodging</option>
+                                    <option>Retail Trade - Nonstore</option>
+                                    <option>Retail Trade - Storefront</option>
+                                    <option>Specialty Trade Contractors</option>
+                                    <option>Technology, Engineering and Consulting</option>
+                                    <option>Transportation & Warehousing</option>
+                                    <option>Wholesale Trade</option>
+                                    <!-- <option></option> -->
+                                </select>
 
-						<h6><br>Type of business</h6>
-						<select class="form-control">
-							<option>Select type of business</option>
-							<option>Apparel, Piece Goods and Notions</option>
-							<option>Beer, Wine and Distilled Alcoholic Beverages</option>
-							<option>Chemicals and Allied Products</option>
-							<option>Drugs, Drug Proprietaries and Druggists' Sundries</option>
-							<option>Electrical Goods</option>
-							<option>Furniture and Home furnishings</option>
-							<option>Groceries and Related Products</option>
-						</select>
+                                <h6><br>Type of business</h6>
+                                <select class="form-control">
+                                    <option>Select type of business</option>
+                                    <option>Apparel, Piece Goods and Notions</option>
+                                    <option>Beer, Wine and Distilled Alcoholic Beverages</option>
+                                    <option>Chemicals and Allied Products</option>
+                                    <option>Drugs, Drug Proprietaries and Druggists' Sundries</option>
+                                    <option>Electrical Goods</option>
+                                    <option>Furniture and Home furnishings</option>
+                                    <option>Groceries and Related Products</option>
+                                </select>
 
-						<h6><br>Standard industry classification (SIC)</h6>
-						<select class="form-control">
-							<option>Select Standard industry classification</option>
-							<option>Confectionery</option>
-							<option>Dairy Products, Except Dried Or Canned</option>
-							<option>Fish and Seafoods</option>
-							<option>Fresh Fruits and Vegetables</option>
-							<option>Groceries and Related Products, Not Elsewhere Classified</option>
-							<option>Groceries, General Line</option>
-							<option>Meats and Meat Products</option>
-							<option>Meats and Meat Products (with butchering or slaughtering)</option>
-							<option>Packaged Frozen Foods</option>
-							<option>Poultry and Poultry Products</option>
-							<!-- <option></option> -->
-						</select>
+                                <h6><br>Standard industry classification (SIC)</h6>
+                                <select class="form-control">
+                                    <option>Select Standard industry classification</option>
+                                    <option>Confectionery</option>
+                                    <option>Dairy Products, Except Dried Or Canned</option>
+                                    <option>Fish and Seafoods</option>
+                                    <option>Fresh Fruits and Vegetables</option>
+                                    <option>Groceries and Related Products, Not Elsewhere Classified</option>
+                                    <option>Groceries, General Line</option>
+                                    <option>Meats and Meat Products</option>
+                                    <option>Meats and Meat Products (with butchering or slaughtering)</option>
+                                    <option>Packaged Frozen Foods</option>
+                                    <option>Poultry and Poultry Products</option>
+                                    <!-- <option></option> -->
+                                </select>
 
-						<h6><br>Business name</h6>
-						<input type="text" class="form-control">
+                                <h6><br>Business name</h6>
+                                <input type="text" class="form-control">
 
-						<h6><br>Principal business address</h6>
-						<input type="text" class="form-control">
-						
-						<h6><br>Suite/Floor</h6>
-						<input type="text" class="form-control" style="width:30%;">
+                                <h6><br>Principal business address</h6>
+                                <input type="text" class="form-control">
+                                
+                                <h6><br>Suite/Floor</h6>
+                                <input type="text" class="form-control" style="width:30%;">
 
-						<h6><br>Year business started</h6>
-						<select class="form-control" id="year" style="width:40%;">
-							<option></option>
-						</select>
+                                <h6><br>Year business started</h6>
+                                <select class="form-control" id="year" style="width:40%;">
+                                    <option></option>
+                                </select>
 
-						<h6><br>Legal entity type</h6>
-						<select class="form-control">
-							<option>Corporation</option>
-							<option>Limited Liability Company</option>
-							<option>Non-Profit</option>
-							<option>Partnership</option>
-							<option>Sole Proprietor</option>
-							<option>Other</option>
-						</select>
+                                <h6><br>Legal entity type</h6>
+                                <select class="form-control">
+                                    <option>Corporation</option>
+                                    <option>Limited Liability Company</option>
+                                    <option>Non-Profit</option>
+                                    <option>Partnership</option>
+                                    <option>Sole Proprietor</option>
+                                    <option>Other</option>
+                                </select>
 
-						<h6><br>Federal Identification Number (optional)</h6>
-						<input type="text" class="form-control" style="width:40%;">
-						<br><br>
-						<input type="submit" value="Next" class="btn btn-success" style="float:right; margin:2px;">
-						<br><br>
+                                <h6><br>Federal Identification Number (optional)</h6>
+                                <input type="text" class="form-control" style="width:40%;">
+                                <br><br>
+                                <!-- <input type="submit" value="Next" class="btn btn-success" style="float:right; margin:2px;"> -->
 
-					</div>
+                            </div>
+                        </div>
+                        <div class="tab"><br>
+                            <!-- <p><input placeholder="E-mail..." oninput="this.className = ''" name="email"></p>
+                            <p><input placeholder="Phone..." oninput="this.className = ''" name="phone"></p> -->
+                            <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
+                                <h4>Your owners, officers, and employees</h4>
+                                <p>List all owners/officers and W-2 employees. In most cases, owners and officers may be excluded from a workers' comp policy, but this varies from state to state. Learn more</p>
 
-					<!-- <div class="container"> -->
-    <!-- <div class="stepwizard">
-        <div class="stepwizard-row setup-panel">
-            <div class="stepwizard-step col-xs-3"> 
-                <a href="#step-1" type="button" class="btn btn-success btn-circle">1</a>
-                <p><small>Shipper</small></p>
-            </div>
-            <div class="stepwizard-step col-xs-3"> 
-                <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
-                <p><small>Destination</small></p>
-            </div>
-            <div class="stepwizard-step col-xs-3"> 
-                <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
-                <p><small>Schedule</small></p>
-            </div>
-            <div class="stepwizard-step col-xs-3"> 
-                <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
-                <p><small>Cargo</small></p>
-            </div>
-        </div>
-    </div>
-    
-    <form role="form">
-        <div class="panel panel-primary setup-content" id="step-1">
-            <div class="panel-heading">
-                 <h3 class="panel-title">Shipper</h3>
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label class="control-label">First Name</label>
-                    <input maxlength="100" type="text" required="required" class="form-control" placeholder="Enter First Name" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Last Name</label>
-                    <input maxlength="100" type="text" required="required" class="form-control" placeholder="Enter Last Name" />
-                </div>
-                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
-            </div>
-        </div>
-        
-        <div class="panel panel-primary setup-content" id="step-2">
-            <div class="panel-heading">
-                 <h3 class="panel-title">Destination</h3>
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label class="control-label">Company Name</label>
-                    <input maxlength="200" type="text" required="required" class="form-control" placeholder="Enter Company Name" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Company Address</label>
-                    <input maxlength="200" type="text" required="required" class="form-control" placeholder="Enter Company Address" />
-                </div>
-                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
-            </div>
-        </div>
-        
-        <div class="panel panel-primary setup-content" id="step-3">
-            <div class="panel-heading">
-                 <h3 class="panel-title">Schedule</h3>
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label class="control-label">Company Name</label>
-                    <input maxlength="200" type="text" required="required" class="form-control" placeholder="Enter Company Name" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Company Address</label>
-                    <input maxlength="200" type="text" required="required" class="form-control" placeholder="Enter Company Address" />
-                </div>
-                <button class="btn btn-primary nextBtn pull-right" type="button">Next</button>
-            </div>
-        </div>
-        
-        <div class="panel panel-primary setup-content" id="step-4">
-            <div class="panel-heading">
-                 <h3 class="panel-title">Cargo</h3>
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label class="control-label">Company Name</label>
-                    <input maxlength="200" type="text" required="required" class="form-control" placeholder="Enter Company Name" />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Company Address</label>
-                    <input maxlength="200" type="text" required="required" class="form-control" placeholder="Enter Company Address" />
-                </div>
-                <button class="btn btn-success pull-right" type="submit">Finish!</button>
-            </div>
-        </div>
-    </form>
-</div> -->
+                                <table class="table">
+                                    <thead>
+                                        <th>NAME</th>
+                                        <th>CLASS CODE</th>
+                                        <th>ROLE</th>
+                                        <th>OWNERSHIP</th>
+                                    </thead>
+                                </table>
+                                <br>
+                                <a class="link-modal-open" href="#" id="" data-toggle="modal" data-target="#item_list">Add new employee or owner</a>
+                                <br>
+                                <h6><br>Total estimated annual payroll</h6>
+                                <input type="text" class="form-control">
+
+                                <h6><br>Payroll frequency</h6>
+                                <select class="form-control">
+                                    <option>Weekly</option>
+                                    <option>Monthly</option>
+                                    <option>Biweekly</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="tab"><br>
+                            <!-- <p><input placeholder="Username..." oninput="this.className = ''" name="uname"></p>
+                            <p><input placeholder="Password..." oninput="this.className = ''" name="pword" type="password"></p> -->
+                            <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
+                            <h4>A few more details about your business</h4>
+                            <p>Answer these questions to help us get a better picture of your business</p><br>
+
+                            <table>
+                                <tr>
+                                    <td><label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Does the business have any 1099 workers?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td> Do you have certificates of insurance for all 1099 employees?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Has the business had any workers' comp claims in the past 3 years?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Work performed underground or above 15 feet?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Any group transportation provided?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Any seasonal employees?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Do employees travel out of state?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>I/they have had a business insurance policy cancelled or non-renewed in the past 3 years.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Labor interchange with other business/subsidiary?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>Do any employees predominantly work at home?</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <label class="switch">
+                                        <input class="switch-input" type="checkbox" />
+                                        <span class="switch-label" data-on="Yes" data-off="No"></span> 
+                                        <span class="switch-handle"></span> 
+                                    </label></td>
+                                    <td>I/they have filed for bankruptcy in the past 5 years.</td>
+                                </tr>
+                            </table>
+
+                            </div>
+                        </div>
+                        <div class="tab"><br>
+                            <!-- <p><input placeholder="E-mail..." oninput="this.className = ''" name="email"></p>
+                            <p><input placeholder="Phone..." oninput="this.className = ''" name="phone"></p> -->
+                            <div style="padding:3%;border: solid gray 1px;width:60%;margin:0 20% 0 20%;">
+                                <h4>Is this contact info up to date?</h4>
+                                <p>Let our insurance partner, AP Intego, know how to reach you to discuss and finalize your quote.</p>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>First name</h6>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Last name</h6>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Phone</h6>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Email</h6>
+                                        <input type="email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Requested policy start date</h6>
+                                        <input type="text" class="form-control" value="<?php echo date('m/d/Y', strtotime("+1 day")); ?>">
+                                    </div>
+                                    <!-- <div class="col-md-6">
+                                        <h6>Email</h6>
+                                        <input type="email" class="form-control">
+                                    </div> -->
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <br>
+                        <div>
+                            <div style="">
+                                <button type="button" id="prevBtn" onclick="nextPrev(-1)" style="float:left; margin:0 20% 0 20%;">Previous</button>
+                                <button type="button" id="nextBtn" onclick="nextPrev(1)" style="float:right; margin:0 20% 0 20%;">Next</button>
+                            </div>
+                        </div>
+                        <!-- Circles which indicates the steps of the form: -->
+                        <!-- <div style="text-align:center;margin-top:40px;">
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                        </div> -->
+                    </form>
+
 
                 <!-- <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Record Payment</button>
@@ -443,6 +888,66 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 	</div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Add new employee or owner</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Adding employees and owners here will help you get the most accurate quote. Need to add this info in QuickBooks? Go to <strong>Workers > Employees.</strong></p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Name</h6>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Role</h6>
+                                    <select class="form-control">
+                                        <option>Employee</option>
+                                        <option>Excluded owner/officer</option>
+                                        <option>Included owner/officer</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6>Class code</h6>
+                                    <select class="form-control">
+                                        <option>2107 - Fruit Packing (Fresh, Not Citrus)</option>
+                                        <option>2108 - Fruit Packing (Citrus)</option>
+                                        <option>2109 - Fruit Packing (Dried)</option>
+                                        <option>2123 - Fruit or Vegetable Processing - Fresh Ready-to-Eat</option>
+                                        <option>8810 - Clerical Office Employees</option>
+                                        <option>8742 - Salespersons or Collectors - Outside</option>
+                                        <option>I’m not sure, let an agent help</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Individual estimated annual payroll</h6>
+                                    <input type="number" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Ownership</h6>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-success" data-dismiss="modal"> Add </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 <?php include viewPath('includes/footer_accounting'); ?>
 <!-- <script src="<?php echo $url->assets;?>mdb5/js/mdb.min.js"></script> -->
@@ -506,4 +1011,110 @@ allNextBtn.click(function () {
 
 $('div.setup-panel div a.btn-success').trigger('click');
 });
+</script>
+
+<script>
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("prevBtn").style.display = "none";
+  } else {
+    document.getElementById("prevBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    document.getElementById("nextBtn").innerHTML = "Submit";
+  } else {
+    document.getElementById("nextBtn").innerHTML = "Next";
+  }
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("regForm").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function validateForm() {
+  // This function deals with validation of the form fields
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("tab");
+  y = x[currentTab].getElementsByTagName("input");
+  // A loop that checks every input field in the current tab:
+  for (i = 0; i < y.length; i++) {
+    // If a field is empty...
+    if (y[i].value == "") {
+      // add an "invalid" class to the field:
+      y[i].className += " invalid";
+      // and set the current valid status to false
+      valid = false;
+    }
+  }
+  // If the valid status is true, mark the step as finished and valid:
+  if (valid) {
+    document.getElementsByClassName("stepper-item")[currentTab].className += " completed";
+  }
+  return valid; // return the valid status
+}
+
+function fixStepIndicator(n) {
+  // This function removes the "active" class of all steps...
+  var i, x = document.getElementsByClassName("stepper-item");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" completed", "");
+  }
+  //... and adds the "active" class on the current step:
+  x[n].className += " completed";
+}
+</script>
+
+<script>
+(function() {
+  $(document).ready(function() {
+    $('.switch-input').on('change', function() {
+      var isChecked = $(this).is(':checked');
+      var selectedData;
+      var $switchLabel = $('.switch-label');
+      console.log('isChecked: ' + isChecked); 
+      
+      if(isChecked) {
+        selectedData = $switchLabel.attr('data-on');
+      } else {
+        selectedData = $switchLabel.attr('data-off');
+      }
+      
+      console.log('Selected data: ' + selectedData);
+      
+    });
+    
+    // Params ($selector, boolean)
+    function setSwitchState(el, flag) {
+      el.attr('', flag);
+    }
+    
+    // Usage
+    setSwitchState($('.switch-input'), true);    
+  });
+  
+})();
 </script>

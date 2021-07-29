@@ -44,8 +44,6 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 }
 
 (async function Accounting__SalesTax() {
-  console.clear();
-
   const data = [
     {
       date: "July 2020",

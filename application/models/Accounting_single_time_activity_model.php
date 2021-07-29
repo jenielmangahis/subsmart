@@ -38,4 +38,13 @@ class Accounting_single_time_activity_model extends MY_Model {
 
         return $delete;
     }
+
+    public function get_by_id($id)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('id', $id);
+        $query = $this->db->get($this->table);
+        
+        return $query->row();
+    }
 }

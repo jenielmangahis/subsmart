@@ -1,3 +1,27 @@
+.payrollTax {
+  font-family: var(--font-family-sans-serif);
+
+  .table {
+    border: 1px solid #dee2e6;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0;
+    color: #4c4c4c;
+
+    &--sm {
+      font-size: 16px;
+    }
+  }
+
+  &__spacer {
+    height: 30px;
+    display: block;
+  }
+}
+
 .payrollTaxTab {
   display: flex;
   align-items: center;
@@ -48,6 +72,121 @@
     &:hover,
     &:visited {
       color: var(--color);
+    }
+  }
+}
+
+.payrollTax {
+  --color: #6b6c72;
+
+  .payrollTax__bold {
+    font-weight: 700;
+    color: var(--color);
+  }
+
+  &__taxType {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    column-gap: 10px;
+    row-gap: 5px;
+    align-items: center;
+    color: var(--color);
+
+    &Icon {
+      font-size: 18px;
+    }
+
+    &DateRange {
+      grid-column: 2 / 4;
+      font-weight: 400;
+    }
+
+    &Btn {
+      --size: 30px;
+
+      border: 0;
+      outline: 0;
+      background-color: transparent;
+      width: var(--size);
+      height: var(--size);
+      color: var(--color);
+    }
+  }
+
+  &__paymentStatus {
+    width: max-content;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-weight: 700;
+    border-radius: 4px;
+    margin: auto;
+    background-color: rgb(0, 119, 197);
+    color: #fff;
+
+    &--accruing {
+      background-color: rgb(107, 108, 114);
+      color: #fff;
+    }
+  }
+
+  &__paymentMethod {
+    display: grid;
+    row-gap: 5px;
+    color: var(--color);
+
+    &Date {
+      font-weight: 400;
+    }
+  }
+
+  &__actions {
+    &Btn {
+      --size: 30px;
+      --color: #3a3a3a;
+
+      outline: 0;
+      border: 0;
+      padding: 0;
+      background-color: transparent;
+      height: var(--size);
+      border: 2px solid var(--color);
+      color: var(--color);
+      padding: 0 8px;
+      border-radius: var(--size);
+      min-width: 70px;
+      font-weight: 400;
+
+      &--disabled {
+        opacity: 0.5;
+        cursor: default !important;
+      }
+    }
+  }
+
+  &__secondaryRow {
+    font-weight: 400;
+    display: none;
+
+    .payrollTax__taxType {
+      grid-template-columns: 30px max-content;
+
+      & > div {
+        grid-column: 2 / 3;
+      }
+    }
+  }
+
+  &__row {
+    &--expanded {
+      & + .payrollTax__secondaryRow {
+        display: table-row;
+      }
+
+      .fa-chevron-right::before {
+        content: "\f078";
+      }
     }
   }
 }

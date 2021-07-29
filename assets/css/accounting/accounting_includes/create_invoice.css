@@ -79,7 +79,7 @@ div#create_invoice_modal {
     padding: 5px 10px;
 }
 
-#create_invoice_modal .modal-footer-check button[data-submit-type='save-send'],
+#create_invoice_modal .modal-footer-check button[data-submit-type='save-preview'],
 #create_invoice_modal .modal-footer-check button[data-toggle='dropdown'] {
     background-image: none;
     background-color: #2CA01C;
@@ -87,14 +87,13 @@ div#create_invoice_modal {
     box-shadow: none;
     border-right: none;
     font-size: 13px;
-    border-radius: 28px 0 0 28px;
     padding: 5px 15px;
     height: auto;
     border: solid 1px #2CA01C;
     margin-right: -5px;
 }
 
-#create_invoice_modal .modal-footer-check button[data-submit-type='save-send']:hover,
+#create_invoice_modal .modal-footer-check button[data-submit-type='save-preview']:hover,
 #create_invoice_modal .modal-footer-check button[data-toggle='dropdown']:hover {
     background-image: none;
     background-color: #108000;
