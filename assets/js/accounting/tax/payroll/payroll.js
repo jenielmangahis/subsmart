@@ -1,4 +1,5 @@
 (async function Accounting__Payroll() {
+  const helpers = await import("./helpers.js");
   const taxes = [
     {
       type: {
@@ -43,6 +44,7 @@
   ];
 
   const $container = $("#taxRowContainer");
+  const $loader = $container.find(".payrollTax__loaderRow");
   const template = $("#taxRowTemplate").get(0).content;
 
   taxes.forEach((tax) => {
@@ -54,11 +56,12 @@
     $dataElements.each((_, element) => {
       const $element = $(element);
       const key = $element.attr("data-type");
-      const value = Accounting__getValue(tax, key);
-
+      const value = helpers.Accounting__getValue(tax, key);
       $element.text(value);
-      if (key === "status" && value === "Accruing") {
-        $element.addClass("payrollTax__paymentStatus--accruing");
+
+      if (key === "status") {
+        const statusType = value.replace(/\s+/g, "-").toLowerCase();
+        $element.addClass(`payrollTax__paymentStatus--${statusType}`);
       }
     });
 
@@ -81,18 +84,6 @@
 
     $container.append($row);
   });
+
+  $loader.addClass("d-none");
 })();
-
-// https://stackoverflow.com/a/6394197/8062659
-function Accounting__getValue(object, selector) {
-  const parts = selector.split(".");
-  const newObj = object[parts[0]];
-
-  if (!parts[1]) {
-    return newObj;
-  }
-
-  parts.splice(0, 1);
-  const nextSelector = parts.join(".");
-  return Accounting__getValue(newObj, nextSelector);
-}

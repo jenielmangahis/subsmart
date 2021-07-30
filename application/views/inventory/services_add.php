@@ -37,7 +37,7 @@ add_css(array(
                                             Service Name
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control " name="item_name" id="item_name" required/>
+                                            <input type="text" class="form-control " name="title" id="title" required/>
                                         </div>
                                     </div>
                                     <div class="row form_line">
@@ -45,27 +45,25 @@ add_css(array(
                                             Description
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control " name="brand" id="brand" />
+                                            <input type="text" class="form-control " name="description" id="description"/>
                                         </div>
                                     </div>
                                     <div class="row form_line">
                                         <div class="col-md-4">
-                                            Cost
+                                            Price
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control " name="cost" id="cost" required/>
+                                            <input type="number" step="any" class="form-control" name="price" id="price" required/>
                                         </div>
                                     </div>
                                     <div class="row form_line">
-                                        <div class="col-md-4">
-                                            Frequency
-                                        </div>
+                                        <div class="col-md-4">Frequency</div>
                                         <div class="col-md-8">
-                                            <select class="form-control col-md-5" name="service_frequency" id="exampleFormControlSelect1">
-                                                <option selected>One Time</option>
-                                                <option>Daily</option>
-                                                <option>Monthly</option>
-                                                <option>Yearly</option>
+                                            <select class="form-control col-md-5" name="frequency" id="frequency">
+                                                <option value="One Time" selected>One Time</option>
+                                                <option value="Daily">Daily</option>
+                                                <option value="Monthly">Monthly</option>
+                                                <option value="Yearly">Yearly</option>
                                             </select>
                                         </div>
                                     </div>
@@ -74,11 +72,12 @@ add_css(array(
                                             Time Estimate
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" class="form-control " name="unit" id="unit" />
+                                            <input type="text" class="form-control " name="estimated_time" id="estimated_time" />
                                         </div>
                                     </div>
                                     <br><br>
                                     <div class="float-right d-md-block" style="position: relative;text-align:right;right: 0;">
+                                        <input type="hidden" name="type" value="service"/>
                                         <button type="button" class="btn btn-default"><span class="fa fa-remove"></span> Cancel</button>
                                         <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
                                     </div>
@@ -117,7 +116,7 @@ add_footer_js(array(
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
                     console.log(data);
-                    window.location.href="<?= base_url()?>/inventory";
+                    window.location.href="<?= base_url()?>/inventory/services";
                     //sucess_add_job(data);
                 }, beforeSend: function() {
                     document.getElementById('overlay').style.display = "flex";

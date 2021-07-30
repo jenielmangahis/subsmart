@@ -3,14 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('includes/header');
 ?>
 
-<style>
-    div.disabled {
-    pointer-events: none;
-    opacity: 0.5;
-    background: #CCC;
-    }
-</style>
-
 <template id="overdueItemTemplate">
     <div class="taxItem">
         <div>
@@ -77,7 +69,7 @@ include viewPath('includes/header');
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
-                                        <a href="<?php echo url('/accounting/salesTax') ?>" class="banking-tab <?php echo ($this->uri->segment(1) == "link_bank") ?: '-active'; ?>">Sales Tax</a>
+                                        <a href="<?php echo url('/accounting/salesTax') ?>" class="banking-tab active">Sales Tax</a>
                                         <a href="<?php echo url('/accounting/payrollTax') ?>" class="banking-tab" style="text-decoration: none">Payroll Tax</a>
                                     </div>
                                 </div>
@@ -366,26 +358,3 @@ include viewPath('includes/header');
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
 <?php include viewPath('includes/footer_accounting');?>
-<script>
-    //dropdown checkbox
-    var expanded = false;
-    function showCheckboxes() {
-        var checkboxes = document.getElementById("checkboxes");
-        if (!expanded) {
-            checkboxes.style.display = "block";
-            expanded = true;
-        } else {
-            checkboxes.style.display = "none";
-            expanded = false;
-        }
-    }
-    //DataTables JS
-    $(document).ready(function() {
-        $('#rules_table').DataTable({
-            "paging":false,
-            "language": {
-                "emptyTable": "<h5>Use rules to save time</h5> <span>Make rules for your frequently occurring transactions and tell nSmartrac exactly what should happen when conditions are met. <a href='#' data-toggle=\"modal\" data-target=\"#createRules\" style='color: #0b97c4'>Create a rule</a></span>"
-            }
-        });
-    } );
-</script>

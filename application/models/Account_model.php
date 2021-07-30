@@ -51,4 +51,32 @@ class Account_model extends MY_Model {
 			return $query->row();
 		}
 	}
+
+	public function createQuoteBusiness($data)
+	{
+		$vendor = $this->db->insert('quote_business', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+	}
+
+	public function createQuoteManagement($data)
+	{
+		$vendor = $this->db->insert('quote_management', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+	}
+
+	public function createQuoteEmployees($data)
+	{
+		$vendor = $this->db->insert('quote_employees', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+	}
+
+	public function createQuoteContacts($data)
+	{
+		$vendor = $this->db->insert('quote_contacts', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+	}
 }

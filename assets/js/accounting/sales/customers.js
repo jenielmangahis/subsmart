@@ -17,12 +17,6 @@ $(document).on('change', '#checkbox-all-action', function() {
         }
     }
 });
-$(document).on('change', 'input[type=checkbox]', function() {
-    if (!$(this).is(':checked')) {
-        $("#checkbox-all-action").prop("checked", false);
-
-    }
-});
 
 $(".section-above-table .search-holder input").on("keyup", function() {
     $(".section-above-table .search-holder ul").addClass("show");
@@ -81,4 +75,35 @@ $(document).on("click", "#customers_table ul li a.created-sales-receipt", functi
             $("#addsalesreceiptModal form input[name='location_scale']").val(data.business_address);
         },
     });
+});
+
+$(document).on('change', 'input[type=checkbox]', function() {
+    if (!$(this).is(':checked')) {
+        $("#checkbox-all-action").prop("checked", false);
+    }
+    var ctr = 0;
+    $("#customers_table tbody tr td:first-child input[type='checkbox']:checked").each(function() {
+        ctr++;
+    });
+    if (ctr == customer_length) {
+        $("#checkbox-all-action").prop("checked", true);
+    }
+    if (ctr == 0) {
+        $(".section-above-table .dropdown-holder ul li").addClass("disabled");
+    } else {
+        $(".section-above-table .dropdown-holder ul li").removeClass("disabled");
+    }
+});
+
+$(document).on("click", ".section-above-table .email-by-batch", function(event) {
+    var mail_to_bcc = "";
+    var mail_to = "";
+    $("#customers_table tbody tr td:first-child input[type='checkbox']:checked").each(function() {
+        mail_to_bcc += $(this).attr("data-email-add") + ", ";
+    });
+    if (mail_to_bcc == "") {
+        event.preventDefault();
+    } else {
+        $(this).attr("href", "mailto:" + mail_to + "?bcc=" + mail_to_bcc);
+    }
 });

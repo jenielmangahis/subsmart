@@ -1356,7 +1356,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
                     $("#job_location").val(cross + ' ' + city + ' ' + state + ' ' +
-                    country);
+                        country);
                     $("#customer_email").val(response['customer'].email);
                     $("#shipping_address").val(response['customer'].mail_add);
                     $("#billing_address").val(response['customer'].mail_add);

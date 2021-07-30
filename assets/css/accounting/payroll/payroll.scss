@@ -79,9 +79,17 @@
 .payrollTax {
   --color: #6b6c72;
 
-  .payrollTax__bold {
-    font-weight: 700;
+  &__text700,
+  &__text400 {
     color: var(--color);
+  }
+
+  &__text700 {
+    font-weight: 700;
+  }
+
+  &__text400 {
+    font-weight: 400;
   }
 
   &__taxType {
@@ -113,7 +121,8 @@
     }
   }
 
-  &__paymentStatus {
+  &__paymentStatus,
+  &__fillingStatus {
     width: max-content;
     height: 25px;
     display: flex;
@@ -121,13 +130,19 @@
     padding: 0 8px;
     font-weight: 700;
     border-radius: 4px;
-    margin: auto;
     background-color: rgb(0, 119, 197);
     color: #fff;
 
     &--accruing {
       background-color: rgb(107, 108, 114);
-      color: #fff;
+    }
+
+    &--due-soon {
+      background-color: rgb(255, 173, 0);
+    }
+
+    &--accepted {
+      background-color: rgb(16, 128, 0);
     }
   }
 
@@ -188,5 +203,20 @@
         content: "\f078";
       }
     }
+  }
+
+  &__loaderRow {
+    td {
+      font-weight: 400;
+      text-align: center;
+    }
+  }
+}
+
+.banking-tab {
+  &.active {
+    color: #404040;
+    text-decoration: none;
+    border-bottom: 5px solid grey;
   }
 }

@@ -2193,6 +2193,7 @@ class Accounting_modals extends MY_Controller {
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
 
             $timeActivityIds = [];
+            $row = 1;
             foreach($data['customer'] as $key => $value) {
                 if($value !== '') {
                     $count = 0;
@@ -2205,9 +2206,9 @@ class Accounting_modals extends MY_Controller {
                                 'name_id' => $name[1],
                                 'customer_id' => $data['customer'][$key],
                                 'service_id' => $timesheetSettings->service === "1" ? $data['service'][$key] : null,
-                                'billable' => $timesheetSettings->billable === "1" ? 1 : 0,
+                                'billable' => $timesheetSettings->billable === "1" ? $data['billable'][$key] : 0,
                                 'hourly_rate' => $timesheetSettings->billable === "1" ? $data['hourly_rate'][$key] : null,
-                                'taxable' => $timesheetSettings->billable === "1" ? 1 : 0,
+                                'taxable' => $timesheetSettings->billable === "1" ? $data['taxable'][$key] : 0,
                                 'time' => $hours,
                                 'description' => $data['description'][$key],
                                 'status' => 1,
@@ -2215,11 +2216,13 @@ class Accounting_modals extends MY_Controller {
                                 'updated_at' => date('Y-m-d h:i:s')
                             ];
 
-                            $timeActivityIds[$value][] = $this->accounting_single_time_activity_model->create($timeActData);
+                            $timeActivityIds[$row][] = $this->accounting_single_time_activity_model->create($timeActData);
                         }
 
                         $count++;
                     }
+
+                    $row++;
                 }
             }
 
@@ -2247,7 +2250,7 @@ class Accounting_modals extends MY_Controller {
                 } else {
                     $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
                     $activityIds = [];
-                    foreach(json_decode($timeSheet->time_activity_ids, true) as $cust => $ids) {
+                    foreach(json_decode($timeSheet->time_activity_ids, true) as $row => $ids) {
                         foreach($ids as $id) {
                             $activityIds[] = $id;
                         }
@@ -5238,9 +5241,9 @@ class Accounting_modals extends MY_Controller {
         $return = [];
         if($lastTimesheet) {
             $timeActivities = [];
-            foreach(json_decode($lastTimesheet->time_activity_ids, true) as $cust => $timeActs) {
+            foreach(json_decode($lastTimesheet->time_activity_ids, true) as $row => $timeActs) {
                 foreach($timeActs as $timeAct) {
-                    $timeActivities[$cust][] = $this->accounting_single_time_activity_model->get_by_id($timeAct);
+                    $timeActivities[$row][] = $this->accounting_single_time_activity_model->get_by_id($timeAct);
                 }
             }
 

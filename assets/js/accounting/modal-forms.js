@@ -22,6 +22,8 @@ var catDetailsBlank = '';
 
 var submitType = 'save-and-close';
 
+const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
 $(function() {
     $(document).on('change', '#adjust-starting-value-modal #location', function() {
         var selected = $(this).children('option:selected');
@@ -3023,9 +3025,9 @@ $(function() {
             $(this).trigger('change');
         });
         $('#modal-container .modal #tags').val(null).trigger('change');
-        $('#modal-container .modal input:not([type="checkbox"],.date)').val('').trigger('change');
+        $('#modal-container .modal input:not([type="checkbox"],.date,[type="number"],.day-input)').val('').trigger('change');
         $('#modal-container .modal input.date').val(today);
-        $('#modal-container .modal input[type="checkbox"]').each(function() {
+        $('#modal-container .modal:not(#time-activity-settings) input[type="checkbox"]').each(function() {
             $(this).prop('checked', false).trigger('change');
         });
         $('#modal-container .modal input[type="hidden"]').remove();
@@ -3134,7 +3136,7 @@ $(function() {
                                 $(this).find('select[name="customer[]"]').parent().next().append(`
                                 <div class="form-check form-check-inline">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input class="form-check-input weekly-billable" id="billable_${number}" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                        <input class="form-check-input weekly-billable" id="billable_${number}" type="checkbox" name="billable[]" value="1" onchange="showHiddenFields(this)">
                                         <label class="form-check-label" for="billable_${number}">Billable(/hr)</label>
                                     </div>
                                 </div>
@@ -3170,12 +3172,55 @@ $(function() {
                     var time_activities = timesheet.time_activities;
 
                     var count = 0;
-                    for(var cust in time_activities) {
-                        
+                    for(var row in time_activities) {
+                        var activities = time_activities[row];
+
+                        for(var activity in activities) {
+                            if($($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).length < 1) {
+                                $('#weeklyTimesheetModal #timesheet-table tbody').append(`<tr>${rowInputs}</tr>`);
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() td:first-child()').html(count+1);
+
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').val(null);
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').next('span').remove();
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() input:not([type="checkbox"])').val('');
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() textarea').val('');
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() textarea').html('');
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() input[name="billable[]"]').attr('id', `billable_${count+1}`).prop('checked', false).trigger('change');
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() input[name="billable[]"]').next().attr('for', `billable_${count+1}`);
+                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').select2();
+                            }
+
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="customer[]"]').val(activities[activity].customer_id).trigger('change');
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="service[]"]').val(activities[activity].service_id).trigger('change');
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="description[]"]').val(activities[activity].description).trigger('change');
+
+                            var date = new Date(activities[activity].date);
+                            
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find(`[name="${days[date.getDay()]}_hours[]"]`).val(activities[activity].time.slice(0, -3)).trigger('change');
+
+                            if($($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').prop('checked') === false && activities[activity].billable === "1") {
+                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').prop('checked', activities[activity].billable === "1").trigger('change');
+
+                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="taxable[]"]').prop('checked', activities[activity].taxable === "1");
+                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="hourly_rate[]"]').val(parseFloat(activities[activity].hourly_rate).toFixed(2));
+                            }
+                        }
+
+                        count++;
                     }
                 }
             });
         }
+    });
+
+    $(document).on('change', '#weeklyTimesheetModal #timesheet-table select[name="service[]"]', function() {
+        var el = $(this);
+        $.get(`/accounting/get-item-details/${$(this).val()}`, function(res) {
+            var result = JSON.parse(res);
+            var rate = result.item !== null ? result.item.price : '';
+
+            el.parent().parent().next().find('[name="hourly_rate[]"]').val(rate);
+        });
     });
 });
 
@@ -3840,11 +3885,17 @@ const showHiddenFields = (el) => {
         if($(el).prop('checked') === true) {
             var id = $(el).attr('id');
             var number = id.replace('billable_', '');
-            $(el).parent().parent().append(`<input type="number" name="hourly_rate[]" class="ml-2 w-25 form-control">
-            <div class="checkbox checkbox-sec">
-                <input type="checkbox" name="taxable[]" id="taxable_${number}" class="ml-2 form-check-input" value="1">
-                <label class="form-check-label" for="taxable_${number}">Taxable</label>
-            </div>`);
+            var serviceId = $(el).parent().parent().parent().prev().find('[name="service[]"]').val();
+
+            $.get(`/accounting/get-item-details/${serviceId}`, function(res) {
+                var result = JSON.parse(res);
+                var rate = result.item !== null ? result.item.price : '';
+                $(el).parent().parent().append(`<input type="number" name="hourly_rate[]" value="${rate}" onchange="convertToDecimal(this)" class="ml-2 w-25 form-control">
+                <div class="checkbox checkbox-sec">
+                    <input type="checkbox" name="taxable[]" id="taxable_${number}" class="ml-2 form-check-input" value="1">
+                    <label class="form-check-label" for="taxable_${number}">Taxable</label>
+                </div>`);
+            });
         } else {
             $(el).parent().parent().find('input[name="hourly_rate[]"]').remove();
             $(el).parent().parent().find('input[name="taxable[]"]').parent().remove();

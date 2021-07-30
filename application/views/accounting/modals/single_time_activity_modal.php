@@ -54,7 +54,7 @@
                                                 <div class="checkbox checkbox-sec">
                                                     <input type="checkbox" name="start_end_time" id="startEndTime"
                                                         value="1" class="form-check-input"
-                                                        onclick="showHiddenFields(this)">
+                                                        onchange="showHiddenFields(this)">
                                                     <label for="startEndTime">Enter Start and End Time</label>
                                                 </div>
                                             </div>
@@ -120,7 +120,7 @@
                                                 <div class="form-check form-check-inline">
                                                     <div class="checkbox checkbox-sec margin-right">
                                                         <input class="form-check-input" type="checkbox" name="billable"
-                                                            id="billable" value="1" onclick="showHiddenFields(this)">
+                                                            id="billable" value="1" onchange="showHiddenFields(this)">
                                                         <label class="form-check-label" for="billable">Billable(/hr)</label>
                                                     </div>
                                                     <input type="number" name="hourly_rate" id="hourlyRate"

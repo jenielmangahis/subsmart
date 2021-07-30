@@ -138,22 +138,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</button>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu"
 								aria-labelledby="dropNewTraaction">
-								<li>
+								<li class="disabled">
 									<a href="javascript:void(0)" class="">
 										Create statement
 									</a>
 								</li>
-								<li>
-									<a href="javascript:void(0)" class="">
+								<li class="disabled">
+									<a href="javascript:void(0)" class="email-by-batch">
 										Email
 									</a>
 								</li>
-								<li>
+								<li class="disabled">
 									<a href="javascript:void(0)" class="">
 										Make inactive
 									</a>
 								</li>
-								<li>
+								<li class="disabled">
 									<a href="javascript:void(0)" class="">
 										Select customer type
 									</a>

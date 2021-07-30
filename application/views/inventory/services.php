@@ -69,7 +69,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
                                                                     <li role="separator" class="divider"></li>
-                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('inventory/delete?id='.$item[3]); ?>" class="deleteJobCurrentForm"><span class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                                    <li role="presentation">
+                                                                        <a href="javascript:void(0)" id="<?= $item[3]; ?>" role="menuitem" tabindex="-1"  class="delete_service">
+                                                                            <span class="fa fa-trash-o icon"></span> Delete
+                                                                        </a>
+                                                                    </li>
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -100,3 +104,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script>
+    $(".delete_service").on("click", function(event) {
+        var ID = this.id;
+        // alert(ID);
+        Swal.fire({
+            title: 'Continue to remove this Service?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/inventory/delete",
+                    data: { id: ID}, // serializes the form's elements.
+                    success: function(data) {
+                        if (data === "1") {
+                            window.location.reload();
+                        } else {
+                            console.log(data);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
