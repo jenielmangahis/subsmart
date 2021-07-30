@@ -209,7 +209,7 @@
 
 <div><?php include viewPath('accounting/customer_invoice_modal'); ?>
 </div>
-<div><?php include viewPath('accounting/customer_receive_payment_modal'); ?>
+<div><?php // include viewPath('accounting/customer_receive_payment_modal'); ?>
 </div>
 <div><?php include viewPath('accounting/customer_estimate_modal'); ?>
 </div>
@@ -230,9 +230,6 @@
 <div><?php include viewPath('accounting/vendor_credit_card_modal'); ?>
 </div>
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?>
-</div>
-<div>
-    <?php //include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
 </div>
 <?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
 

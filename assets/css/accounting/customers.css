@@ -253,3 +253,11 @@
         font-weight: 700;
         margin-bottom: 10px;
     }
+    
+    .section-above-table .dropdown-holder ul li.disabled,
+    .section-above-table .dropdown-holder ul li.disabled a {
+        pointer-events: none!important;
+        opacity: 0.6!important;
+        color: #333333!important;
+        cursor: auto!important;
+    }

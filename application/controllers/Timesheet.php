@@ -2131,27 +2131,21 @@ class Timesheet extends MY_Controller
                 }
                 $date_created = date('m-d-Y h:i A', strtotime($notify->date_created));
 
-                if($notify->title == 'New Work Order'){
-
-
+                if ($notify->title == 'New Work Order') {
                     $html .= '<a href="' . site_url() . 'workorder" id="notificationDP"
                             data-id=' . $notify->id . '" class="dropdown-item notify-item active"
                             style="background-color:' . $bg . '">
                             <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
                             <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
                             </a>';
-                }
-                elseif($notify->title == 'New Estimates'){
-
+                } elseif ($notify->title == 'New Estimates') {
                     $html .= '<a href="' . site_url() . 'estimate" id="notificationDP"
                     data-id=' . $notify->id . '" class="dropdown-item notify-item active"
                     style="background-color:' . $bg . '">
                     <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
                     <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
                     </a>';
-                }
-                else{
-
+                } else {
                     $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
                             data-id=' . $notify->id . '" class="dropdown-item notify-item active"
                             style="background-color:' . $bg . '">
@@ -2487,7 +2481,7 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c');
         $output = json_decode($g_map);
         $status = $output->status;
         $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
@@ -2506,7 +2500,7 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c');
         $output = json_decode($g_map);
         $status = $output->status;
 

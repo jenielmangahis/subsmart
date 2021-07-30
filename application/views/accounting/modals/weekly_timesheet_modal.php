@@ -157,7 +157,7 @@
                                                                                 <?php if($timesheetSettings->billable === "1") : ?>
                                                                                 <div class="form-check form-check-inline">
                                                                                     <div class="checkbox checkbox-sec margin-right">
-                                                                                        <input class="form-check-input weekly-billable" id="billable_1" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                                                                        <input class="form-check-input weekly-billable" id="billable_1" type="checkbox" name="billable[]" value="1" onchange="showHiddenFields(this)">
                                                                                         <label class="form-check-label" for="billable_1">Billable(/hr)</label>
                                                                                     </div>
                                                                                 </div>
@@ -200,7 +200,7 @@
                                                                                 <?php if($timesheetSettings->billable === "1") : ?>
                                                                                 <div class="form-check form-check-inline">
                                                                                     <div class="checkbox checkbox-sec margin-right">
-                                                                                        <input class="form-check-input weekly-billable" id="billable_2" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                                                                        <input class="form-check-input weekly-billable" id="billable_2" type="checkbox" name="billable[]" value="1" onchange="showHiddenFields(this)">
                                                                                         <label class="form-check-label" for="billable_2">Billable(/hr)</label>
                                                                                     </div>
                                                                                 </div>
@@ -243,7 +243,7 @@
                                                                                 <?php if($timesheetSettings->billable === "1") : ?>
                                                                                 <div class="form-check form-check-inline">
                                                                                     <div class="checkbox checkbox-sec">
-                                                                                        <input class="form-check-input weekly-billable" id="billable_3" type="checkbox" name="billable[]" value="1" onclick="showHiddenFields(this)">
+                                                                                        <input class="form-check-input weekly-billable" id="billable_3" type="checkbox" name="billable[]" value="1" onchange="showHiddenFields(this)">
                                                                                         <label class="form-check-label" for="billable_3">Billable(/hr)</label>
                                                                                     </div>
                                                                                 </div>

@@ -112,7 +112,7 @@ class Inventory extends MY_Controller
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['active_category'] = "Show All";
-        $type    = $this->page_data['type']  = "service";
+        $type    = $this->page_data['type']  = "fees";
         $role_id = logged('role');
         if (!empty($get['category'])) {
             if( $role_id == 1 || $role_id == 2 ){
@@ -128,15 +128,10 @@ class Inventory extends MY_Controller
             }else{
                 $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
             }
-
             $items = $this->items_model->getByWhere($arg);
         }
 
         $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
-        $comp = array(
-            'company_id' => $comp_id
-        );
-        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
 
         if($page == null){
             $this->load->view('inventory/fees', $this->page_data);
@@ -331,6 +326,31 @@ class Inventory extends MY_Controller
             echo "0";
         }
     }
+
+    public function  save_new_service()
+    {
+        $input = $this->input->post();
+        $input['is_active'] =  1;
+        $input['company_id'] =  logged('company_id');
+        if ($this->general->add_($input, "items")) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
+
+    public function delete()
+    {
+        $id = $_POST['id'];
+        $remove_item = array(
+            'where' => array('id' =>$id),
+            'table' => 'items'
+        );
+        if ($this->general->delete_($remove_item)) {
+            echo '1';
+        }
+    }
+
 
     public function saveItems()
     {
@@ -599,16 +619,7 @@ class Inventory extends MY_Controller
         }
     }
 
-    public function delete() {
-        $id = $_POST['id'];
-        $remove_item = array(
-            'where' => array('id' =>$id),
-            'table' => 'items'
-        );
-        if ($this->general->delete_($remove_item)) {
-            echo '1';
-        }
-    }
+
 
     public function categorizeNameAlphabetically($items) {
         $result = array();

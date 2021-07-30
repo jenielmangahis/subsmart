@@ -160,7 +160,7 @@ class Dashboard extends Widgets {
 
         // get customer subscription history
         $feeds_query = array(
-            'where' => array('company_id' => logged('company_id')),
+            //'where' => array('company_id' => logged('company_id')),
             'table' => 'feed',
             'select' => '*',
         );

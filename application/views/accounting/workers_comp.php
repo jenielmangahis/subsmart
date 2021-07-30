@@ -569,29 +569,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span aria-hidden="true" style="font-size:24px;">X</span>
                         </button>
                     </div> -->
-                    <div style="padding:3%;width:60%;margin:0 20% 0 20%;">
-                        <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
-
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"  style="float:right;">
-                            <span aria-hidden="true" style="font-size:24px;">X</span>
-                        </button>
+                    <div style="padding:3%;width:65%;margin:0 20% 0 20%;">
+                        <div class="row">
+                            <div class="col-md-6">
+                              <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
+                            </div>
+                            <div class="col-md-6">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"  style="float:right;">
+                                  <span aria-hidden="true" style="font-size:24px;">X</span>
+                              </button>
+                            </div>
+                        </div>
                     </div>
-					<div class="stepper-wrapper" style="margin:0 10% 0 10%;width:80%;">
-						<div class="stepper-item completed">
-							<div class="step-counter">1</div>
-							<div class="step-name">Get started</div>
-						</div>
-						<div class="stepper-item ">
-							<div class="step-counter">2</div>
-							<div class="step-name">Details</div>
-						</div>
-						<div class="stepper-item ">
-							<div class="step-counter">3</div>
-							<div class="step-name">Quote</div>
-						</div>
-					</div>
+
+                    <div class="stepper-wrapper" style="margin:0 10% 0 10%;width:80%;">
+                      <div class="stepper-item completed">
+                        <div class="step-counter">1</div>
+                        <div class="step-name">Get started</div>
+                      </div>
+                      <div class="stepper-item ">
+                        <div class="step-counter">2</div>
+                        <div class="step-name">Details</div>
+                      </div>
+                      <div class="stepper-item ">
+                        <div class="step-counter">3</div>
+                        <div class="step-name">Quote</div>
+                      </div>
+                    </div>
                     
-					<form id="regForm" action="">
+					          <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
+                    <?php //echo form_open_multipart('accounting/addInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
                         <!-- One "tab" for each step in the form: -->
                         <div class="tab"><br>
                             <!-- <p><input placeholder="First name..." oninput="this.className = ''" name="fname"></p>
@@ -697,6 +704,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <th>ROLE</th>
                                         <th>OWNERSHIP</th>
                                     </thead>
+                                    <tbody id="employeesTable">
+                                    </tbody>
                                 </table>
                                 <br>
                                 <a class="link-modal-open" href="#" id="" data-toggle="modal" data-target="#item_list">Add new employee or owner</a>
@@ -869,6 +878,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div style="">
                                 <button type="button" id="prevBtn" onclick="nextPrev(-1)" style="float:left; margin:0 20% 0 20%;">Previous</button>
                                 <button type="button" id="nextBtn" onclick="nextPrev(1)" style="float:right; margin:0 20% 0 20%;">Next</button>
+                                <input type="submit"  id="completeBtn" value="Submit" class="btn btn-success" style="display:none;float:right; margin:0 20% 0 20%;width:100px;">
                             </div>
                         </div>
                         <!-- Circles which indicates the steps of the form: -->
@@ -878,6 +888,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span class="step"></span>
                         </div> -->
                     </form>
+                    <?php //echo form_close(); ?>
 
 
                 <!-- <div class="modal-footer">
@@ -899,58 +910,59 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" id="divpopemp">
                             <p>Adding employees and owners here will help you get the most accurate quote. Need to add this info in QuickBooks? Go to <strong>Workers > Employees.</strong></p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h6>Name</h6>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" id="fullName">
                                 </div>
                                 <div class="col-md-6">
                                     <h6>Role</h6>
-                                    <select class="form-control">
-                                        <option>Employee</option>
-                                        <option>Excluded owner/officer</option>
-                                        <option>Included owner/officer</option>
+                                    <select class="form-control" id="mRole">
+                                        <option value="Employee">Employee</option>
+                                        <option value="Excluded owner/office">Excluded owner/officer</option>
+                                        <option value="Included owner/officer">Included owner/officer</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <h6>Class code</h6>
-                                    <select class="form-control">
-                                        <option>2107 - Fruit Packing (Fresh, Not Citrus)</option>
-                                        <option>2108 - Fruit Packing (Citrus)</option>
-                                        <option>2109 - Fruit Packing (Dried)</option>
-                                        <option>2123 - Fruit or Vegetable Processing - Fresh Ready-to-Eat</option>
-                                        <option>8810 - Clerical Office Employees</option>
-                                        <option>8742 - Salespersons or Collectors - Outside</option>
-                                        <option>I’m not sure, let an agent help</option>
+                                    <select class="form-control" id="classCode">
+                                        <option value="2107 - Fruit Packing (Fresh, Not Citrus)">2107 - Fruit Packing (Fresh, Not Citrus)</option>
+                                        <option value="2108 - Fruit Packing (Citrus">2108 - Fruit Packing (Citrus)</option>
+                                        <option value="2109 - Fruit Packing (Dried)">2109 - Fruit Packing (Dried)</option>
+                                        <option value="2123 - Fruit or Vegetable Processing - Fresh Ready-to-Eat">2123 - Fruit or Vegetable Processing - Fresh Ready-to-Eat</option>
+                                        <option value="8810 - Clerical Office Employees">8810 - Clerical Office Employees</option>
+                                        <option value="8742 - Salespersons or Collectors - Outside">8742 - Salespersons or Collectors - Outside</option>
+                                        <option value="I’m not sure, let an agent help">I’m not sure, let an agent help</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h6>Individual estimated annual payroll</h6>
-                                    <input type="number" class="form-control">
+                                    <input type="number" class="form-control" id="annualPayroll">
                                 </div>
                                 <div class="col-md-6">
                                     <h6>Ownership</h6>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" id="mOwnership">
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer modal-footer-detail">
                             <div class="button-modal-list">
-                                <button type="button" class="btn btn-success" data-dismiss="modal"> Add </button>
+                                <a href="#" class="btn btn-success addEmployeeData" id="addEmployeeData" data-dismiss="modal"> Add </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+
+
 <?php include viewPath('includes/footer_accounting'); ?>
-<!-- <script src="<?php echo $url->assets;?>mdb5/js/mdb.min.js"></script> -->
 
 <script>
 // $(document).ready(function () {
@@ -1028,7 +1040,9 @@ function showTab(n) {
     document.getElementById("prevBtn").style.display = "inline";
   }
   if (n == (x.length - 1)) {
-    document.getElementById("nextBtn").innerHTML = "Submit";
+    // document.getElementById("nextBtn").innerHTML = "Submit";
+    $("#nextBtn").hide();
+    $("#completeBtn").show();
   } else {
     document.getElementById("nextBtn").innerHTML = "Next";
   }
@@ -1072,7 +1086,7 @@ function validateForm() {
   }
   // If the valid status is true, mark the step as finished and valid:
   if (valid) {
-    document.getElementsByClassName("stepper-item")[currentTab].className += " completed";
+    document.getElementsByClassName("stepper-item")[currentTab].className += " finish";
   }
   return valid; // return the valid status
 }
@@ -1117,4 +1131,39 @@ function fixStepIndicator(n) {
   });
   
 })();
+</script>
+
+<script>
+$("#addEmployeeData").click(function () {
+// alert('test');
+  var fullName = $("#fullName").val();
+  var mRole = $("#mRole").val();
+  var classCode = $("#classCode").val();
+  var annualPayroll = $("#annualPayroll").val();
+  var mOwnership = $("#mOwnership").val();
+
+              markup = "<tr id=\"ss\">" +
+                "<td><span>"+fullName+"</span><input  value='"+fullName+"' type=\"hidden\" name=\"mfullName[]\"></td>\n" +
+                "<td><span>"+classCode+"</span><input  value='"+classCode+"' type=\"hidden\" name=\"classCode[]\"></td>\n" +
+                "<td><span>"+mRole+"</span><input  value='"+mRole+"' type=\"hidden\" name=\"mRole[]\"></td>\n" +
+                "<td><span>"+mOwnership+"</span><input  value='"+mOwnership+"' type=\"hidden\" name=\"mOwnership[]\"></td>\n" +
+                "<td>\n" +
+                "<a href=\"#\" class=\"remove btn btn-success\"><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                "</td>\n" +
+                "</tr>";
+            tableBody = $("#employeesTable");
+            tableBody.append(markup);
+
+            $("#divpopemp").load(location.href + " #divpopemp");
+
+});
+
+</script>
+
+<script>
+// $(document).on('hidden.bs.modal', function (e) {
+//         var target = $(e.target);
+//         target.removeData('bs.modal')
+//               .find(".modal-content").html('');
+//     });
 </script>

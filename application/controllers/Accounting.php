@@ -361,6 +361,78 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/invoice_edit', $this->page_data);
     }
 
+    public function addQuote()
+    {
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        $new_data = array(
+            'general_industry'                  => $this->input->post('general_industry'),
+            'type_of_business'                  => $this->input->post('type_of_business'),
+            'classification'                    => $this->input->post('classification'),
+            'business_name'                     => $this->input->post('business_name'),
+            'business_address'                  => $this->input->post('business_address'),
+            'suite'                             => $this->input->post('suite'),
+            'year_started'                      => $this->input->post('year_started'),
+            'legal_entity_type'                 => $this->input->post('legal_entity_type'),
+            'federal_identification_number'     => $this->input->post('federal_identification_number'),
+            'created_by'                        => logged('id'),
+            'company_id'                        => $comp_id,
+            'date_created'                      => date("Y-m-d H:i:s"),
+            'date_modified'                     => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->account_model->createQuoteBusiness($new_data);
+
+        $new_data = array(
+            'total_est_annual_payroll'          => $this->input->post('total_est_annual_payroll'),
+            'payroll_frequency'                 => $this->input->post('payroll_frequency'),
+            'quote_business'                    => $addQuery,
+            'company_id'                        => $comp_id,
+            'date_created'                      => date("Y-m-d H:i:s"),
+            'date_modified'                     => date("Y-m-d H:i:s")
+        );
+
+        $addQuery2 = $this->account_model->createQuoteManagement($new_data);
+
+            $a = $this->input->post('name');
+            $b = $this->input->post('role');
+            $c = $this->input->post('class_code');
+            $d = $this->input->post('annual_payroll');
+            $e = $this->input->post('ownership');
+
+            $i = 0;
+            foreach ($a as $row) {
+                $data['name'] = $a[$i];
+                $data['role'] = $b[$i];
+                $data['class_code'] = $c[$i];
+                $data['annual_payroll'] = $d[$i];
+                $data['ownership'] = $e[$i];
+                $data['quote_management_id'] = $addQuery2;
+                // $data['created_at'] = date("Y-m-d H:i:s");
+                // $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->account_model->createQuoteEmployees($data);
+                $i++;
+            }
+
+        $new_data = array(
+            'fname'                             => $this->input->post('total_est_annual_payroll'),
+            'lname'                             => $this->input->post('payroll_frequency'),
+            'phone'                             => $this->input->post('phone'),
+            'email'                             => $this->input->post('email'),
+            'requested_policy_start_date'       => $this->input->post('requested_policy_start_date'),
+            'quote_business'                    => $addQuery,
+            'company_id'                        => $comp_id,
+            'date_created'                      => date("Y-m-d H:i:s"),
+            'date_modified'                     => date("Y-m-d H:i:s")
+        );
+    
+            $addQuery3 = $this->account_model->createQuoteContacts($new_data);
+
+
+        $this->load->view('accounting/workers-comp');
+    }
+
     public function adjust_starting_value_form($item_id)
     {
         $accounts = $this->chart_of_accounts_model->select();
@@ -6468,15 +6540,16 @@ class Accounting extends MY_Controller
 
     public function payrollTax()
     {
-        add_css([
-            'assets/css/accounting/payroll/payroll.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/accounting/tax/payroll/payroll.js',
-        ]);
-
+        add_css('assets/css/accounting/payroll/payroll.css');
+        add_footer_js('assets/js/accounting/tax/payroll/payroll.js');
         $this->load->view('accounting/payrollTax', $this->page_data);
+    }
+
+    public function payrollTaxFillings()
+    {
+        add_css('assets/css/accounting/payroll/payroll.css');
+        add_footer_js('assets/js/accounting/tax/payroll/fillings.js');
+        $this->load->view('accounting/payrollTaxFillings', $this->page_data);
     }
 
     // public function sendmerchantEmail()
@@ -6764,22 +6837,6 @@ class Accounting extends MY_Controller
         // file_put_contents('./uploads/image.png', $data);
         // echo "1";
     }
-    public function get_customer_search_result()
-    {
-        $value = $this->input->post("value");
-        $search_results = $this->accounting_invoices_model->get_customer_search_result($value);
-        $html="";
-        foreach ($search_results as $customer) {
-            $html.='<li>
-                <a href="javascript:void(0)" class="">
-                    '.$customer->name.'
-                </a>
-            </li>';
-        }
-        $data = new stdClass();
-        $data->html = $html;
-        echo json_encode($data);
-    }
 
     
     public function send_customer_reminder()
@@ -6855,12 +6912,12 @@ class Accounting extends MY_Controller
             $first_option_class="customer_craete_invoice_btn";
             $amount =($receivable_payment - $total_amount_received);
             if ($amount > 0) {
-                $first_option = "Receive rayment";
+                $first_option = "Receive payment";
                 $first_option_class="customer_receive_payment_btn";
             }
             $html .= '<tr>
 								<td class="center"><input type="checkbox"
-										name="checkbox'.$counter.'"> 
+										name="checkbox'.$counter.'" data-customer-id="'.$cus->prof_id.'" data-email-add="'.$cus->email.'"> 
 								</td>
 								<td>'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name .'
 								</td>
@@ -7335,6 +7392,22 @@ class Accounting extends MY_Controller
         } elseif ($action=="print-saver") {
             return $data;
         }
+    }
+    public function get_customer_search_result()
+    {
+        $value = $this->input->post("value");
+        $search_results = $this->accounting_invoices_model->get_customer_search_result($value);
+        $html="";
+        foreach ($search_results as $customer) {
+            $html.='<li>
+                <a href="javascript:void(0)" class="">
+                    '.$customer->name.'
+                </a>
+            </li>';
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        echo json_encode($data);
     }
     public function send_email_receive_payment($customer_id)
     {

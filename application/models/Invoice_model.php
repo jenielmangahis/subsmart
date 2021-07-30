@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Invoice_model extends MY_Model
 {
-
     public $table = 'invoices';
 
 
@@ -12,39 +11,14 @@ class Invoice_model extends MY_Model
         $role = logged('role');
 
         if ($role == 2 || $role == 3) {
-
             $comp_id = logged('company_id');
 
             return $this->getAllByCompany($comp_id);
-
         } else {
-
             return $this->getAllByUserId();
         }
     }
 
-    public function getAllData($company_id)
-    {
-        $where = array(
-            'invoices.company_id'      => $company_id,
-            'invoices.view_flag'                => '0',
-          );
-
-        // $company_id = getLoggedCompanyID();
-        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
-
-        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
-
-        $this->db->from('invoices');
-        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
-
-        // $this->db->select('*');
-        // $this->db->from($this->table);
-        $this->db->where($where);
-        $query = $this->db->get();
-
-		return $query->result();
-    }
 
     public function delete_items($id)
     {
@@ -97,7 +71,7 @@ class Invoice_model extends MY_Model
             // 'phone'                     => $this->input->post('phone'),
             'payment_schedule'          => $payment_schedule,
             'sub_total'                 => $subtotal,
-            'taxes'                     => $taxes, 
+            'taxes'                     => $taxes,
             'adjustment_name'           => $adjustment_name,
             'adjustment_value'          => $adjustment_value,
             'grand_total'               => $grand_total,
@@ -107,11 +81,12 @@ class Invoice_model extends MY_Model
         return true;
     }
 
-    public function createInvoice($data){
-	    $vendor = $this->db->insert('invoices', $data);
-	    $insert_id = $this->db->insert_id();
-		return  $insert_id;
-	}
+    public function createInvoice($data)
+    {
+        $vendor = $this->db->insert('invoices', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
 
     public function getAllByCompany($comp_id, $type, $filter = array())
     {
@@ -121,9 +96,7 @@ class Invoice_model extends MY_Model
         $this->db->where('is_recurring', $type);
 
         if (!empty($filter)) {
-
             if (isset($filter['q'])) {
-
                 $this->db->like('contact_name', $filter['q'], 'both');
             }
         }
@@ -134,7 +107,6 @@ class Invoice_model extends MY_Model
 
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0, $filter = array())
     {
-
         $user_id = getLoggedUserID();
 
         $this->db->select('*');
@@ -147,9 +119,7 @@ class Invoice_model extends MY_Model
         }
 
         if (!empty($filter)) {
-
             if (isset($filter['q'])) {
-
                 $this->db->like('contact_name', $filter['q'], 'both');
             }
         }
@@ -163,7 +133,6 @@ class Invoice_model extends MY_Model
 
     public function getinvoice($invoice_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $invoice_id);
@@ -175,8 +144,8 @@ class Invoice_model extends MY_Model
     public function getItems($id)
     {
         $this->db->select('*');
-		$this->db->from('invoices');
-		$this->db->where('id', $id);
+        $this->db->from('invoices');
+        $this->db->where('id', $id);
         $query = $this->db->get();
         $cus = $query->row();
         // // foreach($query as $q){
@@ -189,9 +158,9 @@ class Invoice_model extends MY_Model
           );
 
         $this->db->select('*');
-		$this->db->from('item_details');
+        $this->db->from('item_details');
         // $this->db->where('type', 'Work Order');
-		// $this->db->where('type_id', $cus->id);
+        // $this->db->where('type_id', $cus->id);
         $this->db->where($where);
         $query2 = $this->db->get();
         return $query2->result();
@@ -204,7 +173,7 @@ class Invoice_model extends MY_Model
           );
 
         $this->db->select('*, invoices_items.cost as costing');
-		$this->db->from('invoices_items');
+        $this->db->from('invoices_items');
         $this->db->join('items', 'invoices_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
@@ -219,7 +188,7 @@ class Invoice_model extends MY_Model
 
         $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
         $this->db->join('acs_profile', 'payment_records.customer_id = acs_profile.prof_id');
-		$this->db->from('payment_records');
+        $this->db->from('payment_records');
         $this->db->where($where);
         $query2 = $this->db->get();
         return $query2->result();
@@ -236,8 +205,8 @@ class Invoice_model extends MY_Model
     public function getInvoiceCustomer($id)
     {
         $this->db->select('*');
-		$this->db->from('invoices');
-		$this->db->where('id', $id);
+        $this->db->from('invoices');
+        $this->db->where('id', $id);
         $query = $this->db->get();
         $cus = $query->row();
         // // foreach($query as $q){
@@ -249,18 +218,39 @@ class Invoice_model extends MY_Model
           );
 
         $this->db->select('*');
-		$this->db->from('acs_profile');
+        $this->db->from('acs_profile');
         // $this->db->where('type', 'Work Order');
-		// $this->db->where('type_id', $cus->id);
+        // $this->db->where('type_id', $cus->id);
         $this->db->where($where);
         $query2 = $this->db->get();
         return $query2->row();
     }
 
+    public function getAllData($company_id)
+    {
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'invoices.view_flag'                => '0',
+          );
+
+        // $company_id = getLoggedCompanyID();
+        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
+
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
+
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 
     public function saveServiceAddress($data, $invoice_id = 0)
     {
-
         $old_addresses = $this->getServiceAddress(array('id' => $invoice_id));
 
         // if ( !empty($old_addresses) ) {
@@ -273,27 +263,21 @@ class Invoice_model extends MY_Model
         // }
 
         if (isset($data['data_index']) && $data['data_index'] >= 0) {
-
             $old_addresses[$data['data_index']] = $data;
         } else {
-
             if (!empty($old_addresses)) {
-
                 array_push($old_addresses, $data);
             } else {
-
                 $old_addresses = array();
                 array_push($old_addresses, $data);
             }
         }
 
         if ($invoice_id) {
-
             $this->db->where('id', $invoice_id);
 
             return $this->db->update($this->table, ['service_address' => serialize($old_addresses)]);
         } else {
-
             $this->db->insert($this->table, ['service_address' => serialize($old_addresses)]);
         }
 
@@ -303,26 +287,21 @@ class Invoice_model extends MY_Model
 
     public function getServiceAddress($params = array(), $index = -1)
     {
-
         $this->db->select('service_address');
         $this->db->from($this->table);
 
         if (isset($params['session_invoice_id'])) {
-
             $this->db->where('id', $params['session_invoice_id']);
         } elseif (isset($params['id'])) {
-
             $this->db->where('id', $params['id']);
         }
 
         $query = $this->db->get();
 
         if (!empty($query)) {
-
             $addresses = unserialize($query->row('service_address'));
 
             if ((!empty($addresses)) && $index >= 0) {
-
                 return $addresses[$index];
             }
 
@@ -335,11 +314,9 @@ class Invoice_model extends MY_Model
 
     public function removeServiceAddress($invoice_id, $index)
     {
-
         $addresses = $this->getServiceAddress(['id' => $invoice_id]);
 
         if ($addresses !== false) {
-
             array_splice($addresses, $index, 1);
 
             // update the DB
@@ -354,26 +331,21 @@ class Invoice_model extends MY_Model
 
     public function getAdditionalContacts($params = array(), $index = -1)
     {
-
         $this->db->select('additional_contacts');
         $this->db->from($this->table);
 
         if (isset($params['session_invoice_id'])) {
-
             $this->db->where('id', $params['session_invoice_id']);
         } elseif (isset($params['id'])) {
-
             $this->db->where('id', $params['id']);
         }
 
         $query = $this->db->get();
 
         if (!empty($query)) {
-
             $addresses = unserialize($query->row('additional_contacts'));
 
             if ((!empty($addresses)) && $index >= 0) {
-
                 return $addresses[$index];
             }
 
@@ -386,22 +358,17 @@ class Invoice_model extends MY_Model
 
     public function saveAdditionalContact($data, $invoice_id = 0)
     {
-
         $old_contacts = $this->getAdditionalContacts(array('id' => $invoice_id));
 
         // print_r($old_contacts); die;
 
         // if edit action perform
         if (isset($data['data_index']) && $data['data_index'] >= 0) {
-
             $old_contacts[$data['data_index']] = $data;
         } else {
-
             if (!empty($old_contacts)) {
-
                 array_push($old_contacts, $data);
             } else {
-
                 $old_contacts = array();
                 array_push($old_contacts, $data);
             }
@@ -410,7 +377,6 @@ class Invoice_model extends MY_Model
         // print_r($invoice_id); die;
 
         if ($invoice_id) {
-
             $this->db->where('id', $invoice_id);
 
             return $this->db->update($this->table, ['additional_contacts' => serialize($old_contacts)]);
@@ -426,11 +392,9 @@ class Invoice_model extends MY_Model
 
     public function removeAdditionalContact($invoice_id, $index)
     {
-
         $addresses = $this->getAdditionalContacts(['id' => $invoice_id]);
 
         if ($addresses !== false) {
-
             array_splice($addresses, $index, 1);
 
             // update the DB
@@ -443,9 +407,8 @@ class Invoice_model extends MY_Model
     }
 
 
-    function getStatusWithCount($company_id = 0, $type)
+    public function getStatusWithCount($company_id = 0, $type)
     {
-
         $this->db->select('id, status, COUNT(id) as total');
         $this->db->from($this->table);
         $this->db->where('is_recurring', $type);
@@ -454,7 +417,6 @@ class Invoice_model extends MY_Model
         if (isset($company_id)) {
             $this->db->where('company_id', $company_id);
         } else {
-
             $this->db->where('user_id', getLoggedUserID());
         }
 
@@ -462,18 +424,15 @@ class Invoice_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
-
     }
 
     public function filterBy($filters = array(), $company_id = 0, $type)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('is_recurring', $type);
 
         if (!empty($filters)) {
-
             if (isset($filters['status'])) {
                 switch ($filters['status']) {
                     case 2:
@@ -502,7 +461,6 @@ class Invoice_model extends MY_Model
                     $this->db->where('status', $filters['status']);
                     break;
                 }
-
             } elseif (isset($filters['search'])) {
                 $this->db->group_start();
                 $this->db->or_like('invoices.invoice_number', $filters['search']);
@@ -516,12 +474,10 @@ class Invoice_model extends MY_Model
         if (isset($company_id)) {
             $this->db->where('company_id', $company_id);
         } else {
-
             $this->db->where('user_id', getLoggedUserID());
         }
 
         if (!empty($filters['order'])) {
-
             switch ($filters['order']) {
 
                 case 'created_at-asc':
@@ -558,15 +514,15 @@ class Invoice_model extends MY_Model
     public function add_invoice_items($data)
     {
         $vendor = $this->db->insert('invoices_items', $data);
-	    $insert_id = $this->db->insert_id();
-		return  $insert_id;
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
     }
 
     public function getInvoiceItems($id)
     {
         // $this->db->select('*');
-		// $this->db->from('work_orders_items');
-		// $this->db->where('work_order_id', $id);
+        // $this->db->from('work_orders_items');
+        // $this->db->where('work_order_id', $id);
         // $query = $this->db->get();
         // $cus = $query->row();
 
@@ -575,31 +531,31 @@ class Invoice_model extends MY_Model
         // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
 
         $this->db->select('*, invoices_items.cost as iCost, invoices_items.tax as itax, invoices_items.total as iTotal');
-		$this->db->from('invoices_items');
+        $this->db->from('invoices_items');
         $this->db->join('items', 'invoices_items.items_id  = items.id');
         $this->db->where('invoice_id', $id);
         $query2 = $this->db->get();
         return $query2->result();
     }
 
-    function duplicateRecord($primary_key, $comp_id) {
-
+    public function duplicateRecord($primary_key, $comp_id)
+    {
         $this->db->where('id', $primary_key);
         $query = $this->db->get($this->table);
         $invoice = $this->getLastRow($comp_id);
         $new_invoice_number = explode("-", $invoice->invoice_number)[0] . '-' . strval(intval(explode("-", $invoice->invoice_number)[1]) + 1);
 
-        foreach ($query->result() as $row){
-            foreach($row as $key=>$val){
-                if($key != 'id' && $key != 'invoice_number' && $key != 'status' && $key != 'created_at' && $key != 'updated_at'){
+        foreach ($query->result() as $row) {
+            foreach ($row as $key=>$val) {
+                if ($key != 'id' && $key != 'invoice_number' && $key != 'status' && $key != 'created_at' && $key != 'updated_at') {
                     $this->db->set($key, $val);
                 }
 
-                if($key === 'invoice_number'){
+                if ($key === 'invoice_number') {
                     $this->db->set($key, $new_invoice_number);
                 }
 
-                if($key === 'status'){
+                if ($key === 'status') {
                     $this->db->set($key, "Draft");
                 }
             }
@@ -608,23 +564,25 @@ class Invoice_model extends MY_Model
         return $this->db->insert($this->table);
     }
 
-    function markAsSent ($id) {
+    public function markAsSent($id)
+    {
         $this->db->where('id', $id);
         return $this->db->update($this->table, ['status' => 'Due']);
     }
 
-    function getLastRow ($comp_id) {
+    public function getLastRow($comp_id)
+    {
         $this->db->select("*");
         $this->db->from($this->table);
         $this->db->where('company_id', $comp_id);
         $this->db->limit(1);
-        $this->db->order_by('id',"DESC");
+        $this->db->order_by('id', "DESC");
         $query = $this->db->get();
         return $query->row();
     }
 
-    public function getlastInsert(){
-
+    public function getlastInsert()
+    {
         $this->db->select('*');
         $this->db->from('invoices');
         // $this->db->where('company_id', $company_id);
@@ -639,8 +597,8 @@ class Invoice_model extends MY_Model
     public function savenewCustomer($data)
     {
         $custom = $this->db->insert('acs_profile', $data);
-	    $insert = $this->db->insert_id();
-		return  $insert;
+        $insert = $this->db->insert_id();
+        return  $insert;
     }
 }
 

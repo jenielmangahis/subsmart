@@ -384,8 +384,8 @@
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="credit_card_payments" value="1" id="credit_card_payments"
-                                            checked>
+                                        <input type="checkbox" name="credit_card_payments" value="1"
+                                            id="credit_card_payments" checked>
                                         <label for="credit_card_payments"><span>Credit Card Payments ()</span></label>
                                     </div>
                                     <div class="faded-info">Your client can pay your invoice using credit card or bank
@@ -403,31 +403,32 @@
 
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="bank_transfer"  value="1" id="bank_transfer" checked>
+                                        <input type="checkbox" name="bank_transfer" value="1" id="bank_transfer"
+                                            checked>
                                         <label for="bank_transfer"><span>Bank Transfer</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="instapay"  value="1" id="instapay" checked>
+                                        <input type="checkbox" name="instapay" value="1" id="instapay" checked>
                                         <label for="instapay"><span>Instapay</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="check"  value="1" id="check" checked>
+                                        <input type="checkbox" name="check" value="1" id="check" checked>
                                         <label for="check"><span>Check</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="cash"  value="1" id="cash" checked>
+                                        <input type="checkbox" name="cash" value="1" id="cash" checked>
                                         <label for="cash"><span>Cash</span></label>
                                     </div>
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="deposit"  value="1" id="deposit" checked>
+                                        <input type="checkbox" name="deposit" value="1" id="deposit" checked>
                                         <label for="deposit"><span>Deposit</span></label>
                                     </div>
                                 </div>
@@ -481,11 +482,9 @@
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-4" style="padding-left: 30px;">
-                                <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                <button class="btn btn-dark cancel-button" data-action="close-modal"
                                     type="button">Cancel</button>
-                                <button class="btn btn-dark cancel-button" id="cancel_recurring" type="button"
-                                    style="display: none;">Cancel</button>
-                                <button class="btn btn-dark cancel-button" id="clearsalereceipt"
+                                <button class="btn btn-dark cancel-button" data-action="clear-modal-form"
                                     type="button">Clear</button>
 
                             </div>
@@ -493,10 +492,10 @@
                             </div>
                             <div class="col-md-3" style="padding-right: 30px;">
                                 <div class="dropdown" style="float: right">
-                                    <button class="btn btn-dark cancel-button px-4" data-submit-type="save"  data-action="save" 
-                                        type="submit">Save as draft</button>
-                                    <button type="submit" data-submit-type="save-preview" data-action="save" class="btn btn-success"
-                                        id="checkSaved">Preview</button>
+                                    <button class="btn btn-dark cancel-button px-4" data-submit-type="save"
+                                        data-action="save" type="submit">Save as draft</button>
+                                    <button type="submit" data-submit-type="save-preview" data-action="save"
+                                        class="btn btn-success" id="checkSaved">Save and Preview</button>
                                 </div>
                             </div>
                         </div>
