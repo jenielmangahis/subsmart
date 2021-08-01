@@ -37,7 +37,15 @@
         <td style="background-color: #454545;color: #ffffff;text-align: right;"><b>Subtotal</b></td>
     </tr>
     <tr>
-        <td>NSMART SUBSCRIPTION</td>
+        <td>
+            <?php 
+                if( $payment->description == 'Paid Plan License' ){
+                  echo "nSmarTrac License";
+                }else{
+                  echo "nSmarTrac Subscription";    
+                }
+            ?>
+        </td>
         <td>1</td>
         <td><?= $payment->description; ?></td>
         <td style="text-align: right;">$<?= number_format($payment->total_amount, 2); ?></td>

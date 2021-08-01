@@ -71,7 +71,7 @@ a.btn-add {
                         </div>
                         <br class="clear"/>
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover" data-id="coupons">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th style="width: 20%;">Plan</th>
@@ -102,6 +102,11 @@ a.btn-add {
                                         <td><?= $p->discount . " / " . $option_discount_types[$p->discount_type]; ?></td>
                                         <td><span class="<?= $cell; ?>"><?= $option_status[$p->status]; ?><span></td>
                                         <td>
+                                            <?php if( $p->status == 1 ){ ?>
+                                                <a style="width:102px;" class="btn btn-primary btn-sm btn-update-status" data-name="<?= $p->plan_name; ?>" data-status="0" data-id="<?= $p->nsmart_plans_id; ?>" href="javascript:void(0);"><i class="fa fa-close"></i> Deactivate</a>
+                                            <?php }else{ ?>
+                                                <a style="width:102px;" class="btn btn-primary btn-sm btn-update-status" data-name="<?= $p->plan_name; ?>" data-status="1" data-id="<?= $p->nsmart_plans_id; ?>" href="javascript:void(0);"><i class="fa fa-close"></i> Activate</a>
+                                            <?php } ?>
                                             <a class="btn btn-primary btn-sm" href="<?php echo base_url('admin/edit_nsmart_plan/'.$p->nsmart_plans_id); ?>"><i class="fa fa-edit"></i> Edit</a>
                                             <a class="btn btn-sm btn-primary btn-delete-plan" data-name="<?= $p->plan_name; ?>" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
@@ -142,6 +147,30 @@ a.btn-add {
       </div>
     </div>
 
+    <div class="modal fade bd-example-modal-sm" id="modalUpdatePlanStatus" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePlanStatusTitle" aria-hidden="true">
+      <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-check"></i> Update Status</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <?php echo form_open_multipart('admin/update_plan_status', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+          <?php echo form_input(array('name' => 'plan_id', 'type' => 'hidden', 'value' => '', 'id' => 'spid'));?>
+          <?php echo form_input(array('name' => 'plan_status', 'type' => 'hidden', 'value' => '', 'id' => 'plan-status'));?>
+          <div class="modal-body">        
+              <p>Are you sure you want to <span class="plan-status-name"></span> plan name <span class="status-plan-name"></span></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="submit" class="btn btn-primary">Yes</button>
+          </div>
+          <?php echo form_close(); ?>
+        </div>
+      </div>
+    </div>
+
 </div>
 <?php include viewPath('includes/admin_footer'); ?>
 
@@ -153,5 +182,23 @@ $(document).on('click', '.btn-delete-plan', function(){
     $("#pid").val(plan_id);
     $(".delete-plan-name").html("<b>" + plan_name + "</b>");
     $("#modalDeletePlan").modal('show');
+});
+
+$(document).on('click', '.btn-update-status', function(){
+    var plan_id     = $(this).attr("data-id");
+    var plan_status = $(this).attr("data-status");
+    var plan_name   = $(this).attr("data-name");
+
+    if( plan_status == 1 ){
+        $(".plan-status-name").html("<b>Activate</b>");
+    }else{
+        $(".plan-status-name").html("<b>Deactivate</b>");
+    }
+
+    $("#spid").val(plan_id);
+    $(".status-plan-name").html("<b>" + plan_name + "</b>");    
+    $("#plan-status").val(plan_status);
+
+    $("#modalUpdatePlanStatus").modal('show');
 });
 </script>

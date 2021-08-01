@@ -500,6 +500,69 @@ class Mycrm extends MY_Controller {
         $obj_pdf->writeHTML($content, true, false, true, false, '');
         $obj_pdf->Output($title, 'I');
     }
+
+    public function company_buy_plan_license()
+    {
+        $this->load->model('Business_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+
+        $is_success = 0;        
+        $message    = '';
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        if( $plan ){
+            $new_num_license = $client->number_of_license + $post['num_license'];                        
+            $amount          = $plan->price_per_license * $post['num_license'];
+
+            $company  = $this->Business_model->getByCompanyId($company_id);
+            $address  = $company->street . " " . $company->city . " " . $company->state;
+            $zip_code = $company->postal_code;
+            $converge_data = [
+                'company_id' => $company->company_id,
+                'amount' => $amount,
+                'card_number' => $post['card_number'],
+                'exp_month' => $post['exp_month'],
+                'exp_year' => $post['exp_year'],
+                'card_cvc' => $post['cvc'],
+                'address' => $address,
+                'zip' => $zip_code
+            ];
+            $result = $this->converge_send_sale($converge_data);
+            if ($result['is_success']) {
+                $data = [   
+                    'number_of_license' => $new_num_license
+                ];
+                $this->Clients_model->update($company_id, $data);
+
+                //Record payment
+                $data_payment = [
+                    'company_id' => $company_id,
+                    'description' => 'Paid Plan License',
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                        
+                $data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($id, $data);
+
+                $is_success = 1;
+            }else {
+                $message = $result['msg'];
+            }
+        }
+
+        echo json_encode(['is_success' => $is_success, 'message' => $message]);
+    }
 }
 
 

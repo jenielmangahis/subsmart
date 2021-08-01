@@ -388,9 +388,9 @@ if ($this->session->userdata('usertimezone') == null) {
                                             alt="user" class="rounded-circle nav-user-img">
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                                        <a class="dropdown-item"
+                                        <!-- <a class="dropdown-item"
                                             href="<?php echo url('admin/dashboard') ?>"><i
-                                                class="fa fa-circle"></i>Dashboard</a>
+                                                class="fa fa-circle"></i>Dashboard</a> -->
                                         <a class="dropdown-item text-danger"
                                             href="<?php echo url('/admin/logout') ?>"><i
                                                 class="fa fa-circle"></i> Logout</a>
