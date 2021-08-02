@@ -135,7 +135,7 @@ class Cron_Payment extends MY_Controller {
             }
         }
 
-        echo "Done";
+        //echo "Done";
     }
 
     //For checking recurring payments with error - need to set in cron once a day checking
@@ -334,7 +334,7 @@ class Cron_Payment extends MY_Controller {
             
         }
         
-        echo "Total updated " . $total_updated . " record(s)";
+        //echo "Total updated " . $total_updated . " record(s)";
         exit;
     }
 
@@ -428,7 +428,7 @@ class Cron_Payment extends MY_Controller {
             
         }
         
-        echo "Total updated " . $total_updated . " record(s)";
+        //echo "Total updated " . $total_updated . " record(s)";
         exit;
     }
 
@@ -512,7 +512,7 @@ class Cron_Payment extends MY_Controller {
             
         }
         
-        echo "Total updated " . $total_updated . " record(s)";
+        //echo "Total updated " . $total_updated . " record(s)";
         exit;
     }
 }
