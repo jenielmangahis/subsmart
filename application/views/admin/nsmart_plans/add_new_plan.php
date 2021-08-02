@@ -58,7 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   </div>
                                   <div class="col-sm-4">
                                       <div class="form-group">
-                                          <label>Number of License</label> <span class="form-required">*</span>
+                                          <label>Default Number of License</label> <span class="form-required">*</span>
                                           <input type="number" name="num_license" id="num_license" class="form-control" value="1" required="" autocomplete="off" min="1"/>
                                       </div>
                                   </div>

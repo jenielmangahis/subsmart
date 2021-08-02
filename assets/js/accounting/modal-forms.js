@@ -3181,29 +3181,35 @@ $(function() {
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() td:first-child()').html(count+1);
 
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').val(null);
-                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').next('span').remove();
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() input:not([type="checkbox"])').val('');
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() textarea').val('');
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() textarea').html('');
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() input[name="billable[]"]').attr('id', `billable_${count+1}`).prop('checked', false).trigger('change');
                                 $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() input[name="billable[]"]').next().attr('for', `billable_${count+1}`);
-                                $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').select2();
                             }
+                            $('#weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').next('span').remove();
 
-                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="customer[]"]').val(activities[activity].customer_id).trigger('change');
-                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="service[]"]').val(activities[activity].service_id).trigger('change');
-                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="description[]"]').val(activities[activity].description).trigger('change');
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="customer[]"]').val(activities[activity].customer_id);
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="service[]"]').val(activities[activity].service_id);
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="description[]"]').val(activities[activity].description);
 
                             var date = new Date(activities[activity].date);
                             
                             $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find(`[name="${days[date.getDay()]}_hours[]"]`).val(activities[activity].time.slice(0, -3)).trigger('change');
 
-                            if($($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').prop('checked') === false && activities[activity].billable === "1") {
-                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').prop('checked', activities[activity].billable === "1").trigger('change');
+                            if(activities[activity] === activities[activities.length - 1]) {
+                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').prop('checked', activities[activity].billable === "1");
 
-                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="taxable[]"]').prop('checked', activities[activity].taxable === "1");
-                                $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="hourly_rate[]"]').val(parseFloat(activities[activity].hourly_rate).toFixed(2));
+                                if(activities[activity].billable === "1") {
+                                    $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('[name="billable[]"]').parent().parent().append(`<input type="number" name="hourly_rate[]" value="${parseFloat(activities[activity].hourly_rate).toFixed(2)}" onchange="convertToDecimal(this)" class="ml-2 w-25 form-control">
+                                    <div class="checkbox checkbox-sec">
+                                        <input type="checkbox" name="taxable[]" id="taxable_${count+1}" class="ml-2 form-check-input" value="1" ${activities[activity].taxable === "1" ? 'checked' : ''}>
+                                        <label class="form-check-label" for="taxable_${count+1}">Taxable</label>
+                                    </div>`);
+                                }
                             }
+
+                            $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('select').select2();
                         }
 
                         count++;
@@ -3221,6 +3227,25 @@ $(function() {
 
             el.parent().parent().next().find('[name="hourly_rate[]"]').val(rate);
         });
+    });
+
+    $(document).on('change', '#weeklyTimesheetModal .show-field', function() {
+        var day = $(this).attr('id').replace('show_', '');
+
+        if($(this).prop('checked')) {
+            $(`#weeklyTimesheetModal #timesheet-table .${day}_field`).show();
+            $(`#weeklyTimesheetModal #timesheet-table .${day}_total`).show();
+        } else {
+            $(`#weeklyTimesheetModal #timesheet-table .${day}_field`).hide();
+            $(`#weeklyTimesheetModal #timesheet-table .${day}_total`).hide();
+        }
+    });
+
+    $(document).on('click', '#weeklyTimesheetModal #save-and-print', function(e) {
+        e.preventDefault();
+
+        submitType = 'save-and-print';
+        $('#weeklyTimesheetModal').parent('form').submit();
     });
 });
 
@@ -3360,7 +3385,10 @@ const computeTotalHours = () => {
             rowHours = rowHours.toString().length === 1 ? "0"+rowHours.toString() : rowHours.toString();
             rowMins = rowMins.toString().length === 1 ? "0"+rowMins.toString() : rowMins.toString();
     
-            $(this).find('td.total-cell').html(rowHours+":"+rowMins);
+            $(this).find('td.total-cell').html(`
+            <p class="text-right m-0">Hrs</p>
+            <p class="text-right m-0">${rowHours}:${rowMins}</p>
+            `);
         } else {
             $(this).find('td.total-cell').html("");
         }
@@ -3402,9 +3430,10 @@ const computeTotalHours = () => {
     var rowTotalHours = 00;
     var rowTotalMins = 00;
     var totalFlag = false;
-    $('#weeklyTimesheetModal table#timesheet-table tbody tr td.total-cell').each(function() {
-        var rowTotal = $(this).html().trim();
-        if(rowTotal !== "") {
+    $('#weeklyTimesheetModal table#timesheet-table tbody tr .total-cell').each(function() {
+        var rowTotal = $(this).find('p:nth-child(2)').html();
+        if(rowTotal !== "" && rowTotal !== undefined) {
+            rowTotal = rowTotal.trim();
             totalFlag = true;
             var totalSplit = rowTotal.length !== 0 ? rowTotal.split(':') : "";
             hour = totalSplit !== "" ? parseInt(totalSplit[0]) : 00;
@@ -3693,13 +3722,13 @@ const submitModalForm = (event, el) => {
             var customer = $(this).find('select[name="customer[]"]').val();
             if(customer !== "" && customer !== null) {
                 var hours = {
-                    'sunday' : $(this).find('[name="sunday_hours[]"]').val(),
-                    'monday' : $(this).find('[name="monday_hours[]"]').val(),
-                    'tuesday' : $(this).find('[name="tuesday_hours[]"]').val(),
-                    'wednesday' : $(this).find('[name="wednesday_hours[]"]').val(),
-                    'thursday' : $(this).find('[name="thursday_hours[]"]').val(),
-                    'friday' : $(this).find('[name="friday_hours[]"]').val(),
-                    'saturday' : $(this).find('[name="saturday_hours[]"]').val(),
+                    'sunday' : $('#weeklyTimesheetModal #show_sunday').prop('checked') ? $(this).find('[name="sunday_hours[]"]').val() : null,
+                    'monday' : $('#weeklyTimesheetModal #show_monday').prop('checked') ? $(this).find('[name="monday_hours[]"]').val() : null,
+                    'tuesday' : $('#weeklyTimesheetModal #show_tuesday').prop('checked') ? $(this).find('[name="tuesday_hours[]"]').val() : null,
+                    'wednesday' : $('#weeklyTimesheetModal #show_wednesday').prop('checked') ? $(this).find('[name="wednesday_hours[]"]').val() : null,
+                    'thursday' : $('#weeklyTimesheetModal #show_thursday').prop('checked') ? $(this).find('[name="thursday_hours[]"]').val() : null,
+                    'friday' : $('#weeklyTimesheetModal #show_friday').prop('checked') ? $(this).find('[name="friday_hours[]"]').val() : null,
+                    'saturday' : $('#weeklyTimesheetModal #show_saturday').prop('checked') ? $(this).find('[name="saturday_hours[]"]').val() : null,
                 };
 
                 if(data.has('hours[]')) {
@@ -3817,6 +3846,8 @@ const submitModalForm = (event, el) => {
         success: function(result) {
             var res = JSON.parse(result);
 
+            toast(res.success, res.message);
+
             if(res.success === true) {
                 if(submitType === 'save-and-close') {
                     $(el).children().modal('hide');
@@ -3824,14 +3855,171 @@ const submitModalForm = (event, el) => {
 
                 if(submitType === 'save' && modalId !== '#payBillsModal') {
                     if($('#modal-container .modal .modal-body .card-body').find('input[name="transaction_id"]').length === 0) {
-                        $('#modal-container .modal .modal-body .card-body').children('.row:first-child').prepend(`<input type="hidden" name="transaction_id" value="${res.data}">`);
+                        $('#modal-container .modal .modal-body .card-body').children('.row:first-child').prepend(`<input type="hidden" name="transaction_id" id="transaction_id" value="${res.data}">`);
                     }
+                }
+
+                if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
+                    printTimesheet(res.data);
                 }
             }
 
-            toast(res.success, res.message);
             submitType = '';
         }
+    });
+}
+
+const printTimesheet = (timesheetId) => {
+    $.get(`/accounting/get-timesheet/${timesheetId}`, function(result) {
+        var res = JSON.parse(result);
+        var timesheet = res.timesheet;
+        var time_activities = timesheet.time_activities;
+
+        var table = '<table style="width: 100%; font-family: Open Sans, sans-serif">';
+        table += `<thead style="font-weight: 700;">
+            <tr>
+                <th>#</th>
+                <th width="30%">Details</th>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+        var totalTimes = [];
+        totalTimes['sunday'] = '00:00';
+        totalTimes['monday'] = '00:00';
+        totalTimes['tuesday'] = '00:00';
+        totalTimes['wednesday'] = '00:00';
+        totalTimes['thursday'] = '00:00';
+        totalTimes['friday'] = '00:00';
+        totalTimes['saturday'] = '00:00';
+        totalTimes['total'] = '00:00';
+
+        for(var row in time_activities) {
+            var activities = time_activities[row].time_activities;
+            var customer = time_activities[row].customer;
+            var service = time_activities[row].service;
+            var billable = time_activities[row].billable;
+            var rate = time_activities[row].rate;
+            var taxable = time_activities[row].taxable;
+
+            var customerName = customer['first_name'] + ' ' + customer['last_name'];
+            var serviceName = service.title;
+
+            var timesheetRow = `
+            <tr>
+                <td>${row}</td>
+                <td>
+                    <p style="margin: 0">Name: ${customerName}</p>
+                    <p style="margin: 0">Service: ${serviceName}</p>
+                    ${billable === '1' ? `<p style="margin: 0">Bill at $${parseFloat(rate).toFixed(2)}/hr</p>` : ''}
+                    <p style="margin: 0">${taxable === '1' ? 'Taxable ' : ''}Cost at 0.00/hr</p>
+                </td>`;
+
+            var rowHours = 00;
+            var rowMins = 00;
+
+            var cols = [];
+            cols['sunday'] = '<td class="sunday"></td>';
+            cols['monday'] = '<td class="monday"></td>';
+            cols['tuesday'] = '<td class="tuesday"></td>';
+            cols['wednesday'] = '<td class="wednesday"></td>';
+            cols['thursday'] = '<td class="thursday"></td>';
+            cols['friday'] = '<td class="friday"></td>';
+            cols['saturday'] = '<td class="saturday"></td>';
+            for(var activity in activities) {
+                var date = new Date(activities[activity].date);
+                var time = activities[activity].time.slice(0, -3);
+
+                cols[days[date.getDay()]] = `<td class="${days[date.getDay()]}" style="text-align:center">${time}</td>`;
+
+                var timeSplit = time.split(':');
+                hour = parseInt(timeSplit[0]);
+                minutes = parseInt(timeSplit[1]);
+
+                rowHours = rowHours + hour;
+                rowMins = rowMins + minutes;
+
+                var dayTotalSplit = totalTimes[days[date.getDay()]].split(':');
+                var totalSplit = totalTimes['total'].split(':');
+                var totalHours = parseInt(totalSplit[0]);
+                var totalMins = parseInt(totalSplit[1]);
+                var dayTotalHour = parseInt(dayTotalSplit[0]);
+                var dayTotalMins = parseInt(dayTotalSplit[1]);
+
+                dayTotalHour = dayTotalHour + hour;
+                dayTotalMins = dayTotalMins + minutes;
+                totalHours = totalHours + hour;
+                totalMins = totalMins + minutes;
+
+                for(var o = 1; dayTotalMins >= 60; o++) {
+                    dayTotalHour += 1;
+                    dayTotalMins -= 60;
+                    totalHours += 1;
+                    totalMins -= 60;
+                }
+
+                dayTotalHour = dayTotalHour.toString().length === 1 ? "0"+dayTotalHour.toString() : dayTotalHour.toString();
+                dayTotalMins = dayTotalMins.toString().length === 1 ? "0"+dayTotalMins.toString() : dayTotalMins.toString();
+                totalHours = totalHours.toString().length === 1 ? "0"+totalHours.toString() : totalHours.toString();
+                totalMins = totalMins.toString().length === 1 ? "0"+totalMins.toString() : totalMins.toString();
+                totalTimes[days[date.getDay()]] = `${dayTotalHour}:${dayTotalMins}`;
+                totalTimes['total'] = `${totalHours}:${totalMins}`;
+            }
+
+            for(var day in cols) {
+                timesheetRow += cols[day];
+            }
+
+            for(var i = 1; rowMins >= 60; i++) {
+                rowHours = rowHours + 1;
+                rowMins = rowMins - 60;
+            }
+
+            rowHours = rowHours.toString().length === 1 ? "0"+rowHours.toString() : rowHours.toString();
+            rowMins = rowMins.toString().length === 1 ? "0"+rowMins.toString() : rowMins.toString();
+
+            timesheetRow += `
+            <td class="total">
+                <p style="margin:0; text-align: center;">Hrs</p>
+                <p style="margin:0; text-align: center;">${rowHours}:${rowMins}</p>
+            </td>`;
+            timesheetRow += `</tr>`;
+
+            table += timesheetRow;
+        }
+
+        table += `</tbody>
+            <tfoot>
+                <tr">
+                    <th></th>
+                    <th>TOTAL</th>
+                    <th>${totalTimes['sunday']}</th>
+                    <th>${totalTimes['monday']}</th>
+                    <th>${totalTimes['tuesday']}</th>
+                    <th>${totalTimes['wednesday']}</th>
+                    <th>${totalTimes['thursday']}</th>
+                    <th>${totalTimes['friday']}</th>
+                    <th>${totalTimes['saturday']}</th>
+                    <th>${totalTimes['total']}</th>
+                </tr>
+            </tfoot>
+        </table>`;
+
+        let tab = window.open("");
+        tab.document.write('<title>Print</title>');
+        tab.document.write(table);
+        $(tab.document).find('body').css('padding', '0');
+        $(tab.document).find('body').css('margin', '0');
+        $(tab.document).focus();
+        tab.print();
     });
 }
 

@@ -59,7 +59,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   </div>
                                   <div class="col-sm-4">
                                       <div class="form-group">
-                                          <label>Number of License</label> <span class="form-required">*</span>
+                                          <label>Default Number of License</label> <span class="form-required">*</span>
                                           <input type="number" name="num_license" id="num_license" class="form-control" value="<?= $nSmartPlan->num_license; ?>" required="" autocomplete="off" min="1"/>
                                       </div>
                                   </div>
@@ -117,5 +117,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/plan_builder_modals'); ?> 
-<?php include viewPath('includes/footer_plan_builder'); ?>
+<?php include viewPath('includes/admin_footer'); ?>

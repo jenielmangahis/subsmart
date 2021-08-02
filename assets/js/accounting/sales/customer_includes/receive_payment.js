@@ -114,6 +114,7 @@ $(document).on("click", ".customer_receive_payment_btn", function(event) {
     $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
     get_customer_info_for_receive_payment_modal(customer_id);
     $('#new-popup').modal('hide');
+    console.log("pasok");
 });
 
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel .buttons .apply-btn", function(event) {

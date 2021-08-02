@@ -377,11 +377,11 @@ button:hover {
   background: #f1f3f5;
 } */
 
-.btn {
+/* .btn {
   height: 40px;
   border-radius: 0;
 
-}
+} */
 
 .btn-modal {
   position: absolute;
@@ -459,6 +459,85 @@ p {
   background: darken(#f1f3f5, 20%);
 }
 
+/* .container {
+  width: 25%;
+} */
+
+.step2 {
+  
+  padding: 10px;
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  
+  background-color: cream;
+}
+
+.v-stepper {
+  position: relative;
+/*   visibility: visible; */
+}
+
+
+/* regular step */
+.step2 .circle {
+  background-color: white;
+  border: 3px solid gray;
+  border-radius: 100%;
+  width: 20px;    /* +6 for border */
+  height: 20px;
+  display: inline-block;
+}
+
+.step2 .line {
+    top: 20px;
+  left: 8px;
+/*   height: 120px; */
+  height: 100%;
+    
+    position: absolute;
+    border-left: 3px solid gray;
+}
+
+.step2.completed .circle {
+  visibility: visible;
+  background-color: #1b9404;
+  border-color:#1b9404;
+}
+
+.step2.completed .line {
+  border-left: 3px solid #1b9404;
+}
+
+.step2.active .circle {
+visibility: visible;
+  border-color:#1b9404;
+}
+
+.step2.empty .circle {
+    visibility: hidden;
+}
+
+.step2.empty .line {
+/*     visibility: hidden; */
+/*   height: 150%; */
+  top: 0;
+  height: 150%;
+}
+
+
+.step2:last-child .line {
+  border-left: 3px solid white;
+  z-index: -1; /* behind the circle to completely hide */
+}
+
+/* .content {
+  margin-left: 20px;
+  display: inline-block;
+} */
+
+
 </style>
 <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
@@ -473,7 +552,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	
 	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
         <!-- page wrapper start -->
-           <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+           <div wrapper__section>
         <div class="container-fluid">
 			<div class="page-title-box mx-4">
 					<div>
@@ -515,7 +594,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="col-lg-12">
 						<h3>Already have a workers' comp policy?</h3>
 						<h5 class="font-weight-normal">Connect your policy to nSmarTrac and reap the benefits of simplification.</h5>
-						<a href="#" class="btn btn-default rounded-20 px-3 py-0 mt-3"><h5>Connect my policy</h5></a>
+						<a href="#" class="btn btn-default rounded-20 px-3 py-0 mt-3" data-toggle="modal" data-target=".connectPolicy"><h5>Connect my policy</h5></a>
 					</div>
 				</div>
 				<div class="row pt-3">
@@ -548,7 +627,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	</div>
 
 	<div class="modal in getQuote" id="" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-fullscreen-sm-down" role="document">
             <div class="modal-content">
                 <!-- <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -569,7 +648,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span aria-hidden="true" style="font-size:24px;">X</span>
                         </button>
                     </div> -->
-                    <div style="padding:3%;width:65%;margin:0 20% 0 20%;">
+                    <div style="width:65%;margin:0 20% 0 20%;">
                         <div class="row">
                             <div class="col-md-6">
                               <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
@@ -910,8 +989,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body" id="divpopemp">
-                            <p>Adding employees and owners here will help you get the most accurate quote. Need to add this info in QuickBooks? Go to <strong>Workers > Employees.</strong></p>
+                        <div class="modal-body" id="divpopemp" style="">
+                            <p>Adding employees and owners here will help you get the most accurate quote. Need to add this info in nSmarTrac? Go to <strong>Workers > Employees.</strong></p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <h6>Name</h6>
@@ -959,6 +1038,123 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
+
+
+      <div class="modal in connectPolicy" id="" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-fullscreen-sm-down" role="document">
+            <div class="modal-content">
+                <!-- <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    	<span aria-hidden="true">&times;</span>
+                    </button>
+                </div> -->
+                <div class="modal-body" style="background-color:white;height:1000px;">
+					
+                    <div style="padding:2%;width:65%;margin:0 20% 0 20%;">
+                        <div class="row">
+                            <div class="col-md-6">
+                              <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
+                            </div>
+                            <div class="col-md-6">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"  style="float:right;">
+                                  <span aria-hidden="true" style="font-size:24px;">X</span>
+                              </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+					          <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
+                    <div style="padding:3%;border: solid gray 1px;width:60%;margin:-5px 20% 1% 20%;">
+                        <h4>Connect your policy to nSmarTrac</h4>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Current insurance carrier</h6>
+                                    <select class="form-control" id="mRole">
+                                        <option value="AmTrust">AmTrust</option>
+                                        <option value="The Hartford">The Hartford</option>
+                                        <option value="Employers">Employers</option>
+                                        <option value="FirstComp/Markel">FirstComp/Markel</option>
+                                        <option value="CNA">CNA</option>
+                                        <option value="Travelers">Travelers</option>
+                                        <option value="Guard">Guard</option>
+                                        <option value="Other (please specify)">Other (please specify)</option>
+                                    </select> 
+                                    <input type="text" class="form-control" id="insuranceCarrier" style="margin-top:10px;">
+                                    <br>
+                                    <h6>Policy renewal date</h6>
+                                    <table class="table">
+                                      <tr>
+                                        <td>
+                                          <select class="form-control" id="renewaldateMonth">
+                                          </select>
+                                        </td>
+                                        <td>
+                                          <select class="form-control" id="renewaldateyears">
+                                          </select>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    <p style="font-size: 12px;margin-bottom:10px;">Connecting your policy does not change anything about your current policy or billing method.</p>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                                <div class="col-md-6" style="padding:5%;">
+                                  <p style="font-weight:bold;font-size:20px;">Why connect?</p>
+                                  <div class="container">
+                                  <!-- completed -->
+                                    <div class="step2 completed">
+                                      <div class="v-stepper">
+                                        <div class="circle"></div>
+                                        <div class="line"></div>
+                                      </div>
+
+                                      <div class="content" style="padding:1%;">
+                                          Sign up for automatic policy renewal reminders to help you stay covered at the best price. <br><br>
+                                      </div>
+                                  </div>
+                                  
+                                  <!-- active -->
+                                  <div class="step2 completed">
+                                    <div class="v-stepper">
+                                      <div class="circle"></div>
+                                      <div class="line"></div>
+                                    </div>
+
+                                    <div class="content" style="padding:1%;">
+                                        Learn if your policy qualifies for Pay As You Go billing through nSmarTrac.<br><br>
+                                    </div>
+                                  </div>
+                                  
+                                  <!-- regular -->
+                                  <div class="step2 completed">
+                                      <div class="v-stepper">
+                                        <div class="circle"></div>
+                                        <div class="line"></div>
+                                      </div>
+
+                                      <div class="content" style="padding:1%;">
+                                          Gain access to trusted insurance experts.<br><br>
+                                      </div>
+                                  </div>
+                                  
+                                </div>
+
+                                  <button type="button" class="btn btn-success" style="float:right;">Get connected</button>
+
+                                </div>
+                            </div>
+                    </div>
+                    </form>
+
+
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+	</div>
+
 
 
 
@@ -1143,7 +1339,7 @@ $("#addEmployeeData").click(function () {
   var mOwnership = $("#mOwnership").val();
 
               markup = "<tr id=\"ss\">" +
-                "<td><span>"+fullName+"</span><input  value='"+fullName+"' type=\"hidden\" name=\"mfullName[]\"></td>\n" +
+                "<td><span>"+fullName+"</span><input  value='"+fullName+"' type=\"hidden\" name=\"mfullName[]\"><input  value='"+annualPayroll+"' type=\"hidden\" name=\"annualPayroll[]\"></td>\n" +
                 "<td><span>"+classCode+"</span><input  value='"+classCode+"' type=\"hidden\" name=\"classCode[]\"></td>\n" +
                 "<td><span>"+mRole+"</span><input  value='"+mRole+"' type=\"hidden\" name=\"mRole[]\"></td>\n" +
                 "<td><span>"+mOwnership+"</span><input  value='"+mOwnership+"' type=\"hidden\" name=\"mOwnership[]\"></td>\n" +
@@ -1166,4 +1362,56 @@ $("#addEmployeeData").click(function () {
 //         target.removeData('bs.modal')
 //               .find(".modal-content").html('');
 //     });
+</script>
+
+<script type="text/javascript">
+var d = new Date();
+var monthArray = new Array();
+monthArray[0] = "January";
+monthArray[1] = "February";
+monthArray[2] = "March";
+monthArray[3] = "April";
+monthArray[4] = "May";
+monthArray[5] = "June";
+monthArray[6] = "July";
+monthArray[7] = "August";
+monthArray[8] = "September";
+monthArray[9] = "October";
+monthArray[10] = "November";
+monthArray[11] = "December";
+for(m = 0; m <= 11; m++) {
+    var optn = document.createElement("OPTION");
+    optn.text = monthArray[m];
+    // server side month start from one
+    optn.value = monthArray[m];
+    // if june selected
+    if ( m == 6 ) {
+        optn.selected = true;
+    }
+    document.getElementById('renewaldateMonth').options.add(optn);
+}
+</script>
+
+<script>
+// var nowY = new Date().getFullYear(),
+//     options = "";
+
+// for(var Y=nowY; Y>=2021; Y++) {
+//   options += "<option>"+ Y +"</option>";
+// }
+
+// $("#renewaldateyears").append( options );
+$('#renewaldateyears').each(function() {
+
+var year = (new Date()).getFullYear();
+var current = year;
+// year += 3;
+for (var i = 0; i < 3; i++) {
+  if ((year+i) == current)
+    $(this).append('<option selected value="' + (year + i) + '">' + (year + i) + '</option>');
+  else
+    $(this).append('<option value="' + (year + i) + '">' + (year + i) + '</option>');
+}
+
+})
 </script>

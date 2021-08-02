@@ -139,7 +139,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							<ul class="dropdown-menu dropdown-menu-right" role="menu"
 								aria-labelledby="dropNewTraaction">
 								<li class="disabled">
-									<a href="javascript:void(0)" class="">
+									<a href="javascript:void(0)" class="created-statement-btn"
+										data-statement-modal-type="by-batch" data-toggle="modal"
+										data-target="#create_statement_modal">
 										Create statement
 									</a>
 								</li>

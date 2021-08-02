@@ -79,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/marketing'); ?>
+    <?php include viewPath('includes/sidebars/mycrm'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -128,7 +128,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <td style="width:50px;font-weight: bold;text-align: right;">Subtotal</td>
                               </tr>
                               <tr>
-                                <td>nSmarTrac Subscription</td>
+                                <td>
+                                  <?php 
+                                    if( $payment->description == 'Paid Plan License' ){
+                                      echo "nSmarTrac License";
+                                    }else{
+                                      echo "nSmarTrac Subscription";    
+                                    }
+                                  ?>
+                                  
+                                </td>
                                 <td>1</td>
                                 <td>
                                   <span><?= $payment->description; ?></span><br />                                  

@@ -173,3 +173,15 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
 #singleTimeModal .modal-header button#time-activity-settings-button:hover, #weeklyTimesheetModal .modal-header button#time-activity-settings-button:hover {
     opacity: .75;
 }
+
+#modal-container .modal .action-bar ul li a:after {
+    width: 0;
+}
+
+#modal-container .modal .action-bar ul li a {
+    font-size: 20px;
+}
+
+#modal-container .modal .action-bar ul li {
+    margin-right: 5px;
+}

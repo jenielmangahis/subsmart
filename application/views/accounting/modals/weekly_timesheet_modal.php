@@ -86,12 +86,62 @@
 
                                         <div class="row mt-3">
                                             <div class="col-md-12">
-                                                <span class="float-right h4 ml-1">
-                                                    <a href="#"><i class="fa fa-cog"></i></a>
-                                                </span>
-                                                <span class="float-right h4">
-                                                    <a href="#"><i class="fa fa-print"></i></a>
-                                                </span>
+                                                <div class="action-bar h-100 d-flex align-items-center">
+                                                    <ul class="ml-auto">
+                                                        <li><a href="#" id="save-and-print"><i class="fa fa-print"></i></a></li>
+                                                        <li><a href="#" id="save-and-download"><i class="fa fa-download"></i></a></li>
+                                                        <li>
+                                                            <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="fa fa-cog"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                                <p class="m-0">Columns</p>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_sunday" checked>
+                                                                        <label for="show_sunday">Sun</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_monday" checked>
+                                                                        <label for="show_monday">Mon</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_tuesday" checked>
+                                                                        <label for="show_tuesday">Tue</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_wednesday" checked>
+                                                                        <label for="show_wednesday">Wed</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_thursday" checked>
+                                                                        <label for="show_thursday">Thu</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_friday" checked>
+                                                                        <label for="show_friday">Fri</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="m-0">
+                                                                    <div class="checkbox checkbox-sec mt-0 mb-2">
+                                                                        <input type="checkbox" class="show-field" id="show_saturday" checked>
+                                                                        <label for="show_saturday">Sat</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="timesheet-table-container">
@@ -99,37 +149,37 @@
                                                         <table class="table table-bordered table-hover" id="timesheet-table">
                                                             <thead>
                                                                 <th>#</th>
-                                                                <th width="45%">DETAILS</th>
-                                                                <th class="text-right">
+                                                                <th>DETAILS</th>
+                                                                <th class="text-right sunday_field" width="5%">
                                                                     <p class="m-0">SUN</p>
                                                                     <p class="m-0">3</p>
                                                                 </th>
-                                                                <th class="text-right">
+                                                                <th class="text-right monday_field" width="5%">
                                                                     <p class="m-0">MON</p>
                                                                     <p class="m-0">4</p>
                                                                 </th>
-                                                                <th class="text-right">
+                                                                <th class="text-right tuesday_field" width="5%">
                                                                     <p class="m-0">TUE</p>
                                                                     <p class="m-0">5</p>
                                                                 </th>
-                                                                <th class="text-right">
+                                                                <th class="text-right wednesday_field" width="5%">
                                                                     <p class="m-0">WED</p>
                                                                     <p class="m-0">6</p>
                                                                 </th>
-                                                                <th class="text-right">
+                                                                <th class="text-right thursday_field" width="5%">
                                                                     <p class="m-0">THU</p>
                                                                     <p class="m-0">7</p>
                                                                 </th>
-                                                                <th class="text-right">
+                                                                <th class="text-right friday_field" width="5%">
                                                                     <p class="m-0">FRI</p>
                                                                     <p class="m-0">8</p>
                                                                 </th>
-                                                                <th class="text-right">
+                                                                <th class="text-right saturday_field" width="5%">
                                                                     <p class="m-0">SAT</p>
                                                                     <p class="m-0">9</p>
                                                                 </th>
-                                                                <th class="text-right">TOTAL</th>
-                                                                <th></th>
+                                                                <th class="text-right" width="5%">TOTAL</th>
+                                                                <th width="0%"></th>
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
@@ -165,13 +215,13 @@
                                                                             </div>
                                                                         </div>
                                                                     </td>
-                                                                    <td><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="monday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="friday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="sunday_field"><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="monday_field"><input type="text" name="monday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="tuesday_field"><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="wednesday_field"><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="thursday_field"><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="friday_field"><input type="text" name="friday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="saturday_field"><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
                                                                     <td class="total-cell"></td>
                                                                     <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
                                                                 </tr>
@@ -208,13 +258,13 @@
                                                                             </div>
                                                                         </div>
                                                                     </td>
-                                                                    <td><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="monday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="friday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="sunday_field"><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="monday_field"><input type="text" name="monday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="tuesday_field"><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="wednesday_field"><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="thursday_field"><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="friday_field"><input type="text" name="friday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="saturday_field"><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
                                                                     <td class="total-cell"></td>
                                                                     <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
                                                                 </tr>
@@ -251,13 +301,13 @@
                                                                             </div>
                                                                         </div>
                                                                     </td>
-                                                                    <td><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="monday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="friday_hours[]" class="form-control day-input"></td>
-                                                                    <td><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="sunday_field"><input type="text" name="sunday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="monday_field"><input type="text" name="monday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="tuesday_field"><input type="text" name="tuesday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="wednesday_field"><input type="text" name="wednesday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="thursday_field"><input type="text" name="thursday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="friday_field"><input type="text" name="friday_hours[]" class="form-control day-input"></td>
+                                                                    <td class="saturday_field"><input type="text" name="saturday_hours[]" class="form-control day-input"></td>
                                                                     <td class="total-cell"></td>
                                                                     <td><a href="#" class="deleteRow h4"><i class="fa fa-trash"></i></a></td>
                                                                 </tr>
@@ -266,13 +316,13 @@
                                                                 <tr class="text-right">
                                                                     <td></td>
                                                                     <td>TOTAL</td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
+                                                                    <td class="sunday_total"></td>
+                                                                    <td class="monday_total"></td>
+                                                                    <td class="tuesday_total"></td>
+                                                                    <td class="wednesday_total"></td>
+                                                                    <td class="thursday_total"></td>
+                                                                    <td class="friday_total"></td>
+                                                                    <td class="saturday_total"></td>
                                                                     <td>00:00</td>
                                                                     <td></td>
                                                                 </tr>

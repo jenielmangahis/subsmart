@@ -912,6 +912,49 @@ $(function(){
         }, 1000);
     });
 
+    $("#frm-buy-license").submit(function(e){
+        e.preventDefault();
+        var url = base_url + 'mycrm/_buy_plan_license';
+        $(".btn-modal-buy-license").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#frm-buy-license").serialize(),
+               success: function(o)
+               {
+                    $("#modal-buy-license").modal('hide'); 
+                    if( o.is_success == 1 ){
+                      
+                      Swal.fire({
+                          title: 'Payment Successful!',
+                          text: "Your plan license was successfully updated",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                      });
+                    }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot upgrade plan',
+                        text: o.message
+                      });
+                    }
+
+                    $(".btn-modal-buy-license").html('Buy');
+                }
+            });
+        }, 1000);
+    });
+
     $("#frm-upgrade-subscription").submit(function(e){
         e.preventDefault();
         var url = base_url + 'mycrm/_upgrade_subscription';

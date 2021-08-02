@@ -2033,6 +2033,23 @@ class Admin extends CI_Controller
         $this->page_data['title'] = 'Jobs';
         $this->load->view('admin/job/list', $this->page_data);
     }
+
+    public function update_plan_status()
+    {
+        $this->load->model('NsmartPlan_model');
+
+        $post = $this->input->post();
+        $data = [
+            'status' => $post['plan_status'],
+            'date_updated' => date("Y-m-d H:i:s")
+        ];
+        $nsPlan = $this->NsmartPlan_model->updatePlan($post['plan_id'],$data);
+
+        $this->session->set_flashdata('message', 'Plan was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+        
+        redirect('admin/nsmart_plans');
+    }
 }
 
 /* End of file Admin.php */

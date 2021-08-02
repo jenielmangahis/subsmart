@@ -841,7 +841,7 @@ class Users extends MY_Controller {
         $cid=logged('company_id');
 
         $company = $this->Clients_model->getById($cid);
-        if( $company->number_of_license <=0 ){
+        if( $company->number_of_license <= 0 && $company->id != 1 ){
         	echo json_encode(3);
         }else{
         	$add = array(
