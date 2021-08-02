@@ -318,6 +318,7 @@ $route['accounting/success-print-checks-modal']['post'] = 'accounting_modals/suc
 $route['accounting/success-print-checks']['post'] = 'accounting_modals/success_print_checks';
 $route['accounting/update-timesheet-settings/(:any)/(:any)'] = 'accounting_modals/update_timesheet_settings/$1/$2';
 $route['accounting/get-last-timesheet/(:any)/(:any)'] = 'accounting_modals/get_last_timesheet/$1/$2';
+$route['accounting/get-timesheet/(:any)'] = 'accounting_modals/get_timesheet/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

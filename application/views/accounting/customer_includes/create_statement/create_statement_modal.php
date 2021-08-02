@@ -10,7 +10,7 @@
                 </button>
             </div>
             <form action="#" id="send_statement">
-                <input type="text" name="statement_id" class="" style="display: none;">
+                <input type="text" name="file_name_ids" class="" style="display: none;">
                 <input type="text" name="statement_type" class="" style="display: none;">
                 <input type="text" name="customer_id" class="" style="display: none;">
                 <div class="modal-body">
@@ -24,8 +24,7 @@
                             <div class="send_statement_form_part">
                                 <div class="form-group">
                                     <div class="label" for="subject">Email</div>
-                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com"
-                                        disabled>
+                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com" readonly>
                                 </div>
                                 <div class="form-group">
                                     <div class="label" for="subject">Subject</div>
@@ -71,9 +70,15 @@
                             class="fa fa-times fa-lg"></i></button>
                 </div>
                 <form action="<?php echo site_url()?>" method="post">
-
+                    <input type="text" name="statement-modal-type" style="display: none;">
                     <input type="text" name="customer_id" style="display: none;">
                     <input type="text" name="current_statement_id" style="display: none;">
+                    <div class="by-batch-ids-holder" style="display: none;">
+                        <input type="text" name="by_batch_ids[]" value="" style="display: none;">
+                    </div>
+                    <div class="by-batch-satement-ids-holder" style="display: none;">
+                        <input type="text" name="by_batch_statement_ids[]" value="" style="display: none;">
+                    </div>
                     <div class="modal-body" style="height:calc(100vh - 170px);padding-top:0;">
                         <div class="statement-type-section">
                             <div class="row">
@@ -107,7 +112,7 @@
                         </div>
                         <div class="error-notif-section" style="display: none;">
                             <div class="title">
-                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i> ERROR
+                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i> <span>ERROR</span>
                             </div>
                             <div class="message">
                                 No Statements to Save
@@ -187,15 +192,17 @@
                                     </div>
                                     <div class="btns">
                                         <button type="button" class="missing-email-address">Missing email address
-                                            (0)</button>
+                                            (<span></span>)</button>
+                                        <button type="button" class="statement-unavailable">Statement Unavailable
+                                            (<span></span>)</button>
                                         <button type="button" class="statement-available">Statement Available
-                                            (1)</button>
+                                            (<span></span>)</button>
                                     </div>
                                     <div class="table-list">
                                         <table class="receipients-list-table">
                                             <thead>
                                                 <tr>
-                                                    <th>
+                                                    <th class="column-check_box">
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="customer_checkbox_all"
@@ -206,34 +213,12 @@
                                                         </div>
                                                     </th>
                                                     <th>RECIPIENTS</th>
-                                                    <th>EMAIL ADDRESS</th>
+                                                    <th class="column-email">EMAIL ADDRESS</th>
                                                     <th>BALANCE</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-check">
-                                                            <div class="checkbox checkbox-sec margin-right">
-                                                                <input type="checkbox" name="customer_checkbox[]"
-                                                                    id="customer_checkbox_1">
-                                                                <label for="customer_checkbox_1"><span></span></label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>World Class Water, Inc
-                                                        <input type="email" value="123" name="customer_ids[]"
-                                                            style="display: none;">
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <input type="email" value="pintonlou@gmail.com" required
-                                                                name="emails[]">
-                                                        </div>
-                                                    </td>
-                                                    <td>$0.00</td>
-                                                </tr>
-                                            </tbody>
+                                            <tbody class="unavaibale_tbody"></tbody>
+                                            <tbody class="available_tbody"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -245,7 +230,8 @@
                             <div class="col-md-4">
                                 <button class="btn btn-dark cancel-button" type="button"
                                     data-dismiss="modal">Cancel</button>
-                                <button class="btn btn-dark cancel-button" type="button">Clear</button>
+                                <button class="btn btn-dark cancel-button" type="button"
+                                    data-action="clear">Clear</button>
 
                             </div>
                             <div class="col-md-5" align="center">

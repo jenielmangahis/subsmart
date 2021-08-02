@@ -246,7 +246,6 @@ class Accounting extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             "assets/css/accounting/customers.css",
             "assets/css/accounting/accounting_includes/create_statement_modal.css",
-            "assets/css/accounting/accounting_includes/create_estimate.css",
             "assets/css/accounting/accounting_includes/time_activity.css",
             "assets/css/accounting/accounting_includes/create_invoice.css",
         ));
@@ -395,25 +394,25 @@ class Accounting extends MY_Controller
 
         $addQuery2 = $this->account_model->createQuoteManagement($new_data);
 
-            $a = $this->input->post('name');
-            $b = $this->input->post('role');
-            $c = $this->input->post('class_code');
-            $d = $this->input->post('annual_payroll');
-            $e = $this->input->post('ownership');
+        $a = $this->input->post('name');
+        $b = $this->input->post('role');
+        $c = $this->input->post('class_code');
+        $d = $this->input->post('annual_payroll');
+        $e = $this->input->post('ownership');
 
-            $i = 0;
-            foreach ($a as $row) {
-                $data['name'] = $a[$i];
-                $data['role'] = $b[$i];
-                $data['class_code'] = $c[$i];
-                $data['annual_payroll'] = $d[$i];
-                $data['ownership'] = $e[$i];
-                $data['quote_management_id'] = $addQuery2;
-                // $data['created_at'] = date("Y-m-d H:i:s");
-                // $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery3 = $this->account_model->createQuoteEmployees($data);
-                $i++;
-            }
+        $i = 0;
+        foreach ($a as $row) {
+            $data['name'] = $a[$i];
+            $data['role'] = $b[$i];
+            $data['class_code'] = $c[$i];
+            $data['annual_payroll'] = $d[$i];
+            $data['ownership'] = $e[$i];
+            $data['quote_management_id'] = $addQuery2;
+            // $data['created_at'] = date("Y-m-d H:i:s");
+            // $data['updated_at'] = date("Y-m-d H:i:s");
+            $addQuery3 = $this->account_model->createQuoteEmployees($data);
+            $i++;
+        }
 
         $new_data = array(
             'fname'                             => $this->input->post('total_est_annual_payroll'),
@@ -427,7 +426,7 @@ class Accounting extends MY_Controller
             'date_modified'                     => date("Y-m-d H:i:s")
         );
     
-            $addQuery3 = $this->account_model->createQuoteContacts($new_data);
+        $addQuery3 = $this->account_model->createQuoteContacts($new_data);
 
 
         $this->load->view('accounting/workers-comp');
@@ -559,6 +558,50 @@ class Accounting extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
+    }
+
+    public function aging_summary_report()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "A/R Aging Summary Report";
+        $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
+    
+    }
+    
+    public function balance_sheet()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Balance Sheet Report";
+        $this->load->view('accounting/reports/balance_sheet', $this->page_data);
+    
+    }
+
+    public function profit_and_loss()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Profit and Loss Report";
+        $this->load->view('accounting/reports/profit_and_loss', $this->page_data);
+    
+    }
+
+    public function balance_sheet_comparison()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+        $this->load->view('accounting/reports/balance_sheet_comparison', $this->page_data);
+    
+    }
+
+    public function audit_log_report()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+        $this->load->view('accounting/reports/audit_log', $this->page_data);
     }
 
     /* payscale */
@@ -6535,21 +6578,28 @@ class Accounting extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js'
         ]);
 
-        $this->load->view('accounting/sales_tax', $this->page_data);
+        $this->load->view('accounting/sales/salesTax', $this->page_data);
     }
 
     public function payrollTax()
     {
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/payroll.js');
-        $this->load->view('accounting/payrollTax', $this->page_data);
+        $this->load->view('accounting/sales/payrollTax', $this->page_data);
     }
 
     public function payrollTaxFillings()
     {
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/fillings.js');
-        $this->load->view('accounting/payrollTaxFillings', $this->page_data);
+        $this->load->view('accounting/sales/payrollTaxFillings', $this->page_data);
+    }
+
+    public function taxEditSettings()
+    {
+        add_css('assets/css/accounting/tax/settings/settings.css');
+        add_footer_js('assets/js/accounting/tax/settings/settings.js');
+        $this->load->view('accounting/sales/taxEditSettings', $this->page_data);
     }
 
     // public function sendmerchantEmail()
@@ -7988,94 +8038,161 @@ class Accounting extends MY_Controller
     }
     public function create_statement_get_result_by_customer()
     {
+        $statement_modal_type = $this->input->post("statement-modal-type");
         $statement_type=$this->input->post("statement_type");
-        $data = new stdClass();
         $state_date = date("Y-m-d", strtotime($this->input->post("start_date")));
         $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
-        $customer_id = $this->input->post("customer_id");
-        $total_of_invoices = $this->accounting_invoices_model->get_sum_of_invoices_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
-        $total_of_sales_receipt = $this->accounting_sales_receipt_model->get_sum_of_sales_receipt_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
-        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $aviable_tbody="";
+        $unavaibale_tbody="";
+        $total_balance=0;
+        $customers_with_balance_ctr=0;
+        $total_number_of_customer=0;
+        $statement_ctr=0;
+        $missing_email_ctr = 0;
+        $missing_statements_ctr = 0;
 
-        $balance = ($total_of_invoices['collectibles']->total_collectibles+$total_of_sales_receipt['billed']->total_amount_billed)-($total_of_invoices['received']->total_amount_received+$total_of_sales_receipt['billed']->total_amount_billed);
-        $tbody='<tr>
-            <td>
-                <div class="form-check">
-                    <div class="checkbox checkbox-sec margin-right">
-                        <input type="checkbox" name="customer_checkbox[]"
-                            id="customer_checkbox_1" class="customer_checkbox" checked>
-                        <label for="customer_checkbox_1"><span></span></label>
+        if ($statement_modal_type == "by-batch") {
+            $ids_array = $this->input->post("by_batch_ids");
+        } else {
+            $ids_array[]=$this->input->post("customer_id");
+        }
+        $total_number_of_customer=count($ids_array);
+        for ($i=0;$i<count($ids_array);$i++) {
+            $customer_id = $ids_array[$i];
+            $total_of_invoices = $this->accounting_invoices_model->get_sum_of_invoices_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
+            $total_of_sales_receipt = $this->accounting_sales_receipt_model->get_sum_of_sales_receipt_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+            
+            $balance = ($total_of_invoices['collectibles']->total_collectibles+$total_of_sales_receipt['billed']->total_amount_billed)-($total_of_invoices['received']->total_amount_received+$total_of_sales_receipt['billed']->total_amount_billed);
+            $first_td_html='';
+            
+            if ($total_of_invoices['collectibles']->collectibles_count > 0) {
+                $first_td_html='<div class="form-check">
+                <div class="checkbox checkbox-sec margin-right">
+                    <input type="checkbox" name="customer_checkbox[]" value="'.$customer_id.'" id="customer_checkbox_'.$customer_id.'" class="customer_checkbox" checked>
+                    <label for="customer_checkbox_'.$customer_id.'"><span></span></label>
+                </div>
+            </div>';
+            } 
+            
+            $missing_email="";
+            if ($customer_info->email == "") {
+                $missing_email="missing-email";
+            }
+            $html='<tr class="'.$missing_email.'">
+                <td class="column-check_box">
+                    '.$first_td_html.'
+                </td>
+                <td>'.$customer_info->first_name." ".$customer_info->last_name.'
+                    <input type="text" name="customer_ids[]"
+                        style="display: none;">
+                </td>
+                <td class="column-email">
+                    <div class="form-group">
+                        <input type="email" value="'.$customer_info->email.'" 
+                            name="emails[]">
                     </div>
-                </div>
-            </td>
-            <td>'.$customer_info->first_name." ".$customer_info->last_name.'
-                <input type="text" name="customer_ids[]"
-                    style="display: none;">
-            </td>
-            <td>
-                <div class="form-group">
-                    <input type="email" value="'.$customer_info->email.'" required
-                        name="emails[]">
-                </div>
-            </td>
-            <td> $'.number_format($balance, 2, '.', ',').'</td>
-        </tr>';
+                </td>
+                <td> $'.number_format($balance, 2, '.', ',').'</td>
+            </tr>';
+            if ($total_of_invoices['collectibles']->collectibles_count > 0) {
+                $statement_ctr++;
+                $aviable_tbody.=$html;
+            } else {
+                $missing_statements_ctr++;
+                $unavaibale_tbody.=$html;
+            }
+            if ($customer_info->email == "") {
+                $missing_email_ctr++;
+            }
+            if ($balance > 0) {
+                $customers_with_balance_ctr++;
+                $total_balance+=$balance;
+            }
+        }
+        
+        $data = new stdClass();
         $data->result=true;
-        $data->customer_fullname = $customer_info->first_name." ".$customer_info->last_name;
-        $data->customer_email = $customer_info->email;
-        $data->customer_id = $customer_id;
-        $data->total_amount_invoice = $total_of_invoices['collectibles']->total_collectibles;
-        $data->total_amount_received_invoice = $total_of_invoices['received']->total_amount_received;
-        $data->total_amount_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
-        $data->total_amount_received_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
         $data->transaction_count = $total_of_invoices['collectibles']->collectibles_count+$total_of_invoices['received']->received_count+$total_of_sales_receipt['billed']->billed_count;
-        $data->balance=$balance;
-        $data->display_balance=number_format($balance, 2, '.', ',');
-        $data->tbody = $tbody;
+        $data->statement_ctr=$statement_ctr;
+        $data->missing_email_ctr=$missing_email_ctr;
+        $data->missing_statements_ctr=$missing_statements_ctr;
+        $data->balance=$total_balance;
+        $data->customers_with_balance_ctr=$customers_with_balance_ctr;
+        $data->total_number_of_customer=$total_number_of_customer;
+        $data->display_balance=number_format($total_balance, 2, '.', ',');
+        $data->aviable_tbody = $aviable_tbody;
+        $data->unavaibale_tbody = $unavaibale_tbody;
         
         echo json_encode($data);
     }
 
     public function save_created_statement()
     {
-        $customer_id = $this->input->post("customer_id");
         $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
         $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
         $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
-        $statement_id = $this->input->post("current_statement_id");
-        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        if ($statement_id == "") {
-            $insert=array(
-                "statement_type"=>$this->input->post("statement_type"),
-                "statement_date"=>$statement_date,
-                "start_date"=>$start_date,
-                "end_date"=>$end_date,
-                "company_id"=>$customer_info->company_id,
-                "created_by"=>logged('id'),
-                "status"=>1
-            );
-            $statement_id = $this->accounting_invoices_model->save_statement($insert);
+        
+        $statement_modal_type = $this->input->post("statement-modal-type");
+        $statement_ids_holder_html="";
+        $file_name_ids="";
+        if ($statement_modal_type == "by-batch") {
+            $ids_array = $this->input->post("by_batch_ids");
+            $statement_ids = $this->input->post("by_batch_statement_ids");
+            if($statement_ids==null || $statement_ids==""){
+                $statement_ids=array();
+            }
         } else {
-            $data=array(
-                "statement_type"=>$this->input->post("statement_type"),
-                "statement_date"=>$statement_date,
-                "start_date"=>$start_date,
-                "end_date"=>$end_date,
-                "company_id"=>$customer_info->company_id,
-                "created_by"=>logged('id'),
-                "status"=>1,
-                "updated_at"=>date("Y-m-d H:i:s")
-            );
-            $this->accounting_invoices_model->update_statement($data, $statement_id);
+            $ids_array[]=$this->input->post("customer_id");
+            if ($this->input->post("current_statement_id") == "") {
+                $statement_ids=array();
+            } else {
+                $statement_ids[] = $this->input->post("current_statement_id");
+            }
         }
+        for ($i =0; $i < count($ids_array);$i++) {
+            $customer_id = $ids_array[$i];
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+            if (count($statement_ids)==0) {
+                $insert=array(
+                    "statement_type"=>$this->input->post("statement_type"),
+                    "statement_date"=>$statement_date,
+                    "start_date"=>$start_date,
+                    "end_date"=>$end_date,
+                    "company_id"=>$customer_info->company_id,
+                    "created_by"=>logged('id'),
+                    "status"=>1
+                );
+                $statement_id = $this->accounting_invoices_model->save_statement($insert);
+                $statement_ids[] = $statement_id;
+            } else {
+                $statement_id = $statement_ids[$i];
+                $data=array(
+                    "statement_type"=>$this->input->post("statement_type"),
+                    "statement_date"=>$statement_date,
+                    "start_date"=>$start_date,
+                    "end_date"=>$end_date,
+                    "company_id"=>$customer_info->company_id,
+                    "created_by"=>logged('id'),
+                    "status"=>1,
+                    "updated_at"=>date("Y-m-d H:i:s")
+                );
+                $this->accounting_invoices_model->update_statement($data, $statement_id);
+            }
+            $statement_ids_holder_html.='<input type="text" name="by_batch_statement_ids[]" value="'.$statement_id.'" style="display: none;">';
+            $file_name_ids.=$statement_id;
+        }
+
         if ($this->input->post("statement_type") == "Transaction Statement") {
-            $file_name="Transaction_Statement_".$statement_id.".pdf";
+            $file_name="Transaction_Statement_".$file_name_ids.".pdf";
         } elseif ($this->input->post("statement_type") == "Open Item") {
-            $file_name="Open_Item_Statement_".$statement_id.".pdf";
+            $file_name="Open_Item_Statement_".$file_name_ids.".pdf";
         } elseif ($this->input->post("statement_type") == "Balance Forward") {
-            $file_name="Balance_forward_Statement_".$statement_id.".pdf";
+            $file_name="Balance_forward_Statement_".$file_name_ids.".pdf";
         }
-        $this->created_statement_pdf($customer_id, $statement_id, $this->input->post("statement_type"), $file_name);
+        $customer_checkboxes = $this->input->post("customer_checkbox");
+
+        $this->created_statement_pdf($ids_array, $statement_ids, $this->input->post("statement_type"), $file_name,$customer_checkboxes);
         
         $data = new stdClass();
         $data->file_location = base_url("assets/pdf/".$file_name);
@@ -8085,64 +8202,77 @@ class Accounting extends MY_Controller
         $data->business_name=$customer_info->business_name;
         $data->customer_full_name=$customer_info->first_name.' '.$customer_info->last_name;
         $data->customer_id=$customer_id;
+        $data->statement_ids_holder_html = $statement_ids_holder_html;
+        $data->file_name_ids=$file_name_ids;
         echo json_encode($data);
     }
-    public function created_statement_pdf($customer_id="", $statement_id="", $statement_type="", $file_name="")
+    public function created_statement_pdf($customer_ids=array(), $statement_ids=array(), $statement_type="", $file_name="",$customer_checkboxes=array())
     {
-        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
-        $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
-        $print_invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type, "print");
-        $invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type);
-        $sales_receipts = $this->accounting_sales_receipt_model->get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type, "print");
-        
-        
-        $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
-        
-        $has_logo = false;
-        // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
-        $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
-        if (@getimagesize($filePath)) {
-            $has_logo = true;
+
+        if (count($customer_ids)>0) {
+            for ($i=0;$i<count($customer_ids);$i++) {
+                $customer_id = $customer_ids[$i];
+                $selected_id_key=array_search($customer_id,$customer_checkboxes);
+                
+                if (is_bool($selected_id_key)!=1) {
+                    $statement_id = $statement_ids[$i];
+                    $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+                    $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
+                    $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
+                    $print_invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type, "print");
+                    $invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type);
+                    $sales_receipts = $this->accounting_sales_receipt_model->get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type, "print");
+                
+                
+                    $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
+                
+                    $has_logo = false;
+                    // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+                    $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+                    if (@getimagesize($filePath)) {
+                        $has_logo = true;
+                    }
+                
+                    $data["pdf_data"][]=array(
+                        'business_name'=>$customer_info->business_name,
+                        'business_address_street'=>$customer_info->bus_street,
+                        'business_address_state'=>$customer_info->bus_city." ".$customer_info->bus_state." ".$customer_info->bus_postal_code." ",
+                        'business_contact_number'=>$customer_info->business_phone,
+                        'business_email'=>$customer_info->business_email,
+                        'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
+                        'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
+                        'customer_adress_street'=>$customer_info->acs_mail_add." ",
+                        'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
+                        'statement_type'=> $statement_type,
+                        'statement_date'=>$statement_date,
+                        'invoices' => $invoices,
+                        'print_invoices' => $print_invoices,
+                        'sales_receipts' => $sales_receipts,
+                        'statement_id'=>$statement_id,
+                        'has_logo'=>$has_logo,
+                        'business_logo' => $customer_info->business_id.'/'.$customer_info->business_image
+                    );
+                }
+            }
+
+            $this->pdf->save_pdf("accounting/customer_includes/create_statement/statement_pdf", $data, $file_name, "P");
         }
         
-        $data=array(
-            'business_name'=>$customer_info->business_name,
-            'business_address_street'=>$customer_info->bus_street,
-            'business_address_state'=>$customer_info->bus_city." ".$customer_info->bus_state." ".$customer_info->bus_postal_code." ",
-            'business_contact_number'=>$customer_info->business_phone,
-            'business_email'=>$customer_info->business_email,
-            'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
-            'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
-            'customer_adress_street'=>$customer_info->acs_mail_add." ",
-            'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
-            'statement_type'=> $statement_type,
-            'statement_date'=>$statement_date,
-            'invoices' => $invoices,
-            'print_invoices' => $print_invoices,
-            'sales_receipts' => $sales_receipts,
-            'statement_id'=>$statement_id,
-            'has_logo'=>$has_logo,
-            'business_logo' => $customer_info->business_id.'/'.$customer_info->business_image
-        );
-        $this->pdf->save_pdf("accounting/customer_includes/create_statement/statement_pdf", $data, $file_name, "P");
     }
     public function send_email_statement()
     {
         $statement_type = $this->input->post("statement_type");
-        $customer_email = $this->input->post("email");
         $customer_id = $this->input->post("customer_id");
-        $statement_id = $this->input->post("statement_id");
+        $file_name_ids = $this->input->post("file_name_ids");
         $data = new stdClass();
-        if ($statement_id != "") {
+        if ($file_name_ids != "") {
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-            $customer_email = $customer_info->email;
             if ($statement_type == "Transaction Statement") {
-                $file_name="Transaction_Statement_".$statement_id.".pdf";
+                $file_name="Transaction_Statement_".$file_name_ids.".pdf";
             } elseif ($statement_type == "Open Item") {
-                $file_name="Open_Item_Statement_".$statement_id.".pdf";
+                $file_name="Open_Item_Statement_".$file_name_ids.".pdf";
             } elseif ($statement_type== "Balance Forward") {
-                $file_name="Balance_forward_Statement_".$statement_id.".pdf";
+                $file_name="Balance_forward_Statement_".$file_name_ids.".pdf";
             }
             $server = MAIL_SERVER;
             $port = MAIL_PORT;
@@ -8184,7 +8314,13 @@ class Accounting extends MY_Controller
             $mail->Body =  'Statement.';
             $content = $this->load->view('accounting/customer_includes/create_statement/statement_send_email', $this->page_data, true);
             $mail->MsgHTML($content);
-            $mail->addAddress($customer_email);
+            $customer_emails=explode(";",$this->input->post("email"));
+            for($i=0;$i<(count($customer_emails)-1);$i++){
+                $mail->addAddress($customer_emails[$i]);
+                echo($customer_emails[$i]);
+            }
+            // $mail->addAddress("pintonlou@gmail.com");
+            
             if (!$mail->Send()) {
                 $data->status="Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
                 exit;

@@ -149,6 +149,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
+    <?php 
+    if(count($pdf_data) > 0){
+        for($i_data=0;$i_data<count($pdf_data);$i_data++){
+            $business_name=$pdf_data[$i_data]["business_name"];
+            $business_address_street=$pdf_data[$i_data]["business_address_street"];
+            $business_address_state=$pdf_data[$i_data]["business_address_state"];
+            $business_contact_number=$pdf_data[$i_data]["business_contact_number"];
+            $business_email=$pdf_data[$i_data]["business_email"];
+            $business_logo=$pdf_data[$i_data]["business_logo"];
+            $customer_full_name=$pdf_data[$i_data]["customer_full_name"];
+            $customer_adress_street=$pdf_data[$i_data]["customer_adress_street"];
+            $customer_address_state=$pdf_data[$i_data]["customer_address_state"];
+            $statement_type=$pdf_data[$i_data]["statement_type"];
+            $statement_date=$pdf_data[$i_data]["statement_date"];
+            $invoices=$pdf_data[$i_data]["invoices"];
+            $print_invoices=$pdf_data[$i_data]["print_invoices"];
+            $sales_receipts=$pdf_data[$i_data]["sales_receipts"];
+            $statement_id=$pdf_data[$i_data]["statement_id"];
+            $has_logo=$pdf_data[$i_data]["has_logo"];
+?>
     <table style="width: 100%;">
         <tbody>
             <tr>
@@ -383,6 +403,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 } elseif ($days_due >= 1) {
                     $due_amount_1_30 += ($invoice->grand_total-$received->total_amount);
                 }
+            }elseif($due_date == date("Y-m-d")){
+                $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                $total_amount_due+=($invoice->grand_total-$received->total_amount);
+                $due_amount_0 += ($invoice->grand_total-$received->total_amount);
             }
             if (($invoice->grand_total-$received->total_amount)>0) {
                 ?>
@@ -548,10 +572,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 } elseif ($days_due >= 1) {
                     $due_amount_1_30 += ($invoice->grand_total-$received->total_amount);
                 }
+            }elseif($due_date == date("Y-m-d")){
+                $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                $total_amount_due+=($invoice->grand_total-$received->total_amount);
+                $due_amount_0 += ($invoice->grand_total-$received->total_amount);
             }
         } ?>
     <div class="items-table">
-        <table style="width: 100%;">
+        <table style="width: 100%; ">
             <thead>
                 <tr>
                     <th style="text-align: left;">Current<br>Due</th>
@@ -589,7 +617,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- END OF OPEN ITEM -->
     <?php
     } ?>
-
+    <div style="<?php if($i_data < (count($pdf_data)-1)){echo "page-break-after: always;";}?>"></div>
+<?php
+        }
+    }
+    ?>
 </body>
 
 </html>

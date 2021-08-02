@@ -5260,4 +5260,25 @@ class Accounting_modals extends MY_Controller {
 
         echo json_encode($return);
     }
+
+    public function get_timesheet($timesheetId)
+    {
+        $timesheet = $this->accounting_weekly_timesheet_model->get_by_id($timesheetId);
+        $timeActivities = [];
+        foreach(json_decode($timesheet->time_activity_ids, true) as $row => $timeActs) {
+            foreach($timeActs as $timeAct) {
+                $timeActivity = $this->accounting_single_time_activity_model->get_by_id($timeAct);
+                $timeActivities[$row]['customer'] = $this->accounting_customers_model->getCustomerDetails($timeActivity->customer_id)[0];
+                $timeActivities[$row]['service'] = $this->items_model->getItemById($timeActivity->service_id)[0];
+                $timeActivities[$row]['billable'] = $timeActivity->billable;
+                $timeActivities[$row]['rate'] = $timeActivity->hourly_rate;
+                $timeActivities[$row]['taxable'] = $timeActivity->taxable;
+                $timeActivities[$row]['time_activities'][] = $timeActivity;
+            }
+        }
+
+        $timesheet->time_activities = $timeActivities;
+
+        echo json_encode(['timesheet' => $timesheet]);
+    }
 }

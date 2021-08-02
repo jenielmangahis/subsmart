@@ -275,20 +275,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
 								<div class="row px-2 text-center mt-4 align-items-center">
 									<div class="col-sm-6">
-										<a href="#" class="add-employee" id="addEmployeeData"><p class=""><i class="fa fa-money h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Run Payroll</h6> </a>
+										<p class=""><i class="fa fa-money h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Run Payroll</h6>
 									</div>
 									<div class="col-sm-6">
-										<p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Add Employee</h6>
+                                        <a href="#" class="add-employee" id="addEmployeeData"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Add Employee</h6> </a>
 									</div>
 									<div class="col-sm-6">
-										<p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
+                                        <p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Pay Contractor</h6>
 									</div>
 									<div class="col-sm-6">
-										<p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
-										<h6>Add Contractor</h6>
+                                        <a href="#" data-toggle="modal" data-target="#modalAddContractor"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+										<h6>Add Contractor</h6> </a>
 									</div>
 								</div>
 							</div>
@@ -318,6 +318,51 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
+            <!-- add contractor modal -->
+            <div class="modal fade" id="modalAddContractor" tabindex="-1" role="dialog" aria-labelledby="addContractorLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg w-25 m-auto" role="document">
+                    <div class="modal-content">
+                        <form action="/accounting/contractors/add" method="post" class="form-validate" novalidate="novalidate">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addContractorLabel">Add a contractor</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                            </div>
+                            <div class="modal-body" style="max-height: 25%;">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card p-0 m-0">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="name">Name *</label>
+                                                            <input type="text" class="form-control" name="name" id="name" required>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="email">Email *</label>
+                                                            <input type="email" class="form-control" name="email" id="email" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- end card -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end modal-body -->
+                            <div class="modal-footer">
+                                <div class="row w-100">
+                                    <div class="col-md-6"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div>
+                                    <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end add contractor modal -->
 
 
 <!--Adding Employee modal-->

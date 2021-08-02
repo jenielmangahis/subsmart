@@ -263,7 +263,8 @@ div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:ho
     margin-left: -6px;
 }
 
-#create_statement_modal .recipient-list-section .btns button.missing-email-address {
+#create_statement_modal .recipient-list-section .btns button.missing-email-address,
+#create_statement_modal .recipient-list-section .btns button.statement-unavailable {
     height: auto;
     padding: 5px 20px;
     background: transparent;
@@ -274,30 +275,33 @@ div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:ho
     border-radius: 20px 0 0 20px;
     font-weight: lighter;
     font-size: 15px;
+    display: none;
+}
+
+#create_statement_modal .recipient-list-section .btns button.active {
+    color: #333333;
+    background: #ECEEF1;
+    font-weight: 600;
+    display: initial;
+}
+
+#create_statement_modal .recipient-list-section .btns button.initial {
+    display: initial;
 }
 
 #create_statement_modal .recipient-list-section .btns button.missing-email-address:hover,
+#create_statement_modal .recipient-list-section .btns button.statement-unavailable:hover,
 #create_statement_modal .recipient-list-section .btns button.statement-available:hover {
     color: #333333;
-    border: solid 2px #333333;
+    background: #D4D7DC;
 }
 
 #create_statement_modal .recipient-list-section table.receipients-list-table {
     width: 100%;
-}
-
-#create_statement_modal .recipient-list-section table.receipients-list-table th:last-child,
-#create_statement_modal .recipient-list-section table.receipients-list-table th:first-child {
-    border-left: none;
-    border-right: none;
-}
-
-#create_statement_modal .recipient-list-section table.receipients-list-table th:last-child {
-    text-align: right;
+    border-bottom: solid 1px #C7C7C7;
 }
 
 #create_statement_modal .recipient-list-section table.receipients-list-table th {
-    border-left: solid 1px #D4D7DC;
     padding: 10px;
     border-right: solid 1px #D4D7DC;
     border-bottom: solid 2px #D4D7DC;
@@ -310,17 +314,23 @@ div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:ho
     padding: 0 10px;
     color: #393A3D;
     font-size: 13px;
-    border-left: dotted 1px #C7C7C7;
     border-right: dotted 1px #C7C7C7;
+    border-bottom: solid 1px #C7C7C7;
+    height: 50px;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table tr:last-child td {
     border-bottom: solid 2px #C7C7C7;
 }
 
-#create_statement_modal .recipient-list-section table.receipients-list-table td:first-child {
+#create_statement_modal .recipient-list-section table.receipients-list-table td:first-child,
+#create_statement_modal .recipient-list-section table.receipients-list-table th:first-child {
     width: 100px;
     border-left: none;
 }
 
-#create_statement_modal .recipient-list-section table.receipients-list-table td:last-child {
+#create_statement_modal .recipient-list-section table.receipients-list-table td:last-child,
+#create_statement_modal .recipient-list-section table.receipients-list-table th:last-child {
     border-right: none;
     text-align: right;
 }
@@ -344,10 +354,19 @@ div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:ho
     margin: 10px 0;
 }
 
+#create_statement_modal .error-notif-section.error-found {
+    border: solid 1px #DC3C1E;
+}
+
 #create_statement_modal .error-notif-section .title {
     font-size: 14px;
     font-weight: 700;
     padding-bottom: 10px;
+}
+
+#create_statement_modal .error-notif-section.error-found .title i,
+#create_statement_modal .error-notif-section.error-found .title {
+    color: #DC3C1E;
 }
 
 #create_statement_modal .error-notif-section .title i {
