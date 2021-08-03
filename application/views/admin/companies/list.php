@@ -28,6 +28,8 @@ label>input {
   position: initial !important; 
 }
 </style>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/admin/company'); ?>
     <!-- page wrapper start -->
@@ -55,8 +57,9 @@ label>input {
                                     <th>Contact Name</th>
                                     <th>Industry</th>
                                     <th>Plan</th>
+                                    <th>Number of License</th>
                                     <th>Status</th>
-                                    <th style="width: 12%;"></th>
+                                    <th style="width: 22%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,6 +106,7 @@ label>input {
                                                 <!-- <span class=""><strong>Next Billing:</strong> Month XX, XXXX</span> -->
 
                                             </td>
+                                            <td><?= $c->number_of_license; ?></td>
                                             <td style="text-align: center;color:#ffffff;">
                                                 <span class="<?= $cell; ?>">
                                                     <?= $status; ?>
@@ -110,6 +114,7 @@ label>input {
                                             </td>
                                             <td>
                                                 <a class="btn btn-sm btn-primary btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $c->id; ?>"><i class="fa fa-view"></i> View Details</a>
+                                                <a class="btn btn-sm btn-primary btn-view-modules-details" href="javascript:void(0);" data-id="<?= $c->id; ?>"><i class="fa fa-view"></i> View Modules</a>
                                                 <?php if( $c->is_plan_active == 1 ){ ?>
                                                     <a class="btn btn-sm btn-primary deactivate-company" href="javascript:void(0);" data-name="<?= $c->bp_business_name; ?>" data-id="<?php echo $c->id ?>"><i class="fa fa-close"></i> Deactivate</a>
                                                 <?php }else{ ?>
@@ -141,6 +146,22 @@ label>input {
             </div>
             <div class="modal-body booking-info">
               <div id="modal-view-subscription-details-container" class="modal-view-subscription-details-container"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalViewModuleDetails" tabindex="-1" role="dialog" aria-labelledby="modalViewModuleDetailsTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="">Modules List</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body booking-info">
+              <div class="modal-view-module-details-container"></div>
             </div>
           </div>
         </div>
@@ -189,6 +210,27 @@ $(function(){
         $(".status-name").html("<b>Deactivate</b>");
         $(".status-company-name").html("<b>" + company_name + "</b>");
         $("#modalUpdateStatus").modal('show');
+    });
+
+    $(document).on('click', '.btn-view-modules-details', function(){
+        $("#modalViewModuleDetails").modal('show');
+
+        var sid = $(this).attr("data-id");
+        var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline;" /> Loading...</div>';
+        var url = base_url + 'admin/ajax_load_company_module_details';
+
+        $(".modal-view-module-details-container").html(msg);
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {sid:sid},
+               success: function(o)
+               {
+                  $(".modal-view-module-details-container").html(o);
+               }
+            });
+        }, 500);
     });
 
     $(document).on('click', '.activate-company', function(){
@@ -249,7 +291,7 @@ $(function(){
                data: {sid:sid},
                success: function(o)
                {
-                  $(".modal-view-subscription-details-container").html(o);
+                  $(".modal-view-subscription-details-container").html(o);                  
                }
             });
         }, 500);
