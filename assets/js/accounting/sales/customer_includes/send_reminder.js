@@ -19,7 +19,7 @@ function get_info_customer_reminder(customer_id) {
         },
         success: function(data) {
             $("#send-reminder-modal").addClass("show");
-            if (data.cutsomer_email == null) {
+            if (data.cutsomer_email == null || data.cutsomer_email == "") {
                 $("#send-reminder-modal .error-found").show();
                 $("#send-reminder-modal .modal-title p.normal").hide();
                 $("#send-reminder-modal #send-reminder-form button[type='submit']").attr("disabled", "true");
@@ -62,6 +62,7 @@ $("#send-reminder-form").submit(function(event) {
         confirmButtonText: "Send now",
     }).then((result) => {
         if (result.value) {
+            $("#loader-modal").show();
             $.ajax({
                 url: baseURL + "/accounting/send_customer_reminder",
                 type: "POST",
@@ -73,6 +74,7 @@ $("#send-reminder-form").submit(function(event) {
                     customer_email: customer_email,
                 },
                 success: function(data) {
+                    $("#loader-modal").hide();
                     if (data.status == "success") {
                         Swal.fire({
                             showConfirmButton: false,

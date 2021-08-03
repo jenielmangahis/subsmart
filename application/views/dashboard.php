@@ -40,7 +40,7 @@
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_customer_qs.png' ?>" style="margin: 0 auto;" />
                                 <p>Add Customer</p>
                             </div>
-                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="$('#modal_customer').modal('show')">
+                            <div class="float-left col-lg-2 no-padding text-center pointer" onclick="document.location = '<?= base_url('customer') ?>'">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'find_customer_qs.png' ?>" style="margin: 0 auto;"  />
                                 <p>Find Customer</p>
                             </div>

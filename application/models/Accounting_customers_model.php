@@ -96,7 +96,7 @@ class Accounting_customers_model extends MY_Model
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
-    public function update_time_activity($data,$time_activity_id)
+    public function update_time_activity($data, $time_activity_id)
     {
         $this->db->where('id', $time_activity_id);
         $res = $this->db->update('accounting_single_time_activity', $data);
@@ -121,5 +121,11 @@ class Accounting_customers_model extends MY_Model
             $data["company_id"] = logged("company_id");
             $this->db->insert('accounting_timesheet_settings', $data);
         }
+    }
+    public function make_customer_inactive($customer_id)
+    {
+        $this->db->where('company_id', logged("company_id"));
+        $this->db->where('prof_id', $customer_id);
+        $this->db->update('acs_profile', array("activated"=>0));
     }
 }

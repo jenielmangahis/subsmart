@@ -24,7 +24,7 @@ include viewPath('includes/header');
                 <div class="settings__header settings__header--table">
                     <div class="settings__title settings__title--secondary">Tax agencies</div>
                     <div>
-                        <button class="settings__btn">Add agency</button>
+                        <button data-action="addAgency" class="settings__btn">Add agency</button>
                         <button class="settings__btn settings__btn--icon" disabled><i class="fa fa-cog"></i></button>
                     </div>
                 </div>
@@ -46,7 +46,15 @@ include viewPath('includes/header');
                             <td data-type="tax_period_start">January</td>
                             <td data-type="date_start">01/01/2012</td>
                             <td data-type="agency">
-                                <a class="settings__link" href="#">Edit</a>
+                                <div class="btn-group btnGroup">
+                                    <button data-action="agencyInfo" type="button" class="btn btn-sm btnGroup__main">Edit</button>
+                                    <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Make inactive</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -59,7 +67,7 @@ include viewPath('includes/header');
                 <div class="settings__header settings__header--table">
                     <div class="settings__title settings__title--secondary">Custom rates</div>
                     <div>
-                        <button class="settings__btn">Add Rate</button>
+                        <button data-action="addRate" class="settings__btn">Add Rate</button>
                     </div>
                 </div>
 
@@ -78,7 +86,15 @@ include viewPath('includes/header');
                             <td data-type="agency">Florida Department of Revenue</td>
                             <td data-type="rate">7.5%</td>
                             <td data-type="agency">
-                                <a class="settings__link" href="#">Edit</a>
+                                <div class="btn-group btnGroup">
+                                    <button data-action="agencyInfo" type="button" class="btn btn-sm btnGroup__main">Edit</button>
+                                    <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Make inactive</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -87,11 +103,11 @@ include viewPath('includes/header');
         </div>
     </div>
 
-    <div class="editTaxAgency">
-        <div class="editTaxAgency__inner">
-            <div class="editTaxAgency__header">
-                <div class="editTaxAgency__title">Florida details</div>
-                <button class="editTaxAgency__close">
+    <div class="sidebarForm" id="agencyInfo">
+        <div class="sidebarForm__inner">
+            <div class="sidebarForm__header">
+                <div class="sidebarForm__title">Florida details</div>
+                <button data-action="close" class="sidebarForm__close">
                     <i class="fa fa-times"></i>
                 </button>
             </div>
@@ -100,8 +116,8 @@ include viewPath('includes/header');
 
             <form>
                 <div class="form-group">
-                    <label for="filing_frequency">Filing frequency</label>
-                    <select class="form-control" id="filing_frequency">
+                    <label for="agencyInfo__filingFrequency">Filing frequency</label>
+                    <select class="form-control" id="agencyInfo__filingFrequency">
                         <option value="yearly">Yearly</option>
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
@@ -110,18 +126,104 @@ include viewPath('includes/header');
                 </div>
 
                 <div class="form-group">
-                    <label for="tax_period_start">Start of tax period</label>
-                    <input type="text" class="form-control" id="tax_period_start" value="January">
+                    <label for="agencyInfo__taxPeriodStart">Start of tax period</label>
+                    <input type="text" class="form-control" id="agencyInfo__taxPeriodStart" value="January">
                 </div>
 
                 <div class="form-group">
-                    <label for="date_start">Start Date</label>
-                    <input type="date" class="form-control" id="date_start" value="January">
+                    <label for="agencyInfo__dateStart">Start Date</label>
+                    <input type="date" class="form-control" id="agencyInfo__dateStart" value="January">
                 </div>
             </form>
 
-            <div class="editTaxAgency__footer">
+            <div class="sidebarForm__footer">
                 <button type="button" class="settings__btn mr-2">Make inactive</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarForm" id="addAgency">
+        <div class="sidebarForm__inner">
+            <div class="sidebarForm__header">
+                <div class="sidebarForm__title">Add Agency</div>
+                <button data-action="close" class="sidebarForm__close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label for="addAgency__agency">Agency</label>
+                    <input type="text" class="form-control" id="addAgency__agency">
+                </div>
+
+                <div class="form-group">
+                    <label for="addAgency__filingFrequency">Filing frequency</label>
+                    <select class="form-control" id="addAgency__filingFrequency">
+                        <option value="yearly">Yearly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="half_yearly">Half-yearly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="addAgency__dateStart">Start Date</label>
+                    <input type="date" class="form-control" id="addAgency__dateStart">
+                </div>
+            </form>
+
+            <div class="sidebarForm__footer">
+                <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarForm" id="addRate">
+        <div class="sidebarForm__inner">
+            <div class="sidebarForm__header">
+                <div class="sidebarForm__title">Add a custom sales tax rate</div>
+                <button data-action="close" class="sidebarForm__close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="rateType" id="addRate__rateType1" checked>
+                        <label class="form-check-label" for="addRate__rateType1">
+                            Single
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="rateType" id="addRate__rateType2">
+                        <label class="form-check-label" for="addRate__rateType2">
+                            Combined
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="addRate__name">Name</label>
+                    <input type="text" class="form-control" id="addRate__name">
+                </div>
+
+                <div class="form-group">
+                    <label for="addRate__agency">Agency</label>
+                    <input type="text" class="form-control" id="addRate__agency">
+                </div>
+
+                <div class="form-group">
+                    <label for="addRate__rate">Rate</label>
+                    <input type="text" class="form-control" id="addRate__rate">
+                </div>
+            </form>
+
+            <div class="sidebarForm__footer">
+                <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
                 <button type="button" class="btn btn-primary">Save</button>
             </div>
         </div>

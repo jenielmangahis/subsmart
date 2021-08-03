@@ -63,13 +63,13 @@
                         endforeach;
                     }else{
                         ?>
-                    <h3 class="text-center" style="margin-top: 110px !important;">No Upcoming Events</h3>
+                        <h3 class="text-center" style="margin-top: 110px !important;">No Upcoming Events</h3>
                         <?php
                     }
                     ?>
                 </div>
                 <div class="text-center">
-                    <a class="text-info" href="<?= base_url() ?>job">SEE ALL EVENTS</a>
+                    <a class="text-info" href="<?= base_url() ?>events">SEE ALL EVENTS</a>
                 </div>
 
             </div>

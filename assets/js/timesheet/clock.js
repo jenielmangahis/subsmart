@@ -100,7 +100,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         }
                     },
                 });
@@ -240,7 +240,7 @@ $(document).ready(function() {
                                     data.company_id,
                                     data.title
                                 );
-                                get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                                // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
                         },
                     });
@@ -297,7 +297,7 @@ $(document).ready(function() {
                                     data.company_id,
                                     data.title
                                 );
-                                get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                                // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
                         },
                     });
@@ -364,7 +364,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         },
                     });
                 }
@@ -424,7 +424,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             // location.reload();
                         } else {
                             console.log("Autoc lockout: Something is wrong!");

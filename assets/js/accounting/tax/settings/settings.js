@@ -1,20 +1,23 @@
 (() => {
-  const $sidebar = $(".editTaxAgency");
-  const $sidebarCloseBtn = $sidebar.find(".editTaxAgency__close");
-  const $editLink = $(".settings__link");
+  const $sidebarTriggers = $("[data-action]");
 
-  $editLink.on("click", (event) => {
-    event.preventDefault();
-    $sidebar.addClass("editTaxAgency--show");
-  });
+  $sidebarTriggers.on("click", function () {
+    const sidebarId = $(this).attr("data-action");
+    const showClass = "sidebarForm--show";
 
-  $sidebarCloseBtn.on("click", () => {
-    $sidebar.removeClass("editTaxAgency--show");
-  });
+    const $sidebar = $(`#${sidebarId}`);
+    const $sidebarCloseBtn = $sidebar.find("[data-action=close]");
 
-  $sidebar.on("click", (event) => {
-    if ($sidebar.is(event.target)) {
-      $sidebar.removeClass("editTaxAgency--show");
-    }
+    $sidebar.addClass(showClass);
+
+    $sidebarCloseBtn.on("click", () => {
+      $sidebar.removeClass(showClass);
+    });
+
+    $sidebar.on("click", (event) => {
+      if ($sidebar.is(event.target)) {
+        $sidebar.removeClass(showClass);
+      }
+    });
   });
 })();

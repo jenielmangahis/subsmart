@@ -189,7 +189,12 @@ $(document).ready(function () {
 
     //Initialize Select2 Elements
 
-    $('.select2').select2()
+    $('.select2').select2({
+        dropdownParent: $('.modal')
+    });
+    $('#myTabContent select').select2({
+        minimumResultsForSearch: -1
+    });
 
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
 
@@ -317,13 +322,13 @@ $(document).ready(function () {
                     } else {
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">View Register</a>
+                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
 
                             <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="javascript:void(0);" data-href="/accounting/chart-of-accounts/edit/${rowData.id}" id="editAccount" data-id="${rowData.id}">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
                                 <a class="dropdown-item make-inactive" href="#">Make Inactive (Reduce usage)</a>
                                 <a class="dropdown-item" href="#">Run Report</a>
                             </div>
@@ -370,7 +375,7 @@ $(document).on('click', '#editAccount', function(e){
         success:function(html)
         {
             $('.append-edit-account').html(html);
-            $('.date_picker input#edit_time_date').datepicker({
+            $('#modalEditAccount .date_picker input#edit_time_date').datepicker({
                 uiLibrary: 'bootstrap',
                 todayBtn: "linked",
                 language: "de"
@@ -379,7 +384,9 @@ $(document).on('click', '#editAccount', function(e){
 
             //Initialize Select2 Elements
 
-            $('.select2').select2()
+            $('#modalEditAccount .select2').select2({
+                dropdownParent: $('#modalEditAccount')
+            });
 
             var element = document.querySelector('#edit_check_sub');
             var switchery = new Switchery(element, {size: 'small'});
@@ -387,6 +394,12 @@ $(document).on('click', '#editAccount', function(e){
         }
     })
 });
+
+// $(document).on('click', '#chart-of-accounts-table .view-register', function(e) {
+//     e.preventDefault();
+
+    
+// });
 
 $('#import_form').on('submit', function(event){
     event.preventDefault();

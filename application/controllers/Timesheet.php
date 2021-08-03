@@ -2009,6 +2009,7 @@ class Timesheet extends MY_Controller
         );
         echo json_encode($return);
     }
+
     public function clockOut_validation()
     {
         $attn_id = $this->input->post('attn_id');

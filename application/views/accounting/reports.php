@@ -187,7 +187,7 @@
                                                                     <a href="#" onclick="addToFavorites(this)" data-name="Balance Sheet Comparison" data-link="#" class="pr-4 text-secondary h6 pull-right"><i class="fa fa-star-o fa-lg"></i></a>
                                                                 </li>
                                                                 <li class="border-bottom p-3 cursor-pointer">
-                                                                    <a href="#" class=" font-weight-normal">Balance Sheet Detail</a>
+                                                                    <a href="<?php echo url('accounting/balance_sheet_detail'); ?>" class=" font-weight-normal">Balance Sheet Detail</a>
                                                                     <a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o "></i></a>
 
                                                                     <div class="dropdown pull-right d-inline-block">
@@ -201,7 +201,7 @@
                                                                     <a href="#" onclick="addToFavorites(this)" data-name="Balance Sheet Detail" data-link="#" class="pr-4 text-secondary h6 pull-right"><i class="fa fa-star-o fa-lg"></i></a>
                                                                 </li>
                                                                 <li class="border-bottom p-3 cursor-pointer">
-                                                                    <a href="#" class=" font-weight-normal">Balance Sheet Summary</a>
+                                                                    <a href="<?php echo url('accounting/balance_sheet_summary')?>" class=" font-weight-normal">Balance Sheet Summary</a>
                                                                     <a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o "></i></a>
 
                                                                     <div class="dropdown pull-right d-inline-block">
@@ -215,7 +215,7 @@
                                                                     <a href="#" onclick="addToFavorites(this)" data-name="Balance Sheet Summary" data-link="#" class="pr-4 text-secondary h6 pull-right"><i class="fa fa-star-o fa-lg"></i></a>
                                                                 </li>
                                                                 <li class="border-bottom p-3 cursor-pointer">
-                                                                    <a href="#" class=" font-weight-normal">Balance Sheet</a>
+                                                                    <a href="<?php echo url('accounting/balance_sheet')?>" class=" font-weight-normal">Balance Sheet</a>
                                                                     <a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o "></i></a>
 
                                                                     <div class="dropdown pull-right d-inline-block">

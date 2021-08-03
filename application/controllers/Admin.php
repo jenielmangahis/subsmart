@@ -1555,6 +1555,27 @@ class Admin extends CI_Controller
         $this->load->view('admin/subscribers/ajax_subscriber_details', $this->page_data);
     }
 
+    public function ajax_load_company_module_details() 
+    {
+        $this->load->model('Clients_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $post = $this->input->post();
+
+        $sid = $post['sid'];
+        $cid = logged('company_id');
+
+        $subscriber   = $this->Clients_model->getById($sid);
+        $industryType = $this->IndustryType_model->getById($subscriber->industry_type_id);
+        $templateModules = $this->IndustryTemplateModules_model->getAllByIndustryTemplateId($industryType->industry_template_id);
+
+        $this->page_data['templateModules'] = $templateModules;
+        $this->page_data['subscriber'] = $subscriber;
+        $this->load->view('admin/subscribers/ajax_company_module_details', $this->page_data);
+    }
+
     public function offer_codes() 
     {   
         $this->load->model('OfferCodes_model');
