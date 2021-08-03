@@ -248,6 +248,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/create_statement_modal.css",
             "assets/css/accounting/accounting_includes/time_activity.css",
             "assets/css/accounting/accounting_includes/create_invoice.css",
+            "assets/css/accounting/accounting_includes/select_customer_type.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
@@ -602,6 +603,22 @@ class Accounting extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Balance Sheet Comparison Report";
         $this->load->view('accounting/reports/audit_log', $this->page_data);
+    }
+
+    public function balance_sheet_detail()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+        $this->load->view('accounting/reports/balance_sheet_detail', $this->page_data);
+    }
+
+    public function balance_sheet_summary()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Balance Sheet Comparison Report";
+        $this->load->view('accounting/reports/balance_sheet_summary', $this->page_data);
     }
 
     /* payscale */
@@ -7026,7 +7043,7 @@ class Accounting extends MY_Controller
 													Send payment link
 												</a>
 											</li>';
-            if ($amount == 0) {
+            if ($amount <= 0) {
                 $html.='<li>
 												<a href="javascript:void(0)"
 													class="create-charge-btn" data-toggle="modal" data-target="#create_charge_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
@@ -7041,7 +7058,7 @@ class Accounting extends MY_Controller
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="">
+													class="make-customer-inactive" data-customer-id="'.$cus->prof_id.'">
 													Make inactive
 												</a>
 											</li>
@@ -8073,7 +8090,7 @@ class Accounting extends MY_Controller
                     <label for="customer_checkbox_'.$customer_id.'"><span></span></label>
                 </div>
             </div>';
-            } 
+            }
             
             $missing_email="";
             if ($customer_info->email == "") {
@@ -8139,7 +8156,7 @@ class Accounting extends MY_Controller
         if ($statement_modal_type == "by-batch") {
             $ids_array = $this->input->post("by_batch_ids");
             $statement_ids = $this->input->post("by_batch_statement_ids");
-            if($statement_ids==null || $statement_ids==""){
+            if ($statement_ids==null || $statement_ids=="") {
                 $statement_ids=array();
             }
         } else {
@@ -8192,7 +8209,7 @@ class Accounting extends MY_Controller
         }
         $customer_checkboxes = $this->input->post("customer_checkbox");
 
-        $this->created_statement_pdf($ids_array, $statement_ids, $this->input->post("statement_type"), $file_name,$customer_checkboxes);
+        $this->created_statement_pdf($ids_array, $statement_ids, $this->input->post("statement_type"), $file_name, $customer_checkboxes);
         
         $data = new stdClass();
         $data->file_location = base_url("assets/pdf/".$file_name);
@@ -8206,13 +8223,12 @@ class Accounting extends MY_Controller
         $data->file_name_ids=$file_name_ids;
         echo json_encode($data);
     }
-    public function created_statement_pdf($customer_ids=array(), $statement_ids=array(), $statement_type="", $file_name="",$customer_checkboxes=array())
+    public function created_statement_pdf($customer_ids=array(), $statement_ids=array(), $statement_type="", $file_name="", $customer_checkboxes=array())
     {
-
         if (count($customer_ids)>0) {
             for ($i=0;$i<count($customer_ids);$i++) {
                 $customer_id = $customer_ids[$i];
-                $selected_id_key=array_search($customer_id,$customer_checkboxes);
+                $selected_id_key=array_search($customer_id, $customer_checkboxes);
                 
                 if (is_bool($selected_id_key)!=1) {
                     $statement_id = $statement_ids[$i];
@@ -8257,7 +8273,6 @@ class Accounting extends MY_Controller
 
             $this->pdf->save_pdf("accounting/customer_includes/create_statement/statement_pdf", $data, $file_name, "P");
         }
-        
     }
     public function send_email_statement()
     {
@@ -8314,10 +8329,9 @@ class Accounting extends MY_Controller
             $mail->Body =  'Statement.';
             $content = $this->load->view('accounting/customer_includes/create_statement/statement_send_email', $this->page_data, true);
             $mail->MsgHTML($content);
-            $customer_emails=explode(";",$this->input->post("email"));
-            for($i=0;$i<(count($customer_emails)-1);$i++){
+            $customer_emails=explode(";", $this->input->post("email"));
+            for ($i=0;$i<(count($customer_emails)-1);$i++) {
                 $mail->addAddress($customer_emails[$i]);
-                echo($customer_emails[$i]);
             }
             // $mail->addAddress("pintonlou@gmail.com");
             
@@ -8414,5 +8428,15 @@ class Accounting extends MY_Controller
         $return_data->show_services = $this->input->post('show_services');
         $return_data->time_activity_id =$time_activity_id;
         echo json_encode($return_data);
+    }
+    public function make_customer_inactive()
+    {
+        $customer_ids=$this->input->post("customer_ids");
+        for ($i=0;$i<count($customer_ids);$i++) {
+            $this->accounting_customers_model->make_customer_inactive($customer_ids[$i]);
+        }
+        $data = new stdClass();
+        $data->result="success";
+        echo json_encode($data);
     }
 }

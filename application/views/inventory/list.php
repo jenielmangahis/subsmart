@@ -199,7 +199,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         var ID = this.id;
         // alert(ID);
         Swal.fire({
-            title: 'Continue to remove this Service?',
+            title: 'Continue to remove this Item?',
             text: "",
             icon: 'warning',
             showCancelButton: true,

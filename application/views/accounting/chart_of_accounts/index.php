@@ -14,6 +14,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #chart-of-accounts-table .btn-group .btn {
         padding: 10px;
     }
+    #myTabContent .action-bar ul li a:after {
+        width: 0;
+    }
+    #myTabContent .action-bar ul li a {
+    font-size: 20px;
+    }
+    #myTabContent .action-bar ul li {
+        margin-right: 5px;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -93,7 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <input type="text" name="search" id="search" class="form-control" placeholder="Filter by name">
                                             </div>
                                             <div class="col-3">
-                                                <select name="" id="" class="form-control">
+                                                <select name="" id="type" class="form-control">
                                                     <option value="all">All</option>
                                                     <option value="ctl">Counts toward limits</option>
                                                 </select>

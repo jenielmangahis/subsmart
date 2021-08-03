@@ -9,6 +9,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->checkLogin();
         $this->hasAccessModule(45);
         $this->load->model('chart_of_accounts_model');
+        $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('vendors_model');
@@ -24,7 +25,10 @@ class Chart_of_accounts extends MY_Controller {
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
             "assets/css/accounting/accounting-modal-forms.css",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
+            "assets/css/accounting/accounting_includes/receive_payment.css",
+            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
+            "assets/css/accounting/accounting_includes/create_charge.css"
         ));
 
         add_footer_js(array(
@@ -32,7 +36,10 @@ class Chart_of_accounts extends MY_Controller {
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
+            "assets/js/accounting/sales/customer_sales_receipt_modal.js",
+            "assets/js/accounting/sales/customer_includes/receive_payment.js",
+            "assets/js/accounting/sales/customer_includes/create_charge.js"
         ));
 
 		$this->page_data['menu_name'] =

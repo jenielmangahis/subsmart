@@ -29,7 +29,7 @@
                     <hr />
                 </div>
                 <div class="justify-content-center text-center mt-5">
-                    <button onclick="document.location = '<?= base_url() ?>'" class="btn btn-primary mt-2">Setup a Plan</button>
+                    <button onclick="document.location = '<?= base_url() ?>inventory/plans'" class="btn btn-primary mt-2">Setup a Plan</button>
                 </div>
             </div>
         </div>

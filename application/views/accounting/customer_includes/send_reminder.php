@@ -11,7 +11,7 @@
                     <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Email addresses missing
                 </div>
                 <div class="error-description">
-                    <span class="invoice-count">155</span> invoices are missing valid email addresses and will not be
+                    There are missing valid email addresses and will not be
                     sent.
                 </div>
             </div>

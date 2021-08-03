@@ -107,3 +107,74 @@ $(document).on("click", ".section-above-table .email-by-batch", function(event) 
         $(this).attr("href", "mailto:" + mail_to + "?bcc=" + mail_to_bcc);
     }
 });
+
+
+////////////=====>>>>>MAKE CUSTOMER INACTIVE
+
+$(document).on("click", ".section-above-table .make-customer-inactive-by-batch", function(event) {
+    var chech_boxes = new Array();
+    $("#customers_table tbody tr td:first-child input[type='checkbox']:checked").each(function() {
+        chech_boxes.push($(this).attr('data-customer-id'));
+    });
+    make_custmer_inactive(chech_boxes);
+});
+$(document).on("click", "#customers_table .make-customer-inactive", function(event) {
+    var chech_boxes = new Array();
+    chech_boxes.push($(this).attr('data-customer-id'));
+    make_custmer_inactive(chech_boxes);
+});
+
+function make_custmer_inactive(chech_boxes) {
+
+    if (chech_boxes.length > 0) {
+        var customer = "customer"
+        if (chech_boxes.length > 1) {
+            customer = "customers";
+        }
+        Swal.fire({
+            title: "Make selected " + customer + " Inactive?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/hibernation.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Make inactive",
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: baseURL + "/accounting/make_customer_inactive",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        customer_ids: chech_boxes,
+                        action: "by-batch"
+                    },
+                    success: function(data) {
+                        if (data.result == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Already marked the selected " + customer + " to inactive",
+                                icon: "success",
+                            });
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Something went wrong.",
+                                icon: "error",
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    }
+}
+
+$(document).on("click", ".section-above-table  .slect-customer-type-by-batch", function(event) {
+    $("#select_customer_type_modal").fadeIn();
+});
+$(document).on("click", "#select_customer_type_modal .select_customer_type_modal-footer  .cancel-btn", function(event) {
+    $("#select_customer_type_modal").fadeOut();
+});

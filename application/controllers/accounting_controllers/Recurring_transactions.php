@@ -8,6 +8,8 @@ class Recurring_transactions extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('accounting_customers_model');
+        $this->load->model('accounting_invoices_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -17,7 +19,10 @@ class Recurring_transactions extends MY_Controller {
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
             "assets/css/accounting/accounting-modal-forms.css",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
+            "assets/css/accounting/accounting_includes/receive_payment.css",
+            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
+            "assets/css/accounting/accounting_includes/create_charge.css"
         ));
 
         add_footer_js(array(
@@ -25,7 +30,10 @@ class Recurring_transactions extends MY_Controller {
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
+            "assets/js/accounting/sales/customer_sales_receipt_modal.js",
+            "assets/js/accounting/sales/customer_includes/receive_payment.js",
+            "assets/js/accounting/sales/customer_includes/create_charge.js"
         ));
 
 		$this->page_data['menu_name'] =

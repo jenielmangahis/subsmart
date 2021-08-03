@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
-
+<style>
+	.swal2-image {
+		border-radius: 0 !important;
+	}
+</style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper accounting-sales" role="wrapper">
 	<!-- page wrapper start -->
@@ -151,12 +155,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									</a>
 								</li>
 								<li class="disabled">
-									<a href="javascript:void(0)" class="">
+									<a href="javascript:void(0)" class="make-customer-inactive-by-batch">
 										Make inactive
 									</a>
 								</li>
 								<li class="disabled">
-									<a href="javascript:void(0)" class="">
+									<a href="javascript:void(0)" class="slect-customer-type-by-batch">
 										Select customer type
 									</a>
 								</li>
@@ -205,7 +209,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
+
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
+<?php include viewPath('accounting/customer_includes/select_customer_type/select_customer_type'); ?>
 <?php include viewPath('accounting/customer_includes/create_statement/create_statement_modal'); ?>
 <?php include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
 

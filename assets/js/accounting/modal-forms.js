@@ -90,6 +90,7 @@ $(function() {
 
         if($(this).attr('id') !== 'time') {
             computeTotalHours();
+            computeTotalBill();
         }
     });
 
@@ -3353,12 +3354,36 @@ const tableWeekDate = (el) => {
     }
 }
 
+const computeTotalBill = () => {
+    $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function() {
+        var rate = $(this).find('[name="hourly_rate[]"]').val();
+        var totalHrs = $(this).find('.total-cell').find('p:nth-child(2)').html();
+
+        if(rate !== undefined && rate !== '0.00' && totalHrs !== undefined && totalHrs !== '0:00') {
+            var totalHrsSplit = totalHrs.split(':');
+            rate = parseFloat(rate);
+
+            var minutesDecimal = parseInt(totalHrsSplit[1]) / 60;
+            totalHrs = parseFloat(totalHrsSplit[0]) + minutesDecimal;
+
+            var totalBill = totalHrs * rate;
+            if($(this).find('.total-cell').find('p').length < 4) {
+                $(this).find('.total-cell').find('p:nth-child(2)').removeClass('m-0');
+                $(this).find('.total-cell').append(`<p class="text-right m-0">Billable</p>`);
+                $(this).find('.total-cell').append(`<p class="text-right m-0">$${parseFloat(totalBill).toFixed(2)}</p>`);
+            } else {
+                $(this).find('.total-cell').find('p:last-child()').html(`$${parseFloat(totalBill).toFixed(2)}`);
+            }
+        }
+    });
+}
+
 const computeTotalHours = () => {
     var input = "";
     var hour = 00;
     var minutes = 00;
     
-    $('table#timesheet-table tbody tr').each(function() {
+    $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function() {
         var rowHours = 00;
         var rowMins = 00;
         var rowFlag = false;
@@ -3986,10 +4011,16 @@ const printTimesheet = (timesheetId) => {
             rowHours = rowHours.toString().length === 1 ? "0"+rowHours.toString() : rowHours.toString();
             rowMins = rowMins.toString().length === 1 ? "0"+rowMins.toString() : rowMins.toString();
 
+            var minsDecimal = parseFloat(rowMins) / 60;
+            var rowHoursDec = parseFloat(rowHours) + minsDecimal;
+            var rowBills = rowHoursDec * parseFloat(rate).toFixed(2);
+
             timesheetRow += `
             <td class="total">
                 <p style="margin:0; text-align: center;">Hrs</p>
-                <p style="margin:0; text-align: center;">${rowHours}:${rowMins}</p>
+                <p style="${billable === "0" ? 'margin:0;' : 'margin-top:0;'} text-align: center;">${rowHours}:${rowMins}</p>
+                ${billable === "1" ? '<p style="margin:0; text-align: center">Billable</p>' : ''}
+                ${billable === "1" ? `<p style="margin:0; text-align: center">$${parseFloat(rowBills).toFixed(2)}</p>` : ''}
             </td>`;
             timesheetRow += `</tr>`;
 

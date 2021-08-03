@@ -1,0 +1,29 @@
+div#select_customer_type_modal {
+    position: fixed;
+    background: #0000008c;
+    z-index: 1040;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    display: none;
+}
+
+#select_customer_type_modal .monal-body {
+    background: #ffffff;
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+#select_customer_type_modal .btn-success {
+    background: #2ca01c;
+}
+
+#select_customer_type_modal .btn-success:hover {
+    background: #108000;
+}
