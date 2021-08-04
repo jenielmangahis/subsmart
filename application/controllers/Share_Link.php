@@ -54,6 +54,7 @@ class Share_Link extends MY_Controller
         $company = $this->workorder_model->getcompany_data($acs->company_id);
         $items = $this->workorder_model->getworkorderItems($data->id);
         $payment = $this->workorder_model->getpayment($data->id);
+        $lead = $this->workorder_model->getleadSource($data->lead_source_id);
         
         // $this->load->library('pdf');
         // $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
@@ -69,7 +70,8 @@ class Share_Link extends MY_Controller
                                 Priority: '.$data->priority.' <br>
                                 Password: '.$data->password.' <br>
                                 Security Number: '.$data->security_number.' <br>
-                                Source: '.$data->source_name.' <br></div>';
+                                Source: '.$lead->ls_name.' <br></div>
+                                Agent: '.$acs->first_name.' '.$acs->last_name.' <br>';
 
         $html .= '<div style="margin-top:12%;"><b>FROM:</b><hr> <br>'.$company->first_name.' '.$company->last_name.'<br>Address: '.$company->business_address.'<br> Phone: '.$company->phone_number.'</div><br><br>';
         $html .= '<div><b>TO:</b><hr> <br>'.$acs->first_name.' '.$acs->last_name.'<br>'.$acs->business_name.'<br>Address: '.$acs->mail_add.' '.$acs->city.' '.$acs->state.' '.$acs->country.' '.$acs->zip_code.' '.$acs->cross_street.' '.'<br>Email: '.$acs->email.'<br>Phone:'.$acs->phone_h.'<br> Mobile: '.$acs->phone_m.'</div><br><br>';
@@ -299,6 +301,8 @@ class Share_Link extends MY_Controller
         $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
         $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
         $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+        
+        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 

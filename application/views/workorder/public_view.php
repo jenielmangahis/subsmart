@@ -559,7 +559,11 @@ body
 														</tr>
 														</tr>
 															<td align="left"><div style="">Source: </div></td>
-															<td align="right"><?php echo $workorder->lead_source_id ?></td>
+															<td align="right"><?php echo $lead->ls_name ?></td>
+														</tr>
+														</tr>
+															<td align="left"><div style="">Agent: </div></td>
+															<td align="right"><?php echo $first->FName.' '.$first->LName; ?></td>
 														</tr>
 														
 														</tbody>
@@ -606,6 +610,7 @@ body
 																</li>
 															<li><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></li>
 															<li>Phone: <?php echo $customer->phone_h ?></li>
+															<li>Email: <?php echo $customer->email ?></li>
 		         							   			
 		         							   			</ul>
 		         							   		</div><br>
@@ -613,6 +618,7 @@ body
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><b>JOB:</b></li>
+															<li>Job Name: <?php echo $workorder->job_name ?></li>
 		         							   				<!-- <li><a href="" class="ul-text">Job for Estimate #EST-000010</a></li> -->
 		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
 		         							   			<br>
@@ -697,7 +703,7 @@ body
 											            <thead>
 											                <tr>
 											                    <th style="background: #f4f4f4; text-align: center; padding: 5px 0;font-weight:bold;">#</th>
-											                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;font-weight:bold;">Services</th>
+											                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;font-weight:bold;">Description</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Qty</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Price</th>
 											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Discount</th>

@@ -48,22 +48,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <h6><a href="/accounting/lists" class="text-info"><i class="fa fa-chevron-left"></i> All Lists</a></h6>
                                 </div>
                                 <div class="col-sm-12">
-                                    <form id="attachments-form">
-                                        <div class="attachments attachments">
-                                            <div class="attachments-header">
-                                                <button type="button" onclick="document.getElementById('attachments').click();">Attachments</button>
-                                                <span>Maximum size: 20MB</span>
+                                    <div class="attachments-container">
+                                        <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                             </div>
-                                            <div class="attachments-list">
-                                                <div class="attachments-container border" onclick="document.getElementById('attachments').click();">
-                                                    <div class="attachments-container-label">
-                                                        Drag/Drop files here or click the icon
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <input type="file" name="attachments[]" id="attachments" class="hide" multiple="multiple">
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>

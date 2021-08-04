@@ -128,4 +128,29 @@ class Accounting_customers_model extends MY_Model
         $this->db->where('prof_id', $customer_id);
         $this->db->update('acs_profile', array("activated"=>0));
     }
+    public function add_new_customer_type($data=array())
+    {
+        $this->db->insert('customer_types', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
+    public function get_customer_type_by_company_id($company_id="")
+    {
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('title');
+        $query = $this->db->get('customer_types');
+        return $query->result();
+    }
+    public function delete_customer_type($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('customer_types');
+        return $this->db->affected_rows();
+    }
+    public function update_customer_type($id,$data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('customer_types', $data);
+        return $this->db->affected_rows();
+    }
 }

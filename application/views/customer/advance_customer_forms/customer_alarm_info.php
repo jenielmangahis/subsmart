@@ -295,6 +295,7 @@
             <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 12px;"><span class="fa fa-plus"></span> Add Field</a>
             <?php if(isset($profile_info)):  ?>
                 <?php $custom_fields = json_decode($profile_info->custom_fields); ?>
+                <?php if(!empty($custom_fields)): ?>
                 <?php foreach ($custom_fields as $field): ?>
                     <div class="row form_line">
                         <div class="col-md-5">
@@ -310,6 +311,7 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
+                <?php endif; ?>
             <?php else: ?>
                 <div class="row form_line">
                     <div class="col-md-5">

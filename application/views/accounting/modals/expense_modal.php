@@ -22,6 +22,7 @@
                                                         <label for="payee">Payee</label>
                                                         <select name="payee" id="payee" class="form-control">
                                                             <option value="" disabled selected>&nbsp;</option>
+                                                            <option value="add-new">&plus; Add new</option>
                                                             <?php if(count($dropdown['vendors']) > 0) : ?>
                                                             <optgroup label="Vendors">
                                                             <?php foreach($dropdown['vendors'] as $vendor) : ?>

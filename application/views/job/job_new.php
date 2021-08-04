@@ -247,7 +247,7 @@ add_css(array(
                             <br>
                             <center>
                             <a href="#" data-toggle="modal" data-target="#share_job_modal" data-backdrop="static" data-keyboard="false" class="btn btn-primary">
-                                <span class="fa fa-plus"></span> Share Job
+                                <span class="fa fa-plus"></span> Assign Job
                             </a>
                             </center>
                         </div>
@@ -694,35 +694,24 @@ add_css(array(
                             </div>
                         </div>
                         <hr>
+                        <h6 style="padding-left: 7px;">Job Items Listing</h6>
                         <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <td>
-                                    <h6>Job Items Listing</h6>
-                                </td>
-                            </tr>
-                            </thead>
+                            <tbody >
+                                <tr>
+                                    <td>
+                                        <small>Job Type</small>
+                                        <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
+                                    </td>
+                                    <td>
+                                        <small>Job Tags</small>
+                                        <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-striped">
                             <tbody id="jobs_items">
-                            <tr>
-                                <td>
-                                    <small>Job Type</small>
-                                    <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                </td>
-                                <td>
-                                    <small>Job Tags</small>
-                                    <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <!--<button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:"></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:"></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>-->
-                                </td>
-                                <td>
-                                </td>
-                            </tr>
                             <?php if(isset($jobs_data)): ?>
                                 <?php
                                     $subtotal = 0.00;
@@ -1239,7 +1228,7 @@ add_css(array(
                 <h4 class="modal-title">Share Job To Other Employee</h4>
             </div>
             <div class="modal-body">
-                <label>Employee 2</label>
+                <label>Employee 1</label>
                 <select id="employee2" name="employee2_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -1249,7 +1238,7 @@ add_css(array(
                     <?php endif; ?>
                 </select>
 
-                <label>Employee 3</label>
+                <label>Employee 2</label>
                 <select id="employee3" name="employee3_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>
@@ -1259,7 +1248,7 @@ add_css(array(
                     <?php endif; ?>
                 </select>
 
-                <label>Employee 4</label>
+                <label>Employee 3</label>
                 <select id="employee4" name="employee4_" class="form-control">
                     <option value="">Select Employee</option>
                     <?php if(!empty($employees)): ?>

@@ -13,7 +13,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			<div style="padding-top:1%;">
 				<h3 style="font-family: Sarabun, sans-serif">Customers</h3>
 			</div>
-			<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+			<div class="notification-page"
+				style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
 				As your business grows, it's important to stay organized and keep track of your customers. You can add
 				customer profiles so you can quickly add them to transactions or invoices. Here's how to add customers
 				and keep your customer list up-to-date. <br>
@@ -64,16 +65,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			</div>
 			<div class="col-lg-6">
 				<div class="pull-right">
-					<button class="btn btn-success rounded-20" type="button" id="dropNewTraaction"
-						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						New Customer&ensp;<span class="fa fa-caret-down"></span>
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropNewTraaction">
-						<a class="dropdown-item" href="#">Import Customers</a>
-					</div>
+					<button type="submit" data-submit-type="save-send" class="btn btn-success"
+						data-target="#modalNewCustomer" data-toggle="modal" style="border-radius: 20px 0 0 20px">New
+						Customer</button>
+					<button class="btn btn-success" type="button" data-toggle="dropdown"
+						style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+						<span class="fa fa-caret-down"></span></button>
+					<ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
+						<li>
+							<button type="submit" data-submit-type="save-close" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
+                                                ">Import Customers</button>
+						</li>
+					</ul>
 				</div>
 				<div class="pull-right mr-3">
-					<button class="btn btn-default rounded-20" type="button">
+					<button class="btn btn-default rounded-20" type="button" data-target="#customer_type_modal"
+						data-toggle="modal">
 						Customer Types
 					</button>
 				</div>
@@ -209,9 +216,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-
+<div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	data-keyboard="false" style="z-index: 1050 !important;">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body pt-0 pl-3 pb-3"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
-<?php include viewPath('accounting/customer_includes/select_customer_type/select_customer_type'); ?>
+<?php include viewPath('accounting/customer_includes/customer_type/select_customer_type'); ?>
+<?php include viewPath('accounting/customer_includes/customer_type/customer_types_modal'); ?>
 <?php include viewPath('accounting/customer_includes/create_statement/create_statement_modal'); ?>
 <?php include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
 

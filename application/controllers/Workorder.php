@@ -559,6 +559,8 @@ class Workorder extends MY_Controller
         $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
         $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
 
+        $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
         // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
@@ -1369,6 +1371,8 @@ class Workorder extends MY_Controller
         $second = $this->workorder_model->getusersecond($workData->primary_account_holder_name);
         $third = $this->workorder_model->getuserthird($workData->secondary_account_holder_name);
 
+        $lead = $this->workorder_model->getleadSource($workData->lead_source_id);
+
         $data = array(
             'workorder'                         => $workorder,
             'tags'                              => $workData->tags,
@@ -1376,7 +1380,7 @@ class Workorder extends MY_Controller
             'priority'                          => $workData->priority,
             'password'                          => $workData->password,
             'security_number'                   => $workData->security_number,
-            'source_name'                       => $workData->lead_source_id,
+            'source_name'                       => $lead->ls_name,
             'company_representative_signature'  => $workData->company_representative_signature,
             'company_representative_name'       => $workData->company_representative_name,
             'primary_account_holder_signature'  => $workData->primary_account_holder_signature,
@@ -1451,6 +1455,8 @@ class Workorder extends MY_Controller
             'second'                            => $second,
             'third'                             => $third,
             'company_id'                        => $company_id,
+
+            'header'                            => $workData->header,
             
             // 'source' => $source
         );
@@ -2884,6 +2890,7 @@ class Workorder extends MY_Controller
                 'amount'                    => $this->input->post('payment_amount'),
                 'check_number'              => $this->input->post('check_number'),
                 'routing_number'            => $this->input->post('routing_number'),
+                'account_number'            => $this->input->post('account_number'),
                 'work_order_id'             => $addQuery,
                 'date_created'              => date("Y-m-d H:i:s"),
                 'date_updated'              => date("Y-m-d H:i:s")
@@ -3961,6 +3968,7 @@ class Workorder extends MY_Controller
                 'amount'            => $this->input->post('payment_amount'),
                 'check_number'      => $this->input->post('check_number'),
                 'routing_number'    => $this->input->post('routing_number'),
+                'account_number'    => $this->input->post('account_number'),
                 'work_order_id'     => $id,
                 'date_updated'      => date("Y-m-d H:i:s")
             );
@@ -4286,7 +4294,7 @@ class Workorder extends MY_Controller
         }
         
         $action = $this->input->post('action');
-        if($action == 'submit') {
+        if($action == 'Submit') {
 
         $acs = array(
             'prof_id'                   => $this->input->post('acs_id'),

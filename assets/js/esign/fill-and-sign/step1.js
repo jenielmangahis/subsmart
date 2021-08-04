@@ -13,6 +13,7 @@ function Step1(params = {}) {
   const $selectFileModalClose = $("#selectDocumentCloseButton");
   const $vaultTab = $("#vault");
   const $recentTab = $("#recent");
+  const $myTemplates = $("#myTemplates");
   const $selectDocumentButton = $("#selectDocumentButton");
   const $fileInput = $("#fileInput");
 
@@ -20,12 +21,17 @@ function Step1(params = {}) {
   let documentObj = null;
   let documentUrl = null;
   let recentDocuments = [];
+  let templates = [];
   let onSelect = params.onSelect || (() => {});
 
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   function getVaultDocumentById(id) {
     return vaultDocuments.find(({ file_id }) => file_id == id);
+  }
+
+  function getTemplateById(id) {
+    return templates.find(({ id: currId }) => currId == id);
   }
 
   function getRecentById(id) {
@@ -292,8 +298,7 @@ function Step1(params = {}) {
       return $element;
     });
 
-    const $vaultList = $vaultTab.find(".fillAndSign__vault");
-    $vaultList.append($elements);
+    $vaultTab.find(".fillAndSign__vault").append($elements);
   }
 
   function displayRecentDocuments() {
@@ -337,20 +342,75 @@ function Step1(params = {}) {
       return $element;
     });
 
-    const $recentList = $vaultTab.find(".fillAndSign__recent");
-    $recentTab.append($elements);
+    $recentTab.find(".fillAndSign__recent").append($elements);
+  }
+
+  function displayMyTemplates() {
+    if (!templates.length) {
+      $myTemplates.append("<p>🤷‍♀️ Nothing to display here</p>");
+      return;
+    }
+
+    const $elements = templates.map((template) => {
+      const { id, name, created_at: createdRaw } = template;
+      const created = moment(createdRaw).format("MMMM DD, YYYY");
+
+      const html = `
+        <li class="fillAndSign__vaultItem" data-template-id=${id}>
+            <div class="media">
+                <i class="fa fa-file-pdf-o fa-2x text-danger mr-3"></i>
+                <div class="media-body">
+                    <h5 class="mt-0 fillAndSign__vaultItemTitle">${name}</h5>
+                    <div class="fillAndSign__vaultItemInfo">
+                      Created on <span>${created}</span>
+                  </div>
+                </div>
+            </div>
+        </li>
+        `;
+
+      $element = createElementFromHTML(html);
+      $element.on("click", (event) => {
+        const $currActive = $(".fillAndSign__vaultItem--selected");
+        $currActive.removeClass("fillAndSign__vaultItem--selected");
+
+        let $target = $(event.target);
+        if (!$target.hasClass("fillAndSign__vaultItem")) {
+          $target = $target.closest(".fillAndSign__vaultItem");
+        }
+
+        $target.addClass("fillAndSign__vaultItem--selected");
+        onSelect(event);
+      });
+
+      return $element;
+    });
+
+    $myTemplates.find(".fillAndSign__vault").append($elements);
+  }
+
+  async function fetchMyTemplates() {
+    const endpoint = `${prefixURL}/DocuSign/apiTemplates?shared=false`;
+    const response = await fetch(endpoint, {
+      headers: { accepts: "application/json" },
+    });
+
+    const { data } = await response.json();
+    templates = data.map((currData) => ({ ...currData, isTemplate: true }));
   }
 
   async function init() {
     await fetchPdfs();
     await fetchRecentDocuments();
+    await fetchMyTemplates();
 
     displayVaultDocuments();
     displayRecentDocuments();
     attachEventHandlers();
+    displayMyTemplates();
   }
 
-  return { init, getVaultDocumentById, getRecentById };
+  return { init, getVaultDocumentById, getTemplateById, getRecentById };
 }
 
 $(document).ready(function () {

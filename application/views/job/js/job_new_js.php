@@ -106,17 +106,19 @@ if(isset($jobs_data)){
             }else{
 
                 var form = $(this);
+                const $overlay = document.getElementById('overlay');
+ 
                 //var url = form.attr('action');
                 $.ajax({
                     type: "POST",
                     url: "<?= base_url() ?>/job/save_job",
                     data: form.serialize(), // serializes the form's elements.
                     success: function(data) {
-                        document.getElementById('overlay').style.display = "none";
+                        if ($overlay) $overlay.style.display = "none";
                         console.log(data);
                         sucess_add_job(data);
                     }, beforeSend: function() {
-                        document.getElementById('overlay').style.display = "flex";
+                        if ($overlay) $overlay.style.display = "flex";
                     }
                 });
             }
@@ -630,6 +632,8 @@ if(isset($jobs_data)){
         });
 
         $("#fillAndSignNext").on( "click", function( event ) {
+            return; // moved implementation to script.js@onClickNext
+
             console.log('fsdfd');
             var formData = {
                 'status': $(this).data('status'),
