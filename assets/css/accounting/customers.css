@@ -261,3 +261,7 @@
         color: #333333!important;
         cursor: auto!important;
     }
+    
+    div#modalNewCustomer {
+        z-index: 1040!important;
+    }

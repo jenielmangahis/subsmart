@@ -74,7 +74,7 @@ class Attachments extends MY_Controller {
 
     public function upload()
     {
-        $files = $_FILES['attachments'];
+        $files = $_FILES['file'];
 
         if(count($files['name']) > 0) {
             $insert = $this->uploadFile($files);

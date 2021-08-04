@@ -2463,7 +2463,7 @@ class Timesheet extends MY_Controller
         $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
         if (!@getimagesize($image)) {
             $image = base_url('uploads/users/default.png');
-        }
+        }   
 
         $data->user_id = $user_id;
         $data->html = "";
@@ -2482,7 +2482,7 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c');
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo');
         $output = json_decode($g_map);
         $status = $output->status;
         $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
@@ -2501,7 +2501,7 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c');
+        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo');
         $output = json_decode($g_map);
         $status = $output->status;
 

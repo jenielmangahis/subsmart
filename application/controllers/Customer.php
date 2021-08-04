@@ -719,14 +719,15 @@ class Customer extends MY_Controller
             $check_customer= $this->customer_ad_model->check_customer($input);
         }
         if(empty($check_customer)){
-            $custom_field_name = $input['custom_name'];
-            $custom_field_value = $input['custom_value'];
-            $custom_fields_array = array();
-            for ($xx=0;$xx<count($custom_field_name);$xx++) {
-                $custom_fields_array[$xx]['name'] = $custom_field_name[$xx];
-                $custom_fields_array[$xx]['value'] = $custom_field_value[$xx];
+            if(isset($input['custom_name']) AND isset($input['custom_value'])) {
+                $custom_field_name = $input['custom_name'];
+                $custom_field_value = $input['custom_value'];
+                $custom_fields_array = array();
+                for ($xx=0;$xx<count($custom_field_name);$xx++) {
+                    $custom_fields_array[$xx]['name'] = $custom_field_name[$xx];
+                    $custom_fields_array[$xx]['value'] = $custom_field_value[$xx];
+                }
             }
-
             // customer profile info
             $input_profile = array();
             $input_profile['fk_user_id'] = logged('id');

@@ -248,7 +248,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/create_statement_modal.css",
             "assets/css/accounting/accounting_includes/time_activity.css",
             "assets/css/accounting/accounting_includes/create_invoice.css",
-            "assets/css/accounting/accounting_includes/select_customer_type.css",
+            "assets/css/accounting/accounting_includes/customer_types.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
@@ -257,6 +257,7 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/create_estimate.js",
             "assets/js/accounting/sales/customer_includes/time_activity.js",
             "assets/js/accounting/sales/customer_includes/create_invoice.js",
+            "assets/js/accounting/sales/customer_includes/customer_types.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -567,7 +568,6 @@ class Accounting extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "A/R Aging Summary Report";
         $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
-    
     }
     
     public function balance_sheet()
@@ -576,7 +576,6 @@ class Accounting extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Balance Sheet Report";
         $this->load->view('accounting/reports/balance_sheet', $this->page_data);
-    
     }
 
     public function profit_and_loss()
@@ -585,7 +584,6 @@ class Accounting extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Profit and Loss Report";
         $this->load->view('accounting/reports/profit_and_loss', $this->page_data);
-    
     }
 
     public function balance_sheet_comparison()
@@ -594,7 +592,6 @@ class Accounting extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $this->page_data['page_title'] = "Balance Sheet Comparison Report";
         $this->load->view('accounting/reports/balance_sheet_comparison', $this->page_data);
-    
     }
 
     public function audit_log_report()
@@ -8438,5 +8435,66 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->result="success";
         echo json_encode($data);
+    }
+    public function add_new_customer_type()
+    {
+        $insert = array(
+            "title" => $this->input->post("customer_type"),
+            "company_id" => logged("company_id")
+        );
+        $id = $this->accounting_customers_model->add_new_customer_type($insert);
+        $data = new stdClass();
+        $data->result="success";
+        if ($id > 0) {
+            echo json_encode($data);
+        } else {
+            $data->result="denied";
+            echo json_encode($data);
+        }
+    }
+    public function get_load_customer_type_table()
+    {
+        $tbody_html="";
+        $customer_types = $this->accounting_customers_model->get_customer_type_by_company_id(logged("company_id"));
+        foreach ($customer_types as $type) {
+            $tbody_html.='<tr>
+                        <td>'.$type->title.'</td>
+                        <td>
+                            <a href="#" class="edit-customer-type-btn" data-id="'.$type->id.'" data-title="'.$type->title.'"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a><span class="separator"></span>
+                            <a href="#" class="delete-customer-type-btn" data-id="'.$type->id.'" data-title="'.$type->title.'"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                        </td>
+                    </tr>';
+        }$data = new stdClass();
+        $data->tbody_html=$tbody_html;
+        echo json_encode($data);
+    }
+    public function delete_customer_type()
+    {
+        $id = $this->input->post('id');
+        $affected = $this->accounting_customers_model->delete_customer_type($id);
+        $data = new stdClass();
+        $data->result="success";
+        if ($affected > 0) {
+            echo json_encode($data);
+        } else {
+            $data->result="denied";
+            echo json_encode($data);
+        }
+    }
+    public function update_customer_type()
+    {
+        $id = $this->input->post('customer-type-id');
+        $data = array(
+            "title" => $this->input->post("customer_type"),
+            "company_id" => logged("company_id")
+        );
+        $affected = $this->accounting_customers_model->update_customer_type($id,$data);$data = new stdClass();
+        $data->result="success";
+        if ($affected > 0) {
+            echo json_encode($data);
+        } else {
+            $data->result="denied";
+            echo json_encode($data);
+        }
     }
 }

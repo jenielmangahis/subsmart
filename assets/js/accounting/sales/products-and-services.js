@@ -598,7 +598,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 	$.get('products-and-services/item-form/'+type, function(result) {
 		$('.modal-form-container').html(result);
 
-		if(type === 'inventory' || type === 'bundle') {
+		if(type === 'product' || type === 'bundle') {
 			$('#inventory-form-modal table thead tr th a').remove();
 			$('#bundle-form-modal table thead tr th a').remove();
 		} else {
@@ -607,8 +607,8 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 
 		occupyFields(rowData, type);
 
-		$('#inventory-form-modal #storage-locations').next().remove();
-		$('#inventory-form-modal label[for="asOfDate"]').parent().remove();
+		$('#product-form-modal #storage-locations').next().remove();
+		$('#product-form-modal label[for="asOfDate"]').parent().remove();
 		$(`
 		<div class="form-group row" style="margin: 0 !important">
 			<div class="col-sm-6">
@@ -618,8 +618,8 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			<div class="col-sm-6">
 				<p class="text-right m-0">${rowData.qty_on_hand}</p>
 			</div>
-		</div>`).insertAfter('#inventory-form-modal #storage-locations');
-		$('#inventory-form-modal #storage-locations').parent().append(`
+		</div>`).insertAfter('#product-form-modal #storage-locations');
+		$('#product-form-modal #storage-locations').parent().append(`
 		<div class="form-group row" style="margin: 0 !important">
 			<div class="col-sm-6">
 				<label for="" class="m-0">Quantity on PO</label>
@@ -629,7 +629,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			</div>
 		</div>
 		`);
-		$('#inventory-form-modal #storage-locations').remove();
+		$('#product-form-modal #storage-locations').remove();
 		
 		$('#bundle-form-modal form').attr('id', 'update-bundle-form');
 		$(`#${type}-form-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${rowData.id}`);

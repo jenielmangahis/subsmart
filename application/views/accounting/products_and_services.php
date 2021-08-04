@@ -83,6 +83,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 	.nav-close {
 		margin-top: 52% !important;
 	}
+
+	.modal-form-container .modal.right .modal-dialog {
+		width: 25%;
+	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -430,7 +434,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							<div class="modal-right-side">
 								<div class="modal right fade" id="type-selection-modal" tabindex="" role="dialog"
 									aria-labelledby="myModalLabel2">
-									<div class="modal-dialog" role="document">
+									<div class="modal-dialog" role="document" style="width: 25%">
 										<div class="modal-content">
 											<div class="modal-header">
 												<h3 class="modal-title" id="myModalLabel2">Product/Service information
@@ -441,7 +445,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 											<div class="modal-body p-0">
 												<table class="table table-hover cursor-pointer" id="types-table">
 													<tbody>
-														<tr data-href="inventory">
+														<tr data-href="product">
 															<td>
 																<div class="row" style="height: 117px">
 																	<div class="col-sm-3">

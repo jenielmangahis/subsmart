@@ -471,6 +471,23 @@ border: none;
 	border-bottom: 0 solid transparent;
 	border-left: 75px solid transparent;
 }
+
+.num{
+	position:relative;
+}
+
+.number{
+	position: absolute;
+}
+
+.value{
+	position: absolute;
+	top:0;
+	color: transparent !important;
+	background: transparent;
+	border:none;
+}
+
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -521,7 +538,7 @@ border: none;
                                 <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
                                 <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
-                                <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                                <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
                             </div>
                         </div>
                     </div>
@@ -558,6 +575,7 @@ border: none;
                             <div class="col-md-3 form-group">
                                 <label for="security_number" class="label-element">Security Number</label>
                                 <input type="text" class="form-control input-element" name="security_number" id="security_number" placeholder="xxx-xx-xxxx" required/>
+                                <!-- <p class='num'> <input class='number form-control input-element' /> <input class='value' name="security_number"/> </p> -->
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate" class="label-element">Birth Date</label>
@@ -1006,9 +1024,9 @@ border: none;
                                 <div class="select-wrap">
                                     <label for="workorder_priority">Priority</label>
                                     <select name="priority" id="workorder_priority" class="form-control custom-select m_select">
+                                        <option value="Standard">Standard</option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
-                                        <option value="Standard">Standard</option>
                                         <option value="Urgent">Urgent</option>                
                                     </select>
                                 </div>   
@@ -2367,6 +2385,63 @@ border: none;
             </div>
 
 <?php include viewPath('includes/footer'); ?>
+<script src="<?php echo $url->assets;?>js/jquery-input-mask-phone-number.js"></script>
+
+<script>
+// $('.value').on('keydown keyup mousedown mouseup', function() {
+//     	 var res = this.value, //grabs the value
+//     		 len = res.length, //grabs the length
+//     		 max = 9, //sets a max chars
+//     		 stars = len>0?len>1?len>2?len>3?len>4?'XXX-XX-':'XXX-X':'XXX-':'XX':'X':'', //this provides the masking and formatting
+//     		result = stars+res.substring(5); //this is the result
+//     	 $(this).attr('maxlength', max); //setting the max length
+//     	$(".number").val(result); //spits the value into the input
+//     });
+
+// $('#security_number').keyup(function() {
+//     var val = this.value.replace(/\D/g, '');
+//     var newVal = '';
+//     var sizes = [3, 2, 4];
+
+//     for (var i in sizes) {
+//       if (val.length > sizes[i]) {
+//         newVal += val.substr(0, sizes[i]) + '-';
+//         val = val.substr(sizes[i]);
+//       }
+//       else
+//         break;        
+//     }
+
+//     newVal += val;
+//     this.value = newVal;
+// });
+
+$('#security_number').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{2})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+
+$('#phone_no').keyup(function () {
+    var foo = $(this).val().split("-").join(""); // remove hyphens
+    if (foo.length > 0) {
+        foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+    }
+    $(this).val(foo);
+});
+
+$('#mobile_no').keyup(function () {
+    var foo = $(this).val().split("-").join(""); // remove hyphens
+    if (foo.length > 0) {
+        foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+    }
+    $(this).val(foo);
+});
+
+</script>
 
 <script>
 // $('.enter_signature').click(function(){
@@ -2622,6 +2697,7 @@ var package_price_set =  $("#package_price_set").val();
                 $("#grand_total_inputs").val(grand_total_w.toFixed(2));
                 $("#grand_total").text(grand_total_w.toFixed(2));
                 $("#grand_total_input").val(grand_total_w.toFixed(2));
+                $("#payment_amount").val(grand_total_w.toFixed(2));
 
         },
     });
@@ -2726,6 +2802,7 @@ $(".addNewPackageToList").click(function () {
                 $("#grand_total_inputs").val(grand_total_w.toFixed(2));
                 $("#grand_total").text(grand_total_w.toFixed(2));
                 $("#grand_total_input").val(grand_total_w.toFixed(2));
+                $("#payment_amount").val(grand_total_w.toFixed(2));
 
         },
     });
@@ -3036,6 +3113,8 @@ $(document).ready(function(){
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
         //  alert(grand_tot);
         var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
+
+        $("#payment_amount").val(grand_tot.toFixed(2));
     });
 
     $(document).on("focusout", "#m_monitoring", function () {
@@ -3051,6 +3130,7 @@ $(document).ready(function(){
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
         //  alert(grand_tot);
         var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
+        $("#payment_amount").val(grand_tot.toFixed(2));
     });
 
     // $(document).on("checked", "#same_as", function () {
@@ -3344,7 +3424,8 @@ resizeCanvas();
 
 
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
 function initialize() {
           var input = document.getElementById('job_location');
@@ -3387,11 +3468,11 @@ jQuery(document).ready(function () {
 
 <script>
 
-    document.getElementById('contact_mobile').addEventListener('input', function (e) {
+    document.getElementById('mobile_no_').addEventListener('input', function (e) {
         var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
         e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
     });
-    document.getElementById('contact_phone').addEventListener('input', function (e) {
+    document.getElementById('phone_no_').addEventListener('input', function (e) {
         var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
         e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
     });
@@ -3513,6 +3594,55 @@ $("#thisdiv3").html(function() {
 
 // alert(now);  
       return $(this).html().replace("{current_date_3}", date);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#terms_of_use").val(function() { 
+
+    // var companyName = $('#company_name').val();
+    // var now = new Date();
+    // now.setDate(now.getDate()+3);
+    // var n=3; //number of days to add. 
+    // var t = new Date();
+    // t.setDate(t.getDate() + n); 
+    // var month = "0"+(t.getMonth()+1);
+    // var date = "0"+t.getDate();
+    // month = month.slice(-2);
+    // date = date.slice(-2);
+    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+    // var startDate = "16-APR-2021";
+    var startDate = new Date();
+    // var daaa = new Date();
+    
+    // var date = d.getDate();
+    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+    // var year = d.getFullYear();
+        
+    // var startDate = date + "-" + month + "-" + year;
+
+    // startDate = new Date(startDate.replace(/-/g, "/"));
+    var endDate = "", noOfDaysToAdd = 3, count = 0;
+    while(count < noOfDaysToAdd){
+        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+        if(endDate.getDay() != 0 && endDate.getDay() != 6){
+        count++;
+        }
+    }
+    //alert(endDate);
+    var month = "0"+(endDate.getMonth()+1);
+    var date = "0"+endDate.getDate();
+    month = month.slice(-2);
+    date = date.slice(-2);
+    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
+// alert(now);  
+      return $(this).val().replace("{current_date_3}", date);  
 
 });
 });
@@ -3686,16 +3816,30 @@ $(document).ready(function(){
                 // alert('success');
                 // console.log(response['customer']);
             // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+
+            // var phone = response['customer'].phone_h;
+            // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
+            var phone = response['customer'].phone_h;
+                // phone = normalize(phone);
+            
+            var mobile = response['customer'].phone_m;
+                // mobile = normalize(mobile);
+
+            var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            
             $("#job_location").val(response['customer'].mail_add);
             $("#email").val(response['customer'].email);
             $("#date_of_birth").val(response['customer'].date_of_birth);
-            $("#phone_no").val(response['customer'].phone_h);
-            $("#mobile_no").val(response['customer'].phone_m);
+            $("#phone_no").val(test_p);
+            $("#mobile_no").val(test_m);
             $("#city").val(response['customer'].city);
             $("#state").val(response['customer'].state);
             $("#zip").val(response['customer'].zip_code);
             $("#cross_street").val(response['customer'].cross_street);
             $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+
+            $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
         
             },
                 error: function(response){
@@ -3703,6 +3847,20 @@ $(document).ready(function(){
        
                 }
         });
+
+        function normalize(phone) {
+            //normalize string and remove all unnecessary characters
+            phone = phone.replace(/[^\d]/g, "");
+
+            //check if number length equals to 10
+            if (phone.length == 10) {
+                //reformat and return phone number
+                return phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+            }
+
+            return null;
+        }
+
     });
 
 
@@ -3923,6 +4081,7 @@ $(document).ready(function(){
 
                 $("#grand_total").text(new_grand.toFixed(2));
                 $("#grand_total_input").val(new_grand.toFixed(2));
+                $("#payment_amount").val(new_grand.toFixed(2));
                 // alert('computed');
                 $('#saved').show();
                 $('.invalid_code').hide();
@@ -3945,6 +4104,7 @@ $(document).ready(function(){
                 var total3  = parseFloat(total1) - parseFloat(total2);
                 $("#grand_total").text(total3.toFixed(2));
                 $("#grand_total_input").val(total3.toFixed(2));
+                $("#payment_amount").val(total3.toFixed(2));
                 // var counter = $(this).data("counter");
                 // calculation(counter);
        
@@ -4028,6 +4188,7 @@ $(document).ready(function(){
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#payment_amount").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();
@@ -4588,6 +4749,7 @@ $.ajax({
                 $("#grand_total").text(grand_total_w.toFixed(2));
                 $("#grand_total_input").val(grand_total_w.toFixed(2));
                 $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+                $("#payment_amount").val(grand_total_w.toFixed(2));
 
                 var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
                 sls = parseFloat(sls).toFixed(2);

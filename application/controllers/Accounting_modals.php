@@ -5281,4 +5281,63 @@ class Accounting_modals extends MY_Controller {
 
         echo json_encode(['timesheet' => $timesheet]);
     }
+
+    public function get_add_payee_modal($type)
+    {
+        $this->page_data['type'] = $type;
+        $this->load->view('accounting/modals/add_new_payee', $this->page_data);
+    }
+
+    public function add_new_payee()
+    {
+        $post = $this->input->post();
+        $name = explode(' ', trim($post['payee_name']));
+        $nameCount = count($name);
+
+        if($post['payee_type'] === 'vendor') {
+            $data = [
+                'company_id' => logged('company_id'),
+                'display_name' => trim($post['payee_name']),
+                'print_on_check_name' => trim($post['payee_name']),
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            switch(strval($nameCount)) {
+                case '1' :
+                    $data['f_name'] = $name[0];
+                break;
+                case '2' :
+                    $data['f_name'] = $name[0];
+                    $data['l_name'] = $name[1];
+                break;
+                case '3' :
+                    $data['f_name'] = $name[0];
+                    $data['m_name'] = $name[1];
+                    $data['l_name'] = $name[2];
+                break;
+                case '4' :
+                    $data['title'] = $name[0];
+                    $data['f_name'] = $name[1];
+                    $data['m_name'] = $name[2];
+                    $data['l_name'] = $name[3];
+                break;
+                case '5' :
+                    $data['title'] = $name[0];
+                    $data['f_name'] = $name[1];
+                    $data['m_name'] = $name[2];
+                    $data['l_name'] = $name[3];
+                    $data['suffix'] = $name[4];
+                break;
+            }
+
+            $id = $this->vendors_model->createVendor($data);
+
+            $payee = $this->vendors_model->get_vendor_by_id($id);
+        } else {
+            
+        }
+
+        echo json_encode(['payee' => $payee]);
+    }
 }

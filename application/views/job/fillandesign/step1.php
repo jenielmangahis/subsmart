@@ -7,6 +7,12 @@
         </li>
 
         <li class="nav-item">
+            <a class="nav-link" id="my-templates" data-toggle="tab" href="#myTemplates" role="tab" aria-selected="false">
+                My eSign Templates
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link" id="vault-tab" data-toggle="tab" href="#vault" role="tab" aria-selected="false">
                 Shared Library
             </a>
@@ -23,6 +29,7 @@
                 eSign
             </a>
         </li>
+
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="recent" data-upload-type="recent" role="tabpanel" aria-labelledby="recent-tab">
@@ -32,6 +39,12 @@
         </div>
 
         <div class="tab-pane" id="vault" data-upload-type="vault" role="tabpanel" aria-labelledby="vault-tab">
+            <div>
+                <ul class="fillAndSign__vault"></ul>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="myTemplates" data-upload-type="myTemplates" role="tabpanel" aria-labelledby="my-templates">
             <div>
                 <ul class="fillAndSign__vault"></ul>
             </div>

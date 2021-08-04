@@ -38,7 +38,7 @@
                                 <div class="row form_line">
                                     <div class="col-md-4">Item Name</div>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" name="title" id="title" required/>
+                                        <input type="text" class="form-control" maxlength="25" placeholder="Maximum 25 characters only" name="title" id="title" required/>
                                     </div>
                                 </div>
                                 <div class="row form_line">

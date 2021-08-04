@@ -2287,7 +2287,7 @@ border: none;
                                             class="btn btn-flat btn-primary">
                                         Submit
                                     </button> -->
-                                    <input type="submit" value="Submit" class="btn btn-flat btn-primary">
+                                    <input type="submit" value="Submit" name="action" class="btn btn-flat btn-primary">
                                     <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview as PDF</button>
                                     <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
@@ -3228,10 +3228,11 @@ resizeCanvas();
         address2Field.focus();
       }
     </script>
-    <script
+    <!-- <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&callback=initAutocomplete&libraries=places&v=weekly"
       async
-    ></script>
+    ></script> -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
 
     <script>
         // function validatecard() {

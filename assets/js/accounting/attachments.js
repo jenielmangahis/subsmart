@@ -10,6 +10,18 @@ function col(el) {
 }
 
 $(function(){
+    var atttachments = new Dropzone('#attachments', {
+        url: '/accounting/attachments/upload',
+        maxFilesize: 20,
+        uploadMultiple: true,
+        addRemoveLinks: true,
+        init: function() {
+            this.on("success", function(file, response) {
+                location.reload();
+            });
+        }
+    });
+
     $('.date_picker input').datepicker({
         format: "dd.mm.yyyy",
         todayBtn: "linked",

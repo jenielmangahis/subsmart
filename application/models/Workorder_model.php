@@ -521,6 +521,7 @@ class Workorder_model extends MY_Model
             'amount'                => $amount,
             'check_number'          => $check_number,
             'routing_number'        => $routing_number,
+            'account_number'        => $account_number,
             'date_updated'          => $date_updated,
         ));
         return true;
@@ -966,6 +967,15 @@ class Workorder_model extends MY_Model
         $this->db->select('*');
 		$this->db->from('users');
 		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getleadSource($id)
+    {
+        $this->db->select('*');
+		$this->db->from('ac_leadsource');
+		$this->db->where('ls_id', $id);
         $query = $this->db->get();
         return $query->row();
     }
@@ -1434,7 +1444,7 @@ class Workorder_model extends MY_Model
 
         $this->db->select('*');
 		$this->db->from('clients');
-		$this->db->where('id', $comp->company_id);
+		$this->db->where('id', $id);
         $query2 = $this->db->get();
         return $query2->row();
     }

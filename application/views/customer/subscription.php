@@ -163,10 +163,10 @@ add_css(array(
                                                                     <option  value=""></option>
                                                                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="">- Select -</option>
                                                                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == 0){echo "selected";} } ?> value="0">One Time Only</option>
-                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 1){echo "selected";} } ?> value="1">Every 1 Month</option>
-                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 3){echo "selected";} } ?> value="3">Every 3 Months</option>
-                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 6){echo "selected";} } ?> value="6">Every 6 Months</option>
-                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 12){echo "selected";} } ?> value="12">Every 1 Year</option>
+                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 1){echo "selected";} } ?> value="1">Monthly</option>
+                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 3){echo "selected";} } ?> value="3">Quarterly</option>
+                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 6){echo "selected";} } ?> value="6">Semi-Annual</option>
+                                                                    <option <?php if(isset($billing_info)){ if($billing_info->frequency == 12){echo "selected";} } ?> value="12">Anually</option>
                                                                 </select>
                                                                 <input type="hidden" class="form-control" name="num_frequency" id="num_frequency" value="<?= $billing_info->frequency; ?>" readonly/>
                                                             </div>

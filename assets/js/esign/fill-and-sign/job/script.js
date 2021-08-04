@@ -31,20 +31,19 @@ function JobFillAndEsign() {
 
     const { files } = $target.get(0);
 
-    if (files && !files.length) {
-      return;
-    }
-
-    if (files) {
+    if (files && files.length) {
       documentObj = files[0];
     } else {
-      const $activeTab = $(".tab-pane.active");
+      const $activeTab = $("[data-upload-type].tab-pane.active");
       const uploadType = $activeTab.data("upload-type");
       const $selected = $(".fillAndSign__vaultItem--selected");
 
       if (uploadType === "vault") {
         fileId = $selected.data("file-id");
         documentObj = step1.getVaultDocumentById(fileId);
+      } else if (uploadType === "myTemplates") {
+        fileId = $selected.data("template-id");
+        documentObj = step1.getTemplateById(fileId);
       } else {
         recentFileId = $selected.data("recent-id");
         documentObj = step1.getRecentById(recentFileId);
@@ -141,6 +140,38 @@ function JobFillAndEsign() {
       return;
     }
 
+    if (documentObj.isTemplate) {
+      const $fillAndSignNext = $("#fillAndSignNext");
+      const jobId = $fillAndSignNext.data("id");
+      const jobStatus = $fillAndSignNext.data("status");
+
+      const formData = new FormData();
+      formData.append("id", jobId);
+      formData.append("status", jobStatus);
+
+      const endpoint = `${prefixURL}/job/update_jobs_status`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+      });
+
+      const text = await response.text();
+      if (text === "Success") {
+        const { id: templateId } = documentObj;
+        window.location = `${prefixURL}/eSign/templatePrepare?id=${templateId}&job_id=${jobId}`;
+      } else {
+        await Swal.fire({
+          title: "Warning!",
+          text: "There is an error updating job status. Contact Administrator!",
+          icon: "warning",
+          showCancelButton: false,
+          confirmButtonColor: "#32243d",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Ok",
+        });
+      }
+    }
+
     const formData = new FormData();
     if (documentObj instanceof File) {
       formData.append("document", documentObj);
@@ -191,7 +222,7 @@ function JobFillAndEsign() {
   async function init() {
     signaturePad = new SignaturePad($signaturePadCanvas.get(0));
 
-    step1 = new Step1({ onSelect: onSelect });
+    step1 = new Step1({ onSelect });
     await step1.init();
 
     attachEventHandlers();

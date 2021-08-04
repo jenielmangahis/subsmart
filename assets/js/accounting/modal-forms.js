@@ -3248,6 +3248,39 @@ $(function() {
         submitType = 'save-and-print';
         $('#weeklyTimesheetModal').parent('form').submit();
     });
+
+    $(document).on('change', '#expenseModal #payee', function() {
+        $.get('/accounting/get-add-payee-modal/payee', function(result) {
+            if($('#modal-form').parent().find('#add-payee-modal').length > 0) {
+                $('#modal-form #add-payee-modal').remove();
+            }
+
+            $('#modal-form').parent().append(result);
+            $('#modal-container #add-payee-modal select').select2({
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #add-payee-modal')
+            });
+
+            $('#modal-container #add-payee-modal').modal('show');
+        });
+    });
+
+    $(document).on('submit', '#modal-container #add-payee-modal #new-payee-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/accounting/add-new-payee',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+            }
+        });
+    });
 });
 
 const convertToDecimal = (el) => {

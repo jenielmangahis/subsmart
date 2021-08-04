@@ -185,3 +185,13 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
 #modal-container .modal .action-bar ul li {
     margin-right: 5px;
 }
+
+#modal-container #add-payee-modal {
+    display: flex !important;
+}
+
+#modal-container #add-payee-modal .modal-dialog {
+    width: 25%;
+    height: 40%;
+    margin: auto;
+}
