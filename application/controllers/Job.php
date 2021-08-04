@@ -1606,11 +1606,12 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-        if ($role == 1 || $role == 2) {
+        /*if ($role == 1 || $role == 2) {
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
         } else {
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
-        }
+        }*/
+        $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
 
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);

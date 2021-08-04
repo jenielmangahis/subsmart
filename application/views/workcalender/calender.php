@@ -416,6 +416,9 @@ a.top-1 {
       min-height:34px !important;
       overflow:hidden;
   }
+  .fc .fc-daygrid-event {
+    padding: 6px !important;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">

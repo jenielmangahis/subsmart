@@ -32,8 +32,9 @@ class Settings extends MY_Controller {
 
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';
-        $post = $this->input->post();
-        $get = $this->input->get();
+        $post       = $this->input->post();
+        $get        = $this->input->get();
+        $company_id = logged('company_id');
 
         $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);
         $this->page_data['settings'] = unserialize($settings);
@@ -70,7 +71,7 @@ class Settings extends MY_Controller {
                 }
 
                 $this->session->set_flashdata('alert', 'Schedule Settings Updated Successfully');
-            } else {
+            } else {                
                 $this->setting_model->create([
                     'company_id' => $company_id,
                     'key'   => DB_SETTINGS_TABLE_KEY_SCHEDULE,
