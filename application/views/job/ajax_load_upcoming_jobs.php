@@ -22,8 +22,12 @@
                     <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
             <?php if(!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
                     <b  style="color:#45a73c;">
-                        <?= $jb->first_name. ' '. $jb->last_name; ?>
-                    </b><br>
+                        <?= $jb->first_name. ' '. $jb->last_name; ?>                                              
+                    </b>
+                    <?php if( $jb->cust_phone != '' ){ ?>
+                            <a style="margin-left: 10px;color:#000000;" href="tel:<?= $jb->cust_phone; ?>"><i class="fa fa-phone-square"></i></a>
+                        <?php } ?>  
+                    <br>
             <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
                         <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>

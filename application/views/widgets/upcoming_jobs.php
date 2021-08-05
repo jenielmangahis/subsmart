@@ -50,6 +50,9 @@
                                         <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
                                         <b style="color:#45a73c;">
                                             <?= $jb->first_name. ' '. $jb->last_name; ?>
+                                            <?php if( $jb->cust_phone != '' ){ ?>
+                                                <a style="margin-left: 10px;" href="tel:<?= $jb->cust_phone; ?>"><i class="fa fa-phone-square"></i></a>
+                                            <?php } ?>
                                         </b><br>
                                        <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
                                        <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i>
