@@ -18,7 +18,7 @@
                 </span>
             </div>
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">
-                <a style="color: #000!important;" href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
+                <a style="color: #000!important;" href="<?php echo base_url('job/new_job1/' . $jb->id); ?>">
                     <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
             <?php if(!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
                     <b  style="color:#45a73c;">
