@@ -825,9 +825,9 @@ class Workcalender extends MY_Controller
                         $title = $event->start_time . " - " . $event->end_time;
                         /*$custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small><br /><small>" . $event->FName . ' ' . $event->LName . "</small><br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . "</small>";*/
 
-                        $custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small>";
+                        $custom_html = $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small>";
                         if (isset($a_settings['work_order_show_customer'])) {
-                            $custom_html .= "<br /><small>" . $event->FName . ' ' . $event->LName . "</small>";
+                            $custom_html .= "<br /><b><small style='font-weight:bolder;'>" . $event->FName . ' ' . $event->LName . "</small></b>";
                         }
 
                         if (isset($a_settings['work_order_show_details'])) {
@@ -998,9 +998,9 @@ class Workcalender extends MY_Controller
 
                             if ($event->summary != '') {
                                 if ($is_with_time) {
-                                    $custom_html = "<i class='fa fa-calendar'></i> " . $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+                                    $custom_html = $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
                                 } else {
-                                    $custom_html = "<i class='fa fa-calendar'></i> " . $event->summary . "<br /><small>Google Event</small><br />";
+                                    $custom_html = $event->summary . "<br /><small>Google Event</small><br />";
                                 }
                                 
 
@@ -1044,10 +1044,10 @@ class Workcalender extends MY_Controller
 
                 //$custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";
 
-                $custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small>";
+                $custom_html = $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small>";
 
                 if (isset($a_settings['work_order_show_customer'])) {
-                    $custom_html .= "<br /><small>" . $j->FName . ' ' . $j->LName . "</small>";
+                    $custom_html .= "<br /><b><small style='font-weight:bolder;'>" . $j->FName . ' ' . $j->LName . "</small></b>";
                 }
 
                 if (isset($a_settings['work_order_show_details'])) {

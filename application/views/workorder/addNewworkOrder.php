@@ -774,9 +774,9 @@ border: none;
 
                                             <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                            <td width="10%"><input type="number" class="form-control quantity_w mobile_qty" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                            <td width="10%"><input type="number" class="form-control price_w hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->

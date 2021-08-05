@@ -17,6 +17,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
    <!-- end container-fluid -->
 </div>
 
+<style>
+table.dataTable tbody th,
+table.dataTable tbody td {
+    padding: 8px 18px;
+}
+</style>
 <div class="modal fade" id="usersModal" tabindex="-1" role="dialog" aria-labelledby="usersModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">

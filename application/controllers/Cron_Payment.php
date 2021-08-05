@@ -442,7 +442,7 @@ class Cron_Payment extends MY_Controller {
         $get_billing = array(
             'where' => array(
                 'next_billing_date' => $date,
-                'bill_end_date >=' => $date, 
+                'recurring_end_date >= ' . $date, 
                 'bill_method' => 'CC',
                 'is_with_error' => 0
                 //'credit_card_num !=' => null
@@ -462,9 +462,20 @@ class Cron_Payment extends MY_Controller {
 
         $total_updated = 0;
         foreach( $data as $d ){
-            $total_amount = $d->equipment + $d->mmr;
+            $total_amount = 0;
+            if( $d->equipment > 0 ){
+                $total_amount += $d->equipment;
+            }
+            if( $d->mmr > 0 ){
+                $total_amount += $d->mmr;
+            }
+            
+            if( $d->transaction_amount > 0 ){
+                $total_amount += $d->transaction_amount;
+            }
+            
             if( $total_amount > 0 ){
-                $exp_date = str_replace("/", "", $d->credit_card_exp);
+                $exp_date = str_replace("/", "", $d->credit_card_exp);                
                 $createSale = $converge->request('ccsale', [
                     'ssl_card_number' => $d->credit_card_num,
                     'ssl_exp_date' => $exp_date,
@@ -505,7 +516,7 @@ class Cron_Payment extends MY_Controller {
 
                     $total_updated++;
                 }else{
-                	$transaction_data['is_with_error'] = 1;
+                    $transaction_data['is_with_error'] = 1;
                     $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
                 }
             }

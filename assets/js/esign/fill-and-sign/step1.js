@@ -352,7 +352,7 @@ function Step1(params = {}) {
     }
 
     const $elements = templates.map((template) => {
-      const { id, name, created_at: createdRaw } = template;
+      const { id, name, created_at: createdRaw, user, is_shared } = template;
       const created = moment(createdRaw).format("MMMM DD, YYYY");
 
       const html = `
@@ -370,6 +370,12 @@ function Step1(params = {}) {
         `;
 
       $element = createElementFromHTML(html);
+      if (user && is_shared) {
+        $element.find(".fillAndSign__vaultItemInfo").html(`
+          Created by ${user.FName} ${user.LName} on ${created}
+        `);
+      }
+
       $element.on("click", (event) => {
         const $currActive = $(".fillAndSign__vaultItem--selected");
         $currActive.removeClass("fillAndSign__vaultItem--selected");
@@ -390,7 +396,7 @@ function Step1(params = {}) {
   }
 
   async function fetchMyTemplates() {
-    const endpoint = `${prefixURL}/DocuSign/apiTemplates?shared=false`;
+    const endpoint = `${prefixURL}/DocuSign/apiTemplates?all=true`;
     const response = await fetch(endpoint, {
       headers: { accepts: "application/json" },
     });

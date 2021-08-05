@@ -17,6 +17,8 @@
 
         public function generateEmployeeNumber()
         {   
+            echo $date = date("n/j/Y");
+            exit;
             $users = $this->users_model->getAllUsers();
             foreach($users as $u){
                 $employee_number = $this->users_model->generateRandomEmployeeNumber();

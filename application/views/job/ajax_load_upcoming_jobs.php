@@ -14,7 +14,7 @@
                 <div class="job-status text-center mb-2" style="background:<?= $jb->event_color?>; color:#ffffff;"><b><?php echo strtoupper($jb->status); ?></b></div>
                 <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;font-size: 10px;" class="text-center">ARRIVAL TIME</span><br/>
                 <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:12px">
-                    <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
+                    <?php echo $jb->start_time; ?>-<?php echo $jb->end_time; ?>
                 </span>
             </div>
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">

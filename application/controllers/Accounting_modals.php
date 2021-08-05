@@ -5335,9 +5335,145 @@ class Accounting_modals extends MY_Controller {
 
             $payee = $this->vendors_model->get_vendor_by_id($id);
         } else {
-            
+            $data = [
+                'fk_user_id' => logged('id'),
+                'company_id' => logged('company_id'),
+                'business_name' => trim($post['payee_name'])
+            ];
+
+            switch(strval($nameCount)) {
+                case '1' :
+                    $data['first_name'] = $name[0];
+                break;
+                case '2' :
+                    $data['first_name'] = $name[0];
+                    $data['last_name'] = $name[1];
+                break;
+                case '3' :
+                    $data['first_name'] = $name[0];
+                    $data['middle_name'] = $name[1];
+                    $data['last_name'] = $name[2];
+                break;
+                case '4' :
+                    $data['prefix'] = $name[0];
+                    $data['first_name'] = $name[1];
+                    $data['middle_name'] = $name[2];
+                    $data['last_name'] = $name[3];
+                break;
+                case '5' :
+                    $data['prefix'] = $name[0];
+                    $data['first_name'] = $name[1];
+                    $data['middle_name'] = $name[2];
+                    $data['last_name'] = $name[3];
+                    $data['suffix'] = $name[4];
+                break;
+            }
+
+            $id = $this->accounting_customers_model->createCustomer($data);
+            $payee = $this->accounting_customers_model->getCustomerDetails($id)[0];
         }
 
         echo json_encode(['payee' => $payee]);
+    }
+
+    public function get_payee_dropdown()
+    {
+        $search = $this->input->get('search');
+        $return = [];
+        $vendors = $this->vendors_model->getAllByCompany();
+
+        foreach($vendors as $vendor) {
+            if($search !== null && $search !== '') {
+                if (stripos($vendor->display_name, $search) !== false) {
+                    $return['results'][] = [
+                        'id' => 'vendor-'.$vendor->id,
+                        'text' => $vendor->display_name
+                    ];
+                }
+            } else {
+                if($this->input->get('field') === 'payee') {
+                    $return['results'][0]['text'] = 'Vendors';
+                    $return['results'][0]['children'][] = [
+                        'id' => 'vendor-'.$vendor->id,
+                        'text' => $vendor->display_name
+                    ];
+                } else {
+                    $return['results'][] = [
+                        'id' => 'vendor-'.$vendor->id,
+                        'text' => $vendor->display_name
+                    ];
+                }
+            }
+        }
+
+        if($this->input->get('field') === 'payee') {
+            $customers = $this->accounting_customers_model->getAllByCompany();
+            $employees = $this->users_model->getCompanyUsers(logged('company_id'));
+
+            foreach($customers as $customer) {
+                $name = $customer->first_name . ' ' . $customer->last_name;
+                if($search !== null && $search !== '') {
+                    if (stripos($name, $search) !== false) {
+                        $return['results'][] = [
+                            'id' => 'customer-'.$customer->prof_id,
+                            'text' => $name
+                        ];
+                    }
+                } else {
+                    $return['results'][1]['text'] = 'Customers';
+                    $return['results'][1]['children'][] = [
+                        'id' => 'customer-'.$customer->prof_id,
+                        'text' => $name
+                    ];
+                }
+            }
+
+            foreach($employees as $employee) {
+                $name = $employee->FName . ' ' . $employee->LName;
+                if($search !== null && $search !== '') {
+                    if (stripos($name, $search) !== false) {
+                        $return['results'][] = [
+                            'id' => 'employee-'.$employee->id,
+                            'text' => $name
+                        ];
+                    }
+                } else {
+                    $return['results'][2]['text'] = 'Employees';
+                    $return['results'][2]['children'][] =  [
+                        'id' => 'employee-'.$employee->id,
+                        'text' => $name
+                    ];
+                }
+            }
+        }
+
+        if($search !== null && $search !== '') {
+            usort($return['results'], function($a, $b) use ($search) {
+                $indexA = strpos($a['text'], $search) === false ? PHP_INT_MAX : strpos($a['text'], $search);
+                $indexB = strpos($b['text'], $search) === false ? PHP_INT_MAX : strpos($b['text'], $search);
+                return $indexA - $indexB;
+            });
+
+            if($this->input->get('field') === 'payee') {
+                $results = $return['results'];
+                $return['results'] = [];
+                for($i = 0; $i < count($results); $i++) {
+                    $idExplode = explode('-', $results[$i]['id']);
+
+                    if(count($return['results']) === 0 || $return['results'][array_key_last($return['results'])]['text'] !== ucfirst($idExplode[0])) {
+                        $return['results'][]['text'] = ucfirst($idExplode[0]);
+                    }
+
+                    $return['results'][array_key_last($return['results'])]['children'][] = [
+                        'id' => $results[$i]['id'],
+                        'text' => $results[$i]['text']
+                    ];
+                }
+            }
+        }
+
+        array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+
+        echo json_encode($return);
     }
 }

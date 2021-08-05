@@ -3114,7 +3114,7 @@ function createFile(file, options = {}) {
 function createDocusignTemplate(file, options = {}) {
     const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
-    const { id, name, create_at } = file;
+    const { id, name, create_at, is_shared } = file;
     const { onClick = null, onDoubleClick = null } = options;
     const createdString = moment(create_at).format("MMMM DD, YYYY");
     const templateUrl = `${prefixURL}/eSign/templatePrepare?id=${id}`;
@@ -3153,11 +3153,11 @@ function createDocusignTemplate(file, options = {}) {
 
                       <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="${templateUrl}">Use</a>
-                        <a class="dropdown-item" href="#" data-action="edit">Edit</a>
+                        <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="edit">Edit</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
-                        <a class="dropdown-item" href="#" data-action="delete">Delete</a>
-                        <a class="dropdown-item" href="#" data-action="share">Share with users</a>
-                        <a class="dropdown-item" href="#" data-action="uploadThumbnail">Change thumbnail</a>
+                        <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="delete">Delete</a>
+                        <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="share">Share with users</a>
+                        <a class="dropdown-item ${is_shared ? 'd-none' : ''}" href="#" data-action="uploadThumbnail">Change thumbnail</a>
                       </div>
                     </div>
                   </td>

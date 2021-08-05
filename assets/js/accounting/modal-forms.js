@@ -366,7 +366,41 @@ $(function() {
                 loadChecksTable();
             }
 
-            $(`${modal_element} select`).select2();
+            $(`${modal_element} select:not(#payee,#vendor)`).select2();
+
+            $(`${modal_element} select#payee`).select2({
+                ajax: {
+                    url: '/accounting/get-payee-dropdown',
+                    dataType: 'json',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public',
+                            field: 'payee'
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    }
+                }
+            });
+
+            $(`${modal_element} select#vendor`).select2({
+                ajax: {
+                    url: '/accounting/get-payee-dropdown',
+                    dataType: 'json',
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public',
+                            field: 'vendor'
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    }
+                }
+            });
 
             if($('div#modal-container select#tags').length > 0) {
                 $('div#modal-container select#tags').select2({
@@ -3250,19 +3284,21 @@ $(function() {
     });
 
     $(document).on('change', '#expenseModal #payee', function() {
-        $.get('/accounting/get-add-payee-modal/payee', function(result) {
-            if($('#modal-form').parent().find('#add-payee-modal').length > 0) {
-                $('#modal-form #add-payee-modal').remove();
-            }
-
-            $('#modal-form').parent().append(result);
-            $('#modal-container #add-payee-modal select').select2({
-                minimumResultsForSearch: -1,
-                dropdownParent: $('#modal-container #add-payee-modal')
+        if($(this).val() === 'add-new') {
+            $.get('/accounting/get-add-payee-modal/payee', function(result) {
+                if($('#modal-form').parent().find('#add-payee-modal').length > 0) {
+                    $('#modal-form #add-payee-modal').remove();
+                }
+    
+                $('#modal-form').parent().append(result);
+                $('#modal-container #add-payee-modal select').select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container #add-payee-modal')
+                });
+    
+                $('#modal-container #add-payee-modal').modal('show');
             });
-
-            $('#modal-container #add-payee-modal').modal('show');
-        });
+        }
     });
 
     $(document).on('submit', '#modal-container #add-payee-modal #new-payee-form', function(e) {
@@ -3278,6 +3314,8 @@ $(function() {
             contentType: false,
             success: function(result) {
                 var res = JSON.parse(result);
+
+                // $('#modal-container #add-payee-modal').prev().find('#payee').val(data.get('payee_type')+'-'+res.payee.id);
             }
         });
     });

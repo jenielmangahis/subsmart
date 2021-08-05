@@ -22,9 +22,6 @@
                                                         <label for="vendor">Vendor</label>
                                                         <select name="vendor_id" id="vendor" class="form-control">
                                                             <option value="" disabled selected>&nbsp;</option>
-                                                            <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                                <option value="<?=$vendor->id?>"><?=$vendor->display_name?></option>
-                                                            <?php endforeach; ?>
                                                         </select>
                                                     </div>
                                                 </div>

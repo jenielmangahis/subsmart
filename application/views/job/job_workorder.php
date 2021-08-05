@@ -47,6 +47,9 @@
         justify-content: center;
         margin: auto;
     }
+    .label-width .form-control {
+        width: 80% !important;
+    }
 </style>
 <div id="overlay">
     <div>
@@ -350,6 +353,21 @@
                         </div>
                         <hr>
                         <table class="table table-striped">
+                            <tbody >
+                            <tr>
+                                <td>
+                                    <small>Job Type</small>
+                                    <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
+                                </td>
+                                <td>
+                                    <small>Job Tags</small>
+                                    <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
+                                </td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-striped">
                             <thead>
                             <tr>
                                 <td>
@@ -358,21 +376,6 @@
                             </tr>
                             </thead>
                             <tbody id="jobs_items">
-                            <tr>
-                                <td>
-                                    <small>Job Type</small>
-                                    <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
-                                </td>
-                                <td></td>
-                                <td>
-                                    <small>Job Tags</small>
-                                    <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
                             <?php if(isset($jobs_data)): ?>
                                 <?php
                                 $subtotal = 0.00;

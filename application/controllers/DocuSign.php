@@ -705,27 +705,51 @@ class DocuSign extends MY_Controller
 
     public function apiTemplates()
     {
-        $shared = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
-        $records = [];
+        $sharedOnly = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
+        $sharedAndOwned = filter_var($this->input->get('all'), FILTER_VALIDATE_BOOLEAN);
 
-        if (!$shared) {
+        $getOwned = function () {
             $this->db->where('company_id', logged('company_id'));
             $this->db->where('user_id', logged('id'));
             $this->db->order_by('created_at', 'DESC');
-            $records = $this->db->get('user_docfile_templates')->result();
-        } else {
+            return $this->db->get('user_docfile_templates')->result();
+        };
+
+        $getShared = function () {
             $this->db->where('user_id', logged('id'));
             $sharedTemplates = $this->db->get('user_docfile_templates_shared')->result_array();
 
-            if (!empty($sharedTemplates)) {
-                $sharedTemplateIds = array_map(function ($template) {
-                    return $template['template_id'];
-                }, $sharedTemplates);
-
-                $this->db->where_in('id', $sharedTemplateIds);
-                $this->db->order_by('created_at', 'DESC');
-                $records = $this->db->get('user_docfile_templates')->result();
+            if (empty($sharedTemplates)) {
+                return [];
             }
+
+            $sharedTemplateIds = array_map(function ($template) {
+                return $template['template_id'];
+            }, $sharedTemplates);
+
+            $this->db->where_in('id', $sharedTemplateIds);
+            $this->db->order_by('created_at', 'DESC');
+            $results = $this->db->get('user_docfile_templates')->result();
+
+            $usersMap = []; // user_id => user_object
+            foreach ($results as $result) {
+                if (!array_key_exists($result->user_id, $usersMap)) {
+                    $this->db->where('id', $result->user_id);
+                    $usersMap[$result->user_id] = $this->db->get('users')->row();
+                }
+
+                $result->user = $usersMap[$result->user_id];
+                $result->is_shared = true;
+            }
+
+            return $results;
+        };
+
+        $records = [];
+        if ($sharedAndOwned) {
+            $records = array_merge($getOwned(), $getShared());
+        } else {
+            $records = $sharedOnly ? $getShared() : $getOwned();
         }
 
         foreach ($records as $record) {
