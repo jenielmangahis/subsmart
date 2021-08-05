@@ -22,28 +22,7 @@
                                                         <label for="payee">Payee</label>
                                                         <select name="payee" id="payee" class="form-control">
                                                             <option value="" disabled selected>&nbsp;</option>
-                                                            <option value="add-new">&plus; Add new</option>
-                                                            <?php if(count($dropdown['vendors']) > 0) : ?>
-                                                            <optgroup label="Vendors">
-                                                            <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                                <option value="vendor-<?=$vendor->id?>"><?=$vendor->display_name?></option>
-                                                            <?php endforeach; ?>
-                                                            </optgroup>
-                                                            <?php endif; ?>
-                                                            <?php if(count($dropdown['customers']) > 0) : ?>
-                                                            <optgroup label="Customers">
-                                                            <?php foreach($dropdown['customers'] as $customer) : ?>
-                                                                <option value="customer-<?=$customer->prof_id?>"><?=$customer->first_name . ' ' . $customer->last_name?></option>
-                                                            <?php endforeach; ?>
-                                                            </optgroup>
-                                                            <?php endif; ?>
-                                                            <?php if(count($dropdown['employees']) > 0) : ?>
-                                                            <optgroup label="Employees">
-                                                            <?php foreach($dropdown['employees'] as $employee) : ?>
-                                                                <option value="employee-<?=$employee->id?>"><?=$employee->FName . ' ' . $employee->LName?></option>
-                                                            <?php endforeach; ?>
-                                                            </optgroup>
-                                                            <?php endif; ?>
+                                                            <!-- <option value="add-new">&plus; Add new</option> -->
                                                         </select>
                                                     </div>
                                                 </div>

@@ -321,6 +321,7 @@ $route['accounting/get-last-timesheet/(:any)/(:any)'] = 'accounting_modals/get_l
 $route['accounting/get-timesheet/(:any)'] = 'accounting_modals/get_timesheet/$1';
 $route['accounting/get-add-payee-modal/(:any)'] = 'accounting_modals/get_add_payee_modal/$1';
 $route['accounting/add-new-payee']['post'] = 'accounting_modals/add_new_payee';
+$route['accounting/get-payee-dropdown'] = 'accounting_modals/get_payee_dropdown';
 
 $route['accounting/lists'] = 'accounting/lists';
 

@@ -112,7 +112,7 @@ function JobFillAndEsign() {
     };
 
     const endpoint = `${prefixURL}/Job/createOrUpdateSignature`;
-    const response = await fetch(endpoint, {
+    await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
       headers: {
@@ -121,8 +121,20 @@ function JobFillAndEsign() {
       },
     });
 
-    const data = await response.json();
-    console.log(data);
+    await approveJob();
+    const response = await Swal.fire({
+      title: "Good job!",
+      text: "Job Status Updated",
+      icon: "success",
+      showCancelButton: false,
+      confirmButtonColor: "#32243d",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ok",
+    });
+
+    if (response.value) {
+      window.location.reload();
+    }
 
     signaturePad.clear();
     $signatureTextInput.val("");
@@ -143,20 +155,9 @@ function JobFillAndEsign() {
     if (documentObj.isTemplate) {
       const $fillAndSignNext = $("#fillAndSignNext");
       const jobId = $fillAndSignNext.data("id");
-      const jobStatus = $fillAndSignNext.data("status");
+      const isSuccess = await approveJob();
 
-      const formData = new FormData();
-      formData.append("id", jobId);
-      formData.append("status", jobStatus);
-
-      const endpoint = `${prefixURL}/job/update_jobs_status`;
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
-      });
-
-      const text = await response.text();
-      if (text === "Success") {
+      if (isSuccess) {
         const { id: templateId } = documentObj;
         window.location = `${prefixURL}/eSign/templatePrepare?id=${templateId}&job_id=${jobId}`;
       } else {
@@ -170,6 +171,8 @@ function JobFillAndEsign() {
           confirmButtonText: "Ok",
         });
       }
+
+      return;
     }
 
     const formData = new FormData();
@@ -226,6 +229,25 @@ function JobFillAndEsign() {
     await step1.init();
 
     attachEventHandlers();
+  }
+
+  async function approveJob() {
+    const $fillAndSignNext = $("#fillAndSignNext");
+    const jobId = $fillAndSignNext.data("id");
+    const jobStatus = $fillAndSignNext.data("status");
+
+    const formData = new FormData();
+    formData.append("id", jobId);
+    formData.append("status", jobStatus);
+
+    const endpoint = `${prefixURL}/job/update_jobs_status`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+    });
+
+    const text = await response.text();
+    return text === "Success";
   }
 
   return { init };

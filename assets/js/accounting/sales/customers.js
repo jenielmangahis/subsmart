@@ -40,15 +40,10 @@ $(".section-above-table .search-holder input").on("keyup", function() {
     }
 
 });
-$(".section-above-table .search-holder input").focusout(function() {
-    $(".section-above-table .search-holder ul.dropdown-menu").removeClass("show");
-});
-// $(".section-above-table .search-field input[name='filter_customers_table']").on("keyup", function() {
-//     var value = $(this).val().toLowerCase();
-//     $("#customers_table tbody tr").filter(function() {
-//         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-//     });
+// $(".section-above-table .search-holder input").focusout(function() {
+//     $(".section-above-table .search-holder ul.dropdown-menu").removeClass("show");
 // });
+
 get_load_customers_table();
 $('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
     get_load_customers_table();
@@ -178,3 +173,5 @@ $(document).on("click", ".section-above-table  .slect-customer-type-by-batch", f
 $(document).on("click", "#select_customer_type_modal .select_customer_type_modal-footer  .cancel-btn", function(event) {
     $("#select_customer_type_modal").fadeOut();
 });
+
+///

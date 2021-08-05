@@ -270,6 +270,19 @@ if(isset($jobs_data)){
             calculate_subtotal();
         });
 
+        $("body").delegate(".qty", "change", function(){
+            //console.log( "Handler for .keyup() called." );
+            var id = this.id;
+            var qty=this.value;
+            var cost = $('#price'+id).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            $('#sub_total'+id).data('subtotal',new_sub_total);
+            $('#sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_sub_total'+id).text('$' + formatNumber(parseFloat(new_sub_total).toFixed(2)));
+            $('#device_qty'+id).text(qty);
+            calculate_subtotal();
+        });
+
         $("body").delegate(".remove_item_row", "click", function(){
             $(this).parent().parent().remove();
             calculate_subtotal();

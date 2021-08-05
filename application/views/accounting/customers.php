@@ -13,7 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			<div style="padding-top:1%;">
 				<h3 style="font-family: Sarabun, sans-serif">Customers</h3>
 			</div>
-			<div class="notification-page"
+			<div class="page-notification-section"
 				style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
 				As your business grows, it's important to stay organized and keep track of your customers. You can add
 				customer profiles so you can quickly add them to transactions or invoices. Here's how to add customers
@@ -208,9 +208,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 		<!-- end row -->
 		<div class="row ml-2"></div>
 		<!-- end row -->
+
 	</div>
 </div>
-<!-- end container-fluid -->
+<!-- end container-fluid --><?php include viewPath('accounting/customer_includes/customer_single_modal/customer_single_modal'); ?>
 </div>
 <!-- page wrapper end -->
 

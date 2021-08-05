@@ -583,6 +583,68 @@ class Share_Link extends MY_Controller
 
         // $this->pdf->stream("welcome.pdf");
     }
+
+    public function sendLinkToEmail()
+    {
+        $test = $this->input->post('emails_list');
+    //    var_dump('test'.$test);
+
+        $arr = explode(',',$test);
+
+        $message = $this->input->post('email_content'); 
+
+        foreach($arr as $recipient)
+        {
+            //echo $recipient."<br>";
+
+            include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+            $server    = MAIL_SERVER;
+            $port      = MAIL_PORT ;
+            $username  = MAIL_USERNAME;
+            $password  = MAIL_PASSWORD;
+            $from      = MAIL_FROM;
+            $subject   = 'nSmarTrac: Shared Link';
+            $mail = new PHPMailer;
+            //$mail->SMTPDebug = 4;
+            $mail->isSMTP();
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username   = $username;
+            $mail->Password   = $password;
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'NsmarTrac';
+
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
+            // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+            // $cid = $email->attachment_cid($filename);
+
+
+            $json_data['is_success'] = 1;
+            $json_data['error']      = '';
+
+            if(!$mail->Send()) {
+                /*echo 'Message could not be sent.';
+                echo 'Mailer Error: ' . $mail->ErrorInfo;
+                exit;*/
+                $json_data['is_success'] = 0;
+                $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+            }
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+            echo json_encode($json_data);
+        }
+        
+
+    }
 }
 
 

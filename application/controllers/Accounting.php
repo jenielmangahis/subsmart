@@ -249,6 +249,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/time_activity.css",
             "assets/css/accounting/accounting_includes/create_invoice.css",
             "assets/css/accounting/accounting_includes/customer_types.css",
+            "assets/css/accounting/accounting_includes/customer_single_modal.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
@@ -258,6 +259,7 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/time_activity.js",
             "assets/js/accounting/sales/customer_includes/create_invoice.js",
             "assets/js/accounting/sales/customer_includes/customer_types.js",
+            "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -6983,7 +6985,7 @@ class Accounting extends MY_Controller
 								<td class="center"><input type="checkbox"
 										name="checkbox'.$counter.'" data-customer-id="'.$cus->prof_id.'" data-email-add="'.$cus->email.'"> 
 								</td>
-								<td>'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name .'
+								<td><a class="customer-full-page-btn" href="javascript:void(0)" data-customer-id="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name .'</a>
 								</td>
 								<td>'. $cus->phone_h.'
 								</td>
@@ -7463,8 +7465,8 @@ class Accounting extends MY_Controller
         $search_results = $this->accounting_invoices_model->get_customer_search_result($value);
         $html="";
         foreach ($search_results as $customer) {
-            $html.='<li>
-                <a href="javascript:void(0)" class="">
+            $html.='<li class="customer-full-page-btn" data-customer-id="'.$customer->prof_id.'">
+                <a  href="javascript:void(0)" >
                     '.$customer->name.'
                 </a>
             </li>';
@@ -8464,7 +8466,8 @@ class Accounting extends MY_Controller
                             <a href="#" class="delete-customer-type-btn" data-id="'.$type->id.'" data-title="'.$type->title.'"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </td>
                     </tr>';
-        }$data = new stdClass();
+        }
+        $data = new stdClass();
         $data->tbody_html=$tbody_html;
         echo json_encode($data);
     }
@@ -8488,7 +8491,8 @@ class Accounting extends MY_Controller
             "title" => $this->input->post("customer_type"),
             "company_id" => logged("company_id")
         );
-        $affected = $this->accounting_customers_model->update_customer_type($id,$data);$data = new stdClass();
+        $affected = $this->accounting_customers_model->update_customer_type($id, $data);
+        $data = new stdClass();
         $data->result="success";
         if ($affected > 0) {
             echo json_encode($data);

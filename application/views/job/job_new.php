@@ -36,6 +36,9 @@ add_css(array(
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+    .label-width .form-control {
+        width: 80% !important;
+    }
 </style>
 
 <?php if(isset($jobs_data)): ?>
@@ -151,7 +154,7 @@ add_css(array(
                                 </select>
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
-                                <label >To</label>
+                                <label>To</label>
                                 <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
                                 <select id="end_time" name="end_time" class="form-control" required>
                                     <option value="">End time</option>

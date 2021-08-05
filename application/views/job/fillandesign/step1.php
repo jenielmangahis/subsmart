@@ -2,13 +2,13 @@
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item active">
             <a class="nav-link active" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-selected="true">
-                Recent Documents
+                Fill & eSign Documents
             </a>
         </li>
 
         <li class="nav-item">
             <a class="nav-link" id="my-templates" data-toggle="tab" href="#myTemplates" role="tab" aria-selected="false">
-                My eSign Templates
+                eSign Templates
             </a>
         </li>
 

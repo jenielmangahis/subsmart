@@ -2166,9 +2166,70 @@ $(document).on("focusout", ".price2", function () {
   $("#payment_amount").val(s_grandtotal.toFixed(2));
 });
 
-$(document).on("focusout", ".quantity", function () {
+$(document).on("focusout", ".price_w", function () {
   var counter = $(this).data("counter");
   // calculation(counter);
+  var in_id = $(this).attr('data-counter');
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var taxes = (parseFloat(price) * 7.5) / 100;
+  var o_total = (
+    (parseFloat(price) + parseFloat(taxes)) * parseFloat(quantity)
+  ).toFixed(2);
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(2);
+  $("#tax1_" + in_id).val(tax1);
+  // var o_total = ;
+
+  var total = price * quantity;
+
+  $("#priceqty_" + in_id).val(total);
+
+  var priceqty = 0;
+    $('*[id^="priceqty_"]').each(function(){
+      priceqty += parseFloat($(this).val());
+  });
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax1_"]').each(function(){
+      subtotaltax += parseFloat($(this).val());
+  });
+
+  // alert(priceqty);
+
+  $("#sales_taxs").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
+  $("#span_total_" + in_id).text(o_total);
+  $("#item_total_" + in_id).val(o_total);
+  $("#sub_total_text" + in_id).text(o_total);
+  $("#span_sub_total_invoice").text(priceqty.toFixed(2));
+  $("#item_total").val(priceqty.toFixed(2));
+
+  var one_time  = $("#one_time").val();
+  var m_monitoring  = $("#m_monitoring").val();
+
+  var grandtotal = priceqty + subtotaltax + parseFloat(one_time) + parseFloat(m_monitoring);
+  // alert(grandtotal);
+
+  $("#grand_total_input").val(grandtotal);
+  $("#grand_total_inputs").val(grandtotal);
+  $("#grand_total_inputs_a").val(grandtotal);
+  $("#payment_amount").val(grandtotal.toFixed(2));
+  // alert(grandtotal);
+  // standard form
+  var taxtotal  = $("#total_tax_input").val();
+  var pricetotal  = $("#item_total").val();
+  var s_grandtotal = subtotaltax + priceqty;
+  $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
+  $("#payment_amount").val(s_grandtotal.toFixed(2));
+});
+
+$(document).on("focusout", ".quantity", function () {
+  var counter = $(this).data("counter");
+  calculation(counter);
   var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_" + counter).val();
@@ -2311,6 +2372,66 @@ $(document).on("focusout", ".quantity", function () {
   $("#total_tax_input").val(sls);
   cal_total_due();
 });
+
+$(document).on("focusout", ".quantity_w", function () {
+
+var in_id = $(this).attr('data-counter');
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var taxes = (parseFloat(price) * 7.5) / 100;
+  var o_total = (
+    (parseFloat(price) + parseFloat(taxes)) * parseFloat(quantity)
+  ).toFixed(2);
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(2);
+  $("#tax1_" + in_id).val(tax1);
+  // var o_total = ;
+
+  var total = price * quantity;
+
+  $("#priceqty_" + in_id).val(total);
+
+  var priceqty = 0;
+    $('*[id^="priceqty_"]').each(function(){
+      priceqty += parseFloat($(this).val());
+  });
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax1_"]').each(function(){
+      subtotaltax += parseFloat($(this).val());
+  });
+
+  // alert(priceqty);
+
+  $("#sales_taxs").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
+  $("#span_total_" + in_id).text(o_total);
+  // $("#sub_total_text" + in_id).text(o_total);
+  $("#sub_total_text" + in_id).val(o_total);
+  $("#span_sub_total_invoice").text(priceqty.toFixed(2));
+  $("#item_total").val(priceqty.toFixed(2));
+
+  var one_time  = $("#one_time").val();
+  var m_monitoring  = $("#m_monitoring").val();
+
+  // var grandtotal = priceqty + subtotaltax + one_time + m_monitoring;
+  var grandtotal = priceqty + subtotaltax + parseFloat(one_time) + parseFloat(m_monitoring);
+
+  $("#grand_total_input").val(grandtotal);
+  $("#grand_total_inputs_a").val(grandtotal);
+  $("#payment_amount").val(grandtotal.toFixed(2));
+  // alert(grandtotal);
+  // standard form
+  var taxtotal  = $("#total_tax_input").val();
+  var pricetotal  = $("#item_total").val();
+  var s_grandtotal = subtotaltax + priceqty;
+  $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
+  $("#payment_amount").val(s_grandtotal.toFixed(2));
+});
+
 $(document).on("focusout", ".discount", function () {
   var counter = $(this).data("counter");
   calculation(counter);

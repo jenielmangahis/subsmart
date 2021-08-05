@@ -416,6 +416,48 @@ border: none;
 		margin:5% !important;
 	}
 }
+
+.multipleInput-container {
+     border:1px #999 solid;
+     padding:1px;
+     padding-bottom:0;
+     cursor:text;
+     font-size:15px;
+     width:100%;
+	border-radius: 6px
+}
+ 
+.multipleInput-container input {
+    font-size:15px;
+    clear:both;
+    height:60px;
+    border:0;
+    margin-bottom:1px;
+}
+ 
+.multipleInput-container ul {
+    list-style-type:none;
+}
+ 
+li.multipleInput-email {
+    float:left;
+    padding:6px ;
+    color: #fff;
+	background: #FD9160;
+	margin-top: 0;
+	border-radius: 6px;
+	margin: 6px 2px 6px 6px;
+}
+ 
+.multipleInput-close {
+    width:16px;
+    height:16px;
+    display:block;
+    float:right;
+    margin: -2px 0px 0px 8px;
+	color: #fff;
+	font-size: 16px;
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
@@ -1033,8 +1075,49 @@ border: none;
                             <input type="text" class="form-control" value="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>" id="myInput" readonly>
 							<br>
 							<a href="#" class="btn btn-success" onclick="myCopyFunction()">Copy link to Clipboard</a>
+							<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#shareLinkToEmail">Email Share Link</a>
                         </p>
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal fade" id="shareLinkToEmail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Share link to email</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+					<?php echo form_open_multipart('workorder/sendLinkToEmail', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+							<b>To</b><br>
+                            <input type="email" class="form-control" name="emails_list" id="my_input" ><br><br>
+							
+							<b>Content</b>
+							<textarea name="email_content" id="email_content_share">
+							<p>This is the data of 
+							Work Order  Number <b><?php echo $workorder->work_order_number ?></b>
+							<br><br> Link Below: <br>
+							<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>
+							<br><br>
+							From<br>
+							<?php echo $company->business_name ?></textarea>
+
+							<div id="testArea"></div>
+							<br>
+							<center><input type="submit" value="Send Email" class="btn btn-success"></center>
+                        </p>
+					<?php echo form_close(); ?>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
@@ -1091,6 +1174,10 @@ function initMap() {
 </script>
 
 <script>
+    CKEDITOR.replace('email_content_share');
+</script>
+
+<script>
 function myCopyFunction() {
   var copyText = document.getElementById("myInput");
   copyText.select();
@@ -1098,6 +1185,103 @@ function myCopyFunction() {
   document.execCommand("copy");
 //   alert("Copied the text: " + copyText.value);
 }
+</script>
+
+<script>
+(function( $ ){
+ 
+ $.fn.multipleInput = function() {
+
+	  return this.each(function() {
+
+		   // create html elements
+
+		   // list of email addresses as unordered list
+		   $list = $('#testArea');
+
+		   // input
+		   var $input = $('<input type="text" />').keyup(function(event) {
+
+				if(event.which == 32 || event.which == 188) {
+					 // key press is space or comma
+					var val = $(this).val().slice(0, -1); // remove space/comma from value
+
+					 // append to list of emails with remove button
+					 $list.append($('<li class="multipleInput-email"><span> ' + val + '</span><inpupt type="text" name="email_list[]" class="email_list" value="'+ val +'"></li>')
+						  .append($('<a href="#" class="multipleInput-close" title="Remove">x</a>')
+							   .click(function(e) {
+									$(this).parent().remove();
+									e.preventDefault();
+							   })
+						  )
+					 );
+					 $(this).attr('placeholder', '');
+					 // empty input
+					 $(this).val('');
+				}
+
+		   });
+
+		   // container div
+		   var $container = $('<div class="multipleInput-container" />').click(function() {
+				$input.focus();
+		   });
+
+		   // insert elements into DOM
+		   $container.append($list).append($input).insertAfter($(this));
+
+		   // add onsubmit handler to parent form to copy emails into original input as csv before submitting
+		   var $orig = $(this);
+		   $(this).closest('form').submit(function(e) {
+
+				var emails = new Array();
+				$('.multipleInput-email span').each(function() {
+					 emails.push($(this).html());
+				});
+				emails.push($input.val());
+
+				$orig.val(emails.join());
+
+		   });
+
+		   return $(this).hide();
+
+	  });
+
+ };
+})( jQuery );
+
+$('#my_input').multipleInput();
+</script>
+
+<script>
+// $(document).on('click','.testAlert',function(){
+// 	var test = $('.email_list').val();
+// 	// alert('test'  +  test);
+// 	var email_list = $('input[name="email_list[]"]').map(function(){ 
+//                     return this.value; 
+//                 }).get();
+
+// 	// var users = $(this).find('.email_list').map(function(i, el) {
+// 	// 	return el.value;
+// 	// });
+// 	var users = $("input[name='email_list[]']").map(function(){return $(this).val();}).get();
+		
+// 		console.log(test);
+
+//                 // $.ajax({
+//                 //     type: 'POST',
+//                 //     url: 'users.php',
+//                 //     data: {
+//                 //         'email_list[]': email_list,
+//                 //         // other data
+//                 //     },
+//                 //     success: function() {
+
+//                 //     }
+//                 // });
+
+// });
 </script>
 
 <script>
