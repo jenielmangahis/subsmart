@@ -1174,8 +1174,12 @@ SQL;
 
     public function getJobCustomer($jobId)
     {
+        $job = $this->_getJobCustomer($jobId);
+        $job->employee = $this->getJobEmployee($job);
+        $job->admin = $this->getCompanyAdmin();
+
         header('content-type: application/json');
-        echo json_encode(['data' => $this->_getJobCustomer($jobId)]);
+        echo json_encode(['data' => $job]);
     }
 
     private function _getJobCustomer($jobId)
@@ -1186,6 +1190,39 @@ SQL;
 SQL;
 
         return $this->db->query($query, [$jobId])->row();
+    }
+
+    private function getJobEmployee($job)
+    {
+        $employee = null;
+        $employeeIdKeys = [
+            'employee_id',
+            'employee2_id',
+            'employee3_id',
+            'employee4_id',
+        ];
+
+        foreach ($employeeIdKeys as $key) {
+            if (!is_null($employee)) {
+                break;
+            }
+
+            if (is_null($job->$key) || $job->$key === 0) {
+                continue;
+            }
+
+            $this->db->where('id', $job->$key);
+            $employee = $this->db->get('users')->row();
+        }
+
+        return $employee;
+    }
+
+    private function getCompanyAdmin()
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('user_type', 7); // 7 is for admins
+        return $this->db->get('users')->row();
     }
 
     public function apiCopyTemplate($templateId)

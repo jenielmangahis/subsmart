@@ -645,12 +645,12 @@ border: none;
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_<?php echo $data->items_id; ?>" min="0"  value="0" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change2" name="tax[]"
-                                                       data-counter="0" id="tax1_<?php echo $data->items_id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                       data-counter="0" id="tax1_<?php echo $data->items_id; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
-                                                       $<span id="span_total_<?php echo $data->items_id; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?></span></td>
+                                                       $<span id="span_total_<?php echo $data->items_id; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
                                             <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         <?php } ?>
@@ -702,12 +702,12 @@ border: none;
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice">0<?php echo $workorder->subtotal; ?></span>
+                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo number_format($workorder->subtotal,2); ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo $workorder->taxes; ?>0</span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
+                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo number_format($workorder->taxes,2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
@@ -715,7 +715,7 @@ border: none;
                                             <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($workorder->adjustment_value)){ echo "0"; }else{ echo $workorder->adjustment_value; } ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td><?php echo $workorder->adjustment_value; ?></td>
+                                            <td><?php echo number_format($workorder->adjustment_value,2); ?></td>
                                         </tr>
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <?php if(empty($workorder->voucher_value)){ ?>
@@ -733,7 +733,7 @@ border: none;
                                         <?php } ?>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <td colspan="2" align="center"><b><span id="grand_total"><?php echo $workorder->grand_total; ?></span>
+                                            <td colspan="2" align="center"><b><span id="grand_total"><?php echo number_format($workorder->grand_total,2); ?></span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
                                         </tr>
                                     </table>

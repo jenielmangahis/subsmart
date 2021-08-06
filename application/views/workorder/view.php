@@ -615,33 +615,33 @@ li.multipleInput-email {
 		         							   <div class="user-info">
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head"> FROM:</a></li>
+		         							   				<li><a href="#" class="ul-head"> FROM:</a></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><a href="" class="ul-head"><?php echo $company->business_name ?></a></li>
-		         							   				<li><a href="" class="ul-text">License: EF, AL, MS</a></li>
-		         							   				<li><a href="" class="ul-text"><?php echo $company->business_address ?></a></li>
+		         							   				<li><a href="#" class="ul-head"><?php echo $company->business_name ?></a></li>
+		         							   				<li><a href="#" class="ul-text">License: EF, AL, MS</a></li>
+		         							   				<li><a href="#" class="ul-text"><?php echo $company->business_address ?></a></li>
 		         							   				<!-- <li><a href="" class="ul-text">Pensacola, FL, 32526</a></li> -->
-		         							   				<li><a href="" class="ul-text">Email: <?php echo $company->email_address ?></a></li>
-		         							   				<li><a href="" class="ul-text">Phone: <?php echo $company->phone_number ?> </a></li>			   			
+		         							   				<li><a href="#" class="ul-text">Email: <?php echo $company->email_address ?></a></li>
+		         							   				<li><a href="#" class="ul-text">Phone: <?php echo $company->phone_number ?> </a></li>			   			
 		         							   			</ul>
 		         							   		</div><br>
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">TO:</a></li>
+		         							   				<li><a href="#" class="ul-head">TO:</a></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
-															<li><a href="" class="ul-text"><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></a></li>
-															<li><a href="" class="ul-text">Phone: <?php echo $customer->phone_h ?></a></li>
-															<li><a href="" class="ul-text">Email: <?php echo $customer->email ?></a></li>
+															<li><a href="#" class="ul-text"><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?></a></li>
+															<li><a href="#" class="ul-text">Phone: <?php echo $workorder->phone_number ?></a></li>
+															<li><a href="#" class="ul-text">Email: <?php echo $workorder->email ?></a></li>
 		         							   			
 		         							   			</ul>
 		         							   		</div><br>
 
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">JOB:</a></li>
+		         							   				<li><a href="#" class="ul-head">JOB:</a></li>
 		         							   				<li>Job Name: <?php echo $workorder->job_name ?></li>
 		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
 		         							   			<br>
@@ -699,7 +699,7 @@ li.multipleInput-email {
 		         							   		</div> -->
 		         							   			<div class="ul-info">
 			         							   			<ul>
-			         							   				<li><a href="#" class="ul-head">Lob Location </a></li>
+			         							   				<li><a href="#" class="ul-head">Job Location </a></li>
 																<li class="show_mobile_view"><hr></li>
 																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
 																<!-- <a href="#" style="color:green;">Show Map</a> -->
@@ -741,14 +741,14 @@ li.multipleInput-email {
 																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
 																			<td valign="top"> <?php echo $item->title; ?>   </td>
 																			<td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-																			<td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->costing ?></td>
+																			<td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->costing,2) ?></td>
 																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
 																				$ 0<?php //echo $item->discount ?>
 																				</td>
 																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																				$<?php echo $item->tax ?>
+																				$<?php echo number_format($item->tax,2) ?>
 																				</td>
-																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
+																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
 																		</tr>
 																	<?php }else{ ?>
 																		<tr class="table-items__tr">
@@ -757,7 +757,7 @@ li.multipleInput-email {
 																			<div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
 																			<div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
 																			</td>
-																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
+																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
 																		</tr>
 																	<?php } ?>
 																	<?php } ?>
@@ -785,18 +785,18 @@ li.multipleInput-email {
 													                            <tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Subtotal</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->subtotal ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format($workorder->subtotal,2) ?></td>
 													                            </tr>
 																				<tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Taxes</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->taxes ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format($workorder->taxes,2) ?></td>
 													                            </tr>
 																				<?php if($workorder->work_order_type_id == 1){ ?>
 																				<tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class=""><?php echo $workorder->adjustment_name ?></td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->adjustment_value ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo number_format($workorder->adjustment_value,2) ?></td>
 													                            </tr>
 																				<tr>
 																					<td colspan="5"></td>
@@ -818,7 +818,7 @@ li.multipleInput-email {
 													                            <tr>
 																					<td colspan="5"></td>
 													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="mobile_size"><b>Grand Total ($)</b></td>
-													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo $workorder->grand_total ?></b></td>
+													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo number_format($workorder->grand_total,2) ?></b></td>
 													                            </tr>
 													                          </tbody>
 													                    <!-- </table>
@@ -1101,17 +1101,30 @@ li.multipleInput-email {
                         <div class="validation-error" style="display: none;"></div>
                         <p>
 							<b>To</b><br>
-                            <input type="email" class="form-control" name="emails_list" id="my_input" ><br><br>
+                            <input type="email" class="form-control" name="emails_list" id="my_input" >
+							<input type="hidden" class="form-control" name="" id="my_input_hidden" value="<?php echo $workorder->email ?>" >
+							<inpupt type="hidden" name="email_list[]" class="email_list" value="<?php echo $workorder->email ?>"><br><br>
 							
 							<b>Content</b>
-							<textarea name="email_content" id="email_content_share">
-							<p>This is the data of 
-							Work Order  Number <b><?php echo $workorder->work_order_number ?></b>
-							<br><br> Link Below: <br>
-							<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>
-							<br><br>
-							From<br>
-							<?php echo $company->business_name ?></textarea>
+							<textarea name="email_content" id="email_content_share" style="height:1000px;">
+
+							<p dir="rtl" style="text-align:center"><span style="color:#ffffff"><span style="font-size:30px"><span style="background-color:#9b59b6">&nbsp; <?php echo $company->business_name ?> &nbsp;&nbsp;</span></span></span></p>
+							
+							<p>W O R K O R D E R # &nbsp;<?php echo $workorder->work_order_number ?>&nbsp; F R O M &nbsp; <?php echo $company->business_name ?></p>
+							<br />
+
+							<p>DEAR <?php echo $customer->contact_name .''. $customer->first_name ?>,<br /><br />
+							THANK YOU FOR CHOOSING <?php echo $company->business_name ?>! <br />
+							YOUR WORKORDER# <?php echo $workorder->work_order_number ?> IS ATTACHED. &nbsp; THE WORK ORDER CAN BE FOUND IN THE ATTACHED PDF FILE.<br /><br />
+
+							CLICK THE LINK TO VIEW THE WORK ORDER ONLINE. <br>
+							<a href="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>"><?php echo base_url('share_Link/public_view/'.$workorder->id) ?></a><br /><br />
+
+							REGARDS,<br /><br /><br />
+							NSMARTRAC PRO SUPPORT<br /><br />
+							POWERERED BY NSMARTRAC<br /><br />
+
+							</textarea>
 
 							<div id="testArea"></div>
 							<br>
@@ -1198,9 +1211,10 @@ function myCopyFunction() {
 
 		   // list of email addresses as unordered list
 		   $list = $('#testArea');
+		   var valueEmail = $('#my_input_hidden').val();
 
 		   // input
-		   var $input = $('<input type="text" />').keyup(function(event) {
+		   var $input = $('<input type="text" value="'+ valueEmail +'"/>').keyup(function(event) {
 
 				if(event.which == 32 || event.which == 188) {
 					 // key press is space or comma
@@ -1325,7 +1339,21 @@ $(document).ready(function()
         // });
         // });
     });
+
+	
+	// var changed = $("#view_ssn").text();
 });
+</script>
+
+<script>
+var mainStr = $("#view_ssn").text(),
+    vis = mainStr.slice(-4),
+    countNum = '';
+
+for(var i = (mainStr.length)-4; i>0; i--){
+    countNum += 'X';
+}
+$("#view_ssn").text(countNum+vis);
 </script>
 
 <script>
@@ -1362,9 +1390,9 @@ $(document).ready(function()
 
 // $(document).ready(function()
 // {
-// 	var ssn = $("#view_ssn").html();
+// 	var changed = $("#view_ssn").text();
 // 	// alert(ssn);
-// 	ssn.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+// 	changed.value = new Array(account.value.length-3).join('x') + account.value.substr(account.value.length-4, 4);
 // });
 
 </script>

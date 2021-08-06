@@ -17,6 +17,9 @@ var payroll =  {};
 var modalAttachmentId = [];
 var modalAttachedFiles = [];
 
+var vendAttIds = [];
+var vendAttFiles = [];
+
 var catDetailsInputs = '';
 var catDetailsBlank = '';
 
@@ -382,7 +385,8 @@ $(function() {
                         // Query parameters will be ?search=[term]&type=public
                         return query;
                     }
-                }
+                },
+                templateResult: formatPayee
             });
 
             $(`${modal_element} select#vendor`).select2({
@@ -399,7 +403,8 @@ $(function() {
                         // Query parameters will be ?search=[term]&type=public
                         return query;
                     }
-                }
+                },
+                templateResult: formatPayee
             });
 
             if($('div#modal-container select#tags').length > 0) {
@@ -3283,13 +3288,9 @@ $(function() {
         $('#weeklyTimesheetModal').parent('form').submit();
     });
 
-    $(document).on('change', '#expenseModal #payee', function() {
+    $(document).on('change', '#modal-container #modal-form #payee', function() {
         if($(this).val() === 'add-new') {
             $.get('/accounting/get-add-payee-modal/payee', function(result) {
-                if($('#modal-form').parent().find('#add-payee-modal').length > 0) {
-                    $('#modal-form #add-payee-modal').remove();
-                }
-    
                 $('#modal-form').parent().append(result);
                 $('#modal-container #add-payee-modal select').select2({
                     minimumResultsForSearch: -1,
@@ -3315,9 +3316,79 @@ $(function() {
             success: function(result) {
                 var res = JSON.parse(result);
 
-                // $('#modal-container #add-payee-modal').prev().find('#payee').val(data.get('payee_type')+'-'+res.payee.id);
+                if(data.get('payee_type') === 'vendor') {
+                    var name = res.payee.display_name;
+                } else {
+                    var name = res.payee.first_name+' '+res.payee.last_name;
+                }
+
+                $('#modal-container #add-payee-modal').prev().find('#payee').append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+
+                $('#modal-container #add-payee-modal').modal('hide');
             }
         });
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #add-payee-modal', function() {
+        $('#modal-container #add-payee-modal').remove();
+    });
+
+    $(document).on('click', '#modal-container #add-payee-modal #add-payee-details', function() {
+        var type = $('#modal-container #add-payee-modal #payee_type').val();
+        var name = $('#modal-container #add-payee-modal #payee_name').val();
+
+        if(type === 'vendor') {
+            $.get('/accounting/get-add-vendor-details-modal', function(result) {
+                $('#modal-container').append(result);
+
+                var attachments = new Dropzone(`#vendAtt`, {
+                    url: '/accounting/attachments/attach',
+                    maxFilesize: 20,
+                    uploadMultiple: true,
+                    // maxFiles: 1,
+                    addRemoveLinks: true,
+                    init: function() {
+                        this.on("success", function(file, response) {
+                            var ids = JSON.parse(response)['attachment_ids'];
+                            for(i in ids) {
+                                if($('#new-vendor-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                    $('#modal-container #new-vendor-modal #vendAtt').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                }
+
+                                vendAttIds.push(ids[i]);
+                            }
+                            vendAttFiles.push(file);
+                        });
+                    },
+                    removedfile: function(file) {
+                        var ids = vendAttIds;
+                        var index = vendAttFiles.map(function(d, index) {
+                            if (d == file) return index;
+                        }).filter(isFinite)[0];
+
+                        $('#modal-container #new-vendor-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                        //remove thumbnail
+                        var previewElement;
+                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+                    }
+                });
+
+                $('#modal-container #new-vendor-modal select').select2({
+                    dropdownParent: $('#modal-container #new-vendor-modal')
+                });
+                $('#modal-container #new-vendor-modal .datepicker').datepicker({
+                    uiLibrary: 'bootstrap',
+                    todayBtn: "linked",
+                    language: "de"
+                });;
+
+                $('#modal-container #add-payee-modal').modal('hide');
+                $('#modal-container #new-vendor-modal').modal('show');
+            });
+        } else {
+
+        }
     });
 });
 
@@ -4960,4 +5031,17 @@ const saveClosePayBills = (e) => {
     $('#modal-container form#modal-form').submit();
 
     $('#modal-container .modal').modal('hide');
+}
+
+const formatPayee = (optionElement) => {
+    var searchField = $('.select2-search__field');
+    var text = optionElement.text;
+    var searchVal = $(searchField[searchField.length - 1]).val();
+    if(searchVal === "") {
+        return optionElement.text;
+    }
+
+    text = text.replaceAll(searchVal, `<strong>${searchVal}</strong>`);
+    var el = $(`<span>${text}</span>`);
+    return el;
 }

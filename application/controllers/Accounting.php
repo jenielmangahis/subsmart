@@ -6911,6 +6911,7 @@ class Accounting extends MY_Controller
         $customer_email = $this->input->post("customer_email");
         $subject = $this->input->post("subject");
         $message = $this->input->post("message");
+
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
         $username = MAIL_USERNAME;
@@ -6952,6 +6953,18 @@ class Accounting extends MY_Controller
             $data->status = "Mailer Error: ".$mail->ErrorInfo;
             exit;
         }
+
+        //=======>>>>> willberts code for email
+        // $this->load->library('email');
+        // $this->email->clear(true);
+        // $this->email->from($from);
+        // $this->email->to($customer_email);
+        // $this->email->subject($subject);
+        // $this->email->message($content);
+        // $this->email->attach(base_url("/assets/dashboard/images/logo.png"));
+        // $this->email->send();
+
+
         echo json_encode($data);
         // $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data);
     }

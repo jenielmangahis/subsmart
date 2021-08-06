@@ -1,12 +1,18 @@
 #customer-single-modal {
     position: absolute;
-    top: 250px;
+    top: 248px;
     width: calc(100% - 262px);
     background: #ffffff;
     left: 260px;
     min-height: calc(100% - 250px);
     display: none;
     z-index: 1;
+    font-size: 15px;
+}
+
+#customer-single-modal a {
+    color: #2182C9;
+    font-weight: lighter;
 }
 
 #customer-single-modal .the-body {
@@ -25,7 +31,7 @@
 #customer-single-modal .the-body .customer-list-section {
     padding: 0 10px;
     padding: 0 10px;
-    height: calc(100vh - 406px);
+    height: calc(100vh - 392px);
     overflow: auto;
 }
 
@@ -131,4 +137,206 @@
     box-shadow: none;
     border: solid 1px #80CF03!important;
     font-style: normal;
+}
+
+#customer-single-modal .single-customer-info-section {
+    color: #393A3D;
+    overflow: auto;
+    height: calc(100vh - 249px);
+}
+
+#customer-single-modal .single-customer-info-section .top-section {
+    background-color: #F4F5F8;
+    padding: 20px 10px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .customer-name h2 {
+    margin: 0;
+    font-weight: lighter;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .customer-name h2 label {
+    position: absolute;
+    top: 0;
+    padding: 0 10px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .customer-name h2 label a {
+    font-size: 15px;
+    color: #7391AC;
+    margin: 0 3px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .customer-name h2 label a:hover {
+    color: #2182C9;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .btns-section button.btn-default {
+    background-image: none;
+    box-shadow: none;
+    border-right: none;
+    font-size: 15px;
+    padding: 7px 35px;
+    height: auto;
+    border: solid 1px #8D9096;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .btns-section {
+    height: 50px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .btns-section button.btn-success {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 15px;
+    padding: 7px 35px;
+    height: auto;
+    border: solid 1px #2CA01C;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .customer-address label {
+    font-size: 15px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .monetary-section .group {
+    height: 50px;
+    margin-top: 10px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-open {
+    padding: 0 10px;
+    border-left: solid 5px #F2B835;
+    width: 180px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-overdue {
+    padding: 0 10px;
+    border-left: solid 5px #CD5133;
+    width: 180px;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-overdue .label,
+#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-open .label {
+    color: #7893AE;
+    font-size: 12px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section {
+    padding: 20px 20px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tabs-section {
+    border-bottom: solid 3px #F1F1F1;
+}
+
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs {
+    width: 100%;
+    border-bottom: solid 1px #CCCCCC;
+    height: 53px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li {
+    float: left;
+    padding: 10px 0;
+}
+
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li .labels {
+    padding: 3px 20px;
+    border-right: dashed 1px #999999;
+}
+
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li:last-child .labels {
+    border-right: none;
+}
+
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li.active {
+    border-bottom: solid 4px #2CA01C;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .seaction-above-table .batch-actiom-icon-holder {
+    position: relative;
+    padding-right: 10px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .seaction-above-table .batch-actiom-icon-holder img.batch-action-icon {
+    width: 20px;
+    float: left;
+    position: inherit;
+    bottom: -15px;
+    margin-right: 15px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section {
+    padding: 20px 0;
+}
+
+#customer-single-modal button.btn.btn-default {
+    font-size: 13px;
+    padding: 5px 25px;
+    font-weight: 700;
+    border: solid 2px #393A3D;
+    height: auto;
+    color: #393A3D;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table {
+    padding: 20px 0;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .seaction-above-table .by-btach-btn {
+    width: 200px;
+    float: left;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table {
+    width: 100%;
+    border-bottom: solid 1px #C7C7C7;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:first-child,
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:first-child {
+    width: 100px;
+    border-left: none;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:last-child,
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:last-child {
+    border-right: none;
+    text-align: right;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th {
+    padding: 10px;
+    border-right: solid 1px #D4D7DC;
+    border-bottom: solid 2px #D4D7DC;
+    color: #393A3D;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td {
+    padding: 0 10px;
+    color: #393A3D;
+    font-size: 13px;
+    border-right: dotted 1px #C7C7C7;
+    border-bottom: solid 1px #C7C7C7;
+    height: 50px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tr:last-child td {
+    border-bottom: solid 2px #C7C7C7;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td {
+    padding: 0 10px;
+    color: #393A3D;
+    font-size: 13px;
+    border-right: dotted 1px #C7C7C7;
+    border-bottom: solid 1px #C7C7C7;
+    height: 50px;
 }

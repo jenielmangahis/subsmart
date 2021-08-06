@@ -5299,6 +5299,7 @@ class Accounting_modals extends MY_Controller {
                 'company_id' => logged('company_id'),
                 'display_name' => trim($post['payee_name']),
                 'print_on_check_name' => trim($post['payee_name']),
+                'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ];
@@ -5371,6 +5372,7 @@ class Accounting_modals extends MY_Controller {
 
             $id = $this->accounting_customers_model->createCustomer($data);
             $payee = $this->accounting_customers_model->getCustomerDetails($id)[0];
+            $payee->id = $payee->prof_id;
         }
 
         echo json_encode(['payee' => $payee]);
@@ -5475,5 +5477,14 @@ class Accounting_modals extends MY_Controller {
         array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
 
         echo json_encode($return);
+    }
+
+    public function add_vendor_details_modal()
+    {
+        $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+        $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
+        $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
+        $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
+        $this->load->view('accounting/modals/add_vendor_modal', $this->page_data);
     }
 }

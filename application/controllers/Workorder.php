@@ -2753,6 +2753,8 @@ class Workorder extends MY_Controller
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
 
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+        $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
+        
 
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
@@ -2860,6 +2862,8 @@ class Workorder extends MY_Controller
         $action = $this->input->post('action');
         if($action == 'submit') {
 
+            $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+
         $new_data = array(
             
             'work_order_number'                     => $this->input->post('workorder_number'),
@@ -2878,7 +2882,7 @@ class Workorder extends MY_Controller
             'password'                              => $this->input->post('password'),
             'offer_code'                            => $this->input->post('offer_code'),//
             'tags'                                  => $this->input->post('job_tag'),
-            'date_issued'                           => $this->input->post('schedule_date_given'),
+            'date_issued'                           => $dateIssued,
             'job_type'                              => $this->input->post('job_type'),
             'job_name'                              => $this->input->post('job_name'),
             'job_description'                       => $this->input->post('job_description'),
@@ -3307,6 +3311,8 @@ class Workorder extends MY_Controller
         $action = $this->input->post('action');
         if($action == 'submit') {
 
+            $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+
         $new_data = array(
             
             'work_order_number'                     => $this->input->post('workorder_number'),
@@ -3326,7 +3332,7 @@ class Workorder extends MY_Controller
             'password'                              => $this->input->post('password'),
             'offer_code'                            => $this->input->post('offer_code'),//
             'tags'                                  => $this->input->post('job_tag'),
-            'date_issued'                           => $this->input->post('schedule_date_given'),
+            'date_issued'                           => $dateIssued,
             'job_type'                              => $this->input->post('job_type'),
             'job_name'                              => $this->input->post('job_name'),
             'job_description'                       => $this->input->post('job_description'),
@@ -3948,6 +3954,8 @@ class Workorder extends MY_Controller
         // $action = $this->input->post('action');
         // if($action == 'submit') {
 
+        $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+
         $update_data = array(
             'id'                    => $this->input->post('wo_id'),
             'work_order_number'     => $this->input->post('workorder_number'),
@@ -3965,7 +3973,7 @@ class Workorder extends MY_Controller
             'password'              => $this->input->post('password'),
             'offer_code'            => $this->input->post('offer_code'),//
             'tags'                  => $this->input->post('job_tag'),
-            'date_issued'           => $this->input->post('schedule_date_given'),
+            'date_issued'           => $dateIssued,
             'job_type'              => $this->input->post('job_type'),
             'job_name'              => $this->input->post('job_name'),
             'job_description'       => $this->input->post('job_description'),
@@ -4365,6 +4373,7 @@ class Workorder extends MY_Controller
         
         $action = $this->input->post('action');
         if($action == 'Submit') {
+            $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
 
         $acs = array(
             'prof_id'                   => $this->input->post('acs_id'),
@@ -4438,7 +4447,7 @@ class Workorder extends MY_Controller
             'password'              => $this->input->post('password'),
             // 'offer_code'            => $this->input->post('offer_code'),
             'tags'                  => $this->input->post('job_tag'),
-            'date_issued'           => $this->input->post('schedule_date_given'),
+            'date_issued'           => $dateIssued,
             'job_type'              => $this->input->post('job_type'),
             // 'job_name'              => $this->input->post('job_name'),
             // 'job_description'       => $this->input->post('job_description'),
@@ -5110,6 +5119,8 @@ class Workorder extends MY_Controller
     $action = $this->input->post('action');
     if($action == 'submit') {
 
+        $dateIssued = date('Y-m-d', strtotime($this->input->post('date_issued')));
+
         $acs = array(
             'fk_user_id'                => $user_id,
             'customer_type'             => $this->input->post('customer_type'),
@@ -5268,7 +5279,7 @@ class Workorder extends MY_Controller
             'priority'                              => $this->input->post('priority'),
             'terms_of_use'                          => $this->input->post('terms_of_use'),
             'header'                                => $this->input->post('header'),
-            'date_issued'                           => $this->input->post('date_issued'),
+            'date_issued'                           => $dateIssued,
             'plan_type'                             => $this->input->post('plan_type'),
             'lead_source_id'                        => $this->input->post('lead_source'),
 

@@ -39,7 +39,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 					class="banking-tab">Products and Services</a>
 			</div>
 		</div> -->
-		<div class="col-md-12 banking-tab-container" style="background-color:white;">
+		<div class="col-md-12 banking-tab-container" style="background-color:white;z-index:2;">
 			<a href="<?php echo url('/accounting/sales-overview')?>"
 				class="banking-tab">Overview</a>
 			<a href="<?php echo url('/accounting/all-sales')?>"

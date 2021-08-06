@@ -198,14 +198,16 @@ function TemplateCreate() {
     if (files && files.length) {
       for (let index = 0; index < eventFiles.length; index++) {
         const file = eventFiles[index];
-        if (files.find(f => f.file.name === file.name)) {
+        if (files.find((f) => f.file.name === file.name)) {
           alert(`File name already exists: ${file.name}`);
           return;
         }
       }
     }
 
-    const promises = [...eventFiles].map((file) => createFilePreview(event, file));
+    const promises = [...eventFiles].map((file) =>
+      createFilePreview(event, file)
+    );
     await Promise.all(promises);
   }
 
@@ -324,7 +326,7 @@ function TemplateCreate() {
 
     const $items = $(".esignBuilder__docPreview");
     let documentSequence = $items.map((_, item) => {
-      const file = files.find(f => f.id == $(item).attr("data-id"));
+      const file = files.find((f) => f.id == $(item).attr("data-id"));
       return file === undefined ? null : file.file.name;
     });
 
@@ -532,7 +534,7 @@ function TemplateCreate() {
     await onChangeFile(fakeEvent);
 
     let customerSet = false;
-    const _recipients = recipients.map((r) => {
+    let _recipients = recipients.map((r) => {
       if (!workorder && !job) return r;
       if (customerSet || r.name || r.email) return r;
 
@@ -543,12 +545,54 @@ function TemplateCreate() {
       return r;
     });
 
-    _recipients.forEach((recipient) =>
-      addRecipient({
-        ...recipient,
-        isPreparingTemplate,
-      })
-    );
+    if (!job || !job.id) {
+      return _recipients.forEach((recipient) =>
+        addRecipient({
+          ...recipient,
+          isPreparingTemplate,
+        })
+      );
+    }
+
+    // For jobs that are using the Master template.
+    _recipients.forEach((recipient) => {
+      let { role_name: role } = recipient;
+      role = role.toUpperCase();
+
+      if (role === "ESA Rep".toUpperCase()) {
+        if (job.employee) {
+          recipient.email = job.employee.email;
+          recipient.name = `${job.employee.FName} ${job.employee.LName}`;
+        }
+      }
+
+      if (role === "Client".toUpperCase()) {
+        recipient.email = job.email;
+        recipient.name = `${job.first_name} ${job.last_name}`;
+      }
+
+      if (role === "Admin".toUpperCase()) {
+        if (job.admin) {
+          recipient.email = job.admin.email;
+          recipient.name = `${job.admin.FName} ${job.admin.LName}`;
+        }
+      }
+    });
+
+    if (_recipients.every((recipient) => !recipient.email && !recipient.name)) {
+      // Nothing is set, or this job is not using the Master template,
+      // we'll set the first recipient as the job customer.
+      _recipients.forEach((recipient, index) => {
+        if (index === 0) {
+          recipient.email = job.email;
+          recipient.name = `${job.first_name} ${job.last_name}`;
+        }
+      });
+    }
+
+    _recipients.forEach((recipient) => {
+      addRecipient({ ...recipient, isPreparingTemplate });
+    });
   }
 
   async function getWorkorderCustomer(workorderId) {
@@ -596,7 +640,6 @@ function TemplateCreate() {
     prepareForm({ action });
     attachEventHandlers({ templateId, action });
     $(".card--loading").removeClass("card--loading");
-
 
     $sortable.disableSelection();
     $sortable.sortable({
@@ -755,7 +798,12 @@ function Recipient({
                       ${role.value}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start">
-                      ${roles.map((currRole) => `<li><a href="#"><i class="fa ${currRole.icon}"></i>${currRole.value}</a></li>`).join("")}
+                      ${roles
+                        .map(
+                          (currRole) =>
+                            `<li><a href="#"><i class="fa ${currRole.icon}"></i>${currRole.value}</a></li>`
+                        )
+                        .join("")}
                     </div>
                   </div>
               </div>
