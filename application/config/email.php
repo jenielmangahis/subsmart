@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------
@@ -18,4 +18,14 @@ $config['newline'] = "rn";
 $config['wordWrap'] = true;
 $config['mailpath'] = '/usr/sbin/sendmail';
 
-
+///Mailtrap Account => hamita4085@biohorta.com
+  $config = array(
+    'protocol' => 'smtp',
+    'smtp_host' => 'smtp.mailtrap.io',
+    'smtp_port' => 2525,
+    'smtp_user' => '48383e4249a71f',
+    'smtp_pass' => 'b01900e0930b3e',
+    'crlf' => "\r\n",
+    'newline' => "\r\n",
+    'mailtype' => "html"
+  );

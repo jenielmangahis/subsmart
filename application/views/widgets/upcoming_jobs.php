@@ -42,14 +42,17 @@
                                     <div class="job-status text-center mb-2" style="background:<?= $jb->event_color ?>; color:white;"><?php echo strtoupper($jb->status); ?></div>
                                     <span style="font-family: Sarabun, sans-serif !important;color: #9d9e9d;font-weight: 700;font-size: 10px;" class="text-center">ARRIVAL TIME</span><br/>
                                     <span class="job-caption text-center" style="font-weight:700; color: black; font-family: Sarabun, sans-serif !important; font-size:10px">
-                                        <?php echo get_format_time($jb->date_created); ?>-<?php echo get_format_time_plus_hours($jb->date_created); ?>
+                                        <?php echo $jb->start_time; ?>-<?php echo $jb->end_time; ?>
                                     </span>
                                 </div>
                                 <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
-                                    <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
+                                    <a href="<?php echo base_url('job/new_job1/' . $jb->id); ?>">
                                         <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
                                         <b style="color:#45a73c;">
                                             <?= $jb->first_name. ' '. $jb->last_name; ?>
+                                            <?php if( $jb->cust_phone != '' ){ ?>
+                                                <a style="margin-left: 10px;" href="tel:<?= $jb->cust_phone; ?>"><i class="fa fa-phone-square"></i></a>
+                                            <?php } ?>
                                         </b><br>
                                        <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
                                        <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i>

@@ -536,7 +536,13 @@ border: none;
                                 <br>
 
                                 <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
-                                <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
+                                <input type="hidden" id="current_date" value="<?php 
+                                $dt = new DateTime();
+                                $timestamp = time();
+                                $dt->setTimezone(new DateTimeZone($getSettings->value));
+                                $dt->setTimestamp($timestamp);
+                                
+                                echo $dt->format('m-d-Y'); ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header2" value="<?php echo $headers->content; ?>">
                             </div>
@@ -2425,21 +2431,37 @@ $('#security_number').keyup(function() {
     });
 
 
-$('#phone_no').keyup(function () {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
+// $('#phone_no').keyup(function () {
+//     var foo = $(this).val().split("-").join(""); // remove hyphens
+//     if (foo.length > 0) {
+//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+//     }
+//     $(this).val(foo);
+// });
 
-$('#mobile_no').keyup(function () {
-    var foo = $(this).val().split("-").join(""); // remove hyphens
-    if (foo.length > 0) {
-        foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
-    }
-    $(this).val(foo);
-});
+$('#phone_no').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+// $('#mobile_no').keyup(function () {
+//     var foo = $(this).val().split("-").join(""); // remove hyphens
+//     if (foo.length > 0) {
+//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+//     }
+//     $(this).val(foo);
+// });
+
+$('#mobile_no').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
 
 </script>
 

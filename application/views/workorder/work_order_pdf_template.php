@@ -128,11 +128,11 @@ table {
                         <tr>
                             <td data-column=""><?php echo $item->title; ?></td>
                             <td data-column=""><?php echo $item->qty; ?></td>
-                            <td data-column=""><?php echo $item->costing; ?></td>
+                            <td data-column=""><?php echo number_format($item->costing,2); ?></td>
                             <td data-column=""><?php //echo $item->discount; ?>0</td>
-                            <td data-column=""><?php echo $item->tax; ?> </td>
+                            <td data-column=""><?php echo number_format($item->tax,2); ?> </td>
                             <td data-column=""><?php //echo $item->total; 
-                             $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
+                             $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
                         </tr>
                         <?php } ?>
                         <tr style="background-color: #F7F4FF !important;">
@@ -141,7 +141,7 @@ table {
                             <td data-column=""></td>
                             <td data-column=""></td>
                             <td data-column=""></td> -->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo $subtotal; ?></td>
+                            <td style="background-color: #F8F8F8 !important;"><?php echo number_format($subtotal,2); ?></td>
                         </tr>
                         <tr style="background-color: #E9DDFF !important;">
                             <td colspan="5" style="background-color: #F8F8F8 !important;">Taxes</td>
@@ -149,7 +149,7 @@ table {
                             <td data-column=""></td>
                             <td data-column=""></td> 
                             <td data-column=""></td>-->
-                            <td style="background-color: #F8F8F8 !important;"><?php echo $taxes; ?></td>
+                            <td style="background-color: #F8F8F8 !important;"><?php echo number_format($taxes,2); ?></td>
                         </tr>
                         <?php if(empty($adjustment_value)){  } else{ ?>
                         <tr style="background-color: #F3F3F3 !important;">
@@ -196,7 +196,7 @@ table {
                             <td data-column=""></td>
                             <td data-column=""></td>
                             <td data-column=""></td> -->
-                            <td style="background-color: #F8F8F8 !important;"><b><?php echo $total; ?></b></td>
+                            <td style="background-color: #F8F8F8 !important;"><b><?php echo number_format($total,2); ?></b></td>
                         </tr>
                     </tbody>
                 </table></div></center>
@@ -355,14 +355,14 @@ table {
                         <td align="center">
                             <?php if(empty($primary_account_holder_signature)){ } else{ ?>
                             <img src="<?php echo base_url($primary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $second->FName.' '.$second->LName; ?>
+                            <?php echo $primary_account_holder_name; ?>
                             <?php } ?>
                         </td>
                         
                         <td align="center">
                             <?php if(empty($secondary_account_holder_signature)){ } else{ ?>
                             <img src="<?php echo base_url($secondary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $third->FName.' '.$third->LName; ?>
+                            <?php echo $secondary_account_holder_name; ?>
                             <?php } ?>
                         </td>
                     </tr>

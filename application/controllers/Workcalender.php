@@ -784,6 +784,7 @@ class Workcalender extends MY_Controller
         $this->load->model('GoogleAccounts_model');
         $this->load->model('ColorSettings_model');
         $this->load->model('DealsBookings_model');
+        $this->load->model('ColorSettings_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -1038,8 +1039,9 @@ class Workcalender extends MY_Controller
                 $start_date_end  = date('Y-m-d H:i:s', strtotime($j->end_date . " " . $j->end_time));
                 $backgroundColor = "#38a4f8";
 
-                if ($j->event_color != '') {
-                    $backgroundColor = $j->event_color;
+                $colorSetting = $this->ColorSettings_model->getById($j->event_color);
+                if($colorSetting){
+                    $backgroundColor = $colorSetting->color_code;
                 }
 
                 //$custom_html = "<i class='fa fa-calendar'></i> " . $j->start_time . " - " . $j->end_time . "<br /><small>" . $j->job_type . "</small><br /><small>" . $j->FName . ' ' . $j->LName . "</small><br /><small>" . $j->mail_add . " " . $j->cus_city . " " . $j->cus_state . "</small>";

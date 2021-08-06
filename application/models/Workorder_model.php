@@ -1431,6 +1431,21 @@ class Workorder_model extends MY_Model
         return $query->row();
     }
 
+    public function getSettings($company_id)
+    {
+        // $company_id = logged('company_id');
+        $where = array(
+            'company_id' => $company_id,
+            'key' => 'timezone',
+          );
+
+        $this->db->select('*');
+		$this->db->from('settings');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getCompanyCompanyId($id)
     {
         $this->db->select('company_id');
