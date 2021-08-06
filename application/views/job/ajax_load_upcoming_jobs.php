@@ -59,7 +59,9 @@
                     <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee4_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
                 <?php } ?>
                 <?php if( customerQrCode($jb->prof_id) ){ ?>
-                    <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 67px;left: 3px;" />
+                    <!-- <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 67px;left: 3px;" /> -->
+                    <br />
+                    <img style="margin-top: 20px;margin-bottom: 17px;" src="<?= customerQrCode($jb->prof_id); ?>" />
                 <?php } ?>
             </div>
         </div>
