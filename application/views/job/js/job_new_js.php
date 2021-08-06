@@ -396,14 +396,14 @@ if(isset($jobs_data)){
         $("#start_time").on( 'change', function () {
             var tag_id = this.value;
             console.log(tag_id);
-            var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
+            /*var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $settings['job_time_setting']; ?>,'hour').format('h:mm a');
 
             if(end_time === 'Invalid date') {
                 $('#end_time').val("");
             }else{
                $('#end_time').val(end_time);
             }
-            console.log(end_time);
+            console.log(end_time);*/
         });
 
         $("#job_type_option").on( 'change', function () {

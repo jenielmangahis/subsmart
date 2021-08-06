@@ -419,6 +419,9 @@ a.top-1 {
   .fc .fc-daygrid-event {
     padding: 6px !important;
   }
+  .fc-event{
+    max-width: 200px !important;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
