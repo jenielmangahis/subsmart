@@ -2,6 +2,9 @@
     .jobsRow:hover{
         background: #e8e8fa;
     }
+    .nav-subuser-img{
+        margin-top: 10px;
+    }
 </style>
 
 <div class="<?= $class ?>"  data-id="<?= $id ?>" id="widget_<?= $id ?>">
@@ -60,9 +63,19 @@
                                     </a>
                                 </div>
                                 <div class="col-lg-2 float-right" style="margin-top:40px !important; ">
-                                    <img style="position: absolute;width: 40px;" src="<?= base_url() ?>uploads/users/user-profile/<?= $jb->profile_img; ?>" onerror="this.onerror=null;this.src='<?= base_url() ?>uploads/users/default.png';" alt="user" class="rounded-circle nav-user-img vertical-center">
+                                    <img style="position: absolute;width: 40px;" src="<?php echo userProfileImage($jb->e_employee_id); ?>" alt="user" class="rounded-circle nav-user-img vertical-center">
+                                    <?php if( $jb->employee2_img != '' ){ ?>
+                                        <br />
+                                        <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee2_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
+                                    <?php } ?>
+                                    <?php if( $jb->employee3_img != '' ){ ?>
+                                        <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee3_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
+                                    <?php } ?>
+                                    <?php if( $jb->employee4_img != '' ){ ?>
+                                        <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee4_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
+                                    <?php } ?>
                                     <?php if( customerQrCode($jb->prof_id) ){ ?>
-                                        <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 50px;left: 3px;" />
+                                        <img src="<?= customerQrCode($jb->prof_id); ?>" style="margin-top: 20px;margin-bottom: 17px;" />
                                     <?php } ?>
                                 </div>
                             </div>

@@ -39,7 +39,8 @@
                         <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i><br>
                     <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
-                        <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount ,2,'.',',') : '0.00' ; ?></small> <br>
+                        <!-- <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount ,2,'.',',') : '0.00' ; ?></small> <br> -->
+                        <small>Amount : $ <?= number_format((float)$jobs_total_amount[$jb->id] ,2,'.',',') ; ?></small> <br>
                     <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
                         <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
