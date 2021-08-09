@@ -46,7 +46,8 @@
     border-bottom: solid 1px #D6E0ED;
 }
 
-#customer-single-modal .the-body .customer-list-section ul li:hover {
+#customer-single-modal .the-body .customer-list-section ul li:hover,
+#customer-single-modal .the-body .customer-list-section ul li.active {
     background-color: #F9FAFB;
     cursor: pointer;
 }
@@ -192,7 +193,7 @@
     box-shadow: none;
     border-right: none;
     font-size: 15px;
-    padding: 7px 35px;
+    padding: 7px 25px;
     height: auto;
     border: solid 1px #2CA01C;
 }
@@ -284,6 +285,9 @@
 
 #customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table {
     padding: 20px 0;
+    width: 100%;
+    overflow-y: auto;
+    height: 100%;
 }
 
 #customer-single-modal .single-customer-info-section .body-section .seaction-above-table .by-btach-btn {
@@ -315,8 +319,9 @@
     color: #393A3D;
     font-size: 14px;
     font-weight: 600;
-    text-align: center;
+    /* text-align: center; */
     text-transform: uppercase;
+    font-size: 13px;
 }
 
 #customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td {
@@ -339,4 +344,72 @@
     border-right: dotted 1px #C7C7C7;
     border-bottom: solid 1px #C7C7C7;
     height: 50px;
+}
+
+#customer-single-modal .dropdown-menu li a {
+    font-size: 13px;
+    color: #2C2C2C;
+}
+
+#customer-single-modal .dropdown-menu li {
+    padding: 5px 0;
+}
+
+#customer-single-modal .dropdown-menu li:hover,
+#customer-single-modal .dropdown-menu li:hover a {
+    color: #2CA01C;
+    background-color: #ECEDF1;
+}
+
+#customer-single-modal .dropdown a .btn-label {
+    padding: 10px;
+    color: #2C2C2C;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns button {
+    height: auto;
+    margin-left: 13px;
+    background: none;
+    border: 0;
+    font-size: 25px;
+    color: #BABEC5;
+    transition: 0.3s;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns button:hover {
+    color: #393A3D;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section {
+    position: relative;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options {
+    border: solid 1px #C7C7C7;
+    text-transform: capitalize;
+    position: absolute;
+    right: -10px;
+    top: 38px;
+    background: #fff;
+    color: #393A3D;
+    padding: 10px 15px;
+    font-size: 13px;
+    width: 188px;
+    z-index: 1;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options .achor-holder {
+    width: 20px;
+    position: absolute;
+    top: -13px;
+    right: 10px;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options .form-check {
+    padding-left: 0;
+}
+
+#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options .form-check label {
+    font-size: 13px;
+    padding-top: 5px;
 }

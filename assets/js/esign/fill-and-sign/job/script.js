@@ -122,15 +122,7 @@ function JobFillAndEsign() {
     });
 
     await approveJob();
-    const response = await Swal.fire({
-      title: "Good job!",
-      text: "Job Status Updated",
-      icon: "success",
-      showCancelButton: false,
-      confirmButtonColor: "#32243d",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Ok",
-    });
+    const response = await approveJobSuccessAlert();
 
     if (response.value) {
       window.location.reload();
@@ -147,38 +139,44 @@ function JobFillAndEsign() {
       return saveSignatureOnly();
     }
 
-    if (documentObj.isRecent) {
-      initStep2(documentObj.id);
-      return;
-    }
-
-    if (documentObj.isTemplate) {
-      const $fillAndSignNext = $("#fillAndSignNext");
-      const jobId = $fillAndSignNext.data("id");
-      const isSuccess = await approveJob();
-
-      if (isSuccess) {
-        const { id: templateId } = documentObj;
-        window.location = `${prefixURL}/eSign/templatePrepare?id=${templateId}&job_id=${jobId}`;
-      } else {
-        await Swal.fire({
-          title: "Warning!",
-          text: "There is an error updating job status. Contact Administrator!",
-          icon: "warning",
-          showCancelButton: false,
-          confirmButtonColor: "#32243d",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ok",
-        });
+    if (documentObj) {
+      if (documentObj.isRecent) {
+        initStep2(documentObj.id);
+        return;
       }
 
-      return;
+      if (documentObj.isTemplate) {
+        const $fillAndSignNext = $("#fillAndSignNext");
+        const jobId = $fillAndSignNext.data("id");
+        const isSuccess = await approveJob();
+
+        if (isSuccess) {
+          const { id: templateId } = documentObj;
+          window.location = `${prefixURL}/eSign/templatePrepare?id=${templateId}&job_id=${jobId}`;
+        } else {
+          await Swal.fire({
+            title: "Warning!",
+            text: "There is an error updating job status. Contact Administrator!",
+            icon: "warning",
+            showCancelButton: false,
+            confirmButtonColor: "#32243d",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ok",
+          });
+        }
+
+        return;
+      }
     }
 
     const formData = new FormData();
     if (documentObj instanceof File) {
       formData.append("document", documentObj);
     } else {
+      if (!documentObj) {
+        return;
+      }
+
       formData.append("vault_file_id", documentObj.file_id);
     }
 
@@ -195,8 +193,27 @@ function JobFillAndEsign() {
     initStep2(document_id);
   }
 
-  function onClickSave() {
-    $modal.modal("hide");
+  async function onClickSave() {
+    await approveJob();
+    const response = await approveJobSuccessAlert();
+
+    if (response.value) {
+      window.location.reload();
+    }
+
+    // $modal.modal("hide");
+  }
+
+  async function approveJobSuccessAlert() {
+    return await Swal.fire({
+      title: "Good job!",
+      text: "Job Status Updated",
+      icon: "success",
+      showCancelButton: false,
+      confirmButtonColor: "#32243d",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Ok",
+    });
   }
 
   function attachEventHandlers() {

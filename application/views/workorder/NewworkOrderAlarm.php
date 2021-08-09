@@ -545,7 +545,7 @@ border: none;
                                         <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
                                 <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
-                                <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                                <input type="hidden" id="content_input" class="form-control" name="header_" value="<?php echo $headers->content; ?>">
                                 <input type="hidden" name="wo_id" value="<?php 
                                 foreach($ids as $id)
                                 {
@@ -652,7 +652,7 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="contact_ssn" class="label-element">SSN <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="security_number"
-												   id="ssn"
+												   id="security_number"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
                                                    required
 												   placeholder="Enter SSN"/>
@@ -679,7 +679,7 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_mobile" class="label-element">Mobile <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="s_mobile"
-												   id="spouse_contact_mobile"
+												   id="phone_no"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
 												   placeholder="Enter Mobile"/>
 
@@ -803,7 +803,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="1st_call_verification_name" class="label-element">1st Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
-                                               name="1st_verification_name"
+                                               name="1st_verification_name[]"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
                                                id="1st_call_verification_name"
                                                 placeholder="Enter 1st Call Verification Name"/>
@@ -827,11 +827,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="1st_number_type"
+                                            <input type="hidden" name="1st_number_type[]"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][0])) ? $workorder->emergency_call_list['phone']['type'][0] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="1st_number"
+                                            <input type="text" name="1st_number[]"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][0])) ? $workorder->emergency_call_list['phone']['number'][0] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -846,7 +846,7 @@ border: none;
                                                id="emergency_call_relation"
                                                value="<?php //echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
                                                 placeholder="Enter Relation"/> -->
-                                                <select name="1st_relation" id="1st_relation" class="form-control custom-select m_select">
+                                                <select name="1st_relation[]" id="1st_relation" class="form-control custom-select m_select">
                                                     <option value="">Choose Relation</option>
                                                     <option value="Owner">Owner</option>
                                                     <option value="Relative">Relative</option>
@@ -874,9 +874,9 @@ border: none;
 
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <label for="" class="label-element">2nd Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
-                                               name="2nd_verification_name"
+                                               name="1st_verification_name[]"
                                                id="2nd_call_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
                                                 placeholder="Enter 2nd Call Verification Name"/>
@@ -900,11 +900,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="2nd_number_type"
+                                            <input type="hidden" name="1st_number_type[]"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="2nd_number"
+                                            <input type="text" name="1st_number[]"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][1])) ? $workorder->emergency_call_list['phone']['number'][1] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -919,7 +919,7 @@ border: none;
                                                id="emergency_call_relation"
                                                value="<?php //echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
                                                 placeholder="Enter Relation"/> -->
-                                                <select name="2nd_relation" id="2nd_relation" class="form-control custom-select m_select">
+                                                <select name="1st_relation[]" id="2nd_relation" class="form-control custom-select m_select">
                                                     <option value="">Choose Relation</option>
                                                     <option value="Owner">Owner</option>
                                                     <option value="Relative">Relative</option>
@@ -949,7 +949,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
-                                               name="3rd_verification_name"
+                                               name="1st_verification_name[]"
                                                id="emergency_call_emergency_contact_1"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
                                                 placeholder="Enter Emergency Contact"/>
@@ -973,11 +973,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="3rd_number_type"
+                                            <input type="hidden" name="1st_number_type[]"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="3rd_number"
+                                            <input type="text" name="1st_number[]"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -992,7 +992,7 @@ border: none;
                                                id="emergency_call_relation"
                                                value="<?php //echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
                                                 placeholder="Enter Relation"/> -->
-                                                <select name="3rd_relation" id="3rd_relation" class="form-control custom-select m_select">
+                                                <select name="1st_relation[]" id="3rd_relation" class="form-control custom-select m_select">
                                                     <option value="">Choose Relation</option>
                                                     <option value="Owner">Owner</option>
                                                     <option value="Relative">Relative</option>
@@ -1014,7 +1014,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
-                                               name="4th_verification_name"
+                                               name="1st_verification_name[]"
                                                id="emergency_call_emergency_contact_2"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
                                                 placeholder="Enter Emergency Contact"/>
@@ -1038,11 +1038,11 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="4th_number_type"
+                                            <input type="hidden" name="1st_number_type[]"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="4th_number"
+                                            <input type="text" name="1st_number[]"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -1057,7 +1057,7 @@ border: none;
                                                id="emergency_call_relation"
                                                value="<?php //echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
                                                 placeholder="Enter Relation"/> -->
-                                                <select name="4th_relation" id="4th_relation" class="form-control custom-select m_select">
+                                                <select name="1st_relation[]" id="4th_relation" class="form-control custom-select m_select">
                                                     <option value="">Choose Relation</option>
                                                     <option value="Owner">Owner</option>
                                                     <option value="Relative">Relative</option>
@@ -1232,6 +1232,21 @@ border: none;
                                                    id="datepicker_dateissued"/>
                                         <!-- </div> -->
                                     <!-- </div> -->
+                                </div>
+
+                                
+                                <div class="col-md-4 form-group">
+                                <div class="select-wrap">
+                                    <label for="job_name" class="label-element">Job Name</label>
+                                    <input type="text" class="form-control input-element" name="job_name" id="job_name" />
+                                </div>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                <div class="select-wrap">
+                                        <label for="job_desc" class="label-element">Job Description</label>
+                                        <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control input-element"></textarea> 
+                                </div>                                           
                                 </div>
 
                                 <div class="col-md-4 form-group">
@@ -1646,7 +1661,7 @@ border: none;
 
                                         <div class="row" id="plansItemDiv">
 
-                                            <div class="col-md-12 table-responsive">
+                                            <div class="col-md-12">
                                             <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
@@ -1720,7 +1735,7 @@ border: none;
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity_w mobile_qty" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price_w hidden_mobile_view" name="price[]"
+                                            <td width="10%"><input type="number" class="form-control price_w price hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
@@ -1751,7 +1766,7 @@ border: none;
 
                                         <div class="row" id="plansItemDiv">
 
-                                            <div class="col-md-12 table-responsive">
+                                            <div class="col-md-12">
                                             <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
@@ -1826,7 +1841,7 @@ border: none;
                                                     </td>
                                                 <td width="10%"><input type="number" class="form-control quantity_w mobile_qty" name="quantity[]"
                                                         data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price_w hidden_mobile_view" name="price[]"
+                                                <td width="10%"><input type="number" class="form-control price_w price hidden_mobile_view" name="price[]"
                                                         data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
                                                         <div class="show_mobile_view"><span class="price">0</span>
                                                         <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
@@ -2366,14 +2381,14 @@ border: none;
                                            name="company_representative_approval_signature1a">
                                     <br>
 
-                                    <label for="comp_rep_approval">Printed Name</label>
+                                    <label for="comp_rep_approval">Printed Name <?php //echo logged('id'); ?></label>
                                     <!-- <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
                                            id="company_representative_printed_name" placeholder=""/> -->
                                         <select class="form-control mb-3" name="company_representative_printed_name">
-                                            <option value="0">Select Name</option>
+                                            <!-- <option value="0">Select Name</option> -->
                                             <?php foreach($users_lists as $ulist){ ?>
-                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php } ?>
                                         </select>
                                             <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
@@ -2464,6 +2479,14 @@ border: none;
 
                             <div class="signature_mobile signatureArea">
                             </div>
+                            <br><br>
+                                
+                                <div class="row">        
+                                    <div class="form-group col-md-6">
+                                        <label for="instructions" class="label-element">Instructions</label>
+                                        <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control input-element"></textarea>
+                                    </div>                                           
+                                </div>
 
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row" id="group_area">
@@ -2478,6 +2501,7 @@ border: none;
                                             <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
                                     </div>
                                 </div>
+
 
                                 <div class="col-md-6">
                                     <div class="form-group"> 
@@ -3256,6 +3280,104 @@ border: none;
             </div>
 
     <?php include viewPath('includes/footer'); ?>
+
+    <script>
+    $("#first_name").keyup(function () {
+      var value = $(this).val();
+      var value2 = $("#last_name").val();
+      $("#primary_account_holder_name").val(value + ' ' + value2);
+    }).keyup();
+
+    $("#last_name").keyup(function () {
+      var value2 = $(this).val();
+      var value = $("#first_name").val();
+      $("#primary_account_holder_name").val(value + ' ' + value2);
+    }).keyup();
+
+    $("#spouse_first_name").keyup(function () {
+      var value = $(this).val();
+      var value2 = $("#spouse_last_name").val();
+      $("#secondery_account_holder_name").val(value + ' ' + value2);
+    }).keyup();
+
+    $("#spouse_last_name").keyup(function () {
+      var value2 = $(this).val();
+      var value = $("#spouse_first_name").val();
+      $("#secondery_account_holder_name").val(value + ' ' + value2);
+    }).keyup();
+    </script>
+
+<script>
+// $('.value').on('keydown keyup mousedown mouseup', function() {
+//     	 var res = this.value, //grabs the value
+//     		 len = res.length, //grabs the length
+//     		 max = 9, //sets a max chars
+//     		 stars = len>0?len>1?len>2?len>3?len>4?'XXX-XX-':'XXX-X':'XXX-':'XX':'X':'', //this provides the masking and formatting
+//     		result = stars+res.substring(5); //this is the result
+//     	 $(this).attr('maxlength', max); //setting the max length
+//     	$(".number").val(result); //spits the value into the input
+//     });
+
+// $('#security_number').keyup(function() {
+//     var val = this.value.replace(/\D/g, '');
+//     var newVal = '';
+//     var sizes = [3, 2, 4];
+
+//     for (var i in sizes) {
+//       if (val.length > sizes[i]) {
+//         newVal += val.substr(0, sizes[i]) + '-';
+//         val = val.substr(sizes[i]);
+//       }
+//       else
+//         break;        
+//     }
+
+//     newVal += val;
+//     this.value = newVal;
+// });
+
+$('#security_number').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{2})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+
+// $('#phone_no').keyup(function () {
+//     var foo = $(this).val().split("-").join(""); // remove hyphens
+//     if (foo.length > 0) {
+//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+//     }
+//     $(this).val(foo);
+// });
+
+$('#phone_no').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+// $('#mobile_no').keyup(function () {
+//     var foo = $(this).val().split("-").join(""); // remove hyphens
+//     if (foo.length > 0) {
+//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+//     }
+//     $(this).val(foo);
+// });
+
+$('#contact_mobile').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+</script>
 
     <script>
 // $('.enter_signature').click(function(){
@@ -4290,6 +4412,55 @@ $("#thisdiv3").html(function() {
 // alert(now);  
       return $(this).html().replace("{current_date_3}", date);  
 
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#terms_of_use").val(function() { 
+
+    // var companyName = $('#company_name').val();
+    // var now = new Date();
+    // now.setDate(now.getDate()+3);
+    // var n=3; //number of days to add. 
+    // var t = new Date();
+    // t.setDate(t.getDate() + n); 
+    // var month = "0"+(t.getMonth()+1);
+    // var date = "0"+t.getDate();
+    // month = month.slice(-2);
+    // date = date.slice(-2);
+    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+    // var startDate = "16-APR-2021";
+    var startDate = new Date();
+    // var daaa = new Date();
+    
+    // var date = d.getDate();
+    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+    // var year = d.getFullYear();
+        
+    // var startDate = date + "-" + month + "-" + year;
+
+    // startDate = new Date(startDate.replace(/-/g, "/"));
+    var endDate = "", noOfDaysToAdd = 3, count = 0;
+    while(count < noOfDaysToAdd){
+        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+        if(endDate.getDay() != 0 && endDate.getDay() != 6){
+        count++;
+        }
+    }
+    //alert(endDate);
+    var month = "0"+(endDate.getMonth()+1);
+    var date = "0"+endDate.getDate();
+    month = month.slice(-2);
+    date = date.slice(-2);
+    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
+// alert(now);  
+      return $(this).val().replace("{current_date_3}", date);  
+
+});
 });
 });
 </script>

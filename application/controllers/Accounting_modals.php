@@ -5386,10 +5386,12 @@ class Accounting_modals extends MY_Controller {
 
         foreach($vendors as $vendor) {
             if($search !== null && $search !== '') {
-                if (stripos($vendor->display_name, $search) !== false) {
+                $stripos = stripos($vendor->display_name, $search);
+                if ($stripos !== false) {
+                    $searched = substr($vendor->display_name, $stripos, strlen($search));
                     $return['results'][] = [
                         'id' => 'vendor-'.$vendor->id,
-                        'text' => $vendor->display_name
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
                     ];
                 }
             } else {
@@ -5415,10 +5417,12 @@ class Accounting_modals extends MY_Controller {
             foreach($customers as $customer) {
                 $name = $customer->first_name . ' ' . $customer->last_name;
                 if($search !== null && $search !== '') {
-                    if (stripos($name, $search) !== false) {
+                    $stripos = stripos($name, $search);
+                    if ($stripos !== false) {
+                        $searched = substr($name, $stripos, strlen($search));
                         $return['results'][] = [
                             'id' => 'customer-'.$customer->prof_id,
-                            'text' => $name
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
                         ];
                     }
                 } else {
@@ -5433,10 +5437,12 @@ class Accounting_modals extends MY_Controller {
             foreach($employees as $employee) {
                 $name = $employee->FName . ' ' . $employee->LName;
                 if($search !== null && $search !== '') {
-                    if (stripos($name, $search) !== false) {
+                    $stripos = stripos($name, $search);
+                    if ($stripos !== false) {
+                        $searched = substr($name, $stripos, strlen($search));
                         $return['results'][] = [
                             'id' => 'employee-'.$employee->id,
-                            'text' => $name
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
                         ];
                     }
                 } else {
@@ -5451,8 +5457,8 @@ class Accounting_modals extends MY_Controller {
 
         if($search !== null && $search !== '') {
             usort($return['results'], function($a, $b) use ($search) {
-                $indexA = strpos($a['text'], $search) === false ? PHP_INT_MAX : strpos($a['text'], $search);
-                $indexB = strpos($b['text'], $search) === false ? PHP_INT_MAX : strpos($b['text'], $search);
+                $indexA = stripos($a['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($a['text'], "<strong>$search</strong>");
+                $indexB = stripos($b['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($b['text'], "<strong>$search</strong>");
                 return $indexA - $indexB;
             });
 
@@ -5486,5 +5492,119 @@ class Accounting_modals extends MY_Controller {
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->load->view('accounting/modals/add_vendor_modal', $this->page_data);
+    }
+
+    public function add_customer_details_modal()
+    {
+        $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+        $this->page_data['paymentMethods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
+        $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->load->view('accounting/modals/add_customer_modal', $this->page_data);
+    }
+
+    public function add_full_payee_details()
+    {
+        $post = $this->input->post();
+        
+        if($post['payee_type'] === 'vendor') {
+            $data = [
+                'company_id' =>logged('company_id'),
+                'title' => $post['title'],
+                'f_name' => $post['f_name'],
+                'm_name' => $post['m_name'],
+                'l_name' => $post['l_name'],
+                'suffix' => $post['suffix'],
+                'email' => $post['email'],
+                'company' => $post['company'],
+                'display_name' => $post['display_name'],
+                'to_display' => $post['use_display_name'],
+                'print_on_check_name' => $post['use_display_name'] === "1" ? $post['use_display_name'] : $post['print_on_check_name'],
+                'street' => $post['street'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip' => $post['zip'],
+                'country' => $post['country'],
+                'phone' => $post['phone'],
+                'mobile' => $post['mobile'],
+                'fax' => $post['fax'],
+                'website' => $post['website'],
+                'billing_rate' => $post['billing_rate'],
+                'terms' => $post['terms'],
+                'opening_balance' => $post['opening_balance'],
+                'opening_balance_as_of_date' => date("Y-m-d", strtotime($post['opening_balance_as_of_date'])),
+                'account_number' => $post['account_number'],
+                'tax_id' => $post['tax_id'],
+                'default_expense_account' => $post['default_expense_account'],
+                'notes' => $post['notes'],
+                'attachments' => isset($post['attachments']) ? json_encode($post['attachments']) : null,
+                'status' => 1,
+                'created_by' => logged('id'),
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $id = $this->vendors_model->createVendor($data);
+
+            $payee = $this->vendors_model->get_vendor_by_id($id);
+        } else {
+            $data = [
+                'fk_user_id' => logged('id'),
+                'company_id' => logged('company_id'),
+                'business_name' => $post['company'],
+                'first_name' => $post['f_name'],
+                'middle_name' => $post['m_name'],
+                'last_name' => $post['l_name'],
+                'prefix' => $post['title'],
+                'suffix' => $post['suffix'],
+                'mail_add' => $post['street'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip_code' => $post['zip'],
+                'country' => $post['country'],
+                'email' => $post['email'],
+                'phone_m' => $post['phone'],
+                'contact_phone1' => $post['mobile'],
+                'customer_type' => $post['customer_type']
+            ];
+
+            $id = $this->accounting_customers_model->createCustomer($data);
+            $payee = $this->accounting_customers_model->getCustomerDetails($id)[0];
+            $payee->id = $payee->prof_id;
+
+            if($id) {
+                $accountingDetails = [
+                    'customer_id' => $id,
+                    'company_id' => logged('company_id'),
+                    'display_name' => $post['display_name'],
+                    'use_display_name' => $post['use_display_name'],
+                    'print_check_name' => $post['print_on_check_name'],
+                    'fax_no' => $post['fax'],
+                    'website' => $post['website'],
+                    'is_sub_customer' => $post['sub_customer'],
+                    'parent_customer_id' => $post['parent_customer'],
+                    'bill_with' => $post['bill_with'],
+                    'shipping_address' => $post['shipping_address'],
+                    'shipping_city' => $post['shipping_city'],
+                    'shipping_state' => $post['shipping_state'],
+                    'shipping_zip' => $post['shipping_zip'],
+                    'shipping_country' => $post['shipping_country'],
+                    'notes' => $post['notes'],
+                    'tax_exempted' => $post['cust_tax_exempt'],
+                    'tax_rate' => $post['tax_rate'],
+                    'reason_for_exemption' => $post['reason_for_exemption'],
+                    'exemption_details' => $post['exemption_details'],
+                    'payment_method' => $post['cust_payment_method'],
+                    'delivery_method' => $post['delivery_method'],
+                    'payment_terms' => $post['cust_payment_terms'],
+                    'opening_balance' => $post['opening_balance'],
+                    'as_of_date' => date("Y-m-d", strtotime($post['as_of_date'])),
+                    'attachments' => isset($post['attachments']) ? json_encode($post['attachments']) : null
+                ];
+
+                $accDetailsId = $this->accounting_customers_model->add_customer_accounting_details($accountingDetails);
+            }
+        }
+
+        echo json_encode(['payee' => $payee]);
     }
 }

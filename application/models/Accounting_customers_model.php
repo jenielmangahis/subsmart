@@ -76,7 +76,7 @@ class Accounting_customers_model extends MY_Model
         $query = $this->db->query("SELECT *,
         business_profile.id as business_id, business_profile.street as bus_street, business_profile.city as bus_city, business_profile.state as bus_state, 
         business_profile.postal_code as bus_postal_code,
-        acs_profile.mail_add as acs_mail_add, acs_profile.city as acs_city, acs_profile.state as acs_state, acs_profile.zip_code as acs_zip_code
+        acs_profile.mail_add as acs_mail_add, acs_profile.city as acs_city, acs_profile.state as acs_state, acs_profile.zip_code as acs_zip_code, acs_profile.email as acs_email
         FROM acs_profile JOIN business_profile ON acs_profile.company_id = business_profile.company_id WHERE acs_profile.prof_id = ".$id);
         return $query->row();
     }
@@ -152,5 +152,11 @@ class Accounting_customers_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update('customer_types', $data);
         return $this->db->affected_rows();
+    }
+
+    public function add_customer_accounting_details($data)
+    {
+        $this->db->insert('customer_accounting_details', $data);
+        return $this->db->insert_id();
     }
 }

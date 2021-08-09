@@ -535,7 +535,7 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="contact_ssn" class="label-element">SSN</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="security_number"
-												   id="ssn"
+												   id="security_number"
 												   value="<?php echo $workorder->ssn; ?>"
 												   placeholder="Enter SSN"/>
 										</div>
@@ -561,7 +561,7 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_mobile" class="label-element">Mobile</label>
 											<input type="text" class="form-control input-element" name="s_mobile"
-												   id="spouse_contact_mobile"
+												   id="phone_no"
 												   value="<?php echo $workorder->s_mobile; ?>"
 												   placeholder="Enter Mobile"/>
 
@@ -578,7 +578,7 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_ssn" class="label-element">SSN</label>
 											<input type="text" class="form-control input-element" name="s_ssn"
-												   id="spouse_contact_ssn"
+												   id="security_number_spouse"
 												   value="<?php echo $workorder->s_ssn; ?>"
 												   placeholder="Enter SSN"/>
 										</div>
@@ -677,12 +677,15 @@ border: none;
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Emergency Call List</h5>
                                 </div>
+                                <?php 
+                                $count = 0; 
+                                foreach($contacts as $contact){ ?>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label>
+                                        <label for="1st_call_verification_name" class="label-element"><?php echo $count + 1; ?>st Call Verification Name</label>
                                         <input type="text" class="form-control input-element"
-                                               name="1st_verification_name"
-                                               value="<?php echo $workorder->first_verification_name; ?>"
+                                               name="1st_verification_name[]"
+                                               value="<?php echo $contact->name; ?>"
                                                id="1st_call_verification_name"
                                                 placeholder="Enter 1st Call Verification Name"/>
                                     <!-- </div> -->
@@ -690,6 +693,401 @@ border: none;
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="contact_phone" class="mobile_view">Phone Number</label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo $contact->phone_type; ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo $contact->phone_type; ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo $contact->phone; ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                                <select name="1st_relation[]" id="1st_relation" class="form-control custom-select m_select">
+                                                    <option value="<?php echo $contact->relation; ?>"><?php echo $contact->relation; ?></option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                <?php 
+                                $count++;
+                                    } 
+                                    if($count == 1){
+                                    ?>
+
+                                <div class="col-md-4 form-group">
+                                        <label for="" class="label-element">2nd Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="2nd_call_verification_name"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
+                                                placeholder="Enter 2nd Call Verification Name"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][1])) ? $workorder->emergency_call_list['phone']['number'][1] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="2nd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_1"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="3rd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_2"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="4th_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                    <?php } elseif($count == 2){ ?>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_1"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="3rd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_2"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="4th_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+                                        <?php } elseif($count == 3){ ?>
+
+                                            
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_2"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="4th_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                            <?php }elseif($count == 0){ ?>
+                                <div class="col-md-4 form-group">
+                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
+                                               id="1st_call_verification_name"
+                                                placeholder="Enter 1st Call Verification Name"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -705,27 +1103,22 @@ border: none;
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="1st_number_type"
+                                            <input type="hidden" name="1st_number_type[]"
                                                    class="type-input"
-                                                   value="<?php echo $workorder->first_number_type; ?>"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][0])) ? $workorder->emergency_call_list['phone']['type'][0] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="1st_number"
+                                            <input type="text" name="1st_number[]"
                                                    class="form-control"
-                                                   value="<?php echo $workorder->first_number; ?>"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][0])) ? $workorder->emergency_call_list['phone']['number'][0] : '' ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
                                     </div>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <!-- <input type="text" class="form-control input-element" name="1st_relation"
-                                               id="emergency_call_relation"
-                                               value="<?php //echo $workorder->first_relation; ?>"
-                                                placeholder="Enter Relation"/> -->
-                                                <select name="1st_relation" id="1st_relation" class="form-control custom-select m_select">
-                                                    <option value="<?php echo $workorder->first_relation; ?>"><?php echo $workorder->first_relation; ?></option>
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="1st_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
                                                     <option value="Owner">Owner</option>
                                                     <option value="Relative">Relative</option>
                                                     <option value="Employee">Employee</option>
@@ -737,28 +1130,181 @@ border: none;
                                                     <option value="Maintenance">Maintenance</option>
                                                     <option value="Other">Other</option>
                                                 </select>
-                                    <!-- </div> -->
                                 </div>
-                                <!-- <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_carrier_name">Carrier Name</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[carrier_name][]"
-                                               id="emergency_carrier_name"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['carrier_name'][0])) ? $workorder->emergency_call_list['carrier_name'][0] : '' ?>"
-                                               required placeholder="Enter Carrier Name"/>
-                                    </div>
-                                </div> -->
 
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class="form-group"> -->
+                                        <label for="" class="label-element">2nd Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="2nd_call_verification_name"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
+                                                placeholder="Enter 2nd Call Verification Name"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][1])) ? $workorder->emergency_call_list['phone']['number'][1] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="2nd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_1"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="3rd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
+                                        <input type="text" class="form-control input-element"
+                                               name="1st_verification_name[]"
+                                               id="emergency_call_emergency_contact_2"
+                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
+                                                placeholder="Enter Emergency Contact"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
+                                        <div class="input-group phone-input">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle"
+                                                        data-toggle="dropdown" aria-expanded="false"><span
+                                                            class="type-text"><?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?></span> <span
+                                                            class="caret"></span></button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="mobile">Mobile</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="home">Home</a></li>
+                                                    <li><a class="changePhoneType" href="javascript:;"
+                                                           data-type-value="work">Work</a></li>
+                                                </ul>
+                                            </span>
+                                            <input type="hidden" name="1st_number_type[]"
+                                                   class="type-input"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
+                                                   value="mobile"/>
+                                            <input type="text" name="1st_number[]"
+                                                   class="form-control"
+                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
+                                                   placeholder="Enter Phone"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
+                                                <select name="1st_relation[]" id="4th_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                </div>
+                                                <?php } ?>
+
+                                <!-- <div class="col-md-4 form-group">
                                         <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name</label>
                                         <input type="text" class="form-control input-element"
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
                                                value="<?php echo $workorder->second_verification_name; ?>"
-                                                placeholder="Enter 2nd Call Verification Name"/>
-                                    <!-- </div> -->
+                                               placeholder="Enter 2nd Call Verification Name"/>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -791,12 +1337,7 @@ border: none;
                                     </div>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class="form-group"> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <!-- <input type="text" class="form-control input-element" name="2nd_relation"
-                                               id="emergency_call_relation"
-                                               value="<?php //echo $workorder->second_relation; ?>"
-                                                placeholder="Enter Relation"/> -->
 
                                                 <select name="2nd_relation" id="2nd_relation" class="form-control custom-select m_select">
                                                     <option value="<?php echo $workorder->second_relation; ?>"><?php echo $workorder->second_relation; ?></option>
@@ -811,28 +1352,15 @@ border: none;
                                                     <option value="Maintenance">Maintenance</option>
                                                     <option value="Other">Other</option>
                                                 </select>
-                                    <!-- </div> -->
                                 </div>
-                                <!-- <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="emergency_carrier_name">Carrier Name</label>
-                                        <input type="text" class="form-control"
-                                               name="emergency_call_list[carrier_name][]"
-                                               id="emergency_carrier_name"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['carrier_name'][1])) ? $workorder->emergency_call_list['carrier_name'][1] : '' ?>"
-                                               required placeholder="Enter Carrier Name"/>
-                                    </div>
-                                </div> -->
 
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
                                         <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name</label>
                                         <input type="text" class="form-control input-element"
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
                                                value="<?php echo $workorder->third_verification_name; ?>"
                                                 placeholder="Enter Emergency Contact"/>
-                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -865,13 +1393,7 @@ border: none;
                                     </div>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class="form-group"> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <!-- <input type="text" class="form-control input-element" name="3rd_relation"
-                                               id="emergency_call_relation"
-                                               value="<?php //echo $workorder->third_relation; ?>"
-                                                placeholder="Enter Relation"/> -->
-
                                                 <select name="3rd_relation" id="3rd_relation" class="form-control custom-select m_select">
                                                     <option value="<?php echo $workorder->third_relation; ?>"><?php echo $workorder->third_relation; ?></option>
                                                     <option value="Owner">Owner</option>
@@ -885,20 +1407,15 @@ border: none;
                                                     <option value="Maintenance">Maintenance</option>
                                                     <option value="Other">Other</option>
                                                 </select>
-                                    <!-- </div> -->
                                 </div>
 
-                                <!-- <div class="col-md-3">
-								</div> -->
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
                                         <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name</label>
                                         <input type="text" class="form-control input-element"
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
                                                value="<?php echo $workorder->fourth_verification_name; ?>"
                                                 placeholder="Enter Emergency Contact"/>
-                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -931,12 +1448,7 @@ border: none;
                                     </div>
                                 </div>
                                 <div class="col-md-4 form-group">
-                                    <!-- <div class=""> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <!-- <input type="text" class="form-control input-element" name="4th_relation"
-                                               id="emergency_call_relation"
-                                               value="<?php //echo $workorder->fourth_relation; ?>"
-                                                placeholder="Enter Relation"/> -->
 
                                                 <select name="4th_relation" id="4th_relation" class="form-control custom-select m_select">
                                                     <option value="<?php echo $workorder->fourth_relation; ?>"><?php echo $workorder->fourth_relation; ?></option>
@@ -951,8 +1463,7 @@ border: none;
                                                     <option value="Maintenance">Maintenance</option>
                                                     <option value="Other">Other</option>
                                                 </select>
-                                    <!-- </div> -->
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- ====== CUSTOMER ACCOUNT INFORMATION ====== -->
@@ -1106,6 +1617,20 @@ border: none;
                                                    id="datepicker_dateissued"/>
                                         <!-- </div> -->
                                     <!-- </div> -->
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                <div class="select-wrap">
+                                    <label for="job_name" class="label-element">Job Name</label>
+                                    <input type="text" class="form-control input-element" name="job_name" id="job_name" />
+                                </div>
+                                </div>
+
+                                <div class="col-md-4 form-group">
+                                <div class="select-wrap">
+                                        <label for="job_desc" class="label-element">Job Description</label>
+                                        <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control input-element"></textarea> 
+                                </div>                                           
                                 </div>
 
                                 <div class="col-md-4 form-group">
@@ -2109,6 +2634,16 @@ border: none;
                                 </div>
                             </div>
 
+                            
+                            <br><br>
+                                
+                                <div class="row">        
+                                    <div class="form-group col-md-6">
+                                        <label for="instructions" class="label-element">Instructions</label>
+                                        <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control input-element"></textarea>
+                                    </div>                                           
+                                </div>
+
 
                             <!-- <div class="signature_mobile">
                                     <br><br>
@@ -2643,6 +3178,86 @@ border: none;
         format: 'yyyy-mm-dd'
     });
   } );
+</script>
+
+<script>
+// $('.value').on('keydown keyup mousedown mouseup', function() {
+//     	 var res = this.value, //grabs the value
+//     		 len = res.length, //grabs the length
+//     		 max = 9, //sets a max chars
+//     		 stars = len>0?len>1?len>2?len>3?len>4?'XXX-XX-':'XXX-X':'XXX-':'XX':'X':'', //this provides the masking and formatting
+//     		result = stars+res.substring(5); //this is the result
+//     	 $(this).attr('maxlength', max); //setting the max length
+//     	$(".number").val(result); //spits the value into the input
+//     });
+
+// $('#security_number').keyup(function() {
+//     var val = this.value.replace(/\D/g, '');
+//     var newVal = '';
+//     var sizes = [3, 2, 4];
+
+//     for (var i in sizes) {
+//       if (val.length > sizes[i]) {
+//         newVal += val.substr(0, sizes[i]) + '-';
+//         val = val.substr(sizes[i]);
+//       }
+//       else
+//         break;        
+//     }
+
+//     newVal += val;
+//     this.value = newVal;
+// });
+
+$('#security_number').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{2})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+    $('#security_number_spouse').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{2})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+
+// $('#phone_no').keyup(function () {
+//     var foo = $(this).val().split("-").join(""); // remove hyphens
+//     if (foo.length > 0) {
+//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+//     }
+//     $(this).val(foo);
+// });
+
+$('#phone_no').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
+// $('#mobile_no').keyup(function () {
+//     var foo = $(this).val().split("-").join(""); // remove hyphens
+//     if (foo.length > 0) {
+//         foo = foo.match(new RegExp('.{1,3}', 'g')).join("-");
+//     }
+//     $(this).val(foo);
+// });
+
+$('#contact_mobile').keyup(function() {
+        var val = this.value.replace(/\D/g, '');
+        val = val.replace(/^(\d{3})/, '$1-');
+        val = val.replace(/-(\d{3})/, '-$1-');
+        val = val.replace(/(\d)-(\d{4}).*/, '$1-$2');
+        this.value = val;
+    });
+
 </script>
     <script>
 // $("#company_representative_approval_signature1aM").on("click touchstart",
@@ -3360,6 +3975,55 @@ $("#thisdiv3").html(function() {
 
 // alert(now);  
       return $(this).html().replace("{current_date_3}", date);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#terms_of_use").val(function() { 
+
+    // var companyName = $('#company_name').val();
+    // var now = new Date();
+    // now.setDate(now.getDate()+3);
+    // var n=3; //number of days to add. 
+    // var t = new Date();
+    // t.setDate(t.getDate() + n); 
+    // var month = "0"+(t.getMonth()+1);
+    // var date = "0"+t.getDate();
+    // month = month.slice(-2);
+    // date = date.slice(-2);
+    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+    // var startDate = "16-APR-2021";
+    var startDate = new Date();
+    // var daaa = new Date();
+    
+    // var date = d.getDate();
+    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+    // var year = d.getFullYear();
+        
+    // var startDate = date + "-" + month + "-" + year;
+
+    // startDate = new Date(startDate.replace(/-/g, "/"));
+    var endDate = "", noOfDaysToAdd = 3, count = 0;
+    while(count < noOfDaysToAdd){
+        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+        if(endDate.getDay() != 0 && endDate.getDay() != 6){
+        count++;
+        }
+    }
+    //alert(endDate);
+    var month = "0"+(endDate.getMonth()+1);
+    var date = "0"+endDate.getDate();
+    month = month.slice(-2);
+    date = date.slice(-2);
+    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
+// alert(now);  
+      return $(this).val().replace("{current_date_3}", date);  
 
 });
 });

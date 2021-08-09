@@ -1,4 +1,6 @@
 function TemplateCreate() {
+  const PDFJS = pdfjsLib;
+
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   const validFileExtensions = ["pdf"];
 
@@ -36,6 +38,7 @@ function TemplateCreate() {
 
     try {
       document = await PDFJS.getDocument({ url: documentUrl });
+      document = await document.promise;
     } catch (error) {
       alert(error);
       return;
@@ -97,10 +100,8 @@ function TemplateCreate() {
     const $docTitle = $docPreview.find(".esignBuilder__docTitle");
     const $docPageCount = $docPreview.find(".esignBuilder__docPageCount");
     const $docModalTitle = $docModal.find(".modal-title");
-    const context = $canvas.getContext("2d");
 
     $docPreview.removeClass("d-none");
-    context.clearRect(0, 0, $canvas.width, $canvas.height);
     $docPreview.removeClass("esignBuilder__docPreview--completed");
     $progress.removeClass("esignBuilder__uploadProgress--completed");
     $progressCheck.removeClass("esignBuilder__uploadProgressCheck--completed");
@@ -111,14 +112,14 @@ function TemplateCreate() {
     $docModalTitle.text(file.name);
     $docPageCount.text(`${document.numPages} page`);
 
-    const scaleRequired = $canvas.width / documentPage.getViewport(1).width;
-    const viewport = documentPage.getViewport(scaleRequired);
-    const canvasContext = {
-      viewport,
-      canvasContext: context,
-    };
+    const viewport = documentPage.getViewport({ scale: 1 });
+    $canvas.height = viewport.height;
+    $canvas.width = viewport.width;
 
-    await documentPage.render(canvasContext);
+    await documentPage.render({
+      viewport,
+      canvasContext: $canvas.getContext("2d"),
+    });
 
     $docPreview.addClass("esignBuilder__docPreview--completed");
     $progress.addClass("esignBuilder__uploadProgress--completed");
@@ -250,17 +251,19 @@ function TemplateCreate() {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
 
-    const document = await PDFJS.getDocument({ url: documentUrl });
+    let document = await PDFJS.getDocument({ url: documentUrl });
+    document = await document.promise;
+
     for (index = 1; index <= document.numPages; index++) {
       const canvas = window.document.createElement("canvas");
       $modalBody.append(canvas);
 
       const documentPage = await document.getPage(index);
-      const viewport = documentPage.getViewport(1);
+      const viewport = documentPage.getViewport({ scale: 1.3 });
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
-      documentPage.render({
+      await documentPage.render({
         viewport,
         canvasContext: canvas.getContext("2d"),
       });

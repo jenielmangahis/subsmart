@@ -291,7 +291,7 @@
                                     }else{
                                         ?>
                                         <label>Enter Url</label>
-                                        <input type="url" name="link" class="form-control checkDescription">
+                                        <input type="url" name="link" value="<?= base_url() ?>share_Link/public_view/<?= $this->uri->segment(3) ?>" class="form-control checkDescription">
                                         <?php
                                     } ?>
                                 </div>

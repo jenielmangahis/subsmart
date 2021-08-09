@@ -1,4 +1,6 @@
 function Signing(hash) {
+  const PDFJS = pdfjsLib;
+
   const $documentContainer = $(".signing__documentContainer");
 
   const $signatureModal = $("#signatureModal");
@@ -26,7 +28,7 @@ function Signing(hash) {
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
-    const viewport = await documentPage.getViewport(1.5);
+    const viewport = await documentPage.getViewport({ scale: 1.5 });
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
@@ -169,7 +171,12 @@ function Signing(hash) {
     }
 
     if (["Checkbox", "Radio"].includes(field_name)) {
-      let { subCheckbox = [], isChecked, name, is_required } = JSON.parse(field.specs) || {};
+      let {
+        subCheckbox = [],
+        isChecked,
+        name,
+        is_required,
+      } = JSON.parse(field.specs) || {};
 
       if (!name) {
         name = field.unique_key;
@@ -185,7 +192,7 @@ function Signing(hash) {
         }
 
         return hasRequested ? value.subCheckbox : subCheckbox;
-      }
+      };
 
       if (value.hasOwnProperty("isChecked")) {
         isChecked = value.isChecked;
@@ -228,10 +235,11 @@ function Signing(hash) {
       if (subCheckbox.length) {
         $element.append(
           subCheckbox.map((option) => {
-            const { id, top = 0, left = 0, } = option;
+            const { id, top = 0, left = 0 } = option;
             let { isChecked = false } = option;
             if (value.subCheckbox) {
-              const f = value.subCheckbox.find(({ id: _id }) => _id === id) || {};
+              const f =
+                value.subCheckbox.find(({ id: _id }) => _id === id) || {};
               isChecked = Boolean(f.isChecked);
             }
 
@@ -268,7 +276,10 @@ function Signing(hash) {
         if (id === field.unique_key) {
           let _subCheckbox = getSubCheckboxes();
           if (field_name !== "Checkbox") {
-            _subCheckbox = _subCheckbox.map(f => ({ ...f, isChecked: false }))
+            _subCheckbox = _subCheckbox.map((f) => ({
+              ...f,
+              isChecked: false,
+            }));
           }
 
           const { data } = await storeFieldValue({
@@ -293,10 +304,7 @@ function Signing(hash) {
               return s.id !== id ? s : { ...s, isChecked: _isChecked };
             });
           } else {
-            newSubCheckbox = [
-              ...subCheckbox,
-              { id, isChecked: _isChecked },
-            ];
+            newSubCheckbox = [...subCheckbox, { id, isChecked: _isChecked }];
           }
 
           let payload = {
@@ -308,7 +316,7 @@ function Signing(hash) {
             payload = {
               subCheckbox: newSubCheckbox,
               isChecked: false,
-            }
+            };
           }
 
           const { data } = await storeFieldValue({
@@ -320,14 +328,16 @@ function Signing(hash) {
         }
 
         if ((!subCheckbox || !subCheckbox.length) && name) {
-          const $duplicate = $(`[type=checkbox][name=${name}]:not([id=${field.unique_key}])`);
+          const $duplicate = $(
+            `[type=checkbox][name=${name}]:not([id=${field.unique_key}])`
+          );
           const id = $duplicate.attr("id");
-          const duplicateField = data.fields.find(f => f.unique_key === id);
+          const duplicateField = data.fields.find((f) => f.unique_key === id);
 
           if (duplicateField) {
             const { subCheckbox } = JSON.parse(duplicateField.specs) || {};
             if (!subCheckbox || !subCheckbox.length) {
-              $duplicate.prop('checked', Boolean(value.isChecked));
+              $duplicate.prop("checked", Boolean(value.isChecked));
               await storeFieldValue({
                 id: duplicateField.id,
                 value: JSON.stringify({
@@ -335,7 +345,6 @@ function Signing(hash) {
                   isChecked: Boolean(value.isChecked),
                 }),
               });
-
             }
           }
         }
@@ -373,7 +382,7 @@ function Signing(hash) {
       const $element = createElementFromHTML(html);
 
       if (is_required) {
-        $element.addClass("docusignField__dropdown--isRequired")
+        $element.addClass("docusignField__dropdown--isRequired");
       }
 
       $element.on("change", function () {
@@ -520,7 +529,11 @@ function Signing(hash) {
         const { pageTop: top, left } = JSON.parse(coordinates);
 
         context.font = "12px monospace";
-        context.fillText(isString ? $element : text, left + (isString ? 40 : 0), top + 30);
+        context.fillText(
+          isString ? $element : text,
+          left + (isString ? 40 : 0),
+          top + 30
+        );
         return;
       }
 
@@ -540,7 +553,8 @@ function Signing(hash) {
     const filepath = file.path.replace(/^\/|\/$/g, "");
 
     const documentUrl = `${prefixURL}/${filepath}`;
-    const document = await PDFJS.getDocument({ url: documentUrl });
+    let document = await PDFJS.getDocument({ url: documentUrl });
+    document = await document.promise;
 
     const $container = createElementFromHTML(
       `<div class="signing__documentPDF" data-file-id="${file.id}"></div>`
@@ -765,7 +779,10 @@ function Signing(hash) {
         };
 
         if ($element.is("select")) {
-          if (isEmptyOrSpaces($element.val()) && $element.hasClass("docusignField__dropdown--isRequired")) {
+          if (
+            isEmptyOrSpaces($element.val()) &&
+            $element.hasClass("docusignField__dropdown--isRequired")
+          ) {
             scrollToElement();
             return;
           }
@@ -804,8 +821,13 @@ function Signing(hash) {
         }
 
         if (inputType !== undefined) {
-          const $parent = $input.closest(`.docusignField__${inputType}--isRequired`);
-          if ($parent.length && !$element.find(`input:${inputType}:checked`).length) {
+          const $parent = $input.closest(
+            `.docusignField__${inputType}--isRequired`
+          );
+          if (
+            $parent.length &&
+            !$element.find(`input:${inputType}:checked`).length
+          ) {
             scrollToElement();
             return;
           }

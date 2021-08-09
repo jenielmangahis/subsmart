@@ -579,7 +579,7 @@ li.multipleInput-email {
 														</tr>
 														</tr>
 															<td align="left"><div style="">Security Number: </div></td>
-															<td align="right"> <span id="view_ssn"><?php echo $workorder->security_number ?></span></td>
+															<td align="right"> <span id="view_ssn"><?php echo $workorder->security_number ?></span><input type="hidden" id="view_ssn_input" value="<?php echo $workorder->security_number ?>"></td>
 														</tr>
 														</tr>
 															<td align="left"><div style="">Source: </div></td>
@@ -672,14 +672,8 @@ li.multipleInput-email {
 															<ul>
 																<li><b>Contacts</b></li>
 																<li class="show_mobile_view"><hr></li>
-																<?php if(!empty($customer->first_verification_name)){ ?>
-																<li><a href="" class="ul-text"><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></a></li>
-																<?php } ?>
-																<?php if(!empty($customer->second_verification_name)){ ?>
-																<li><a href="" class="ul-text"><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></a></li>
-																<?php } ?>
-																<?php if(!empty($customer->third_verification_name)){ ?>
-																<li><a href="" class="ul-text"> <?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></a></li>
+																<?php foreach($contacts as $cont){ ?>
+																<li style = "text-transform:capitalize;"><p><a href="#" class="ul-text"><?php echo $cont->name ?> <br> <?php echo $cont->phone ?> <br> <?php echo $cont->relation ?></a></p></li>
 																<?php } ?>
 																
 															
@@ -1346,14 +1340,16 @@ $(document).ready(function()
 </script>
 
 <script>
-var mainStr = $("#view_ssn").text(),
-    vis = mainStr.slice(-4),
-    countNum = '';
+var ssn = $("#view_ssn").html();
+// var ssn = "123-45-6789";
+//     vis = mainStr.slice(-4),
+//     countNum = '';
 
-for(var i = (mainStr.length)-4; i>0; i--){
-    countNum += 'X';
-}
-$("#view_ssn").text(countNum+vis);
+// for(var i = (mainStr.length)-4; i>0; i--){
+//     countNum += 'X';
+// }
+var output = ssn.replace(/\d(?=.{5,})/g, "X");
+$("#view_ssn").text(output);
 </script>
 
 <script>
