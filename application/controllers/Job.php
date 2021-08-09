@@ -1613,6 +1613,18 @@ class Job extends MY_Controller
         }*/
         $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
 
+        $jobs_total_amount = array();
+        foreach($upcomingJobs as $j){
+            $jobItems = $this->jobs_model->get_specific_job_items($j->id);
+            $total_price = 0;
+            foreach ($jobItems as $item) {
+                $total_price += ($item->price * $item->qty);
+            }
+
+            $jobs_total_amount[$j->id] = $total_price;
+        }
+
+        $this->page_data['jobs_total_amount'] = $jobs_total_amount;
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
     }

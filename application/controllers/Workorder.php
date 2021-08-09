@@ -560,6 +560,7 @@ class Workorder extends MY_Controller
         $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
 
         $this->page_data['lead'] = $this->workorder_model->getleadSource($work->lead_source_id);
+        $this->page_data['contacts'] = $this->workorder_model->get_contacts($work->customer_id);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
@@ -4393,22 +4394,22 @@ class Workorder extends MY_Controller
             's_dob'                     => $this->input->post('s_dob'),
             's_ssn'                     => $this->input->post('s_ssn'),
             'notification_type'         => $this->input->post('notification_type'),
-            'first_verification_name'   => $this->input->post('1st_verification_name'),
-            'first_number'              => $this->input->post('1st_number'),
-            'first_number_type'         => $this->input->post('1st_number_type'),
-            'first_relation'            => $this->input->post('1st_relation'),
-            'second_verification_name'  => $this->input->post('2nd_verification_name'),
-            'second_number'             => $this->input->post('2nd_number'),
-            'second_number_type'        => $this->input->post('2nd_number_type'),
-            'second_relation'           => $this->input->post('2nd_relation'),
-            'third_verification_name'   => $this->input->post('3rd_verification_name'),
-            'third_number'              => $this->input->post('3rd_number'),
-            'third_number_type'         => $this->input->post('3rd_number_type'),
-            'third_relation'            => $this->input->post('3rd_relation'),
-            'fourth_verification_name'  => $this->input->post('4th_verification_name'),
-            'fourth_number'             => $this->input->post('4th_number'),
-            'fourth_number_type'        => $this->input->post('4th_number_type'),
-            'fourth_relation'           => $this->input->post('4th_relation'),
+            // 'first_verification_name'   => $this->input->post('1st_verification_name'),
+            // 'first_number'              => $this->input->post('1st_number'),
+            // 'first_number_type'         => $this->input->post('1st_number_type'),
+            // 'first_relation'            => $this->input->post('1st_relation'),
+            // 'second_verification_name'  => $this->input->post('2nd_verification_name'),
+            // 'second_number'             => $this->input->post('2nd_number'),
+            // 'second_number_type'        => $this->input->post('2nd_number_type'),
+            // 'second_relation'           => $this->input->post('2nd_relation'),
+            // 'third_verification_name'   => $this->input->post('3rd_verification_name'),
+            // 'third_number'              => $this->input->post('3rd_number'),
+            // 'third_number_type'         => $this->input->post('3rd_number_type'),
+            // 'third_relation'            => $this->input->post('3rd_relation'),
+            // 'fourth_verification_name'  => $this->input->post('4th_verification_name'),
+            // 'fourth_number'             => $this->input->post('4th_number'),
+            // 'fourth_number_type'        => $this->input->post('4th_number_type'),
+            // 'fourth_relation'           => $this->input->post('4th_relation'),
 
             'mail_add'                  => $this->input->post('monitored_location'), //new
             'city'                      => $this->input->post('city'), //new
@@ -4427,6 +4428,30 @@ class Workorder extends MY_Controller
         );
 
         $w_acs = $this->workorder_model->update_acs_alarm($acs);
+
+        $custID = $this->input->post('acs_id');
+
+        $deleteContacts =  $this->workorder_model->deleteContacts($custID);
+
+        
+        $ainame         = $this->input->post('1st_verification_name');
+        $number_type    = $this->input->post('1st_number_type');
+        $phonev         = $this->input->post('1st_number');
+        $relation       = $this->input->post('1st_relation');
+
+        // dd($ainame);
+
+        $ai = 0;
+        foreach($ainame as $row3){
+            $datav['name']          = $ainame[$ai];
+            $datav['phone_type']    = $number_type[$ai];
+            $datav['phone']         = $phonev[$ai];
+            $datav['relation']      = $relation[$ai];
+            $datav['customer_id']   = $custID;
+            $save_contactv          = $this->workorder_model->save_contact_new($datav);
+            $ai++;
+        }
+        
 
         
 
@@ -4461,6 +4486,10 @@ class Workorder extends MY_Controller
             // 'instructions'          => $this->input->post('instructions'),
             'header'                => $this->input->post('header'),
             'lead_source_id'        => $this->input->post('lead_source'),
+
+            'job_name'                              => $this->input->post('job_name'),
+            'job_description'                       => $this->input->post('job_description'),
+            'instructions'                          => $this->input->post('instructions'),
 
             //signature
             // 'company_representative_signature' => $this->input->post('company_representative_signature'),
@@ -5048,6 +5077,11 @@ class Workorder extends MY_Controller
 
     public function savenewWorkorderAlarm()
     {
+
+        
+        // $test         = $this->input->post('1st_verification_name');
+        // dd($test);
+
         $company_id  = getLoggedCompanyID();
         $user_id  = logged('id');
 
@@ -5193,67 +5227,87 @@ class Workorder extends MY_Controller
         // );
 
             // $notification_type          = $this->input->post('notification_type');
-            $first_verification_name    = $this->input->post('1st_verification_name');
-            $first_number               = $this->input->post('1st_number');
-            $first_number_type          = $this->input->post('1st_number_type');
-            $first_relation             = $this->input->post('1st_relation');//
-            $second_verification_name   = $this->input->post('2nd_verification_name');
-            $second_number              = $this->input->post('2nd_number');
-            $second_number_type         = $this->input->post('2nd_number_type');
-            $second_relation            = $this->input->post('2nd_relation');//
-            $third_verification_name    = $this->input->post('3rd_verification_name');
-            $third_number               = $this->input->post('3rd_number');
-            $third_number_type          = $this->input->post('3rd_number_type');
-            $third_relation             = $this->input->post('3rd_relation');//
-            $fourth_verification_name   = $this->input->post('4th_verification_name');
-            $fourth_number              = $this->input->post('4th_number');
-            $fourth_number_type         = $this->input->post('4th_number_type');
-            $fourth_relation            = $this->input->post('4th_relation');
+            // $first_verification_name    = $this->input->post('1st_verification_name');
+            // $first_number               = $this->input->post('1st_number');
+            // $first_number_type          = $this->input->post('1st_number_type');
+            // $first_relation             = $this->input->post('1st_relation');//
+            // $second_verification_name   = $this->input->post('2nd_verification_name');
+            // $second_number              = $this->input->post('2nd_number');
+            // $second_number_type         = $this->input->post('2nd_number_type');
+            // $second_relation            = $this->input->post('2nd_relation');//
+            // $third_verification_name    = $this->input->post('3rd_verification_name');
+            // $third_number               = $this->input->post('3rd_number');
+            // $third_number_type          = $this->input->post('3rd_number_type');
+            // $third_relation             = $this->input->post('3rd_relation');//
+            // $fourth_verification_name   = $this->input->post('4th_verification_name');
+            // $fourth_number              = $this->input->post('4th_number');
+            // $fourth_number_type         = $this->input->post('4th_number_type');
+            // $fourth_relation            = $this->input->post('4th_relation');
 
-            if(!empty($first_verification_name)){
-                $contact1 = array(
-                    'name'                     => $first_verification_name,
-                    'phone_type'               => $first_number,
-                    'phone'                    => $first_number_type,
-                    'relation'                 => $first_relation,
-                    'customer_id'              => $w_acs,
-                );
+            // if(!empty($first_verification_name)){
+            //     $contact1 = array(
+            //         'name'                     => $first_verification_name,
+            //         'phone_type'               => $first_number,
+            //         'phone'                    => $first_number_type,
+            //         'relation'                 => $first_relation,
+            //         'customer_id'              => $w_acs,
+            //     );
 
-                $contact = $this->workorder_model->save_contact($contact1);
-            }
-            if(!empty($second_verification_name)){
-                $contact2 = array(
-                    'name'                     => $second_verification_name,
-                    'phone_type'               => $second_number,
-                    'phone'                    => $second_number_type,
-                    'relation'                 => $second_relation,
-                    'customer_id'              => $w_acs,
-                );
+            //     $contact = $this->workorder_model->save_contact($contact1);
+            // }
+            // if(!empty($second_verification_name)){
+            //     $contact2 = array(
+            //         'name'                     => $second_verification_name,
+            //         'phone_type'               => $second_number,
+            //         'phone'                    => $second_number_type,
+            //         'relation'                 => $second_relation,
+            //         'customer_id'              => $w_acs,
+            //     );
 
-                $contact = $this->workorder_model->save_contact($contact2);
-            }
-            if(!empty($third_verification_name)){
-                $contact3 = array(
-                    'name'                     => $third_verification_name,
-                    'phone_type'               => $third_number,
-                    'phone'                    => $third_number_type,
-                    'relation'                 => $third_relation,
-                    'customer_id'              => $w_acs,
-                );
+            //     $contact = $this->workorder_model->save_contact($contact2);
+            // }
+            // if(!empty($third_verification_name)){
+            //     $contact3 = array(
+            //         'name'                     => $third_verification_name,
+            //         'phone_type'               => $third_number,
+            //         'phone'                    => $third_number_type,
+            //         'relation'                 => $third_relation,
+            //         'customer_id'              => $w_acs,
+            //     );
 
-                $contact = $this->workorder_model->save_contact($contact3);
-            }
-            if(!empty($fourth_verification_name)){
-                $contact4 = array(
-                    'name'                     => $fourth_verification_name,
-                    'phone_type'               => $fourth_number,
-                    'phone'                    => $fourth_number_type,
-                    'relation'                 => $fourth_relation,
-                    'customer_id'              => $w_acs,
-                );
+            //     $contact = $this->workorder_model->save_contact($contact3);
+            // }
+            // if(!empty($fourth_verification_name)){
+            //     $contact4 = array(
+            //         'name'                     => $fourth_verification_name,
+            //         'phone_type'               => $fourth_number,
+            //         'phone'                    => $fourth_number_type,
+            //         'relation'                 => $fourth_relation,
+            //         'customer_id'              => $w_acs,
+            //     );
 
-                $contact = $this->workorder_model->save_contact($contact4);
-            }
+            //     $contact = $this->workorder_model->save_contact($contact4);
+            // }
+
+            
+
+        $ainame         = $this->input->post('1st_verification_name');
+        $number_type    = $this->input->post('1st_number_type');
+        $phonev         = $this->input->post('1st_number');
+        $relation       = $this->input->post('1st_relation');
+
+        // dd($ainame);
+
+        $ai = 0;
+        foreach($ainame as $row3){
+            $datav['name']          = $ainame[$ai];
+            $datav['phone_type']    = $number_type[$ai];
+            $datav['phone']         = $phonev[$ai];
+            $datav['relation']      = $relation[$ai];
+            $datav['customer_id']   = $w_acs;
+            $save_contactv          = $this->workorder_model->save_contact_new($datav);
+            $ai++;
+        }
         
 
         $new_data = array(
@@ -5282,6 +5336,10 @@ class Workorder extends MY_Controller
             'date_issued'                           => $dateIssued,
             'plan_type'                             => $this->input->post('plan_type'),
             'lead_source_id'                        => $this->input->post('lead_source'),
+
+            'job_name'                              => $this->input->post('job_name'),
+            'job_description'                       => $this->input->post('job_description'),
+            'instructions'                          => $this->input->post('instructions'),
 
              //signature
              'company_representative_signature'     => $file_save,
@@ -5424,6 +5482,7 @@ class Workorder extends MY_Controller
                 $enhanced_services_automation = $this->workorder_model->save_automation($dataa);
                 $auto++;
             }
+
         // }
 
         // $enhanced_services_automation = $this->workorder_model->save_automation($automation);
@@ -5718,6 +5777,10 @@ class Workorder extends MY_Controller
 
         //    redirect('workorder');
         // }
+        
+
+
+
         if($addQuery > 0){
             $a          = $this->input->post('itemid');
             $packageID  = $this->input->post('packageID');

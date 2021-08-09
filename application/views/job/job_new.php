@@ -71,7 +71,7 @@ add_css(array(
                                             <p class=""><small>Scheduled</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>">
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Arrival'  ? 'btn-success' : 'btn-default' ; ?>">
                                                 <span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                             <p><small>Arrival</small></p>
                                         </div> &nbsp;&nbsp;
@@ -753,8 +753,8 @@ add_css(array(
                         </div>
                         <br>
                         <div class="col-sm-12">
-                            <p>Description of Job (optional)</p>
-                            <textarea name="job_description" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                            <p>Description of Job</p>
+                            <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                             <hr/>
                         </div>
                         <div class="col-md-12 table-responsive">

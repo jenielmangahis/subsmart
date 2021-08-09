@@ -84,7 +84,7 @@ add_css(array(
                                                 <label>First Name</label>
                                             </div>
                                             <div class="col-md-10">
-                                                <input type="text" readonly class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
+                                                <input type="text" readonly class="form-control" name="first_name" id="first_name" value="<?= $profile_info->first_name;  ?>" required/>
                                             </div>
                                         </div>
                                         <div class="row form_line">

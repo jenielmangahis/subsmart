@@ -1222,45 +1222,53 @@ select {
 }
 
 #edit-vendor-modal .modal-dialog,
-#new-vendor-modal .modal-dialog {
+#new-vendor-modal .modal-dialog,
+#new-customer-modal .modal-dialog {
     max-width: 1060px;
 }
 
 #edit-vendor-modal .modal-dialog .modal-body,
-#new-vendor-modal .modal-dialog .modal-body {
+#new-vendor-modal .modal-dialog .modal-body,
+#new-customer-modal .modal-dialog .modal-body {
     max-height: 480px;
 }
 
 #edit-vendor-modal .modal-dialog .modal-footer-vendor,
-#new-vendor-modal .modal-dialog .modal-footer-vendor {
+#new-vendor-modal .modal-dialog .modal-footer-vendor,
+#new-customer-modal .modal-dialog .modal-footer-customer {
     padding: 10px;
 }
 
 #edit-vendor-modal .modal-dialog .modal-footer-vendor button,
-#new-vendor-modal .modal-dialog .modal-footer-vendor button {
+#new-vendor-modal .modal-dialog .modal-footer-vendor button,
+#new-customer-modal .modal-dialog .modal-footer-customer button {
     border-radius: 36px;
 }
 
 #edit-vendor-modal .form-ib-group,
-#new-vendor-modal .form-ib-group {
+#new-vendor-modal .form-ib-group,
+#new-customer-modal .form-ib-group {
     display: block;
     width: 100%;
 }
 
 #edit-vendor-modal .form-ib-group .form-ib,
-#new-vendor-modal .form-ib-group .form-ib {
+#new-vendor-modal .form-ib-group .form-ib,
+#new-customer-modal .form-ib-group .form-ib {
     display: inline-block;
     position: relative;
     width: 100%;
 }
 
 #edit-vendor-modal .form-ib-group .form-ib label,
-#new-vendor-modal .form-ib-group .form-ib label {
+#new-vendor-modal .form-ib-group .form-ib label,
+#new-customer-modal .form-ib-group .form-ib label {
     font-weight: 600;
 }
 
 #edit-vendor-modal .form-ib-group .form-ib .form-textarea,
-#new-vendor-modal .form-ib-group .form-ib .form-textarea {
+#new-vendor-modal .form-ib-group .form-ib .form-textarea,
+#new-customer-modal .form-ib-group .form-ib .form-textarea {
     color: #363636;
     font-size: 16px;
     border-radius: 2px;
@@ -1272,7 +1280,8 @@ select {
 }
 
 #edit-vendor-modal .form-ib-group .form-ib .address-form,
-#new-vendor-modal .form-ib-group .form-ib .address-form {
+#new-vendor-modal .form-ib-group .form-ib .address-form,
+#new-customer-modal .form-ib-group .form-ib .address-form {
     width: 49%;
     display: inline-block;
     margin-top: 8px;

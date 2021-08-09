@@ -1,7 +1,12 @@
+<style>
+.nav-subuser-img{
+    margin-top: 10px;
+}
+</style>
 <div class="row" style="height: 250px; overflow-y: auto;">
   <div class="col-lg-12 col-md-12 col-sm-12">
     <?php if ( !empty($upcomingJobs) ) { ?>
-      <?php foreach($upcomingJobs as $jb){ ?>
+      <?php foreach($upcomingJobs as $jb){ ?>  
         <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: -1px; cursor: pointer">
             <div class="col-20 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
                 <a href="<?php echo base_url('workcalender/'); ?>">
@@ -34,7 +39,8 @@
                         <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i><br>
                     <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
-                        <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount ,2,'.',',') : '0.00' ; ?></small> <br>
+                        <!-- <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount ,2,'.',',') : '0.00' ; ?></small> <br> -->
+                        <small>Amount : $ <?= number_format((float)$jobs_total_amount[$jb->id] ,2,'.',',') ; ?></small> <br>
                     <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
                         <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
@@ -42,9 +48,21 @@
                 </a>
             </div>
             <div class="col-lg-1 float-right">
-                <img style="position: absolute;width: 40px;" src="<?= base_url() ?>uploads/users/user-profile/<?= $jb->profile_img; ?>" onerror="this.onerror=null;this.src='<?= base_url() ?>uploads/users/default.png';" alt="user" class="rounded-circle nav-user-img vertical-center">
+                <img style="position: absolute;width: 40px;" src="<?php echo userProfileImage($jb->e_employee_id); ?>" alt="user" class="rounded-circle nav-user-img vertical-center">
+                <?php if( $jb->employee2_img != '' ){ ?>
+                    <br />
+                    <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee2_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
+                <?php } ?>
+                <?php if( $jb->employee3_img != '' ){ ?>
+                    <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee3_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
+                <?php } ?>
+                <?php if( $jb->employee4_img != '' ){ ?>
+                    <img style="width: 40px;" src="<?php echo userProfileImage($jb->employee4_employee_id); ?>" alt="user" class="rounded-circle nav-user-img nav-subuser-img vertical-center">
+                <?php } ?>
                 <?php if( customerQrCode($jb->prof_id) ){ ?>
-                    <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 67px;left: 3px;" />
+                    <!-- <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 67px;left: 3px;" /> -->
+                    <br />
+                    <img style="margin-top: 20px;margin-bottom: 17px;" src="<?= customerQrCode($jb->prof_id); ?>" />
                 <?php } ?>
             </div>
         </div>

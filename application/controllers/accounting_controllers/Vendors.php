@@ -229,7 +229,7 @@ class Vendors extends MY_Controller
             'tax_id' => $this->input->post('tax_id'),
             'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
-            'attachments' => json_encode($this->input->post('attachments')),
+            'attachments' => isset($this->input->post('attachments')) ? json_encode($this->input->post('attachments')) : null,
             'status' => 1,
             'created_by' => logged('id'),
             'created_at' => date("Y-m-d H:i:s"),

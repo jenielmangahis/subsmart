@@ -6,6 +6,9 @@ function createElementFromHTML(htmlString) {
 }
 
 function Step3() {
+  console.clear();
+  const PDFJS = pdfjsLib;
+
   let fields = [];
 
   const $form = $("[data-form-step=3]");
@@ -27,7 +30,7 @@ function Step3() {
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
-    const viewport = await documentPage.getViewport(1.5);
+    const viewport = await documentPage.getViewport({ scale: 1.5 });
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
@@ -82,11 +85,11 @@ function Step3() {
     let docId = undefined;
 
     // const elementYTop = $element.get(0).offsetTop;
-    const elementYTop = (
+    const elementYTop =
       // get element offset top relative to parent
-      ($element.get(0).getBoundingClientRect().top + document.documentElement.scrollTop) -
-      $("#upload_file").get(0).offsetTop
-    );
+      $element.get(0).getBoundingClientRect().top +
+      document.documentElement.scrollTop -
+      $("#upload_file").get(0).offsetTop;
 
     const $pages = [...$docRenderer.find(".docPage")];
     for (let index = 0; index < $pages.length; index++) {
@@ -100,7 +103,8 @@ function Step3() {
       if ($docPage.attr("data-page") == 1) {
         docPageYBottom = docPageYBottom + docPageHeight;
       } else {
-        docPageYBottom = docPageYBottom + $docPage.get(0).offsetTop + docPageHeight;
+        docPageYBottom =
+          docPageYBottom + $docPage.get(0).offsetTop + docPageHeight;
       }
 
       // element is sitting on the current page
@@ -254,15 +258,22 @@ function Step3() {
       const isCheckbox = field_name === "Checkbox";
 
       $(".options #optionsRequired").removeAttr("checked");
-      $(".options #optionsRequired").prop("checked", Boolean(specs.is_required));
+      $(".options #optionsRequired").prop(
+        "checked",
+        Boolean(specs.is_required)
+      );
 
       $(".options__valuesItem:first").attr("data-key", field.unique_key);
-      $(".options__valuesItem:first").children(":first").attr("type", "checkbox");
+      $(".options__valuesItem:first")
+        .children(":first")
+        .attr("type", "checkbox");
 
       $(".options__valuesSubItems").empty();
       $(".options #optionsFieldName").val(specs.name ? specs.name : "");
 
-      const $valueItem = $(`.options__valuesItem[data-key=${field.unique_key}]`);
+      const $valueItem = $(
+        `.options__valuesItem[data-key=${field.unique_key}]`
+      );
 
       const $checkbox = $valueItem.find("[type=checkbox]");
       $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
@@ -277,7 +288,9 @@ function Step3() {
         $valueItem.attr("type", "radio");
         $valueItem.attr("data-key", item.id);
 
-        const $checkbox = $valueItem.find(`[type=${isCheckbox ? "checkbox" : "radio"}]`);
+        const $checkbox = $valueItem.find(
+          `[type=${isCheckbox ? "checkbox" : "radio"}]`
+        );
         $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
         $checkbox.prop("checked", item.isChecked);
         $checkbox.attr("name", specs.name ? specs.name : field.unique_key);
@@ -300,7 +313,9 @@ function Step3() {
 
         if (field_name === "Radio") {
           const $fieldParent = $field.parent(".esignBuilder__field");
-          $fieldParent.find(`.${selector}--checked`).removeClass(`${selector}--checked`);
+          $fieldParent
+            .find(`.${selector}--checked`)
+            .removeClass(`${selector}--checked`);
         }
 
         if (this.checked) {
@@ -326,10 +341,15 @@ function Step3() {
       $(".dropdown #dropdownName").val(specs.name ? specs.name : "");
       $(".dropdown .options__values").empty();
       $(".dropdown #requiredDropdown").removeAttr("checked");
-      $(".dropdown #requiredDropdown").prop("checked", Boolean(specs.is_required));
+      $(".dropdown #requiredDropdown").prop(
+        "checked",
+        Boolean(specs.is_required)
+      );
 
       if (specs && specs.values && specs.values.length) {
-        const $elements = specs.values.map(v => createDropdownInput({ value: v }));
+        const $elements = specs.values.map((v) =>
+          createDropdownInput({ value: v })
+        );
         $(".dropdown .options__values").append($elements);
       } else {
         const $element = createDropdownInput({ value: "" });
@@ -547,7 +567,7 @@ function Step3() {
 
       $adder = $element.find(`.${baseClassName}Adder`);
       $adder.on("click", async function () {
-        const id = Date.now()
+        const id = Date.now();
         const $currElement = createSubCheckbox({
           id,
           top: 0,
@@ -624,7 +644,9 @@ function Step3() {
       const { id, path } = data;
       const url = `${prefixURL}/${path.replace(/^\//, "")}`;
 
-      const document = await PDFJS.getDocument({ url });
+      let document = await PDFJS.getDocument({ url });
+      document = await document.promise;
+
       const $container = createElementFromHTML("<div></div>");
       $container.addClass("docPageContainer");
       $container.attr("data-document-id", id);
@@ -734,20 +756,23 @@ function Step3() {
           if ($docPage.attr("data-page") == 1) {
             docPageYBottom = docPageYBottom + docPageHeight;
           } else {
-            docPageYBottom = docPageYBottom + $docPage.get(0).offsetTop + docPageHeight;
+            docPageYBottom =
+              docPageYBottom + $docPage.get(0).offsetTop + docPageHeight;
           }
 
           // element is sitting on the current page
           if (elementYTop < docPageYBottom) {
             // pageTop = is the top position of the element inside its page
-            ui.position.pageTop = elementYTop - ($parent.get(0).offsetTop + $docPage.get(0).offsetTop);
+            ui.position.pageTop =
+              elementYTop -
+              ($parent.get(0).offsetTop + $docPage.get(0).offsetTop);
             $_document = $docPage;
             break;
           }
         }
 
         if ($_document === null) {
-          console.log($_document)
+          console.log($_document);
           return;
         }
 
@@ -857,7 +882,7 @@ function Step3() {
           is_required: $("#requiredText").is(":checked"),
           is_read_only: $("#readOnlyText").is(":checked"),
           name: !isEmpty(fieldName) ? fieldName : null,
-          value: fieldValue
+          value: fieldValue,
         };
       } else if (fieldType === "dropdown") {
         const $options = $(".dropdown .options__valuesItem input");
@@ -898,7 +923,9 @@ function Step3() {
 
         $(".options__valuesItem").each(function (_, element) {
           const $element = $(element);
-          const $checkbox = $element.find(`[type=${isCheckbox ? "checkbox" : "radio"}]`);
+          const $checkbox = $element.find(
+            `[type=${isCheckbox ? "checkbox" : "radio"}]`
+          );
           const $inputText = $element.find("[type=text]");
           const key = $element.attr("data-key");
 
@@ -911,8 +938,8 @@ function Step3() {
               return {
                 ...c,
                 isChecked: $checkbox.is(":checked"),
-                value: $inputText.val()
-              }
+                value: $inputText.val(),
+              };
             });
           }
         });
@@ -1036,7 +1063,9 @@ function Step3() {
     });
 
     $("#textFieldValue").on("input propertychange", function (event) {
-      const activeInputId = $(".esignBuilder__optionsSidebarFieldId span").text();
+      const activeInputId = $(
+        ".esignBuilder__optionsSidebarFieldId span"
+      ).text();
       $(`[data-key=${activeInputId}]`).text(event.target.value);
     });
   }

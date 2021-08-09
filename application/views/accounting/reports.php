@@ -229,7 +229,7 @@
                                                                     <a href="#" onclick="addToFavorites(this)" data-name="Balance Sheet" data-link="#" class="pr-4 text-secondary h6 pull-right"><i class="fa fa-star-o fa-lg"></i></a>
                                                                 </li>
                                                                 <li class="border-bottom p-3 cursor-pointer">
-                                                                    <a href="#" class=" font-weight-normal">Business Snapshot</a>
+                                                                    <a href="<?php echo url('accounting/business_snapshot')?>" class=" font-weight-normal">Business Snapshot</a>
                                                                     <a href="#" class="pl-1 text-secondary h6 position-relative top-1"><i class="fa fa-question-circle-o "></i></a>
 
                                                                     <div class="dropdown pull-right d-inline-block">

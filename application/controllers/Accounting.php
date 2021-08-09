@@ -620,6 +620,14 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/reports/balance_sheet_summary', $this->page_data);
     }
 
+    public function business_snapshot()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['page_title'] = "Business Snapshot";
+        $this->load->view('accounting/reports/business_snapshot', $this->page_data);
+    }
+
     /* payscale */
 
     public function employeeinfo()
@@ -8513,5 +8521,157 @@ class Accounting extends MY_Controller
             $data->result="denied";
             echo json_encode($data);
         }
+    }
+    public function single_customer_page_get_all_customers()
+    {
+        $counter =0;
+        $html='';
+        $customers = $this->accounting_customers_model->getAllByCompany();
+        foreach ($customers as $cus) {
+            $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
+            $receivable_payment = 0;
+            $total_amount_received =0;
+            foreach ($invoices as $inv) {
+                if (is_numeric($inv->grand_total)) {
+                    $receivable_payment+=$inv->grand_total;
+                }
+                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->payment_amount;
+                }
+            }
+            $amount =($receivable_payment - $total_amount_received);
+            $html .= '<li data-customer-id="'.$cus->prof_id.'" data-name="'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'" data-open-balance="'.$amount.'">
+                            <div class="name" >'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</div>
+                            <div class="open-balance">$'.number_format(($amount), 2).'</div>
+                        </li>';
+            $counter++;
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        echo json_encode($data);
+    }
+    public function single_customer_get_customers_details()
+    {
+        $counter =0;
+        $html='';
+        $customer_id=$this->input->post("customer_id");
+        $customer = $this->accounting_customers_model->getCustomerDetails($customer_id);
+        $open_balance=0;
+        $overdue=0;
+        foreach ($customer as $cus) {
+            $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
+            $receivable_payment = 0;
+            $total_amount_received =0;
+            foreach ($invoices as $inv) {
+                if (is_numeric($inv->grand_total)) {
+                    $receivable_payment+=$inv->grand_total;
+                }
+                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                $amount_received=0;
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->payment_amount;
+                    $amount_received+=$payment->payment_amount;
+                }
+                if (date("Y-m-d", strtotime($inv->due_date)) < date("Y-m-d")) {
+                    $overdue+=($inv->grand_total-$amount_received);
+                }
+            }
+            $open_balance +=($receivable_payment - $total_amount_received);
+            $counter++;
+        }
+        $data = new stdClass();
+        $data->open_balance = number_format(($open_balance), 2);
+        $data->overdue = number_format(($overdue), 2);
+        $data->customer_details = $customer;
+        echo json_encode($data);
+    }
+    public function single_customer_get_transaction_lists()
+    {
+        $tbody_html="";
+        $counter=0;
+        $customer_id=$this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
+        $tr_html="";
+        foreach ($invoices as $inv) {
+                $receivable_payment = 0;
+                $total_amount_received =0;
+                $tr_html="";
+                if (is_numeric($inv->grand_total)) {
+                    $receivable_payment=$inv->grand_total;
+                }
+                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->payment_amount;
+                }
+
+                $balance=$receivable_payment-$total_amount_received;
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->payment_amount;
+                    $amount_received=$payment->payment_amount;
+                    
+                    $this->page_data['date']=$payment->payment_date;
+                    $this->page_data['type']="Payment";
+                    $this->page_data['no']=$payment->ref_no;
+                    $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                    $this->page_data['method']=$payment->payment_method;
+                    $this->page_data['source']="";
+                    $this->page_data['memo']=$payment->memo;
+                    $this->page_data['duedate']=$inv->due_date;
+                    $this->page_data['aging']=$this->get_date_difference_indays($payment->payment_date,date("Y-m-d"));
+                    $this->page_data['balance']=$balance;
+                    $this->page_data['total']=$balance-$payment->payment_amount;
+                    $this->page_data['last_delivered']="";
+                    $this->page_data['email']=$customer_info->acs_email;
+                    $this->page_data['atatchement']="";
+                    $this->page_data['status']="Closed";
+                    $this->page_data['ponumber']="";
+                    $this->page_data['sales_rep']="";
+                    $this->page_data['customer_id']=$customer_id;
+                    $this->page_data['invoice_payment_id']=$payment->id;
+                    $this->page_data['invoice_id']=$inv->id;
+                    $tr_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data,true);
+                }
+                if($balance <= 0){
+                    $status="Paid";
+                }else{
+                    $status="Open";
+                }
+                $this->page_data['date']=$inv->date_issued;
+                $this->page_data['type']="Invoice";
+                $this->page_data['no']=$inv->invoice_number;
+                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                $this->page_data['method']="";
+                $this->page_data['source']="";
+                $this->page_data['memo']="";
+                $this->page_data['duedate']=$inv->due_date;
+                $this->page_data['aging']=$this->get_date_difference_indays($inv->date_issued,date("Y-m-d"));
+                $this->page_data['balance']=$balance;
+                $this->page_data['total']=$receivable_payment;
+                $this->page_data['last_delivered']="";
+                $this->page_data['email']=$inv->customer_email;
+                $this->page_data['atatchement']="";
+                $this->page_data['status']=$status;
+                $this->page_data['ponumber']="";
+                $this->page_data['sales_rep']="";
+                $this->page_data['customer_id']=$customer_id;
+                $this->page_data['invoice_payment_id']="";
+                $this->page_data['invoice_id']=$inv->id;
+                $tbody_html.=$tr_html;
+                $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data,true);
+        }
+        
+        $data = new stdClass();
+        $data->tbody_html = $tbody_html;
+        echo json_encode($data);
+    }
+    public function get_date_difference_indays($date_from = "",$date_to="")
+    {
+        $date_1 = strtotime($date_to); // or your date as well
+        $date_2 = strtotime($date_from);
+        $datediff = $date_1 - $date_2;
+        
+        return round($datediff / (60 * 60 * 24));
     }
 }

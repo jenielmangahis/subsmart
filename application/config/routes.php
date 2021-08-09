@@ -323,6 +323,8 @@ $route['accounting/get-add-payee-modal/(:any)'] = 'accounting_modals/get_add_pay
 $route['accounting/add-new-payee']['post'] = 'accounting_modals/add_new_payee';
 $route['accounting/get-payee-dropdown'] = 'accounting_modals/get_payee_dropdown';
 $route['accounting/get-add-vendor-details-modal'] = 'accounting_modals/add_vendor_details_modal';
+$route['accounting/get-add-customer-details-modal'] = 'accounting_modals/add_customer_details_modal';
+$route['accounting/add-full-payee-details']['post'] = 'accounting_modals/add_full_payee_details';
 
 $route['accounting/lists'] = 'accounting/lists';
 

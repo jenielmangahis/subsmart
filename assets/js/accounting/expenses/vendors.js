@@ -15,11 +15,13 @@ $(document).on('click', '#vendors-table tbody tr td:not(:first-child,:last-child
     window.location.href = '/accounting/vendors/view/'+data.id;
 });
 
-$(document).on('change', '#new-vendor-modal #use_display_name', function() {
+$(document).on('change', '.append-modal #new-vendor-modal #use_display_name', function() {
     if($(this).prop('checked')) {
-        $('#new-vendor-modal #print_on_check_name').prop('disabled', true);
+        var display_name = $('.append-modal #new-vendor-modal #display_name').val();
+        $('.append-modal #new-vendor-modal #print_on_check_name').val(display_name);
+        $('.append-modal #new-vendor-modal #print_on_check_name').prop('disabled', true);
     } else {
-        $('#new-vendor-modal #print_on_check_name').prop('disabled', false);
+        $('.append-modal #new-vendor-modal #print_on_check_name').prop('disabled', false);
     }
 });
 
@@ -43,8 +45,8 @@ var attachments = new Dropzone('#vendorAttachments', {
         this.on("success", function(file, response) {
             var ids = JSON.parse(response)['attachment_ids'];
             for(i in ids) {
-                if($('#new-vendor-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                    $('#new-vendor-modal #vendorAttachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                if($('.append-modal #new-vendor-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                    $('.append-modal #new-vendor-modal #vendorAttachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
                 }
 
                 attachmentId.push(ids[i]);
@@ -58,7 +60,7 @@ var attachments = new Dropzone('#vendorAttachments', {
             if (d == file) return index;
         }).filter(isFinite)[0];
 
-        $('#new-vendor-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+        $('.append-modal #new-vendor-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
         //remove thumbnail
         var previewElement;
@@ -66,7 +68,7 @@ var attachments = new Dropzone('#vendorAttachments', {
     }
 });
 
-$('#terms').on('change', function() {
+$('.append-modal #new-vendor-modal #terms').on('change', function() {
     if($(this).val() === 'add-new') {
         $('#payment_term_modal').modal('show');
     }

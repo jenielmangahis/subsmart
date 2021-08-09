@@ -1,4 +1,3 @@
-<!--    Add vendor modal-->
 <div id="new-vendor-modal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg m-auto">
         <!-- Modal content-->
@@ -318,7 +317,7 @@
             </div>
             <div class="modal-footer">
                 <div class="row w-100">
-                    <div class="col-md-6"><button type="button" class="btn btn-transparent" data-dismiss="modal">Cancel</button></div>
+                    <div class="col-md-6"><button type="button" class="btn btn-transparent" id="cancel-add-vendor">Cancel</button></div>
                     <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
                 </div>
             </div>
@@ -326,4 +325,3 @@
         </form>
     </div>
 </div>
-<!--    end of modal-->

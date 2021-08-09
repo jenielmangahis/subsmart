@@ -742,7 +742,7 @@ border: none;
                                 </div>
                             </div> -->
                             <div class="row" id="plansItemDiv" style="background-color:white;">
-                                <div class="col-md-12 table-responsive">
+                                <div class="col-md-12">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
@@ -782,7 +782,7 @@ border: none;
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity_w mobile_qty" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price_w hidden_mobile_view" name="price[]"
+                                            <td width="10%"><input type="number" class="form-control price_w price hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
@@ -1417,7 +1417,7 @@ border: none;
                                         <select class="form-control mb-3" name="company_representative_printed_name">
                                             <option value="0">Select Name</option>
                                             <?php foreach($users_lists as $ulist){ ?>
-                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php } ?>
                                         </select>
                                            <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
@@ -3862,6 +3862,8 @@ $(document).ready(function(){
             $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
 
             $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+
+            $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
         
             },
                 error: function(response){

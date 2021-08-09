@@ -390,20 +390,17 @@ class Customer extends MY_Controller
 
     }
 
-    public function subscription_new()
+    public function subscription_new($id=null)
     {
+        $userid = $id;
         $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
-                'table' => 'users',
-                'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-        }
+        $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        $get_login_user = array(
+            'where' => array('id' => $user_id),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         $this->load->view('customer/subscription_new', $this->page_data);
     }
 

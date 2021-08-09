@@ -337,6 +337,11 @@ class Workorder_model extends MY_Model
             'zip_code'              => $zip_code,
             'cross_street'          => $cross_street,
             'password'              => $password,
+            //additional
+            'job_name'              => $job_name,
+            'job_description'       => $job_description,
+            'instructions'          => $instructions,
+            //--end
             // 'offer_code'            => $offer_code,
             'tags'                  => $tags,
             'date_issued'           => $date_issued,
@@ -693,6 +698,12 @@ class Workorder_model extends MY_Model
 		return  $insert;
     }
 
+    public function save_contact_new($data){
+        $custom = $this->db->insert('contacts', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
     public function save_contact_temp($data){
         $custom = $this->db->insert('contacts_temp', $data);
 	    $insert = $this->db->insert_id();
@@ -706,6 +717,13 @@ class Workorder_model extends MY_Model
 		$this->db->where('customer_id', $customer_id);
 		$query = $this->db->get();
 		return $query->result();
+    }
+
+    public function deleteContacts($customer_id)
+    {
+        $this->db->where('customer_id',$customer_id);
+        $this->db->delete('contacts');
+        return true;
     }
 
     public function getDataByWO($wo_num)

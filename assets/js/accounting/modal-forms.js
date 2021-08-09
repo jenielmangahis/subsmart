@@ -20,6 +20,9 @@ var modalAttachedFiles = [];
 var vendAttIds = [];
 var vendAttFiles = [];
 
+var custAttIds = [];
+var custAttFiles = [];
+
 var catDetailsInputs = '';
 var catDetailsBlank = '';
 
@@ -386,7 +389,8 @@ $(function() {
                         return query;
                     }
                 },
-                templateResult: formatPayee
+                templateResult: formatPayee,
+                templateSelection: optionSelect
             });
 
             $(`${modal_element} select#vendor`).select2({
@@ -404,7 +408,8 @@ $(function() {
                         return query;
                     }
                 },
-                templateResult: formatPayee
+                templateResult: formatPayee,
+                templateSelection: optionSelect
             });
 
             if($('div#modal-container select#tags').length > 0) {
@@ -3335,7 +3340,8 @@ $(function() {
 
     $(document).on('click', '#modal-container #add-payee-modal #add-payee-details', function() {
         var type = $('#modal-container #add-payee-modal #payee_type').val();
-        var name = $('#modal-container #add-payee-modal #payee_name').val();
+        var name = $('#modal-container #add-payee-modal #payee_name').val().trim();
+        var nameSplit = name.split(' ');
 
         if(type === 'vendor') {
             $.get('/accounting/get-add-vendor-details-modal', function(result) {
@@ -3381,14 +3387,293 @@ $(function() {
                     uiLibrary: 'bootstrap',
                     todayBtn: "linked",
                     language: "de"
-                });;
+                });
 
+                switch(nameSplit.length.toString()) {
+                    case '1' :
+                        $('#modal-container #new-vendor-modal #f_name').val(nameSplit[0]);
+                    break;
+                    case '2' :
+                        $('#modal-container #new-vendor-modal #f_name').val(nameSplit[0]);
+                        $('#modal-container #new-vendor-modal #l_name').val(nameSplit[1]);
+                    break;
+                    case '3' :
+                        $('#modal-container #new-vendor-modal #f_name').val(nameSplit[0]);
+                        $('#modal-container #new-vendor-modal #m_name').val(nameSplit[1]);
+                        $('#modal-container #new-vendor-modal #l_name').val(nameSplit[2]);
+                    break;
+                    case '4' :
+                        $('#modal-container #new-vendor-modal #title').val(nameSplit[0]);
+                        $('#modal-container #new-vendor-modal #f_name').val(nameSplit[1]);
+                        $('#modal-container #new-vendor-modal #m_name').val(nameSplit[2]);
+                        $('#modal-container #new-vendor-modal #l_name').val(nameSplit[3]);
+                    break;
+                    case '5' :
+                        $('#modal-container #new-vendor-modal #title').val(nameSplit[0]);
+                        $('#modal-container #new-vendor-modal #f_name').val(nameSplit[1]);
+                        $('#modal-container #new-vendor-modal #m_name').val(nameSplit[2]);
+                        $('#modal-container #new-vendor-modal #l_name').val(nameSplit[3]);
+                        $('#modal-container #new-vendor-modal #suffix').val(nameSplit[4]);
+                    break;
+                }
+
+                $('#modal-container #new-vendor-modal #display_name').val(name);
+                $('#modal-container #new-vendor-modal #print_on_check_name').val(name);
                 $('#modal-container #add-payee-modal').modal('hide');
                 $('#modal-container #new-vendor-modal').modal('show');
             });
         } else {
+            $.get('/accounting/get-add-customer-details-modal', function(result) {
+                $('#modal-container').append(result);
 
+                var attachments = new Dropzone(`#custAttachment`, {
+                    url: '/accounting/attachments/attach',
+                    maxFilesize: 20,
+                    uploadMultiple: true,
+                    // maxFiles: 1,
+                    addRemoveLinks: true,
+                    init: function() {
+                        this.on("success", function(file, response) {
+                            var ids = JSON.parse(response)['attachment_ids'];
+                            for(i in ids) {
+                                if($('#new-customer-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                    $('#modal-container #new-customer-modal #custAttachment').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                }
+
+                                custAttIds.push(ids[i]);
+                            }
+                            custAttFiles.push(file);
+                        });
+                    },
+                    removedfile: function(file) {
+                        var ids = custAttIds;
+                        var index = custAttFiles.map(function(d, index) {
+                            if (d == file) return index;
+                        }).filter(isFinite)[0];
+
+                        $('#modal-container #new-customer-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                        //remove thumbnail
+                        var previewElement;
+                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+                    }
+                });
+
+                $('#modal-container #new-customer-modal select').select2({
+                    dropdownParent: $('#modal-container #new-customer-modal')
+                });
+
+                $('#modal-container #new-customer-modal .datepicker').datepicker({
+                    uiLibrary: 'bootstrap',
+                    todayBtn: "linked",
+                    language: "de"
+                });
+
+                switch(nameSplit.length.toString()) {
+                    case '1' :
+                        $('#modal-container #new-customer-modal #f_name').val(nameSplit[0]);
+                    break;
+                    case '2' :
+                        $('#modal-container #new-customer-modal #f_name').val(nameSplit[0]);
+                        $('#modal-container #new-customer-modal #l_name').val(nameSplit[1]);
+                    break;
+                    case '3' :
+                        $('#modal-container #new-customer-modal #f_name').val(nameSplit[0]);
+                        $('#modal-container #new-customer-modal #m_name').val(nameSplit[1]);
+                        $('#modal-container #new-customer-modal #l_name').val(nameSplit[2]);
+                    break;
+                    case '4' :
+                        $('#modal-container #new-customer-modal #title').val(nameSplit[0]);
+                        $('#modal-container #new-customer-modal #f_name').val(nameSplit[1]);
+                        $('#modal-container #new-customer-modal #m_name').val(nameSplit[2]);
+                        $('#modal-container #new-customer-modal #l_name').val(nameSplit[3]);
+                    break;
+                    case '5' :
+                        $('#modal-container #new-customer-modal #title').val(nameSplit[0]);
+                        $('#modal-container #new-customer-modal #f_name').val(nameSplit[1]);
+                        $('#modal-container #new-customer-modal #m_name').val(nameSplit[2]);
+                        $('#modal-container #new-customer-modal #l_name').val(nameSplit[3]);
+                        $('#modal-container #new-customer-modal #suffix').val(nameSplit[4]);
+                    break;
+                }
+
+                $('#modal-container #new-customer-modal #display_name').val(name);
+                $('#modal-container #new-customer-modal #print_on_check_name').val(name);
+                $('#modal-container #add-payee-modal').modal('hide');
+                $('#modal-container #new-customer-modal').modal('show');
+            });
         }
+    });
+
+    $(document).on('click', '#modal-container #new-customer-modal .banking-tab-container a', function(e) {
+        e.preventDefault();
+
+        $(this).parent().find('.banking-tab-active').removeClass('active').removeClass('text-decoration-none').addClass('banking-tab').removeClass('banking-tab-active');
+
+        $(this).removeClass('banking-tab');
+        $(this).addClass('banking-tab-active');
+        $(this).addClass('text-decoration-none');
+    });
+
+    $(document).on('change', '#modal-container #new-vendor-modal #use_display_name', function() {
+        if($(this).prop('checked')) {
+            var display_name = $('#modal-container #new-vendor-modal #display_name').val();
+            $('#modal-container #new-vendor-modal #print_on_check_name').val(display_name);
+            $('#modal-container #new-vendor-modal #print_on_check_name').prop('disabled', true);
+        } else {
+            $('#modal-container #new-vendor-modal #print_on_check_name').prop('disabled', false);
+        }
+    });
+
+    $(document).on('change', '#modal-container #new-customer-modal #use_display_name', function() {
+        if($(this).prop('checked')) {
+            var display_name = $('#modal-container #new-customer-modal #display_name').val();
+            $('#modal-container #new-customer-modal #print_on_check_name').val(display_name);
+            $('#modal-container #new-customer-modal #print_on_check_name').prop('disabled', true);
+        } else {
+            $('#modal-container #new-customer-modal #print_on_check_name').prop('disabled', false);
+        }
+    });
+
+    $(document).on('change', '#modal-container #new-customer-modal #sub_customer', function() {
+        if($(this).prop('checked')) {
+            $('#modal-container #new-customer-modal #parent_customer').prop('disabled', false);
+            $('#modal-container #new-customer-modal #bill_with').prop('disabled', false);
+        } else {
+            $('#modal-container #new-customer-modal #parent_customer').prop('disabled', true);
+            $('#modal-container #new-customer-modal #bill_with').prop('disabled', true);
+        }
+    });
+
+    $(document).on('change', '#modal-container #new-customer-modal #same_as_billing_add', function() {
+        if($(this).prop('checked')) {
+            $('#modal-container #new-customer-modal #shipping_address').prop('disabled', true);
+            $('#modal-container #new-customer-modal #shipping_city').prop('disabled', true);
+            $('#modal-container #new-customer-modal #shipping_state').prop('disabled', true);
+            $('#modal-container #new-customer-modal #shipping_zip').prop('disabled', true);
+            $('#modal-container #new-customer-modal #shipping_country').prop('disabled', true);
+        } else {
+            $('#modal-container #new-customer-modal #shipping_address').prop('disabled', false);
+            $('#modal-container #new-customer-modal #shipping_city').prop('disabled', false);
+            $('#modal-container #new-customer-modal #shipping_state').prop('disabled', false);
+            $('#modal-container #new-customer-modal #shipping_zip').prop('disabled', false);
+            $('#modal-container #new-customer-modal #shipping_country').prop('disabled', false);
+        }
+    });
+
+    $(document).on('change', '#modal-container #new-customer-modal #cust_tax_exempt', function() {
+        if($(this).prop('checked')) {
+            $('#modal-container #new-customer-modal #tax_rate').prop('disabled', true);
+            $(this).parent().parent().parent().next().append(`
+            <div class="col-6">
+                <div class="form-ib">
+                    <label for="reason_for_exemption">Reason for exemption<span class="text-danger">*</span></label>
+                    <select name="reason_for_exemption" id="reason_for_exemption" class="form-control">
+                        <option value="">Federal government</option>
+                        <option value="">State government</option>
+                        <option value="">Local government</option>
+                        <option value="">Tribal government</option>
+                        <option value="">Charitable organization</option>
+                        <option value="">Religious organization</option>
+                        <option value="">Hospital</option>
+                        <option value="">Resale</option>
+                        <option value="">Direct pay permit</option>
+                        <option value="">Multiple points of use</option>
+                        <option value="">Direct mail</option>
+                        <option value="">Industrial production/manufacturing</option>
+                        <option value="">Foreign diplomat</option>
+                        <option value="">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-ib">
+                    <label for="exemption_details">Exemption details</label>
+                    <input type="text" class="form-control" name="exemption_details" id="exemption_details">
+                </div>
+            </div>
+            `);
+            $(this).parent().parent().parent().next().find('select').select2({
+                minimumResultsForSearch: -1,
+                dropdownParent: $('#modal-container #new-customer-modal')
+            });
+        } else {
+            $('#modal-container #new-customer-modal #tax_rate').prop('disabled', false);
+            $(this).parent().parent().parent().next().html('');
+        }
+    });
+
+    $(document).on('click', '#modal-container #new-vendor-modal #cancel-add-vendor', function(e) {
+        $('#modal-container #modal-form #payee').val('').trigger('change');
+        $('#modal-container #modal-form #vendor').val('').trigger('change');
+
+        $('#modal-container #new-vendor-modal').modal('hide');
+    });
+
+    $(document).on('click', '#modal-container #new-customer-modal #cancel-add-customer', function(e) {
+        $('#modal-container #modal-form #payee').val('').trigger('change');
+
+        $('#modal-container #new-customer-modal').modal('hide');
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #new-vendor-modal', function(e) {
+        $('#modal-container #new-vendor-modal').remove();
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #new-customer-modal', function(e) {
+        $('#modal-container #new-customer-modal').remove();
+    });
+
+    $(document).on('submit', '#modal-container #new-vendor-modal #add-vendor-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+        data.set('payee_type', 'vendor');
+
+        $.ajax({
+            url: '/accounting/add-full-payee-details',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                var name = res.payee.display_name;
+
+                $('#modal-container #new-vendor-modal').prev().find('#payee').append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+
+                $('#modal-container #new-vendor-modal').modal('hide');
+            }
+        });
+
+        $('#modal-container #new-vendor-modal').modal('hide');
+    });
+
+    $(document).on('submit', '#modal-container #new-customer-modal #add-customer-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+        data.set('payee_type', 'customer');
+
+        $.ajax({
+            url: '/accounting/add-full-payee-details',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                var name = res.payee.first_name+' '+res.payee.last_name;
+
+                $('#modal-container #new-vendor-modal').prev().find('#payee').append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+
+                $('#modal-container #new-vendor-modal').modal('hide');
+            }
+        });
+
+        $('#modal-container #new-customer-modal').modal('hide');
     });
 });
 
@@ -5038,10 +5323,15 @@ const formatPayee = (optionElement) => {
     var text = optionElement.text;
     var searchVal = $(searchField[searchField.length - 1]).val();
     if(searchVal === "") {
-        return optionElement.text;
+        return text;
     }
 
-    text = text.replaceAll(searchVal, `<strong>${searchVal}</strong>`);
-    var el = $(`<span>${text}</span>`);
-    return el;
+    return $(`<span>${text}</span>`);
+}
+
+const optionSelect = (data, container) => {
+    var text = data.text;
+    text = text.replaceAll('<strong>', '');
+    text = text.replaceAll('</strong>', '');
+    return text;
 }
