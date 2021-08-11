@@ -93,30 +93,7 @@
                                                                 <td></td>
                                                                 <td>1</td>
                                                                 <td>
-                                                                    <select name="received_from[]" class="form-control">
-                                                                        <option value="" disabled selected>&nbsp;</option>
-                                                                        <?php if(count($dropdown['customers']) !== 0) : ?>
-                                                                        <optgroup label="Customers">
-                                                                            <?php foreach($dropdown['customers'] as $customer) :?>
-                                                                                <option value="customer-<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                            <?php endforeach; ?>
-                                                                        </optgroup>
-                                                                        <?php endif; ?>
-                                                                        <?php if(count($dropdown['vendors']) !== 0) : ?>
-                                                                        <optgroup label="Vendors">
-                                                                            <?php foreach($dropdown['vendors'] as $vendor):?>
-                                                                                <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
-                                                                            <?php endforeach; ?> 
-                                                                        </optgroup>
-                                                                        <?php endif; ?>
-                                                                        <?php if(count($dropdown['employees']) !== 0) : ?>
-                                                                        <optgroup label="Employees">
-                                                                            <?php foreach($dropdown['employees'] as $employee):?>
-                                                                                <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
-                                                                            <?php endforeach; ?> 
-                                                                        </optgroup>
-                                                                        <?php endif; ?>
-                                                                    </select>
+                                                                    <select name="received_from[]" class="form-control"></select>
                                                                 </td>
                                                                 <td>
                                                                     <select name="account[]" class="form-control" required>

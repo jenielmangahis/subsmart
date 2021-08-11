@@ -35,11 +35,15 @@ class Accounting__DropdownWithSearch {
       return;
     }
 
-    const { text, right_text, sub_texts } = option;
+    const { text, right_text, sub_texts, disabled } = option;
     const $item = this.createElementFromHTML(this.createOption(text));
 
     if (this.isString(right_text)) {
       $item.append(`<span>${right_text}</span>`);
+    }
+
+    if (disabled === true) {
+      $item.addClass("dropdownWithSearch__optionsItem--disabled");
     }
 
     if (!Array.isArray(sub_texts)) {
@@ -47,11 +51,12 @@ class Accounting__DropdownWithSearch {
     }
 
     const $subTexts = sub_texts.map((subText) => {
-      const subOption = this.createOption({ text: subText, right_text });
+      const optionParams = subText.text ? subText : { text: subText, right_text }; // prettier-ignore
+      const subOption = this.createOption(optionParams);
       const $subOption = this.createElementFromHTML(subOption);
 
       $subOption.addClass("dropdownWithSearch__optionsItem--sub");
-      $subOption.attr("data-value", `${text}:${subText}`);
+      $subOption.attr("data-value", `${text}:${optionParams.text}`);
       return $subOption;
     });
 
@@ -70,6 +75,10 @@ class Accounting__DropdownWithSearch {
 
       if (!$target.hasClass("dropdownWithSearch__optionsItem")) {
         $target = $target.parent(".dropdownWithSearch__optionsItem");
+      }
+
+      if ($target.hasClass("dropdownWithSearch__optionsItem--disabled")) {
+        return;
       }
 
       if ($target.hasClass("dropdownWithSearch__optionsItem")) {

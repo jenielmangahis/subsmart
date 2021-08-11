@@ -1,4 +1,5 @@
 <div id="customer-single-modal">
+    <input type="text" name="customer_id" style="display: none;">
     <div class="the-body">
         <div class="row no-margin">
             <div class="col-md-2 no-padding">
@@ -76,6 +77,9 @@
                                     <label>901 Windrock Court, Mobile, AL 36608</label>
                                     <div class="notes">
                                         <a href="#" class="add-notes-btn">Add notes</a>
+                                        <textarea name="customer_notes" id="" cols="30" rows="3"
+                                            placeholder="Add notes"></textarea>
+                                            <div class="saved-indicator"></div>
                                     </div>
                                 </div>
                             </div>
@@ -85,33 +89,33 @@
                                         <button class="btn btn-default edit-button px-4" type="button">Edit</button>
                                         <button class="btn btn-success" type="button" data-toggle="dropdown">
                                             New Transaction &nbsp;<span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
+                                        <ul class="dropdown-menu dropdown-menu-right new-transactions" role="menu">
                                             <li>
-                                                <a href="#">Invoice</a>
+                                                <a href="#" data-customer-id="" class="customer_craete_invoice_btn">Invoice</a>
                                             </li>
                                             <li>
-                                                <a href="#">Payment</a>
+                                                <a href="#" data-customer-id="" class="customer_receive_payment_btn">Payment</a>
                                             </li>
                                             <li>
-                                                <a href="#">Estimate</a>
+                                                <a href="#" class="create-estimate-btn" data-toggle="modal" data-target="#newJobModal" data-email-add="">Estimate</a>
                                             </li>
                                             <li>
                                                 <a href="#">Payment Link</a>
                                             </li>
                                             <li>
-                                                <a href="#">Sales Receipt</a>
+                                                <a href="#" class="created-sales-receipt" data-toggle="modal" data-target="#addsalesreceiptModal" data-email-add="" data-customer-id="">Sales Receipt</a>
                                             </li>
                                             <li>
                                                 <a href="#">Credit Memo</a>
                                             </li>
                                             <li>
-                                                <a href="#">Delayed Charge</a>
+                                                <a href="#" class="create-charge-btn" data-toggle="modal" data-target="#create_charge_modal" data-customer-id="">Delayed Charge</a>
                                             </li>
                                             <li>
-                                                <a href="#">Time Activity</a>
+                                                <a href="#" class="time-activity-btn" data-toggle="modal" data-target="#time_activity_modal" data-customer-id="" >Time Activity</a>
                                             </li>
                                             <li>
-                                                <a href="#">Statement</a>
+                                                <a href="#" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-customer-id="">Statement</a>
                                             </li>
                                         </ul>
                                     </div>

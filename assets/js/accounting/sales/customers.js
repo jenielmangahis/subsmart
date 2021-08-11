@@ -51,7 +51,7 @@ $('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
 
 
 
-$(document).on("click", "#customers_table ul li a.created-sales-receipt", function(event) {
+$(document).on("click", ".created-sales-receipt", function(event) {
     $('#addsalesreceiptModal form').trigger("reset");
     $("#addsalesreceiptModal form #sel-customer2").val($(this).attr('data-customer-id'));
     $("#addsalesreceiptModal form #email2").val($(this).attr('data-email-add'));

@@ -30,7 +30,7 @@ var submitType = 'save-and-close';
 
 var dropdownEl = null;
 
-const payeeFields = ['customer', 'employee', 'vendor', 'payee'];
+const dropdownFields = ['customer', 'employee', 'vendor', 'payee', 'received-from', 'payment-method', 'names'];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 $(function() {
@@ -375,8 +375,6 @@ $(function() {
                 loadChecksTable();
             }
 
-            // $(`${modal_element} select:not(#payee,#vendor)`).select2();
-
             $(`${modal_element} select`).each(function() {
                 var type = $(this).attr('id');
                 if(type === undefined) {
@@ -384,13 +382,17 @@ $(function() {
                     type = $(this).attr('name').includes('vendor') ? 'vendor' : type;
                     type = $(this).attr('name').includes('employee') ? 'employee' : type;
                     type = $(this).attr('name').includes('payee') ? 'payee' : type;
+                    type = $(this).attr('name').includes('received_from') ? 'received-from' : type;
+                    type = $(this).attr('name').includes('payment_method') ? 'payment-method' : type;
+                    type = $(this).attr('name').includes('names[]') ? 'names' : type;
+                } else {
+                    type = type.replaceAll('_', '-');
                 }
 
-                
-                if(payeeFields.includes(type)) {
+                if(dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-payee-dropdown',
+                            url: '/accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function(params) {
                                 var query = {
@@ -575,7 +577,43 @@ $(function() {
             $(this).html(rowInputs);
             $(this).children('td:nth-child(2)').html(rowNum);
 
-            $(this).find('select').select2();
+            $(this).find('select').each(function() {
+                var type = $(this).attr('id');
+                if(type === undefined) {
+                    type = $(this).attr('name').includes('customer') ? 'customer' : type;
+                    type = $(this).attr('name').includes('vendor') ? 'vendor' : type;
+                    type = $(this).attr('name').includes('employee') ? 'employee' : type;
+                    type = $(this).attr('name').includes('payee') ? 'payee' : type;
+                    type = $(this).attr('name').includes('received_from') ? 'received-from' : type;
+                    type = $(this).attr('name').includes('payment_method') ? 'payment-method' : type;
+                    type = $(this).attr('name').includes('names[]') ? 'names' : type;
+                } else {
+                    type = type.replaceAll('_', '-');
+                }
+
+                if(dropdownFields.includes(type)) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type
+                                }
+
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect
+                    });
+                } else {
+                    $(this).select2();
+                }
+            });
         }
     });
 
@@ -594,7 +632,7 @@ $(function() {
                 if($(this).attr('name').includes('customer')) {
                     $(this).select2({
                         ajax: {
-                            url: '/accounting/get-payee-dropdown',
+                            url: '/accounting/get-dropdown-choices',
                             dataType: 'json',
                             data: function (params) {
                                 var query = {
@@ -3341,6 +3379,38 @@ $(function() {
                 $('#modal-form').parent().append(result);
 
                 $('#modal-container #add-payee-modal h4.modal-title').html('New Customer');
+                $('#modal-container #add-payee-modal').modal('show');
+            });
+        }
+    });
+
+    $(document).on('change', '#modal-container #modal-form [name="received_from[]"]', function() {
+        if($(this).val() === 'add-new') {
+            dropdownEl = $(this);
+
+            $.get('/accounting/get-add-payee-modal/received-from', function(result) {
+                $('#modal-form').parent().append(result);
+                $('#modal-container #add-payee-modal select').select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container #add-payee-modal')
+                });
+    
+                $('#modal-container #add-payee-modal').modal('show');
+            });
+        }
+    });
+
+    $(document).on('change', '#modal-container #modal-form [name="names[]"]', function() {
+        if($(this).val() === 'add-new') {
+            dropdownEl = $(this);
+
+            $.get('/accounting/get-add-payee-modal/received-from', function(result) {
+                $('#modal-form').parent().append(result);
+                $('#modal-container #add-payee-modal select').select2({
+                    minimumResultsForSearch: -1,
+                    dropdownParent: $('#modal-container #add-payee-modal')
+                });
+    
                 $('#modal-container #add-payee-modal').modal('show');
             });
         }

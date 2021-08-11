@@ -189,9 +189,6 @@
                                                                             <div class="col-md-6 p-0">
                                                                                 <select name="customer[]" class="form-control">
                                                                                     <option value="" disabled selected>Choose a customer</option>
-                                                                                    <?php foreach($dropdown['customers'] as $customer):?>
-                                                                                        <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                                    <?php endforeach; ?>
                                                                                 </select>
                                                                                 <div class="service-cont <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">
                                                                                     <select name="service[]" class="form-control">
@@ -232,9 +229,6 @@
                                                                             <div class="col-md-6 p-0">
                                                                                 <select name="customer[]" class="form-control">
                                                                                     <option value="" disabled selected>Choose a customer</option>
-                                                                                    <?php foreach($dropdown['customers'] as $customer):?>
-                                                                                        <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                                    <?php endforeach; ?>
                                                                                 </select>
                                                                                 <div class="service-cont <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">
                                                                                     <select name="service[]" class="form-control">
@@ -275,9 +269,6 @@
                                                                             <div class="col-md-6 p-0">
                                                                                 <select name="customer[]" class="form-control">
                                                                                     <option value="" disabled selected>Choose a customer</option>
-                                                                                    <?php foreach($dropdown['customers'] as $customer):?>
-                                                                                        <option value="<?php echo $customer->prof_id;?>"><?php echo $customer->first_name . ' ' . $customer->last_name;?></option>
-                                                                                    <?php endforeach; ?>
                                                                                 </select>
                                                                                 <div class="service-cont <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">
                                                                                     <select name="service[]" class="form-control">

@@ -67,10 +67,6 @@
                                             <div class="form-group">
                                                 <label for="payment_method">Payment method</label>
                                                 <select name="payment_method" id="payment_method" class="form-control">
-                                                    <option value="" selected disabled>&nbsp;</option>
-                                                    <?php foreach($dropdown['payment_methods'] as $paymentMethod) : ?>
-                                                        <option value="<?=$paymentMethod['id']?>"><?=$paymentMethod['name']?></option>
-                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>

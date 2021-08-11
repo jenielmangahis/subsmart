@@ -186,6 +186,14 @@
     padding-top: 0;
     padding-bottom: 0;
   }
+
+  .form-group--error {
+    input,
+    button,
+    select {
+      border-color: #ec4561 !important;
+    }
+  }
 }
 
 .btnGroup {

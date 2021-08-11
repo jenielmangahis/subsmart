@@ -12,7 +12,7 @@
         </div>
     </td>
     <td>
-        <?=date("Y-m-d", strtotime($date))?>
+        <?=date("m/d/Y", strtotime($date))?>
     </td>
     <td data-column="type">
         <?=$type?>
@@ -33,7 +33,7 @@
         <?=$memo?>
     </td>
     <td data-column="duedate">
-        <?=date("Y-m-d", strtotime($duedate))?>
+        <?=date("m/d/Y", strtotime($duedate))?>
     </td>
     <td data-column="aging">
         <?=$aging?>

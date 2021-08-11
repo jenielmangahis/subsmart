@@ -39,6 +39,21 @@ $(document).on("click", "#customer-single-modal .seaction-above-table .print-exp
     }
 });
 
+$(document).on("click", "#customer-single-modal .single-customer-info-section .top-section .notes a.add-notes-btn", function(event) {
+    $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").show();
+    $(this).hide();
+    $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").focus();
+    $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicato").hide();
+});
+$("#customer-single-modal .single-customer-info-section .top-section .notes textarea").focus(function() {
+    $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").removeClass("notes-added");
+    $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator").hide();
+
+});
+
+$("#customer-single-modal .single-customer-info-section .top-section .notes textarea").focusout(function() {
+    single_customer_notes_text_area_changed();
+});
 $(document).on("click", "#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section button.settings-btn", function(event) {
     $("#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options").show();
 });
@@ -63,6 +78,22 @@ $(document).on("change", "#customer-single-modal .single-customer-info-section .
     single_customer_transaction_table_checkbox_changed();
 });
 
+function single_customer_notes_text_area_changed() {
+    if (!$.trim($("#customer-single-modal .single-customer-info-section .top-section .notes textarea").val())) {
+        $("#customer-single-modal .single-customer-info-section .top-section .notes a.add-notes-btn").show();
+        $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").hide();
+        $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").val("");
+        $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator").hide();
+        single_customer_update_customer_notes();
+    } else {
+        $("#customer-single-modal .single-customer-info-section .top-section .notes a.add-notes-btn").hide();
+        $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").show();
+        $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").addClass("notes-added");
+        $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator").show();
+        single_customer_update_customer_notes();
+    }
+}
+
 function single_customer_transaction_table_checkbox_changed() {
 
     $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", true);
@@ -76,6 +107,25 @@ function single_customer_transaction_table_checkbox_changed() {
 
 
 single_customer_table_columns_changed();
+
+function single_customer_update_customer_notes() {
+    $.ajax({
+        url: baseURL + "/accounting/update_customer_notes",
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: $("#customer-single-modal input[name='customer_id']").val(),
+            notes: $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").val(),
+        },
+        success: function(data) {
+            if (data.result == "success") {
+                $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator").html("Saved!");
+            } else {
+                $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator").html("Not saved!");
+            }
+        },
+    });
+}
 
 function single_customer_table_columns_changed() {
     $("#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options input[type='checkbox']")
@@ -148,9 +198,17 @@ function single_customer_sort_all_customers_ul(sort_by) {
 }
 
 function single_customer_get_customers_details(customer_id) {
-
+    $("#customer-single-modal input[name='customer_id']").val(customer_id);
     $('#customer-single-modal .the-body .customer-list-section ul li').removeClass("active");
     $('#customer-single-modal .the-body .customer-list-section ul li[data-customer-id="' + customer_id + '"]').addClass("active");
+    $("#customer-single-modal .top-section .btns-section .new-transactions .customer_craete_invoice_btn").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .customer_receive_payment_btn").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .customer_receive_payment_btn").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .create-estimate-btn").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .created-sales-receipt").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .create-charge-btn").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .time-activity-btn").attr("data-customer-id", customer_id);
+    $("#customer-single-modal .top-section .btns-section .new-transactions .created-statement-btn").attr("data-customer-id", customer_id);
     $("#loader-modal").show();
     $.ajax({
         url: baseURL + "/accounting/single_customer_get_customers_details",
@@ -162,7 +220,12 @@ function single_customer_get_customers_details(customer_id) {
             $("#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-overdue .amount").html("$" + data.overdue);
             $("#customer-single-modal .single-customer-info-section .top-section .customer-name h2 span.text").html(data.customer_details[0]['first_name'] + " " + data.customer_details[0]['last_name']);
             $("#customer-single-modal .single-customer-info-section .top-section .customer-address label").html(data.customer_details[0]['mail_add'] + ", " + data.customer_details[0]['city'] + ", " + data.customer_details[0]['state'] + " " + data.customer_details[0]['zip_code']);
+            $("#customer-single-modal .single-customer-info-section .top-section .notes textarea").val(data.customer_details[0]['notes']);
+            $("#customer-single-modal .top-section .btns-section .new-transactions .create-estimate-btn").attr("data-email-add", data.customer_details[0]['email']);
+            single_customer_notes_text_area_changed();
+            $("#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator").hide();
             single_customer_get_transaction_lists(customer_id);
+            console.log(data);
             // $("#loader-modal").hide();
         },
     });

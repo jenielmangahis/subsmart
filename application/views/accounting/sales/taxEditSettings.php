@@ -7,7 +7,7 @@ include viewPath('includes/header');
     <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="settings">
             <div class="settings__back">
-                <a href="#">
+                <a href="<?=url('/accounting/salesTax');?>">
                     <i class="fa fa-chevron-left"></i>
                     Back to sales tax center
                 </a>
@@ -155,12 +155,17 @@ include viewPath('includes/header');
             <form>
                 <div class="form-group">
                     <label for="addAgency__agency">Agency</label>
-                    <input type="text" class="form-control" id="addAgency__agency">
+                    <div class="dropdownWithSearch" id="agencySelect">
+                        <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" id="addAgency__agency" placeholder="Select agency">
+                        <button type="button" class="dropdownWithSearch__btn">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="addAgency__filingFrequency">Filing frequency</label>
-                    <select class="form-control" id="addAgency__filingFrequency">
+                    <select required data-type="frequency" class="form-control" id="addAgency__filingFrequency">
                         <option value="yearly">Yearly</option>
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
@@ -170,13 +175,13 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="addAgency__dateStart">Start Date</label>
-                    <input type="date" class="form-control" id="addAgency__dateStart">
+                    <input required data-type="start_date" type="date" class="form-control" id="addAgency__dateStart">
                 </div>
             </form>
 
             <div class="sidebarForm__footer">
                 <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button id="saveAgency" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>

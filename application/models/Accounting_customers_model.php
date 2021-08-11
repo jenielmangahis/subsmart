@@ -27,9 +27,10 @@ class Accounting_customers_model extends MY_Model
     }
     public function updateCustomer($id, $data)
     {
-        $this->db->where('id', $id);
-        $customer = $this->db->update('acs_profile', $data);
-        if ($customer) {
+        $this->db->where('prof_id', $id);
+        $this->db->update('acs_profile', $data);
+        $customer =  $this->db->affected_rows();
+        if ($customer > 0) {
             return true;
         } else {
             return false;
@@ -147,7 +148,7 @@ class Accounting_customers_model extends MY_Model
         $this->db->delete('customer_types');
         return $this->db->affected_rows();
     }
-    public function update_customer_type($id,$data)
+    public function update_customer_type($id, $data)
     {
         $this->db->where('id', $id);
         $this->db->update('customer_types', $data);

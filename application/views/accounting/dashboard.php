@@ -1,12 +1,60 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<style>
+/* Style the tab */
+.tab_ {
+  /* float: left; */
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Style the buttons inside the tab */
+.tab_ button {
+  display: block;
+  background-color: inherit;
+  color: black;
+  padding: 0 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab_ button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.tab_ button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  float: left;
+  padding: 0px 12px;
+  border: 1px solid #ccc;
+  width: 80%;
+  border-left: none;
+  /* height: 300px; */
+}  
+</style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="padding-left:1%;">
         <div class="container-fluid" style="background-color:white;">
                     <div style="padding-top:1%;">
-						<h3 style="font-family: Sarabun, sans-serif">Accounting Dashboard</h3>
+						<!-- <h3 style="font-family: Sarabun, sans-serif">Accounting Dashboard</h3> -->
+                        <a class="link-modal-open" href="#" id="" data-toggle="modal" data-target="#account_settings"><h3 style="font-family: Sarabun, sans-serif">Accounting Dashboard</h3></a>
 					</div>
             <div class="page-title-box">
                 <div class="row">
@@ -506,6 +554,262 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!--end of modal-->
     
+    <!-- Modal -->
+    <div class="full-screen-modal">
+    <div id="account_settings" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="height: 100%;">
+                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                    <h4 class="modal-title">Account and Settings</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                
+                <div class="row">
+                    <div class="col-md-2" style="background-color:#eceef1;">
+                        <!-- <p style="padding:2px;color:#898a8f;"><center>Company</center></p> -->
+                        <div class="tab_">
+                            <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Company</button>
+                            <button class="tablinks" onclick="">Billing & Subscription</button>
+                            <button class="tablinks" onclick="openCity(event, 'Paris')">Usage</button>
+                            <button class="tablinks" onclick="openCity(event, 'Tokyo')">Sales</button>
+                            <button class="tablinks" onclick="">Expenses</button>
+                            <button class="tablinks" onclick="">Payments</button>
+                            <button class="tablinks" onclick="">Advanced</button>
+                        </div>
+                    </div>
+                    <div id="London" class="tabcontent">
+                        <div class="col-md-10" style="padding:1%;">
+                            <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> You don't currently have permission to edit all company information. Check with your QuickBooks admin if you require access.</p>
+
+                            <table class="table">
+                                <tr>
+                                    <td style="width:10%;">Company name</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p></p>
+                                        <p>Company name</p>
+                                        <p>Legal name</p>
+                                        <p>EIN</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" /></p>
+                                        <p><?php echo $clients->business_name; ?></p>
+                                        <p><?php echo $clients->business_name; ?></p>
+                                        <p>XX-XXX6593</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Company type</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Tax form</p>
+                                        <p>Industry</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>Limited liability</p>
+                                        <p>Information</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Contact info</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Company email</p>
+                                        <p>Customer-facing email</p>
+                                        <p>Company phone</p>
+                                        <p>Website</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><?php echo $clients->email_address; ?></p>
+                                        <p><?php echo $clients->email_address; ?></p>
+                                        <p><?php echo $clients->phone_number; ?></p>
+                                        <p>-</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Address</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Company address</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><?php echo $clients->business_address; ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Address</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Customer-facing address</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><?php echo $clients->business_address; ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Address</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Legal address</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><?php echo $clients->business_address; ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Communications with Intuit</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p><a href="#">Marketing Preferences</a></p>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    
+
+                    <div id="Paris" class="tabcontent">
+                        <div class="col-md-10" style="padding:1%;">
+                            <div style="padding:1%;width:80%;"> 
+                                <h2>Usage limits</h2> 
+                                <p>These are your usage limits for QuickBooks Online Plus. Need more room?</p>
+                                <p>Upgrade to a plan with more capacity.</p>
+                                <p><a href="#"><h6>Find out more about usage limits.</h6></a></p>
+
+                                <br><br>
+                                <p style="font-size:30px;">Billable Users</p>
+                                <p>The limit for your plan is 5.</p>
+                                <br><hr><br>
+                                <p style="font-size:30px;">Chart of accounts</p>
+                                <p>The limit for your plan is 250.</p>
+                                <br><hr><br>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="Tokyo" class="tabcontent">
+                        <div class="col-md-10" style="padding:1%;">
+
+                            <table class="table">
+                                <tr>
+                                    <td style="width:10%;">Customize</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Customize the way forms look to your customers</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><button class="btn btn-success">Customize look and feel</button></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Sales form content</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Preferred invoice terms</p>
+                                        <p>Preferred delivery method</p>
+                                        <p>Shipping</p>
+                                        <p>Custom fields</p>
+                                        <p>Custom transaction numbers</p>
+                                        <p>Service date</p>
+                                        <p>Discount</p>
+                                        <p>Deposit </p>
+                                        <p>Tips (Gratuity)</p>
+                                        <p>Tags</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>Net 30</p>
+                                        <p>None</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>On</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Products and services</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Show Product/Service column on sales forms</p>
+                                        <p>Show SKU column</p>
+                                        <p>Turn on price rules</p>
+                                        <p>Track quantity and price/rate</p>
+                                        <p>Track inventory quantity on hand</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>On</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>On</p>
+                                        <p>On</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Progress Invoicing</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>	Create multiple partial invoices from a single estimate</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Messages</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Default email message sent with sales forms</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Reminders</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Default email message for invoice reminders</p>
+                                        <p>Automatic invoice reminders</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p> </p>
+                                        <p>On</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Online delivery</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Email options for all sales forms</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>On</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Statements</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Show aging table at bottom of statement</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>On</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                    
+                </div>
+                <div style="margin: auto;">
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                </div>
+                <div style="margin: auto">
+                    <a href="" style="text-align: center">Privacy</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end of modal-->
+    
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
@@ -553,4 +857,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     });
 
+</script>
+
+<script>
+    function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
 </script>
