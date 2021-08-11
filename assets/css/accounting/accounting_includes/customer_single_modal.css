@@ -414,3 +414,24 @@
     font-size: 13px;
     padding-top: 5px;
 }
+
+#customer-single-modal .single-customer-info-section .top-section .notes textarea {
+    width: 300px!important;
+    display: none;
+    color: #333333;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .notes textarea.notes-added {
+    background-color: transparent;
+    border: none!important;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .notes textarea.notes-added:hover {
+    background-color: #E3EAF3;
+}
+
+#customer-single-modal .single-customer-info-section .top-section .notes .saved-indicator {
+    font-size: 11px;
+    font-style: italic;
+    color: #333333;
+}

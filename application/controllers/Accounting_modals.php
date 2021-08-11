@@ -5378,101 +5378,40 @@ class Accounting_modals extends MY_Controller {
         echo json_encode(['payee' => $payee]);
     }
 
-    public function get_payee_dropdown()
+    public function get_dropdown_choices()
     {
         $search = $this->input->get('search');
+        $field = $this->input->get('field');
         $return = [];
-        $vendors = $this->vendors_model->getAllByCompany();
 
-        if($this->input->get('field') !== 'customer') {
-            foreach($vendors as $vendor) {
-                if($search !== null && $search !== '') {
-                    $stripos = stripos($vendor->display_name, $search);
-                    if ($stripos !== false) {
-                        $searched = substr($vendor->display_name, $stripos, strlen($search));
-                        $return['results'][] = [
-                            'id' => 'vendor-'.$vendor->id,
-                            'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
-                        ];
-                    }
-                } else {
-                    if($this->input->get('field') === 'payee') {
-                        $return['results'][0]['text'] = 'Vendors';
-                        $return['results'][0]['children'][] = [
-                            'id' => 'vendor-'.$vendor->id,
-                            'text' => $vendor->display_name
-                        ];
-                    } else {
-                        $return['results'][] = [
-                            'id' => 'vendor-'.$vendor->id,
-                            'text' => $vendor->display_name
-                        ];
-                    }
-                }
-            }
-        }
-
-        if($this->input->get('field') === 'payee' || $this->input->get('field') === 'customer' || $this->input->get('field') === 'employee') {
-            $customers = $this->accounting_customers_model->getAllByCompany();
-            $employees = $this->users_model->getCompanyUsers(logged('company_id'));
-
-            if($this->input->get('field') !== 'employee') {
-                foreach($customers as $customer) {
-                    $name = $customer->first_name . ' ' . $customer->last_name;
-                    if($search !== null && $search !== '') {
-                        $stripos = stripos($name, $search);
-                        if ($stripos !== false) {
-                            $searched = substr($name, $stripos, strlen($search));
-                            $return['results'][] = [
-                                'id' => 'customer-'.$customer->prof_id,
-                                'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                            ];
-                        }
-                    } else {
-                        if($this->input->get('field') === 'payee') {
-                            $return['results'][1]['text'] = 'Customers';
-                            $return['results'][1]['children'][] = [
-                                'id' => 'customer-'.$customer->prof_id,
-                                'text' => $name
-                            ];
-                        } else {
-                            $return['results'][] = [
-                                'id' => 'customer-'.$customer->prof_id,
-                                'text' => $name
-                            ];
-                        }
-                    }
-                }
-            }
-
-            if($this->input->get('field') !== 'customer') {
-                foreach($employees as $employee) {
-                    $name = $employee->FName . ' ' . $employee->LName;
-                    if($search !== null && $search !== '') {
-                        $stripos = stripos($name, $search);
-                        if ($stripos !== false) {
-                            $searched = substr($name, $stripos, strlen($search));
-                            $return['results'][] = [
-                                'id' => 'employee-'.$employee->id,
-                                'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                            ];
-                        }
-                    } else {
-                        if($this->input->get('field') === 'payee') {
-                            $return['results'][2]['text'] = 'Employees';
-                            $return['results'][2]['children'][] =  [
-                                'id' => 'employee-'.$employee->id,
-                                'text' => $name
-                            ];
-                        } else {
-                            $return['results'][] = [
-                                'id' => 'employee-'.$employee->id,
-                                'text' => $name
-                            ];
-                        }
-                    }
-                }
-            }
+        switch($field) {
+            case 'payee' :
+                $return = $this->get_vendor_choices($return, $search, $field);
+                $return = $this->get_customer_choices($return, $search, $field);
+                $return = $this->get_employee_choices($return, $search, $field);
+            break;
+            case 'received-from' :
+                $return = $this->get_customer_choices($return, $search, $field);
+                $return = $this->get_vendor_choices($return, $search, $field);
+                $return = $this->get_employee_choices($return, $search, $field);
+            break;
+            case 'names' :
+                $return = $this->get_customer_choices($return, $search, $field);
+                $return = $this->get_vendor_choices($return, $search, $field);
+                $return = $this->get_employee_choices($return, $search, $field);
+            break;
+            case 'vendor' :
+                $return = $this->get_vendor_choices($return, $search, $field);
+            break;
+            case 'customer' :
+                $return = $this->get_customer_choices($return, $search, $field);
+            break;
+            case 'employee' :
+                $return = $this->get_employee_choices($return, $search, $field);
+            break;
+            case 'payment-method' :
+                $return = $this->get_payment_method_choices($return, $search);
+            break;
         }
 
         if($search !== null && $search !== '') {
@@ -5482,7 +5421,7 @@ class Accounting_modals extends MY_Controller {
                 return $indexA - $indexB;
             });
 
-            if($this->input->get('field') === 'payee') {
+            if($field === 'payee' || $field === 'received-from' || $field === 'names') {
                 $results = $return['results'];
                 $return['results'] = [];
                 for($i = 0; $i < count($results); $i++) {
@@ -5503,6 +5442,143 @@ class Accounting_modals extends MY_Controller {
         array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
 
         echo json_encode($return);
+    }
+
+    private function get_vendor_choices($choices, $search = null, $field)
+    {
+        $vendors = $this->vendors_model->getAllByCompany();
+        foreach($vendors as $vendor) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($vendor->display_name, $search);
+                if ($stripos !== false) {
+                    $searched = substr($vendor->display_name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => 'vendor-'.$vendor->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
+                    ];
+                }
+            } else {
+                if($field === 'payee' || $field === 'received-from' || $field === 'names') {
+                    if($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Vendors') {
+                        $choices['results'][array_key_last($choices['results'])]['text'] = 'Vendors';
+                    } else {
+                        $choices['results'][]['text'] = 'Vendors';
+                    }
+                    $choices['results'][array_key_last($choices['results'])]['children'][] = [
+                        'id' => 'vendor-'.$vendor->id,
+                        'text' => $vendor->display_name
+                    ];
+                } else {
+                    $choices['results'][] = [
+                        'id' => $vendor->id,
+                        'text' => $vendor->display_name
+                    ];
+                }
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_customer_choices($choices, $search = null, $field)
+    {
+        $customers = $this->accounting_customers_model->getAllByCompany();
+
+        foreach($customers as $customer) {
+            $name = $customer->first_name . ' ' . $customer->last_name;
+            if($search !== null && $search !== '') {
+                $stripos = stripos($name, $search);
+                if ($stripos !== false) {
+                    $searched = substr($name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => 'customer-'.$customer->prof_id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                    ];
+                }
+            } else {
+                if($field === 'payee' || $field === 'received-from' || $field === 'names') {
+                    if($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
+                        $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
+                    } else {
+                        $choices['results'][]['text'] = 'Customers';
+                    }
+                    $choices['results'][array_key_last($choices['results'])]['children'][] = [
+                        'id' => 'customer-'.$customer->prof_id,
+                        'text' => $name
+                    ];
+                } else {
+                    $choices['results'][] = [
+                        'id' => $customer->prof_id,
+                        'text' => $name
+                    ];
+                }
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_employee_choices($choices, $search = null, $field)
+    {
+        $employees = $this->users_model->getCompanyUsers(logged('company_id'));
+
+        foreach($employees as $employee) {
+            $name = $employee->FName . ' ' . $employee->LName;
+            if($search !== null && $search !== '') {
+                $stripos = stripos($name, $search);
+                if ($stripos !== false) {
+                    $searched = substr($name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => 'employee-'.$employee->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                    ];
+                }
+            } else {
+                if($field === 'payee' || $field === 'received-from' || $field === 'names') {
+                    if($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Employees') {
+                        $choices['results'][array_key_last($choices['results'])]['text'] = 'Employees';
+                    } else {
+                        $choices['results'][]['text'] = 'Employees';
+                    }
+                    $choices['results'][array_key_last($choices['results'])]['children'][] =  [
+                        'id' => 'employee-'.$employee->id,
+                        'text' => $name
+                    ];
+                } else {
+                    $choices['results'][] = [
+                        'id' => $employee->id,
+                        'text' => $name
+                    ];
+                }
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_payment_method_choices($choices, $search = null)
+    {
+        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
+
+        foreach($paymentMethods as $paymentMethod) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($paymentMethod['name'], $search);
+                if ($stripos !== false) {
+                    $searched = substr($paymentMethod['name'], $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $paymentMethod['id'],
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $paymentMethod['name'])
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $paymentMethod['id'],
+                    'text' => $paymentMethod['name']
+                ];
+            }
+        }
+
+        return $choices;
     }
 
     public function add_vendor_details_modal()

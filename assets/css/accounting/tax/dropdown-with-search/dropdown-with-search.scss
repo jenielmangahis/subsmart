@@ -69,6 +69,11 @@
     &--sub {
       padding-left: 32px;
     }
+
+    &--disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
   }
 
   &--optionsShown {

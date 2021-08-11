@@ -297,6 +297,19 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getclientsData($customer_id)
+    {
+        $where = array(
+            'id '   => $customer_id
+          );
+
+        $this->db->select('*');
+        $this->db->from('clients');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
     public function getAllInvPaid($company_id)
     {
         $where = array(

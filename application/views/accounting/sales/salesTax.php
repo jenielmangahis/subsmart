@@ -169,7 +169,7 @@ include viewPath('includes/header');
 
                         <ul class="shortcuts__list">
                             <li class="shortcuts__item">
-                                <a href="#" class="shortcuts__itemMain">
+                                <a href="<?=url('/accounting/taxEditSettings');?>" class="shortcuts__itemMain">
                                     <div class="shortcuts__logo">
                                         <img src="<?php echo $url->assets ?>img/taxlogo/l1.png">
                                     </div>
