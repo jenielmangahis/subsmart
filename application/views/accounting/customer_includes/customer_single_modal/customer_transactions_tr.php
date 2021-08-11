@@ -1,16 +1,18 @@
-
 <tr>
     <td>
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
-                <input type="checkbox" name="single_customer_transaction_check_box" id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>"
-                    class="customer_checkbox" data-row-type="<?=$type?>">
-                <label for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>"><span></span></label>
+                <input type="checkbox" name="single_customer_transaction_check_box"
+                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"
+                    class="customer_checkbox"
+                    data-row-type="<?=$type?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"><span></span></label>
             </div>
         </div>
     </td>
     <td>
-        <?=$date?>
+        <?=date("Y-m-d", strtotime($date))?>
     </td>
     <td data-column="type">
         <?=$type?>
@@ -31,7 +33,7 @@
         <?=$memo?>
     </td>
     <td data-column="duedate">
-        <?=$duedate?>
+        <?=date("Y-m-d", strtotime($duedate))?>
     </td>
     <td data-column="aging">
         <?=$aging?>
@@ -61,106 +63,108 @@
         <?=$sales_rep?>
     </td>
     <td>
-        <?php if($type=="Invoice" && $status=="Paid"){
-            ?>
-            <div class="dropdown dropdown-btn text-right">
-                <a href="" class="">Print</a>
-                <a type="button" data-toggle="dropdown">
-                    <span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
-                    aria-labelledby="dropdown-edit">
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Send
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Print packaging slip
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            View/edit
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Copy
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Delete
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Void
-                        </a>
-                    </li>
-    
-                </ul>
-            </div>
-            <?php
-        }elseif($type=="Invoice" && $status=="Open"){
-            ?>
-            <div class="dropdown dropdown-btn text-right">
-                <a href="" class="first-option customer_receive_payment_btn" data-customer-id="<?=$customer_id?>">Receive payment </a>
-                <a type="button" id="dropdown-button-icon" data-toggle="dropdown">
-                    <span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
-                    aria-labelledby="dropdown-edit">
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Print
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Send
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Send reminder
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Share invoice link
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Print package slip
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            View/Edit
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Copy
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Delete
-                        </a>
-                    </li>
-                    <li>
-                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                            Void
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <?php
-        } ?>
+        <?php if ($type=="Invoice" && $status=="Paid") {
+    ?>
+        <div class="dropdown dropdown-btn text-right">
+            <a href="" class="">Print</a>
+            <a type="button" data-toggle="dropdown">
+                <span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
+                aria-labelledby="dropdown-edit">
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Send
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Print packaging slip
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        View/edit
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Copy
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Delete
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Void
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <?php
+} elseif ($type=="Invoice" && $status=="Open") {
+        ?>
+        <div class="dropdown dropdown-btn text-right">
+            <a href="" class="first-option customer_receive_payment_btn"
+                data-customer-id="<?=$customer_id?>">Receive payment
+            </a>
+            <a type="button" id="dropdown-button-icon" data-toggle="dropdown">
+                <span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
+                aria-labelledby="dropdown-edit">
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Print
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Send
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Send reminder
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Share invoice link
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Print package slip
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        View/Edit
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Copy
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Delete
+                    </a>
+                </li>
+                <li>
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Void
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <?php
+    } ?>
     </td>
 </tr>

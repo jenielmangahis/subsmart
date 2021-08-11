@@ -31,12 +31,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="payee">Payee (optional)</label>
-                                                <select name="payee" id="payee" class="form-control" required>
-                                                    <option value="" disabled selected>&nbsp;</option>
-                                                    <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                        <option value="<?php echo $vendor->id; ?>"><?=$vendor->display_name?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="payee" id="vendor" class="form-control" required></select>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">

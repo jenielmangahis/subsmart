@@ -95,12 +95,6 @@
                                                     <label for="customer">Customer</label>
                                                     <select name="customer" id="customer" class="form-control" required>
                                                         <option value="" disabled selected>Choose a customer</option>
-                                                        <?php foreach ($dropdown['customers'] as $customer) :?>
-                                                        <option
-                                                            value="<?php echo $customer->prof_id;?>">
-                                                            <?php echo $customer->first_name . ' ' . $customer->last_name;?>
-                                                        </option>
-                                                        <?php endforeach; ?>
                                                     </select>
                                                 </div>
                                                 <div class="form-group <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">

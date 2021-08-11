@@ -25,7 +25,7 @@ function TemplateCreate() {
   };
 
   async function createFilePreview(event, file) {
-    await sleep(1000);
+    // await sleep(1000);
     const fileId = Date.now();
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -106,7 +106,7 @@ function TemplateCreate() {
     $progress.removeClass("esignBuilder__uploadProgress--completed");
     $progressCheck.removeClass("esignBuilder__uploadProgressCheck--completed");
 
-    await sleep(1000);
+    // await sleep(1000);
 
     $docTitle.text(file.name);
     $docModalTitle.text(file.name);
@@ -124,7 +124,7 @@ function TemplateCreate() {
     $docPreview.addClass("esignBuilder__docPreview--completed");
     $progress.addClass("esignBuilder__uploadProgress--completed");
 
-    await sleep(500);
+    // await sleep(500);
 
     $progress.removeClass("esignBuilder__uploadProgress--completed");
     $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
@@ -137,7 +137,7 @@ function TemplateCreate() {
     const actions = {
       preview: showDocument,
       delete: function (event) {
-        const _file = template.files.find((f) => f.name == file.name);
+        const _file = files.find((f) => f.name == file.name);
 
         if (!_file || !_file.total_fields) {
           actions._delete(event);
@@ -206,10 +206,12 @@ function TemplateCreate() {
       }
     }
 
-    const promises = [...eventFiles].map((file) =>
-      createFilePreview(event, file)
-    );
-    await Promise.all(promises);
+    // We could use Promise.all, but that wont display
+    // previews in order, but a lot faster.
+    for (let index = 0; index < eventFiles.length; index++) {
+      const file = eventFiles[index];
+      await createFilePreview(event, file);
+    }
   }
 
   function prepareForm({ action }) {

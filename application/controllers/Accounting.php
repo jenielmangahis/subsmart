@@ -103,6 +103,10 @@ class Accounting extends MY_Controller
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
+        $this->page_data['invoices_sales'] = $this->invoice_model->getAllDataSales(logged('company_id'));
+        $this->page_data['OpenInvoices'] = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
+        $this->page_data['InvOverdue'] = $this->invoice_model->InvOverdue(logged('company_id'));
+        $this->page_data['getAllInvPaid'] = $this->invoice_model->getAllInvPaid(logged('company_id'));
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->workorder_model->getPackagelist(logged('company_id'));
         $this->page_data['estimates'] = $this->estimate_model->getAllByCompany(logged('company_id'));

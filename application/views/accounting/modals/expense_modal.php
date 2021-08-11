@@ -164,14 +164,7 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <select name="category_customer[]" class="form-control">
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php if(count($dropdown['customers']) > 0) : ?>
-                                                                                    <?php foreach($dropdown['customers'] as $customer) :?>
-                                                                                        <option value="<?=$customer->prof_id?>"><?=$customer->first_name . ' ' . $customer->last_name?></option>
-                                                                                    <?php endforeach; ?>
-                                                                                <?php endif; ?>
-                                                                            </select>
+                                                                            <select name="category_customer[]" class="form-control"></select>
                                                                         </td>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>

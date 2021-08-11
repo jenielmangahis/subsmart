@@ -51,7 +51,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			<a href="<?php echo url('/accounting/deposits')?>"
 				class="banking-tab">Deposits</a>
 			<a href="<?php echo url('/accounting/listworkOrder')?>"
-				class="banking-tab">Word Order</a>
+				class="banking-tab">Work Order</a>
 			<a href="<?php echo url('/accounting/invoices')?>"
 				class="banking-tab">Invoices</a>
 			<a href="<?php echo url('/accounting/jobs ')?>"

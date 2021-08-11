@@ -28,6 +28,9 @@ var catDetailsBlank = '';
 
 var submitType = 'save-and-close';
 
+var dropdownEl = null;
+
+const payeeFields = ['customer', 'employee', 'vendor', 'payee'];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 $(function() {
@@ -372,44 +375,40 @@ $(function() {
                 loadChecksTable();
             }
 
-            $(`${modal_element} select:not(#payee,#vendor)`).select2();
+            // $(`${modal_element} select:not(#payee,#vendor)`).select2();
 
-            $(`${modal_element} select#payee`).select2({
-                ajax: {
-                    url: '/accounting/get-payee-dropdown',
-                    dataType: 'json',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            type: 'public',
-                            field: 'payee'
-                        }
+            $(`${modal_element} select`).each(function() {
+                var type = $(this).attr('id');
+                if(type === undefined) {
+                    type = $(this).attr('name').includes('customer') ? 'customer' : type;
+                    type = $(this).attr('name').includes('vendor') ? 'vendor' : type;
+                    type = $(this).attr('name').includes('employee') ? 'employee' : type;
+                    type = $(this).attr('name').includes('payee') ? 'payee' : type;
+                }
 
-                        // Query parameters will be ?search=[term]&type=public
-                        return query;
-                    }
-                },
-                templateResult: formatPayee,
-                templateSelection: optionSelect
-            });
-
-            $(`${modal_element} select#vendor`).select2({
-                ajax: {
-                    url: '/accounting/get-payee-dropdown',
-                    dataType: 'json',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            type: 'public',
-                            field: 'vendor'
-                        }
-
-                        // Query parameters will be ?search=[term]&type=public
-                        return query;
-                    }
-                },
-                templateResult: formatPayee,
-                templateSelection: optionSelect
+                
+                if(payeeFields.includes(type)) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-payee-dropdown',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type
+                                }
+                                
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect
+                    });
+                } else {
+                    $(this).select2();
+                }
             });
 
             if($('div#modal-container select#tags').length > 0) {
@@ -591,20 +590,32 @@ $(function() {
                 $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
             }
 
-            $(this).find('select').select2();
+            $(this).find('select').each(function() {
+                if($(this).attr('name').includes('customer')) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-payee-dropdown',
+                            dataType: 'json',
+                            data: function (params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: 'customer'
+                                }
+        
+                                // Query parameters will be ?search=[term]&type=public
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect
+                    });        
+                } else {
+                    $(this).select2();
+                }
+            });
         }
     });
-
-    // $(document).on('click', 'div#modal-container table#item-details-table tbody tr', function() {
-    //     if($(this).find('input').length < 1) {
-    //         var rowNum = $(this).children().next().html();
-
-    //         $(this).html(itemDetailsInputs);
-    //         $(this).children('td:nth-child(2)').html(rowNum);
-
-    //         $(this).find('select').select2();
-    //     }
-    // });
 
     $(document).on('click', 'div#modal-container table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
@@ -3295,6 +3306,8 @@ $(function() {
 
     $(document).on('change', '#modal-container #modal-form #payee', function() {
         if($(this).val() === 'add-new') {
+            dropdownEl = $(this);
+
             $.get('/accounting/get-add-payee-modal/payee', function(result) {
                 $('#modal-form').parent().append(result);
                 $('#modal-container #add-payee-modal select').select2({
@@ -3307,10 +3320,44 @@ $(function() {
         }
     });
 
+    $(document).on('change', '#modal-container #modal-form #vendor', function() {
+        if($(this).val() === 'add-new') {
+            dropdownEl = $(this);
+
+            $.get('/accounting/get-add-payee-modal/vendor', function(result) {
+                $('#modal-form').parent().append(result);
+
+                $('#modal-container #add-payee-modal h4.modal-title').html('New Vendor');
+                $('#modal-container #add-payee-modal').modal('show');
+            });
+        }
+    });
+
+    $(document).on('change', '#modal-container #modal-form [name="category_customer[]"]', function() {
+        if($(this).val() === 'add-new') {
+            dropdownEl = $(this);
+
+            $.get('/accounting/get-add-payee-modal/vendor', function(result) {
+                $('#modal-form').parent().append(result);
+
+                $('#modal-container #add-payee-modal h4.modal-title').html('New Customer');
+                $('#modal-container #add-payee-modal').modal('show');
+            });
+        }
+    });
+
     $(document).on('submit', '#modal-container #add-payee-modal #new-payee-form', function(e) {
         e.preventDefault();
 
         var data = new FormData(this);
+        if(!data.has('payee_type')) {
+            var type = dropdownEl.attr('id');
+
+            if(type === undefined) {
+                type = dropdownEl.attr('name').includes('customer') ? 'customer' : type;
+                type = dropdownEl.attr('name').includes('vendor') ? 'vendor' : type;
+            }
+        }
 
         $.ajax({
             url: '/accounting/add-new-payee',
@@ -3327,7 +3374,7 @@ $(function() {
                     var name = res.payee.first_name+' '+res.payee.last_name;
                 }
 
-                $('#modal-container #add-payee-modal').prev().find('#payee').append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+                dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
 
                 $('#modal-container #add-payee-modal').modal('hide');
             }
@@ -3342,6 +3389,14 @@ $(function() {
         var type = $('#modal-container #add-payee-modal #payee_type').val();
         var name = $('#modal-container #add-payee-modal #payee_name').val().trim();
         var nameSplit = name.split(' ');
+
+        if(type === undefined) {
+            if(dropdownEl.attr('id') === undefined) {
+                type = dropdownEl.attr('name').includes('customer') ? 'customer' : 'vendor';
+            } else {
+                type = dropdownEl.attr('id');
+            }
+        }
 
         if(type === 'vendor') {
             $.get('/accounting/get-add-vendor-details-modal', function(result) {
@@ -3603,15 +3658,20 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#modal-container #new-vendor-modal #cancel-add-vendor', function(e) {
-        $('#modal-container #modal-form #payee').val('').trigger('change');
-        $('#modal-container #modal-form #vendor').val('').trigger('change');
+    $(document).on('click', '#modal-container #add-payee-modal .cancel-add-payee', function(e) {
+        dropdownEl.val('').trigger('change');
+
+        $('#modal-container #add-payee-modal').modal('hide');
+    });
+
+    $(document).on('click', '#modal-container #new-vendor-modal .cancel-add-vendor', function(e) {
+        dropdownEl.val('').trigger('change');
 
         $('#modal-container #new-vendor-modal').modal('hide');
     });
 
-    $(document).on('click', '#modal-container #new-customer-modal #cancel-add-customer', function(e) {
-        $('#modal-container #modal-form #payee').val('').trigger('change');
+    $(document).on('click', '#modal-container #new-customer-modal .cancel-add-customer', function(e) {
+        dropdownEl.val('').trigger('change');
 
         $('#modal-container #new-customer-modal').modal('hide');
     });
@@ -3641,7 +3701,7 @@ $(function() {
 
                 var name = res.payee.display_name;
 
-                $('#modal-container #new-vendor-modal').prev().find('#payee').append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+                dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
 
                 $('#modal-container #new-vendor-modal').modal('hide');
             }
@@ -3667,7 +3727,7 @@ $(function() {
 
                 var name = res.payee.first_name+' '+res.payee.last_name;
 
-                $('#modal-container #new-vendor-modal').prev().find('#payee').append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+                dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
 
                 $('#modal-container #new-vendor-modal').modal('hide');
             }
@@ -5318,7 +5378,7 @@ const saveClosePayBills = (e) => {
     $('#modal-container .modal').modal('hide');
 }
 
-const formatPayee = (optionElement) => {
+const formatResult = (optionElement) => {
     var searchField = $('.select2-search__field');
     var text = optionElement.text;
     var searchVal = $(searchField[searchField.length - 1]).val();

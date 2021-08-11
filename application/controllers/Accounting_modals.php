@@ -5384,73 +5384,93 @@ class Accounting_modals extends MY_Controller {
         $return = [];
         $vendors = $this->vendors_model->getAllByCompany();
 
-        foreach($vendors as $vendor) {
-            if($search !== null && $search !== '') {
-                $stripos = stripos($vendor->display_name, $search);
-                if ($stripos !== false) {
-                    $searched = substr($vendor->display_name, $stripos, strlen($search));
-                    $return['results'][] = [
-                        'id' => 'vendor-'.$vendor->id,
-                        'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
-                    ];
-                }
-            } else {
-                if($this->input->get('field') === 'payee') {
-                    $return['results'][0]['text'] = 'Vendors';
-                    $return['results'][0]['children'][] = [
-                        'id' => 'vendor-'.$vendor->id,
-                        'text' => $vendor->display_name
-                    ];
+        if($this->input->get('field') !== 'customer') {
+            foreach($vendors as $vendor) {
+                if($search !== null && $search !== '') {
+                    $stripos = stripos($vendor->display_name, $search);
+                    if ($stripos !== false) {
+                        $searched = substr($vendor->display_name, $stripos, strlen($search));
+                        $return['results'][] = [
+                            'id' => 'vendor-'.$vendor->id,
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
+                        ];
+                    }
                 } else {
-                    $return['results'][] = [
-                        'id' => 'vendor-'.$vendor->id,
-                        'text' => $vendor->display_name
-                    ];
+                    if($this->input->get('field') === 'payee') {
+                        $return['results'][0]['text'] = 'Vendors';
+                        $return['results'][0]['children'][] = [
+                            'id' => 'vendor-'.$vendor->id,
+                            'text' => $vendor->display_name
+                        ];
+                    } else {
+                        $return['results'][] = [
+                            'id' => 'vendor-'.$vendor->id,
+                            'text' => $vendor->display_name
+                        ];
+                    }
                 }
             }
         }
 
-        if($this->input->get('field') === 'payee') {
+        if($this->input->get('field') === 'payee' || $this->input->get('field') === 'customer' || $this->input->get('field') === 'employee') {
             $customers = $this->accounting_customers_model->getAllByCompany();
             $employees = $this->users_model->getCompanyUsers(logged('company_id'));
 
-            foreach($customers as $customer) {
-                $name = $customer->first_name . ' ' . $customer->last_name;
-                if($search !== null && $search !== '') {
-                    $stripos = stripos($name, $search);
-                    if ($stripos !== false) {
-                        $searched = substr($name, $stripos, strlen($search));
-                        $return['results'][] = [
-                            'id' => 'customer-'.$customer->prof_id,
-                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                        ];
+            if($this->input->get('field') !== 'employee') {
+                foreach($customers as $customer) {
+                    $name = $customer->first_name . ' ' . $customer->last_name;
+                    if($search !== null && $search !== '') {
+                        $stripos = stripos($name, $search);
+                        if ($stripos !== false) {
+                            $searched = substr($name, $stripos, strlen($search));
+                            $return['results'][] = [
+                                'id' => 'customer-'.$customer->prof_id,
+                                'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                            ];
+                        }
+                    } else {
+                        if($this->input->get('field') === 'payee') {
+                            $return['results'][1]['text'] = 'Customers';
+                            $return['results'][1]['children'][] = [
+                                'id' => 'customer-'.$customer->prof_id,
+                                'text' => $name
+                            ];
+                        } else {
+                            $return['results'][] = [
+                                'id' => 'customer-'.$customer->prof_id,
+                                'text' => $name
+                            ];
+                        }
                     }
-                } else {
-                    $return['results'][1]['text'] = 'Customers';
-                    $return['results'][1]['children'][] = [
-                        'id' => 'customer-'.$customer->prof_id,
-                        'text' => $name
-                    ];
                 }
             }
 
-            foreach($employees as $employee) {
-                $name = $employee->FName . ' ' . $employee->LName;
-                if($search !== null && $search !== '') {
-                    $stripos = stripos($name, $search);
-                    if ($stripos !== false) {
-                        $searched = substr($name, $stripos, strlen($search));
-                        $return['results'][] = [
-                            'id' => 'employee-'.$employee->id,
-                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                        ];
+            if($this->input->get('field') !== 'customer') {
+                foreach($employees as $employee) {
+                    $name = $employee->FName . ' ' . $employee->LName;
+                    if($search !== null && $search !== '') {
+                        $stripos = stripos($name, $search);
+                        if ($stripos !== false) {
+                            $searched = substr($name, $stripos, strlen($search));
+                            $return['results'][] = [
+                                'id' => 'employee-'.$employee->id,
+                                'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                            ];
+                        }
+                    } else {
+                        if($this->input->get('field') === 'payee') {
+                            $return['results'][2]['text'] = 'Employees';
+                            $return['results'][2]['children'][] =  [
+                                'id' => 'employee-'.$employee->id,
+                                'text' => $name
+                            ];
+                        } else {
+                            $return['results'][] = [
+                                'id' => 'employee-'.$employee->id,
+                                'text' => $name
+                            ];
+                        }
                     }
-                } else {
-                    $return['results'][2]['text'] = 'Employees';
-                    $return['results'][2]['children'][] =  [
-                        'id' => 'employee-'.$employee->id,
-                        'text' => $name
-                    ];
                 }
             }
         }
