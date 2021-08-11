@@ -5,7 +5,7 @@
         <div class="modal-content max-width">
             <div class="modal-header" style="border-bottom: 0">
                 <div class="modal-title">Vendor Information</div>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close cancel-add-vendor">&times;</button>
             </div>
             <div class="modal-body overflow-auto">
                 <div class="row">
@@ -317,7 +317,7 @@
             </div>
             <div class="modal-footer">
                 <div class="row w-100">
-                    <div class="col-md-6"><button type="button" class="btn btn-transparent" id="cancel-add-vendor">Cancel</button></div>
+                    <div class="col-md-6"><button type="button" class="btn btn-transparent cancel-add-vendor">Cancel</button></div>
                     <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
                 </div>
             </div>

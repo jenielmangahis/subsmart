@@ -5,7 +5,7 @@
         <div class="modal-content" style="height: 100%;">
             <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                 <h4 class="modal-title">New Name</h4>
-                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                <button type="button" class="close cancel-add-payee">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="row" style="min-height: 100%">

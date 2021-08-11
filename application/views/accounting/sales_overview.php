@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<a href="<?php echo url('/accounting/newEstimateList')?>" class="banking-tab">Estimates</a>
 							<a href="<?php echo url('/accounting/customers')?>" class="banking-tab">Customers</a>
 							<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab">Deposits</a>
-							<a href="<?php echo url('/accounting/listworkOrder')?>" class="banking-tab">Word Order</a>
+							<a href="<?php echo url('/accounting/listworkOrder')?>" class="banking-tab">Work Order</a>
 							<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab">Invoices</a>
 							<a href="<?php echo url('/accounting/jobs ')?>" class="banking-tab">Jobs</a>
 							<!-- <a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a> -->

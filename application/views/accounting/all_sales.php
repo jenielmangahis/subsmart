@@ -249,7 +249,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <a href="<?php echo url('/accounting/deposits')?>"
                     class="banking-tab">Deposits</a>
                 <a href="<?php echo url('/accounting/listworkOrder')?>"
-                    class="banking-tab">Word Order</a>
+                    class="banking-tab">Work Order</a>
                 <a href="<?php echo url('/accounting/invoices')?>"
                     class="banking-tab">Invoices</a>
                 <a href="<?php echo url('/accounting/jobs ')?>"
@@ -293,7 +293,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="row pt-3 align-items-end mr-1">
                     <div class="col px-0">
                         <div class="bg-info px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white">0</h4>
+                            <h4 class="text-white"><?php $estimateCount = 0; foreach ($estimates as $estimate){ $estimateCount++; } echo $estimateCount;  ?></h4>
                             <h6 class="text-white">ESTIMATES</h6>
                         </div>
                     </div>
@@ -311,13 +311,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col px-0">
                         <p class="text-primary mb-1">Unpaid Last 365 Days</p>
                         <div class="bg-warning px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white">0</h4>
+                            <h4 class="text-white"><?php $Over = 0; foreach ($InvOverdue as $InvOver){ $Over++; } echo $Over;  ?></h4>
                             <h6 class="text-white">OVERDUE</h6>
                         </div>
                     </div>
                     <div class="col px-0">
                         <div class="bg-secondary px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white">3</h4>
+                            <h4 class="text-white"><?php $OpenInv = 0; foreach ($OpenInvoices as $OpenInvoice){ $OpenInv++; } echo $OpenInv;  ?></h4>
                             <h6 class="text-white">OPEN INVOICES</h6>
                         </div>
                     </div>
@@ -328,7 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col px-0">
                         <p class="text-primary mb-1">Paid</p>
                         <div class="bg-success px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white">0</h4>
+                            <h4 class="text-white"><?php $InvPaid = 0; foreach ($getAllInvPaid as $getAllInvPaid){ $InvPaid++; } echo $InvPaid;  ?></h4>
                             <h6 class="text-white">PAID LAST 30 DAYS</h6>
                         </div>
                     </div>
@@ -379,7 +379,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </td>
                                 <td><?php echo $inv->total_due; ?>
                                 </td>
-                                <td><?php echo $inv->status; ?>
+                                <td><?php echo $inv->INV_status; ?>
                                 </td>
                                 <td class="text-center">
                                     <!-- <a href="">View</a> -->
@@ -432,7 +432,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
                                             </td>
                                             <td>
-                                            <?php //echo $inv->due_date; ?></td>
+                                            <?php echo $estimate->type; ?></td>
                                             <td>
                                                 <a class="a-default"
                                                 href="#">
@@ -482,187 +482,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                 data-toggle="modal"
                                                                                 data-target="#modalCloneWorkorder"
                                                                                 data-id="<?php echo $estimate->id ?>"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-files-o icon clone-workorder">
-
-                                                            </span> Clone Estimate</a>
-                                                        </li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('invoice') ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="161983"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-print icon"></span>  Print</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
-                                                        <li><div class="dropdown-divider"></div></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-                                    <?php foreach ($sales_receipts as $sr) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($sr->sales_receipt_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php //echo $inv->due_date; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $sr->estimate_number; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div><a href="#"><?php //echo $sr->job_name; ?></a></div>
-                                                <a href="<?php echo base_url('customer/view/' . $sr->customer_id) ?>">
-                                                    <?php //echo get_customer_by_id($sr->customer_id)->contact_name 
-                                                    echo $sr->first_name .' ' . $sr->middle_name .' ' . $sr->last_name;
-                                                    ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($sr->shipping_date)); ?>
-                                            </td>
-                                            <td>
-                                                <?php if (is_serialized($sr->estimate_eqpt_cost)) { ?>
-                                                    $<?php echo unserialize($sr->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?php echo $sr->grand_total; ?></td>
-                                            <td>
-                                            <?php
-                                                // if( $estimate->is_mail_open == 1 ){
-                                                // echo "<i class='fa fa-eye'></i>  ";
-                                                // }
-                                                // echo $estimate->status;
-                                            ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown dropdown-btn">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/view/' . $sr->id) ?>"><span
-                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/edit/' . $sr->id) ?>"><span
-                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem"
-                                                                                tabindex="-1"
-                                                                                href="#"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modalCloneWorkorder"
-                                                                                data-id="<?php echo $sr->id ?>"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-files-o icon clone-workorder">
-
-                                                            </span> Clone Estimate</a>
-                                                        </li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('invoice') ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="161983"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-print icon"></span>  Print</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
-                                                        <li><div class="dropdown-divider"></div></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-                                    <?php foreach ($credit_memo as $cr) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($cr->credit_memo_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php //echo $inv->due_date; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $cr->estimate_number; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div><a href="#"><?php //echo $cr->job_name; ?></a></div>
-                                                <a href="<?php echo base_url('customer/view/' . $cr->customer_id) ?>">
-                                                    <?php // echo get_customer_by_id($cr->customer_id)->contact_name 
-                                                     echo $cr->first_name .' ' . $cr->middle_name .' ' . $cr->last_name; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($cr->shipping_date)); ?>
-                                            </td>
-                                            <td>
-                                                <?php if (is_serialized($cr->estimate_eqpt_cost)) { ?>
-                                                    $<?php echo unserialize($cr->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?php echo $cr->grand_total; ?></td>
-                                            <td>
-                                            <?php
-                                                // if( $estimate->is_mail_open == 1 ){
-                                                // echo "<i class='fa fa-eye'></i>  ";
-                                                // }
-                                                // echo $estimate->status;
-                                            ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown dropdown-btn">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/view/' . $sr->id) ?>"><span
-                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/edit/' . $sr->id) ?>"><span
-                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem"
-                                                                                tabindex="-1"
-                                                                                href="#"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modalCloneWorkorder"
-                                                                                data-id="<?php echo $sr->id ?>"
                                                                                 data-name="WO-00433"><span
                                                                         class="fa fa-files-o icon clone-workorder">
 

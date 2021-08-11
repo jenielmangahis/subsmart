@@ -44,7 +44,6 @@ $(document).on("click", "#customer-single-modal .seaction-above-table .print-exp
 });
 $(document).on("change", "#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options input[type='checkbox']", function(event) {
     if ($(this).is(":checked")) {
-        console.log("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='" + $(this).attr("data-column") + "']");
         $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='" + $(this).attr("data-column") + "']").show();
         $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='" + $(this).attr("data-column") + "']").show();
     } else {
@@ -52,13 +51,36 @@ $(document).on("change", "#customer-single-modal .seaction-above-table .print-ex
         $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='" + $(this).attr("data-column") + "']").hide();
     }
 });
+
+$(document).on("change", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']", function(event) {
+    if ($(this).is(":checked")) {
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").prop("checked", true);
+    } else {
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").prop("checked", false);
+    }
+});
+$(document).on("change", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']", function(event) {
+    single_customer_transaction_table_checkbox_changed();
+});
+
+function single_customer_transaction_table_checkbox_changed() {
+
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", true);
+
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+        if (!$(this).is(":checked")) {
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", false);
+        }
+    });
+}
+
+
 single_customer_table_columns_changed();
 
 function single_customer_table_columns_changed() {
     $("#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options input[type='checkbox']")
         .map(function() {
             if ($(this).is(":checked")) {
-                console.log("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='" + $(this).attr("data-column") + "']");
                 $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='" + $(this).attr("data-column") + "']").show();
                 $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='" + $(this).attr("data-column") + "']").show();
             } else {
@@ -88,6 +110,21 @@ function single_customer_page_get_all_customers(view_id = "") {
 $(document).on("click", "#customer-single-modal .all-customer-section .sort-btn ul li", function(event) {
     single_customer_sort_all_customers_ul($(this).attr("data-sort-by"));
 });
+
+function single_customer_get_transaction_lists(customer_id) {
+    $.ajax({
+        url: baseURL + "/accounting/single_customer_get_transaction_lists",
+        type: "POST",
+        dataType: "json",
+        data: { customer_id: customer_id },
+        success: function(data) {
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html(data.tbody_html);
+            single_customer_table_columns_changed();
+            single_customer_sortTable();
+            $("#loader-modal").hide();
+        },
+    });
+}
 
 function single_customer_sort_all_customers_ul(sort_by) {
 
@@ -131,16 +168,26 @@ function single_customer_get_customers_details(customer_id) {
     });
 }
 
-function single_customer_get_transaction_lists(customer_id) {
-    $.ajax({
-        url: baseURL + "/accounting/single_customer_get_transaction_lists",
-        type: "POST",
-        dataType: "json",
-        data: { customer_id: customer_id },
-        success: function(data) {
-            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html(data.tbody_html);
-            single_customer_table_columns_changed();
-            $("#loader-modal").hide();
-        },
-    });
+
+function single_customer_sortTable() {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("single_customer_table");
+    switching = true;
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[1];
+            y = rows[i + 1].getElementsByTagName("TD")[1];
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                shouldSwitch = true;
+                break;
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
 }

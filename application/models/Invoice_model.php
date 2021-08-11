@@ -249,6 +249,105 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllDataSales($company_id)
+    {
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'invoices.view_flag'       => '0',
+            'invoices.invoice_type'    => 'Final Payment',
+          );
+
+        // $company_id = getLoggedCompanyID();
+        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
+
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
+
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getAllOpenInvoices($company_id)
+    {
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'invoices.view_flag'       => '0',
+            'invoices.status !='       => 'Paid',
+          );
+
+        // $company_id = getLoggedCompanyID();
+        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
+
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
+
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getAllInvPaid($company_id)
+    {
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'invoices.view_flag'       => '0',
+            'invoices.status'          => 'Paid',
+          );
+
+        // $company_id = getLoggedCompanyID();
+        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
+
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
+
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function InvOverdue($company_id)
+    {
+        $date_now = date("Y-m-d");
+
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'invoices.view_flag'       => '0',
+            'invoices.status'          => 'Overdue',
+            // 'invoices.due_date >='      => $date_now,
+          );
+
+        // $company_id = getLoggedCompanyID();
+        // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
+
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');
+
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+
+        // $this->db->select('*');
+        // $this->db->from($this->table);
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
     public function saveServiceAddress($data, $invoice_id = 0)
     {
         $old_addresses = $this->getServiceAddress(array('id' => $invoice_id));

@@ -59,7 +59,7 @@
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/accounting/') . '04_recieve_payment.png' ?>" />
                                     <p>Receive Payments</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('invoice/add') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/accounting/') . '03_add_invoice.png' ?>" />
                                     <p>Add Invoice</p>
                                 </div>
@@ -73,7 +73,7 @@
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/accounting/') . '06_add_bill.png' ?>" />
                                     <p>Add Bill</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('customer/settings') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/accounting/') . '07_add_sales_tax.png' ?>" />
                                     <p>Add Sales Tax</p>
                                 </div>
@@ -83,19 +83,19 @@
                                 </div>
                             </div>
                             <div class="col-lg-12 no-padding float-left">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('accounting/payroll-overview') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/accounting/') . '09_run_payroll.png' ?>" />
                                     <p>Run Payroll</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('accounting/link_bank') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/accounting/') . '10_sync_bank.png' ?>" />
                                     <p>Bank Sync</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('credit_notes/add_new') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/accounting/') . '11_add_credit_notes.png' ?>" />
                                     <p>Add Credit Notes</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('events') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/calendar/') . '01_add_calendar_event.png' ?>" />
                                     <p>Add Calendar Events</p>
                                 </div>
@@ -107,21 +107,21 @@
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/calendar/') . '02_add_or_assign_task.png' ?>" />
                                     <p>Add/Assign a Task</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left text-center pointer">
+                                <div onclick="document.location = '<?= base_url('workorder/priority/add') ?>'" class="col-lg-3 no-padding float-left text-center pointer">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/calendar/') . '03_add_priority_list.png' ?>" />
                                     <p>Add Priority List</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('color_settings/index') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/calendar/') . '04_assign_color_settings.png' ?>" />
                                     <p>Assign Color Listing</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('users') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/company/') . '01_add_employees.png' ?>" />
                                     <p>Add Employees</p>
                                 </div>
                             </div>
                             <div class="col-lg-12 no-padding float-left">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('users/businessview') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/company/') . '02_change_business_profile.png' ?>" />
                                     <p>Change Business Profile</p>
                                 </div>
@@ -129,29 +129,29 @@
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/file_vault/') . '01_add_before_and_after_pictures.png' ?>" />
                                     <p>Add Pictures</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('vault') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/file_vault/') . '02_save_to_file_vault.png' ?>" />
                                     <p>Save to Vault</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('marketing') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/marketing/') . '01_marketing_tools.png' ?>" />
                                     <p>Marketing Tools</p>
                                 </div>
                             </div>
                             <div class="col-lg-12 no-padding float-left">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('job') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/sales/') . '01_add_a_job.png' ?>" />
                                     <p>Add a Job</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('job/job_types') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '02_add_job_type.png' ?>" />
                                     <p>Add a Job Type</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('job/job_tags') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '03_add_a_job_tag.png' ?>" />
                                     <p>Add a Job Tag</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('estimate') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '04_add_estimate.png' ?>" />
                                     <p>Add an Estimate</p>
                                 </div>
@@ -159,55 +159,55 @@
                         </div>
                         <div class="carousel-item text-center shortcuts">
                             <div class="col-lg-12 no-padding">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('workorder/NewworkOrderAlarm') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/sales/') . '05_add_workorder.png' ?>" />
                                     <p>Add Workorder</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left text-center pointer">
+                                <div onclick="document.location = '<?= base_url('customer/addTicket') ?>'" class="col-lg-3 no-padding float-left text-center pointer">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '06_add_service_ticket.png' ?>" />
                                     <p>Add Service Ticket</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('customer/add_lead') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '07_add_lead.png' ?>" />
                                     <p>Add Lead</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('customer') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '08_add_customer.png' ?>" />
                                     <p>Add Customer</p>
                                 </div>
                             </div>
                             <div class="col-lg-12 no-padding float-left">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('customer/group_add') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/sales/') . '09_add_customer_group.png' ?>" />
                                     <p>Add Customer Group</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('customer/settings') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '10_add_customer_source.png' ?>" />
                                     <p>Add Customer Source</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('customer/settings') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '11_add_customer_type.png' ?>" />
                                     <p>Add Customer Type</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('customer') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/sales/') . '12_customer_dashboard.png' ?>" />
                                     <p>Customer Dashboard</p>
                                 </div>
                             </div>
                             <div class="col-lg-12 no-padding float-left">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('customer/import_customer') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/sales/') . '13_import_customer.png' ?>" />
                                     <p>Import Customer</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/support/') . '01_enable_disable_settings.png' ?>" />
                                     <p>Enable/Disable Settings</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/support/') . '02_schedule_demo.png' ?>" />
                                     <p>Schedule a Demo</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center ">
+                                <div onclick="document.location = '<?= base_url('inventory/add') ?>'" class="col-lg-3 no-padding float-left pointer text-center ">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/tools/') . '01_add_items_to_inventory.png' ?>" />
                                     <p>Add Item</p>
                                 </div>
@@ -215,19 +215,19 @@
                         </div>
                         <div class="carousel-item text-center shortcuts">
                             <div class="col-lg-12 no-padding">
-                                <div class="float-left col-lg-3 no-padding text-center pointer">
+                                <div onclick="document.location = '<?= base_url('inventory/import') ?>'" class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/tools/') . '02_import_inventory_list.png' ?>" />
                                     <p>Import Inventory</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left text-center pointer">
+                                <div onclick="document.location = '<?= base_url('') ?>'" class="col-lg-3 no-padding float-left text-center pointer">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/tools/') . '03_add_new_service.png' ?>" />
                                     <p>Add New Service</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/tools/') . '04_add_free_schedule.png' ?>" />
                                     <p>Add Free Schedule</p>
                                 </div>
-                                <div class="col-lg-3 no-padding float-left pointer text-center">
+                                <div onclick="document.location = '<?= base_url('inventory/item_groups/add') ?>'" class="col-lg-3 no-padding float-left pointer text-center">
                                     <img class="col-lg-12" src="<?= assets_url('img/shortcuts/tools/') . '05_add_item_group.png' ?>" />
                                     <p>Add Item Group</p>
                                 </div>

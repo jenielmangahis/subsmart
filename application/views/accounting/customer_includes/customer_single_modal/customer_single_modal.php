@@ -324,7 +324,7 @@
 
                             </div>
                             <div class="transaction-list-table">
-                                <table>
+                                <table id="single_customer_table">
                                     <thead>
                                         <tr>
                                             <th>
