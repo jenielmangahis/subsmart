@@ -79,7 +79,7 @@
                                         <a href="#" class="add-notes-btn">Add notes</a>
                                         <textarea name="customer_notes" id="" cols="30" rows="3"
                                             placeholder="Add notes"></textarea>
-                                            <div class="saved-indicator"></div>
+                                        <div class="saved-indicator"></div>
                                     </div>
                                 </div>
                             </div>
@@ -91,31 +91,42 @@
                                             New Transaction &nbsp;<span class="fa fa-caret-down"></span></button>
                                         <ul class="dropdown-menu dropdown-menu-right new-transactions" role="menu">
                                             <li>
-                                                <a href="#" data-customer-id="" class="customer_craete_invoice_btn">Invoice</a>
+                                                <a href="#" data-customer-id=""
+                                                    class="customer_craete_invoice_btn">Invoice</a>
                                             </li>
                                             <li>
-                                                <a href="#" data-customer-id="" class="customer_receive_payment_btn">Payment</a>
+                                                <a href="#" data-customer-id=""
+                                                    class="customer_receive_payment_btn">Payment</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="create-estimate-btn" data-toggle="modal" data-target="#newJobModal" data-email-add="">Estimate</a>
+                                                <a href="#" class="create-estimate-btn" data-toggle="modal"
+                                                    data-target="#newJobModal" data-email-add="">Estimate</a>
                                             </li>
                                             <li>
                                                 <a href="#">Payment Link</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="created-sales-receipt" data-toggle="modal" data-target="#addsalesreceiptModal" data-email-add="" data-customer-id="">Sales Receipt</a>
+                                                <a href="#" class="created-sales-receipt" data-toggle="modal"
+                                                    data-target="#addsalesreceiptModal" data-email-add=""
+                                                    data-customer-id="">Sales Receipt</a>
                                             </li>
                                             <li>
                                                 <a href="#">Credit Memo</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="create-charge-btn" data-toggle="modal" data-target="#create_charge_modal" data-customer-id="">Delayed Charge</a>
+                                                <a href="#" class="create-charge-btn" data-toggle="modal"
+                                                    data-target="#create_charge_modal" data-customer-id="">Delayed
+                                                    Charge</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="time-activity-btn" data-toggle="modal" data-target="#time_activity_modal" data-customer-id="" >Time Activity</a>
+                                                <a href="#" class="time-activity-btn" data-toggle="modal"
+                                                    data-target="#time_activity_modal" data-customer-id="">Time
+                                                    Activity</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-customer-id="">Statement</a>
+                                                <a href="#" class="created-statement-btn" data-toggle="modal"
+                                                    data-target="#create_statement_modal"
+                                                    data-customer-id="">Statement</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -140,13 +151,117 @@
                     <div class="body-section">
                         <div class="tabs-section">
                             <ul class="body-tabs">
-                                <li class="active">
+                                <li class="active" data-target="transaction-list">
                                     <div class="labels">Transaction List</div>
                                 </li>
-                                <li>
+                                <li data-target="customer-details">
                                     <div class="labels">Customer Details</div>
                                 </li>
                             </ul>
+                        </div>
+                        <div class="tab-body-content-section customer-details" style="display: none;">
+                            <div class="pull-right">
+                                <button class="btn btn-default edit-button px-4" type="button">Edit</button>
+                            </div>
+                            <div class="customer-details-section">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="customer-info">
+                                            <div class="info-label">Customer</div>
+                                            <div class="info-value" data-for="customer-name">Nguyen, Brannon</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Email</div>
+                                            <div class="info-value" data-for="email">pintonlou@gmail.com</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Phone</div>
+                                            <div class="info-value" data-for="phone"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Mobile</div>
+                                            <div class="info-value" data-for="mobile">09480781683</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Fax</div>
+                                            <div class="info-value" data-for="fax"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Other</div>
+                                            <div class="info-value" data-for="other"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Website</div>
+                                            <div class="info-value" data-for="website">loupinton.github.io</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Notes</div>
+                                            <div class="info-value" data-for="notes"><textarea name="notes" rows="2"
+                                                    placeholder="Add notes"></textarea></div>
+                                        </div>
+                                        <div class="file-upload">
+                                            <button class="" type="button"
+                                                onclick="$('#customer_receive_payment_modal .file-upload-input').trigger( 'click' )">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> Attachments
+                                            </button> <label class="button-label" for="">Maximum size:
+                                                20MB</label>
+
+                                            <div class="image-upload-wrap">
+                                                <input class="file-upload-input" type='file' onchange="readURL(this);"
+                                                    accept="image/*" name="attachments" />
+                                                <div class="drag-text">
+                                                    <i>Drag and drop files here or click the icon</i>
+                                                </div>
+                                            </div>
+                                            <div class="file-upload-content">
+                                                <img class="file-upload-image" src="#" alt="your image" />
+                                                <div class="image-title-wrap">
+                                                    <button type="button" onclick="removeUpload()"
+                                                        class="remove-image">Remove <span class="image-title">Uploaded
+                                                            File</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="customer-info">
+                                            <div class="info-label">Billing address</div>
+                                            <div class="info-value" data-for="billing-address">2222 E First St<br> Santa
+                                                Ana, CA <br>92705</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Shipping address</div>
+                                            <div class="info-value" data-for="shipping-address">2222 E First St<br>
+                                                Santa Ana, CA <br>92705</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label" data-for="terms">Terms</div>
+                                            <div class="info-value"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label" data-for="payment-method">Payment Method</div>
+                                            <div class="info-value"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label" data-for="deleviry-method">Preferred delivery method
+                                            </div>
+                                            <div class="info-value">None</div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Customer type</div>
+                                            <div class="info-value" data-for="customer-type"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Customer language</div>
+                                            <div class="info-value" data-for="customer-laguage"></div>
+                                        </div>
+                                        <div class="customer-info">
+                                            <div class="info-label">Tax reg. no.</div>
+                                            <div class="info-value" data-for="tax-reg-no"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-body-content-section transaction-list">
                             <div class="seaction-above-table">

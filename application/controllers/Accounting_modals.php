@@ -335,80 +335,10 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['customers'] = $display;
                 break;
                 case 'expense_modal' :
-                    $paymentAccs = [];
-                    $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
-
-                    $count = 1;
-                    foreach($paymentAccsType as $accType) {
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $paymentAccs[$accType->account_name][] = $account;
-
-                                if($count === 1) {
-                                    $selectedBalance = $account->balance;
-                                }
-
-                                $count++;
-                            }
-                        }
-                    }
-
-                    if(strpos($selectedBalance, '-') !== false) {
-                        $balance = str_replace('-', '', $selectedBalance);
-                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-                    } else {
-                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-                    }
-
-                    $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
-                    $this->page_data['balance'] = $selectedBalance;
-                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['balance'] = '0.00';
                 break;
                 case 'check_modal' :
-                    $bankAccsType = $this->account_model->getAccTypeByName('Bank');
-
-                    $bankAccs = [];
-                    $accounts = $this->chart_of_accounts_model->getByAccountType($bankAccsType->id, null, logged('company_id'));
-                    $count = 1;
-                    if(count($accounts) > 0) {
-                        foreach($accounts as $account) {
-                            $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                            $account->childAccs = $childAccs;
-
-                            $bankAccs[] = $account;
-
-                            if($count === 1) {
-                                $selectedBalance = $account->balance;
-                            }
-
-                            $count++;
-                        }
-                    }
-
-                    if(strpos($selectedBalance, '-') !== false) {
-                        $balance = str_replace('-', '', $selectedBalance);
-                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-                    } else {
-                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-                    }
-
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
-                    $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['balance'] = '0.00';
                 break;
                 case 'bill_modal' :
                     $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
@@ -437,9 +367,6 @@ class Accounting_modals extends MY_Controller {
                     }
 
                     $this->page_data['due_date'] = $dueDate;
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                     $this->page_data['dropdown']['terms'] = $terms;
                 break;
                 case 'pay_bills_modal' :
@@ -486,12 +413,10 @@ class Accounting_modals extends MY_Controller {
                 case 'vendor_credit_modal' :
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                 break;
                 case 'purchase_order_modal' :
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                 break;
                 case 'credit_card_credit_modal' :
                     $creditCardAccs = [];
@@ -525,7 +450,6 @@ class Accounting_modals extends MY_Controller {
 
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                     $this->page_data['balance'] = $selectedBalance;
-                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
@@ -579,45 +503,6 @@ class Accounting_modals extends MY_Controller {
 
             $this->load->view("accounting/modals/". $view, $this->page_data);
         }
-    }
-
-    private function get_category_accs()
-    {
-        $categoryAccs = [];
-        $accountTypes = [
-            'Expenses',
-            'Bank',
-            'Accounts receivable (A/R)',
-            'Other Current Assets',
-            'Fixed Assets',
-            'Accounts payable (A/P)',
-            'Credit Card',
-            'Other Current Liabilities',
-            'Long Term Liabilities',
-            'Equity',
-            'Income',
-            'Cost of Goods Sold',
-            'Other Income',
-            'Other Expense'
-        ];
-
-        foreach($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $categoryAccs[$typeName][] = $account;
-                }
-            }
-        }
-
-        return $categoryAccs;
     }
 
     public function get_recurring_modal_fields($modal)
@@ -5412,6 +5297,42 @@ class Accounting_modals extends MY_Controller {
             case 'payment-method' :
                 $return = $this->get_payment_method_choices($return, $search);
             break;
+            case 'expense-account' :
+                $accountTypes = [
+                    'Expenses',
+                    'Bank',
+                    'Accounts receivable (A/R)',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Accounts payable (A/P)',
+                    'Credit Card',
+                    'Other Current Liabilities',
+                    'Long Term Liabilities',
+                    'Equity',
+                    'Income',
+                    'Cost of Goods Sold',
+                    'Other Income',
+                    'Other Expense'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'payment-account' :
+                $accountTypes = [
+                    'Bank',
+                    'Credit Card',
+                    'Other Current Assets'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'bank-account' :
+                $accountTypes = [
+                    'Bank'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
         if($search !== null && $search !== '') {
@@ -5576,6 +5497,82 @@ class Accounting_modals extends MY_Controller {
                     'text' => $paymentMethod['name']
                 ];
             }
+        }
+
+        return $choices;
+    }
+
+    private function get_account_choices($choices, $search = null, $accountTypes)
+    {
+        if($search === null || $search === '') {
+            foreach($accountTypes as $typeName) {
+                $accType = $this->account_model->getAccTypeByName($typeName);
+
+                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                if(count($accounts) > 0) {
+                    if(count($accountTypes) > 1) {
+                        $choices['results'][]['text'] = $typeName;
+                        $accTypeKey = array_key_last($choices['results']);
+                    }
+
+                    foreach($accounts as $account) {
+                        if($search === null || $search === '') {
+                            if(count($accountTypes) > 1) {
+                                $choices['results'][$accTypeKey]['children'][] = [
+                                    'id' => $account->id,
+                                    'text' => $account->name
+                                ];   
+                            } else {
+                                $choices['results'][] = [
+                                    'id' => $account->id,
+                                    'text' => $account->name
+                                ];
+                            }
+                        }
+    
+                        $lastParentKey = array_key_last($choices['results']);
+                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+    
+                        if(count($childAccs) > 0) {
+                            if(count($accountTypes) > 1) {
+                                $choices['results'][$lastParentKey]['children'][] = [
+                                    'text' => 'Sub-account of '.$account->name,
+                                    'children' => []
+                                ];
+                            } else {
+                                $choices['results'][] = [
+                                    'text' => 'Sub-account of '.$account->name,
+                                    'children' => []
+                                ];
+                            }
+    
+                            if(count($accountTypes) > 1) {
+                                $key = array_key_last($choices['results'][$lastParentKey]['children']);
+                            }
+    
+                            $lastParentKey = array_key_last($choices['results']);
+                            foreach($childAccs as $childAcc) {
+                                if($search === null || $search === '') {
+                                    if(count($accountTypes) > 1) {
+                                        $choices['results'][$lastParentKey]['children'][$key]['children'][] = [
+                                            'id' => $childAcc->id,
+                                            'text' => $childAcc->name
+                                        ];
+                                    } else {
+                                        $choices['results'][$lastParentKey]['children'][] = [
+                                            'id' => $childAcc->id,
+                                            'text' => $childAcc->name
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+
         }
 
         return $choices;

@@ -66,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			<div class="col-lg-6">
 				<div class="pull-right">
 					<button type="submit" data-submit-type="save-send" class="btn btn-success"
-						data-target="#modalNewCustomer" data-toggle="modal" style="border-radius: 20px 0 0 20px">New
+						data-target="#new-customer-modal" data-toggle="modal" style="border-radius: 20px 0 0 20px">New
 						Customer</button>
 					<button class="btn btn-success" type="button" data-toggle="dropdown"
 						style="border-radius: 0 20px 20px 0;margin-left: -5px;">
@@ -217,23 +217,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	data-keyboard="false" style="z-index: 1050 !important;">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body pt-0 pl-3 pb-3"></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
-			</div>
-		</div>
-	</div>
+<div class="new-customer-modal-holdder">
+
 </div>
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
 <?php include viewPath('accounting/customer_includes/customer_type/select_customer_type'); ?>

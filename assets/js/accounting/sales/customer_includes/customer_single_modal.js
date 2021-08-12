@@ -78,6 +78,13 @@ $(document).on("change", "#customer-single-modal .single-customer-info-section .
     single_customer_transaction_table_checkbox_changed();
 });
 
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li", function(event) {
+    $("#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li").removeClass("active");
+    $(this).addClass("active");
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section." + $(this).attr("data-target")).fadeIn();
+});
+
 function single_customer_notes_text_area_changed() {
     if (!$.trim($("#customer-single-modal .single-customer-info-section .top-section .notes textarea").val())) {
         $("#customer-single-modal .single-customer-info-section .top-section .notes a.add-notes-btn").show();
@@ -227,6 +234,37 @@ function single_customer_get_customers_details(customer_id) {
             single_customer_get_transaction_lists(customer_id);
             console.log(data);
             // $("#loader-modal").hide();
+
+            //seeting customer-deatials-values
+            var billing_address = "";
+            if (data.customer_details[0]['billing_address'] != null && data.customer_details[0]['billing_address'] != "") {
+                billing_address = data.customer_details[0]['billing_address'];
+            }
+            if (data.customer_details[0]['billing_city'] != null && data.customer_details[0]['billing_city'] != "") {
+                billing_address += "<br>" + data.customer_details[0]['billing_city'];
+            }
+            if (data.customer_details[0]['billing_state'] != null && data.customer_details[0]['billing_state'] != "") {
+                billing_address += ", " + data.customer_details[0]['billing_state'];
+            }
+            if (data.customer_details[0]['billing_postal'] != null && data.customer_details[0]['billing_postal'] != "") {
+                billing_address += "<br>" + data.customer_details[0]['billing_postal'];
+            }
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='customer']").html(data.customer_details[0]['last_name'] + ", " + data.customer_details[0]['fisrt_name']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='email']").html(data.customer_details[0]['email']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='phone']").html(data.customer_details[0]['phone_h']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='mobile']").html(data.customer_details[0]['phone_m']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='fax']").html(data.customer_details[0]['fax']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='other']").html("");
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='website']").html("");
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='notes'] textarea").html(data.customer_details[0]['notes']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='billing-address']").html(billing_address);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='shipping-address']").html(billing_address);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='terms']").html("");
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='payment-method']").html("");
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='delivery-method']").html("");
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='customer-type']").html(data.customer_details[0]['customer_type']);
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='customer-language']").html("");
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value[data-for='tax-reg-no']").html("");
         },
     });
 }

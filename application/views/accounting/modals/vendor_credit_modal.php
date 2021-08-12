@@ -20,9 +20,7 @@
                                                 <div class="col-md-5">
                                                     <div class="form-group">
                                                         <label for="vendor">Vendor</label>
-                                                        <select name="vendor_id" id="vendor" class="form-control" required>
-                                                            <option value="" disabled selected>&nbsp;</option>
-                                                        </select>
+                                                        <select name="vendor_id" id="vendor" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -93,24 +91,7 @@
                                                                     <td></td>
                                                                         <td>1</td>
                                                                         <td>
-                                                                            <select name="expense_name[]" class="form-control" required>
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
-                                                                                    <optgroup label="<?=$accType?>">
-                                                                                        <?php foreach($accounts as $account) : ?>
-                                                                                            <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                                            <?php if(count($account->childAccs) > 0) : ?>
-                                                                                                <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                                    <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                                        <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                                    <?php endforeach; ?>
-                                                                                                </optgroup>
-                                                                                            <?php endif; ?>
-                                                                                        <?php endforeach; ?>
-                                                                                    </optgroup>
-                                                                                <?php endforeach; ?>
-                                                                            </select>
+                                                                            <select name="expense_name[]" class="form-control" required></select>
                                                                         </td>
                                                                         <td>
                                                                             <select name="category[]" class="form-control">

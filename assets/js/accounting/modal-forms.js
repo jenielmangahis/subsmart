@@ -30,7 +30,7 @@ var submitType = 'save-and-close';
 
 var dropdownEl = null;
 
-const dropdownFields = ['customer', 'employee', 'vendor', 'payee', 'received-from', 'payment-method', 'names'];
+const dropdownFields = ['customer', 'employee', 'vendor', 'payee', 'received-from', 'payment-method', 'names', 'expense-account', 'payment-account', 'bank-account'];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 $(function() {
@@ -385,6 +385,8 @@ $(function() {
                     type = $(this).attr('name').includes('received_from') ? 'received-from' : type;
                     type = $(this).attr('name').includes('payment_method') ? 'payment-method' : type;
                     type = $(this).attr('name').includes('names[]') ? 'names' : type;
+                    type = $(this).attr('name').includes('payment_account') ? 'payment-account' : type;
+                    type = $(this).attr('name').includes('bank_account') ? 'bank-account' : type;
                 } else {
                     type = type.replaceAll('_', '-');
                 }
@@ -409,7 +411,14 @@ $(function() {
                         templateSelection: optionSelect
                     });
                 } else {
-                    $(this).select2();
+                    var options = $(this).find('option');
+                    if(options.length > 10) {
+                        $(this).select2();
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1
+                        });
+                    }
                 }
             });
 
@@ -611,7 +620,14 @@ $(function() {
                         templateSelection: optionSelect
                     });
                 } else {
-                    $(this).select2();
+                    var options = $(this).find('option');
+                    if(options.length > 10) {
+                        $(this).select2();
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1
+                        });
+                    }
                 }
             });
         }
@@ -629,7 +645,15 @@ $(function() {
             }
 
             $(this).find('select').each(function() {
-                if($(this).attr('name').includes('customer')) {
+                var type = $(this).attr('id');
+                if(type === undefined) {
+                    type = $(this).attr('name').includes('expense_name') ? 'expense-account' : type;
+                    type = $(this).attr('name').includes('customer') ? 'customer' : type;
+                } else {
+                    type = type.replaceAll('_', '-');
+                }
+
+                if(dropdownFields.includes(type)) {
                     $(this).select2({
                         ajax: {
                             url: '/accounting/get-dropdown-choices',
@@ -638,7 +662,7 @@ $(function() {
                                 var query = {
                                     search: params.term,
                                     type: 'public',
-                                    field: 'customer'
+                                    field: type
                                 }
         
                                 // Query parameters will be ?search=[term]&type=public
@@ -649,7 +673,14 @@ $(function() {
                         templateSelection: optionSelect
                     });        
                 } else {
-                    $(this).select2();
+                    var options = $(this).find('option');
+                    if(options.length > 10) {
+                        $(this).select2();
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1
+                        });
+                    }
                 }
             });
         }
@@ -5463,5 +5494,6 @@ const optionSelect = (data, container) => {
     var text = data.text;
     text = text.replaceAll('<strong>', '');
     text = text.replaceAll('</strong>', '');
+    text = $.trim(text);
     return text;
 }

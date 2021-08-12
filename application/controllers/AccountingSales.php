@@ -11,6 +11,7 @@ class AccountingSales extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
+        $payload['user_id'] = logged('id');
         $this->db->insert('accounting_tax_agencies', $payload);
 
         $this->db->where('id', $this->db->insert_id());
@@ -22,7 +23,10 @@ class AccountingSales extends MY_Controller
 
     public function apiGetAgencies()
     {
+        $this->db->where('user_id', logged('id'));
+        $agencies = $this->db->get('accounting_tax_agencies')->result();
+
         header('content-type: application/json');
-        echo json_encode(['data' => $this->db->get('accounting_tax_agencies')->result()]);
+        echo json_encode(['data' => $agencies]);
     }
 }

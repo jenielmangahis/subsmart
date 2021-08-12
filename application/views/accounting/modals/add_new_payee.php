@@ -18,7 +18,7 @@
                                             <label for="name"><span class="text-danger">*</span> Name</label>
                                             <input type="text" name="payee_name" id="payee_name" class="form-control">
                                         </div>
-                                        <?php if($type !== 'vendor' || $type !== 'customer') : ?>
+                                        <?php if($type !== 'vendor' && $type !== 'customer') : ?>
                                         <div class="form-group">
                                             <label for="name">Type</label>
                                             <select name="payee_type" id="payee_type" class="form-control">

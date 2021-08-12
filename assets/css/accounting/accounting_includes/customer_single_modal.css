@@ -253,8 +253,10 @@
     border-right: none;
 }
 
-#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li.active {
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li.active,
+#customer-single-modal .single-customer-info-section .body-section ul.body-tabs li:hover {
     border-bottom: solid 4px #2CA01C;
+    cursor: pointer;
 }
 
 #customer-single-modal .single-customer-info-section .body-section .seaction-above-table .batch-actiom-icon-holder {
@@ -434,4 +436,44 @@
     font-size: 11px;
     font-style: italic;
     color: #333333;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info {
+    padding: 10px 0;
+    border-bottom: solid 1px #CCCCCC;
+    font-size: 13px;
+    display: flex;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-label {
+    width: 150px;
+    float: left;
+    font-weight: 600;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .customer-info .info-value {
+    width: calc(100% - 150px);
+    float: left;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .file-upload {
+    padding-left: 0;
+    margin: unset;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .file-upload button {
+    border: none;
+    background: transparent;
+    height: auto;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .file-upload .button-label {
+    margin-left: 15px;
+    font-size: 13px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .file-upload .drag-text {
+    font-size: 13px;
 }

@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <style>
 /* Style the tab */
 .tab_ {
@@ -574,9 +572,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <button class="tablinks" onclick="">Billing & Subscription</button>
                             <button class="tablinks" onclick="openCity(event, 'Paris')">Usage</button>
                             <button class="tablinks" onclick="openCity(event, 'Tokyo')">Sales</button>
-                            <button class="tablinks" onclick="">Expenses</button>
-                            <button class="tablinks" onclick="">Payments</button>
-                            <button class="tablinks" onclick="">Advanced</button>
+                            <button class="tablinks" onclick="openCity(event, 'Expenses')">Expenses</button>
+                            <button class="tablinks" onclick="openCity(event, 'payments')">Payments</button>
+                            <button class="tablinks" onclick="openCity(event, 'Advanced')">Advanced</button>
                         </div>
                     </div>
                     <div id="London" class="tabcontent">
@@ -793,7 +791,298 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         </div>
                     </div>
+
+
+                    <div id="Expenses" class="tabcontent">
+                        <div class="col-md-10" style="padding:1%;">
+                            <div style="padding:1%;width:80%;"> 
+                                <table class="table">
+                                    <!-- <tr>
+                                        <td style="width:10%;">Customize</td>
+                                        <td style="width:30%;padding:3%;">
+                                            <p>Customize the way forms look to your customers</p>
+                                        </td>
+                                        <td style="padding:3%;">
+                                            <p><button class="btn btn-success">Customize look and feel</button></p>
+                                        </td>
+                                    </tr> -->
+                                    <tr>
+                                        <td style="width:10%;">Sales form content</td>
+                                        <td style="width:30%;padding:3%;">
+                                            <p>Show Items table on expense and purchase forms</p>
+                                            <p>Show Tags field on expense and purchase forms </p>
+                                            <p>Track expenses and items by customer</p>
+                                            <p>Make expenses and items billable</p>
+                                            <p>Default bill payment terms</p>
+                                            <!-- <p>Service date</p>
+                                            <p>Discount</p>
+                                            <p>Deposit </p>
+                                            <p>Tips (Gratuity)</p>
+                                            <p>Tags</p> -->
+                                        </td>
+                                        <td style="padding:3%;">
+                                            <p>On</p>
+                                            <p>On</p>
+                                            <p>On</p>
+                                            <p>On</p>
+                                            <p>Net 30</p>
+                                            <!-- <p>Off</p>
+                                            <p>Off</p>
+                                            <p>Off</p>
+                                            <p>Off</p>
+                                            <p>Off</p>
+                                            <p>On</p> -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:10%;">Purchase orders</td>
+                                        <td style="width:30%;padding:3%;">
+                                            <p>Use purchase orders</p>
+                                        </td>
+                                        <td style="padding:3%;">
+                                            <p>On</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:10%;">Messages</td>
+                                        <td style="width:30%;padding:3%;">
+                                            <p>Default email message sent with sales forms</p>
+                                        </td>
+                                        <td style="padding:3%;">
+                                            <p></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div id="payments" class="tabcontent">
+                        <div class="col-md-10" style="padding:1%;">
+
+                            <table class="table">
+                                <tr>
+                                    <td style="width:10%;">Merchant details</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Merchant ID 5247719993753319</p>
+                                        <p>Run deposit reports</p>
+                                        <p>See transaction details</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><button class="btn btn-success">Manage account</button></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Deposit Speed</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Credit Cards</p>
+                                        <p>Bank Transfers</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>1 business day</p>
+                                        <p>1 business day</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Deposit accounts</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Standard depositsl</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>TEST BANK (...6001) <a href="#">Change</a></p>
+                                        <p>P.O. BOX 681</p>
+                                        <p>PLACE, AL 35211</p>
+                                        <p>-</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Business Owner info</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Owner's address</p>
+                                        <p>Mobile Phone number</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><?php echo $clients->business_address; ?></p>
+                                        <p>(123) 456-7890</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Address</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Customer-facing address</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><?php echo $clients->business_address; ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Documents</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Monthly Statements</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <select class="form-control">
+                                                <option>July 2021</option>
+                                            </select>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Chart of Accounts</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Tell us where in QuickBooks to automatically record:</p>
+                                        <p>Standard deposits</p>
+                                        <p>Processing fees</p>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Payment Methods</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Cards</p>
+                                        <p>Bank Transfer</p>
+                                        <p>PayPal</p>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <div id="Advanced" class="tabcontent">
+                        <div class="col-md-10" style="padding:1%;">
+
+                            <table class="table">
+                                <!-- <tr>
+                                    <td style="width:10%;">Customize</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Customize the way forms look to your customers</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><button class="btn btn-success">Customize look and feel</button></p>
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <td style="width:10%;">Accounting</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>First month of fiscal year</p>
+                                        <p>First month of income tax year</p>
+                                        <p>Accounting method</p>
+                                        <p>Close the books</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>January</p>
+                                        <p>Same as fiscal year</p>
+                                        <p>Accrual</p>
+                                        <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Chart of accounts</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Enable account numbers </p>
+                                        <p>Tips account</p>
+                                        <p>Markup income account </p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>OFF</p>
+                                        <p> </p>
+                                        <p>Markup</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Categories</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Track classes</p>
+                                        <p>Track locations</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Automation</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Pre-fill forms with previously entered content</p>
+                                        <p>Automatically apply credits</p>
+                                        <p>Automatically invoice unbilled activity</p>
+                                        <p>Automatically apply bill payments</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Projects</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Organize all job-related activity in one place</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Time tracking</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Add Service field to timesheets</p>
+                                        <p>Make Single-Time Activity Billable to Customer</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>On</p>
+                                        <p>On</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Currency</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Home Currency</p>
+                                        <p>Multicurrency</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>USD</p>
+                                        <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;">Other preferences</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Date format</p>
+                                        <p>Number format</p>
+                                        <p>Customer label</p>
+                                        <p>Warn if duplicate check number is used</p>
+                                        <p>Warn me when I enter a bill number that’s already been used for that vendor</p>
+                                        <p>Warn if duplicate journal number is used</p>
+                                        <p>Sign me out if inactive for</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>MM/dd/yyyy</p>
+                                        <p>123,456.00</p>
+                                        <p>Customers</p>
+                                        <p>On</p>
+                                        <p>Off</p>
+                                        <p>Off</p>
+                                        <p>1 hour</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+
+
                 </div>
+
+                
 
 
                     

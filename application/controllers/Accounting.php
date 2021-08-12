@@ -6626,8 +6626,19 @@ class Accounting extends MY_Controller
 
     public function taxEditSettings()
     {
-        add_css('assets/css/accounting/tax/settings/settings.css');
-        add_footer_js('assets/js/accounting/tax/settings/settings.js');
+        add_css([
+            'assets/css/accounting/tax/settings/settings.css',
+            'https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css',
+            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/tax/settings/settings.js',
+            'https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+        ]);
+
         $this->load->view('accounting/sales/taxEditSettings', $this->page_data);
     }
 
