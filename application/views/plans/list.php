@@ -122,6 +122,28 @@ svg#svg-sprite-menu-close {
     bottom: 0px;
   }
 }
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
+}
+.cell-active{
+    background-color: #53b94a;
+    color: white;
+    padding: 4px 0px;
+    width: 75px;
+    display: block;
+    text-align: center;
+    border-radius: 20px;
+}
+.cell-inactive{
+    background-color: #585858;
+    color: white;
+    padding: 4px 0px;
+    width: 75px;
+    display: block;
+    text-align: center;
+    border-radius: 20px;
+}
 </style>
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -166,29 +188,36 @@ svg#svg-sprite-menu-close {
                <table id="dataTable1" class="table table-bordered table-striped">
                   <thead>
                      <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Status</th>
+                        <th style="width:70%;">Name</th>
+                        <th style="width:20%;">Status</th>
                         <th>Action</th>
                      </tr>
                   </thead>
                   <tbody>
-                     <?php foreach ($plans as $row): ?>
+                      <?php foreach ($plans as $row): ?>
+                      <?php
+                          if( $row->status == 1 ){
+                              $cell   = 'cell-active';
+                              $status = 'Activated';
+                          }else{
+                              $cell   = 'cell-inactive';
+                              $status = 'Deactivated';
+                          } 
+                      ?>
                      <tr>
-                        <td width="60"><?php echo $row->id ?></td>
                         <td>
                            <?php echo $row->plan_name ?>
                         </td>
-                        <td>
-                           <?php echo ($row->status==1)?'Activated':'De-Activated'; ?>
+                        <td><span class="<?= $cell; ?>"><?= $status; ?></span>
                         </td>
-
                         <td>
                            <?php //if (hasPermissions('plan_edit')): ?>
-                           <a href="<?php echo url('plans/edit/'.$row->id) ?>" class="btn btn-sm btn-default" title="Edit item" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                           <a href="<?php echo url('plans/edit/'.$row->id) ?>" class="btn btn-sm btn-primary" title="Edit item" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit</a>
                            <?php //endif ?>
                            <?php //if (hasPermissions('plan_delete')): ?>
-                           <a href="<?php echo url('plans/delete/'.$row->id) ?>" class="btn btn-sm btn-default" onclick='return confirm("Do you really want to delete this item ? \nIt may cause errors where it is currently being used !!")' title="Delete item" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                           <a class="btn btn-sm btn-primary btn-delete-plan" data-name="<?= $row->plan_name; ?>" href="javascript:void(0);" data-id="<?= $row->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+
+                           <a href="<?php echo url('plans/delete/'.$row->id) ?>" class="btn btn-sm btn-primary" onclick='return confirm("Do you really want to delete this item ? \nIt may cause errors where it is currently being used !!")' title="Delete item" data-toggle="tooltip"><i class="fa fa-trash"></i> Delete</a>
                            <?php //endif ?>
                         </td>
                      </tr>
@@ -201,6 +230,28 @@ svg#svg-sprite-menu-close {
 
             </div>
             <!-- /.box-footer-->
+            <div class="modal fade bd-example-modal-sm" id="modalDeletePlan" tabindex="-1" role="dialog" aria-labelledby="modalDeletePlanTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <?php echo form_open_multipart('plans/delete', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
+                  <div class="modal-body">        
+                      <p>Are you sure you want to delete plan name <span class="delete-plan-name"></span></p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                  </div>
+                  <?php echo form_close(); ?>
+                </div>
+              </div>
+            </div>
          </div>
          <!-- /.box -->
       </section>
@@ -212,6 +263,20 @@ svg#svg-sprite-menu-close {
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-   $('#dataTable1').DataTable()
+   $('#dataTable1').DataTable({
+    "searching": true,
+    "sort": false
+   });
+
+   $(document).on('click', '.btn-delete-plan', function(){
+      var plan_id   = $(this).attr("data-id");
+      var plan_name = $(this).attr("data-name");
+
+      $("#pid").val(plan_id);
+      $(".delete-plan-name").html("<b>" + plan_name + "</b>");
+      $("#modalDeletePlan").modal('show');
+  });
+
+
 
 </script>

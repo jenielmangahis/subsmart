@@ -59,8 +59,6 @@ class Plans extends MY_Controller {
 		$this->load->view('plans/edit', $this->page_data);
 	}
 
-
-
 	public function save(){		
 
 		postAllowed();		
@@ -108,8 +106,6 @@ class Plans extends MY_Controller {
 
 		redirect('plans');
 	}
-
-
 
 	public function update($id){		
 
@@ -175,10 +171,6 @@ class Plans extends MY_Controller {
 		redirect('items');
 	}
 
-
-
-	
-	
 	public function checkIfUnique(){		
 
 		$code = get('code');
@@ -198,6 +190,15 @@ class Plans extends MY_Controller {
 			die('false');
 		else
 			die('true');
+	}
+
+	public function delete_plan(){
+        $this->plans_model->deletePlan(post('pid'));
+
+        $this->session->set_flashdata('message', 'Plan has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('plans');
 	}
 
 }

@@ -592,7 +592,7 @@ class Admin extends CI_Controller
     public function delete_nsmart_plan(){
         $this->load->model('NsmartPlan_model');
 
-        $id = $this->NsmartPlan_model->deletePlan(post('pid'));
+        $this->NsmartPlan_model->deletePlan(post('pid'));
 
         $this->session->set_flashdata('message', 'Plan has been Deleted Successfully');
         $this->session->set_flashdata('alert_class', 'alert-success');
@@ -1561,16 +1561,22 @@ class Admin extends CI_Controller
         $this->load->model('SubscriberNsmartUpgrade_model');
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
+        $this->load->model('CompanyDeactivatedModule_model');
 
         $post = $this->input->post();
-
-        $sid = $post['sid'];
-        $cid = logged('company_id');
+        $sid  = $post['sid'];
 
         $subscriber   = $this->Clients_model->getById($sid);
         $industryType = $this->IndustryType_model->getById($subscriber->industry_type_id);
         $templateModules = $this->IndustryTemplateModules_model->getAllByIndustryTemplateId($industryType->industry_template_id);
+        $deactivatedModules = $this->CompanyDeactivatedModule_model->getAllByCompanyId($subscriber->id);
 
+        $deactivated_modules = array();
+        foreach($deactivatedModules as $d){
+            $deactivated_modules[$d->industry_module_id] = $d->industry_module_id;
+        }
+
+        $this->page_data['deactivated_modules'] = $deactivated_modules;
         $this->page_data['templateModules'] = $templateModules;
         $this->page_data['subscriber'] = $subscriber;
         $this->load->view('admin/subscribers/ajax_company_module_details', $this->page_data);
@@ -2070,6 +2076,32 @@ class Admin extends CI_Controller
         $this->session->set_flashdata('alert_class', 'alert-success');
         
         redirect('admin/nsmart_plans');
+    }
+
+    public function save_company_deactivated_module()
+    {
+        $this->load->model('CompanyDeactivatedModule_model');
+
+        $post = $this->input->post();
+        
+        if( $post['is_activated'] == 1 ){
+            $isModuleExist = $this->CompanyDeactivatedModule_model->getByCompanyIdAndIndustryModuleId($post['company_id'], $post['module_id']);
+            if( $isModuleExist ){
+                $this->CompanyDeactivatedModule_model->delete($isModuleExist->id);
+            }
+        }else{
+            $data = [
+                'company_id' => $post['company_id'],
+                'industry_module_id' => $post['module_id']
+            ];
+
+            $result = $this->CompanyDeactivatedModule_model->save($data);
+        }
+        
+
+        $json_data = ['is_success' => 1];
+
+        echo json_encode($json_data);
     }
 }
 
