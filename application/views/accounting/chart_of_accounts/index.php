@@ -166,7 +166,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             <!-- add account modal -->
             <div class="modal fade" id="modalAddAccount" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document" style="max-width: 800px !important">
                     <div class="modal-content">
                         <form action="/accounting/chart-of-accounts/add" method="post" class="form-validate" novalidate="novalidate">
                             <div class="modal-header">
@@ -179,7 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="card p-0 m-0">
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="account_type">Account Type</label>
                                                             <select name="account_type" id="account_type" class="form-control select2" required>
@@ -201,7 +201,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <?=$detail->description?>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="name">Name</label>
                                                             <input type="text" class="form-control" name="name" id="name" required

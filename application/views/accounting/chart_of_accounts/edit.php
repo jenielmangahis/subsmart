@@ -1,5 +1,5 @@
 <div class="modal fade" id="modalEditAccount" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document" style="max-width: 800px !important">
         <div class="modal-content">
             <?php echo form_open_multipart('accounting/chart-of-accounts/update/'.$chart_of_accounts->id, ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
                 <div class="modal-header">
@@ -13,7 +13,7 @@
                             <div class="card p-0 m-0">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="account_type">Account Type</label>
                                                 <select name="account_type" id="edit_account_type" class="form-control select2" required>
@@ -35,7 +35,7 @@
                                                 <?=$detail_type->description?>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <input type="text" class="form-control" name="name" id="edit_name" required

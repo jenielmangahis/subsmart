@@ -48,7 +48,21 @@ get_load_customers_table();
 $('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
     get_load_customers_table();
 });
+get_modal_new_customer();
 
+function get_modal_new_customer() {
+    console.log("data");
+    console.log("data");
+    $.ajax({
+        url: baseURL + "/accounting/get-add-customer-details-modal",
+        type: "GET",
+        data: {},
+        success: function(data) {
+
+            $(".new-customer-modal-holdder").html(data);
+        },
+    });
+}
 
 
 $(document).on("click", ".created-sales-receipt", function(event) {

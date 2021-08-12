@@ -29,7 +29,7 @@ include viewPath('includes/header');
                     </div>
                 </div>
 
-                <table class="table table-hover settings__table">
+                <table class="table table-hover settings__table" id="agencyTable">
                     <thead>
                         <tr>
                             <th class="settings__tableHead" scope="col">Agency</th>
@@ -40,25 +40,8 @@ include viewPath('includes/header');
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td data-type="agency">Florida Department of Revenue</td>
-                            <td data-type="filling_frequency">Monthly</td>
-                            <td data-type="tax_period_start">January</td>
-                            <td data-type="date_start">01/01/2012</td>
-                            <td data-type="agency">
-                                <div class="btn-group btnGroup">
-                                    <button data-action="agencyInfo" type="button" class="btn btn-sm btnGroup__main">Edit</button>
-                                    <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Make inactive</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
-                    </table>
+                </table>
             </div>
 
             <div class="settings__spacer"></div>
@@ -112,12 +95,12 @@ include viewPath('includes/header');
                 </button>
             </div>
 
-            <p>Florida Department of Revenue</p>
+            <p data-type="agency"></p>
 
             <form>
                 <div class="form-group">
                     <label for="agencyInfo__filingFrequency">Filing frequency</label>
-                    <select class="form-control" id="agencyInfo__filingFrequency">
+                    <select data-type="frequency" class="form-control" id="agencyInfo__filingFrequency">
                         <option value="yearly">Yearly</option>
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
@@ -127,12 +110,12 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="agencyInfo__taxPeriodStart">Start of tax period</label>
-                    <input type="text" class="form-control" id="agencyInfo__taxPeriodStart" value="January">
+                    <input readonly data-type="start_period" type="text" class="form-control" id="agencyInfo__taxPeriodStart" value="January">
                 </div>
 
                 <div class="form-group">
                     <label for="agencyInfo__dateStart">Start Date</label>
-                    <input type="date" class="form-control" id="agencyInfo__dateStart" value="January">
+                    <input data-type="start_date" type="date" class="form-control" id="agencyInfo__dateStart" value="January">
                 </div>
             </form>
 
@@ -169,7 +152,7 @@ include viewPath('includes/header');
                         <option value="yearly">Yearly</option>
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
-                        <option value="half_yearly">Half-yearly</option>
+                        <option value="half-yearly">Half-yearly</option>
                     </select>
                 </div>
 
@@ -218,12 +201,20 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="addRate__agency">Agency</label>
-                    <input type="text" class="form-control" id="addRate__agency">
+                    <div class="dropdownWithSearch" id="rateAgencySelect">
+                        <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" id="addRate__agency" placeholder="Select agency">
+                        <button type="button" class="dropdownWithSearch__btn">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="addRate__rate">Rate</label>
-                    <input type="text" class="form-control" id="addRate__rate">
+                    <div class="d-flex align-items-center">
+                        <input type="number" class="form-control" id="addRate__rate">
+                        <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                    </div>
                 </div>
             </form>
 
