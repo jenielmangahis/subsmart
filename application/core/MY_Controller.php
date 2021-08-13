@@ -150,7 +150,7 @@ class MY_Controller extends CI_Controller {
 	            redirect('mycrm/membership');
 	        }
 
-	        $deactivated_modules = $ci->sessioin->userdata('deactivated_modules');
+	        $deactivated_modules = $ci->session->userdata('deactivated_modules');
 	        if( !in_array($module_id, $deactivated_modules) ){
 	            $this->session->set_flashdata('alert_class', 'alert-danger');
 	            $this->session->set_flashdata('message', 'You have no access to this module');

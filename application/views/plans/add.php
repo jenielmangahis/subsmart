@@ -117,6 +117,12 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
+.getItems_hidden{
+  display: none;
+}
+.show_mobile_view{
+  display: none;
+}
 </style>
 <?php
    defined('BASEPATH') OR exit('No direct script access allowed'); ?>
@@ -152,7 +158,7 @@ a.btn-primary.btn-md {
             </div>
             <div class="pl-3 pr-3 mt-2 row">
               <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add New Plan.</span>
+                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add New Package.</span>
               </div>
             </div>
 						<div class="card-body" style="padding: 0px;">
@@ -175,7 +181,14 @@ a.btn-primary.btn-md {
 								</div>
 
 								<div class="col-md-12 table-responsive">
-									<h5>Assign Items</h5>
+                  <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-6">
+  									 <h5>Assign Items</h5>
+                    </div>
+                    <div class="col-sm-6" style="text-align: right;">
+                      <a href="#" class="btn btn-primary btn-sm" id="add_another_old" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus"></i> Add Items</a>
+                    </div>
+                  </div>
 									<table class="table table-hover">
 										<input type="hidden" name="count" value="0" id="count">
 										<thead>
@@ -186,7 +199,7 @@ a.btn-primary.btn-md {
 												<!-- <th>LOCATION</th> -->
 												<th width="100px">COST</th>
 												<th width="100px">Discount</th>
-												<th>Tax(%)</th>
+												<th>Tax(7.5%)</th>
 												<th>Total</th>
 											</tr>
 										</thead>
@@ -200,18 +213,22 @@ a.btn-primary.btn-md {
 													</select></td>
 												<td width="100px"><input type="text" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
 												<!-- <td><input type="text" class="form-control" name="location[]"></td> -->
-												<td width="140px"><input readonly type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0"></td>
+												<td width="140px"><input type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0"></td>
 												<td width="100px"><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0"></td>
-												<td width="100px"><span id="span_tax_0">0.00 (7.5%)</span></td>
+												<td width="100px">
+                          <input type="text" class="form-control tax_change2" name="tax[]" data-counter="0" id="tax_1_0" min="0" value="0.00" disabled="">
+                          <!-- <span id="span_tax_0">0.00</span> -->
+                        </td>
 												<td><span id="span_total_0">0.00</span></td>
 											</tr>
 										</tbody>
 									</table>
-									<a href="#" class="btn btn-primary" id="add_another_old" data-toggle="modal" data-target="#item_list">Add Items</a>
+									
 								</div>
 
-								<div class="col-sm-6 mt-3">
-									<button type="submit" class="btn btn-flat btn-primary">Submit</button>
+								<div class="col-sm-6 mt-3">                  
+									<button type="submit" class="btn btn-flat btn-primary">Save</button>
+                  <a class="btn btn-primary" href="<?php echo base_url('plans'); ?>">Cancel</a>
 								</div>
 
 							</div>
@@ -283,37 +300,16 @@ a.btn-primary.btn-md {
 <?php include viewPath('includes/footer'); ?>
 <script>
    $(document).ready(function() {
-
      $('.form-validate').validate();
-
-
-
      $('.check-select-all-p').on('change', function() {
-
-
-
        $('.check-select-p').attr('checked', $(this).is(':checked'));
-
-
-
-     })
-
-
-
-     $('.table-DT').DataTable({
-
-       "ordering": false,
-
      });
 
-   })
-
-
-
+     $('.table-DT').DataTable({
+       "ordering": false,
+     });
+   });
 </script>
 <script>
-   //Initialize Select2 Elements
-
-   $('.select2').select2()
-
+   $('.select2').select2();
 </script>
