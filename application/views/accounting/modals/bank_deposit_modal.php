@@ -20,23 +20,7 @@
                                                 <div class="col-md-5">
                                                     <div class="form-group">
                                                         <label for="bankAccount">Account</label>
-                                                        <select name="bank_account" id="bankAccount" class="form-control" required>
-                                                            <?php foreach($accounts as $accType => $accs) : ?>
-                                                                <optgroup label="<?=$accType?>">
-                                                                    <?php foreach($accs as $account) : ?>
-                                                                        <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                        <?php if(count($account->childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                    <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                </optgroup>
-                                                            <?php endforeach; ?>
-                                                        </select>
+                                                        <select name="bank_account" id="bank_deposit_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 d-flex ">
@@ -96,32 +80,12 @@
                                                                     <select name="received_from[]" class="form-control"></select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="account[]" class="form-control" required>
-                                                                        <option value="" disabled selected>&nbsp;</option>
-                                                                        <?php foreach($fundsAccounts as $accType => $fundAccs) : ?>
-                                                                            <optgroup label="<?=$accType?>">
-                                                                                <?php foreach($fundAccs as $fundAcc) : ?>
-                                                                                    <option value="<?=$fundAcc->id?>"><?=$fundAcc->name?></option>
-
-                                                                                    <?php if(count($fundAcc->childAccs) > 0) : ?>
-                                                                                        <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$fundAcc->name?>">
-                                                                                            <?php foreach($fundAcc->childAccs as $childAcc) : ?>
-                                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                            <?php endforeach; ?>
-                                                                                        </optgroup>
-                                                                                    <?php endif; ?>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endforeach; ?>
-                                                                    </select>
+                                                                    <select name="funds_account[]" class="form-control" required></select>
                                                                 </td>
                                                                 <td><input type="text" name="description[]" class="form-control"></td>
                                                                 <td>
                                                                     <select name="payment_method[]" class="form-control">
                                                                         <option value="" disabled selected>&nbsp;</option>
-                                                                        <?php foreach($dropdown['payment_methods'] as $paymentMethod) : ?>
-                                                                            <option value="<?=$paymentMethod['id']?>"><?=$paymentMethod['name']?></option>
-                                                                        <?php endforeach; ?>
                                                                     </select>
                                                                 </td>
                                                                 <td><input type="text" name="reference_no[]" class="form-control"></td>
@@ -170,23 +134,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackTarget">Cash back goes to</label>
-                                                        <select name="cash_back_target" id="cashBackTarget" class="form-control" required>
-                                                        <?php foreach($accounts as $accType => $accounts) : ?>
-                                                            <optgroup label="<?=$accType?>">
-                                                                <?php foreach($accounts as $account) : ?>
-                                                                    <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                    <?php if(count($account->childAccs) > 0) : ?>
-                                                                        <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                            <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                            <?php endforeach; ?>
-                                                                        </optgroup>
-                                                                    <?php endif; ?>
-                                                                <?php endforeach; ?>
-                                                            </optgroup>
-                                                        <?php endforeach; ?>
-                                                        </select>
+                                                        <select name="cash_back_target" id="cash_back_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">

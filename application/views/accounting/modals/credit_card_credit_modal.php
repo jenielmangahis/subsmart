@@ -26,19 +26,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="bank_credit_account">Bank/Credit account</label>
-                                                        <select name="bank_credit_account" id="bank_credit_account" class="form-control" required>
-                                                            <?php foreach($dropdown['bank_credit_accounts'] as $account) : ?>
-                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                <?php if(count($account->childAccs) > 0) : ?>
-                                                                    <optgroup label="Sub-account of <?=$account->name?>">
-                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                            <option value="<?=$childAcc->id?>"><?=$childAcc->name?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        </select>
+                                                        <select name="bank_credit_account" id="bank_credit_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 d-flex ">

@@ -1,13 +1,14 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Accounting_modals extends MY_Controller {
-
+class Accounting_modals extends MY_Controller
+{
     private $upload_path = "./uploads/accounting/attachments/";
     public $result = null;
     public $page_data = [];
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->checkLogin();
 
@@ -44,10 +45,11 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('expenses_model');
         $this->load->model('accounting_assigned_checks_model');
         $this->load->model('accounting_timesheet_settings_model');
-		$this->load->library('form_validation');
+        $this->load->library('form_validation');
     }
 
-    public function index($view ="") {
+    public function index($view ="")
+    {
         if ($view) {
             switch ($view) {
                 case 'pay_down_credit_card_modal':
@@ -55,12 +57,12 @@ class Accounting_modals extends MY_Controller {
                     $accounts = $this->chart_of_accounts_model->select();
 
                     $bankAccounts = [];
-                    foreach($detailTypes as $detailType) {
-                        $detailTypeAccs = array_filter($accounts, function($v, $k) use ($detailType) {
+                    foreach ($detailTypes as $detailType) {
+                        $detailTypeAccs = array_filter($accounts, function ($v, $k) use ($detailType) {
                             return $v->acc_detail_id === $detailType->acc_detail_id;
                         }, ARRAY_FILTER_USE_BOTH);
 
-                        if(!empty($detailTypeAccs)) {
+                        if (!empty($detailTypeAccs)) {
                             $bankAccounts[$detailType->acc_detail_name] = $detailTypeAccs;
                         }
                     }
@@ -71,7 +73,6 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'single_time_activity_modal':
                     $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                     $this->page_data['dropdown']['services'] = $this->items_model->getItemsWithFilter(['type' => ['service', 'Service'], 'status' => [1]]);
@@ -86,7 +87,7 @@ class Accounting_modals extends MY_Controller {
                         ]
                     ];
 
-                    for($i = 0; $time != $endTime; $i++) {
+                    for ($i = 0; $time != $endTime; $i++) {
                         $time = date('H:i', strtotime($time . '+ 15 minutes'));
 
                         $times[] = [
@@ -102,11 +103,11 @@ class Accounting_modals extends MY_Controller {
                     $accountTypes = $this->account_model->getAccounts();
 
                     $bankAccounts = [];
-                    foreach($accountTypes as $accType) {
+                    foreach ($accountTypes as $accType) {
                         $accName = strtolower($accType->account_name);
 
-                        foreach($accounts as $account) {
-                            if($account->account_id === $accType->id) {
+                        foreach ($accounts as $account) {
+                            if ($account->account_id === $accType->id) {
                                 $bankAccounts[$accType->account_name][] = [
                                     'value' => $accName.'-'.$account->id,
                                     'text' => $account->name,
@@ -122,7 +123,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
-                case 'transfer_modal' :
+                case 'transfer_modal':
                     $accountTypes = [
                         'Bank',
                         'Other Current Assets',
@@ -135,13 +136,13 @@ class Accounting_modals extends MY_Controller {
 
                     $accounts = [];
 
-                    foreach($accountTypes as $accountType) {
+                    foreach ($accountTypes as $accountType) {
                         $type = $this->account_model->getAccTypeByName($accountType);
 
                         $typeAccounts = $this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id'));
 
-                        if(count($typeAccounts) > 0) {
-                            foreach($typeAccounts as $typeAcc) {
+                        if (count($typeAccounts) > 0) {
+                            foreach ($typeAccounts as $typeAcc) {
                                 $childAcc = $this->chart_of_accounts_model->getChildAccounts($typeAcc->id);
 
                                 $typeAcc->childAccs = $childAcc;
@@ -154,89 +155,18 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['accounts'] = $accounts;
                 break;
                 case 'bank_deposit_modal':
-                    $accountTypes = $this->account_model->getAccTypeByName(['Bank', 'Other Current Assets']);
-
-                    $bankAccounts = [];
-                    $count = 1;
-                    foreach($accountTypes as $accType) {
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $bankAccounts[$accType->account_name][] = $account;
-
-                                if($count === 1) {
-                                    $selectedBalance = $account->balance;
-                                }
-
-                                $count++;
-                            }
-                        }
-                    }
-
-                    $fundAccsTypes = [
-                        'Income',
-                        'Other Income',
-                        'Bank',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Cost of Goods Sold',
-                        'Expenses',
-                        'Other Expense'
-                    ];
-                    $fundsAccounts = [];
-
-                    foreach($fundAccsTypes as $fundAccType) {
-                        $type = $this->account_model->getAccTypeByName($fundAccType);
-
-                        $fundAccs = $this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id'));
-
-                        if(count($fundAccs) > 0) {
-                            foreach($fundAccs as $fundAcc) {
-                                $childFundAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $fundAcc->childAccs = $childFundAccs;
-
-                                $fundsAccounts[$fundAccType][] = $fundAcc;
-                            }
-                        }
-                    }
-
-
-                    if(strpos($selectedBalance, '-') !== false) {
-                        $balance = str_replace('-', '', $selectedBalance);
-                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-                    } else {
-                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-                    }
-
-                    $this->page_data['fundsAccounts'] = $fundsAccounts;
-                    $this->page_data['balance'] = $selectedBalance;
-                    $this->page_data['accounts'] = $bankAccounts;
-                    $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+                    $this->page_data['balance'] = '$0.00';
                 break;
                 case 'inventory_qty_modal':
                     $accounts = $this->chart_of_accounts_model->select();
                     $accountTypes = $this->account_model->getAccounts();
 
                     $bankAccounts = [];
-                    foreach($accountTypes as $accType) {
+                    foreach ($accountTypes as $accType) {
                         $accName = strtolower($accType->account_name);
 
-                        foreach($accounts as $account) {
-                            if($account->account_id === $accType->id) {
+                        foreach ($accounts as $account) {
+                            if ($account->account_id === $accType->id) {
                                 $bankAccounts[$accType->account_name][] = [
                                     'value' => $accName.'-'.$account->id,
                                     'text' => $account->name,
@@ -280,13 +210,13 @@ class Accounting_modals extends MY_Controller {
                         ]
                     ];
 
-                    for($i = 2; $i <= 105; $i++) {
+                    for ($i = 2; $i <= 105; $i++) {
                         $firstDay = $lastDay->add(new DateInterval('P1D'));
                         $firstDayString = $firstDay->format('m/d/Y');
                         $lastDay = $firstDay->add(new DateInterval('P6D'));
                         $lastDayString = $lastDay->format('m/d/Y');
 
-                       $weeks[] = [
+                        $weeks[] = [
                            'firstDay' => $firstDayString,
                            'lastDay' => $lastDayString,
                            'selected' => (strtotime($date) >= strtotime($firstDayString) && strtotime($date) <= strtotime($lastDayString)) ? true : false
@@ -295,7 +225,7 @@ class Accounting_modals extends MY_Controller {
 
                     $this->page_data['dropdown']['weeks'] = $weeks;
                 break;
-                case 'statement_modal' :
+                case 'statement_modal':
                     $data = [
                         'cust_bal_status' => 'open',
                         'company_id' => logged('company_id'),
@@ -305,9 +235,9 @@ class Accounting_modals extends MY_Controller {
                     $customers = $this->accounting_invoices_model->getStatementInvoices($data);
 
                     $display = [];
-                    foreach($customers as $customer) {
+                    foreach ($customers as $customer) {
                         $index = array_search($customer->customer_id, array_column($display, 'id'));
-                        if($index === false) {
+                        if ($index === false) {
                             $display[] = [
                                 'id' => $customer->customer_id,
                                 'name' => $customer->first_name . ' ' . $customer->last_name,
@@ -315,18 +245,18 @@ class Accounting_modals extends MY_Controller {
                                 'balance' => ($customer->status === '1') ? number_format($customer->amount, 2, '.', ',') : 0.00
                             ];
                         } else {
-                            if($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
+                            if ($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
                                 $balance = (int)$display[$index]['balance'] + $customer->amount;
                                 $display[$index]['balance'] = number_format($balance, 2, '.', ',');
                             }
                         }
                     }
 
-                    $totalBalance = array_sum(array_map(function($item) { 
-                        return $item['balance']; 
+                    $totalBalance = array_sum(array_map(function ($item) {
+                        return $item['balance'];
                     }, $display));
 
-                    $withoutEmail = array_filter($display, function($value, $key) {
+                    $withoutEmail = array_filter($display, function ($value, $key) {
                         return $value['email'] === '';
                     }, ARRAY_FILTER_USE_BOTH);
 
@@ -334,31 +264,30 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['total'] = number_format($totalBalance, 2, '.', ',');
                     $this->page_data['customers'] = $display;
                 break;
-                case 'expense_modal' :
-                    $this->page_data['balance'] = '0.00';
+                case 'expense_modal':
+                    $this->page_data['balance'] = '$0.00';
                 break;
-                case 'check_modal' :
-                    $this->page_data['balance'] = '0.00';
+                case 'check_modal':
+                    $this->page_data['balance'] = '$0.00';
                 break;
-                case 'bill_modal' :
+                case 'bill_modal':
                     $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
 
                     $selectedTerm = $terms[0];
 
-                    if($selectedTerm->type === "1") {
+                    if ($selectedTerm->type === "1") {
                         $dueDate = date("m/d/Y", strtotime(date("m/d/Y")." +$selectedTerm->net_due_days days"));
                     } else {
-                        if($selectedTerm->minimum_days_to_pay === null ||
+                        if ($selectedTerm->minimum_days_to_pay === null ||
                             $selectedTerm->minimum_days_to_pay === "" ||
-                            $selectedTerm->minimum_days_to_pay === "0")
-                        {
-                            if(intval(date("d")) > intval($selectedTerm->day_of_month_due)) {
+                            $selectedTerm->minimum_days_to_pay === "0") {
+                            if (intval(date("d")) > intval($selectedTerm->day_of_month_due)) {
                                 $dueDate = date("m/d/Y", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." +1 month"));
                             } else {
                                 $dueDate = date("m/$selectedTerm->day_of_month_due/Y");
                             }
                         } else {
-                            if(intval(date("d") > intval(date("d", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." -$selectedTerm->minimum_days_to_pay days"))))) {
+                            if (intval(date("d") > intval(date("d", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." -$selectedTerm->minimum_days_to_pay days"))))) {
                                 $dueDate = date("m/d/Y", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." +1 month"));
                             } else {
                                 $dueDate = date("m/$selectedTerm->day_of_month_due/Y");
@@ -369,92 +298,21 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['due_date'] = $dueDate;
                     $this->page_data['dropdown']['terms'] = $terms;
                 break;
-                case 'pay_bills_modal' :
-                    $paymentAccs = [];
-                    $accountTypes = [
-                        'Bank',
-                        'Credit Card'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        $count = 0;
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $paymentAccs[$typeName][] = $account;
-
-                                if($count === 1) {
-                                    $selectedBalance = $account->balance;
-                                }
-    
-                                $count++;
-                            }
-                        }
-                    }
-
-                    if(strpos($selectedBalance, '-') !== false) {
-                        $balance = str_replace('-', '', $selectedBalance);
-                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-                    } else {
-                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-                    }
-
-                    $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
-                    $this->page_data['balance'] = $selectedBalance;
-                    $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
+                case 'pay_bills_modal':
+                    $this->page_data['balance'] = '$0.00';
                 break;
-                case 'vendor_credit_modal' :
+                case 'vendor_credit_modal':
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                 break;
-                case 'purchase_order_modal' :
+                case 'purchase_order_modal':
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                 break;
-                case 'credit_card_credit_modal' :
-                    $creditCardAccs = [];
-                    $accType = $this->account_model->getAccTypeByName('Credit Card');
-
-                    $count = 1;
-                    $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                    if(count($accounts) > 0) {
-                        foreach($accounts as $account) {
-                            $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                            $account->childAccs = $childAccs;
-
-                            $creditCardAccs[] = $account;
-
-                            if($count === 1) {
-                                $selectedBalance = $account->balance;
-                            }
-
-                            $count++;
-                        }
-                    }
-
-                    if(strpos($selectedBalance, '-') !== false) {
-                        $balance = str_replace('-', '', $selectedBalance);
-                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-                    } else {
-                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-                    }
-
-                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['balance'] = $selectedBalance;
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                case 'credit_card_credit_modal':
+                    $this->page_data['balance'] = '$0.00';
                 break;
-                case 'print_checks_modal' :
+                case 'print_checks_modal':
                     $paymentAccs = [];
                     $accountTypes = [
                         'Bank',
@@ -462,20 +320,20 @@ class Accounting_modals extends MY_Controller {
                     ];
 
                     $count = 1;
-                    foreach($accountTypes as $typeName) {
+                    foreach ($accountTypes as $typeName) {
                         $accType = $this->account_model->getAccTypeByName($typeName);
 
                         $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
+                        if (count($accounts) > 0) {
+                            foreach ($accounts as $account) {
                                 $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
                                 $account->childAccs = $childAccs;
 
                                 $paymentAccs[$typeName][] = $account;
 
-                                if($count === 1) {
+                                if ($count === 1) {
                                     $selectedBalance = $account->balance;
 
                                     $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
@@ -488,7 +346,7 @@ class Accounting_modals extends MY_Controller {
                         }
                     }
 
-                    if(strpos($selectedBalance, '-') !== false) {
+                    if (strpos($selectedBalance, '-') !== false) {
                         $balance = str_replace('-', '', $selectedBalance);
                         $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
                     } else {
@@ -507,12 +365,12 @@ class Accounting_modals extends MY_Controller {
 
     public function get_recurring_modal_fields($modal)
     {
-        if($modal) {
+        if ($modal) {
             $totalDays = date('t');
 
             $recurringDays = [];
             $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-            for($i = 1; $i <= (int)$totalDays; $i++) {
+            for ($i = 1; $i <= (int)$totalDays; $i++) {
                 if (($i %100) >= 11 && ($i%100) <= 13) {
                     $abbreviation = $i. 'th';
                 } else {
@@ -525,24 +383,24 @@ class Accounting_modals extends MY_Controller {
 
             $this->page_data['recurringDays'] = $recurringDays;
 
-            if($modal === 'bank_deposit') {
+            if ($modal === 'bank_deposit') {
                 $accounts = $this->chart_of_accounts_model->select();
                 $accountTypes = $this->account_model->getAccounts();
 
                 $bankAccounts = [];
                 $count = 1;
-                foreach($accountTypes as $accType) {
+                foreach ($accountTypes as $accType) {
                     $accName = strtolower($accType->account_name);
 
-                    foreach($accounts as $account) {
-                        if($account->account_id === $accType->id) {
+                    foreach ($accounts as $account) {
+                        if ($account->account_id === $accType->id) {
                             $bankAccounts[$accType->account_name][] = [
                                 'value' => $accName.'-'.$account->id,
                                 'text' => $account->name,
                                 'selected' => $count === 1 ? true : false
                             ];
 
-                            if($count === 1) {
+                            if ($count === 1) {
                                 $selectedBalance = $account->balance;
                             }
                         }
@@ -557,7 +415,8 @@ class Accounting_modals extends MY_Controller {
         }
     }
 
-    public function load_job_tags() {
+    public function load_job_tags()
+    {
         $postData = json_decode(file_get_contents('php://input'), true);
 
         $tags = $this->tags_model->getTags();
@@ -565,13 +424,13 @@ class Accounting_modals extends MY_Controller {
         $data = [];
         $search = $postData['columns'][0]['search']['value'];
 
-        foreach($tags as $tag) {
-            if($search !== "") {
-                if(stripos($tag['name'], $search) !== false) {
-                    if($tag['type'] === 'group-tag') {
+        foreach ($tags as $tag) {
+            if ($search !== "") {
+                if (stripos($tag['name'], $search) !== false) {
+                    if ($tag['type'] === 'group-tag') {
                         $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
 
-                        if($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
+                        if ($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
                             $data[] = [
                                 'id' => $tags[$tag['parentIndex']]['id'],
                                 'tag_name' => $tags[$tag['parentIndex']]['name'],
@@ -583,7 +442,7 @@ class Accounting_modals extends MY_Controller {
 
                         $idExists = array_search($tag['id'], array_column($data, 'id'));
 
-                        if($idExists === false || $idExists !== false && $data[$idExists]['type'] !== 'group-tag') {
+                        if ($idExists === false || $idExists !== false && $data[$idExists]['type'] !== 'group-tag') {
                             $groupIndex = array_key_last($data);
                             $data[] = [
                                 'id' => $tag['id'],
@@ -594,10 +453,10 @@ class Accounting_modals extends MY_Controller {
                                 'tags' => null
                             ];
                         }
-                    } else if($tag['type'] === 'group') {
+                    } elseif ($tag['type'] === 'group') {
                         $groupIdExists = array_search($tags[$tag['parentIndex']]['id'], array_column($data, 'id'));
 
-                        if($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
+                        if ($groupIdExists === false || $groupIdExists !== false && $tags[$groupIdExists]['type'] !== 'group') {
                             $data[] = [
                                 'id' => $tag['id'],
                                 'tag_name' => $tag['name'],
@@ -607,7 +466,7 @@ class Accounting_modals extends MY_Controller {
                             ];
 
                             $parentIndex = array_key_last($data);
-                            foreach($tag['tags'] as $groupTag) {
+                            foreach ($tag['tags'] as $groupTag) {
                                 $data[] = [
                                     'id' => $groupTag['id'],
                                     'tag_name' => $groupTag['name'],
@@ -651,15 +510,16 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($result);
     }
 
-    public function submit_job_tag() {
+    public function submit_job_tag()
+    {
         $data = [
             'name' => $this->input->post('tag_name'),
-            'group_tag_id' => $this->input->post('group_id') !== "" ? $this->input->post('group_id') : null, 
+            'group_tag_id' => $this->input->post('group_id') !== "" ? $this->input->post('group_id') : null,
             'company_id' => logged('company_id')
         ];
 
         try {
-            if($this->input->post('method') === 'create') {
+            if ($this->input->post('method') === 'create') {
                 $jobTagId = $this->job_tags_model->create($data);
             } else {
                 $id = $this->input->post('id');
@@ -682,30 +542,35 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($return);
     }
 
-    public function group_job_tag_form() {
+    public function group_job_tag_form()
+    {
         $this->load->view("accounting/modals/group_tag_form");
     }
 
-    public function job_tag_modal() {
+    public function job_tag_modal()
+    {
         $this->load->view("accounting/modals/job_tags_modal");
     }
 
-    public function job_tag_form() {
+    public function job_tag_form()
+    {
         $this->load->view("accounting/modals/job_tag_modal_form");
     }
 
-    public function edit_group_tag_form() {
+    public function edit_group_tag_form()
+    {
         $this->load->view("accounting/modals/edit_group_form");
     }
 
-    public function get_job_tags() {
+    public function get_job_tags()
+    {
         $tags = $this->tags_model->getCompanyTags();
 
         $return = [];
 
-        foreach($tags as $tag) {
+        foreach ($tags as $tag) {
             $name = $tag['name'];
-            if($tag['group_tag_id'] !== null) {
+            if ($tag['group_tag_id'] !== null) {
                 $group = $this->tags_model->getGroupById($tag['group_tag_id']);
                 $name = $group->name.': '.$tag['name'];
             }
@@ -724,22 +589,22 @@ class Accounting_modals extends MY_Controller {
         $this->page_data['paySchedule'] = $paySchedule;
         $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPaySched($paySchedule->id);
         $accounts = $this->chart_of_accounts_model->select();
-        $accounts = array_filter($accounts, function($v, $k) {
+        $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
         }, ARRAY_FILTER_USE_BOTH);
 
         $currentDay = date('m/d/Y');
 
-        switch($paySchedule->pay_frequency) {
-            case 'every-week' :
+        switch ($paySchedule->pay_frequency) {
+            case 'every-week':
                 $endDay = strtotime($paySchedule->next_pay_period_end);
                 $payDate = strtotime($paySchedule->next_payday);
 
-                if($payDate < strtotime(date('m/d/Y'))) {
+                if ($payDate < strtotime(date('m/d/Y'))) {
                     do {
                         $payDate = strtotime(date('m/d/Y', $payDate).' +7 days');
                         $endDay = strtotime(date('m/d/Y', $endDay).' +7 days');
-                    } while($payDate < strtotime(date('m/d/Y')));
+                    } while ($payDate < strtotime(date('m/d/Y')));
                 }
                 $endDay = date('m/d/Y', $endDay);
                 $payDate = date('m/d/Y', $payDate);
@@ -748,15 +613,15 @@ class Accounting_modals extends MY_Controller {
                 $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
                 $dropdownLimit = 30;
             break;
-            case 'every-other-week' :
+            case 'every-other-week':
                 $endDay = strtotime($paySchedule->next_pay_period_end);
                 $payDate = strtotime($paySchedule->next_payday);
 
-                if($payDate < strtotime(date('m/d/Y'))) {
+                if ($payDate < strtotime(date('m/d/Y'))) {
                     do {
                         $payDate = strtotime(date('m/d/Y', $payDate).' +2 weeks');
                         $endDay = strtotime(date('m/d/Y', $endDay).' +2 weeks');
-                    } while($payDate <= strtotime(date('m/d/Y')));
+                    } while ($payDate <= strtotime(date('m/d/Y')));
                 }
                 $endDay = date('m/d/Y', $endDay);
                 $payDate = date('m/d/Y', $payDate);
@@ -765,27 +630,27 @@ class Accounting_modals extends MY_Controller {
                 $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
                 $dropdownLimit = 18;
             break;
-            case 'twice-month' :
+            case 'twice-month':
                 $currentMonth = intval(date("m"));
                 $currentYear = intval(date("Y"));
                 $firstPayDay = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->first_payday/Y"));
                 $secondPayDay = $paySchedule->second_payday === "0" ? strtotime(date("m/t/Y", strtotime(date("m/d/Y")))) : strtotime(date("m/$paySchedule->second_payday/Y"));
                 $currentDate = strtotime(date("m/d/Y"));
 
-                if($currentDate <= $firstPayDay) {
+                if ($currentDate <= $firstPayDay) {
                     $payDate = $firstPayDay;
                     $payDateMonth = intval(date('m', $payDate));
                     $payDateYear = intval(date('Y', $payDate));
 
-                    if($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch($paySchedule->first_pay_month) {
-                            case 'same' :
+                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
+                        switch ($paySchedule->first_pay_month) {
+                            case 'same':
                                 $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear")));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month")));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month")));
                             break;
                         }
@@ -803,15 +668,15 @@ class Accounting_modals extends MY_Controller {
                     $payDateMonth = intval(date('m', $payDate));
                     $payDateYear = intval(date('Y', $payDate));
 
-                    if($paySchedule->end_of_second_pay_period === 'end-date') {
-                        switch($paySchedule->second_pay_month) {
-                            case 'same' :
+                    if ($paySchedule->end_of_second_pay_period === 'end-date') {
+                        switch ($paySchedule->second_pay_month) {
+                            case 'same':
                                 $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear")));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear -1 month")));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $endDay = $paySchedule->second_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear +1 month")));
                             break;
                         }
@@ -836,16 +701,16 @@ class Accounting_modals extends MY_Controller {
                 $first = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
                 $second = $paySchedule->second_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_payday/$payDateYear"));
 
-                if($firstPayDate === $first) {
-                    if($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch($paySchedule->first_pay_month) {
-                            case 'same' :
+                if ($firstPayDate === $first) {
+                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
+                        switch ($paySchedule->first_pay_month) {
+                            case 'same':
                                 $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear"));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month"));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month"));
                             break;
                         }
@@ -857,15 +722,15 @@ class Accounting_modals extends MY_Controller {
                     $prevPayMonth = date("m", strtotime($prevPayDate));
                     $prevPayYear = date("Y", strtotime($prevPayDate));
 
-                    if($paySchedule->end_of_second_pay_period === 'end-date') {
-                        switch($paySchedule->second_pay_month) {
-                            case 'same' :
+                    if ($paySchedule->end_of_second_pay_period === 'end-date') {
+                        switch ($paySchedule->second_pay_month) {
+                            case 'same':
                                 $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear"));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear -1 month"));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear +1 month"));
                             break;
                         }
@@ -873,15 +738,15 @@ class Accounting_modals extends MY_Controller {
                         $firstDateString = date("m/d/Y", strtotime("$prevPayDate -$paySchedule->second_pay_days_before days"));
                     }
                 } else {
-                    if($paySchedule->end_of_second_pay_period === 'end-date') {
-                        switch($paySchedule->second_pay_month) {
-                            case 'same' :
+                    if ($paySchedule->end_of_second_pay_period === 'end-date') {
+                        switch ($paySchedule->second_pay_month) {
+                            case 'same':
                                 $lastDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear"));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $lastDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear -1 month"));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $lastDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_pay_day/$payDateYear +1 month"));
                             break;
                         }
@@ -893,15 +758,15 @@ class Accounting_modals extends MY_Controller {
                     $prevPayMonth = date("m", strtotime($prevPayDate));
                     $prevPayYear = date("Y", strtotime($prevPayDate));
 
-                    if($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch($paySchedule->first_pay_month) {
-                            case 'same' :
+                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
+                        switch ($paySchedule->first_pay_month) {
+                            case 'same':
                                 $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear"));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear -1 month"));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear +1 month"));
                             break;
                         }
@@ -913,14 +778,14 @@ class Accounting_modals extends MY_Controller {
                 
                 $dropdownLimit = 17;
             break;
-            case 'every-month' :
+            case 'every-month':
                 $currentMonth = intval(date("m"));
                 $currentYear = intval(date("Y"));
                 $firstPayDate = $paySchedule->first_payday === "0" ? cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear) : intval($paySchedule->first_payday);
                 $firstPayDay = strtotime(date("m/$firstPayDate/Y"));
                 $currentDate = strtotime(date("m/d/Y"));
 
-                if($currentDate <= $firstPayDay) {
+                if ($currentDate <= $firstPayDay) {
                     $payDate = $firstPayDay;
                 } else {
                     $payDate = strtotime(date("m/d/Y").' +1 month');
@@ -931,15 +796,15 @@ class Accounting_modals extends MY_Controller {
                 $payDateMonth = date('m', $payDate);
                 $payDateYear = date('Y', $payDate);
 
-                if($paySchedule->end_of_first_pay_period === 'end-date') {
-                    switch($paySchedule->first_pay_month) {
-                        case 'same' :
+                if ($paySchedule->end_of_first_pay_period === 'end-date') {
+                    switch ($paySchedule->first_pay_month) {
+                        case 'same':
                             $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear")));
                         break;
-                        case 'previous' :
+                        case 'previous':
                             $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month")));
                         break;
-                        case 'next' :
+                        case 'next':
                             $endDay = $paySchedule->first_pay_day === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month"))) : strtotime(date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month")));
                         break;
                     }
@@ -956,7 +821,7 @@ class Accounting_modals extends MY_Controller {
                 $payDateYear = intval(date('Y', strtotime($payDate)));
                 $payDateTotalDays = cal_days_in_month(CAL_GREGORIAN, $payDateMonth, $payDateYear);
 
-                if($paySchedule->first_payday === "0") {
+                if ($paySchedule->first_payday === "0") {
                     $firstPayDate = date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +4 months"));
                 } else {
                     $firstPayDate = date('m/d/Y', strtotime($payDate.' +4 months'));
@@ -968,17 +833,17 @@ class Accounting_modals extends MY_Controller {
                 $prevPayDateMonth = intval(date('m', strtotime($prevPayDate)));
                 $prevPayDateYear = intval(date('Y', strtotime($prevPayDate)));
 
-                if($paySchedule->end_of_first_pay_period === 'end-date') {
-                    switch($paySchedule->first_pay_month) {
-                        case 'same' :
+                if ($paySchedule->end_of_first_pay_period === 'end-date') {
+                    switch ($paySchedule->first_pay_month) {
+                        case 'same':
                             $lastDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear"));
                             $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear"));
                         break;
-                        case 'previous' :
+                        case 'previous':
                             $lastDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear -1 month")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month"));
                             $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear -1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear -1 month"));
                         break;
-                        case 'next' :
+                        case 'next':
                             $lastDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$payDateMonth/01/$payDateYear +1 month")) : date('m/d/Y', strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month"));
                             $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear +1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear +1 month"));
                         break;
@@ -1003,22 +868,22 @@ class Accounting_modals extends MY_Controller {
             ]
         ];
 
-        for($i = 0; count($payPeriod) < $dropdownLimit; $i++ ) {
+        for ($i = 0; count($payPeriod) < $dropdownLimit; $i++) {
             $lastDateString = date('m/d/Y', strtotime($firstDateString.' -1 day'));
-            switch($paySchedule->pay_frequency) {
-                case 'every-week' :
+            switch ($paySchedule->pay_frequency) {
+                case 'every-week':
                     $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
                     $firstPayDate = date('m/d/Y', strtotime($firstPayDate.' -7 days'));
                 break;
-                case 'every-other-week' :
+                case 'every-other-week':
                     $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
                     $firstPayDate = date('m/d/Y', strtotime($firstPayDate.' -2 weeks'));
                 break;
-                case 'twice-month' :
+                case 'twice-month':
                     $payDateMonth = intval(date('m', strtotime($firstPayDate)));
                     $payDateYear = intval(date('Y', strtotime($firstPayDate)));
                     $firstPayDay = $paySchedule->first_payday === "0" ? strtotime(date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear"))) : strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear");
-                    if(strtotime($firstPayDate) === $firstPayDay) {
+                    if (strtotime($firstPayDate) === $firstPayDay) {
                         $firstPayDate = date('m/d/Y', strtotime("$payDateMonth/01/$payDateYear -1 month"));
                         $payDateMonth = intval(date('m', strtotime($firstPayDate)));
                         $payDateYear = intval(date('Y', strtotime($firstPayDate)));
@@ -1031,21 +896,21 @@ class Accounting_modals extends MY_Controller {
                     $payDateYear = intval(date('Y', strtotime($firstPayDate)));
                     $firstPayDay = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
 
-                    if(date('m/d/Y', strtotime($firstPayDate)) === $firstPayDay) {
+                    if (date('m/d/Y', strtotime($firstPayDate)) === $firstPayDay) {
                         $prevPayDate = $paySchedule->second_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->second_payday/$payDateYear -1 month"));
 
-                        if($paySchedule->end_of_second_pay_period === 'end-date') {
+                        if ($paySchedule->end_of_second_pay_period === 'end-date') {
                             $prevPayMonth = date("m", strtotime($prevPayDate));
                             $prevPayYear = date("Y", strtotime($prevPayDate));
 
-                            switch($paySchedule->second_pay_month) {
-                                case 'same' :
+                            switch ($paySchedule->second_pay_month) {
+                                case 'same':
                                     $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear"));
                                 break;
-                                case 'previous' :
+                                case 'previous':
                                     $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear -1 month"));
                                 break;
-                                case 'next' :
+                                case 'next':
                                     $firstDateString = $paySchedule->second_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->second_pay_day/$prevPayYear +1 month"));
                                 break;
                             }
@@ -1055,18 +920,18 @@ class Accounting_modals extends MY_Controller {
                     } else {
                         $prevPayDate = $paySchedule->first_payday === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_payday/$payDateYear"));
 
-                        if($paySchedule->end_of_first_pay_period === 'end-date') {
+                        if ($paySchedule->end_of_first_pay_period === 'end-date') {
                             $prevPayMonth = date("m", strtotime($prevPayDate));
                             $prevPayYear = date("Y", strtotime($prevPayDate));
 
-                            switch($paySchedule->first_pay_month) {
-                                case 'same' :
+                            switch ($paySchedule->first_pay_month) {
+                                case 'same':
                                     $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear"));
                                 break;
-                                case 'previous' :
+                                case 'previous':
                                     $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear -1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear -1 month"));
                                 break;
-                                case 'next' :
+                                case 'next':
                                     $firstDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$prevPayMonth/01/$prevPayYear +1 month")) : date("m/d/Y", strtotime("$prevPayMonth/$paySchedule->first_pay_day/$prevPayYear +1 month"));
                                 break;
                             }
@@ -1077,8 +942,8 @@ class Accounting_modals extends MY_Controller {
 
                     $firstDateString = date('m/d/Y', strtotime("$firstDateString +1 day"));
                 break;
-                case 'every-month' :
-                    if($paySchedule->first_payday === "0") {
+                case 'every-month':
+                    if ($paySchedule->first_payday === "0") {
                         $payDateMonth = intval(date('m', strtotime($firstPayDate)));
                         $payDateYear = intval(date('Y', strtotime($firstPayDate)));
 
@@ -1094,17 +959,17 @@ class Accounting_modals extends MY_Controller {
                     $prevPayDateMonth = intval(date('m', strtotime($prevPayDate)));
                     $prevPayDateYear = intval(date('Y', strtotime($prevPayDate)));
 
-                    if($paySchedule->end_of_first_pay_period === 'end-date') {
-                        switch($paySchedule->first_pay_month) {
-                            case 'same' :
+                    if ($paySchedule->end_of_first_pay_period === 'end-date') {
+                        switch ($paySchedule->first_pay_month) {
+                            case 'same':
                                 $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear"));
                                 $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear"));
                             break;
-                            case 'previous' :
+                            case 'previous':
                                 $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear -1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear -1 month"));
                                 $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear -1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear -1 month"));
                             break;
-                            case 'next' :
+                            case 'next':
                                 $lastDateString = $paySchedule->first_pay_day === "0" ? date("m/t/Y", strtotime("$payDateMonth/01/$payDateYear +1 month")) : date("m/d/Y", strtotime("$payDateMonth/$paySchedule->first_pay_day/$payDateYear +1 month"));
                                 $firstDateString = $paySchedule->first_pay_day === "0" ? date('m/t/Y', strtotime("$prevPayDateMonth/01/$prevPayDateYear +1 month")) : date('m/d/Y', strtotime("$prevPayDateMonth/$paySchedule->first_pay_day/$prevPayDateYear +1 month"));
                             break;
@@ -1133,7 +998,8 @@ class Accounting_modals extends MY_Controller {
         $this->load->view('accounting/modals/payroll_form', $this->page_data);
     }
 
-    public function generate_payroll() {
+    public function generate_payroll()
+    {
         $postData = $this->input->post();
         $socialSecurity = 6.2;
         $medicare = 1.45;
@@ -1145,7 +1011,7 @@ class Accounting_modals extends MY_Controller {
         $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));
 
         $employees = [];
-        foreach($postData['select'] as $key => $empId) {
+        foreach ($postData['select'] as $key => $empId) {
             $emp = $this->users_model->getUser($empId);
             $payDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
@@ -1205,7 +1071,8 @@ class Accounting_modals extends MY_Controller {
         $this->load->view("accounting/modals/payroll_summary", $this->page_data);
     }
 
-    public function get_statement_customers() {
+    public function get_statement_customers()
+    {
         $input = $this->input->post();
         $company_id = logged('company_id');
 
@@ -1216,16 +1083,16 @@ class Accounting_modals extends MY_Controller {
             'end_date' => ($input['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($input['end_date']))
         ];
 
-        if($input['statement_type'] === '1' || $input['statement_type'] === '2') {
+        if ($input['statement_type'] === '1' || $input['statement_type'] === '2') {
             $customers = $this->accounting_invoices_model->getStatementInvoices($data);
         } else {
             $customers = $this->accounting_invoices_model->getTransactionInvoices($data);
         }
 
         $display = [];
-        foreach($customers as $customer) {
+        foreach ($customers as $customer) {
             $index = array_search($customer->customer_id, array_column($display, 'id'));
-            if($index === false) {
+            if ($index === false) {
                 $balance = ($customer->status === '1') ? $customer->amount : 0.00;
                 $display[] = [
                     'id' => $customer->customer_id,
@@ -1234,20 +1101,20 @@ class Accounting_modals extends MY_Controller {
                     'balance' => number_format($balance, 2, '.', ',')
                 ];
             } else {
-                if($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
+                if ($customer->status === '1' || $customer->status === '2' && $input['statement_type'] === '3' && $input['cust_bal_status'] === 'overdue') {
                     $balance = (int)$display[$index]['balance'] + $customer->amount;
                     $display[$index]['balance'] = number_format($balance, 2, '.', ',');
                 }
             }
         }
 
-        $totalBalance = array_sum(array_map(function($item) { 
-            return $item['balance']; 
+        $totalBalance = array_sum(array_map(function ($item) {
+            return $item['balance'];
         }, $display));
 
         $withoutEmail = [];
-        foreach($display as $cust) {
-            if($cust['email'] === '') {
+        foreach ($display as $cust) {
+            if ($cust['email'] === '') {
                 $withoutEmail[] = $cust;
             }
         }
@@ -1261,10 +1128,11 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($result);
     }
 
-    public function getAccountBalance($accountId = "") {
+    public function getAccountBalance($accountId = "")
+    {
         $account = $this->chart_of_accounts_model->getById($accountId);
 
-        if(strpos($account->balance, '-') !== false) {
+        if (strpos($account->balance, '-') !== false) {
             $balance = str_replace('-', '', $account->balance);
             $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
         } else {
@@ -1274,18 +1142,20 @@ class Accounting_modals extends MY_Controller {
         echo json_encode(['balance' => $selectedBalance]);
     }
 
-    public function getItemDetails($id) {
+    public function getItemDetails($id)
+    {
         $item = $this->items_model->getItemById($id)[0];
         $locations = $this->items_model->getLocationByItemId($id);
 
         echo json_encode(['item' => $item, 'locations' => $locations]);
     }
 
-    public function action() {
+    public function action()
+    {
         $data = $this->input->post();
         $modalName = $data['modal_name'];
 
-        if(isset($_FILES['attachments'])) {
+        if (isset($_FILES['attachments'])) {
             $files = $_FILES['attachments'];
         }
 
@@ -1297,7 +1167,7 @@ class Accounting_modals extends MY_Controller {
                 case 'payDownCreditModal':
                     $this->result = $this->pay_down_credit_card($data, $files);
                 break;
-                case 'singleTimeModal';
+                case 'singleTimeModal':
                     $this->result = $this->single_time_activity($data);
                 break;
                 case 'journalEntryModal':
@@ -1318,34 +1188,34 @@ class Accounting_modals extends MY_Controller {
                 case 'statementModal':
                     $this->result = $this->statement($data);
                 break;
-                case 'commission-payroll-modal' :
+                case 'commission-payroll-modal':
                     $this->result = $this->payroll($data, 'commission-only');
                 break;
-                case 'bonus-payroll-modal' :
+                case 'bonus-payroll-modal':
                     $this->result = $this->payroll($data, 'bonus');
                 break;
-                case 'expenseModal' :
+                case 'expenseModal':
                     $this->result = $this->expense($data);
                 break;
-                case 'checkModal' :
+                case 'checkModal':
                     $this->result = $this->check($data);
                 break;
-                case 'billModal' :
+                case 'billModal':
                     $this->result = $this->bill($data);
                 break;
-                case 'payBillsModal' :
+                case 'payBillsModal':
                     $this->result = $this->pay_bills($data);
                 break;
-                case 'vendorCreditModal' :
+                case 'vendorCreditModal':
                     $this->result = $this->vendor_credit($data);
                 break;
-                case 'purchaseOrderModal' :
+                case 'purchaseOrderModal':
                     $this->result = $this->purchase_order($data);
                 break;
-                case 'creditCardCreditModal' :
+                case 'creditCardCreditModal':
                     $this->result = $this->credit_card_credit($data);
                 break;
-                case 'billPaymentModal' :
+                case 'billPaymentModal':
                     $this->result = $this->bill_payment($data);
                 break;
             }
@@ -1357,35 +1227,36 @@ class Accounting_modals extends MY_Controller {
         exit;
     }
 
-    private function transfer_funds($data, $files) {
+    private function transfer_funds($data, $files)
+    {
         $this->form_validation->set_rules('transfer_from', 'Transfer From Account', 'required');
         $this->form_validation->set_rules('transfer_to', 'Transfer To Account', 'required|differs[transfer_from]');
         $this->form_validation->set_rules('transfer_amount', 'Amount', 'required');
 
-        if(isset($data['template_name'])) {
+        if (isset($data['template_name'])) {
             $this->form_validation->set_rules('template_name', 'Template Name', 'required');
             $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
-            if($data['recurring_type'] !== 'unscheduled') {
+            if ($data['recurring_type'] !== 'unscheduled') {
                 $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-                if($data['recurring_interval'] !== 'daily') {
-                    if($data['recurring_interval'] === 'monthly') {
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
                         $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
-                    } else if($data['recurring_interval'] === 'yearly') {
+                    } elseif ($data['recurring_interval'] === 'yearly') {
                         $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
 
                     $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
                 }
-                if($data['recurring_interval'] !== 'yearly') {
+                if ($data['recurring_interval'] !== 'yearly') {
                     $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
                 $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
-                if($data['end_type'] === 'by') {
+                if ($data['end_type'] === 'by') {
                     $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
-                } else if($data['end_type'] === 'after') {
+                } elseif ($data['end_type'] === 'after') {
                     $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
@@ -1395,7 +1266,7 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -1417,9 +1288,9 @@ class Accounting_modals extends MY_Controller {
     
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
 
-            if($transferId) {
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+            if ($transferId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -1429,7 +1300,7 @@ class Accounting_modals extends MY_Controller {
                     }
                 }
 
-                if(isset($data['template_name'])) {
+                if (isset($data['template_name'])) {
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -1467,7 +1338,8 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function pay_down_credit_card($data, $files) {
+    private function pay_down_credit_card($data, $files)
+    {
         $this->form_validation->set_rules('credit_card', 'Credit Card', 'required');
         $this->form_validation->set_rules('payee', 'Payee', 'required');
         $this->form_validation->set_rules('amount', 'Amount', 'required');
@@ -1476,7 +1348,7 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -1500,9 +1372,9 @@ class Accounting_modals extends MY_Controller {
 
             $payDownId = $this->accounting_pay_down_credit_card_model->create($insertData);
 
-            if($payDownId) {
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+            if ($payDownId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -1541,11 +1413,11 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('name', 'Name', 'required');
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('service', 'Service', 'required');
-        if($data['billable'] === 1 || $data['billable'] === "1") {
+        if ($data['billable'] === 1 || $data['billable'] === "1") {
             $this->form_validation->set_rules('hourly_rate', 'Hourly Rate', 'required');
         }
 
-        if($data['start_end_time'] === 1 || $data['start_end_time'] === "1") {
+        if ($data['start_end_time'] === 1 || $data['start_end_time'] === "1") {
             $this->form_validation->set_rules('start_time', 'Start Time', 'required');
             $this->form_validation->set_rules('end_time', 'End Time', 'required');
         } else {
@@ -1554,7 +1426,7 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -1562,7 +1434,7 @@ class Accounting_modals extends MY_Controller {
             $timesheetSettings = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
             $name = explode('-', $data['name']);
 
-            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                 $timeActData = [
                     'company_id' => logged('company_id'),
                     'date' => date('Y-m-d', strtotime($data['date'])),
@@ -1606,7 +1478,7 @@ class Accounting_modals extends MY_Controller {
 
                 $update = $this->accounting_single_time_activity_model->update($data['transaction_id'], $timeActData);
 
-                if($update) {
+                if ($update) {
                     $activityId = $data['transaction_id'];
                 }
 
@@ -1621,31 +1493,32 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function journal_entry($data, $files) {
-        if(isset($data['template_name'])) {
+    private function journal_entry($data, $files)
+    {
+        if (isset($data['template_name'])) {
             $this->form_validation->set_rules('template_name', 'Template Name', 'required');
             $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
-            if($data['recurring_type'] !== 'unscheduled') {
+            if ($data['recurring_type'] !== 'unscheduled') {
                 $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-                if($data['recurring_interval'] !== 'daily') {
-                    if($data['recurring_interval'] === 'monthly') {
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
                         $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
-                    } else if($data['recurring_interval'] === 'yearly') {
+                    } elseif ($data['recurring_interval'] === 'yearly') {
                         $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
 
                     $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
                 }
-                if($data['recurring_interval'] !== 'yearly') {
+                if ($data['recurring_interval'] !== 'yearly') {
                     $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
                 $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
-                if($data['end_type'] === 'by') {
+                if ($data['end_type'] === 'by') {
                     $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
-                } else if($data['end_type'] === 'after') {
+                } elseif ($data['end_type'] === 'after') {
                     $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
@@ -1654,25 +1527,25 @@ class Accounting_modals extends MY_Controller {
             $this->form_validation->set_rules('journal_no', 'Journal No.', 'required');
         }
 
-        $totalDebit = array_sum(array_map(function($item) { 
+        $totalDebit = array_sum(array_map(function ($item) {
             return $item;
         }, $data['debits']));
 
-        $totalCredit = array_sum(array_map(function($item) { 
+        $totalCredit = array_sum(array_map(function ($item) {
             return $item;
         }, $data['credits']));
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(isset($data['accounts']) && count($data['accounts']) < 2 || !isset($data['accounts'])) {
+        } elseif (isset($data['accounts']) && count($data['accounts']) < 2 || !isset($data['accounts'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'You must fill out at least two detail lines.';
-        } else if($totalDebit !== $totalCredit) {
+        } elseif ($totalDebit !== $totalCredit) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please balance debits and credits.';
@@ -1691,8 +1564,8 @@ class Accounting_modals extends MY_Controller {
 
             $entryId = $this->accounting_journal_entries_model->create($insertData);
 
-            if($entryId > 0) {
-                if(isset($data['template_name'])) {
+            if ($entryId > 0) {
+                if (isset($data['template_name'])) {
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -1717,8 +1590,8 @@ class Accounting_modals extends MY_Controller {
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
                 }
 
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -1756,44 +1629,45 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function bank_deposit($data, $files) {
+    private function bank_deposit($data, $files)
+    {
         $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
 
-        if($data['cash_back_amount'] !== "") {
+        if ($data['cash_back_amount'] !== "") {
             $this->form_validation->set_rules('cash_back_target', 'Cash back account', 'required|differs[bank_account]');
         }
 
-        if(isset($data['account']) && isset($data['amount'])) {
-            $this->form_validation->set_rules('account[]', 'Account', 'required');
+        if (isset($data['funds_account']) && isset($data['amount'])) {
+            $this->form_validation->set_rules('funds_account[]', 'Account', 'required');
             $this->form_validation->set_rules('amount[]', 'Amount', 'required');
         }
 
-        if(!isset($data['template_name'])) {
+        if (!isset($data['template_name'])) {
             $this->form_validation->set_rules('date', 'Date', 'required');
         } else {
             $this->form_validation->set_rules('template_name', 'Template Name', 'required');
             $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
 
-            if($data['recurring_type'] !== 'unscheduled') {
+            if ($data['recurring_type'] !== 'unscheduled') {
                 $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
 
-                if($data['recurring_interval'] !== 'daily') {
-                    if($data['recurring_interval'] === 'monthly') {
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
                         $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
-                    } else if($data['recurring_interval'] === 'yearly') {
+                    } elseif ($data['recurring_interval'] === 'yearly') {
                         $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
                     }
 
                     $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
                 }
-                if($data['recurring_interval'] !== 'yearly') {
+                if ($data['recurring_interval'] !== 'yearly') {
                     $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
                 }
                 $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
 
-                if($data['end_type'] === 'by') {
+                if ($data['end_type'] === 'by') {
                     $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
-                } else if($data['end_type'] === 'after') {
+                } elseif ($data['end_type'] === 'after') {
                     $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
                 }
             }
@@ -1801,16 +1675,16 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['account']) && !isset($data['amount'])) {
+        } elseif (!isset($data['account']) && !isset($data['amount'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
-            $totalAmount = array_sum(array_map(function($item) {
+            $totalAmount = array_sum(array_map(function ($item) {
                 return floatval($item);
             }, $data['amount']));
 
@@ -1836,8 +1710,8 @@ class Accounting_modals extends MY_Controller {
 
             $depositId = $this->accounting_bank_deposit_model->create($insertData);
 
-            if($depositId > 0) {
-                if(isset($data['template_name'])) {
+            if ($depositId > 0) {
+                if (isset($data['template_name'])) {
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -1862,8 +1736,8 @@ class Accounting_modals extends MY_Controller {
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
                 }
 
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -1874,7 +1748,7 @@ class Accounting_modals extends MY_Controller {
                 }
 
                 $fundsData = [];
-                foreach($data['account'] as $key => $value) {
+                foreach ($data['funds_account'] as $key => $value) {
                     $account = explode('-', $value);
                     $receivedFrom = explode('-', $data['received_from'][$key]);
 
@@ -1890,7 +1764,7 @@ class Accounting_modals extends MY_Controller {
                         'amount' => $data['amount'][$key],
                     ];
 
-                    if(!isset($data['template_name'])) {
+                    if (!isset($data['template_name'])) {
                         $accountBalance = $this->chart_of_accounts_model->getBalance($account[1]);
                         $accountData = [
                             'id' => $account[1],
@@ -1903,7 +1777,7 @@ class Accounting_modals extends MY_Controller {
 
                 $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
 
-                if(!isset($data['template_name'])) {
+                if (!isset($data['template_name'])) {
                     $depositToAcc = $this->chart_of_accounts_model->getById($bankAccount[1]);
                     $depositData = [
                         'id' => $depositToAcc->id,
@@ -1912,7 +1786,7 @@ class Accounting_modals extends MY_Controller {
                     ];
                     $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
 
-                    if($data['cash_back_amount'] !== "") {
+                    if ($data['cash_back_amount'] !== "") {
                         $cashBackAccount = $this->chart_of_accounts_model->getById($cashBackTarget[1]);
                         $cashBackData = [
                             'id' => $cashBackAccount->id,
@@ -1939,7 +1813,7 @@ class Accounting_modals extends MY_Controller {
         $products = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
 
         $locationData = [];
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $location = $this->items_model->getItemLocation($product->location_id, $product->product_id);
             $locationData[] = [
                 'id' => $product->location_id,
@@ -1960,7 +1834,7 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('reference_no', 'Reference No.', 'required');
         $this->form_validation->set_rules('inventory_adj_acc', 'Inventory Adjustment Account', 'required');
 
-        if(isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty']) && isset($data['location'])) {
+        if (isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty']) && isset($data['location'])) {
             $this->form_validation->set_rules('product[]', 'Product', 'required');
             $this->form_validation->set_rules('location[]', 'Location', 'required');
             $this->form_validation->set_rules('new_qty[]', 'New Quantity', 'required');
@@ -1969,17 +1843,17 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
+        } elseif (!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one inventory item.';
         } else {
             $adjustmentAcc = explode('-', $data['inventory_adj_acc']);
-            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                 $adjustmentData = [
                     'adjustment_no' => $data['reference_no'],
                     'company_id' => logged('company_id'),
@@ -1999,7 +1873,7 @@ class Accounting_modals extends MY_Controller {
             } else {
                 $revert = $this->revert_inventory_qty_adjustment($data);
 
-                if($revert) {
+                if ($revert) {
                     $adjustmentData = [
                         'adjustment_no' => $data['reference_no'],
                         'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
@@ -2013,7 +1887,7 @@ class Accounting_modals extends MY_Controller {
     
                     $update = $this->accounting_inventory_qty_adjustments_model->update($data['transaction_id'], $adjustmentData);
     
-                    if($update) {
+                    if ($update) {
                         $adjustmentId = $data['transaction_id'];
                     }
                 }
@@ -2021,10 +1895,10 @@ class Accounting_modals extends MY_Controller {
                 $successMessage = 'Update successful.';
             }
 
-            if($adjustmentId > 0) {
+            if ($adjustmentId > 0) {
                 $adjustmentProducts = [];
                 $locationData = [];
-                foreach($data['product'] as $key => $value) {
+                foreach ($data['product'] as $key => $value) {
                     $adjustmentProducts[] = [
                         'adjustment_id' => $adjustmentId,
                         'product_id' => $value,
@@ -2056,17 +1930,17 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('person_tracking', 'Person being Tracked', 'required');
         $this->form_validation->set_rules('week_dates', 'Week Dates', 'required');
 
-        if(isset($data['billable'])) {
+        if (isset($data['billable'])) {
             $this->form_validation->set_rules('hourly_rate[]', 'Week Dates', 'required');
         }
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(isset($data['customer']) && count($data['customer']) < 1 || !isset($data['customer'])) {
+        } elseif (isset($data['customer']) && count($data['customer']) < 1 || !isset($data['customer'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'You must enter at least one time activity before you can save the timesheet.';
@@ -2079,11 +1953,11 @@ class Accounting_modals extends MY_Controller {
 
             $timeActivityIds = [];
             $row = 1;
-            foreach($data['customer'] as $key => $value) {
-                if($value !== '') {
+            foreach ($data['customer'] as $key => $value) {
+                if ($value !== '') {
                     $count = 0;
-                    foreach(json_decode($data['hours'][$key], true) as $day => $hours) {
-                        if($hours !== "") {
+                    foreach (json_decode($data['hours'][$key], true) as $day => $hours) {
+                        if ($hours !== "") {
                             $timeActData = [
                                 'company_id' => logged('company_id'),
                                 'date' => date('Y-m-d', strtotime($weekDate[0]." +$count days")),
@@ -2111,8 +1985,8 @@ class Accounting_modals extends MY_Controller {
                 }
             }
 
-            if(count($timeActivityIds) > 0) {
-                if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            if (count($timeActivityIds) > 0) {
+                if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                     $timesheetRecord = [
                         'company_id' => logged('company_id'),
                         'name_type' => $name[0],
@@ -2127,7 +2001,7 @@ class Accounting_modals extends MY_Controller {
     
                     $timeSheetRecordId = $this->accounting_weekly_timesheet_model->create($timesheetRecord);
 
-                    if(!$timeSheetRecordId) {
+                    if (!$timeSheetRecordId) {
                         $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
                     }
     
@@ -2135,14 +2009,14 @@ class Accounting_modals extends MY_Controller {
                 } else {
                     $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
                     $activityIds = [];
-                    foreach(json_decode($timeSheet->time_activity_ids, true) as $row => $ids) {
-                        foreach($ids as $id) {
+                    foreach (json_decode($timeSheet->time_activity_ids, true) as $row => $ids) {
+                        foreach ($ids as $id) {
                             $activityIds[] = $id;
                         }
                     }
                     $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($activityIds);
     
-                    if($delete) {
+                    if ($delete) {
                         $timesheetRecord = [
                             'name_type' => $name[0],
                             'name_id' => $name[1],
@@ -2154,7 +2028,7 @@ class Accounting_modals extends MY_Controller {
 
                         $update = $this->accounting_weekly_timesheet_model->update($data['transaction_id'], $timesheetRecord);
 
-                        if($update) {
+                        if ($update) {
                             $timeSheetRecordId = $timeSheet->id;
                         } else {
                             $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
@@ -2177,16 +2051,17 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function payroll($data, $payType = 'all') {
+    private function payroll($data, $payType = 'all')
+    {
         $this->form_validation->set_rules('pay_from', 'Pay from account', 'required');
-        if($payType === 'all') {
+        if ($payType === 'all') {
             $this->form_validation->set_rules('pay_period', 'Pay Period', 'required');
         }
         $this->form_validation->set_rules('pay_date', 'Pay Date', 'required');
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -2215,8 +2090,8 @@ class Accounting_modals extends MY_Controller {
 
             $employees = [];
 
-            if($payrollId > 0) {
-                foreach($data['select'] as $key => $value) {
+            if ($payrollId > 0) {
+                foreach ($data['select'] as $key => $value) {
                     $emp = $this->users_model->getUser($value);
                     $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
                     $empTotalPay = ($empPayDetails->pay_rate * (float)$data['reg_pay_hours'][$key]) + (float)$data['commission'][$key] + (float)$data['bonus'][$key];
@@ -2242,7 +2117,7 @@ class Accounting_modals extends MY_Controller {
                 }
             }
 
-            if(count($employees) > 0) {
+            if (count($employees) > 0) {
                 $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);
 
                 $totalNetPay = array_sum(array_column($employees, 'employee_net_pay'));
@@ -2264,23 +2139,24 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function statement($data) {
+    private function statement($data)
+    {
         $flag = true;
 
         $this->form_validation->set_rules('statement_type', 'Statement Type', 'required');
         $this->form_validation->set_rules('statement_date', 'Statement Date', 'required');
         $this->form_validation->set_rules('customer_balance_status', 'Customer Balance Status', 'required');
 
-        if(isset($data['start_date']) && isset($data['end_date'])) {
+        if (isset($data['start_date']) && isset($data['end_date'])) {
             $this->form_validation->set_rules('start_date', 'Start Date', 'required');
             $this->form_validation->set_rules('end_date', 'End Date', 'required');
         }
 
-        if(isset($data['select_all'])) {
+        if (isset($data['select_all'])) {
             $this->form_validation->set_rules('email[]', 'Email', 'required');
         } else {
-            foreach($data['customer'] as $cust) {
-                if($data['email'][$cust] === '') {
+            foreach ($data['customer'] as $cust) {
+                if ($data['email'][$cust] === '') {
                     $flag = false;
                     break;
                 }
@@ -2289,7 +2165,7 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false || $flag === false) {
+        if ($this->form_validation->run() === false || $flag === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -2309,7 +2185,7 @@ class Accounting_modals extends MY_Controller {
 
             $statementId = $this->accounting_statements_model->create($insertData);
 
-            if($statementId > 0) {
+            if ($statementId > 0) {
                 $queryData = [
                     'cust_bal_status' => $data['customer_balance_status'],
                     'company_id' => logged('company_id'),
@@ -2317,21 +2193,21 @@ class Accounting_modals extends MY_Controller {
                     'end_date' => ($data['statement_type'] === '2') ? date('Y-m-d') : date('Y-m-d', strtotime($data['end_date']))
                 ];
 
-                if($data['statement_type'] === '1' || $data['statement_type'] === '2') {
+                if ($data['statement_type'] === '1' || $data['statement_type'] === '2') {
                     $invoices = $this->accounting_invoices_model->getStatementInvoices($queryData);
                 } else {
                     $invoices = $this->accounting_invoices_model->getTransactionInvoices($queryData);
                 }
 
                 $statementCustomers = [];
-                foreach($data['customer'] as $customer) {
-                    $customerInvoices = array_filter($invoices, function($value, $key) use ($customer){
+                foreach ($data['customer'] as $customer) {
+                    $customerInvoices = array_filter($invoices, function ($value, $key) use ($customer) {
                         return $value->customer_id === $customer;
                     }, ARRAY_FILTER_USE_BOTH);
 
                     $balance = 0.00;
-                    foreach($customerInvoices as $invoice) {
-                        if($invoice->status === '1' || $invoice->status === '2' && $data['statement_type'] === '3' && $data['customer_balance_status'] === 'overdue') {
+                    foreach ($customerInvoices as $invoice) {
+                        if ($invoice->status === '1' || $invoice->status === '2' && $data['statement_type'] === '3' && $data['customer_balance_status'] === 'overdue') {
                             $balance += number_format($invoice->amount, 2, '.', ',');
                         }
                     }
@@ -2346,11 +2222,11 @@ class Accounting_modals extends MY_Controller {
 
                 $statementCustomers = $this->accounting_statements_model->insertCustomers($statementCustomers);
 
-                if(isset($data['subject']) && $statementCustomers > 0 && $data['save_method'] === 'save-and-send') {
+                if (isset($data['subject']) && $statementCustomers > 0 && $data['save_method'] === 'save-and-send') {
                     $this->load->library('pdf');
                     $this->load->library('email');
 
-                    foreach($data['customer'] as $customer) {
+                    foreach ($data['customer'] as $customer) {
                         $custProfile = $this->AcsProfile_model->getByProfId((int)$customer);
                         
                         $pdfData = new stdClass();
@@ -2385,12 +2261,14 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    public function showStatement() {
+    public function showStatement()
+    {
         echo $this->load->view("accounting/modals/print_action/statement", [], true);
         exit;
     }
     
-    public function generatePDF() {
+    public function generatePDF()
+    {
         $this->load->library('pdf');
         $post = $this->input->post();
         // $post = json_decode('{"received_from":{"0":"Aaron Weston"},"accounts":{"0":"Billable Expense Income"},"description":{"0":"test1"},"payment_method":{"0":"Credit Card"},"reference_no":{"0":"1"},"amount":{"0":"12.00"}}');
@@ -2398,7 +2276,7 @@ class Accounting_modals extends MY_Controller {
         // $fileName = 'deposit-summary-statement-'.logged('id').'.pdf';
         $fileName = $post->title."-".logged('id').'.pdf';
         // $this->pdf->save_pdf('accounting/modals/print_action/summary', ['data' => $post], $fileName, 'portrait');
-        $view = ''; 
+        $view = '';
         switch ($post->id) {
             case '1':
                 # code...
@@ -2416,16 +2294,17 @@ class Accounting_modals extends MY_Controller {
         exit;
     }
 
-    private function generateStatementPdfData($post) {
+    private function generateStatementPdfData($post)
+    {
         $data = [
             'statement_type' => $post->statement_type,
             'customers' => []
         ];
-        foreach($post->customers as $customer) {
+        foreach ($post->customers as $customer) {
             $items = [];
             $customerProfile = $this->AcsProfile_model->getByProfId((int)$customer);
             $balance = 0.00;
-            if($post->statement_type === "1" || $post->statement_type === 1) {
+            if ($post->statement_type === "1" || $post->statement_type === 1) {
                 $overdueQuery = [
                     'company_id' => logged('company_id'),
                     'customer_id' => (int)$customer,
@@ -2435,7 +2314,7 @@ class Accounting_modals extends MY_Controller {
                 $overdueInvoices = $this->accounting_invoices_model->getCustomerOverdueInvoices($overdueQuery);
 
                 $overdueAmount = 0.00;
-                foreach($overdueInvoices as $inv) {
+                foreach ($overdueInvoices as $inv) {
                     $overdueAmount = $overdueAmount + floatval($inv->amount);
                 }
                 $balance = $balance + floatval($overdueAmount);
@@ -2455,7 +2334,7 @@ class Accounting_modals extends MY_Controller {
     
                 $invoices = $this->accounting_invoices_model->getCustomerInvoicesByDate($invoiceQuery);
     
-                foreach($invoices as $invoice) {
+                foreach ($invoices as $invoice) {
                     $balance = $balance + floatval($invoice->amount);
                     $items[] = [
                         'date' => date('m/d/Y', strtotime($invoice->invoice_date)),
@@ -2464,7 +2343,7 @@ class Accounting_modals extends MY_Controller {
                         'balance' => $balance
                     ];
     
-                    if($invoice->status === 2 || $invoice->status === "2") {
+                    if ($invoice->status === 2 || $invoice->status === "2") {
                         $balance = $balance - floatval($invoice->amount);
                         $items[] = [
                             'date' => date('m/d/Y', $invoice->updated_at),
@@ -2474,7 +2353,7 @@ class Accounting_modals extends MY_Controller {
                         ];
                     }
                 }
-            } else if($post->statement_type === "2" || $post->statement_type === 2) {
+            } elseif ($post->statement_type === "2" || $post->statement_type === 2) {
                 $invoiceQuery = [
                     'company_id' => logged('company_id'),
                     'customer_id' => (int)$customer,
@@ -2484,7 +2363,7 @@ class Accounting_modals extends MY_Controller {
 
                 $invoices = $this->accounting_invoices_model->getCustomerOpenInvoices($invoiceQuery);
 
-                foreach($invoices as $invoice) {
+                foreach ($invoices as $invoice) {
                     $items[] = [
                         'date' => date('m/d/Y', strtotime($invoice->invoice_date)),
                         'activity' => 'Invoice #'.$invoice->id.': Due '.date('m/d/Y', strtotime($invoice->due_date)),
@@ -2492,7 +2371,7 @@ class Accounting_modals extends MY_Controller {
                         'balance' => $invoice->amount
                     ];
                 }
-            } else if($post->statement_type === "3" || $post->statement_type === 3) {
+            } elseif ($post->statement_type === "3" || $post->statement_type === 3) {
                 $invoiceQuery = [
                     'cust_bal_status' => $post->cust_bal_status,
                     'company_id' => logged('company_id'),
@@ -2503,7 +2382,7 @@ class Accounting_modals extends MY_Controller {
 
                 $invoices = $this->accounting_invoices_model->getCustomerTransactions($invoiceQuery);
 
-                foreach($invoices as $invoice) {
+                foreach ($invoices as $invoice) {
                     $items[] = [
                         'date' => date('m/d/Y', strtotime($invoice->invoice_date)),
                         'activity' => 'Invoice #'.$invoice->id.': '.$invoice->message_on_statement,
@@ -2513,10 +2392,10 @@ class Accounting_modals extends MY_Controller {
                 }
             }
 
-            if($post->statement_type === "1" || $post->statement_type === 1) {
+            if ($post->statement_type === "1" || $post->statement_type === 1) {
                 $totalDue = end($items)['balance'];
             } else {
-                $totalDue = array_sum(array_map(function($item){
+                $totalDue = array_sum(array_map(function ($item) {
                     return $item['balance'];
                 }, $items));
             }
@@ -2532,22 +2411,24 @@ class Accounting_modals extends MY_Controller {
         return $data;
     }
 
-    public function showPDF() {
-        // Store the file name into variable 
+    public function showPDF()
+    {
+        // Store the file name into variable
         $file = $this->input->get('pdf');
         $filename = base_url("/assets/pdf/$file");
         
-        // Header content type 
-        header("Content-type: application/pdf"); 
+        // Header content type
+        header("Content-type: application/pdf");
         
-        // header("Content-Length: " . filesize($filename)); 
+        // header("Content-Length: " . filesize($filename));
         
-        // Send the file to the browser. 
+        // Send the file to the browser.
         @readfile($filename);
         exit;
     }
 
-    public function downloadPDF() {
+    public function downloadPDF()
+    {
         $filename = $this->input->get('filename');
         $file = base_url("/assets/pdf/$filename");
 
@@ -2561,12 +2442,13 @@ class Accounting_modals extends MY_Controller {
         readfile($file);
     }
 
-    public function showEmailModal() {
+    public function showEmailModal()
+    {
         $this->load->library('pdf');
         $post = $this->input->post();
         $post = json_decode($post['json']);
 
-        if(count($post->customers) === 1) {
+        if (count($post->customers) === 1) {
             $customer = $this->AcsProfile_model->getByProfId((int)$post->customers[0]);
             $this->page_data['email'] = $customer->email;
             $this->page_data['customer_name'] = $customer->first_name . ' ' . $customer->last_name;
@@ -2590,22 +2472,22 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['expense_name'])) {
+        if (isset($data['expense_name'])) {
             $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
-        if(isset($data['item'])) {
+        if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
         }
 
         $return = [];
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -2613,7 +2495,7 @@ class Accounting_modals extends MY_Controller {
             $payee = explode('-', $data['payee']);
             $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
 
-            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                 $expenseData = [
                     'company_id' => logged('company_id'),
                     'payee_type' => $payee[0],
@@ -2638,7 +2520,7 @@ class Accounting_modals extends MY_Controller {
             } else {
                 $revert = $this->revert_expense($data);
 
-                if($revert) {
+                if ($revert) {
                     $expense = $this->vendors_model->get_expense_by_id($data['transaction_id']);
 
                     $expenseData = [
@@ -2660,29 +2542,29 @@ class Accounting_modals extends MY_Controller {
 
                     $expenseId = $this->vendors_model->update_expense($expense->id, $expenseData);
 
-                    if($expenseId) {
+                    if ($expenseId) {
                         $expenseId = intval($expense->id);
                     }
                 }
                 $successMessage = 'Update Successful!';
             }
 
-            if($expenseId) {
+            if ($expenseId) {
                 $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
 
                 $total = 0.00;
 
-                if(isset($data['category_linked'])) {
-                    foreach($data['category_linked'] as $index => $linked) {
-                        if($linked === "true") {
+                if (isset($data['category_linked'])) {
+                    foreach ($data['category_linked'] as $index => $linked) {
+                        if ($linked === "true") {
                             $total += floatval($data['category_amount'][$index]);
                         }
                     }
                 }
 
-                if(isset($data['item_linked'])) {
-                    foreach($data['item_linked'] as $index => $linked) {
-                        if($linked === "true") {
+                if (isset($data['item_linked'])) {
+                    foreach ($data['item_linked'] as $index => $linked) {
+                        if ($linked === "true") {
                             $total += floatval($data['item_total'][$index]);
                         }
                     }
@@ -2696,8 +2578,8 @@ class Accounting_modals extends MY_Controller {
 
                 $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
 
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -2710,7 +2592,7 @@ class Accounting_modals extends MY_Controller {
                 $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-                if($paymentAccType->account_name === 'Credit Card') {
+                if ($paymentAccType->account_name === 'Credit Card') {
                     $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
                 } else {
                     $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
@@ -2726,9 +2608,9 @@ class Accounting_modals extends MY_Controller {
 
                 $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
-                if(isset($data['expense_name'])) {
+                if (isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
@@ -2760,9 +2642,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
-                if(isset($data['item'])) {
+                if (isset($data['item'])) {
                     $itemDetails = [];
-                    foreach($data['item'] as $index => $value) {
+                    foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
@@ -2785,7 +2667,7 @@ class Accounting_modals extends MY_Controller {
     
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
     
-                        if($itemAccDetails) {
+                        if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                             $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
@@ -2816,21 +2698,21 @@ class Accounting_modals extends MY_Controller {
     {
         $expense = $this->vendors_model->get_expense_by_id($data['transaction_id']);
 
-        if(!is_null($expense->linked_purchase_order_id)) {
+        if (!is_null($expense->linked_purchase_order_id)) {
             $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($expense->linked_purchase_order_id);
 
             $total = 0.00;
-            if(isset($data['category_linked'])) {
-                foreach($data['category_linked'] as $index => $linked) {
-                    if($linked === "true") {
+            if (isset($data['category_linked'])) {
+                foreach ($data['category_linked'] as $index => $linked) {
+                    if ($linked === "true") {
                         $total += floatval($data['category_amount'][$index]);
                     }
                 }
             }
 
-            if(isset($data['item_linked'])) {
-                foreach($data['item_linked'] as $index => $linked) {
-                    if($linked === "true") {
+            if (isset($data['item_linked'])) {
+                foreach ($data['item_linked'] as $index => $linked) {
+                    if ($linked === "true") {
                         $total += floatval($data['item_total'][$index]);
                     }
                 }
@@ -2845,8 +2727,8 @@ class Accounting_modals extends MY_Controller {
             $updatePurch = $this->vendors_model->update_purchase_order($purchaseOrder->id, $purchaseOrderData);
         }
 
-        if(!is_null($expense->attachments) && $expense->attachments !== "[]") {
-            foreach(json_decode($expense->attachments, true) as $attachmentId) {
+        if (!is_null($expense->attachments) && $expense->attachments !== "[]") {
+            foreach (json_decode($expense->attachments, true) as $attachmentId) {
                 $attachment = $this->accounting_attachments_model->getById($attachmentId);
                 $attachmentData = [
                     'linked_to_count' => intval($attachment->linked_to_count) - 1
@@ -2859,7 +2741,7 @@ class Accounting_modals extends MY_Controller {
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-        if($paymentAccType->account_name === 'Credit Card') {
+        if ($paymentAccType->account_name === 'Credit Card') {
             $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
         } else {
             $newBalance = floatval($paymentAcc->balance) + floatval($expense->total_amount);
@@ -2889,11 +2771,11 @@ class Accounting_modals extends MY_Controller {
             foreach ($categories as $category) {
                 $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
 
-                switch($transactionType) {
-                    case 'Expense' :
+                switch ($transactionType) {
+                    case 'Expense':
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     break;
-                    case 'Bill' :
+                    case 'Bill':
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     break;
                 }
@@ -2920,23 +2802,23 @@ class Accounting_modals extends MY_Controller {
                 $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
                 $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
                 $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                switch($transactionType) {
-                    case 'Expense' :
+                switch ($transactionType) {
+                    case 'Expense':
                         $newQty = intval($location->qty) - intval($item->quantity);
                         $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
                     break;
-                    case 'Bill' :
+                    case 'Bill':
                         $newQty = intval($location->qty) - intval($item->quantity);
                         $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
                     break;
-                    case 'Purchase Order' :
+                    case 'Purchase Order':
                         $newQtyPO = intval($itemAccDetails->qty_po) - intval($item->quantity);
 
                         $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
                     break;
                 }
 
-                if($transactionType !== 'Purchase Order') {
+                if ($transactionType !== 'Purchase Order') {
                     $invAssetAccData = [
                         'id' => $invAssetAcc->id,
                         'company_id' => logged('company_id'),
@@ -2957,11 +2839,11 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['expense_name'])) {
+        if (isset($data['expense_name'])) {
             $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
-        if(isset($data['item'])) {
+        if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
@@ -2969,11 +2851,11 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -2985,17 +2867,17 @@ class Accounting_modals extends MY_Controller {
 
             $total = 0.00;
 
-            if(isset($data['category_linked'])) {
-                foreach($data['category_linked'] as $index => $linked) {
-                    if($linked === "true") {
+            if (isset($data['category_linked'])) {
+                foreach ($data['category_linked'] as $index => $linked) {
+                    if ($linked === "true") {
                         $total += floatval($data['category_amount'][$index]);
                     }
                 }
             }
 
-            if(isset($data['item_linked'])) {
-                foreach($data['item_linked'] as $index => $linked) {
-                    if($linked === "true") {
+            if (isset($data['item_linked'])) {
+                foreach ($data['item_linked'] as $index => $linked) {
+                    if ($linked === "true") {
                         $total += floatval($data['item_total'][$index]);
                     }
                 }
@@ -3031,8 +2913,8 @@ class Accounting_modals extends MY_Controller {
     
             $checkId = $this->expenses_model->addCheck($checkData);
     
-            if($checkId) {
-                if(!isset($data['print_later']) && $data['check_no'] !== '') {
+            if ($checkId) {
+                if (!isset($data['print_later']) && $data['check_no'] !== '') {
                     $assignCheck = [
                         'check_no' => $checkData['check_no'],
                         'transaction_type' => 'check',
@@ -3045,8 +2927,8 @@ class Accounting_modals extends MY_Controller {
                     $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
                 }
 
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -3068,9 +2950,9 @@ class Accounting_modals extends MY_Controller {
 
                 $this->chart_of_accounts_model->updateBalance($bankAccData);
 
-                if(isset($data['expense_name'])) {
+                if (isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
@@ -3102,9 +2984,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
-                if(isset($data['item'])) {
+                if (isset($data['item'])) {
                     $itemDetails = [];
-                    foreach($data['item'] as $index => $value) {
+                    foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
@@ -3127,7 +3009,7 @@ class Accounting_modals extends MY_Controller {
 
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if($itemAccDetails) {
+                        if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                             $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
@@ -3159,21 +3041,21 @@ class Accounting_modals extends MY_Controller {
     {
         $bill = $this->vendors_model->get_bill_by_id($data['transaction_id']);
 
-        if(!is_null($bill->linked_purchase_order_id)) {
+        if (!is_null($bill->linked_purchase_order_id)) {
             $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($bill->linked_purchase_order_id);
 
             $total = 0.00;
-            if(isset($data['category_linked'])) {
-                foreach($data['category_linked'] as $index => $linked) {
-                    if($linked === "true") {
+            if (isset($data['category_linked'])) {
+                foreach ($data['category_linked'] as $index => $linked) {
+                    if ($linked === "true") {
                         $total += floatval($data['category_amount'][$index]);
                     }
                 }
             }
 
-            if(isset($data['item_linked'])) {
-                foreach($data['item_linked'] as $index => $linked) {
-                    if($linked === "true") {
+            if (isset($data['item_linked'])) {
+                foreach ($data['item_linked'] as $index => $linked) {
+                    if ($linked === "true") {
                         $total += floatval($data['item_total'][$index]);
                     }
                 }
@@ -3188,8 +3070,8 @@ class Accounting_modals extends MY_Controller {
             $updatePurch = $this->vendors_model->update_purchase_order($purchaseOrder->id, $purchaseOrderData);
         }
 
-        if(!is_null($bill->attachments) && $bill->attachments !== "[]") {
-            foreach(json_decode($bill->attachments, true) as $attachmentId) {
+        if (!is_null($bill->attachments) && $bill->attachments !== "[]") {
+            foreach (json_decode($bill->attachments, true) as $attachmentId) {
                 $attachment = $this->accounting_attachments_model->getById($attachmentId);
                 $attachmentData = [
                     'linked_to_count' => intval($attachment->linked_to_count) - 1
@@ -3199,7 +3081,7 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if($revert) {
+        if ($revert) {
             $this->revert_categories('Bill', $data['transaction_id']);
             $this->revert_items('Bill', $data['transaction_id']);
         }
@@ -3213,11 +3095,11 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
         $this->form_validation->set_rules('due_date', 'Due date', 'required');
 
-        if(isset($data['expense_name'])) {
+        if (isset($data['expense_name'])) {
             $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
-        if(isset($data['item'])) {
+        if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
@@ -3225,17 +3107,17 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
             $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
-            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                 $billData = [
                     'company_id' => logged('company_id'),
                     'vendor_id' => $data['vendor_id'],
@@ -3261,7 +3143,7 @@ class Accounting_modals extends MY_Controller {
             } else {
                 $revert = $this->revert_bill($data);
                 
-                if($revert) {
+                if ($revert) {
                     $bill = $this->vendors_model->get_bill_by_id($data['transaction_id']);
 
                     $billData = [
@@ -3284,29 +3166,29 @@ class Accounting_modals extends MY_Controller {
 
                     $billId = $this->vendors_model->update_bill($data['transaction_id'], $billData);
 
-                    if($billId) {
+                    if ($billId) {
                         $billId = $bill->id;
                     }
                 }
                 $successMessage = 'Update Successful!';
             }
 
-            if($billId) {
+            if ($billId) {
                 $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
 
                 $total = 0.00;
 
-                if(isset($data['category_linked'])) {
-                    foreach($data['category_linked'] as $index => $linked) {
-                        if($linked === "true") {
+                if (isset($data['category_linked'])) {
+                    foreach ($data['category_linked'] as $index => $linked) {
+                        if ($linked === "true") {
                             $total += floatval($data['category_amount'][$index]);
                         }
                     }
                 }
 
-                if(isset($data['item_linked'])) {
-                    foreach($data['item_linked'] as $index => $linked) {
-                        if($linked === "true") {
+                if (isset($data['item_linked'])) {
+                    foreach ($data['item_linked'] as $index => $linked) {
+                        if ($linked === "true") {
                             $total += floatval($data['item_total'][$index]);
                         }
                     }
@@ -3320,8 +3202,8 @@ class Accounting_modals extends MY_Controller {
 
                 $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
 
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -3331,9 +3213,9 @@ class Accounting_modals extends MY_Controller {
                     }
                 }
 
-                if(isset($data['expense_name'])) {
+                if (isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
@@ -3365,9 +3247,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
-                if(isset($data['item'])) {
+                if (isset($data['item'])) {
                     $itemDetails = [];
-                    foreach($data['item'] as $index => $value) {
+                    foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
@@ -3390,7 +3272,7 @@ class Accounting_modals extends MY_Controller {
 
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if($itemAccDetails) {
+                        if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                             $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
@@ -3428,45 +3310,45 @@ class Accounting_modals extends MY_Controller {
 
         $filters = [];
 
-        if($post['payee'] !== 'all') {
+        if ($post['payee'] !== 'all') {
             $filters['vendor_id'] = $post['payee'];
         }
 
-        switch($post['due_date']) {
-            case 'last-365-days' :
+        switch ($post['due_date']) {
+            case 'last-365-days':
                 $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
                 // $filters['end_date'] = date("Y-m-d");
             break;
-            case 'custom' :
-                if($post['from_date'] !== '') {
+            case 'custom':
+                if ($post['from_date'] !== '') {
                     $filters['start_date'] = date("Y-m-d", strtotime($post['from_date']));
                 }
 
-                if($post['to_date'] !== '') {
+                if ($post['to_date'] !== '') {
                     $filters['end_date'] = date("Y-m-d", strtotime($post['to_date']));
                 }
             break;
-            case 'today' :
+            case 'today':
                 $filters['start_date'] = date("Y-m-d");
                 $filters['end_date'] = date("Y-m-d");
             break;
-            case 'yesterday' :
+            case 'yesterday':
                 $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
                 $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
             break;
-            case 'yesterday' :
+            case 'yesterday':
                 $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
                 $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
             break;
-            case 'this-week' :
+            case 'this-week':
                 $filters['start_date'] = date("Y-m-d", strtotime("this week -1 day"));
                 $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 day"));
             break;
-            case 'this-month' :
+            case 'this-month':
                 $filters['start_date'] = date("Y-m-01");
                 $filters['end_date'] = date("Y-m-t");
             break;
-            case 'this-quarter' :
+            case 'this-quarter':
                 $quarters = [
                     1 => [
                         'start' => date("01/01/Y"),
@@ -3491,19 +3373,19 @@ class Accounting_modals extends MY_Controller {
                 $filters['start_date'] = $quarters[$quarter]['start'];
                 $filters['end_date'] = $quarters[$quarter]['end'];
             break;
-            case 'this-year' :
+            case 'this-year':
                 $filters['start_date'] = date("Y-01-01");
                 $filters['end_date'] = date("Y-12-t");
             break;
-            case 'last-week' :
+            case 'last-week':
                 $filters['start_date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
                 $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
             break;
-            case 'last-month' :
+            case 'last-month':
                 $filters['start_date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
                 $filters['end_date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
             break;
-            case 'last-quarter' :
+            case 'last-quarter':
                 $quarters = [
                     1 => [
                         'start' => date("01/01/Y"),
@@ -3528,7 +3410,7 @@ class Accounting_modals extends MY_Controller {
                 $filters['start_date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
                 $filters['end_date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
             break;
-            case 'last-year' :
+            case 'last-year':
                 $filters['start_date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
                 $filters['end_date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
             break;
@@ -3537,7 +3419,7 @@ class Accounting_modals extends MY_Controller {
         $bills = $this->expenses_model->get_open_bills($filters);
 
         $data = [];
-        foreach($bills as $bill) {
+        foreach ($bills as $bill) {
             $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
 
             $data[] = [
@@ -3551,29 +3433,29 @@ class Accounting_modals extends MY_Controller {
             ];
         }
 
-        if($post['overdue_only'] === "1") {
-            $data = array_filter($data, function($v, $k) {
+        if ($post['overdue_only'] === "1") {
+            $data = array_filter($data, function ($v, $k) {
                 return strtotime(date("Y-m-d")) > strtotime($v['due_date']);
             }, ARRAY_FILTER_USE_BOTH);
         }
 
-        usort($data, function($a, $b) use ($order, $columnName) {
-            if($columnName !== 'due_date') {
-                if($columnName === 'open_balance') {
-                    if($order === 'asc') {
+        usort($data, function ($a, $b) use ($order, $columnName) {
+            if ($columnName !== 'due_date') {
+                if ($columnName === 'open_balance') {
+                    if ($order === 'asc') {
                         return floatval($a[$columnName]) > floatval($b[$columnName]);
                     } else {
                         return floatval($b[$columnName]) > floatval($a[$columnName]);
                     }
                 } else {
-                    if($order === 'asc') {
+                    if ($order === 'asc') {
                         return strcmp($a[$columnName], $b[$columnName]);
                     } else {
                         return strcmp($b[$columnName], $a[$columnName]);
                     }
                 }
             } else {
-                if($order === 'asc') {
+                if ($order === 'asc') {
                     return strtotime($a[$columnName]) > strtotime($b[$columnname]);
                 } else {
                     return strtotime($a[$columnName]) < strtotime($b[$columnname]);
@@ -3597,15 +3479,15 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         // $this->form_validation->set_rules('bills[]', 'Bill', 'required');
 
-        if(isset($data['bills'])) {
+        if (isset($data['bills'])) {
             $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
         }
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['bills']) && is_null($data['bills'])) {
+        } elseif (!isset($data['bills']) && is_null($data['bills'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please select at least one bill to pay.';
@@ -3613,12 +3495,12 @@ class Accounting_modals extends MY_Controller {
             $payees = array_unique($data['payee']);
 
             $startingCheckNo = $data['starting_check_no'] === "" ? null : intval($data['starting_check_no']);
-            foreach($payees as $payee) {
+            foreach ($payees as $payee) {
                 $paymentTotal = 0.00;
                 $itemKeys = array_keys($data['payee'], $payee);
                 $vendor = $this->vendors_model->get_vendor_by_id($payee);
                 $appliedVCredits = [];
-                foreach($itemKeys as $key) {
+                foreach ($itemKeys as $key) {
                     $paymentTotal += floatval($data['payment_amount'][$key]);
                 }
 
@@ -3650,8 +3532,8 @@ class Accounting_modals extends MY_Controller {
                 $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
                 // $billPaymentId = true;
 
-                if($billPaymentId) {
-                    if(is_null($billPayment['to_print_check_no']) && !is_null($billPayment['check_no'])) {
+                if ($billPaymentId) {
+                    if (is_null($billPayment['to_print_check_no']) && !is_null($billPayment['check_no'])) {
                         $assignCheck = [
                             'check_no' => $billPayment['check_no'],
                             'transaction_type' => 'bill-payment',
@@ -3667,7 +3549,7 @@ class Accounting_modals extends MY_Controller {
                     $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
                     $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-                    if($paymentAccType->account_name === 'Credit Card') {
+                    if ($paymentAccType->account_name === 'Credit Card') {
                         $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
                     } else {
                         $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
@@ -3684,12 +3566,12 @@ class Accounting_modals extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
                     $paymentItems = [];
-                    foreach($itemKeys as $key) {
-                        if(!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
+                    foreach ($itemKeys as $key) {
+                        if (!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
                             $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
                             $vCreditPercentage = number_format(floatval($data['credit_applied'][$key]) / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
         
-                            foreach($openVCredits as $vCredit) {
+                            foreach ($openVCredits as $vCredit) {
                                 $balance = floatval($vCredit->remaining_balance);
                                 $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
                                 if (array_key_exists($vCredit->id, $appliedVCredits)) {
@@ -3726,7 +3608,7 @@ class Accounting_modals extends MY_Controller {
 
                         $bill = $this->expenses_model->get_bill_data($data['bills'][$key]);
 
-                        if(floatval($data['total_amount'][$key]) === floatval($bill->remaining_balance)) {
+                        if (floatval($data['total_amount'][$key]) === floatval($bill->remaining_balance)) {
                             $billData = [
                                 'remaining_balance' => 0.00,
                                 'status' => 2,
@@ -3746,7 +3628,7 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_bill_payment_items($paymentItems);
                 }
 
-                if($data['starting_check_no'] !== "") {
+                if ($data['starting_check_no'] !== "") {
                     $startingCheckNo++;
                 }
             }
@@ -3765,11 +3647,11 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['expense_name'])) {
+        if (isset($data['expense_name'])) {
             $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
-        if(isset($data['item'])) {
+        if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
@@ -3777,11 +3659,11 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -3805,9 +3687,9 @@ class Accounting_modals extends MY_Controller {
     
             $vendorCreditId = $this->expenses_model->add_vendor_credit($vendorCredit);
     
-            if($vendorCreditId) {
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+            if ($vendorCreditId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -3819,7 +3701,7 @@ class Accounting_modals extends MY_Controller {
 
                 $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
 
-                if($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
+                if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
                     $vendorCredits = floatval($data['total_amount']);
                 } else {
                     $vendorCredits = floatval($data['total_amount']) + floatval($vendor->vendor_credits);
@@ -3831,9 +3713,9 @@ class Accounting_modals extends MY_Controller {
 
                 $this->vendors_model->updateVendor($vendor->id, $vendorData);
 
-                if(isset($data['expense_name'])) {
+                if (isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Vendor Credit',
                             'transaction_id' => $vendorCreditId,
@@ -3863,9 +3745,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
-                if(isset($data['item'])) {
+                if (isset($data['item'])) {
                     $itemDetails = [];
-                    foreach($data['item'] as $index => $value) {
+                    foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Vendor Credit',
                             'transaction_id' => $vendorCreditId,
@@ -3886,7 +3768,7 @@ class Accounting_modals extends MY_Controller {
 
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if($itemAccDetails) {
+                        if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                             $newBalance = floatval($data['item_amount'][$index]) - 5.00;
                             $newBalance = floatval($invAssetAcc->balance) + $newBalance;
@@ -3930,7 +3812,7 @@ class Accounting_modals extends MY_Controller {
     {
         $items = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'product'], 'status' => [1]]);
 
-        $items = array_filter($items, function($item, $k) {
+        $items = array_filter($items, function ($item, $k) {
             $accDetails = $this->items_model->getItemAccountingDetails($item->id);
             return $accDetails !== null;
         }, ARRAY_FILTER_USE_BOTH);
@@ -3950,8 +3832,8 @@ class Accounting_modals extends MY_Controller {
     {
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($data['transaction_id']);
 
-        if(!is_null($purchaseOrder->attachments) && $purchaseOrder->attachments !== "[]") {
-            foreach(json_decode($purchaseOrder->attachments, true) as $attachmentId) {
+        if (!is_null($purchaseOrder->attachments) && $purchaseOrder->attachments !== "[]") {
+            foreach (json_decode($purchaseOrder->attachments, true) as $attachmentId) {
                 $attachment = $this->accounting_attachments_model->getById($attachmentId);
                 $attachmentData = [
                     'linked_to_count' => intval($attachment->linked_to_count) - 1
@@ -3961,7 +3843,7 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if($revert) {
+        if ($revert) {
             $this->revert_categories('Purchase Order', $data['transaction_id']);
             $this->revert_items('Purchase Order', $data['transaction_id']);
         }
@@ -3975,11 +3857,11 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('purchase_order_date', 'Purchase order date', 'required');
 
-        if(isset($data['expense_name'])) {
+        if (isset($data['expense_name'])) {
             $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
-        if(isset($data['item'])) {
+        if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
@@ -3987,16 +3869,16 @@ class Accounting_modals extends MY_Controller {
 
         $return = [];
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
-            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                 $lastPO = $this->expenses_model->get_last_purchase_order(logged('company_id'));
 
                 $purchaseOrderData = [
@@ -4026,7 +3908,7 @@ class Accounting_modals extends MY_Controller {
             } else {
                 $revert = $this->revert_purchase_order($data);
 
-                if($revert) {
+                if ($revert) {
                     $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($data['transaction_id']);
 
                     $purchaseOrderData = [
@@ -4050,16 +3932,16 @@ class Accounting_modals extends MY_Controller {
             
                     $purchaseOrderId = $this->vendors_model->update_purchase_order($data['transaction_id'], $purchaseOrderData);
 
-                    if($purchaseOrderId) {
+                    if ($purchaseOrderId) {
                         $purchaseOrderId = $purchaseOrder->id;
                     }
                 }
                 $successMessage = 'Update Successful!';
             }
     
-            if($purchaseOrderId) {
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+            if ($purchaseOrderId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -4069,9 +3951,9 @@ class Accounting_modals extends MY_Controller {
                     }
                 }
 
-                if(isset($data['expense_name'])) {
+                if (isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Purchase Order',
                             'transaction_id' => $purchaseOrderId,
@@ -4089,9 +3971,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
-                if(isset($data['item'])) {
+                if (isset($data['item'])) {
                     $itemDetails = [];
-                    foreach($data['item'] as $index => $value) {
+                    foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Purchase Order',
                             'transaction_id' => $purchaseOrderId,
@@ -4149,22 +4031,22 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['expense_name'])) {
+        if (isset($data['expense_name'])) {
             $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
-        if(isset($data['item'])) {
+        if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
         }
 
         $return = [];
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } else if(!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -4197,9 +4079,9 @@ class Accounting_modals extends MY_Controller {
 
             $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
     
-            if($creditId) {
-                if(isset($data['attachments']) && is_array($data['attachments'])) {
-                    foreach($data['attachments'] as $attachmentId) {
+            if ($creditId) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) + 1
@@ -4209,9 +4091,9 @@ class Accounting_modals extends MY_Controller {
                     }
                 }
 
-                if(isset($data['expense_name'])) {
+                if (isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Credit Card Credit',
                             'transaction_id' => $creditId,
@@ -4241,9 +4123,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
-                if(isset($data['item'])) {
+                if (isset($data['item'])) {
                     $itemDetails = [];
-                    foreach($data['item'] as $index => $value) {
+                    foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Credit Card Credit',
                             'transaction_id' => $creditId,
@@ -4264,7 +4146,7 @@ class Accounting_modals extends MY_Controller {
 
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if($itemAccDetails) {
+                        if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                             $newBalance = floatval($data['item_amount'][$index]) - 5.00;
                             $newBalance = floatval($invAssetAcc->balance) + $newBalance;
@@ -4311,7 +4193,7 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('bills[]', 'Bill', 'required');
         $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
 
-        if($this->form_validation->run() === false) {
+        if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
@@ -4319,7 +4201,7 @@ class Accounting_modals extends MY_Controller {
             $paymentTotal = floatval($data['payment_amount']);
 
             $appliedVCredits = [];
-            foreach($data['credits'] as $index => $credit) {
+            foreach ($data['credits'] as $index => $credit) {
                 $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit);
                 $balance = floatval($vCredit->remaining_balance);
                 $subtracted = floatval($data['credit_payment'][$index]);
@@ -4351,11 +4233,11 @@ class Accounting_modals extends MY_Controller {
 
             $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
 
-            if($billPaymentId) {
+            if ($billPaymentId) {
                 $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-                if($paymentAccType->account_name === 'Credit Card') {
+                if ($paymentAccType->account_name === 'Credit Card') {
                     $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
                 } else {
                     $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
@@ -4372,7 +4254,7 @@ class Accounting_modals extends MY_Controller {
                 $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
                 $paymentItems = [];
-                foreach($data['bills'] as $index => $bill) {
+                foreach ($data['bills'] as $index => $bill) {
                     $paymentItems[] = [
                         'bill_payment_id' => $billPaymentId,
                         'bill_id' => $bill,
@@ -4383,7 +4265,7 @@ class Accounting_modals extends MY_Controller {
 
                     $bill = $this->expenses_model->get_bill_data($bill);
 
-                    if(floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
+                    if (floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
                         $billData = [
                             'remaining_balance' => 0.00,
                             'status' => 2,
@@ -4414,21 +4296,21 @@ class Accounting_modals extends MY_Controller {
 
     public function get_linkable_transactions($transactionType, $vendorId)
     {
-        switch($transactionType) {
-            case 'expense' :
+        switch ($transactionType) {
+            case 'expense':
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
                 $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
             break;
-            case 'check' :
+            case 'check':
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
                 $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
             break;
-            case 'bill' :
+            case 'bill':
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
             break;
-            case 'bill-payment' :
+            case 'bill-payment':
                 $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
             break;
@@ -4436,8 +4318,8 @@ class Accounting_modals extends MY_Controller {
 
         $transactions = [];
 
-        if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
-            foreach($purchaseOrders as $purchaseOrder) {
+        if (isset($purchaseOrders) && count($purchaseOrders) > 0) {
+            foreach ($purchaseOrders as $purchaseOrder) {
                 $transactions[] = [
                     'type' => 'Purchase Order',
                     'data_type' => 'purchase-order',
@@ -4451,8 +4333,8 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if(isset($bills) && count($bills) > 0) {
-            foreach($bills as $bill) {
+        if (isset($bills) && count($bills) > 0) {
+            foreach ($bills as $bill) {
                 $transactions[] = [
                     'type' => 'Bill',
                     'data_type' => 'bill',
@@ -4466,8 +4348,8 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if(isset($vendorCredits) && count($vendorCredits) > 0) {
-            foreach($vendorCredits as $vendorCredit) {
+        if (isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach ($vendorCredits as $vendorCredit) {
                 $transactions[] = [
                     'type' => 'Vendor Credit',
                     'data_type' => 'vendor-credit',
@@ -4486,12 +4368,12 @@ class Accounting_modals extends MY_Controller {
 
     public function get_transaction_details($transactionType, $transactionId)
     {
-        switch($transactionType) {
-            case 'purchase-order' :
+        switch ($transactionType) {
+            case 'purchase-order':
                 $type = 'Purchase Order';
                 $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
             break;
-            case 'bill' :
+            case 'bill':
                 $type = 'Bill';
                 $transaction = $this->vendors_model->get_bill_by_id($transactionId);
             break;
@@ -4500,7 +4382,7 @@ class Accounting_modals extends MY_Controller {
         $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
         $items = $this->expenses_model->get_transaction_items($transactionId, $type);
 
-        foreach($items as $index => $item) {
+        foreach ($items as $index => $item) {
             $details = $this->items_model->getItemById($item->item_id);
             $locations = $this->items_model->getLocationByItemId($item->item_id);
 
@@ -4523,21 +4405,21 @@ class Accounting_modals extends MY_Controller {
             'Credit Card'
         ];
 
-        foreach($accountTypes as $typeName) {
+        foreach ($accountTypes as $typeName) {
             $accType = $this->account_model->getAccTypeByName($typeName);
 
             $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
             $count = 0;
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
+            if (count($accounts) > 0) {
+                foreach ($accounts as $account) {
                     $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
                     $account->childAccs = $childAccs;
 
                     $paymentAccs[$typeName][] = $account;
 
-                    if($count === 1) {
+                    if ($count === 1) {
                         $selectedBalance = $account->balance;
                     }
 
@@ -4546,7 +4428,7 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if(strpos($selectedBalance, '-') !== false) {
+        if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
             $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
         } else {
@@ -4578,14 +4460,14 @@ class Accounting_modals extends MY_Controller {
         $bills = $this->expenses_model->get_bills_by_vendor($post['vendor'], $filters);
 
         $data = [];
-        foreach($bills as $bill) {
+        foreach ($bills as $bill) {
             $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
             $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
-            if($search !== "") {
-                if(stripos($bill->bill_no, $search) !== false) {
+            if ($search !== "") {
+                if (stripos($bill->bill_no, $search) !== false) {
                     $data[] = [
                         'id' => $bill->id,
                         'description' => $description,
@@ -4635,14 +4517,14 @@ class Accounting_modals extends MY_Controller {
         $credits = $this->expenses_model->get_credits_by_vendor($post['vendor'], $filters);
 
         $data = [];
-        foreach($credits as $credit) {
+        foreach ($credits as $credit) {
             $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
             $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
 
-            if($search !== "") {
-                if(stripos($credit->ref_no, $search) !== false) {
+            if ($search !== "") {
+                if (stripos($credit->ref_no, $search) !== false) {
                     $data[] = [
                         'id' => $credit->id,
                         'description' => $description,
@@ -4687,16 +4569,16 @@ class Accounting_modals extends MY_Controller {
             'payment_account' => $paymentAcc
         ];
 
-        switch($type) {
-            case 'regular' :
+        switch ($type) {
+            case 'regular':
                 $checks = $this->expenses_model->get_checks_to_print($filters);
                 $totalCount = count($checks);
             break;
-            case 'bill-payment' :
+            case 'bill-payment':
                 $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
                 $totalCount = count($billPayments);
             break;
-            default :
+            default:
                 $checks = $this->expenses_model->get_checks_to_print($filters);
                 $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
                 $totalCount = count($checks) + count($billPayments);
@@ -4704,24 +4586,24 @@ class Accounting_modals extends MY_Controller {
         }
 
         $data = [];
-        if(isset($checks) && count($checks) > 0) {
-            foreach($checks as $check) {
-                switch($check->payee_type) {
-                    case 'vendor' :
+        if (isset($checks) && count($checks) > 0) {
+            foreach ($checks as $check) {
+                switch ($check->payee_type) {
+                    case 'vendor':
                         $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
                         $payeeName = $payee->display_name;
                     break;
-                    case 'customer' :
+                    case 'customer':
                         $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
                         $payeeName = $payee->first_name . ' ' . $payee->last_name;
                     break;
-                    case 'employee' : 
+                    case 'employee':
                         $payee = $this->users_model->getUser($check->payee_id);
                         $payeeName = $payee->FName . ' ' . $payee->LName;
                     break;
                 }
 
-                if(strpos($check->total_amount, '-') !== false) {
+                if (strpos($check->total_amount, '-') !== false) {
                     $total = str_replace('-', '', $check->total_amount);
                     $amount = '-$'.number_format($total, 2, '.', ',');
                 } else {
@@ -4739,8 +4621,8 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        if(isset($billPayments) && count($billPayments) > 0) {
-            foreach($billPayments as $payment) {
+        if (isset($billPayments) && count($billPayments) > 0) {
+            foreach ($billPayments as $payment) {
                 $payee = $this->vendors_model->get_vendor_by_id($payment->payee_id);
                 $payeeName = $payee->display_name;
 
@@ -4748,7 +4630,7 @@ class Accounting_modals extends MY_Controller {
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
                 $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
 
-                if(strpos($payment->total_amount, '-') !== false) {
+                if (strpos($payment->total_amount, '-') !== false) {
                     $total = str_replace('-', '', $payment->total_amount);
                     $amount = '-$'.number_format($total, 2, '.', ',');
                 } else {
@@ -4766,18 +4648,18 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        usort($data, function($a, $b) use ($sort) {
-            switch($sort) {
-                case 'payee' :
+        usort($data, function ($a, $b) use ($sort) {
+            switch ($sort) {
+                case 'payee':
                     return strcmp($b['payee'], $a['payee']);
                 break;
-                case 'order-created' :
+                case 'order-created':
                     return $a['order_created'] > $b['order_created'];
                 break;
-                case 'date-payee' :
+                case 'date-payee':
                     return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && strcmp($b['payee'], $a['payee']);
                 break;
-                case 'date-order-created' :
+                case 'date-order-created':
                     return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && $a['order_created'] > $b['order_created'];
                 break;
             }
@@ -4798,9 +4680,9 @@ class Accounting_modals extends MY_Controller {
         $post = $this->input->post();
         $flag = true;
 
-        foreach($post['id'] as $key => $id) {
-            if($flag) {
-                if($post['type'][$key] === 'check') {
+        foreach ($post['id'] as $key => $id) {
+            if ($flag) {
+                if ($post['type'][$key] === 'check') {
                     $data = [
                         'to_print' => 0,
                         'updated_at' => date("Y-m-d H:i:s")
@@ -4820,9 +4702,9 @@ class Accounting_modals extends MY_Controller {
             $flag = $update ? true : false;
         }
 
-        if($flag === false) {
-            foreach($post['id'] as $key => $id) {
-                if($post['type'][$key] === 'check') {
+        if ($flag === false) {
+            foreach ($post['id'] as $key => $id) {
+                if ($post['type'][$key] === 'check') {
                     $data = [
                         'to_print' => 1,
                         'updated_at' => date("Y-m-d H:i:s")
@@ -4869,8 +4751,8 @@ class Accounting_modals extends MY_Controller {
         $startingCheckNo = $post['starting_check_no'] === "" ? null : intval($post['starting_check_no']);
 
         $data = [];
-        foreach($post['id'] as $key => $id) {
-            if($post['type'][$key] === 'check') {
+        foreach ($post['id'] as $key => $id) {
+            if ($post['type'][$key] === 'check') {
                 $check = $this->vendors_model->get_check_by_id($id);
                 $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
 
@@ -4920,9 +4802,9 @@ class Accounting_modals extends MY_Controller {
                 $payeeName = $payee->display_name;
 
                 $linked = [];
-                if($check->vendor_credits_applied !== null && $check->vendor_credits_applied !== "[]") {
+                if ($check->vendor_credits_applied !== null && $check->vendor_credits_applied !== "[]") {
                     $vCredits = json_decode($check->vendor_credits_applied, true);
-                    foreach($vCredits as $vCreditId => $amount) {
+                    foreach ($vCredits as $vCreditId => $amount) {
                         $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
 
                         $linked[] = [
@@ -4937,7 +4819,7 @@ class Accounting_modals extends MY_Controller {
                 }
 
                 $paidBills = $this->vendors_model->get_bill_payment_items($id);
-                foreach($paidBills as $paidBill) {
+                foreach ($paidBills as $paidBill) {
                     $bill = $this->vendors_model->get_bill_by_id($paidBill->bill_id);
 
                     $linked[] = [
@@ -4950,7 +4832,7 @@ class Accounting_modals extends MY_Controller {
                     ];
                 }
 
-                usort($linked, function($a, $b) {
+                usort($linked, function ($a, $b) {
                     return strtotime($a['date']) > strtotime($b['date']);
                 });
 
@@ -5018,7 +4900,7 @@ class Accounting_modals extends MY_Controller {
         $startingCheckNo = intval($this->input->post('starting_check_no'));
         
         $checkNos = [];
-        foreach($checks as $check) {
+        foreach ($checks as $check) {
             $checkNos[] = $startingCheckNo;
             $startingCheckNo++;
         }
@@ -5031,11 +4913,11 @@ class Accounting_modals extends MY_Controller {
     {
         $post = $this->input->post();
         $paymentAcc = $this->input->post('payment_account');
-        switch($post['print_check_status']) {
-            case 'some' :
+        switch ($post['print_check_status']) {
+            case 'some':
                 $fromCheckNo = $post['print_from'];
 
-                foreach($post['checks_selected'] as $key => $id) {
+                foreach ($post['checks_selected'] as $key => $id) {
                     $type = $post['type'][$key];
                     $assignedData = [
                         'transaction_type' => $type,
@@ -5044,13 +4926,13 @@ class Accounting_modals extends MY_Controller {
                     ];
                     $checkNo = $this->accounting_assigned_checks_model->get_assigned_check_no($assignedData);
 
-                    if(intval($checkNo->check_no) >= intval($fromCheckNo)) {
+                    if (intval($checkNo->check_no) >= intval($fromCheckNo)) {
                         $checkData = [
                             'check_no' => null,
                             'updated_at' => date("Y-m-d H:i:s")
                         ];
 
-                        if($type === 'check') {
+                        if ($type === 'check') {
                             $checkData['to_print'] = 1;
 
                             $this->vendors_model->update_check($id, $checkData);
@@ -5069,8 +4951,8 @@ class Accounting_modals extends MY_Controller {
                     }
                 }
             break;
-            case 'no' :
-                foreach($post['checks_selected'] as $key => $id) {
+            case 'no':
+                foreach ($post['checks_selected'] as $key => $id) {
                     $type = $post['type'][$key];
 
                     $checkData = [
@@ -5078,7 +4960,7 @@ class Accounting_modals extends MY_Controller {
                         'updated_at' => date("Y-m-d H:i:s")
                     ];
 
-                    if($type === 'check') {
+                    if ($type === 'check') {
                         $checkData['to_print'] = 1;
 
                         $this->vendors_model->update_check($id, $checkData);
@@ -5108,7 +4990,7 @@ class Accounting_modals extends MY_Controller {
 
         $settings = $this->accounting_timesheet_settings_model->get_by_company_id($companyId);
 
-        if($settings) {
+        if ($settings) {
             $query = $this->accounting_timesheet_settings_model->update($companyId, $settingsData);
         } else {
             $settingsData['company_id'] = $companyId;
@@ -5124,10 +5006,10 @@ class Accounting_modals extends MY_Controller {
         $lastTimesheet = $this->accounting_weekly_timesheet_model->get_last_timesheet($nameType, $nameId);
         
         $return = [];
-        if($lastTimesheet) {
+        if ($lastTimesheet) {
             $timeActivities = [];
-            foreach(json_decode($lastTimesheet->time_activity_ids, true) as $row => $timeActs) {
-                foreach($timeActs as $timeAct) {
+            foreach (json_decode($lastTimesheet->time_activity_ids, true) as $row => $timeActs) {
+                foreach ($timeActs as $timeAct) {
                     $timeActivities[$row][] = $this->accounting_single_time_activity_model->get_by_id($timeAct);
                 }
             }
@@ -5150,8 +5032,8 @@ class Accounting_modals extends MY_Controller {
     {
         $timesheet = $this->accounting_weekly_timesheet_model->get_by_id($timesheetId);
         $timeActivities = [];
-        foreach(json_decode($timesheet->time_activity_ids, true) as $row => $timeActs) {
-            foreach($timeActs as $timeAct) {
+        foreach (json_decode($timesheet->time_activity_ids, true) as $row => $timeActs) {
+            foreach ($timeActs as $timeAct) {
                 $timeActivity = $this->accounting_single_time_activity_model->get_by_id($timeAct);
                 $timeActivities[$row]['customer'] = $this->accounting_customers_model->getCustomerDetails($timeActivity->customer_id)[0];
                 $timeActivities[$row]['service'] = $this->items_model->getItemById($timeActivity->service_id)[0];
@@ -5179,7 +5061,7 @@ class Accounting_modals extends MY_Controller {
         $name = explode(' ', trim($post['payee_name']));
         $nameCount = count($name);
 
-        if($post['payee_type'] === 'vendor') {
+        if ($post['payee_type'] === 'vendor') {
             $data = [
                 'company_id' => logged('company_id'),
                 'display_name' => trim($post['payee_name']),
@@ -5189,26 +5071,26 @@ class Accounting_modals extends MY_Controller {
                 'updated_at' => date("Y-m-d H:i:s")
             ];
 
-            switch(strval($nameCount)) {
-                case '1' :
+            switch (strval($nameCount)) {
+                case '1':
                     $data['f_name'] = $name[0];
                 break;
-                case '2' :
+                case '2':
                     $data['f_name'] = $name[0];
                     $data['l_name'] = $name[1];
                 break;
-                case '3' :
+                case '3':
                     $data['f_name'] = $name[0];
                     $data['m_name'] = $name[1];
                     $data['l_name'] = $name[2];
                 break;
-                case '4' :
+                case '4':
                     $data['title'] = $name[0];
                     $data['f_name'] = $name[1];
                     $data['m_name'] = $name[2];
                     $data['l_name'] = $name[3];
                 break;
-                case '5' :
+                case '5':
                     $data['title'] = $name[0];
                     $data['f_name'] = $name[1];
                     $data['m_name'] = $name[2];
@@ -5227,26 +5109,26 @@ class Accounting_modals extends MY_Controller {
                 'business_name' => trim($post['payee_name'])
             ];
 
-            switch(strval($nameCount)) {
-                case '1' :
+            switch (strval($nameCount)) {
+                case '1':
                     $data['first_name'] = $name[0];
                 break;
-                case '2' :
+                case '2':
                     $data['first_name'] = $name[0];
                     $data['last_name'] = $name[1];
                 break;
-                case '3' :
+                case '3':
                     $data['first_name'] = $name[0];
                     $data['middle_name'] = $name[1];
                     $data['last_name'] = $name[2];
                 break;
-                case '4' :
+                case '4':
                     $data['prefix'] = $name[0];
                     $data['first_name'] = $name[1];
                     $data['middle_name'] = $name[2];
                     $data['last_name'] = $name[3];
                 break;
-                case '5' :
+                case '5':
                     $data['prefix'] = $name[0];
                     $data['first_name'] = $name[1];
                     $data['middle_name'] = $name[2];
@@ -5269,35 +5151,42 @@ class Accounting_modals extends MY_Controller {
         $field = $this->input->get('field');
         $return = [];
 
-        switch($field) {
-            case 'payee' :
+        switch ($field) {
+            case 'payee':
                 $return = $this->get_vendor_choices($return, $search, $field);
                 $return = $this->get_customer_choices($return, $search, $field);
                 $return = $this->get_employee_choices($return, $search, $field);
             break;
-            case 'received-from' :
+            case 'received-from':
                 $return = $this->get_customer_choices($return, $search, $field);
                 $return = $this->get_vendor_choices($return, $search, $field);
                 $return = $this->get_employee_choices($return, $search, $field);
             break;
-            case 'names' :
+            case 'names':
                 $return = $this->get_customer_choices($return, $search, $field);
                 $return = $this->get_vendor_choices($return, $search, $field);
                 $return = $this->get_employee_choices($return, $search, $field);
             break;
-            case 'vendor' :
+            case 'person-tracking':
+                $return = $this->get_employee_choices($return, $search, $field);
                 $return = $this->get_vendor_choices($return, $search, $field);
             break;
-            case 'customer' :
+            case 'vendor':
+                $return = $this->get_vendor_choices($return, $search, $field);
+            break;
+            case 'pay-bills-vendor':
+                $return = $this->get_vendor_choices($return, $search, $field);
+            break;
+            case 'customer':
                 $return = $this->get_customer_choices($return, $search, $field);
             break;
-            case 'employee' :
+            case 'employee':
                 $return = $this->get_employee_choices($return, $search, $field);
             break;
-            case 'payment-method' :
+            case 'payment-method':
                 $return = $this->get_payment_method_choices($return, $search);
             break;
-            case 'expense-account' :
+            case 'expense-account':
                 $accountTypes = [
                     'Expenses',
                     'Bank',
@@ -5317,7 +5206,7 @@ class Accounting_modals extends MY_Controller {
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
-            case 'payment-account' :
+            case 'payment-account':
                 $accountTypes = [
                     'Bank',
                     'Credit Card',
@@ -5326,29 +5215,92 @@ class Accounting_modals extends MY_Controller {
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
-            case 'bank-account' :
+            case 'bank-account':
                 $accountTypes = [
                     'Bank'
                 ];
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'bill-payment-account':
+                $accountTypes = [
+                    'Bank',
+                    'Credit Card'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'bank-credit-account':
+                $accountTypes = [
+                    'Credit Card'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'bank-deposit-account':
+                $accountTypes = [
+                    'Bank',
+                    'Other Current Assets'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'cash-back-account':
+                $accountTypes = [
+                    'Bank',
+                    'Other Current Assets'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'funds-account':
+                $accountTypes = [
+                    'Income',
+                    'Other Income',
+                    'Bank',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Accounts payable (A/P)',
+                    'Credit Card',
+                    'Other Current Liabilities',
+                    'Long Term Liabilities',
+                    'Equity',
+                    'Cost of Goods Sold',
+                    'Expenses',
+                    'Other Expense'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'transfer-account':
+                $accountTypes = [
+                    'Bank',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Credit Card',
+                    'Other Current Liabilities',
+                    'Long Term Liabilities',
+                    'Equity'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
-        if($search !== null && $search !== '') {
-            usort($return['results'], function($a, $b) use ($search) {
+        if ($search !== null && $search !== '') {
+            usort($return['results'], function ($a, $b) use ($search) {
                 $indexA = stripos($a['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($a['text'], "<strong>$search</strong>");
                 $indexB = stripos($b['text'], "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($b['text'], "<strong>$search</strong>");
                 return $indexA - $indexB;
             });
 
-            if($field === 'payee' || $field === 'received-from' || $field === 'names') {
+            if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
                 $results = $return['results'];
                 $return['results'] = [];
-                for($i = 0; $i < count($results); $i++) {
+                for ($i = 0; $i < count($results); $i++) {
                     $idExplode = explode('-', $results[$i]['id']);
 
-                    if(count($return['results']) === 0 || $return['results'][array_key_last($return['results'])]['text'] !== ucfirst($idExplode[0])) {
+                    if (count($return['results']) === 0 || $return['results'][array_key_last($return['results'])]['text'] !== ucfirst($idExplode[0])) {
                         $return['results'][]['text'] = ucfirst($idExplode[0]);
                     }
 
@@ -5360,7 +5312,11 @@ class Accounting_modals extends MY_Controller {
             }
         }
 
-        array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+        if ($field === 'pay-bills-vendor') {
+            array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
+        } else {
+            array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+        }
 
         echo json_encode($return);
     }
@@ -5368,8 +5324,8 @@ class Accounting_modals extends MY_Controller {
     private function get_vendor_choices($choices, $search = null, $field)
     {
         $vendors = $this->vendors_model->getAllByCompany();
-        foreach($vendors as $vendor) {
-            if($search !== null && $search !== '') {
+        foreach ($vendors as $vendor) {
+            if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);
                 if ($stripos !== false) {
                     $searched = substr($vendor->display_name, $stripos, strlen($search));
@@ -5379,8 +5335,8 @@ class Accounting_modals extends MY_Controller {
                     ];
                 }
             } else {
-                if($field === 'payee' || $field === 'received-from' || $field === 'names') {
-                    if($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Vendors') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                    if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Vendors') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Vendors';
                     } else {
                         $choices['results'][]['text'] = 'Vendors';
@@ -5405,9 +5361,9 @@ class Accounting_modals extends MY_Controller {
     {
         $customers = $this->accounting_customers_model->getAllByCompany();
 
-        foreach($customers as $customer) {
+        foreach ($customers as $customer) {
             $name = $customer->first_name . ' ' . $customer->last_name;
-            if($search !== null && $search !== '') {
+            if ($search !== null && $search !== '') {
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
                     $searched = substr($name, $stripos, strlen($search));
@@ -5417,8 +5373,8 @@ class Accounting_modals extends MY_Controller {
                     ];
                 }
             } else {
-                if($field === 'payee' || $field === 'received-from' || $field === 'names') {
-                    if($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names') {
+                    if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
                     } else {
                         $choices['results'][]['text'] = 'Customers';
@@ -5443,9 +5399,9 @@ class Accounting_modals extends MY_Controller {
     {
         $employees = $this->users_model->getCompanyUsers(logged('company_id'));
 
-        foreach($employees as $employee) {
+        foreach ($employees as $employee) {
             $name = $employee->FName . ' ' . $employee->LName;
-            if($search !== null && $search !== '') {
+            if ($search !== null && $search !== '') {
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
                     $searched = substr($name, $stripos, strlen($search));
@@ -5455,8 +5411,8 @@ class Accounting_modals extends MY_Controller {
                     ];
                 }
             } else {
-                if($field === 'payee' || $field === 'received-from' || $field === 'names') {
-                    if($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Employees') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                    if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Employees') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Employees';
                     } else {
                         $choices['results'][]['text'] = 'Employees';
@@ -5481,8 +5437,8 @@ class Accounting_modals extends MY_Controller {
     {
         $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
 
-        foreach($paymentMethods as $paymentMethod) {
-            if($search !== null && $search !== '') {
+        foreach ($paymentMethods as $paymentMethod) {
+            if ($search !== null && $search !== '') {
                 $stripos = stripos($paymentMethod['name'], $search);
                 if ($stripos !== false) {
                     $searched = substr($paymentMethod['name'], $stripos, strlen($search));
@@ -5504,25 +5460,25 @@ class Accounting_modals extends MY_Controller {
 
     private function get_account_choices($choices, $search = null, $accountTypes)
     {
-        if($search === null || $search === '') {
-            foreach($accountTypes as $typeName) {
+        if ($search === null || $search === '') {
+            foreach ($accountTypes as $typeName) {
                 $accType = $this->account_model->getAccTypeByName($typeName);
 
                 $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
-                if(count($accounts) > 0) {
-                    if(count($accountTypes) > 1) {
+                if (count($accounts) > 0) {
+                    if (count($accountTypes) > 1) {
                         $choices['results'][]['text'] = $typeName;
                         $accTypeKey = array_key_last($choices['results']);
                     }
 
-                    foreach($accounts as $account) {
-                        if($search === null || $search === '') {
-                            if(count($accountTypes) > 1) {
+                    foreach ($accounts as $account) {
+                        if ($search === null || $search === '') {
+                            if (count($accountTypes) > 1) {
                                 $choices['results'][$accTypeKey]['children'][] = [
                                     'id' => $account->id,
                                     'text' => $account->name
-                                ];   
+                                ];
                             } else {
                                 $choices['results'][] = [
                                     'id' => $account->id,
@@ -5534,8 +5490,8 @@ class Accounting_modals extends MY_Controller {
                         $lastParentKey = array_key_last($choices['results']);
                         $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
     
-                        if(count($childAccs) > 0) {
-                            if(count($accountTypes) > 1) {
+                        if (count($childAccs) > 0) {
+                            if (count($accountTypes) > 1) {
                                 $choices['results'][$lastParentKey]['children'][] = [
                                     'text' => 'Sub-account of '.$account->name,
                                     'children' => []
@@ -5547,14 +5503,14 @@ class Accounting_modals extends MY_Controller {
                                 ];
                             }
     
-                            if(count($accountTypes) > 1) {
+                            if (count($accountTypes) > 1) {
                                 $key = array_key_last($choices['results'][$lastParentKey]['children']);
                             }
     
                             $lastParentKey = array_key_last($choices['results']);
-                            foreach($childAccs as $childAcc) {
-                                if($search === null || $search === '') {
-                                    if(count($accountTypes) > 1) {
+                            foreach ($childAccs as $childAcc) {
+                                if ($search === null || $search === '') {
+                                    if (count($accountTypes) > 1) {
                                         $choices['results'][$lastParentKey]['children'][$key]['children'][] = [
                                             'id' => $childAcc->id,
                                             'text' => $childAcc->name
@@ -5572,7 +5528,6 @@ class Accounting_modals extends MY_Controller {
                 }
             }
         } else {
-
         }
 
         return $choices;
@@ -5599,7 +5554,7 @@ class Accounting_modals extends MY_Controller {
     {
         $post = $this->input->post();
         
-        if($post['payee_type'] === 'vendor') {
+        if ($post['payee_type'] === 'vendor') {
             $data = [
                 'company_id' =>logged('company_id'),
                 'title' => $post['title'],
@@ -5657,14 +5612,21 @@ class Accounting_modals extends MY_Controller {
                 'email' => $post['email'],
                 'phone_m' => $post['phone'],
                 'contact_phone1' => $post['mobile'],
+                'notes' => $post['notes'],
                 'customer_type' => $post['customer_type']
             ];
+            if ($post['customer_id_edit_info']=="") {
+                $id = $this->accounting_customers_model->createCustomer($data);
+            } else {
+                $id = $post['customer_id_edit_info'];
+                $this->accounting_customers_model->updateCustomer($id, $data);
+            }
+            
 
-            $id = $this->accounting_customers_model->createCustomer($data);
             $payee = $this->accounting_customers_model->getCustomerDetails($id)[0];
             $payee->id = $payee->prof_id;
 
-            if($id) {
+            if ($id) {
                 $accountingDetails = [
                     'customer_id' => $id,
                     'company_id' => logged('company_id'),
@@ -5694,10 +5656,18 @@ class Accounting_modals extends MY_Controller {
                     'attachments' => isset($post['attachments']) ? json_encode($post['attachments']) : null
                 ];
 
-                $accDetailsId = $this->accounting_customers_model->add_customer_accounting_details($accountingDetails);
+                if ($post['customer_id_edit_info']=="") {
+                    $accDetailsId = $this->accounting_customers_model->add_customer_accounting_details($accountingDetails);
+                } else {
+                    if ($this->accounting_customers_model->get_customer_accounting_details($id) != null) {
+                        $updated = $this->accounting_customers_model->update_customer_accounting_details($id, $accountingDetails);
+                    } else {
+                        $accDetailsId = $this->accounting_customers_model->add_customer_accounting_details($accountingDetails);
+                    }
+                }
             }
         }
 
-        echo json_encode(['payee' => $payee]);
+        echo json_encode(['payee' => $payee,'updated' => $updated]);
     }
 }

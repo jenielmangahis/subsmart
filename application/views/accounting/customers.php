@@ -218,7 +218,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <div class="new-customer-modal-holdder">
+	<div class="" id="modal-container">
 
+	</div>
 </div>
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
 <?php include viewPath('accounting/customer_includes/customer_type/select_customer_type'); ?>

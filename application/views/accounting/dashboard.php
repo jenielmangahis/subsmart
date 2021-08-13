@@ -45,6 +45,66 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   border-left: none;
   /* height: 300px; */
 }  
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 30px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #53b700;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #53b700;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 20px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -684,7 +744,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
 
                     <div id="Tokyo" class="tabcontent">
-                        <div class="col-md-10" style="padding:1%;">
+                        <div class="col-md-12" style="padding:1%;">
 
                             <table class="table">
                                 <tr>
@@ -696,7 +756,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p><button class="btn btn-success">Customize look and feel</button></p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="sales_form_content">
                                     <td style="width:10%;">Sales form content</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Preferred invoice terms</p>
@@ -723,7 +783,90 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>On</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="sales_form_content_edit" style="display:none;">
+                                    <td style="width:10%;">Sales form content</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Preferred invoice terms</p><br>
+                                        <p>Preferred delivery method</p><br>
+                                        <p>Shipping</p><br>
+                                        <p>Custom fields</p><br>
+                                        <p>Custom transaction numbers</p><br>
+                                        <p>Service date</p><br>
+                                        <p>Discount</p><br>
+                                        <p>Deposit </p><br>
+                                        <p>Tips (Gratuity)</p><br>
+                                        <p>Tags</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p style="margin-top:-100px;">
+                                            <select class="form-control" style="width:40%;">
+                                                <option>Net 30</option>
+                                                <option>Due 15</option>
+                                                <option>Due on receipt</option>
+                                            </select>
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:40%;">
+                                                <option>None</option>
+                                                <option>Print Later</option>
+                                                <option>Send Later</option>
+                                            </select>
+                                        </p>
+                                        <p></p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                    <td align="right"><i class="fa fa-edit" style="font-size:36px"></i></td>
+                                </tr>
+                                <tr id="product_services">
                                     <td style="width:10%;">Products and services</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Show Product/Service column on sales forms</p>
@@ -740,13 +883,69 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>On</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="product_services_edit" style="display:none;">
+                                    <td style="width:10%;">Products and services</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Show Product/Service column on sales forms</p>
+                                        <p>Show SKU column</p>
+                                        <p>Turn on price rules</p>
+                                        <p>Track quantity and price/rate</p>
+                                        <p>Track inventory quantity on hand</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="progress_invoicing">
                                     <td style="width:10%;">Progress Invoicing</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>	Create multiple partial invoices from a single estimate</p>
                                     </td>
                                     <td style="padding:3%;">
                                         <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr id="progress_invoicing_edit" style="displau:none;">
+                                    <td style="width:10%;">Progress Invoicing</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>	Create multiple partial invoices from a single estimate</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -993,7 +1192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>Markup</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="categories">
                                     <td style="width:10%;">Categories</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Track classes</p>
@@ -1004,7 +1203,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="categories_edit" style="displau:none;">
+                                    <td style="width:10%;">Categories</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Track classes</p>
+                                        <p>Track locations</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="automation">
                                     <td style="width:10%;">Automation</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Pre-fill forms with previously entered content</p>
@@ -1019,13 +1239,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="automation_edit" style="displau:none;">
+                                    <td style="width:10%;">Automation</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Pre-fill forms with previously entered content</p>
+                                        <p>Automatically apply credits</p>
+                                        <p>Automatically invoice unbilled activity</p>
+                                        <p>Automatically apply bill payments</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="projects">
                                     <td style="width:10%;">Projects</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Organize all job-related activity in one place</p>
                                     </td>
                                     <td style="padding:3%;">
                                         <p>Off</p>
+                                    </td>
+                                </tr>
+                                <tr id="projects_edit" style="display:none;">
+                                    <td style="width:10%;">Projects</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Organize all job-related activity in one place</p>
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1165,4 +1434,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
+</script>
+
+<script>
+$(document).ready(function() {
+    $("#sales_form_content").click(function() {
+        var test = $(this).val();
+
+        $("#sales_form_content").hide();
+        $("#sales_form_content_edit" + test).show();
+    });
+
+    $("#sales_form_content_edit").click(function() {
+        var test = $(this).val();
+
+        $("#sales_form_content_edit").hide();
+        $("#sales_form_content" + test).show();
+    });
+});
 </script>

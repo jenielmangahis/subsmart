@@ -150,13 +150,69 @@ class Dashboard extends Widgets {
         }
         
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
-        
-        $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
         $this->page_data['upcomingJobs'] = $this->jobs_model->getAllUpcomingJobsByCompanyId(logged('company_id'));
         $this->page_data['events'] = $this->event_model->get_all_events(5);
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['status_arr'] = $status_arr;
+
+        // fetch open estimates
+        $open_estimate_query = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 'Submitted','view_flag' => '0'),
+            'table' => 'estimates',
+            'select' => '*',
+        );
+        $this->page_data['open_estimates'] = $this->general->get_data_with_param($open_estimate_query);
+
+        // fetch open estimates
+        $plans_query = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 1),
+            'table' => 'plan_type',
+            'select' => 'count(*) as totalPlan',
+        );
+        $this->page_data['plan_type'] = $this->general->get_data_with_param($plans_query);
+
+        // fetch open estimates
+        $estimate_draft_query = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'estimates',
+            'select' => 'id,status',
+        );
+        $this->page_data['estimate_draft'] = $this->general->get_data_with_param($estimate_draft_query);
+
+
+        // fetch open estimates
+        $invoice_draft = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 'Draft'),
+            'table' => 'invoices',
+            'select' => 'count(*) as total',
+        );
+        $this->page_data['invoice_draft'] = $this->general->get_data_with_param($invoice_draft,FALSE);
+
+        // fetch open estimates
+        $invoice_due = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 'Due'),
+            'table' => 'invoices',
+            'select' => 'count(*) as total',
+        );
+        $this->page_data['invoice_due'] = $this->general->get_data_with_param($invoice_due,FALSE);
+
+
+        // fetch open estimates
+        $total_amount_invoice = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 'Paid'),
+            'table' => 'invoices',
+            'select' => 'SUM(grand_total) as total',
+        );
+        $this->page_data['total_amount_invoice'] = $this->general->get_data_with_param($total_amount_invoice,FALSE);
+
+        // fetch open estimates
+        $total_invoice_paid = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 'Paid'),
+            'table' => 'invoices',
+            'select' => 'count(*) as total',
+        );
+        $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid,FALSE);
 
         // get customer subscription history
         $feeds_query = array(

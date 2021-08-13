@@ -160,4 +160,20 @@ class Accounting_customers_model extends MY_Model
         $this->db->insert('customer_accounting_details', $data);
         return $this->db->insert_id();
     }
+    public function get_customer_accounting_details($customer_id)
+    {
+        $customer = $this->db->get_where('customer_accounting_details', array('customer_id' => $customer_id));
+        return $customer->result();
+    }
+    public function update_customer_accounting_details($customer_id, $data)
+    {
+        $this->db->where('customer_id', $customer_id);
+        $this->db->update('customer_accounting_details', $data);
+        $customer =  $this->db->affected_rows();
+        if ($customer > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -54,7 +54,7 @@ include viewPath('includes/header');
                     </div>
                 </div>
 
-                <table class="table table-hover settings__table">
+                <table class="table table-hover settings__table" id="rateTable">
                     <thead>
                         <tr>
                             <th class="settings__tableHead" scope="col">Name</th>
@@ -64,29 +64,13 @@ include viewPath('includes/header');
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td data-type="name">Escambia county</td>
-                            <td data-type="agency">Florida Department of Revenue</td>
-                            <td data-type="rate">7.5%</td>
-                            <td data-type="agency">
-                                <div class="btn-group btnGroup">
-                                    <button data-action="agencyInfo" type="button" class="btn btn-sm btnGroup__main">Edit</button>
-                                    <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Make inactive</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div class="sidebarForm" id="agencyInfo">
+    <div class="sidebarForm" id="editAgency">
         <div class="sidebarForm__inner">
             <div class="sidebarForm__header">
                 <div class="sidebarForm__title">Florida details</div>
@@ -95,27 +79,30 @@ include viewPath('includes/header');
                 </button>
             </div>
 
-            <p data-type="agency"></p>
-
             <form>
                 <div class="form-group">
-                    <label for="agencyInfo__filingFrequency">Filing frequency</label>
-                    <select data-type="frequency" class="form-control" id="agencyInfo__filingFrequency">
+                    <label for="editAgency__agency">Agency</label>
+                    <input readonly data-type="agency" type="text" class="form-control" id="editAgency__agency" placeholder="Select agency">
+                </div>
+
+                <div class="form-group">
+                    <label for="editAgency__filingFrequency">Filing frequency</label>
+                    <select data-type="frequency" class="form-control" id="editAgency__filingFrequency">
                         <option value="yearly">Yearly</option>
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
-                        <option value="half_yearly">Half-yearly</option>
+                        <option value="half-yearly">Half-yearly</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="agencyInfo__taxPeriodStart">Start of tax period</label>
-                    <input readonly data-type="start_period" type="text" class="form-control" id="agencyInfo__taxPeriodStart" value="January">
+                    <label for="editAgency__dateStart">Start Date</label>
+                    <input data-type="start_date" type="date" class="form-control" id="editAgency__dateStart" value="January">
                 </div>
 
                 <div class="form-group">
-                    <label for="agencyInfo__dateStart">Start Date</label>
-                    <input data-type="start_date" type="date" class="form-control" id="agencyInfo__dateStart" value="January">
+                    <label for="editAgency__taxPeriodStart">Start of tax period</label>
+                    <input readonly data-type="start_period" type="text" class="form-control" id="editAgency__taxPeriodStart" value="January">
                 </div>
             </form>
 
@@ -164,7 +151,7 @@ include viewPath('includes/header');
 
             <div class="sidebarForm__footer">
                 <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
-                <button id="saveAgency" type="button" class="btn btn-primary">Save</button>
+                <button id="addAgencyBtn" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -181,13 +168,13 @@ include viewPath('includes/header');
             <form>
                 <div class="form-group">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="rateType" id="addRate__rateType1" checked>
+                        <input data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType1" value="single" checked>
                         <label class="form-check-label" for="addRate__rateType1">
                             Single
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="rateType" id="addRate__rateType2">
+                        <input data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType2" value="combined">
                         <label class="form-check-label" for="addRate__rateType2">
                             Combined
                         </label>
@@ -196,7 +183,7 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="addRate__name">Name</label>
-                    <input type="text" class="form-control" id="addRate__name">
+                    <input data-type="name" required type="text" class="form-control" id="addRate__name">
                 </div>
 
                 <div class="form-group">
@@ -212,7 +199,7 @@ include viewPath('includes/header');
                 <div class="form-group">
                     <label for="addRate__rate">Rate</label>
                     <div class="d-flex align-items-center">
-                        <input type="number" class="form-control" id="addRate__rate">
+                        <input required data-type="rate" type="number" class="form-control" id="addRate__rate">
                         <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
                     </div>
                 </div>
@@ -220,7 +207,48 @@ include viewPath('includes/header');
 
             <div class="sidebarForm__footer">
                 <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button id="addRateBtn" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarForm" id="editRate">
+        <div class="sidebarForm__inner">
+            <div class="sidebarForm__header">
+                <div class="sidebarForm__title">Edit custom sales tax rate</div>
+                <button data-action="close" class="sidebarForm__close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+
+            <div class="sidebarForm__message">
+                <div><i class="fa fa-info-circle text-info sidebarForm__messageIcon"></i></div>
+                <div class="sidebarForm__messageText">Changes you make will update the rates everywhere except for any in past returns.</div>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label for="editRate__name">Name</label>
+                    <input data-type="name" required type="text" class="form-control" id="editRate__name">
+                </div>
+
+                <div class="form-group">
+                    <label for="editRate__rate">Rate</label>
+                    <div class="d-flex align-items-center">
+                        <input required data-type="rate" type="number" class="form-control" id="editRate__rate">
+                        <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editRate__agency">Agency</label>
+                    <input readonly data-type="agency" class="form-control" id="editRate__agency">
+                </div>
+            </form>
+
+            <div class="sidebarForm__footer">
+                <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
+                <button id="editRateBtn" type="button" class="btn btn-primary">Continue</button>
             </div>
         </div>
     </div>

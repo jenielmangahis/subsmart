@@ -28,7 +28,13 @@
             <p><?= $t->industry_module_description; ?></p>
             <hr />
             <div style="width: 100%;display: block;text-align: center;">
-            <input type="checkbox" class="b-toggle" data-id="<?= $t->id; ?>" checked data-toggle="toggle" data-width="250" data-on="Activated" data-off="Deactivated" data-onstyle="success" data-offstyle="danger" data-style="ios">
+            <?php 
+                $is_checked = 'checked';
+                if( in_array($t->id, $deactivated_modules) ){
+                    $is_checked = '';
+                }
+            ?>
+            <input type="checkbox" class="b-toggle" data-id="<?= $t->id; ?>" data-cid="<?= $subscriber->id; ?>" <?= $is_checked; ?> data-toggle="toggle" data-width="250" data-on="Activated" data-off="Deactivated" data-onstyle="success" data-offstyle="danger" data-style="ios">
             </div>
         </li>
         <?php } ?>
@@ -39,8 +45,10 @@
 $(function(){
     $(".b-toggle").bootstrapToggle();
     $(".b-toggle").change(function(){
-        var module_id = $(this).attr("data-id");
-        alert(module_id);
+        var url        = base_url + 'admin/save_company_deactivated_module';
+        var module_id  = $(this).attr("data-id");
+        var company_id = $(this).attr("data-cid");
+
         if ($(this).is(':checked')) {
             var is_activated = 1;
         }else{
@@ -52,13 +60,13 @@ $(function(){
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#payment-sms-blast").serialize(),
+             data: {module_id:module_id, is_activated:is_activated, company_id:company_id},
              success: function(o)
              {
-                if( o.is_success ){
+                /*if( o.is_success ){
                     Swal.fire({
                         title: 'Update Successful!',
-                        text: 'SMS Campaign was successfully activated',
+                        //text: '',
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#32243d',
@@ -66,19 +74,17 @@ $(function(){
                         confirmButtonText: 'Ok'
                     }).then((result) => {
                         if (result.value) {
-                            window.location.href= base_url + 'sms_campaigns/payment_details';
+                            window.location.href= base_url + 'admin/companies';
                         }
                     });
                     
                 }else{
                     Swal.fire({
                       icon: 'error',
-                      title: 'Cannot activate campaign.',
+                      title: 'Cannot save data.',
                       text: o.msg
                     });
-                }
-
-                $(".btn-sms-purchase").html('Purchase');
+                }*/
              }
           });
         }, 1000);

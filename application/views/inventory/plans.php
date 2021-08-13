@@ -39,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!-- Default box -->
                     <div class="box">
                         <div class="box-body">
-                            <table id="dataTable1" class="table table-bordered table-striped">
+                            <table id="plans_table" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
                                     <th>Id</th>
@@ -81,6 +81,5 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
     <?php include viewPath('includes/footer'); ?>
     <script>
-        $('#dataTable1').DataTable()
-
+        $('#plans_table').DataTable()
     </script>

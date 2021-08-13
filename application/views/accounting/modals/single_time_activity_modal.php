@@ -70,25 +70,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="name">Name</label>
-                                                    <select name="name" id="name" class="form-control" required>
-                                                        <option value="" disabled selected>Whose time are you tracking?
-                                                        </option>
-                                                        <optgroup label="Employees">
-                                                            <?php foreach ($dropdown['employees'] as $employee):?>
-                                                            <option
-                                                                value="employee-<?php echo $employee->id;?>">
-                                                                <?php echo $employee->FName . ' ' . $employee->LName;?>
-                                                            </option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                        <optgroup label="Vendors">
-                                                            <?php foreach ($dropdown['vendors'] as $vendor):?>
-                                                            <option
-                                                                value="vendor-<?php echo $vendor->id;?>">
-                                                                <?php echo $vendor->f_name . ' ' . $vendor->l_name;?>
-                                                            </option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
+                                                    <select name="name" id="person_tracking" class="form-control" required>
+                                                        <option value="" disabled selected>Whose time are you tracking?</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">

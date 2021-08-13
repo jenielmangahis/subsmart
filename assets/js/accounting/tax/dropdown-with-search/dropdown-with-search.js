@@ -1,4 +1,4 @@
-class Accounting__DropdownWithSearch {
+export class Accounting__DropdownWithSearch {
   constructor(element, options) {
     this.$element = $(element);
     this.options = options;

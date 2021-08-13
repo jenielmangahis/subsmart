@@ -55,6 +55,7 @@ class Login extends CI_Controller
         $this->load->model('Clients_model');
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
+        $this->load->model('CompanyDeactivatedModule_model');
                 
         $this->load->library('form_validation');
 
@@ -111,6 +112,15 @@ class Login extends CI_Controller
                     }
                 }
 
+                //Get company deactivated modules
+                $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
+                $deactivated_modules = array();
+
+                foreach( $deactivated_modules as $dm ){
+                    $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
+                } 
+
+                $this->session->set_userdata('deactivated_modules', $deactivated_modules);
                 $this->session->set_userdata('userAccessModules', $access_modules);
                 $this->session->set_userdata('is_plan_active', $client->is_plan_active);
             }

@@ -168,8 +168,8 @@ a.btn-primary.btn-md {
 									<div class="form-group">
 										<label for="discount_fixed">Status</label>
 										<select name="status" class="groups-select form-control">
-											<option value="1">Active</option>
-											<option value="0">De-Active</option>
+											<option value="1">Actived</option>
+											<option value="0">Deactived</option>
 										</select>
 									</div>
 								</div>
