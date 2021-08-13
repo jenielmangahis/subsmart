@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'home';
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = false;
 
 $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
 $route['customer/tickets'] = 'customer/ticket';
@@ -180,7 +180,7 @@ $route['survey/add/questions/choices/(:num)/(:num)'] = 'survey/addAndUpdateQuest
 $route['survey/add/questions/(:num)/(:num)'] = 'survey/addAndUpdateQuestion/$1/$2';
 $route['survey/add/question/(:num)/(:num)'] = 'survey/addQuestion/$1/$2';
 $route['survey/delete/question/(:num)']['GET'] = 'survey/deleteQuestion/$1';
-$route['survey/add/questions/template/choices/(:num)'] = 'survey/addTemplateChoices/$1'; // new 
+$route['survey/add/questions/template/choices/(:num)'] = 'survey/addTemplateChoices/$1'; // new
 $route['survey/order/question']['POST'] = 'survey/orderUpdate/$1';
 
 $route['survey/tribute/(:num)'] = 'survey/getQuestions/$1';
@@ -445,7 +445,7 @@ $route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_
 $route['accounting/employees/get-pay-date/(:any)'] = 'accounting_controllers/employees/get_pay_date/$1';
 $route['accounting/employees/commission-only-payroll'] = 'accounting_controllers/employees/commission_only_modal';
 $route['accounting/employees/generate-commission-payroll']['post'] = 'accounting_controllers/employees/generate_commission_payroll';
-$route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_controllers/employees/get_employee_pay_details/$1'; 
+$route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_controllers/employees/get_employee_pay_details/$1';
 $route['accounting/employees/bonus-only-payroll'] = 'accounting_controllers/employees/bonus_only_modal';
 $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
@@ -460,8 +460,8 @@ $route['accounting/contractors/(:any)/load-payments']['post'] = 'accounting_cont
 $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting_controllers/contractors/get_payments_total/$1';
 
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
-$route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors'; 
-$route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add'; 
+$route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors';
+$route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 $route['accounting/vendors/make-inactive']['post'] = 'accounting_controllers/vendors/make_inactive';
 $route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/vendors/update/$1';

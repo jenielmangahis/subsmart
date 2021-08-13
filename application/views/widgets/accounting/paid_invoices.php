@@ -22,8 +22,8 @@
                     <div class="row" id="paidInvoicesBody" style="height:<?= $rawHeight - 50; ?>px; overflow-y: scroll;">
                         <div class="col-lg-12 text-center">
                             <h4>Paid</h4>
-                            <h4>$1,180,000</h4>
-                            <h4 class="mt-5">1811</h4>
+                            <h4>$<?= number_format((float)$total_amount_invoice->total,2,'.',','); ?></h4>
+                            <h4 class="mt-5"><?= $total_invoice_paid->total; ?></h4>
                             <h6 style="color:gray; font-weight: bold">all time paid invoices</h6>
                         </div>
                     </div>

@@ -213,7 +213,7 @@
 </div>
 <div><?php include viewPath('accounting/customer_estimate_modal'); ?>
 </div>
-<div><?php //include viewPath('accounting/customer_credit_memo_modal');?>
+<div><?php include viewPath('accounting/customer_credit_memo_modal');?>
 </div>
 <div><?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
 </div>

@@ -59,16 +59,6 @@
                                             <div class="col-md-3">
                                                 <select name="person_tracking" id="person_tracking" class="form-control" required>
                                                     <option value="" disabled selected>Whose time are you tracking?</option>
-                                                    <optgroup label="Employees">
-                                                        <?php foreach($dropdown['employees'] as $employee):?>
-                                                            <option value="employee-<?php echo $employee->id;?>"><?php echo $employee->FName . ' ' . $employee->LName;?></option>
-                                                        <?php endforeach; ?> 
-                                                    </optgroup>
-                                                    <optgroup label="Vendors">
-                                                        <?php foreach($dropdown['vendors'] as $vendor):?>
-                                                            <option value="vendor-<?php echo $vendor->id;?>"><?=$vendor->display_name === null || $vendor->display_name === '' ? $vendor->f_name . ' ' . $vendor->l_name : $vendor->display_name?></option>
-                                                        <?php endforeach; ?> 
-                                                    </optgroup>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">

@@ -25,9 +25,9 @@
                             <div class="paid-invoices box-invoices-bar"></div>
                         </div>
                         <div class="con-data-label">
-                            <div class="con-label">3</div>
+                            <div class="con-label"><?= $invoice_draft->total; ?></div>
                             <div class="con-sub-label">Open invoices</div>
-                            <div class="con-label">0</div>
+                            <div class="con-label"><?= $invoice_due->total ?></div>
                             <div class="con-sub-label">Overdue invoices</div>
                             <div class="con-label">0</div>
                             <div class="con-sub-label">Paid last 30 days</div>

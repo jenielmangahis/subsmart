@@ -19,7 +19,7 @@
             <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
                 <div class="row" style="height:<?= $rawHeight - 160; ?>px; overflow:scroll">
                     <div class="col-lg-6 text-center">
-                        <h2>0</h2>
+                        <h2><?= $plan_type[0]->totalPlan; ?></h2>
                         <p>Active Service Plans</p>
                     </div>
                     <div class="col-lg-6 text-center">

@@ -19,24 +19,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferFrom">Transfer Funds From</label>
-                                                <select name="transfer_from" id="transferFrom" class="form-control" required>
-                                                    <option disabled selected>&nbsp;</option>
-                                                    <?php foreach($accounts as $accType => $accs) : ?>
-                                                        <optgroup label="<?=$accType?>">
-                                                            <?php foreach($accs as $account) : ?>
-                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                <?php if(count($account->childAccs) > 0) : ?>
-                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                            <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="transfer_from" id="transferFrom" class="form-control" required></select>
                                             </div>
                                         </div>
 
@@ -52,24 +35,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferTo">Transfer Funds To</label>
-                                                <select name="transfer_to" id="transferTo" class="form-control" required>
-                                                    <option disabled selected>&nbsp;</option>
-                                                    <?php foreach($accounts as $accType => $accs) : ?>
-                                                        <optgroup label="<?=$accType?>">
-                                                            <?php foreach($accs as $account) : ?>
-                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                <?php if(count($account->childAccs) > 0) : ?>
-                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                            <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="transfer_to" id="transferTo" class="form-control" required></select>
                                             </div>
                                         </div>
 

@@ -5,9 +5,15 @@ class Widgets_model extends MY_Model {
     
     function loadTechLeaderboard($comp_id)
     {
-        $this->db->where('company_id', $comp_id);
-        $this->db->where('role', 7);
-        return $this->db->get('users')->result();
+        $this->db->from('users');
+        $this->db->select('users.id,users.FName,users.LName,count(*) as totalJobs');
+        $this->db->where('users.company_id', $comp_id);
+        $this->db->join('jobs', 'jobs.employee_id = users.id','right');
+        $this->db->where('jobs.status', 'Completed');
+        $this->db->group_by('jobs.employee_id');
+        $this->db->order_by('totalJobs', 'DESC');
+        return $this->db->get()->result();
+
     }
     
     function getOverdueInvoices($comp_id)
@@ -22,7 +28,6 @@ class Widgets_model extends MY_Model {
     {
         $this->db->where('company_id' , getLoggedCompanyID());
         return $this->db->get('job_tags')->result();
-        
     }
     
     function getLeadSource($comp_id)

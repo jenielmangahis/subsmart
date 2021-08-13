@@ -1,0 +1,150 @@
+export class TaxRateTable {
+  constructor() {
+    this.$table = $("#rateTable");
+    this.render();
+  }
+
+  render() {
+    const columns = {
+      name: (_, __, row) => {
+        return `<span>${row.name}</span>`;
+      },
+      agency: (_, __, row) => {
+        return `<span>${row.agency}</span>`;
+      },
+      rate: (_, __, row) => {
+        return `<span>${row.rate}%</span>`;
+      },
+      actions: (_, __, row) => {
+        return `
+            <div class="btn-group btnGroup">
+                <button data-action="edit" type="button" class="btn btn-sm btnGroup__main action">Edit</button>
+                <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item action" href="#">Make inactive</a>
+                </div>
+            </div>
+        `;
+      },
+    };
+
+    const actions = {
+      edit: (row) => {
+        const $sidebar = $("#editRate");
+        const $sidebarCloseBtn = $sidebar.find("[data-action=close]");
+        const $sidebarSaveBtn = $sidebar.find("#editRateBtn");
+
+        const closeSidebar = () => {
+          $sidebar.removeClass("sidebarForm--show");
+          $sidebar.off("click");
+          $sidebarCloseBtn.off("click");
+          $sidebarSaveBtn.off("click");
+        };
+
+        const $data = $sidebar.find("[data-type]");
+        $data.each((_, element) => {
+          element.value = row[element.dataset.type];
+        });
+
+        $sidebar.addClass("sidebarForm--show");
+
+        $sidebarCloseBtn.on("click", () => {
+          closeSidebar();
+        });
+
+        $sidebar.on("click", (event) => {
+          if ($sidebar.is(event.target)) {
+            closeSidebar();
+          }
+        });
+
+        $sidebarSaveBtn.on("click", async function () {
+          const $inputs = $sidebar.find("[data-type]");
+          const payload = {};
+          for (let index = 0; index < $inputs.length; index++) {
+            const input = $inputs[index];
+            const value = input.value;
+            const key = input.dataset.type;
+
+            const $input = $(input);
+            const $formGroup = $input.closest(".form-group");
+
+            $formGroup.removeClass("form-group--error");
+            if (!value) {
+              $formGroup.addClass("form-group--error");
+              $input.focus();
+              return;
+            }
+
+            if ($(input).is(":checkbox") && !input.checked) {
+              continue;
+            }
+
+            payload[key] = value;
+          }
+
+          $(this).attr("disabled", true);
+          $(this).text("Saving...");
+
+          const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : ""; // prettier-ignore
+          const response = await fetch(
+            `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
+            {
+              method: "post",
+              body: JSON.stringify(payload),
+              headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+              },
+            }
+          );
+
+          const json = await response.json();
+          window.location.reload();
+        });
+      },
+    };
+
+    const table = this.$table.DataTable({
+      searching: false,
+      ajax: `${prefixURL}/AccountingSales/apiGetRates`,
+      columns: [
+        {
+          sortable: false,
+          render: columns.name,
+        },
+        {
+          sortable: false,
+          render: columns.agency,
+        },
+        {
+          sortable: false,
+          render: columns.rate,
+        },
+        {
+          sortable: false,
+          render: columns.actions,
+        },
+      ],
+      rowId: function (row) {
+        return `row${row.id}`;
+      },
+      createdRow: function (row, data) {
+        $(row).attr("data-id", data.id);
+      },
+    });
+
+    this.$table.find("tbody").on("click", ".action", async function (event) {
+      const $parent = $(this).closest("tr");
+      const rows = table.rows().data().toArray();
+
+      const rowId = $parent.data("id");
+      const row = rows.find(({ id }) => id == rowId);
+
+      const action = $(this).data("action");
+      await actions[action](row, table, event);
+    });
+  }
+}

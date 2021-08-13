@@ -29,4 +29,50 @@ class AccountingSales extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $agencies]);
     }
+
+    public function apiSaveRate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $payload['user_id'] = logged('id');
+        $this->db->insert('accounting_tax_rates', $payload);
+
+        $this->db->where('id', $this->db->insert_id());
+        $record = $this->db->get('accounting_tax_rates')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
+    }
+
+    public function apiGetRates()
+    {
+        $this->db->where('user_id', logged('id'));
+        $rates = $this->db->get('accounting_tax_rates')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $rates]);
+    }
+
+    public function apiEditRate($rateId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('id', $rateId);
+        $this->db->update('accounting_tax_rates', $payload);
+
+        $this->db->where('id', $rateId);
+        $record = $this->db->get('accounting_tax_rates')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
+    }
 }

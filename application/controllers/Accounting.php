@@ -6636,7 +6636,7 @@ class Accounting extends MY_Controller
             'assets/js/accounting/tax/settings/settings.js',
             'https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            // 'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js', imported async.
         ]);
 
         $this->load->view('accounting/sales/taxEditSettings', $this->page_data);
@@ -8600,6 +8600,7 @@ class Accounting extends MY_Controller
         $data->open_balance = number_format(($open_balance), 2);
         $data->overdue = number_format(($overdue), 2);
         $data->customer_details = $customer;
+        $data->customer_accounting_details = $this->accounting_customers_model->get_customer_accounting_details($customer_id);
         echo json_encode($data);
     }
     public function single_customer_get_transaction_lists()
@@ -8727,7 +8728,7 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->customer_id = $customer_id;
         $data->result = "success";
-        if(!$success){
+        if (!$success) {
             $data->result = "not success";
         }
         echo json_encode($data);

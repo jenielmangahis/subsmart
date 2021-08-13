@@ -168,11 +168,11 @@
                                     <div class="col-md-6">
                                         <div class="customer-info">
                                             <div class="info-label">Customer</div>
-                                            <div class="info-value" data-for="customer-name">Nguyen, Brannon</div>
+                                            <div class="info-value" data-for="customer-name"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Email</div>
-                                            <div class="info-value" data-for="email">pintonlou@gmail.com</div>
+                                            <div class="info-value" data-for="email"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Phone</div>
@@ -180,7 +180,7 @@
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Mobile</div>
-                                            <div class="info-value" data-for="mobile">09480781683</div>
+                                            <div class="info-value" data-for="mobile"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Fax</div>
@@ -192,7 +192,7 @@
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Website</div>
-                                            <div class="info-value" data-for="website">loupinton.github.io</div>
+                                            <div class="info-value" data-for="website"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Notes</div>
@@ -226,13 +226,11 @@
                                     <div class="col-md-6">
                                         <div class="customer-info">
                                             <div class="info-label">Billing address</div>
-                                            <div class="info-value" data-for="billing-address">2222 E First St<br> Santa
-                                                Ana, CA <br>92705</div>
+                                            <div class="info-value" data-for="billing-address"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Shipping address</div>
-                                            <div class="info-value" data-for="shipping-address">2222 E First St<br>
-                                                Santa Ana, CA <br>92705</div>
+                                            <div class="info-value" data-for="shipping-address"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label" data-for="terms">Terms</div>
@@ -243,9 +241,9 @@
                                             <div class="info-value"></div>
                                         </div>
                                         <div class="customer-info">
-                                            <div class="info-label" data-for="deleviry-method">Preferred delivery method
+                                            <div class="info-label">Preferred delivery method
                                             </div>
-                                            <div class="info-value">None</div>
+                                            <div class="info-value" data-for="deleviry-method"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Customer type</div>
@@ -253,7 +251,7 @@
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Customer language</div>
-                                            <div class="info-value" data-for="customer-laguage"></div>
+                                            <div class="info-value" data-for="customer-language"></div>
                                         </div>
                                         <div class="customer-info">
                                             <div class="info-label">Tax reg. no.</div>

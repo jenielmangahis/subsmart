@@ -48,6 +48,7 @@ get_load_customers_table();
 $('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
     get_load_customers_table();
 });
+
 get_modal_new_customer();
 
 function get_modal_new_customer() {
@@ -58,11 +59,53 @@ function get_modal_new_customer() {
         type: "GET",
         data: {},
         success: function(data) {
-
-            $(".new-customer-modal-holdder").html(data);
+            $(".new-customer-modal-holdder #modal-container").html(data);
+            $(".new-customer-modal-holdder #modal-container #new-customer-modal form").prop("id", "add-new-customer-form");
+            $(".new-customer-modal-holdder #modal-container #new-customer-modal button.cancel-add-customer").attr('data-dismiss', 'modal');
         },
     });
 }
+
+$(document).on('submit', '#modal-container #new-customer-modal #add-new-customer-form', function(e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+    data.set('payee_type', 'customer');
+
+    $.ajax({
+        url: baseURL + '/accounting/add-full-payee-details',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+            if (res.updated == true) {
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: "Success",
+                    html: "Customer details has been updated",
+                    icon: "success",
+                });
+                single_customer_get_customers_details($("#customer-single-modal input[name='customer_id']").val());
+            } else {
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: "Success",
+                    html: "New customer has been added.",
+                    icon: "success",
+                });
+                get_modal_new_customer();
+            }
+            get_load_customers_table();
+            $('#modal-container #new-customer-modal').modal('toggle');
+            $(".modal-backdrop.fade.show.modal-stack").hide();
+        }
+    });
+
+});
 
 
 $(document).on("click", ".created-sales-receipt", function(event) {

@@ -20,23 +20,7 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="payment_account">Payment account</label>
-                                                        <select name="payment_account" id="payment_account" class="form-control" required>
-                                                            <?php foreach($dropdown['payment_accounts'] as $accType => $accounts) : ?>
-                                                                <optgroup label="<?=$accType?>">
-                                                                    <?php foreach($accounts as $account) : ?>
-                                                                        <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                        <?php if(count($account->childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                    <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                </optgroup>
-                                                            <?php endforeach; ?>
-                                                        </select>
+                                                        <select name="payment_account" id="bill_payment_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2 d-flex ">
@@ -113,14 +97,7 @@
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label for="payee">Payee</label>
-                                                                    <select name="payee" id="payee" class="form-control">
-                                                                        <option value="all">All</option>
-                                                                        <?php if(count($dropdown['payees']) > 0) : ?>
-                                                                            <?php foreach($dropdown['payees'] as $payee) : ?>
-                                                                                <option value="<?=$payee->id?>"><?=$payee->display_name?></option>
-                                                                            <?php endforeach; ?>
-                                                                        <?php endif; ?>
-                                                                    </select>
+                                                                    <select name="payee" id="pay-bills-vendor" class="form-control"></select>
                                                                 </div>
                                                             </div>
                                                         </div>
