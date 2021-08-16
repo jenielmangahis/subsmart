@@ -264,7 +264,7 @@
                         <div class="tab-body-content-section transaction-list">
                             <div class="seaction-above-table">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-6" style="display: flex;">
                                         <div class="by-btach-btn">
                                             <div class="batch-actiom-icon-holder">
                                                 <img src="<?=base_url("assets/img/trac360/batch_arrow_down.png")?>"
@@ -288,9 +288,54 @@
                                             </ul>
                                         </div>
                                         <div class="filter-btn-section">
-                                            <button class="btn btn-default" type="button">
+                                            <button class="btn btn-default filter-btn" type="button">
                                                 Filter <span class="fa fa-caret-down"></span></button>
-                                            <div class="filter"></div>
+                                            <div class="filter-panel" style="display: none;">
+                                                <div class="achor-holder"><img
+                                                        src="<?=base_url("assets/img/accounting/customers/anchor.png")?>"
+                                                        alt=""></div>
+                                                <div class="form-group">
+                                                    <div class="label">
+                                                        Type
+                                                    </div>
+                                                    <select class="form-control" name="filter_type">
+                                                        <option>All transactions</option>
+                                                        <option>All plus deposits</option>
+                                                        <option>All invoices</option>
+                                                        <option>Open invoices</option>
+                                                        <option>Overdue invoices</option>
+                                                        <option>Open estimates</option>
+                                                        <option>Credit memos</option>
+                                                        <option>Unbilled income</option>
+                                                        <option>Recently paid</option>
+                                                        <option>Money received</option>
+                                                        <option>Recurring templates</option>
+                                                        <option>Statements</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="label">
+                                                        Date
+                                                    </div>
+                                                    <select class="form-control " name="filter_date">
+                                                        <option>All dates</option>
+                                                        <option>Today</option>
+                                                        <option>Yesterday</option>
+                                                        <option>This week</option>
+                                                        <option>This month</option>
+                                                        <option>This quarter</option>
+                                                        <option>This year</option>
+                                                        <option>Last week</option>
+                                                        <option>Last month</option>
+                                                        <option>Last quarter</option>
+                                                        <option>Last year</option>
+                                                        <option>Last 365 days</option>
+                                                    </select>
+                                                </div>
+                                                <div class="pull-right">
+                                                    <button class="btn btn-success apply-btn px-4" type="button">Apply</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">

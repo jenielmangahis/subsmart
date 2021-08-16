@@ -265,3 +265,13 @@
     div#modalNewCustomer {
         z-index: 1040!important;
     }
+    
+    #customers_table tbody tr:hover {
+        background: #F4F5F8;
+    }
+    
+    #customers_table tbody tr td a.customer-full-page-btn:hover {
+        color: #315ABD;
+        cursor: pointer;
+        text-decoration: underline;
+    }

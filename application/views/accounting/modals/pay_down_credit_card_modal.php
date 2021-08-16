@@ -22,12 +22,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="creditCard">Which credit card did you pay?</label>
-                                                <select name="credit_card" id="creditCard" class="form-control" required>
-                                                    <option value="" disabled selected>&nbsp;</option>
-                                                    <?php foreach($dropdown['creditCards'] as $creditCard) : ?>
-                                                        <option value="<?=$creditCard->id?>"><?=$creditCard->name?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="credit_card" id="credit_card_account" class="form-control" required></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="payee">Payee (optional)</label>
@@ -49,16 +44,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="bankAccount">What did you use to make this payment?</label>
-                                                <select name="bank_account" id="bankAccount" class="form-control" required>
-                                                    <option disabled selected>&nbsp;</option>
-                                                    <?php foreach($dropdown['accounts'] as $key => $accounts) : ?>
-                                                        <optgroup label="<?=$key?>">
-                                                            <?php foreach($accounts as $account) :?>
-                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="bank_account" id="bank_account" class="form-control" required></select>
                                             </div>
                                         </div>
 

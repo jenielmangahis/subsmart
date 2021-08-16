@@ -478,3 +478,56 @@
 #customer-single-modal .single-customer-info-section .body-section .tab-body-content-section.customer-details .customer-details-section .file-upload .drag-text {
     font-size: 13px;
 }
+
+#customer-single-modal .single-customer-info-section .body-section .filter-btn-section {
+    position: relative;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel {
+    width: 250px;
+    position: absolute;
+    background: #fff;
+    padding: 10px;
+    border-radius: 2px;
+    border: solid 1px #CACACA;
+    padding-bottom: 20px;
+    box-shadow: 3px 6px 20px #cacaca;
+    top: 47px;
+    z-index: 1;
+    left: 0;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .achor-holder {
+    position: absolute;
+    top: -13px;
+    width: 20px;
+    left: 35px;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .btn-success {
+    font-size: 13px;
+    font-weight: 700;
+    border: solid 1px #2CA01C;
+    padding: 5px 20px;
+    background: #2CA01C;
+    border-radius: 24px;
+    height: auto;
+    margin-top: 15px;
+    color: #ffffff;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .form-group .label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .btn-success:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody tr:hover {
+    background: #F4F5F8;
+    cursor: pointer;
+}

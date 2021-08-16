@@ -325,6 +325,7 @@ $route['accounting/get-dropdown-choices'] = 'accounting_modals/get_dropdown_choi
 $route['accounting/get-add-vendor-details-modal'] = 'accounting_modals/add_vendor_details_modal';
 $route['accounting/get-add-customer-details-modal'] = 'accounting_modals/add_customer_details_modal';
 $route['accounting/add-full-payee-details']['post'] = 'accounting_modals/add_full_payee_details';
+$route['accounting/get-add-account-modal'] = 'accounting_modals/get_add_account_modal';
 
 $route['accounting/lists'] = 'accounting/lists';
 

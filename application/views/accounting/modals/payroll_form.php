@@ -2,22 +2,11 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="payFrom">Pay from</label>
-            <select name="pay_from" id="payFrom" class="form-control">
-                <?php foreach($accounts as $account) : ?>
-                    <option value="<?=$account->id?>"><?=$account->name?></option>
-                <?php endforeach; ?>
-            </select>
+            <select name="pay_from" id="bank-account" class="form-control" required></select>
         </div>
     </div>
     <div class="col-md-2 d-flex align-items-center">
-        <?php 
-            if(strpos($accounts[array_key_first($accounts)]->balance, '-') !== false) {
-                $selectedBalance = str_replace('-', '-$', $accounts[array_key_first($accounts)]->balance);
-            } else {
-                $selectedBalance = '$'.$accounts[array_key_first($accounts)]->balance;
-            }
-        ?>
-        <h6>Balance <?=$selectedBalance?></h6>
+        <h6>Balance $0.00</h6>
     </div>
     <div class="col-md-3">
         <div class="form-group">

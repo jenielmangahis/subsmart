@@ -105,6 +105,13 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.card {
+    padding: 1px !important;
+}
+.card {
+    margin-bottom: 1px !important;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -643,7 +650,7 @@ input:checked + .slider:before {
 
                             <table class="table">
                                 <tr>
-                                    <td style="width:10%;">Company name</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Company name</td>
                                     <td style="width:16%;padding:3%;">
                                         <p></p>
                                         <p>Company name</p>
@@ -658,7 +665,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Company type</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Company type</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Tax form</p>
                                         <p>Industry</p>
@@ -669,7 +676,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Contact info</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Contact info</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Company email</p>
                                         <p>Customer-facing email</p>
@@ -684,7 +691,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Address</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Address</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Company address</p>
                                     </td>
@@ -693,7 +700,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Address</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Address</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Customer-facing address</p>
                                     </td>
@@ -702,7 +709,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Address</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Address</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Legal address</p>
                                     </td>
@@ -711,7 +718,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Communications with Intuit</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Communications with Intuit</td>
                                     <td style="width:16%;padding:3%;">
                                         <p><a href="#">Marketing Preferences</a></p>
                                     </td>
@@ -748,7 +755,7 @@ input:checked + .slider:before {
 
                             <table class="table">
                                 <tr>
-                                    <td style="width:10%;">Customize</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Customize</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Customize the way forms look to your customers</p>
                                     </td>
@@ -757,7 +764,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="sales_form_content">
-                                    <td style="width:10%;">Sales form content</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Sales form content</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Preferred invoice terms</p>
                                         <p>Preferred delivery method</p>
@@ -784,7 +791,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="sales_form_content_edit" style="display:none;">
-                                    <td style="width:10%;">Sales form content</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Sales form content</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Preferred invoice terms</p><br>
                                         <p>Preferred delivery method</p><br>
@@ -797,7 +804,7 @@ input:checked + .slider:before {
                                         <p>Tips (Gratuity)</p><br>
                                         <p>Tags</p>
                                         <br><br>
-                                        <input type="submit" value="Cancel" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        <input type="submit" value="Cancel" id="sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
                                         <p style="margin-top:-100px;">
@@ -867,7 +874,7 @@ input:checked + .slider:before {
                                     <td align="right"><i class="fa fa-edit" style="font-size:36px"></i></td>
                                 </tr>
                                 <tr id="product_services">
-                                    <td style="width:10%;">Products and services</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Products and services</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Show Product/Service column on sales forms</p>
                                         <p>Show SKU column</p>
@@ -884,16 +891,18 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="product_services_edit" style="display:none;">
-                                    <td style="width:10%;">Products and services</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Products and services</td>
                                     <td style="width:30%;padding:3%;">
-                                        <p>Show Product/Service column on sales forms</p>
-                                        <p>Show SKU column</p>
-                                        <p>Turn on price rules</p>
-                                        <p>Track quantity and price/rate</p>
-                                        <p>Track inventory quantity on hand</p>
+                                        <p>Show Product/Service column on sales forms</p><br>
+                                        <p>Show SKU column</p><br>
+                                        <p>Turn on price rules</p><br>
+                                        <p>Track quantity and price/rate</p><br>
+                                        <p>Track inventory quantity on hand</p><br>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="product_services_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p>
+                                        <p style="margin-top:-100px;">
                                             <label class="switch">
                                             <input type="checkbox" checked>
                                             <span class="slider round"></span>
@@ -926,7 +935,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="progress_invoicing">
-                                    <td style="width:10%;">Progress Invoicing</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Progress Invoicing</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>	Create multiple partial invoices from a single estimate</p>
                                     </td>
@@ -934,13 +943,15 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr id="progress_invoicing_edit" style="displau:none;">
-                                    <td style="width:10%;">Progress Invoicing</td>
+                                <tr id="progress_invoicing_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Progress Invoicing</td>
                                     <td style="width:30%;padding:3%;">
-                                        <p>	Create multiple partial invoices from a single estimate</p>
+                                        <p>	Create multiple partial invoices from a single estimate</p><br>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="progress_invoicing_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p>
+                                        <p style="margin-top:-100px;">
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
@@ -948,17 +959,135 @@ input:checked + .slider:before {
                                         </p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="width:10%;">Messages</td>
-                                    <td style="width:30%;padding:3%;">
+                                <tr id="messages">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Messages</td>
+                                    <td style="width:40%;padding:3%;">
                                         <p>Default email message sent with sales forms</p>
                                     </td>
-                                    <td style="padding:3%;">
-                                        <p></p>
-                                    </td>
                                 </tr>
-                                <tr>
-                                    <td style="width:10%;">Reminders</td>
+                                <tr id="messages_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Messages</td>
+                                    <td style="width:40%;padding:3%;">
+                                        <p>Default email message sent with sales forms</p>
+                                        
+                                        <!-- <div class="row"> -->
+                                            <div class="row">
+                                                <div class="col-md-2" style="text-align: center;vertical-align: center;"><input type="checkbox"></div>
+                                                <div class="col-md-5">
+                                                    <select class="form-control">
+                                                        <option>Dear</option>
+                                                        <option>To</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <select class="form-control">
+                                                        <option>[Full Name]</option>
+                                                        <option>[First]</option>
+                                                        <option>[Company Name]</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">Sales form</div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <select class="form-control">
+                                                        <option>Invoice</option>
+                                                        <option>Estimate</option>
+                                                        <option>Credit Memo</option>
+                                                        <option>Sales Receipt</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <input type="button" value="Use standard message" class="btn btn-success">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">Email subject line</div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12"><input type="text" value="New invoice [Invoice No.] from ADI Smart Security" class="form-control"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">Email message</div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control">
+                                                    Here's your invoice! We appreciate your prompt payment.
+
+                                                    Thanks for your business!
+                                                    ADi Smart Security
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Copy (Cc) new invoices to address
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12"><input type="text" class="form-control"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Blind Copy (Bcc) new invoices to address
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12"><input type="text" class="form-control"></div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Sales form
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <select class="form-control">
+                                                        <option>Estimate</option>
+                                                        <option>Invoice</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input type="submit" value="Cancel" id="messages_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                </div>
+                                            </div>
+                                        <!-- </div> -->
+                                    </td>
+                                    <!-- <td style="padding:3%;">
+                                        <p style="margin-top:-100px;"></p>
+                                    </td> -->
+                                </tr>
+                                <tr id="reminders">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Reminders</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Default email message for invoice reminders</p>
                                         <p>Automatic invoice reminders</p>
@@ -968,8 +1097,469 @@ input:checked + .slider:before {
                                         <p>On</p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="width:10%;">Online delivery</td>
+                                <tr id="reminders_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Reminders</td>
+                                    <td style="width:50%;padding:3%;">
+                                        <p>Default email message for invoice reminders</p>
+                                        <p>Automatic invoice reminders 
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label></p>
+                                        <p>Automatic email reminders only apply to new invoices. Turning off automatic reminders removes them from all invoices.</p>
+                                        <div id="accordion">
+                                            <div class="card">
+                                                <div class="card-header" id="headingOne">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="width: 100%;">
+                                                    <span style="float:left;">Reminder 1 (3 day(s) before due date)</span> 
+                                                    <b style="float:right;">On <i class="fa fa-sort-down"></i></b>
+                                                    </button>
+                                                </h5>
+                                                </div>
+
+                                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <select class="form-control">
+                                                                <option>3</option>
+                                                                <option>7</option>
+                                                                <option>14</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            day(s)
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control">
+                                                                <option>Before</option>
+                                                                <option>After</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            due date
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Subject line</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4" style="text-align: center;vertical-align: center;"><input type="checkbox">Use email greeting</div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Dear</option>
+                                                                <option>To</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>[Full Name]</option>
+                                                                <option>[First]</option>
+                                                                <option>[Company Name]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control">
+                                                                Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
+                                                                
+                                                                Thanks for your business!
+                                                                Alarm Direct, Inc
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-6">
+                                                            <select class="form-control">
+                                                                <option>Invoice</option>
+                                                                <option>Estimate</option>
+                                                                <option>Credit Memo</option>
+                                                                <option>Sales Receipt</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="button" value="Use standard message" class="btn btn-success">
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <div class="row">
+                                                        <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                        <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Copy (Cc) new invoices to address
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Blind Copy (Bcc) new invoices to address
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Sales form
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Estimate</option>
+                                                                <option>Invoice</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                        </div>
+                                                    </div> -->
+                                                
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-header" id="headingTwo">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">
+                                                    <span style="float:left;">Reminder 2 (On due date)</span> 
+                                                    <b style="float:right;">On <i class="fa fa-sort-down"></i></b>
+                                                    </button>
+                                                </h5>
+                                                </div>
+                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <select class="form-control">
+                                                                <option>3</option>
+                                                                <option>7</option>
+                                                                <option>14</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            day(s)
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control">
+                                                                <option>Before</option>
+                                                                <option>After</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            due date
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Subject line</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4" style="text-align: center;vertical-align: center;"><input type="checkbox">Use email greeting</div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Dear</option>
+                                                                <option>To</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>[Full Name]</option>
+                                                                <option>[First]</option>
+                                                                <option>[Company Name]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control">
+                                                                Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
+                                                                
+                                                                Thanks for your business!
+                                                                Alarm Direct, Inc
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-6">
+                                                            <select class="form-control">
+                                                                <option>Invoice</option>
+                                                                <option>Estimate</option>
+                                                                <option>Credit Memo</option>
+                                                                <option>Sales Receipt</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="button" value="Use standard message" class="btn btn-success">
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <div class="row">
+                                                        <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                        <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Copy (Cc) new invoices to address
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Blind Copy (Bcc) new invoices to address
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Sales form
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Estimate</option>
+                                                                <option>Invoice</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                        </div>
+                                                    </div> -->
+
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-header" id="headingThree">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;">
+                                                    <span style="float:left;">Reminder 3 (3 day(s) after due date)</span> 
+                                                    <b style="float:right;">On <i class="fa fa-sort-down"></i></b>
+                                                    </button>
+                                                </h5>
+                                                </div>
+                                                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                                <div class="card-body">
+                                                <div class="row">
+                                                        <div class="col-md-3">
+                                                            <select class="form-control">
+                                                                <option>3</option>
+                                                                <option>7</option>
+                                                                <option>14</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            day(s)
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control">
+                                                                <option>Before</option>
+                                                                <option>After</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            due date
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Subject line</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4" style="text-align: center;vertical-align: center;"><input type="checkbox">Use email greeting</div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Dear</option>
+                                                                <option>To</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>[Full Name]</option>
+                                                                <option>[First]</option>
+                                                                <option>[Company Name]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control">
+                                                                Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
+                                                                
+                                                                Thanks for your business!
+                                                                Alarm Direct, Inc
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-6">
+                                                            <select class="form-control">
+                                                                <option>Invoice</option>
+                                                                <option>Estimate</option>
+                                                                <option>Credit Memo</option>
+                                                                <option>Sales Receipt</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="button" value="Use standard message" class="btn btn-success">
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <div class="row">
+                                                        <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                        <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Copy (Cc) new invoices to address
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Blind Copy (Bcc) new invoices to address
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Sales form
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Estimate</option>
+                                                                <option>Invoice</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                        </div>
+                                                    </div> -->
+
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- <td style="padding:3%;">
+                                        <p> </p>
+                                        <p>On</p>
+                                    </td> -->
+                                </tr>
+                                <tr id="online_delivery">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Online delivery</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Email options for all sales forms</p>
                                     </td>
@@ -977,14 +1567,54 @@ input:checked + .slider:before {
                                         <p>On</p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="width:10%;">Statements</td>
+                                <tr id="online_delivery_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Online delivery</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Email options for all sales forms</p>
+                                        <br>
+                                        <input type="radio" name="radio"> Show short summary in email <br>
+                                        <input type="radio" name="radio" checked> Show full details in email
+                                        <br><br>
+                                        <span>Select which sales forms to attach PDFs to</span>
+                                        <br><br>
+                                        <input type="checkbox" checked> Invoices <br>
+                                        <input type="checkbox"> Credit memo, sales receipt, refund receipt, estimate, receive payment <br><br>
+                                        <span>Additional email options for invoices</span> <br><br>
+                                        <select class="form-control" style="width:40%;">
+                                            <option>Online Invoice</option>
+                                            <option>HTML</option>
+                                            <option>Plain Text</option>
+                                        </select><br><br>
+                                        <input type="submit" value="Cancel" id="online_delivery_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                </tr>
+                                <tr id="statements">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Statements</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Show aging table at bottom of statement</p>
                                     </td>
                                     <td style="padding:3%;">
                                         <p>On</p>
                                     </td>
+                                </tr>
+                                <tr id="statements_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Statements</td>
+                                    <td style="width:30%;padding:3%;">
+                                    <br>
+                                        <input type="radio" name="radio"> Show short summary in email <br>
+                                        <input type="radio" name="radio" checked> Show full details in email <br><br>
+                                        <p>Show aging table at bottom of statement 
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="statements_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <!-- <td style="padding:3%;">
+                                        <p>On</p>
+                                    </td> -->
                                 </tr>
                             </table>
 
@@ -1005,8 +1635,8 @@ input:checked + .slider:before {
                                             <p><button class="btn btn-success">Customize look and feel</button></p>
                                         </td>
                                     </tr> -->
-                                    <tr>
-                                        <td style="width:10%;">Sales form content</td>
+                                    <tr id="exp_sales_form_content">
+                                        <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Sales form content</td>
                                         <td style="width:30%;padding:3%;">
                                             <p>Show Items table on expense and purchase forms</p>
                                             <p>Show Tags field on expense and purchase forms </p>
@@ -1033,8 +1663,94 @@ input:checked + .slider:before {
                                             <p>On</p> -->
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style="width:10%;">Purchase orders</td>
+                                    <tr id="exp_sales_form_content_edit" style="display:none;">
+                                        <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Sales form content</td>
+                                        <td style="width:50%;padding:3%;">
+                                            <p>Show Items table on expense and purchase forms
+                                                <!-- <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label> -->
+                                            </p> <br>
+                                            <p>Show Tags field on expense and purchase forms 
+                                                <!-- <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label> -->
+                                            </p> <br>
+                                            <p>Track expenses and items by customer
+                                                <!-- <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label> -->
+                                            </p> <br>
+                                            <p>Make expenses and items billable
+                                                <!-- <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label> -->
+                                            </p> <br>
+                                            <p>Default bill payment terms
+                                                <!-- <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label> -->
+                                            </p> <br>
+                                            <br>
+                                            <input type="checkbox" checked> Markup with a default rate of <input type="text" class="form-control" style="width:80px;display:inline-block;" value="0">%  <br>
+                                            <input type="checkbox" > Track billable expenses and items as income <br>
+                                            <input type="checkbox" > Charge sales tax <br>
+                                            <br>
+                                            <b>Default bill payment terms</b> 
+                                            <select class="form-control" style="width:40%;">
+                                                <option>Net 10</option>
+                                                <option>Due 15</option>
+                                                <option>Due on receipt</option>
+                                            </select>
+
+                                            <!-- <p>Service date</p>
+                                            <p>Discount</p>
+                                            <p>Deposit </p>
+                                            <p>Tips (Gratuity)</p>
+                                            <p>Tags</p> -->
+                                            <br><br>
+                                            <input type="submit" value="Cancel" id="exp_sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        </td>
+                                        <td style="padding:3%;">
+                                            <p style="margin-top:-250px;">
+                                                <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                            <p>
+                                                <label class="switch">
+                                                <input type="checkbox" checked>>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                            <p>
+                                                <label class="switch">
+                                                <input type="checkbox" checked>>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                            <p>
+                                                <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                            <p>
+                                                <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    <tr id="purchase_orders">
+                                        <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Purchase orders</td>
                                         <td style="width:30%;padding:3%;">
                                             <p>Use purchase orders</p>
                                         </td>
@@ -1042,14 +1758,161 @@ input:checked + .slider:before {
                                             <p>On</p>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style="width:10%;">Messages</td>
+                                    <tr id="purchase_orders_edit" style="display:none;">
+                                        <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Purchase orders</td>
+                                        <td style="width:50%;padding:3%;">
+                                            <p>Use purchase orders 
+                                                <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                            <p>Custom fields</p>
+                                            <p>Go to Settings > Lists > Custom Fields to manage your custom fields.</p>
+                                            <p>Custom transaction number 
+                                                <label class="switch">
+                                                <input type="checkbox" checked>
+                                                <span class="slider round"></span>
+                                                </label>
+                                            </p>
+                                            <p>Default message on purchase orders</p>
+                                            <textarea class="form-control"></textarea>
+                                            <br><br>
+                                            <input type="submit" value="Cancel" id="purchase_orders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        </td>
+                                        <!-- <td style="padding:3%;">
+                                            <p>On</p>
+                                        </td> -->
+                                    </tr>
+                                    <tr id="exp_messages">
+                                        <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Messages</td>
                                         <td style="width:30%;padding:3%;">
                                             <p>Default email message sent with sales forms</p>
                                         </td>
                                         <td style="padding:3%;">
                                             <p></p>
                                         </td>
+                                    </tr>
+                                    <tr id="exp_messages_edit" style="display:none;">
+                                        <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Messages</td>
+                                        <td style="width:50%;padding:3%;">
+                                            <p>Default email message sent with sales forms</p>
+                                            
+                                            <!-- <div class="row"> -->
+                                                <div class="row">
+                                                    <div class="col-md-2" style="text-align: center;vertical-align: center;"><input type="checkbox"></div>
+                                                    <div class="col-md-5">
+                                                        <select class="form-control">
+                                                            <option>Dear</option>
+                                                            <option>To</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <select class="form-control">
+                                                            <option>[Full Name]</option>
+                                                            <option>[First]</option>
+                                                            <option>[Company Name]</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">Sales form</div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <select class="form-control">
+                                                            <option>Invoice</option>
+                                                            <option>Estimate</option>
+                                                            <option>Credit Memo</option>
+                                                            <option>Sales Receipt</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="button" value="Use standard message" class="btn btn-success">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">Email subject line</div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12"><input type="text" value="New invoice [Invoice No.] from ADI Smart Security" class="form-control"></div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">Email message</div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <textarea class="form-control">
+                                                        Here's your invoice! We appreciate your prompt payment.
+
+                                                        Thanks for your business!
+                                                        ADi Smart Security
+                                                        </textarea>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                    <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Copy (Cc) new invoices to address
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Blind Copy (Bcc) new invoices to address
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Sales form
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <select class="form-control">
+                                                            <option>Estimate</option>
+                                                            <option>Invoice</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <textarea class="form-control"></textarea>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="submit" value="Cancel" id="exp_messages_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                    </div>
+                                                </div>
+                                            <!-- </div> -->
+                                        </td>
+                                        <!-- <td style="padding:3%;">
+                                            <p style="margin-top:-100px;"></p>
+                                        </td> -->
                                     </tr>
                                 </table>
                             </div>
@@ -1062,7 +1925,7 @@ input:checked + .slider:before {
 
                             <table class="table">
                                 <tr>
-                                    <td style="width:10%;">Merchant details</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Merchant details</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Merchant ID 5247719993753319</p>
                                         <p>Run deposit reports</p>
@@ -1073,7 +1936,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Deposit Speed</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Deposit Speed</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Credit Cards</p>
                                         <p>Bank Transfers</p>
@@ -1084,7 +1947,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Deposit accounts</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Deposit accounts</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Standard depositsl</p>
                                     </td>
@@ -1096,7 +1959,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Business Owner info</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Business Owner info</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Owner's address</p>
                                         <p>Mobile Phone number</p>
@@ -1107,7 +1970,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Address</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Address</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Customer-facing address</p>
                                     </td>
@@ -1116,7 +1979,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Documents</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Documents</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Monthly Statements</p>
                                     </td>
@@ -1129,7 +1992,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Chart of Accounts</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Chart of Accounts</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Tell us where in QuickBooks to automatically record:</p>
                                         <p>Standard deposits</p>
@@ -1138,7 +2001,7 @@ input:checked + .slider:before {
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Payment Methods</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Payment Methods</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Cards</p>
                                         <p>Bank Transfer</p>
@@ -1165,7 +2028,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr> -->
                                 <tr>
-                                    <td style="width:10%;">Accounting</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Accounting</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>First month of fiscal year</p>
                                         <p>First month of income tax year</p>
@@ -1180,11 +2043,11 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Chart of accounts</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Chart of accounts</td>
                                     <td style="width:30%;padding:3%;">
-                                        <p>Enable account numbers </p>
+                                        <p>Enable account numbers</p>
                                         <p>Tips account</p>
-                                        <p>Markup income account </p>
+                                        <p>Markup income account</p>
                                     </td>
                                     <td style="padding:3%;">
                                         <p>OFF</p>
@@ -1193,7 +2056,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="categories">
-                                    <td style="width:10%;">Categories</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Categories</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Track classes</p>
                                         <p>Track locations</p>
@@ -1204,7 +2067,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="categories_edit" style="displau:none;">
-                                    <td style="width:10%;">Categories</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Categories</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Track classes</p>
                                         <p>Track locations</p>
@@ -1225,7 +2088,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="automation">
-                                    <td style="width:10%;">Automation</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Automation</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Pre-fill forms with previously entered content</p>
                                         <p>Automatically apply credits</p>
@@ -1240,7 +2103,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="automation_edit" style="displau:none;">
-                                    <td style="width:10%;">Automation</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Automation</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Pre-fill forms with previously entered content</p>
                                         <p>Automatically apply credits</p>
@@ -1275,7 +2138,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="projects">
-                                    <td style="width:10%;">Projects</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Projects</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Organize all job-related activity in one place</p>
                                     </td>
@@ -1284,7 +2147,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr id="projects_edit" style="display:none;">
-                                    <td style="width:10%;">Projects</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Projects</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Organize all job-related activity in one place</p>
                                     </td>
@@ -1298,7 +2161,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Time tracking</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Time tracking</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Add Service field to timesheets</p>
                                         <p>Make Single-Time Activity Billable to Customer</p>
@@ -1309,7 +2172,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Currency</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Currency</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Home Currency</p>
                                         <p>Multicurrency</p>
@@ -1320,7 +2183,7 @@ input:checked + .slider:before {
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;">Other preferences</td>
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Other preferences</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Date format</p>
                                         <p>Number format</p>
@@ -1445,11 +2308,138 @@ $(document).ready(function() {
         $("#sales_form_content_edit" + test).show();
     });
 
-    $("#sales_form_content_edit").click(function() {
+    $("#sales_form_content_edit_button").click(function() {
         var test = $(this).val();
 
         $("#sales_form_content_edit").hide();
-        $("#sales_form_content" + test).show();
+        $("#sales_form_content").show();
+    });
+
+
+    $("#product_services").click(function() {
+        var test = $(this).val();
+
+        $("#product_services").hide();
+        $("#product_services_edit" + test).show();
+    });
+
+    $("#product_services_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#product_services_edit").hide();
+        $("#product_services").show();
+    });
+
+    $("#progress_invoicing").click(function() {
+        var test = $(this).val();
+
+        $("#progress_invoicing").hide();
+        $("#progress_invoicing_edit" + test).show();
+    });
+
+    $("#progress_invoicing_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#progress_invoicing_edit").hide();
+        $("#progress_invoicing").show();
+    });
+
+    $("#messages").click(function() {
+        var test = $(this).val();
+
+        $("#messages").hide();
+        $("#messages_edit" + test).show();
+    });
+
+    $("#messages_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#messages_edit").hide();
+        $("#messages").show();
+    });
+
+    $("#reminders").click(function() {
+        var test = $(this).val();
+
+        $("#reminders").hide();
+        $("#reminders_edit" + test).show();
+    });
+
+    $("#reminders_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#reminders_edit").hide();
+        $("#reminders").show();
+    });
+
+    $("#online_delivery").click(function() {
+        var test = $(this).val();
+
+        $("#online_delivery").hide();
+        $("#online_delivery_edit" + test).show();
+    });
+
+    $("#online_delivery_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#online_delivery_edit").hide();
+        $("#online_delivery").show();
+    });
+
+    $("#statements").click(function() {
+        var test = $(this).val();
+
+        $("#statements").hide();
+        $("#statements_edit" + test).show();
+    });
+
+    $("#statements_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#statements_edit").hide();
+        $("#statements").show();
+    });
+
+    $("#exp_sales_form_content").click(function() {
+        var test = $(this).val();
+
+        $("#exp_sales_form_content").hide();
+        $("#exp_sales_form_content_edit" + test).show();
+    });
+
+    $("#exp_sales_form_content_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#exp_sales_form_content_edit").hide();
+        $("#exp_sales_form_content").show();
+    });
+
+    $("#purchase_orders").click(function() {
+        var test = $(this).val();
+
+        $("#purchase_orders").hide();
+        $("#purchase_orders_edit" + test).show();
+    });
+
+    $("#purchase_orders_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#purchase_orders_edit").hide();
+        $("#purchase_orders").show();
+    });
+
+    $("#exp_messages").click(function() {
+        var test = $(this).val();
+
+        $("#exp_messages").hide();
+        $("#exp_messages_edit" + test).show();
+    });
+
+    $("#exp_messages_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#exp_messages_edit").hide();
+        $("#exp_messages").show();
     });
 });
 </script>

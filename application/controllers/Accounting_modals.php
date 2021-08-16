@@ -69,7 +69,6 @@ class Accounting_modals extends MY_Controller
                     
                     $this->page_data['dropdown']['accounts'] = $bankAccounts;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['creditCards'] = $this->chart_of_accounts_model->get_credit_card_accounts();
                 break;
                 case 'single_time_activity_modal':
                     $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
@@ -99,60 +98,8 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['dropdown']['times'] = $times;
                 break;
                 case 'journal_entry_modal':
-                    $accounts = $this->chart_of_accounts_model->select();
-                    $accountTypes = $this->account_model->getAccounts();
-
-                    $bankAccounts = [];
-                    foreach ($accountTypes as $accType) {
-                        $accName = strtolower($accType->account_name);
-
-                        foreach ($accounts as $account) {
-                            if ($account->account_id === $accType->id) {
-                                $bankAccounts[$accType->account_name][] = [
-                                    'value' => $accName.'-'.$account->id,
-                                    'text' => $account->name,
-                                ];
-                            }
-                        }
-                    }
-
                     $lastJournalNo = (int)$this->accounting_journal_entries_model->getLastJournalNo();
                     $this->page_data['journal_no'] = $lastJournalNo + 1;
-                    $this->page_data['accounts'] = $bankAccounts;
-                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                break;
-                case 'transfer_modal':
-                    $accountTypes = [
-                        'Bank',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity'
-                    ];
-
-                    $accounts = [];
-
-                    foreach ($accountTypes as $accountType) {
-                        $type = $this->account_model->getAccTypeByName($accountType);
-
-                        $typeAccounts = $this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id'));
-
-                        if (count($typeAccounts) > 0) {
-                            foreach ($typeAccounts as $typeAcc) {
-                                $childAcc = $this->chart_of_accounts_model->getChildAccounts($typeAcc->id);
-
-                                $typeAcc->childAccs = $childAcc;
-
-                                $accounts[$accountType][] = $typeAcc;
-                            }
-                        }
-                    }
-
-                    $this->page_data['accounts'] = $accounts;
                 break;
                 case 'bank_deposit_modal':
                     $this->page_data['balance'] = '$0.00';
@@ -174,7 +121,6 @@ class Accounting_modals extends MY_Controller
                             }
                         }
                     }
-
 
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
@@ -296,7 +242,6 @@ class Accounting_modals extends MY_Controller
                     }
 
                     $this->page_data['due_date'] = $dueDate;
-                    $this->page_data['dropdown']['terms'] = $terms;
                 break;
                 case 'pay_bills_modal':
                     $this->page_data['balance'] = '$0.00';
@@ -1541,7 +1486,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (isset($data['accounts']) && count($data['accounts']) < 2 || !isset($data['accounts'])) {
+        } elseif (isset($data['journal_entry_accounts']) && count($data['journal_entry_accounts']) < 2 || !isset($data['journal_entry_accounts'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'You must fill out at least two detail lines.';
@@ -1602,7 +1547,7 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $entryItems = [];
-                foreach ($data['accounts'] as $key => $value) {
+                foreach ($data['journal_entry_accounts'] as $key => $value) {
                     $name = explode('-', $data['names'][$key]);
                     $account = explode('-', $value);
     
@@ -2472,8 +2417,8 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if (isset($data['expense_name'])) {
-            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
         }
 
         if (isset($data['item'])) {
@@ -2487,7 +2432,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -2608,9 +2553,9 @@ class Accounting_modals extends MY_Controller
 
                 $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
-                if (isset($data['expense_name'])) {
+                if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    foreach ($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
@@ -5186,6 +5131,9 @@ class Accounting_modals extends MY_Controller
             case 'payment-method':
                 $return = $this->get_payment_method_choices($return, $search);
             break;
+            case 'terms' :
+                $return = $this->get_terms_choices($return, $search);
+            break;
             case 'expense-account':
                 $accountTypes = [
                     'Expenses',
@@ -5285,6 +5233,47 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'journal-entry-account' :
+                $accountTypes = [
+                    'Accounts payable (A/P)',
+                    'Accounts receivable (A/R)',
+                    'Bank',
+                    'Cost of Goods Sold',
+                    'Equity',
+                    'Expense',
+                    'Fixed Assets',
+                    'Income',
+                    'Long Term Liabilities',
+                    'Other Current Assets',
+                    'Other Current Liabilities',
+                    'Other Expense'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'inventory-adj-account' :
+                $accountTypes = [
+                    'Cost of Goods Sold',
+                    'Expenses',
+                    'Other Expense',
+                    'Income',
+                    'Other Income',
+                    'Equity',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Bank',
+                    'Other Current Liabilities'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'credit-card-account' :
+                $accountTypes = [
+                    'Credit Card'  
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -5309,6 +5298,55 @@ class Accounting_modals extends MY_Controller
                         'text' => $results[$i]['text']
                     ];
                 }
+            } else if(stripos($field, 'account') !== false) {
+                $results = $return['results'];
+                $childrens = $return['childrens'];
+
+                $return['results'] = [];
+                unset($return['childrens']);
+                for($i = 0; $i < count($results); $i++) {
+                    if(count($accountTypes) > 1) {
+                        $idExplode = explode('-', $results[$i]['id']);
+
+                        if (count($return['results']) === 0 || $return['results'][array_key_last($return['results'])]['text'] !== str_replace('_', ' ', $idExplode[0])) {
+                            $return['results'][]['text'] = str_replace('_', ' ', $idExplode[0]);
+                        }
+
+                        $return['results'][array_key_last($return['results'])]['children'][] = [
+                            'id' => $idExplode[1],
+                            'text' => $results[$i]['text']
+                        ];
+                    } else {
+                        $return['results'][] = [
+                            'id' => $results[$i]['id'],
+                            'text' => $results[$i]['text']
+                        ];
+                    }
+                }
+
+                foreach($childrens as $child) {
+                    if(count($accountTypes) > 1) {
+                        $lastResultKey = array_key_last($return['results'][array_key_last($return['results'])]['children']);
+                        if($return['results'][array_key_last($return['results'])]['children'][$lastResultKey]['id'] !== null || $return['results'][array_key_last($return['results'])]['children'][$lastResultKey]['text'] !== $child['parent']) {
+                            $return['results'][array_key_last($return['results'])]['children'][]['text'] = 'Sub-account of '.$child['parent'];
+                        }
+    
+                        $lastKey = array_key_last($return['results'][array_key_last($return['results'])]['children']);
+                        $return['results'][array_key_last($return['results'])]['children'][$lastKey]['children'][] = [
+                            'id' => $child['id'],
+                            'text' => $child['text']
+                        ];
+                    } else {
+                        if($return['results'][array_key_last($return['results'])]['id'] !== null || $return['results'][array_key_last($return['results'])]['text'] !== $child['parent']) {
+                            $return['results'][]['text'] = 'Sub-account of '.$child['parent'];
+                        }
+
+                        $return['results'][array_key_last($return['results'])]['children'][] = [
+                            'id' => $child['id'],
+                            'text' => $child['text']
+                        ];
+                    }
+                }
             }
         }
 
@@ -5324,6 +5362,7 @@ class Accounting_modals extends MY_Controller
     private function get_vendor_choices($choices, $search = null, $field)
     {
         $vendors = $this->vendors_model->getAllByCompany();
+        $choices['results'] = [];
         foreach ($vendors as $vendor) {
             if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);
@@ -5361,6 +5400,7 @@ class Accounting_modals extends MY_Controller
     {
         $customers = $this->accounting_customers_model->getAllByCompany();
 
+        $choices['results'] = [];
         foreach ($customers as $customer) {
             $name = $customer->first_name . ' ' . $customer->last_name;
             if ($search !== null && $search !== '') {
@@ -5399,6 +5439,7 @@ class Accounting_modals extends MY_Controller
     {
         $employees = $this->users_model->getCompanyUsers(logged('company_id'));
 
+        $choices['results'] = [];
         foreach ($employees as $employee) {
             $name = $employee->FName . ' ' . $employee->LName;
             if ($search !== null && $search !== '') {
@@ -5437,6 +5478,7 @@ class Accounting_modals extends MY_Controller
     {
         $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
 
+        $choices['results'] = [];
         foreach ($paymentMethods as $paymentMethod) {
             if ($search !== null && $search !== '') {
                 $stripos = stripos($paymentMethod['name'], $search);
@@ -5458,33 +5500,58 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
+    private function get_terms_choices($choices, $search = null)
+    {
+        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+        $choices['results'] = [];
+        foreach ($terms as $term) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($term->name, $search);
+                if($stripos !== false) {
+                    $searched = substr($term->name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $term->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $term->name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $term->id,
+                    'text' => $term->name
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
     private function get_account_choices($choices, $search = null, $accountTypes)
     {
-        if ($search === null || $search === '') {
-            foreach ($accountTypes as $typeName) {
-                $accType = $this->account_model->getAccTypeByName($typeName);
+        $choices['results'] = [];
+        foreach ($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
 
-                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
+            if($search === null || $search === '') {
                 if (count($accounts) > 0) {
                     if (count($accountTypes) > 1) {
                         $choices['results'][]['text'] = $typeName;
                         $accTypeKey = array_key_last($choices['results']);
                     }
-
+    
                     foreach ($accounts as $account) {
-                        if ($search === null || $search === '') {
-                            if (count($accountTypes) > 1) {
-                                $choices['results'][$accTypeKey]['children'][] = [
-                                    'id' => $account->id,
-                                    'text' => $account->name
-                                ];
-                            } else {
-                                $choices['results'][] = [
-                                    'id' => $account->id,
-                                    'text' => $account->name
-                                ];
-                            }
+                        if (count($accountTypes) > 1) {
+                            $choices['results'][$accTypeKey]['children'][] = [
+                                'id' => $account->id,
+                                'text' => $account->name
+                            ];
+                        } else {
+                            $choices['results'][] = [
+                                'id' => $account->id,
+                                'text' => $account->name
+                            ];
                         }
     
                         $lastParentKey = array_key_last($choices['results']);
@@ -5509,25 +5576,55 @@ class Accounting_modals extends MY_Controller
     
                             $lastParentKey = array_key_last($choices['results']);
                             foreach ($childAccs as $childAcc) {
-                                if ($search === null || $search === '') {
-                                    if (count($accountTypes) > 1) {
-                                        $choices['results'][$lastParentKey]['children'][$key]['children'][] = [
-                                            'id' => $childAcc->id,
-                                            'text' => $childAcc->name
-                                        ];
-                                    } else {
-                                        $choices['results'][$lastParentKey]['children'][] = [
-                                            'id' => $childAcc->id,
-                                            'text' => $childAcc->name
-                                        ];
-                                    }
+                                if (count($accountTypes) > 1) {
+                                    $choices['results'][$lastParentKey]['children'][$key]['children'][] = [
+                                        'id' => $childAcc->id,
+                                        'text' => $childAcc->name
+                                    ];
+                                } else {
+                                    $choices['results'][$lastParentKey]['children'][] = [
+                                        'id' => $childAcc->id,
+                                        'text' => $childAcc->name
+                                    ];
                                 }
                             }
                         }
                     }
                 }
+            } else {
+                foreach($accounts as $account) {
+                    $stripos = stripos($account->name, $search);
+                    if($stripos !== false) {
+                        $searched = substr($account->name, $stripos, strlen($search));
+                        $choices['results'][] = [
+                            'id' => count($accountTypes) > 1 ? str_replace(" ", "_", $typeName).'-'.$account->id : $account->id,
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $account->name)
+                        ];
+                    }
+
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    foreach($childAccs as $childAcc) {
+                        $stripos = stripos($childAcc->name, $search);
+                        if($stripos !== false) {
+                            $searched = substr($childAcc->name, $stripos, strlen($search));
+                            $choices['childrens'][] = [
+                                'id' => $childAcc->id,
+                                'text' => str_replace($searched, "<strong>$searched</strong>", $childAcc->name),
+                                'parent' => $account->name
+                            ];
+                        }
+                    }
+                }
             }
-        } else {
+        }
+
+        if($search !== null && $search !== '') {
+            usort($choices['childrens'], function ($a, $b) use ($search) {
+                $indexA = stripos($a->name, "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($a->name, "<strong>$search</strong>");
+                $indexB = stripos($b->name, "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($b->name, "<strong>$search</strong>");
+                return $indexA - $indexB;
+            });
         }
 
         return $choices;
@@ -5669,5 +5766,26 @@ class Accounting_modals extends MY_Controller
         }
 
         echo json_encode(['payee' => $payee,'updated' => $updated]);
+    }
+
+    public function get_add_account_modal()
+    {
+        $accountTypes = $this->account_model->getAccounts();
+        $accountsDropdown = [];
+        foreach($accountTypes as $type)
+        {
+            foreach($this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id')) as $account)
+            {
+                $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id);
+                $accountsDropdown[$type->account_name][] = [
+                    'id' => $account->id,
+                    'name' => $account->name,
+                    'child_accounts' => $childAccounts
+                ];
+            }
+        }
+
+        $this->page_data['accountsDropdown'] = $accountsDropdown;
+        $this->load->view('accounting/modals/add_account_modal', $this->page_data);
     }
 }
