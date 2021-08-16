@@ -2,6 +2,14 @@ $(document).on("click", function(event) {
     if ($(event.target).closest("#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section").length === 0) {
         $("#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options").hide();
     }
+    if ($(event.target).closest("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section").length === 0) {
+        $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel").hide();
+    }
+});
+
+$(document).on("click", "#customer-single-modal .the-body .dropdown-menu li a.send-reminder-btn", function() {
+    get_info_customer_reminder($(this).attr("data-customer-id"), $(this).attr("data-action-from"), $(this).attr("data-invoice-number"));
+
 });
 
 $(document).on("click", ".customer-full-page-btn", function(event) {
@@ -29,6 +37,8 @@ $("#customer-single-modal .the-body .all-customer-section .top-section .search-s
 
 
 $(document).on("click", "#customer-single-modal .the-body .customer-list-section ul li", function(event) {
+    $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val("All transactions");
+    $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_date']").val("All dates");
     single_customer_get_customers_details($(this).attr("data-customer-id"));
 });
 $(document).on("click", "#customer-single-modal .seaction-above-table .print-export-settings-btns .setting-btn-section .settings-options a.show-more-less", function(event) {
@@ -101,6 +111,10 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .e
     $('#modal-container #new-customer-modal').modal('toggle');
     $('#modal-container #new-customer-modal form input[name="customer_id_edit_info"]').remove();
     $('#modal-container #new-customer-modal form').append('<input type="text" name="customer_id_edit_info" value="' + $("#customer-single-modal input[name='customer_id']").val() + '" style="display:none;">');
+});
+
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .filter-btn-section button.filter-btn", function(event) {
+    $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel").show();
 });
 
 function single_customer_notes_text_area_changed() {
@@ -185,15 +199,26 @@ function single_customer_page_get_all_customers(view_id = "") {
 $(document).on("click", "#customer-single-modal .all-customer-section .sort-btn ul li", function(event) {
     single_customer_sort_all_customers_ul($(this).attr("data-sort-by"));
 });
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .btn-success.apply-btn", function(event) {
+    single_customer_get_transaction_lists($("#customer-single-modal input[name='customer_id']").val());
+});
 
 function single_customer_get_transaction_lists(customer_id) {
     $.ajax({
         url: baseURL + "/accounting/single_customer_get_transaction_lists",
         type: "POST",
         dataType: "json",
-        data: { customer_id: customer_id },
+        data: {
+            customer_id: customer_id,
+            filter_type: $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val(),
+            filter_date: $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_date']").val(),
+        },
         success: function(data) {
-            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html(data.tbody_html);
+            if (data.tbody_html == "") {
+                $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'>No transaction list found.</td></tr>");
+            } else {
+                $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html(data.tbody_html);
+            }
             single_customer_table_columns_changed();
             single_customer_sortTable();
             $("#loader-modal").hide();

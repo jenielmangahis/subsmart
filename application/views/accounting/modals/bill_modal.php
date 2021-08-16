@@ -38,11 +38,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="terms">Terms</label>
-                                                <select name="term_id" id="terms" class="form-control">
-                                                    <?php foreach($dropdown['terms'] as $term) : ?>
-                                                        <option value="<?=$term->id?>"><?=$term->name?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="term_id" id="terms" class="form-control"></select>
                                             </div>
                                         </div>
                                         <div class="col-md-2">

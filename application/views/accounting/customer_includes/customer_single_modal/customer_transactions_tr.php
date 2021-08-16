@@ -106,7 +106,7 @@
             </ul>
         </div>
         <?php
-} elseif ($type=="Invoice" && $status=="Open") {
+} elseif ($type=="Invoice" && ($status=="Open" || $status=="Overdue")) {
         ?>
         <div class="dropdown dropdown-btn text-right">
             <a href="" class="first-option customer_receive_payment_btn"
@@ -128,7 +128,7 @@
                     </a>
                 </li>
                 <li>
-                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="send-reminder-btn" data-invoice-number="<?=$no?>" data-action-from="single-customer-view-modal" data-customer-id="<?=$customer_id?>">
                         Send reminder
                     </a>
                 </li>

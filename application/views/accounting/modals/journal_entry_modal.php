@@ -49,16 +49,7 @@
                                                                 <td></td>
                                                                 <td>1</td>
                                                                 <td>
-                                                                    <select name="accounts[]" class="form-control">
-                                                                        <option value="" disabled selected>&nbsp;</option>
-                                                                        <?php foreach($accounts as $key => $value) : ?>
-                                                                            <optgroup label="<?= $key ?>">
-                                                                                <?php foreach($value as $account) : ?>
-                                                                                    <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endforeach; ?>
-                                                                    </select>
+                                                                    <select name="journal_entry_accounts[]" class="form-control"></select>
                                                                 </td>
                                                                 <td><input type="number" name="debits[]" class="form-control text-right" step="0.01"></td>
                                                                 <td><input type="number" name="credits[]" class="form-control text-right" step="0.01"></td>

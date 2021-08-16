@@ -39,6 +39,7 @@ const dropdownFields = [
     'received-from',
     'payment-method',
     'names',
+    'terms',
     'person-tracking',
     'expense-account',
     'payment-account',
@@ -48,7 +49,10 @@ const dropdownFields = [
     'bank-deposit-account',
     'cash-back-account',
     'funds-account',
-    'transfer-account'
+    'transfer-account',
+    'journal-entry-account',
+    'inventory-adj-account',
+    'credit-card-account'
 ];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -146,7 +150,25 @@ $(function() {
                 $('div#payrollModal .modal-body .card-body').html(res);
 
                 $('div#payrollModal .modal-header .modal-title').html('Run Payroll: ' + paySchedName);
-                $('div#payrollModal .modal-body .card-body select').select2();
+                $('div#payrollModal .modal-body .card-body select:not(#bank-account)').select2();
+                $('div#payrollModal .modal-body .card-body select#bank-account').select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: 'bank-account'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect
+                });
                 $('div#payrollModal .modal-body .card-body #payDate').datepicker({
                     uiLibrary: 'bootstrap'
                 });
@@ -404,6 +426,7 @@ $(function() {
                     type = $(this).attr('name').includes('received_from') ? 'received-from' : type;
                     type = $(this).attr('name').includes('payment_method') ? 'payment-method' : type;
                     type = $(this).attr('name').includes('names[]') ? 'names' : type;
+                    type = $(this).attr('name').includes('term') ? 'terms' : type;
                     type = $(this).attr('name').includes('payment_account') ? 'payment-account' : type;
                     type = $(this).attr('name').includes('bank_account') ? 'bank-account' : type;
                     type = $(this).attr('name').includes('funds_account') ? 'funds-account' : type;
@@ -555,7 +578,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', 'div#payrollModal select#payFrom', function() {
+    $(document).on('change', 'div#payrollModal select#bank-account', function() {
         var value = $(this).val();
         var el = $(this);
 
@@ -621,6 +644,7 @@ $(function() {
                     type = $(this).attr('name').includes('payment_method') ? 'payment-method' : type;
                     type = $(this).attr('name').includes('names[]') ? 'names' : type;
                     type = $(this).attr('name').includes('funds_account') ? 'funds-account' : type;
+                    type = $(this).attr('name').includes('journal_entry_accounts') ? 'journal-entry-account' : type;
                 } else {
                     type = type.replaceAll('_', '-');
                 }
@@ -672,7 +696,7 @@ $(function() {
             $(this).find('select').each(function() {
                 var type = $(this).attr('id');
                 if (type === undefined) {
-                    type = $(this).attr('name').includes('expense_name') ? 'expense-account' : type;
+                    type = $(this).attr('name').includes('expense_account') ? 'expense-account' : type;
                     type = $(this).attr('name').includes('customer') ? 'customer' : type;
                 } else {
                     type = type.replaceAll('_', '-');
@@ -1588,13 +1612,15 @@ $(function() {
     });
 
     $(document).on('change', '#expenseModal #payment_account', function() {
-        var id = $(this).val();
+        var val = $(this).val();
 
-        $.get('/accounting/get-account-balance/' + id, function(res) {
-            var result = JSON.parse(res);
-
-            $('#expenseModal span#account-balance').html(result.balance);
-        });
+        if(val !== '' && val !== null && val !== 'add-new') {
+            $.get('/accounting/get-account-balance/' + val, function(res) {
+                var result = JSON.parse(res);
+    
+                $('#expenseModal span#account-balance').html(result.balance);
+            });
+        }
     });
 
     $(document).on('change', '#creditCardCreditModal #bank_credit_account', function() {
@@ -1950,7 +1976,7 @@ $(function() {
     });
 
     $(document).on('change', '#expenseModal #payee', function() {
-        if ($(this).val() !== '' && $(this).val() !== null) {
+        if ($(this).val() !== '' && $(this).val() !== null && $(this).val() !== 'add-new') {
             var split = $(this).val().split('-');
             unlinkTransaction();
 
@@ -3343,6 +3369,51 @@ $(function() {
         $('#weeklyTimesheetModal').parent('form').submit();
     });
 
+    $(document).on('change', '#expenseModal select', function() {
+        var value = $(this).val();
+        if(value === 'add-new' && $(this).attr('name').includes('account')) {
+            dropdownEl = $(this);
+            var modal = $('#modal-form').children('.modal');
+            var modalName = modal.attr('id').toLowerCase().replaceAll('modal', '');
+            var field = dropdownEl.attr('id');
+            var fieldName = field === undefined ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
+            var query = `?modal=${modalName}&field=${fieldName}`;
+
+            $.get('/accounting/get-add-account-modal'+query, function(result) {
+                $('#modal-form').parent().append(result);
+
+                $('#modal-container #add-account-modal select').select2({
+                    dropdownParent: $('#modal-container #add-account-modal')
+                });
+                var switchEl = $('#modal-container #add-account-modal #check_sub').get(0);
+                var switchery = new Switchery(switchEl, {size: 'small'});
+                $('#modal-container #add-account-modal').modal('show');
+            });
+        }
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #add-account-modal', function() {
+        $('#modal-container #add-account-modal').remove();
+    });
+
+    $(document).on('change', '#add-account-modal #check_sub', function() {
+        if($(this).prop('checked')) {
+            $('#add-account-modal #sub_account_type').prop('disabled', false);
+        } else {
+            $('#add-account-modal #sub_account_type').prop('disabled', true);
+        }
+    });
+
+    $(document).on('change', '#add-account-modal #choose_time', function() {
+        if($(this).val() === 'Other') {
+            $('#add-account-modal #balance').parent().addClass('hide');
+            $('#add-account-modal #time_date').parent().parent().removeClass('hide');
+        } else {
+            $('#add-account-modal #time_date').parent().parent().addClass('hide');
+            $('#add-account-modal #balance').parent().removeClass('hide');
+        }
+    });
+
     $(document).on('change', '#modal-container #modal-form #payee', function() {
         if ($(this).val() === 'add-new') {
             dropdownEl = $(this);
@@ -3764,7 +3835,7 @@ $(function() {
     });
 
     $(document).on('hidden.bs.modal', '#modal-container #new-customer-modal', function(e) {
-        // $('#modal-container #new-customer-modal').remove();
+        $('#modal-container #new-customer-modal').remove();
     });
 
     $(document).on('submit', '#modal-container #new-vendor-modal #add-vendor-form', function(e) {

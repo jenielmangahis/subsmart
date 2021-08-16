@@ -1,0 +1,114 @@
+<!-- add account modal -->
+<div class="modal fade" id="add-account-modal" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document" style="max-width: 800px !important">
+        <div class="modal-content">
+            <form action="/accounting/chart-of-accounts/add" method="post" class="form-validate" novalidate="novalidate">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addLocationLabel">Accounts</h5>
+                    <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body" style="max-height: 650px;">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="account_type">Account Type</label>
+                                                <select name="account_type" id="account_type" class="form-control select2" required>
+                                                    <?php foreach ($this->account_model->getAccounts() as $row): ?>
+                                                        <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
+                                                    <?php endforeach ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="detail_type">Detail Type</label>
+                                                <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required>
+                                                    <?php foreach ($this->account_detail_model->getDetailTypesById(1) as $row_detail): ?>
+                                                        <option value="<?php echo $row_detail->acc_detail_id ?>" ><?php echo $row_detail->acc_detail_name ?></option>
+                                                    <?php endforeach ?>
+                                                </select>
+                                            </div>
+                                            <div class="detail-type-desc">
+                                                <?php $detail = $this->account_detail_model->getDetailTypesById(1)[0]; ?>
+                                                <?=$detail->description?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input type="text" class="form-control" name="name" id="name" required
+                                                    placeholder="Enter Name"
+                                                    autofocus/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="description">Description</label>
+                                                <textarea type="text" class="form-control" name="description" id="description"
+                                                        placeholder="Enter Description" rows="3" required></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check(this)"/>
+                                                <label for="formClient-Status">Is sub account</label>
+                                                <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
+                                                    <option disabled selected>Enter parent account</option>
+                                                    <?php foreach($accountsDropdown as $key => $accounts) : ?>
+                                                        <optgroup label="<?=$key?>">
+                                                            <?php foreach($accounts as $account) : ?>
+                                                                <option value="<?=$account['id']?>"><?=$account['name']?></option>
+                                                                <?php if(!empty($account['child_accounts'])) : ?>
+                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;<?='Sub-account of '.$account['name']?>">
+                                                                        <?php foreach($account['child_accounts'] as $subAcc) : ?>
+                                                                            <option value="<?=$subAcc->id?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$subAcc->name?></option>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <br>
+                                                <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
+                                                <span></span>
+                                                <select name="choose_time" id="choose_time" class="form-control select2" required>
+                                                    <option selected="selected" disabled="disabled">Choose one</option>
+                                                    <option value="Beginning of this year">Beginning of this year</option>
+                                                    <option value="Beginning of this month">Beginning of this month</option>
+                                                    <option value="Today">Today</option>
+                                                    <option value="Other" onclick="hidediv()">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group hide-date hide">
+                                                <label for="time_date">Date</label>
+                                                <div class="col-xs-10 date_picker">
+                                                    <input type="text" class="form-control" name="time_date" id="time_date"
+                                                    placeholder="Enter Date" autofocus/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group hide-div hide">
+                                                <label for="balance">Balance</label>
+                                                <input type="text" class="form-control" name="balance" id="balance" required
+                                                    placeholder="Enter Balance"
+                                                    autofocus/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+
+                </div>
+                <!-- end modal-body -->
+                <div class="modal-footer">
+                    <div class="row w-100">
+                        <div class="col-md-6"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div>
+                        <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- end add account modal -->

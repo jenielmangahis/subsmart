@@ -32,16 +32,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
-                                                <select name="inventory_adj_acc" id="inventoryAdjAccount" class="form-control" required>
-                                                    <?php foreach($accounts as $key => $value) : ?>
-                                                        <optgroup label="<?= $key ?>">
-                                                            <?php foreach($value as $account) : ?>
-                                                                <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
-                                                                <?php $count++; ?>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="inventory_adj_acc" id="inventory_adj_account" class="form-control" required></select>
                                             </div>
                                         </div>
                                     </div>

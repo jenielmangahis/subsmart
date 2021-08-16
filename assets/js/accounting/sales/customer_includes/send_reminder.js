@@ -9,7 +9,8 @@ $(document).on("click", "#send-reminder-modal .send-reminder-modal-footer button
     $("#send-reminder-modal").removeClass("show");
 });
 
-function get_info_customer_reminder(customer_id) {
+function get_info_customer_reminder(customer_id, data_action_from = "", data_invoice_number = "") {
+
     $.ajax({
         url: baseURL + "/accounting/get_info_customer_reminder",
         type: "POST",
@@ -32,7 +33,11 @@ function get_info_customer_reminder(customer_id) {
                 $("#send-reminder-modal .form-group input[name='receint-email']").show();
             }
             $("#send-reminder-modal .form-group input[name='receint-email']").val(data.cutsomer_email);
-            $("#send-reminder-modal .form-group input[name='subject']").val(`Reminder: Invoice [Invoice No.] from ` + data.business_name);
+            $invoice_number = "Invoice No.";
+            if (data_action_from == "single-customer-view-modal") {
+                $invoice_number = data_invoice_number;
+            }
+            $("#send-reminder-modal .form-group input[name='subject']").val(`Reminder: Invoice [` + $invoice_number + `] from ` + data.business_name);
             $("#send-reminder-modal .monal-body .modal-title p .invoice-count").html(data.invoice_count);
             var message = `Dear ` + data.name + `,
 
