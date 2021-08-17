@@ -16,31 +16,18 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="account_type">Account Type</label>
-                                                <select name="account_type" id="account_type" class="form-control select2" required>
-                                                    <?php foreach ($this->account_model->getAccounts() as $row): ?>
-                                                        <option value="<?php echo $row->id ?>"><?php echo $row->account_name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
+                                                <select name="account_type" id="account_type" class="form-control select2" required></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="detail_type">Detail Type</label>
-                                                <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required>
-                                                    <?php foreach ($this->account_detail_model->getDetailTypesById(1) as $row_detail): ?>
-                                                        <option value="<?php echo $row_detail->acc_detail_id ?>" ><?php echo $row_detail->acc_detail_name ?></option>
-                                                    <?php endforeach ?>
-                                                </select>
+                                                <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required></select>
                                             </div>
-                                            <div class="detail-type-desc">
-                                                <?php $detail = $this->account_detail_model->getDetailTypesById(1)[0]; ?>
-                                                <?=$detail->description?>
-                                            </div>
+                                            <div class="detail-type-desc"></div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
-                                                <input type="text" class="form-control" name="name" id="name" required
-                                                    placeholder="Enter Name"
-                                                    autofocus/>
+                                                <input type="text" class="form-control" name="name" id="name" required placeholder="Enter Name"/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="description">Description</label>
@@ -50,23 +37,7 @@
                                             <div class="form-group">
                                                 <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check(this)"/>
                                                 <label for="formClient-Status">Is sub account</label>
-                                                <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
-                                                    <option disabled selected>Enter parent account</option>
-                                                    <?php foreach($accountsDropdown as $key => $accounts) : ?>
-                                                        <optgroup label="<?=$key?>">
-                                                            <?php foreach($accounts as $account) : ?>
-                                                                <option value="<?=$account['id']?>"><?=$account['name']?></option>
-                                                                <?php if(!empty($account['child_accounts'])) : ?>
-                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;<?='Sub-account of '.$account['name']?>">
-                                                                        <?php foreach($account['child_accounts'] as $subAcc) : ?>
-                                                                            <option value="<?=$subAcc->id?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$subAcc->name?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="parent_account" id="parent_account" class="form-control select2" required disabled></select>
                                                 <br>
                                                 <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
                                                 <span></span>
@@ -81,15 +52,12 @@
                                             <div class="form-group hide-date hide">
                                                 <label for="time_date">Date</label>
                                                 <div class="col-xs-10 date_picker">
-                                                    <input type="text" class="form-control" name="time_date" id="time_date"
-                                                    placeholder="Enter Date" autofocus/>
+                                                    <input type="text" class="form-control" name="time_date" id="time_date" placeholder="Enter Date"/>
                                                 </div>
                                             </div>
                                             <div class="form-group hide-div hide">
                                                 <label for="balance">Balance</label>
-                                                <input type="text" class="form-control" name="balance" id="balance" required
-                                                    placeholder="Enter Balance"
-                                                    autofocus/>
+                                                <input type="text" class="form-control" name="balance" id="balance" required placeholder="Enter Balance"/>
                                             </div>
                                         </div>
                                     </div>

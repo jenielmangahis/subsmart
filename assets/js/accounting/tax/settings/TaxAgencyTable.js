@@ -40,6 +40,8 @@ export class TaxAgencyTable {
 
         const $sidebar = $("#editAgency");
         const $sidebarCloseBtn = $sidebar.find("[data-action=close]");
+        const $sidebarSaveBtn = $sidebar.find("#editAgencyBtn");
+
         const closeSidebar = () => {
           $sidebar.removeClass("sidebarForm--show");
           $sidebar.off("click");
@@ -61,6 +63,50 @@ export class TaxAgencyTable {
           if ($sidebar.is(event.target)) {
             closeSidebar();
           }
+        });
+
+        $sidebarSaveBtn.on("click", async function () {
+          const $inputs = $sidebar.find("[data-type]");
+          const payload = { ...row };
+
+          for (let index = 0; index < $inputs.length; index++) {
+            const input = $inputs[index];
+            const value = input.value;
+            const key = input.dataset.type;
+
+            const $input = $(input);
+            const $formGroup = $input.closest(".form-group");
+
+            $formGroup.removeClass("form-group--error");
+            if (!value) {
+              $formGroup.addClass("form-group--error");
+              $input.focus();
+              return;
+            }
+
+            payload[key] = value;
+          }
+
+          payload.start_period = `${new Date().getFullYear()}-01-01`;
+
+          $(this).attr("disabled", true);
+          $(this).text("Saving...");
+
+          const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : ""; // prettier-ignore
+          const response = await fetch(
+            `${prefixURL}/AccountingSales/apiEditAgency/${row.id}`,
+            {
+              method: "post",
+              body: JSON.stringify(payload),
+              headers: {
+                accept: "application/json",
+                "content-type": "application/json",
+              },
+            }
+          );
+
+          const json = await response.json();
+          window.location.reload();
         });
       },
     };

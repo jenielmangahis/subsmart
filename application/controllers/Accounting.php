@@ -264,6 +264,7 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/time_activity.js",
             "assets/js/accounting/sales/customer_includes/create_invoice.js",
             "assets/js/accounting/sales/customer_includes/customer_types.js",
+            "assets/js/accounting/sales/customer_includes/export_table.js",
             "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
@@ -5905,6 +5906,16 @@ class Accounting extends MY_Controller
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
 
+        add_css([
+            'assets/css/accounting/tax/settings/settings.css',
+            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            'assets/js/accounting/invoice/addInvoice.js',
+        ]);
+        
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
 
@@ -8603,6 +8614,7 @@ class Accounting extends MY_Controller
         $data->overdue = number_format(($overdue), 2);
         $data->customer_details = $customer;
         $data->customer_accounting_details = $this->accounting_customers_model->get_customer_accounting_details($customer_id);
+        $data->company_details = $this->accounting_customers_model->get_customer_by_id($customer_id);
         echo json_encode($data);
     }
     public function single_customer_get_transaction_lists()
@@ -8652,13 +8664,13 @@ class Accounting extends MY_Controller
                 $this->page_data['customer_id']=$customer_id;
                 $this->page_data['invoice_payment_id']=$payment->id;
                 $this->page_data['invoice_id']=$inv->id;
-                if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type,$this->page_data)) {
+                if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
                     $tr_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
             if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
                 $status="Overdue";
-            }else{
+            } else {
                 if ($balance <= 0) {
                     $status="Paid";
                 } else {
@@ -8686,7 +8698,7 @@ class Accounting extends MY_Controller
             $this->page_data['invoice_payment_id']="";
             $this->page_data['invoice_id']=$inv->id;
             $tbody_html.=$tr_html;
-            if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type,$this->page_data)) {
+            if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
                 $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
             }
         }
@@ -8717,7 +8729,7 @@ class Accounting extends MY_Controller
             $this->page_data['invoice_id']=$inv->id;
             $this->page_data['sales_receipt_id']=$receipt->id;
             $tbody_html.=$tr_html;
-            if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type,$this->page_data)) {
+            if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
                 $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
             }
         }
@@ -8728,58 +8740,58 @@ class Accounting extends MY_Controller
     }
     public function filter_type_qualified($filter_type, $data)
     {
-        if($filter_type == "All transactions"){
+        if ($filter_type == "All transactions") {
             return true;
-        }elseif($filter_type == "All plus deposits" ){
+        } elseif ($filter_type == "All plus deposits") {
             return false;
-        }elseif($filter_type == "All invoices" ){
-            if($data["type"]=="Invoice"){
+        } elseif ($filter_type == "All invoices") {
+            if ($data["type"]=="Invoice") {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }elseif($filter_type == "Open invoices" ){
-            if($data["status"] == "Open"){
+        } elseif ($filter_type == "Open invoices") {
+            if ($data["status"] == "Open") {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }elseif($filter_type == "Overdue invoices" ){
-            if($data["status"] == "Overdue"){
+        } elseif ($filter_type == "Overdue invoices") {
+            if ($data["status"] == "Overdue") {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }elseif($filter_type == "Open estimates" ){
+        } elseif ($filter_type == "Open estimates") {
             return false;
-        }elseif($filter_type == "Credit memos" ){
+        } elseif ($filter_type == "Credit memos") {
             return false;
-        }elseif($filter_type == "Unbilled income" ){
+        } elseif ($filter_type == "Unbilled income") {
             return false;
-        }elseif($filter_type == "Recently paid" ){
+        } elseif ($filter_type == "Recently paid") {
             $firstday = date("Y-m-d", strtotime('monday last week'));
             $lastday = date("Y-m-d", strtotime('sunday this week'));
-            if($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday){
+            if ($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }elseif($filter_type == "Money received" ){
-            if($data["type"] == "Payment"){
+        } elseif ($filter_type == "Money received") {
+            if ($data["type"] == "Payment") {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }elseif($filter_type == "Recurring templates"){
-            if($data["type"] == "Recurring template"){
+        } elseif ($filter_type == "Recurring templates") {
+            if ($data["type"] == "Recurring template") {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }elseif($filter_type == "Statements"){
-            if($data["type"] == "Statements"){
+        } elseif ($filter_type == "Statements") {
+            if ($data["type"] == "Statements") {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
