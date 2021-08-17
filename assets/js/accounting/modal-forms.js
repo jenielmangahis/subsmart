@@ -42,7 +42,7 @@ const dropdownFields = [
     'terms',
     'person-tracking',
     'expense-account',
-    'payment-account',
+    'expense-payment-account',
     'bank-account',
     'bill-payment-account',
     'bank-credit-account',
@@ -427,7 +427,7 @@ $(function() {
                     type = $(this).attr('name').includes('payment_method') ? 'payment-method' : type;
                     type = $(this).attr('name').includes('names[]') ? 'names' : type;
                     type = $(this).attr('name').includes('term') ? 'terms' : type;
-                    type = $(this).attr('name').includes('payment_account') ? 'payment-account' : type;
+                    type = $(this).attr('name').includes('expense_payment_account') ? 'expense-payment-account' : type;
                     type = $(this).attr('name').includes('bank_account') ? 'bank-account' : type;
                     type = $(this).attr('name').includes('funds_account') ? 'funds-account' : type;
                 } else {
@@ -1611,7 +1611,7 @@ $(function() {
         $(this).parent().parent().parent().find('input[name="category_billable[]"]').prop('checked', true).trigger('change');
     });
 
-    $(document).on('change', '#expenseModal #payment_account', function() {
+    $(document).on('change', '#expenseModal #expense_payment_account', function() {
         var val = $(this).val();
 
         if(val !== '' && val !== null && val !== 'add-new') {
@@ -3382,8 +3382,88 @@ $(function() {
             $.get('/accounting/get-add-account-modal'+query, function(result) {
                 $('#modal-form').parent().append(result);
 
-                $('#modal-container #add-account-modal select').select2({
-                    dropdownParent: $('#modal-container #add-account-modal')
+                $('#modal-container #add-account-modal select').each(function() {
+                    var id = $(this).attr('id').replaceAll('_', '-');
+                    switch(id) {
+                        case 'account-type' :
+                            $(this).select2({
+                                ajax: {
+                                    url: '/accounting/get-dropdown-choices',
+                                    dataType: 'json',
+                                    data: function(params) {
+                                        var query = {
+                                            search: params.term,
+                                            type: 'public',
+                                            field: id,
+                                            dropdown: fieldName
+                                        }
+
+                                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                                        return query;
+                                    }
+                                },
+                                templateResult: formatResult,
+                                templateSelection: optionSelect,
+                                dropdownParent: $('#modal-container #add-account-modal')
+                            });
+                        break;
+                        case 'detail-type' :
+                            $(this).select2({
+                                ajax: {
+                                    url: '/accounting/get-dropdown-choices',
+                                    dataType: 'json',
+                                    data: function(params) {
+                                        var query = {
+                                            search: params.term,
+                                            type: 'public',
+                                            field: id,
+                                            accType: $(this).parent().prev().find('#account_type').val()
+                                        }
+
+                                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                                        return query;
+                                    }
+                                },
+                                templateResult: formatResult,
+                                templateSelection: optionSelect,
+                                dropdownParent: $('#modal-container #add-account-modal')
+                            });
+                        break;
+                        case 'parent-account' :
+                            $(this).select2({
+                                ajax: {
+                                    url: '/accounting/get-dropdown-choices',
+                                    dataType: 'json',
+                                    data: function(params) {
+                                        var query = {
+                                            search: params.term,
+                                            type: 'public',
+                                            field: id
+                                        }
+
+                                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                                        return query;
+                                    }
+                                },
+                                templateResult: formatResult,
+                                templateSelection: optionSelect,
+                                dropdownParent: $('#modal-container #add-account-modal'),
+                                placeholder: 'Enter parent account'
+                            });
+                        break;
+                        default :
+                            if($(this).find('option').length > 10) {
+                                $(this).select2({
+                                    dropdownParent: $('#modal-container #add-account-modal')
+                                });
+                            } else {
+                                $(this).select2({
+                                    minimumResultsForSearch: -1,
+                                    dropdownParent: $('#modal-container #add-account-modal')
+                                });
+                            }
+                        break;
+                    }
                 });
                 var switchEl = $('#modal-container #add-account-modal #check_sub').get(0);
                 var switchery = new Switchery(switchEl, {size: 'small'});
@@ -3392,15 +3472,36 @@ $(function() {
         }
     });
 
+    $(document).on('change', '#modal-container #add-account-modal #account_type', function() {
+        var el = $(this);
+        $.get('/accounting/get-first-detail-type/'+el.val(), function(result) {
+            var res = JSON.parse(result);
+
+            el.parent().next().find('#detail_type').append(`<option value="${res.acc_detail_id}" selected>${res.acc_detail_name}</option>`).trigger('change');
+        });
+    });
+
+    $(document).on('change', '#modal-container #add-account-modal #detail_type', function() {
+        var el = $(this);
+        var id = el.val();
+
+        $.get('/accounting/chart-of-accounts/get-detail-type/'+id, function(result) {
+            var res = JSON.parse(result);
+
+            el.parent().next().html(res.description);
+            $('#modal-container #name').val(res.acc_detail_name);
+        });
+    });
+
     $(document).on('hidden.bs.modal', '#modal-container #add-account-modal', function() {
         $('#modal-container #add-account-modal').remove();
     });
 
     $(document).on('change', '#add-account-modal #check_sub', function() {
         if($(this).prop('checked')) {
-            $('#add-account-modal #sub_account_type').prop('disabled', false);
+            $('#add-account-modal #parent_account').prop('disabled', false);
         } else {
-            $('#add-account-modal #sub_account_type').prop('disabled', true);
+            $('#add-account-modal #parent_account').prop('disabled', true);
         }
     });
 

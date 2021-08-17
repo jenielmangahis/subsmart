@@ -23,13 +23,14 @@ export class TaxRateTable {
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item action" href="#">Make inactive</a>
+                    <a data-action="makeInactive" class="dropdown-item action" href="#">Make inactive</a>
                 </div>
             </div>
         `;
       },
     };
 
+    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
     const actions = {
       edit: (row) => {
         const $sidebar = $("#editRate");
@@ -88,7 +89,6 @@ export class TaxRateTable {
           $(this).attr("disabled", true);
           $(this).text("Saving...");
 
-          const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : ""; // prettier-ignore
           const response = await fetch(
             `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
             {
@@ -104,6 +104,23 @@ export class TaxRateTable {
           const json = await response.json();
           window.location.reload();
         });
+      },
+      makeInactive: async (row) => {
+        const payload = { ...row, is_active: 0 };
+        const response = await fetch(
+          `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
+          {
+            method: "post",
+            body: JSON.stringify(payload),
+            headers: {
+              accept: "application/json",
+              "content-type": "application/json",
+            },
+          }
+        );
+
+        const json = await response.json();
+        window.location.reload();
       },
     };
 
@@ -137,6 +154,8 @@ export class TaxRateTable {
     });
 
     this.$table.find("tbody").on("click", ".action", async function (event) {
+      event.preventDefault();
+
       const $parent = $(this).closest("tr");
       const rows = table.rows().data().toArray();
 

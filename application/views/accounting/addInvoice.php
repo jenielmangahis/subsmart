@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<?php include viewPath('includes/header'); ?>
+<?php include viewPath('includes/header');?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+    <?php include viewPath('includes/sidebars/accounting/accounting');?>
     <style>
         .but:hover {
             font-weight: 900;
@@ -237,12 +237,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="col-sm-6">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                <?php if (hasPermissions('WORKORDER_MASTER')) : ?>
+                                <?php if (hasPermissions('WORKORDER_MASTER')): ?>
                                 <a href="<?php echo base_url('invoice') ?>"
                                     class="btn btn-primary" aria-expanded="false">
                                     <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices
                                 </a>
-                                <?php endif ?>
+                                <?php endif?>
                             </div>
                         </div>
                     </div>
@@ -270,12 +270,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </select> -->
                                     <select name="customer_id" id="customer_id" class="form-control" required>
                                         <option>Select a customer</option>
-                                        <?php foreach ($customers as $customer):?>
+                                        <?php foreach ($customers as $customer): ?>
                                         <option
-                                            value="<?php echo $customer->prof_id?>">
-                                            <?php echo $customer->first_name."&nbsp;".$customer->last_name;?>
+                                            value="<?php echo $customer->prof_id ?>">
+                                            <?php echo $customer->first_name . "&nbsp;" . $customer->last_name; ?>
                                         </option>
-                                        <?php endforeach; ?>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                                 <div class="col-md-5 form-group">
@@ -316,12 +316,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <select class="form-control" name="terms" id="addNewTermsInvoice">
                                                 <option></option>
                                                 <option value="0">Add New</option>
-                                                <?php foreach ($terms as $term) : ?>
+                                                <?php foreach ($terms as $term): ?>
                                                 <option
                                                     value="<?php echo $term->id; ?>">
                                                     <?php echo $term->name . ' ' . $term->net_due_days; ?>
                                                 </option>
-                                                <?php endforeach; ?>
+                                                <?php endforeach;?>
                                             </select>
                                         </div>
                                         <div class="col-md-3">
@@ -419,21 +419,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-3 form-group">
                                     <label for="invoice_number">Invoice#</label>
                                     <!-- <input type="text" class="form-control" name="invoice_number"
-                                           id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>"
+                                           id="invoice_number" value="<?php echo "INV-" . date("YmdHis"); ?>"
                                     required placeholder="Enter Invoice#"
                                     autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
                                     <input type="text" class="form-control" name="invoice_number" id="invoice_number"
                                         value="<?php echo "INV-";
-                                           foreach ($number as $num):
-                                                $next = $num->invoice_number;
-                                                $arr = explode("-", $next);
-                                                $date_start = $arr[0];
-                                                $nextNum = $arr[1];
-                                            //    echo $number;
-                                           endforeach;
-                                           $val = $nextNum + 1;
-                                           echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                           ?>" required placeholder="Enter Invoice#" />
+foreach ($number as $num):
+    $next = $num->invoice_number;
+    $arr = explode("-", $next);
+    $date_start = $arr[0];
+    $nextNum = $arr[1];
+    //    echo $number;
+endforeach;
+$val = $nextNum + 1;
+echo str_pad($val, 9, "0", STR_PAD_LEFT);
+?>" required placeholder="Enter Invoice#" />
                                 </div>
 
                                 <div class="col-md-3 form-group">
@@ -673,6 +673,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 id="grand_total_input" value='0'></b></td>
                                                 </tr>
                                             </table>
+
+
+                                            <div class="addInvoiceTax">
+                                                <div class="form-group">
+                                                    <label for="invoiceTaxRate">Select tax rate</label>
+                                                    <select class="form-control" id="invoiceTaxRate" disabled>
+                                                        <option value="default" selected hidden>Select custom rate</option>
+                                                        <option value="add_custom">+ Add custom rate</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1164,7 +1175,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <tr>
                                                 <td><?php echo $item->title; ?>
                                                 </td>
-                                                <td><?php if ($item->rebate == 1) { ?>
+                                                <td><?php if ($item->rebate == 1) {?>
                                                     <!-- <label class="switch">
                                                     <input type="checkbox" id="rebatable_toggle" checked>
                                                     <span class="slider round"></span> -->
@@ -1172,7 +1183,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         item-id="<?php echo $item->id; ?>"
                                                         value="1" data-toggle="toggle" data-size="xs" checked>
                                                     </label>
-                                                    <?php } else { ?>
+                                                    <?php } else {?>
                                                     <!-- <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
@@ -1183,23 +1194,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                         item-id="<?php echo $item->id; ?>"
                                                         value="0" data-toggle="toggle" data-size="xs">
 
-                                                    <?php  } ?>
+                                                    <?php }?>
                                                 </td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?>
                                                 </td>
                                                 <td><button
-                                                        id="<?= $item->id; ?>"
-                                                        data-quantity="<?= $item->units; ?>"
-                                                        data-itemname="<?= $item->title; ?>"
-                                                        data-price="<?= $item->price; ?>"
+                                                        id="<?=$item->id;?>"
+                                                        data-quantity="<?=$item->units;?>"
+                                                        data-itemname="<?=$item->title;?>"
+                                                        data-price="<?=$item->price;?>"
                                                         type="button" data-dismiss="modal"
                                                         class="btn btn-sm btn-default select_item">
                                                         <span class="fa fa-plus"></span>
                                                     </button></td>
                                             </tr>
 
-                                            <?php } ?>
+                                            <?php }?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1267,8 +1278,65 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('accounting/add_new_term'); ?>
-<?php include viewPath('includes/footer_accounting'); ?>
+
+<div class="sidebarForm" id="addRateSidebar">
+    <div class="sidebarForm__inner">
+        <div class="sidebarForm__header">
+            <div class="sidebarForm__title">Add a custom sales tax rate</div>
+            <button data-action="close" class="sidebarForm__close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <form>
+            <div class="form-group">
+                <div class="form-check">
+                    <input data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType1" value="single" checked>
+                    <label class="form-check-label" for="addRate__rateType1">
+                        Single
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType2" value="combined">
+                    <label class="form-check-label" for="addRate__rateType2">
+                        Combined
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="addRate__name">Name</label>
+                <input data-type="name" required type="text" class="form-control" id="addRate__name">
+            </div>
+
+            <div class="form-group">
+                <label for="addRate__agency">Agency</label>
+                <div class="dropdownWithSearch" id="rateAgencySelect">
+                    <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" id="addRate__agency" placeholder="Select agency">
+                    <button type="button" class="dropdownWithSearch__btn">
+                        <i class="fa fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="addRate__rate">Rate</label>
+                <div class="d-flex align-items-center">
+                    <input required data-type="rate" type="number" class="form-control" id="addRate__rate">
+                    <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                </div>
+            </div>
+        </form>
+
+        <div class="sidebarForm__footer">
+            <button data-action="close" type="button" class="settings__btn mr-2">Cancel</button>
+            <button id="addRateBtn" type="button" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</div>
+
+<?php include viewPath('accounting/add_new_term');?>
+<?php include viewPath('includes/footer_accounting');?>
 <script>
     // document.getElementById('contact_mobile').addEventListener('input', function (e) {
     //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
@@ -1298,7 +1366,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </script>
 <!-- <script type="text/javascript"
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=google_credentials()['api_key']?>&callback=initialize&libraries=&v=weekly"></script>
 <script>
     function initialize() {
         var input = document.getElementById('job_location');

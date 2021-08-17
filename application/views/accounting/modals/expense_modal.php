@@ -26,7 +26,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="payment_account">Payment account</label>
-                                                        <select name="payment_account" id="payment_account" class="form-control" required></select>
+                                                        <select name="expense_payment_account" id="expense_payment_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 d-flex ">

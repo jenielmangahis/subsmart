@@ -2414,7 +2414,7 @@ class Accounting_modals extends MY_Controller
 
     private function expense($data)
     {
-        $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
+        $this->form_validation->set_rules('expense_payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
         if (isset($data['expense_account'])) {
@@ -2445,7 +2445,7 @@ class Accounting_modals extends MY_Controller
                     'company_id' => logged('company_id'),
                     'payee_type' => $payee[0],
                     'payee_id' => $payee[1],
-                    'payment_account_id' => $data['payment_account'],
+                    'payment_account_id' => $data['expense_payment_account'],
                     'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                     'payment_method_id' => $data['payment_method'],
                     'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
@@ -5154,7 +5154,7 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
-            case 'payment-account':
+            case 'expense-payment-account':
                 $accountTypes = [
                     'Bank',
                     'Credit Card',
@@ -5274,6 +5274,23 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'parent-account' :
+                $accTypes = $this->account_model->getAccounts();
+                $accountTypes = [];
+                foreach($accTypes as $accType) {
+                    $accountTypes[] = $accType->account_name;
+                }
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
+            case 'account-type' :
+                $dropdown = $this->input->get('dropdown');
+                $return = $this->get_account_types_choices($return, $search, $dropdown);
+            break;
+            case 'detail-type' :
+                $accType = $this->input->get('accType');
+                $return = $this->get_account_details_choices($return, $search, $accType);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -5298,7 +5315,7 @@ class Accounting_modals extends MY_Controller
                         'text' => $results[$i]['text']
                     ];
                 }
-            } else if(stripos($field, 'account') !== false) {
+            } else if(stripos($field, 'account') !== false && $field !== 'account-type') {
                 $results = $return['results'];
                 $childrens = $return['childrens'];
 
@@ -5353,7 +5370,9 @@ class Accounting_modals extends MY_Controller
         if ($field === 'pay-bills-vendor') {
             array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
         } else {
-            array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+            if(!in_array($field, ['account-type', 'detail-type', 'parent-account'])) {
+                array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
+            }
         }
 
         echo json_encode($return);
@@ -5630,6 +5649,71 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
+    private function get_account_types_choices($choices, $search = null, $dropdown = null)
+    {
+        switch ($dropdown) {
+            case 'expense-payment-account' :
+                $typeNames = [
+                    'Bank',
+                    'Credit Card',
+                    'Other Current Assets'
+                ];
+            break;
+        }
+
+        $accountTypes = $this->account_model->getAccTypeByName($typeNames);
+
+        $choices['results'] = [];
+        foreach($accountTypes as $accountType) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($accountType->account_name, $search);
+                if($stripos !== false) {
+                    $searched = substr($accountType->account_name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $accountType->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $accountType->account_name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $accountType->id,
+                    'text' => $accountType->account_name
+                ];
+            }
+        }
+
+        usort($choices['results'], function($a, $b) {
+            return intval($a['id']) > intval($b['id']);
+        });
+
+        return $choices;
+    }
+
+    private function get_account_details_choices($choices, $search = null, $accType)
+    {
+        $accDetails = $this->account_detail_model->getDetailTypesById($accType);
+
+        foreach($accDetails as $accDetail) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($accDetail->acc_detail_name, $search);
+                if($stripos !== false) {
+                    $searched = substr($accDetail->acc_detail_name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $accDetail->acc_detail_id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $accDetail->acc_detail_name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $accDetail->acc_detail_id,
+                    'text' => $accDetail->acc_detail_name
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
     public function add_vendor_details_modal()
     {
         $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
@@ -5787,5 +5871,12 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->load->view('accounting/modals/add_account_modal', $this->page_data);
+    }
+
+    public function first_detail_type($accTypeId)
+    {
+        $detailType = $this->account_detail_model->getDetailTypesById($accTypeId)[0];
+
+        echo json_encode($detailType);
     }
 }

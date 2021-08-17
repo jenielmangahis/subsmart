@@ -2027,7 +2027,7 @@ input:checked + .slider:before {
                                         <p><button class="btn btn-success">Customize look and feel</button></p>
                                     </td>
                                 </tr> -->
-                                <tr>
+                                <tr id="adv_accounting">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Accounting</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>First month of fiscal year</p>
@@ -2042,7 +2042,41 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="adv_accounting_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Accounting</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>First month of fiscal year</p><br>
+                                        <p>First month of income tax year</p><br>
+                                        <p>Accounting method</p><br>
+                                        <p>Close the books</p><br>
+                                        <br>
+                                        <input type="submit" value="Cancel" id="adv_accounting_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p style="margin-top:-100px;">
+                                            <select class="form-control" style="width:20%;">
+                                                <option>January</option>
+                                            </select>
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:30%;">
+                                                <option>Same as fiscal year</option>
+                                            </select>
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:20%;">
+                                                <option>Accrual</option>
+                                            </select>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="adv_chart_of_accounts">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Chart of accounts</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Enable account numbers</p>
@@ -2055,7 +2089,35 @@ input:checked + .slider:before {
                                         <p>Markup</p>
                                     </td>
                                 </tr>
-                                <tr id="categories">
+                                <tr id="adv_chart_of_accounts_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Chart of accounts</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Enable account numbers</p><br>
+                                        <p>Tips account</p><br>
+                                        <p>Markup income account</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="adv_chart_of_accounts_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p style="margin-top:-100px;">
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:30%;">
+                                                <option></option>
+                                            </select> 
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:30%;">
+                                                <option>Markup</option>
+                                            </select> 
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="adv_categories">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Categories</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Track classes</p>
@@ -2066,14 +2128,16 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr id="categories_edit" style="displau:none;">
+                                <tr id="adv_categories_edit" style="display:none;">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Categories</td>
                                     <td style="width:30%;padding:3%;">
-                                        <p>Track classes</p>
-                                        <p>Track locations</p>
+                                        <p>Track classes</p><br>
+                                        <p>Track locations</p><br>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="adv_categories_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p>
+                                        <p style="margin-top:-100px;">
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
@@ -2087,7 +2151,7 @@ input:checked + .slider:before {
                                         </p>
                                     </td>
                                 </tr>
-                                <tr id="automation">
+                                <tr id="adv_automation">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Automation</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Pre-fill forms with previously entered content</p>
@@ -2102,16 +2166,18 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr id="automation_edit" style="displau:none;">
+                                <tr id="adv_automation_edit" style="display:none;">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Automation</td>
                                     <td style="width:30%;padding:3%;">
-                                        <p>Pre-fill forms with previously entered content</p>
-                                        <p>Automatically apply credits</p>
-                                        <p>Automatically invoice unbilled activity</p>
+                                        <p>Pre-fill forms with previously entered content</p><br>
+                                        <p>Automatically apply credits</p><br>
+                                        <p>Automatically invoice unbilled activity</p><br>
                                         <p>Automatically apply bill payments</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="adv_automation_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p>
+                                        <p style="margin-top:-100px;">
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
@@ -2137,7 +2203,7 @@ input:checked + .slider:before {
                                         </p>
                                     </td>
                                 </tr>
-                                <tr id="projects">
+                                <tr id="adv_projects">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Projects</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Organize all job-related activity in one place</p>
@@ -2146,13 +2212,15 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr id="projects_edit" style="display:none;">
+                                <tr id="adv_projects_edit" style="display:none;">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Projects</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Organize all job-related activity in one place</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="adv_projects_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p>
+                                        <p style="margin-top:-100px;">
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
@@ -2440,6 +2508,76 @@ $(document).ready(function() {
 
         $("#exp_messages_edit").hide();
         $("#exp_messages").show();
+    });
+
+    $("#adv_accounting").click(function() {
+        var test = $(this).val();
+
+        $("#adv_accounting").hide();
+        $("#adv_accounting_edit" + test).show();
+    });
+
+    $("#adv_accounting_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_accounting_edit").hide();
+        $("#adv_accounting").show();
+    });
+
+    $("#adv_chart_of_accounts").click(function() {
+        var test = $(this).val();
+
+        $("#adv_chart_of_accounts").hide();
+        $("#adv_chart_of_accounts_edit" + test).show();
+    });
+
+    $("#adv_chart_of_accounts_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_chart_of_accounts_edit").hide();
+        $("#adv_chart_of_accounts").show();
+    });
+
+    $("#adv_categories").click(function() {
+        var test = $(this).val();
+
+        $("#adv_categories").hide();
+        $("#adv_categories_edit" + test).show();
+    });
+
+    $("#adv_categories_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_categories_edit").hide();
+        $("#adv_categories").show();
+    });
+
+    $("#adv_automation").click(function() {
+        var test = $(this).val();
+
+        $("#adv_automation").hide();
+        $("#adv_automation_edit" + test).show();
+    });
+
+    $("#adv_automation_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_automation_edit").hide();
+        $("#adv_automation").show();
+    });
+
+    $("#adv_projects").click(function() {
+        var test = $(this).val();
+
+        $("#adv_projects").hide();
+        $("#adv_projects_edit" + test).show();
+    });
+
+    $("#adv_projects_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_projects_edit").hide();
+        $("#adv_projects").show();
     });
 });
 </script>

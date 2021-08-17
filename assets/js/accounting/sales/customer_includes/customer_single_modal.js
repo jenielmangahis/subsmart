@@ -267,6 +267,9 @@ function single_customer_get_customers_details(customer_id) {
         dataType: "json",
         data: { customer_id: customer_id },
         success: function(data) {
+            $("#customer-single-modal .seaction-above-table .print-export-settings-btns button.export-btn").attr("data-customer-name", data.customer_details[0]['first_name'] + " " + data.customer_details[0]['last_name']);
+            $("#customer-single-modal .seaction-above-table .print-export-settings-btns button.print-btn").attr("data-customer-name", data.customer_details[0]['last_name'] + ", " + data.customer_details[0]['first_name']);
+            $("#customer-single-modal .seaction-above-table .print-export-settings-btns button.print-btn").attr("data-company-name", data.company_details['business_name']);
             $("#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-open .amount").html("$" + data.open_balance);
             $("#customer-single-modal .single-customer-info-section .top-section .monetary-section .monetary-overdue .amount").html("$" + data.overdue);
             $("#customer-single-modal .single-customer-info-section .top-section .customer-name h2 span.text").html(data.customer_details[0]['first_name'] + " " + data.customer_details[0]['last_name']);
@@ -473,3 +476,78 @@ function single_customer_sortTable() {
         }
     }
 }
+
+
+$('#customer-single-modal .seaction-above-table .print-export-settings-btns button.export-btn').click(function() {
+    let options = {
+        "separator": ",",
+        "newline": "\n",
+        "quoteFields": true,
+        "excludeColumns": "",
+        "excludeRows": "",
+        "trimContent": true,
+        "filename": "Transaction List - " + $(this).attr("data-customer-name") + ".csv",
+        "appendTo": "#output"
+    }
+    var attachment_th = $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='attachment']").html();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='attachment']").html("Attachment");
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:last-child").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:last-child").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:first-child").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:first-child").hide();
+    $('#customer-single-modal .transaction-list-table #single_customer_table').table2csv('download', options);
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:last-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:last-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:first-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:first-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='attachment']").html(attachment_th);
+});
+$('#customer-single-modal .seaction-above-table .print-export-settings-btns button.print-btn').click(function() {
+
+    var attachment_th = $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='attachment']").html();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='attachment']").html("Attachment");
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:last-child").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:last-child").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:first-child").hide();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:first-child").hide();
+
+    var filter_type = $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val();
+    var filter_date = $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_date']").val();
+    var w = window.open();
+    var html = `<!DOCTYPE html>
+    <html lang="en">
+    <title>Transaction List</title>
+    <style>
+        h1{
+            text-align: center;
+        }h3{
+            text-align: center;
+        }table {
+            width: 100%;
+            border-collapse: collapse;
+        }thead tr {
+            border-bottom: solid 2px #BFBFBF;
+        }tbody tr {
+            border-bottom: dotted 1px #BFBFBF;
+        }th, td {
+            padding: 10px;
+            text-align: left;
+            padding: 10px;
+        }
+    </style>
+    <body>
+        <h1>` + $(this).attr("data-company-name") + `</h1>
+        <h3>Type: ` + filter_type + ` · Status: All statuses · Delivery method: Any · Name: ` + $(this).attr("data-customer-name") + ` · Date: ` + filter_date + `</h3>
+        <table>` + $('#customer-single-modal .transaction-list-table #single_customer_table').html() + `</table>
+    </body>
+    <script>window.print();</script>
+    </html>`;
+
+    $(w.document.body).html(html);
+
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:last-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:last-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th:first-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td:first-child").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='attachment']").html(attachment_th);
+});

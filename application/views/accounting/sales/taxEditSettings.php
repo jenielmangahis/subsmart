@@ -108,7 +108,7 @@ include viewPath('includes/header');
 
             <div class="sidebarForm__footer">
                 <button type="button" class="settings__btn mr-2">Make inactive</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button id="editAgencyBtn" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>

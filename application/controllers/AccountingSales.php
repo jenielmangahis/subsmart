@@ -30,6 +30,25 @@ class AccountingSales extends MY_Controller
         echo json_encode(['data' => $agencies]);
     }
 
+    public function apiEditAgency($agencyId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('id', $agencyId);
+        $this->db->update('accounting_tax_agencies', $payload);
+
+        $this->db->where('id', $agencyId);
+        $record = $this->db->get('accounting_tax_agencies')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
+    }
+
     public function apiSaveRate()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -51,6 +70,7 @@ class AccountingSales extends MY_Controller
     public function apiGetRates()
     {
         $this->db->where('user_id', logged('id'));
+        $this->db->where('is_active', 1);
         $rates = $this->db->get('accounting_tax_rates')->result();
 
         header('content-type: application/json');
