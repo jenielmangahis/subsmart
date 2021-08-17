@@ -130,7 +130,7 @@ label>input {
     background-color: #53b94a;
     color: white;
     padding: 4px 0px;
-    width: 75px;
+    width: 90px;
     display: block;
     text-align: center;
     border-radius: 20px;
@@ -139,7 +139,7 @@ label>input {
     background-color: #585858;
     color: white;
     padding: 4px 0px;
-    width: 75px;
+    width: 90px;
     display: block;
     text-align: center;
     border-radius: 20px;
@@ -188,7 +188,7 @@ label>input {
                <table id="dataTable1" class="table table-bordered table-striped">
                   <thead>
                      <tr>
-                        <th style="width:70%;">Name</th>
+                        <th style="width:60%;">Name</th>
                         <th style="width:20%;">Status</th>
                         <th>Action</th>
                      </tr>

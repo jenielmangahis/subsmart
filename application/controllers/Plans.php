@@ -54,7 +54,8 @@ class Plans extends MY_Controller {
 	
 	public function edit($id){
 
-		ifPermissions('plan_edit');
+		//ifPermissions('plan_edit');
+		$this->page_data['items'] = $this->items_model->getItemlist();
 		$this->page_data['plan'] = $this->plans_model->getById($id);
 		$this->load->view('plans/edit', $this->page_data);
 	}
@@ -62,25 +63,25 @@ class Plans extends MY_Controller {
 	public function save(){		
 
 		postAllowed();		
-		ifPermissions('add_plan');		
-		
-		if(count(post('item')) > 0) {
+		//ifPermissions('add_plan');		
+		$post = $this->input->post();
+		if(count(post('items')) > 0) {
 
-			$items = post('item');
+			$items = post('items');
 			$quantity = post('quantity');
 			$price = post('price');
 			$discount = post('discount');
 			$type = post('item_type');
 			$location = post('location');
 
-			foreach(post('item') as $key=>$val) {
+			foreach(post('items') as $key=>$val) {
 
 				$itemArray[] = array(
 
 					'item' => $items[$key],
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
-					'location'=> $location[$key],
+					//'location'=> $location[$key],
 					'discount'=> $discount[$key],
 					'price' => $price[$key]
 				);
@@ -90,7 +91,6 @@ class Plans extends MY_Controller {
 		} else {
 			$paln_items = '';
 		}
-		
 		
 		$company_id =  logged('company_id');
 		$permission = $this->plans_model->create([
@@ -110,18 +110,18 @@ class Plans extends MY_Controller {
 	public function update($id){		
 
 		postAllowed();
-		ifPermissions('plan_edit');
-		
-		if(count(post('item')) > 0) {
+		//ifPermissions('plan_edit');
+		$post = $this->input->post();
+		if(count(post('items')) > 0) {
 
-			$items = post('item');
+			$items = post('items');
 			$quantity = post('quantity');
 			$price = post('price');
 			$discount = post('discount');
 			$type = post('item_type');
 			$location = post('location');
 
-			foreach(post('item') as $key=>$val) {
+			foreach(post('items') as $key=>$val) {
 
 				$itemArray[] = array(
 
@@ -145,11 +145,8 @@ class Plans extends MY_Controller {
 			'company_id' => $company_id,
 			'plan_name' => $this->input->post('plan_name'),
 			'status' => $this->input->post('status'),
-			'items' => $paln_items	
-			
+			'items' => $paln_items				
 		];
-
-
 
 		$permission = $this->plans_model->update($id, $data);
 		$this->activity_model->add("plan #$id Updated by User: #".logged('id'));
