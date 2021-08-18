@@ -44,7 +44,7 @@ const dropdownFields = [
     'expense-account',
     'expense-payment-account',
     'bank-account',
-    'bill-payment-account',
+    'payment-account',
     'bank-credit-account',
     'bank-deposit-account',
     'cash-back-account',
@@ -1653,7 +1653,7 @@ $(function() {
         });
     });
 
-    $(document).on('change', '#payBillsModal #bill_payment_account', function() {
+    $(document).on('change', '#payBillsModal #payment_account', function() {
         var id = $(this).val();
 
         $.get('/accounting/get-account-balance/' + id, function(res) {
@@ -3369,7 +3369,7 @@ $(function() {
         $('#weeklyTimesheetModal').parent('form').submit();
     });
 
-    $(document).on('change', '#expenseModal select', function() {
+    $(document).on('change', '#modal-container #modal-form select', function() {
         var value = $(this).val();
         if(value === 'add-new' && $(this).attr('name').includes('account')) {
             dropdownEl = $(this);
@@ -3406,6 +3406,8 @@ $(function() {
                                 templateSelection: optionSelect,
                                 dropdownParent: $('#modal-container #add-account-modal')
                             });
+
+                            $(this).trigger('change');
                         break;
                         case 'detail-type' :
                             $(this).select2({
@@ -3428,6 +3430,8 @@ $(function() {
                                 templateSelection: optionSelect,
                                 dropdownParent: $('#modal-container #add-account-modal')
                             });
+
+                            $(this).trigger('change');
                         break;
                         case 'parent-account' :
                             $(this).select2({
@@ -3467,7 +3471,16 @@ $(function() {
                 });
                 var switchEl = $('#modal-container #add-account-modal #check_sub').get(0);
                 var switchery = new Switchery(switchEl, {size: 'small'});
-                $('#modal-container #add-account-modal').modal('show');
+
+                $('#modal-container #add-account-modal .date_picker input').datepicker({
+                    uiLibrary: 'bootstrap',
+                    todayBtn: "linked",
+                    language: "de"
+                });
+                $('#modal-container #add-account-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3493,6 +3506,13 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#add-account-modal .close-add-account', function(e) {
+        e.preventDefault();
+
+        dropdownEl.val('').trigger('change');
+        $('#add-account-modal').modal('hide');
+    });
+
     $(document).on('hidden.bs.modal', '#modal-container #add-account-modal', function() {
         $('#modal-container #add-account-modal').remove();
     });
@@ -3506,11 +3526,13 @@ $(function() {
     });
 
     $(document).on('change', '#add-account-modal #choose_time', function() {
-        if($(this).val() === 'Other') {
+        if($(this).val() === 'other') {
             $('#add-account-modal #balance').parent().addClass('hide');
-            $('#add-account-modal #time_date').parent().parent().removeClass('hide');
+            $('#add-account-modal #balance').val('');
+            $('#add-account-modal #time_date').parent().parent().parent().removeClass('hide');
         } else {
-            $('#add-account-modal #time_date').parent().parent().addClass('hide');
+            $('#add-account-modal #time_date').parent().parent().parent().addClass('hide');
+            $('#add-account-modal #time_date').val('');
             $('#add-account-modal #balance').parent().removeClass('hide');
         }
     });
@@ -3526,7 +3548,10 @@ $(function() {
                     dropdownParent: $('#modal-container #add-payee-modal')
                 });
 
-                $('#modal-container #add-payee-modal').modal('show');
+                $('#modal-container #add-payee-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3539,7 +3564,10 @@ $(function() {
                 $('#modal-form').parent().append(result);
 
                 $('#modal-container #add-payee-modal h4.modal-title').html('New Vendor');
-                $('#modal-container #add-payee-modal').modal('show');
+                $('#modal-container #add-payee-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3551,7 +3579,10 @@ $(function() {
             $.get('/accounting/get-add-payee-modal/vendor', function(result) {
                 $('#modal-form').parent().append(result);
 
-                $('#modal-container #add-payee-modal').modal('show');
+                $('#modal-container #add-payee-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3564,7 +3595,10 @@ $(function() {
                 $('#modal-form').parent().append(result);
 
                 $('#modal-container #add-payee-modal h4.modal-title').html('New Customer');
-                $('#modal-container #add-payee-modal').modal('show');
+                $('#modal-container #add-payee-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3580,7 +3614,10 @@ $(function() {
                     dropdownParent: $('#modal-container #add-payee-modal')
                 });
 
-                $('#modal-container #add-payee-modal').modal('show');
+                $('#modal-container #add-payee-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3596,7 +3633,10 @@ $(function() {
                     dropdownParent: $('#modal-container #add-payee-modal')
                 });
 
-                $('#modal-container #add-payee-modal').modal('show');
+                $('#modal-container #add-payee-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -3730,7 +3770,10 @@ $(function() {
                 $('#modal-container #new-vendor-modal #display_name').val(name);
                 $('#modal-container #new-vendor-modal #print_on_check_name').val(name);
                 $('#modal-container #add-payee-modal').modal('hide');
-                $('#modal-container #new-vendor-modal').modal('show');
+                $('#modal-container #new-vendor-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         } else {
             $.get('/accounting/get-add-customer-details-modal', function(result) {
@@ -3810,7 +3853,10 @@ $(function() {
                 $('#modal-container #new-customer-modal #display_name').val(name);
                 $('#modal-container #new-customer-modal #print_on_check_name').val(name);
                 $('#modal-container #add-payee-modal').modal('hide');
-                $('#modal-container #new-customer-modal').modal('show');
+                $('#modal-container #new-customer-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             });
         }
     });
@@ -5649,4 +5695,12 @@ const optionSelect = (data, container) => {
     text = text.replaceAll('</strong>', '');
     text = $.trim(text);
     return text;
+}
+
+const showBalance = (el) => {
+    if($('#add-account-modal #choose_time').val() === 'other' && $(el).val() !== '') {
+        $('#add-account-modal #balance').parent().removeClass('hide');
+    } else {
+        $('#add-account-modal #balance').parent().addClass('hide');
+    }
 }

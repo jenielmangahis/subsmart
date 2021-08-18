@@ -1,23 +1,34 @@
 (async () => {
+  // Some functions are from from /assets/js/custom.js.
+
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   const { Accounting__DropdownWithSearch } = await import("../tax/dropdown-with-search/dropdown-with-search.js"); // prettier-ignore
   const { rateAgencies } = await import("../tax/settings/rateAgencies.js");
 
   const $taxRateSelect = $("#invoiceTaxRate");
+  const taxRateDefault = $taxRateSelect.find("[default]").val();
   const $sidebar = $("#addRateSidebar");
+  const $taxDisplay = $("#total_tax_");
 
   const showCustomRateOptions = (options) => {
     options.forEach(({ id, name, rate }) => {
-      $taxRateSelect.append(
-        `<option data-id="${id}" value="${id}">${name} (${rate}%)</option>`
-      );
+      if ($taxRateSelect.find(`[data-id=${id}]`).length === 0) {
+        $taxRateSelect.append(
+          `<option data-id="${id}" value="${id}">${name} (${rate}%)</option>`
+        );
+      }
     });
     $taxRateSelect.prop("disabled", false);
   };
 
-  const closeSidebar = () => {
+  const closeSidebar = (value = null) => {
     $sidebar.find(".form-control").val("");
     $sidebar.removeClass("sidebarForm--show");
+    $taxRateSelect.val(value ? value : taxRateDefault);
+
+    if (value === null) {
+      $taxDisplay.text(calculateInvoiceTax());
+    }
   };
 
   let { data: customRates } = await fetchCustomRates();
@@ -70,7 +81,7 @@
     const json = await response.json();
     customRates = [...customRates, json.data];
     showCustomRateOptions(customRates);
-    closeSidebar();
+    closeSidebar(json.data.id);
   });
 
   const showAddRateSidebar = () => {
@@ -79,21 +90,33 @@
     $sidebar.addClass("sidebarForm--show");
 
     $sidebarCloseBtn.on("click", () => {
-      closeSidebar($sidebar);
+      closeSidebar();
     });
 
     $sidebar.on("click", (event) => {
       if ($sidebar.is(event.target)) {
-        closeSidebar($sidebar);
+        closeSidebar();
       }
     });
   };
 
   $taxRateSelect.on("change", function () {
     const { value } = this;
+
     if (value === "add_custom") {
       showAddRateSidebar();
+      return;
     }
+
+    if (value === taxRateDefault) {
+      $taxDisplay.text(calculateInvoiceTax());
+      return;
+    }
+
+    const price = calculateInvoicePrice();
+    const customRate = customRates.find((rate) => rate.id == value);
+    const taxValue = numberWithDecimal((Number(customRate.rate) / 100) * price);
+    $taxDisplay.text(taxValue);
   });
 })();
 

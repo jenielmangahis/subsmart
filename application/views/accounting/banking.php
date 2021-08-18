@@ -11,6 +11,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .nav-close {
         margin-top: 52% !important;
     }
+	.bank-img-container img{
+		width:auto !important;
+	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">
@@ -412,7 +415,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container modal-container">
+                    <div class="container modal-container accounts-list">
                         <div class="header-modal"><h3>Let's get a picture of your profits</h3></div>
                         <div class="sub-header-modal"><span>Connect your bank or credit card to bring in your transactions.</span></div>
                         <div class="body-modal">
@@ -453,7 +456,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
-                                    <div class="bank-img-container">
+                                    <div class="bank-img-container clk-paypal">
                                         <img class="banks-img" src="<?php echo base_url('assets/img/accounting/paypal_PNG20.png') ?>" alt="">
                                     </div>
                                 </div>
@@ -463,7 +466,64 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+							<div class="row justify-content-md-center align-items-center">
+								<div class="col-sm-3">
+                                    <div class="bank-img-container clk-stripe">
+                                        <img class="banks-img w-auto" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" alt="">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+					<div class="container modal-container paypal-container" style="display:none">
+						<form id="save-paypal-account">
+							<div class="row justify-content-md-center align-items-center pt-3">
+								<div class="col-md-5 col-sm-6 col-xs-12">
+									<h5 class="close-paypal-container text-right text-secondary" style="cursor:pointer;"><i class="fa fa-times fa-lg"></i></h5>
+									<p class="text-center"><img class="banks-img img-fluid mx-auto" style="width:125px" src="<?php echo base_url('assets/img/accounting/paypal_PNG20.png') ?>" alt=""></p>
+									
+									<div class="header-modal text-center"><h3>Add PayPal Credentials</h3></div>
+									<div class="form-group pt-3">
+										<label for="paypal_email">PayPal Email</label>
+										<input type="text" class="form-control" name="paypal_email" id="paypal_email" required="" placeholder="Enter Your PayPal Email" autofocus="">
+									</div>
+								</div>
+							</div>
+							<div class="row justify-content-md-center align-items-center pb-5">
+								<div class="col-md-3 col-sm-4 col-xs-12">
+									<button type="submit" name="save" class="btn btn-success btn-block">Save</button>
+								</div>
+							</div>
+						</form>
+                    </div>
+					<div class="container modal-container stripe-container" style="display:none">
+						<form id="save-stripe-account">
+							<div class="row justify-content-md-center align-items-center pt-3">
+								<div class="col-md-5 col-sm-6 col-xs-12">
+									<h5 class="close-stripe-container text-right text-secondary" style="cursor:pointer;"><i class="fa fa-times fa-lg"></i></h5>
+									<p class="text-center"><img class="banks-img img-fluid mx-auto" style="width:150px" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" alt=""></p>
+									
+									<div class="header-modal text-center"><h3>Add Stripe Credentials</h3></div>
+									<div class="form-group pt-3">
+										<label for="stripe_email">Stripe Email</label>
+										<input type="text" class="form-control" name="stripe_email" id="stripe_email" required="" placeholder="Enter Your Stripe Email" autofocus="">
+									</div>
+									<div class="form-group">
+										<label for="publish_key">Stripe Publish Key</label>
+										<input type="text" class="form-control" name="publish_key" id="publish_key" required="" placeholder="Enter Your Publish Key" autofocus="">
+									</div>
+									<div class="form-group">
+										<label for="secret_key">Stripe Secret Key</label>
+										<input type="text" class="form-control" name="secret_key" id="secret_key" required="" placeholder="Enter Your Secret Key" autofocus="">
+									</div>
+								</div>
+							</div>
+							<div class="row justify-content-md-center align-items-center pb-5">
+								<div class="col-md-3 col-sm-4 col-xs-12">
+									<button type="submit" name="save" class="btn btn-success btn-block">Save</button>
+								</div>
+							</div>
+						</form>
                     </div>
                 </div>
                 <div style="margin: auto;">

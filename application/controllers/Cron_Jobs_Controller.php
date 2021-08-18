@@ -45,7 +45,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
-        $subject = 'nSmarTrac: Time logs for Week ' . date("M d", strtotime($date_from)).' to '. $subj_date_to;
+        $subject = $company_name+': Time logs for Week ' . date("M d", strtotime($date_from)).' to '. $subj_date_to;
 
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -60,9 +60,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
         $mail->Subject = $subject;
-
-        //get job data
-
+        
         $this->page_data['company_name'] = $company_name;
         $this->page_data['date_from'] = $date_from;
         $this->page_data['date_to'] = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
@@ -79,7 +77,6 @@ class Cron_Jobs_Controller extends MY_Controller
             $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo, 'company_logo', $company_logo);
             $this->page_data['has_logo'] = true;
         }
-
         $mail->Body =  'Timesheet Report.';
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
         $mail->MsgHTML($content);
@@ -91,6 +88,45 @@ class Cron_Jobs_Controller extends MY_Controller
         }
     }
     
+    public function get_admin_for_reports()
+    {
+        date_default_timezone_set('UTC');
+        $hour_now = date("H").":00:00";
+        if (date("Y-m-d", strtotime('sunday this week', strtotime(date('Y-m-d')))) == date("Y-m-d")) {
+            $all_admin_report_settings = $this->timesheet_model->get_all_admin_report_settings();
+            $and_query ="";
+            foreach ($all_admin_report_settings as $setting) {
+                if ($and_query=="") {
+                    $and_query = " id != ".$setting->user_id;
+                } else {
+                    $and_query .= " and id !=".$setting->user_id;
+                }
+            }
+            $all_admin_for_default_report = $this->timesheet_model->get_all_admin_for_default_report($and_query);
+            foreach ($all_admin_for_default_report as $admin) {
+                $this->timesheet_model->save_timezone_changes("36", $admin->id, 1, 3, "Sun", "00:00:00", $admin->email);
+            }
+        }
+        $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
+        $date_hour_now_pst = date('Y-m-d')." ".$hour_now;
+        $admins_for_reports=array();
+        foreach ($admins_subject_for_report as $admin) {
+            $date_hour_now_pst = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
+            $week_day = date("D", strtotime($date_hour_now_pst));
+            $schedules = explode(",", $admin->schedule_day);
+            $found= false;
+            for ($i = 0; $i<count($schedules); $i++) {
+                if ($schedules[$i] == $week_day) {
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found) {
+                $admins_for_reports[] = array($admin->user_id, $admin->company_id);
+            }
+        }
+        return $admins_for_reports;
+    }
     public function timesheet_report_sender()
     {
         $this->auto_clockout();
@@ -100,11 +136,9 @@ class Cron_Jobs_Controller extends MY_Controller
         $ios_tokens = array();
         for ($i = 0; $i < count($admins_for_reports); $i++) {
             $admin = $this->timesheet_model->get_user_and_company_details($admins_for_reports[$i][0]);
-            
             if ($admin != null) {
                 $file_info = $this->get_time_sheet_storage($admin->company_id, $admin->id_of_timezone, $admin->timezone_id);
                 $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($admin->company_id)->est_wage_private;
-                // if (count($file_info[2]) > 0) {
                 $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
                 $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
                 $subscribed = false;
@@ -114,7 +148,6 @@ class Cron_Jobs_Controller extends MY_Controller
                 if ($subscribed) {
                     $this->generate_timelogs_csv($file_info[2], $file_info[0], $est_wage_privacy);
                     $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name, $est_wage_privacy);
-                        
                     $this->timelogs_csv_email_sender(
                         $admin->email_report,
                         $admin->business_name . "",
@@ -135,7 +168,6 @@ class Cron_Jobs_Controller extends MY_Controller
                         $ios_tokens[] = $admin->device_token;
                     }
                 }
-                // }
             }
         }
         $title = "Timesheet Report";
@@ -161,47 +193,6 @@ class Cron_Jobs_Controller extends MY_Controller
         }
         $this->timesheet_model->delete_old_timesheet_reports($date_lastweek);
         $this->timesheet_model->delete_old_notifications($date_lastweek);
-    }
-    public function get_admin_for_reports()
-    {
-        date_default_timezone_set('UTC');
-        $hour_now = date("H").":00:00";
-        if (date("Y-m-d", strtotime('sunday this week', strtotime(date('Y-m-d')))) == date("Y-m-d")) {
-            $all_admin_report_settings = $this->timesheet_model->get_all_admin_report_settings();
-            $and_query ="";
-            foreach ($all_admin_report_settings as $setting) {
-                if ($and_query=="") {
-                    $and_query = " id != ".$setting->user_id;
-                } else {
-                    $and_query .= " and id !=".$setting->user_id;
-                }
-            }
-            $all_admin_for_default_report = $this->timesheet_model->get_all_admin_for_default_report($and_query);
-            foreach ($all_admin_for_default_report as $admin) {
-                $this->timesheet_model->save_timezone_changes("36", $admin->id, 1, 3, "Sun", "00:00:00", $admin->email);
-            }
-        }
-        
-        $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
-        
-        $date_hour_now_pst = date('Y-m-d')." ".$hour_now;
-        $admins_for_reports=array();
-        foreach ($admins_subject_for_report as $admin) {
-            $date_hour_now_pst = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
-            $week_day = date("D", strtotime($date_hour_now_pst));
-            $schedules = explode(",", $admin->schedule_day);
-            $found= false;
-            for ($i = 0; $i<count($schedules); $i++) {
-                if ($schedules[$i] == $week_day) {
-                    $found = true;
-                    break;
-                }
-            }
-            if ($found) {
-                $admins_for_reports[] = array($admin->user_id, $admin->company_id);
-            }
-        }
-        return $admins_for_reports;
     }
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name, $est_wage_privacy)
     {
@@ -245,7 +236,6 @@ class Cron_Jobs_Controller extends MY_Controller
     public function generate_timelogs_csv($timehseet_storage, $filename, $est_wage_privacy)
     { // file name
         $file = fopen(APPPATH . '../timesheet/timelogs/' . $filename, 'wb');
-        
         if ($est_wage_privacy == 1) {
             $header = array(
                 "Employee",

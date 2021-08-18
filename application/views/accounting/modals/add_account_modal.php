@@ -5,7 +5,7 @@
             <form action="/accounting/chart-of-accounts/add" method="post" class="form-validate" novalidate="novalidate">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addLocationLabel">Accounts</h5>
-                    <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" class="close close-add-account" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body" style="max-height: 650px;">
                     <div class="row">
@@ -16,11 +16,15 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="account_type">Account Type</label>
-                                                <select name="account_type" id="account_type" class="form-control select2" required></select>
+                                                <select name="account_type" id="account_type" class="form-control select2" required>
+                                                    <?php if(isset($accountType)) : ?>
+                                                        <option value="<?=$accountType->id?>" selected><?=$accountType->account_name?></option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="detail_type">Detail Type</label>
-                                                <select name="detail_type" id="detail_type" class="form-control select2" onchange="showOptions(this)" required></select>
+                                                <select name="detail_type" id="detail_type" class="form-control select2" required></select>
                                             </div>
                                             <div class="detail-type-desc"></div>
                                         </div>
@@ -42,17 +46,17 @@
                                                 <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
                                                 <span></span>
                                                 <select name="choose_time" id="choose_time" class="form-control select2" required>
-                                                    <option selected="selected" disabled="disabled">Choose one</option>
-                                                    <option value="Beginning of this year">Beginning of this year</option>
-                                                    <option value="Beginning of this month">Beginning of this month</option>
-                                                    <option value="Today">Today</option>
-                                                    <option value="Other" onclick="hidediv()">Other</option>
+                                                    <option selected="selected" disabled>Choose one</option>
+                                                    <option value="beginning-of-year">Beginning of this year</option>
+                                                    <option value="beginning-of-month">Beginning of this month</option>
+                                                    <option value="today">Today</option>
+                                                    <option value="other">Other</option>
                                                 </select>
                                             </div>
                                             <div class="form-group hide-date hide">
                                                 <label for="time_date">Date</label>
                                                 <div class="col-xs-10 date_picker">
-                                                    <input type="text" class="form-control" name="time_date" id="time_date" placeholder="Enter Date"/>
+                                                    <input type="text" class="form-control" name="time_date" id="time_date" placeholder="Enter Date" onchange="showBalance(this)"/>
                                                 </div>
                                             </div>
                                             <div class="form-group hide-div hide">
@@ -71,7 +75,7 @@
                 <!-- end modal-body -->
                 <div class="modal-footer">
                     <div class="row w-100">
-                        <div class="col-md-6"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button></div>
+                        <div class="col-md-6"><button type="button" class="btn btn-secondary close-add-account">Cancel</button></div>
                         <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
                     </div>
                 </div>
