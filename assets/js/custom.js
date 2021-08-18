@@ -171,6 +171,39 @@ function createUsername(name) {
     .replace(/[^\w-]+/g, "");
 }
 
+function numberWithDecimal(number) {
+  return Number(number) % 1 === 0 ? Number(Math.floor(number).toFixed(2)) : Number(number);
+}
+
+function calculateInvoiceTax() {
+  let total = 0;
+  const $rows = $("#jobs_items_table_body tr");
+
+  $rows.each((_, row) => {
+    const $tax = $(row).find("input[name='tax[]']");
+    total += Number($tax.val());
+  });
+
+  return numberWithDecimal(Number(total));
+}
+
+function calculateInvoicePrice() {
+  let total = 0;
+  const $rows = $("#jobs_items_table_body tr");
+
+  $rows.each((_, row) => {
+    const $price = $(row).find("input[name='price[]']");
+    const $quantity = $(row).find("input[name='quantity[]']");
+    total += Number($price.val()) * Number($quantity.val());
+  });
+
+  return numberWithDecimal(Number(total));
+}
+
+function calculateGrandTotal() {
+  return calculateInvoicePrice() + Number($("#total_tax_").text());
+}
+
 // $(document).on("focusout", ".price", function () {
 //   var counter = $(this).data("counter");
 //   calculation(counter);

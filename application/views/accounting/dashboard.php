@@ -804,18 +804,18 @@ input:checked + .slider:before {
                                         <p>Tips (Gratuity)</p><br>
                                         <p>Tags</p>
                                         <br><br>
-                                        <input type="submit" value="Cancel" id="sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        <input type="submit" value="Cancel" id="sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success sales_form_content_save_button">
                                     </td>
                                     <td style="padding:3%;">
                                         <p style="margin-top:-100px;">
-                                            <select class="form-control" style="width:40%;">
+                                            <select class="form-control" style="width:40%;" id="sales_pref_inv_terms">
                                                 <option>Net 30</option>
                                                 <option>Due 15</option>
                                                 <option>Due on receipt</option>
                                             </select>
                                         </p>
                                         <p>
-                                            <select class="form-control" style="width:40%;">
+                                            <select class="form-control" style="width:40%;" id="sales_pref_del_method">
                                                 <option>None</option>
                                                 <option>Print Later</option>
                                                 <option>Send Later</option>
@@ -824,49 +824,49 @@ input:checked + .slider:before {
                                         <p></p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_shipping">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_custom_fields">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_cust_trans_numbers">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_service_date">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_discount">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_deposit">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="sales_tips">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" id="sales_tags" checked>
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
@@ -899,36 +899,36 @@ input:checked + .slider:before {
                                         <p>Track quantity and price/rate</p><br>
                                         <p>Track inventory quantity on hand</p><br>
                                         <br><br>
-                                        <input type="submit" value="Cancel" id="product_services_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        <input type="submit" value="Cancel" id="product_services_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success product_services_save_button">
                                     </td>
                                     <td style="padding:3%;">
                                         <p style="margin-top:-100px;">
                                             <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" id="ps_column_sales_form" checked>
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="ps_show_sku_column">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="ps_price_rules">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" id="ps_track_qty_price" checked>
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" id="ps_track_inv_qty" checked>
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
@@ -2169,7 +2169,7 @@ input:checked + .slider:before {
                                 <tr id="adv_automation_edit" style="display:none;">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Automation</td>
                                     <td style="width:30%;padding:3%;">
-                                        <p>Pre-fill forms with previously entered content</p><br>
+                                        <p>Pre-fill forms with previously entered content</p>
                                         <p>Automatically apply credits</p><br>
                                         <p>Automatically invoice unbilled activity</p><br>
                                         <p>Automatically apply bill payments</p>
@@ -2177,7 +2177,7 @@ input:checked + .slider:before {
                                         <input type="submit" value="Cancel" id="adv_automation_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p style="margin-top:-100px;">
+                                        <p style="margin-top:-89px;">
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
@@ -2220,7 +2220,7 @@ input:checked + .slider:before {
                                         <input type="submit" value="Cancel" id="adv_projects_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                     <td style="padding:3%;">
-                                        <p style="margin-top:-100px;">
+                                        <p style="margin-top:-65px;">
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
@@ -2228,7 +2228,7 @@ input:checked + .slider:before {
                                         </p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="time_tracking">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Time tracking</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Add Service field to timesheets</p>
@@ -2239,7 +2239,43 @@ input:checked + .slider:before {
                                         <p>On</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="time_tracking_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Time tracking</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Add Service field to timesheets</p> <br>
+                                        <p>Make Single-Time Activity Billable to Customer</p>
+                                        <br>
+                                        <input type="checkbox"> Show billing rate to users entering time
+                                        <br><br>
+                                        First day of work week <br>
+                                        <select class="form-control" style="width:30%;">
+                                            <option>Sunday</option>
+                                            <option>Monday</option>
+                                            <option>Tuesday</option>
+                                            <option>Wednesday</option>
+                                            <option>Thursday</option>
+                                            <option>Friday</option>
+                                            <option>Saturday</option>
+                                        </select> 
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="time_tracking_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p style="margin-top:-160px;">
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="adv_currency">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Currency</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Home Currency</p>
@@ -2250,7 +2286,29 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="adv_currency_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Currency</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Home Currency</p><br>
+                                        <p>Multicurrency</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="adv_currency_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p style="margin-top:-100px;">
+                                            <select class="form-control" style="width:40%;">
+                                                <option>USD - United States Dollar</option>
+                                            </select> 
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr id="adv_other_preferences">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Other preferences</td>
                                     <td style="width:30%;padding:3%;">
                                         <p>Date format</p>
@@ -2269,6 +2327,64 @@ input:checked + .slider:before {
                                         <p>Off</p>
                                         <p>Off</p>
                                         <p>1 hour</p>
+                                    </td>
+                                </tr>
+                                <tr id="adv_other_preferences_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Other preferences</td>
+                                    <td style="width:30%;padding:3%;">
+                                        <p>Date format</p><br>
+                                        <p>Number format</p><br>
+                                        <p>Customer label</p><br>
+                                        <p>Warn if duplicate check number is used</p><br>
+                                        <p>Warn me when I enter a bill number that’s already been used for that vendor</p><br>
+                                        <p>Warn if duplicate journal number is used</p><br>
+                                        <p>Sign me out if inactive for</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="adv_other_preferences_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p style="margin-top:-148px;">
+                                            <select class="form-control" style="width:40%;">
+                                                <option>MM/dd/yyyy</option>
+                                            </select> 
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:40%;">
+                                                <option>123,456.00</option>
+                                                <option>123.456,00</option>
+                                            </select> 
+                                        </p>
+                                        <p>
+                                            <select class="form-control" style="width:40%;">
+                                                <option>Customers</option>
+                                                <option>Clients</option>
+                                                <option>Donors</option>
+                                                <option>Guests</option>
+                                                <option>Members</option>
+                                                <option>Patients</option>
+                                                <option>Tenants</option>
+                                            </select> 
+                                        </p>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <br>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
+                                        <br>
+                                        <p>
+                                            <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label>
+                                        </p>
                                     </td>
                                 </tr>
                             </table>
@@ -2578,6 +2694,171 @@ $(document).ready(function() {
 
         $("#adv_projects_edit").hide();
         $("#adv_projects").show();
+    });
+
+    $("#time_tracking").click(function() {
+        var test = $(this).val();
+
+        $("#time_tracking").hide();
+        $("#time_tracking_edit" + test).show();
+    });
+
+    $("#time_tracking_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#time_tracking_edit").hide();
+        $("#time_tracking").show();
+    });
+
+    $("#adv_currency").click(function() {
+        var test = $(this).val();
+
+        $("#adv_currency").hide();
+        $("#adv_currency_edit" + test).show();
+    });
+
+    $("#adv_currency_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_currency_edit").hide();
+        $("#adv_currency").show();
+    });
+
+    $("#adv_other_preferences").click(function() {
+        var test = $(this).val();
+
+        $("#adv_other_preferences").hide();
+        $("#adv_other_preferences_edit" + test).show();
+    });
+
+    $("#adv_other_preferences_edit_button").click(function() {
+        var test = $(this).val();
+
+        $("#adv_other_preferences_edit").hide();
+        $("#adv_other_preferences").show();
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $(".sales_form_content_save_button").click(function() {
+        // alert('test');
+        var sales_pref_inv_terms = $("#sales_pref_inv_terms").val();
+        var sales_pref_del_method = $("#sales_pref_del_method").val();
+
+        if($("#sales_shipping").prop('checked') == true){
+            var sales_shipping = 1;
+        }else{
+            var sales_shipping = 0;
+        }
+
+        if($("#sales_custom_fields").prop('checked') == true){
+            var sales_custom_fields = 1;
+        }else{
+            var sales_custom_fields = 0;
+        }
+
+        if($("#sales_cust_trans_numbers").prop('checked') == true){
+            var sales_cust_trans_numbers = 1;
+        }else{
+            var sales_cust_trans_numbers = 0;
+        }
+
+        if($("#sales_service_date").prop('checked') == true){
+            var sales_service_date = 1;
+        }else{
+            var sales_service_date = 0;
+        }
+
+        if($("#sales_discount").prop('checked') == true){
+            var sales_discount = 1;
+        }else{
+            var sales_discount = 0;
+        }
+
+        if($("#sales_deposit").prop('checked') == true){
+            var sales_deposit = 1;
+        }else{
+            var sales_deposit = 0;
+        }
+
+        if($("#sales_tips").prop('checked') == true){
+            var sales_tips = 1;
+        }else{
+            var sales_tips = 0;
+        }
+
+        if($("#sales_tags").prop('checked') == true){
+            var sales_tags = 1;
+        }else{
+            var sales_tags = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/save_sales_form_content",
+         data: {sales_pref_inv_terms : sales_pref_inv_terms, sales_pref_del_method : sales_pref_del_method, sales_shipping : sales_shipping, sales_custom_fields : sales_custom_fields, sales_cust_trans_numbers : sales_cust_trans_numbers, sales_service_date : sales_service_date, sales_discount : sales_discount, sales_deposit : sales_deposit, sales_tips : sales_tips,  sales_tags : sales_tags },
+         dataType: 'json',
+         success: function(response){
+             alert('success');
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+
+
+    $(".product_services_save_button").click(function() {
+        // alert('test');
+
+        if($("#ps_column_sales_form").prop('checked') == true){
+            var ps_column_sales_form = 1;
+        }else{
+            var ps_column_sales_form = 0;
+        }
+
+        if($("#ps_show_sku_column").prop('checked') == true){
+            var ps_show_sku_column = 1;
+        }else{
+            var ps_show_sku_column = 0;
+        }
+
+        if($("#ps_price_rules").prop('checked') == true){
+            var ps_price_rules = 1;
+        }else{
+            var ps_price_rules = 0;
+        }
+
+        if($("#ps_track_qty_price").prop('checked') == true){
+            var ps_track_qty_price = 1;
+        }else{
+            var ps_track_qty_price = 0;
+        }
+
+        if($("#ps_track_inv_qty").prop('checked') == true){
+            var ps_track_inv_qty = 1;
+        }else{
+            var ps_track_inv_qty = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/save_product_services_content",
+         data: {ps_column_sales_form : ps_column_sales_form, ps_show_sku_column : ps_show_sku_column, ps_price_rules : ps_price_rules, ps_track_qty_price : ps_track_qty_price, ps_track_inv_qty : ps_track_inv_qty },
+         dataType: 'json',
+         success: function(response){
+             alert('success');
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
     });
 });
 </script>

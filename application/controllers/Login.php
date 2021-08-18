@@ -56,6 +56,7 @@ class Login extends CI_Controller
         $this->load->model('IndustryType_model');
         $this->load->model('IndustryTemplateModules_model');
         $this->load->model('CompanyDeactivatedModule_model');
+        $this->load->model('Customer_advance_model');
                 
         $this->load->library('form_validation');
 
@@ -181,6 +182,12 @@ class Login extends CI_Controller
             redirect('onboarding/business_info');
         } else {
             if( $client->is_plan_active == 1 ){
+                /*$billingErrors = $this->Customer_advance_model->get_customer_billing_errors($client->id);
+                if( $billingErrors ){
+                    redirect('customer/billing_errors');
+                }else{
+                    redirect('dashboard');
+                }*/           
                 redirect('dashboard');
             }else{
                 if( $client->id == 1 ){

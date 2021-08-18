@@ -19,23 +19,7 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <select name="payment_account" id="payment_account" class="form-control" required>
-                                                            <?php foreach($dropdown['payment_accounts'] as $accType => $accounts) : ?>
-                                                                <optgroup label="<?=$accType?>">
-                                                                    <?php foreach($accounts as $account) : ?>
-                                                                        <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                        <?php if(count($account->childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                    <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                </optgroup>
-                                                            <?php endforeach; ?>
-                                                        </select>
+                                                        <select name="payment_account" id="payment_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2 d-flex">

@@ -228,4 +228,15 @@ class Customer_advance_model extends MY_Model {
             return false;
         }
     }
+
+    public function get_customer_billing_errors($company_id)
+    {        
+        $this->db->select('acs_billing.bill_id, acs_billing.fk_prof_id, acs_billing.is_with_error, acs_billing.error_type, acs_profile.company_id, acs_profile.prof_id, acs_billing.error_message, acs_billing.error_date');
+        $this->db->from("acs_billing");
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->where("acs_billing.is_with_error", 1);
+        $this->db->where("acs_profile.company_id", $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

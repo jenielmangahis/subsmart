@@ -716,6 +716,8 @@ class Customer extends MY_Controller
             $check_customer= $this->customer_ad_model->check_customer($input);
         }
         if(empty($check_customer)){
+
+
             if(isset($input['custom_name']) AND isset($input['custom_value'])) {
                 $custom_field_name = $input['custom_name'];
                 $custom_field_value = $input['custom_value'];
@@ -759,43 +761,105 @@ class Customer extends MY_Controller
 //            $input_profile['contact_phone2'] = $input['contact_phone2'];
 //            $input_profile['contact_phone3'] = $input['contact_phone3'];
             //$input_profile['notes'] = $input['notes'];
-            if(isset($input['customer_id'])){
-                $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
-                $profile_id = $input['customer_id'];
-            }else{
-                $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
-            }
-
-            $save_billing = $this->save_billing_information($input,$profile_id);
-            $save_office = $this->save_office_information($input,$profile_id);
-            $save_alarm = $this->save_alarm_information($input,$profile_id);
-            $save_access = $this->save_access_information($input,$profile_id);
-            $save_papers = $this->save_papers_information($input,$profile_id);
-            if($save_billing == 0){
-                echo 'Error Occured on Saving Billing Information';
-            }else if($save_office == 0){
-                echo 'Error Occured on Saving Office Information';
-            }else if($save_alarm == 0){
-                echo 'Error Occured on Saving Alarm Information';
-            }else if($save_access == 0){
-                echo 'Error Occured on Saving Access Information';
-            }else if($save_papers == 0){
-                echo 'Error Occured on Saving Papers Information';
-            }else {
-                if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
-                    $this->save_notes($input,$profile_id);
-                }
-                $this->generate_qr_image($profile_id);
-                //$this->qrcodeGenerator($profile_id);
-                if(isset($input['customer_id'])){
-                    echo $input['customer_id'];
+            if( $input['bill_method'] == 'CC' ){
+                //Check cc if valid using converge
+                $a_exp_date = explode("/", $input['credit_card_exp']);
+                $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
+                $data_cc = [
+                    'card_number' => $input['credit_card_num'],
+                    'exp_date' => $exp_date,
+                    'cvc' => $input['credit_card_exp_mm_yyyy'],
+                    'ssl_amount' => 0,
+                    'ssl_address' => $input['mail_add'] . ' ' . $input['city'] . ' ' . $input['state'],
+                    'ssl_zip' => $input['zip_code']
+                ];
+                $is_valid = $this->converge_check_cc_details_valid($data_cc);
+                if( $is_valid['is_success'] == 1 ){
+                    $proceed = 1;
                 }else{
-                    echo $profile_id;
+                    $proceed = 0;
                 }
-            }
+            }else{
+                $proceed = 1;
+            }   
+
+            if( $proceed == 1 ){
+                if(isset($input['customer_id'])){
+                    $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                    $profile_id = $input['customer_id'];
+                }else{
+                    $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+                }
+
+                $save_billing = $this->save_billing_information($input,$profile_id);
+                $save_office = $this->save_office_information($input,$profile_id);
+                $save_alarm = $this->save_alarm_information($input,$profile_id);
+                $save_access = $this->save_access_information($input,$profile_id);
+                $save_papers = $this->save_papers_information($input,$profile_id);
+                if($save_billing == 0){
+                    echo 'Error Occured on Saving Billing Information';
+                }else if($save_office == 0){
+                    echo 'Error Occured on Saving Office Information';
+                }else if($save_alarm == 0){
+                    echo 'Error Occured on Saving Alarm Information';
+                }else if($save_access == 0){
+                    echo 'Error Occured on Saving Access Information';
+                }else if($save_papers == 0){
+                    echo 'Error Occured on Saving Papers Information';
+                }else {
+                    if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
+                        $this->save_notes($input,$profile_id);
+                    }
+                    $this->generate_qr_image($profile_id);
+                    //$this->qrcodeGenerator($profile_id);
+                    if(isset($input['customer_id'])){
+                        echo $input['customer_id'];
+                    }else{
+                        echo $profile_id;
+                    }
+                }
+            }             
         }else {
             echo 'Customer Already Exist!';
         }
+    }
+
+    public function converge_check_cc_details_valid(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $msg = '';
+        $is_success = 0;
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $verify = $converge->request('ccverify', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $data['exp_date'],
+            'ssl_cvv2cvc2' => $data['cvc'],
+            'ssl_first_name' => $data['ssl_first_name'],
+            'ssl_last_name' => $data['ssl_last_name'],
+            'ssl_amount' => $data['ssl_amount'],
+            'ssl_avs_address' => $data['ssl_address'],
+            'ssl_avs_zip' => $data['ssl_zip'],
+        ]);
+        if( $verify['success'] == 1 ){
+            if( $verify['ssl_result_message'] == 'DECLINED' ){
+                $is_success = 0;
+            }else{
+                $is_success = 1;    
+            }
+            
+        }else{
+            $msg = $generateToken['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 
     public function save_billing_information($input,$id){
@@ -3118,6 +3182,12 @@ class Customer extends MY_Controller
 
         $json_data = ['is_success' => 1];
         echo json_encode($json_data);
+    }
+
+    public function billing_errors(){
+        $billingErrors = $this->customer_ad_model->get_customer_billing_errors(logged('company_id'));
+        $this->page_data['billingErrors'] = $billingErrors;
+        $this->load->view('customer/billing_errors', $this->page_data);
     }
 
 }

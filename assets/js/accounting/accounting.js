@@ -51,7 +51,73 @@ $(document).ready(function () {
         $(this).hide();
         $('#btnAssignMore').show();
     });
+	//Show paypal form
+	$('.clk-paypal').click(function () {
+        $('.accounts-list').hide();
+        $('.paypal-container').show();
+    });
+	//Hide paypal form
+	
+	$('.close-paypal-container').click(function () {
+		$('.paypal-container').hide();
+        $('.accounts-list').show();
+    });
+	//Show stripe form
+	$('.clk-stripe').click(function () {
+        $('.accounts-list').hide();
+        $('.stripe-container').show();
+    });
+	//Hide stripe form
+	
+	$('.close-stripe-container').click(function () {
+		$('.stripe-container').hide();
+        $('.accounts-list').show();
+    });
+	
+	//Save paypal credentials
+	$(document).on('submit', '#save-paypal-account', function(e) {
+		e.preventDefault();
+		var email = $('#paypal_email').val();
+			$.ajax({
+                url: siteURL + "accounting/addBankAccount",
+                type:"POST",
+                cache:false,
+                dataType:"json",
+                data:{
+                    email:email,
+					method:"paypal"
+                },
+                success:function (data) {
+                    
+                }
+            });
 
+	});
+
+	//Save stripe credentials
+	$(document).on('submit', '#save-stripe-account', function(e) {
+		e.preventDefault();
+		var publish_key = $('#publish_key').val();
+		var secret_key = $('#secret_key').val();
+		var stripe_email = $('#stripe_email').val();
+			$.ajax({
+                url: siteURL + "accounting/addBankAccount",
+                type:"POST",
+                cache:false,
+                dataType:"json",
+                data:{
+                    publish_key:publish_key,
+                    secret_key:secret_key,
+                    stripe_email:stripe_email,
+					method:"stripe"
+                },
+                success:function (data) {
+                    
+                }
+            });
+
+	});
+	
     // Add Split Line
     $('#btnAddSplit').click(function () {
         $('.add-split-container').show();

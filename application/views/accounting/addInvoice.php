@@ -629,7 +629,16 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Taxes</td>
+                                                    <td>
+                                                        <div class="addInvoiceTax">
+                                                            <div class="form-group" style="margin-bottom: 0 !important;">
+                                                                <select class="form-control" id="invoiceTaxRate" disabled>
+                                                                    <option value="items_tax" default="true" selected>Items total tax rate</option>
+                                                                    <option value="add_custom">+ Add custom rate</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                     <!-- <td></td> -->
                                                     <td colspan="2" align="right">$ <span
                                                             id="total_tax_">0.00</span><input type="hidden" name="taxes"
@@ -673,17 +682,6 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                                                 id="grand_total_input" value='0'></b></td>
                                                 </tr>
                                             </table>
-
-
-                                            <div class="addInvoiceTax">
-                                                <div class="form-group">
-                                                    <label for="invoiceTaxRate">Select tax rate</label>
-                                                    <select class="form-control" id="invoiceTaxRate" disabled>
-                                                        <option value="default" selected hidden>Select custom rate</option>
-                                                        <option value="add_custom">+ Add custom rate</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

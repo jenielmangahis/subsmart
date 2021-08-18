@@ -121,7 +121,7 @@
                                                                         <td></td>
                                                                         <td>1</td>
                                                                         <td>
-                                                                            <select name="expense_name[]" class="form-control" required></select>
+                                                                            <select name="expense_account[]" class="form-control" required></select>
                                                                         </td>
                                                                         <td>
                                                                             <select name="category[]" class="form-control">

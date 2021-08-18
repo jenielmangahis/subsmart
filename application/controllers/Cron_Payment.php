@@ -451,6 +451,14 @@ class Cron_Payment extends MY_Controller {
             'select' => 'acs_billing.*',
             'limit' => 50
         );
+        /*$get_billing = array(
+            'where' => array(
+                'bill_id' => 2465
+            ),
+            'table' => 'acs_billing',
+            'select' => 'acs_billing.*',
+            'limit' => 50
+        );*/
         $data = $this->general->get_data_with_param($get_billing, true);
 
         $converge = new \wwwroth\Converge\Converge([
@@ -474,8 +482,9 @@ class Cron_Payment extends MY_Controller {
                 $total_amount += $d->transaction_amount;
             }
             
-            if( $total_amount > 0 ){
-                $exp_date = str_replace("/", "", $d->credit_card_exp);                
+            if( $total_amount > 0 ){                
+                $a_exp_date = explode("/", $d->credit_card_exp);
+                $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
                 $createSale = $converge->request('ccsale', [
                     'ssl_card_number' => $d->credit_card_num,
                     'ssl_exp_date' => $exp_date,
@@ -516,7 +525,9 @@ class Cron_Payment extends MY_Controller {
 
                     $total_updated++;
                 }else{
+                    $transaction_data['error_message'] = $createSale['errorMessage'];
                     $transaction_data['is_with_error'] = 1;
+                    $transaction_data['error_type']    = 'CC';
                     $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
                 }
             }

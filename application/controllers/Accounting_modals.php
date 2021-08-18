@@ -258,7 +258,6 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['balance'] = '$0.00';
                 break;
                 case 'print_checks_modal':
-                    $paymentAccs = [];
                     $accountTypes = [
                         'Bank',
                         'Credit Card'
@@ -274,13 +273,7 @@ class Accounting_modals extends MY_Controller
                             foreach ($accounts as $account) {
                                 $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
-                                $account->childAccs = $childAccs;
-
-                                $paymentAccs[$typeName][] = $account;
-
                                 if ($count === 1) {
-                                    $selectedBalance = $account->balance;
-
                                     $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
 
                                     $startingCheckNo = intval($lastAssignedCheck->check_no) + 1;
@@ -291,15 +284,7 @@ class Accounting_modals extends MY_Controller
                         }
                     }
 
-                    if (strpos($selectedBalance, '-') !== false) {
-                        $balance = str_replace('-', '', $selectedBalance);
-                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-                    } else {
-                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-                    }
-
-                    $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
-                    $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['balance'] = '$0.00';
                     $this->page_data['startingCheckNo'] = $startingCheckNo;
                 break;
             }
@@ -2784,8 +2769,8 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if (isset($data['expense_name'])) {
-            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
         }
 
         if (isset($data['item'])) {
@@ -2800,7 +2785,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -2895,9 +2880,9 @@ class Accounting_modals extends MY_Controller
 
                 $this->chart_of_accounts_model->updateBalance($bankAccData);
 
-                if (isset($data['expense_name'])) {
+                if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    foreach ($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
@@ -3040,8 +3025,8 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
         $this->form_validation->set_rules('due_date', 'Due date', 'required');
 
-        if (isset($data['expense_name'])) {
-            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
         }
 
         if (isset($data['item'])) {
@@ -3056,7 +3041,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -3158,9 +3143,9 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                if (isset($data['expense_name'])) {
+                if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    foreach ($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
@@ -5170,7 +5155,7 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
-            case 'bill-payment-account':
+            case 'payment-account':
                 $accountTypes = [
                     'Bank',
                     'Credit Card'
@@ -5659,6 +5644,40 @@ class Accounting_modals extends MY_Controller
                     'Other Current Assets'
                 ];
             break;
+            case 'expense-account' :
+                $typeNames = [
+                    'Expenses',
+                    'Bank',
+                    'Accounts receivable (A/R)',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Accounts payable (A/P)',
+                    'Credit Card',
+                    'Other Current Liabilities',
+                    'Long Term Liabilities',
+                    'Equity',
+                    'Income',
+                    'Cost of Goods Sold',
+                    'Other Income',
+                    'Other Expense'
+                ];
+            break;
+            case 'bank-account' :
+                $typeNames = [
+                    'Bank'
+                ];
+            break;
+            case 'payment-account' :
+                $typeNames = [
+                    'Bank',
+                    'Credit Card'
+                ];
+            break;
+            case 'bank-credit-account' :
+                $typeNames = [
+                    'Credit Card'
+                ];
+            break;
         }
 
         $accountTypes = $this->account_model->getAccTypeByName($typeNames);
@@ -5854,22 +5873,17 @@ class Accounting_modals extends MY_Controller
 
     public function get_add_account_modal()
     {
-        $accountTypes = $this->account_model->getAccounts();
-        $accountsDropdown = [];
-        foreach($accountTypes as $type)
-        {
-            foreach($this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id')) as $account)
-            {
-                $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id);
-                $accountsDropdown[$type->account_name][] = [
-                    'id' => $account->id,
-                    'name' => $account->name,
-                    'child_accounts' => $childAccounts
-                ];
-            }
+        $field = $this->input->get('field');
+        switch($field) {
+            default :
+                $accountType = $this->account_model->getAccTypeByName('Bank');
+            break;
+            case 'bank-credit-account' :
+                $accountType = $this->account_model->getAccTypeByName('Credit Card');
+            break;
         }
 
-        $this->page_data['accountsDropdown'] = $accountsDropdown;
+        $this->page_data['accountType'] = $accountType;
         $this->load->view('accounting/modals/add_account_modal', $this->page_data);
     }
 

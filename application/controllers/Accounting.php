@@ -20,6 +20,7 @@ class Accounting extends MY_Controller
         $this->load->model('receipt_model');
         $this->load->model('tags_model');
         $this->load->model('categories_model');
+        $this->load->model('accounting_bank_accounts');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_receive_payment_model');
         $this->load->model('accounting_sales_receipt_model');
@@ -48,6 +49,7 @@ class Accounting extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('General_model', 'general');
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
+        $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
         $this->load->library('excel');
         $this->load->library('pdf');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -298,7 +300,35 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/deposits', $this->page_data);
     }
 
+    public function addBankAccount()
+    {
+        if ($this->input->post('method') == "paypal") {
+            $new_data = array(
+                'paypal_email' => $this->input->post('email'),
+                'payment_method' => $this->input->post('method'),
+                'status' => 1,
+                'created' => date('Y-m-d h:i:s'),
+                'modified' => date('Y-m-d h:i:s')
+            );
+        } elseif ($this->input->post('method') == "stripe") {
+            $new_data = array(
+                'stripe_publish_key' => $this->input->post('publish_key'),
+                'stripe_secret_key' => $this->input->post('secret_key'),
+                'stripe_email' => $this->input->post('stripe_email'),
+                'payment_method' => $this->input->post('method'),
+                'status' => 1,
+                'created' => date('Y-m-d h:i:s'),
+                'modified' => date('Y-m-d h:i:s')
+            );
+        }
+        $addQuery = $this->accounting_bank_accounts->create($new_data);
 
+        if ($addQuery > 0) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+    }
     // private function uploadFile($files)
     // {
     //     $this->load->helper('string');
@@ -8738,64 +8768,7 @@ class Accounting extends MY_Controller
         $data->tbody_html = $tbody_html;
         echo json_encode($data);
     }
-    public function filter_type_qualified($filter_type, $data)
-    {
-        if ($filter_type == "All transactions") {
-            return true;
-        } elseif ($filter_type == "All plus deposits") {
-            return false;
-        } elseif ($filter_type == "All invoices") {
-            if ($data["type"]=="Invoice") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Open invoices") {
-            if ($data["status"] == "Open") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Overdue invoices") {
-            if ($data["status"] == "Overdue") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Open estimates") {
-            return false;
-        } elseif ($filter_type == "Credit memos") {
-            return false;
-        } elseif ($filter_type == "Unbilled income") {
-            return false;
-        } elseif ($filter_type == "Recently paid") {
-            $firstday = date("Y-m-d", strtotime('monday last week'));
-            $lastday = date("Y-m-d", strtotime('sunday this week'));
-            if ($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Money received") {
-            if ($data["type"] == "Payment") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Recurring templates") {
-            if ($data["type"] == "Recurring template") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Statements") {
-            if ($data["type"] == "Statements") {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+
     public function filter_date_qualified($filter_date, $date)
     {
         if ($filter_date == "All dates") {
@@ -8892,15 +8865,69 @@ class Accounting extends MY_Controller
             }
         }
     }
-    public function tester()
+    public function filter_type_qualified($filter_type, $data)
     {
+        if ($filter_type == "All transactions") {
+            return true;
+        } elseif ($filter_type == "All plus deposits") {
+            return false;
+        } elseif ($filter_type == "All invoices") {
+            if ($data["type"]=="Invoice") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Open invoices") {
+            if ($data["status"] == "Open") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Overdue invoices") {
+            if ($data["status"] == "Overdue") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Open estimates") {
+            return false;
+        } elseif ($filter_type == "Credit memos") {
+            return false;
+        } elseif ($filter_type == "Unbilled income") {
+            return false;
+        } elseif ($filter_type == "Recently paid") {
+            $firstday = date("Y-m-d", strtotime('monday last week'));
+            $lastday = date("Y-m-d", strtotime('sunday this week'));
+            if ($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Money received") {
+            if ($data["type"] == "Payment") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Recurring templates") {
+            if ($data["type"] == "Recurring template") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Statements") {
+            if ($data["type"] == "Statements") {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
     public function get_date_difference_indays($date_from = "", $date_to="")
     {
         $date_1 = strtotime($date_to); // or your date as well
         $date_2 = strtotime($date_from);
         $datediff = $date_1 - $date_2;
-        
         return round($datediff / (60 * 60 * 24));
     }
     public function update_customer_notes()
@@ -8915,5 +8942,44 @@ class Accounting extends MY_Controller
             $data->result = "not success";
         }
         echo json_encode($data);
+    }
+
+    public function save_sales_form_content()
+    {
+        $new_data = array(
+            
+            'sales_pref_inv_terms'       => $this->input->post("sales_pref_inv_terms"),
+            'sales_pref_del_method'      => $this->input->post("sales_pref_del_method"),
+            'sales_shipping'             => $this->input->post("sales_shipping"),
+            'sales_custom_fields'        => $this->input->post("sales_custom_fields"),
+            'sales_cust_trans_numbers'   => $this->input->post("sales_cust_trans_numbers"),
+            'sales_service_date'         => $this->input->post("sales_service_date"),
+            'sales_discount'             => $this->input->post("sales_discount"),
+            'sales_deposit'              => $this->input->post("sales_deposit"),
+            'sales_tips'                 => $this->input->post("sales_tips"),
+            'sales_tags'                 => $this->input->post("sales_tags"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->addSalesForm($new_data);
+
+        echo json_encode($addQuery);
+    }
+
+    public function save_product_services_content()
+    {
+        $new_data = array(
+            
+            'ps_column_sales_form'      => $this->input->post("ps_column_sales_form"),
+            'ps_show_sku_column'        => $this->input->post("ps_show_sku_column"),
+            'ps_price_rules'            => $this->input->post("ps_price_rules"),
+            'ps_track_qty_price'        => $this->input->post("ps_track_qty_price"),
+            'ps_track_inv_qty'          => $this->input->post("ps_track_inv_qty"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->save_product_services_content($new_data);
+
+        echo json_encode($addQuery);
     }
 }

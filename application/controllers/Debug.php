@@ -394,6 +394,58 @@
             exit;
 
         }
+
+        public function checkCC(){
+            $data_cc = [
+                'card_number' => '',
+                'exp_date' => '', //format 11/22
+                'cvc' => '',
+                'ssl_first_name' => '',
+                'ssl_last_name' => '',
+                'ssl_amount' => 1,
+                'ssl_address' => '',
+                'ssl_zip' => ''
+            ];
+            $result = $this->converge_verify_cc($data_cc);
+
+            echo "<pre>";
+            print_r($data_cc);
+            print_r($result)
+        }
+
+        public function converge_verify_cc( $data ){
+            include APPPATH . 'libraries/Converge/src/Converge.php';
+
+            $msg = '';
+            $is_success = 0;
+
+            $converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => CONVERGE_MERCHANTID,
+                'user_id' => CONVERGE_MERCHANTUSERID,
+                'pin' => CONVERGE_MERCHANTPIN,
+                'demo' => false,
+            ]);
+
+            $createSale = $converge->request('ccverify', [
+                'ssl_card_number' => $data['card_number'],
+                'ssl_exp_date' => $data['exp_date'],
+                'ssl_cvv2cvc2' => $data['cvc'],
+                'ssl_first_name' => $data['ssl_first_name'],
+                'ssl_last_name' => $data['ssl_last_name'],
+                'ssl_amount' => $data['ssl_amount'],
+                'ssl_avs_address' => $data['ssl_address'],
+                'ssl_avs_zip' => $data['ssl_zip'],
+            ]);
+
+            if( $createSale['success'] == 1 ){
+                $is_success = 1;
+            }else{
+                $msg = $createSale['errorMessage'];
+            }
+            
+            $return = ['is_success' => $is_success, 'msg' => $msg];
+            return $return;
+        }
     }
     /* End of file Debug.php */
 
