@@ -2,7 +2,7 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="payFrom">Pay from</label>
-            <select name="pay_from" id="bank-account" class="form-control" required></select>
+            <select name="pay_from_account" id="bank-account" class="form-control" required></select>
         </div>
     </div>
     <div class="col-md-2 d-flex align-items-center">
@@ -13,7 +13,7 @@
             <label for="payPeriod">Pay period</label>
             <select name="pay_period" id="payPeriod" class="form-control">
                 <?php foreach($payPeriods as $period) : ?>
-                    <option value="<?php echo $period['first_day'] . '-' . $period['last_day']; ?>" data-pay_date="<?=$period['pay_date']?>" <?=$period['selected'] === true ? 'selected' : ''?>><?php echo $period['first_day'] . ' to ' . $period['last_day']; ?></option>
+                    <option value="<?=$period['first_day'] . '-' . $period['last_day']?>" data-pay_date="<?=$period['pay_date']?>" <?=$period['selected'] === true ? 'selected' : ''?>><?=$period['first_day'] . ' to ' . $period['last_day']?></option>
                 <?php endforeach; ?>
             </select>
         </div>

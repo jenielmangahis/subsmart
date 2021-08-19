@@ -95,4 +95,34 @@ class AccountingSales extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $record]);
     }
+
+    public function apiGetTaxedInvoices()
+    {
+        $records = [];
+        $statuses = ['overdue', 'due', 'upcoming'];
+
+        $currentDate = date('Y-m-d');
+        $nextWeekDate = date('Y-m-d', strtotime('+7 days'));
+
+        foreach ($statuses as $status) {
+            $this->db->where('user_id', logged('id'));
+            $this->db->where('taxes >', '0');
+
+            if ($status === 'overdue') {
+                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $currentDate);
+
+            } else if ($status === 'due') {
+                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $currentDate);
+
+            } else { // upcoming
+                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >", $currentDate);
+                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $nextWeekDate);
+            }
+
+            $records[$status] = $this->db->get('invoices')->result();
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
 }

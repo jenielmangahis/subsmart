@@ -77,6 +77,12 @@
                         Send
                     </a>
                 </li>
+                <li class="share-invoice-link-btn"
+                    data-invoice-id="<?=$invoice_id?>">
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        Share invoice link
+                    </a>
+                </li>
                 <li>
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Print packaging slip
@@ -128,11 +134,15 @@
                     </a>
                 </li>
                 <li>
-                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="send-reminder-btn" data-invoice-number="<?=$no?>" data-action-from="single-customer-view-modal" data-customer-id="<?=$customer_id?>">
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="send-reminder-btn"
+                        data-invoice-number="<?=$no?>"
+                        data-action-from="single-customer-view-modal"
+                        data-customer-id="<?=$customer_id?>">
                         Send reminder
                     </a>
                 </li>
-                <li>
+                <li class="share-invoice-link-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Share invoice link
                     </a>

@@ -32,7 +32,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
-                                                <select name="inventory_adj_acc" id="inventory_adj_account" class="form-control" required></select>
+                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control" required></select>
                                             </div>
                                         </div>
                                     </div>

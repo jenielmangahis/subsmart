@@ -134,7 +134,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackTarget">Cash back goes to</label>
-                                                        <select name="cash_back_target" id="cash_back_account" class="form-control" required></select>
+                                                        <select name="cash_back_account" id="cash_back_account" class="form-control" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">

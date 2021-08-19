@@ -8982,4 +8982,28 @@ class Accounting extends MY_Controller
 
         echo json_encode($addQuery);
     }
+    public function generate_share_invoice_link()
+    {
+        $token = "";
+        $token_available = false;
+        while (!$token_available) {
+            $token = sha1(mt_rand(1, 90000) . 'SALT');
+            if($this->accounting_invoices_model->check_token_available_for_shared_invoice_link($token)){
+                $token_available = true;
+            }
+        }
+        $invoice_id=$this->input->post("invoice_id");
+        $expired_at = date('Y-m-d', strtotime(date("Y-m-d"). ' + 24 days'));
+        $data=array(
+            "invoice_id" => $invoice_id,
+            "token" => $token,
+            "expired_at" => $expired_at
+        );
+        $this->accounting_invoices_model->add_shared_invoice_link($data);
+
+        $shared_link=base_url("portal/appinv/".$token."/view");
+        $data = new stdClass();
+        $data->shared_link = $shared_link;
+        echo json_encode($data);
+    }
 }

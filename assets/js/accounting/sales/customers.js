@@ -89,6 +89,7 @@ $(document).on('submit', '#modal-container #new-customer-modal #add-new-customer
                     icon: "success",
                 });
                 single_customer_get_customers_details($("#customer-single-modal input[name='customer_id']").val());
+                single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
             } else {
                 Swal.fire({
                     showConfirmButton: false,

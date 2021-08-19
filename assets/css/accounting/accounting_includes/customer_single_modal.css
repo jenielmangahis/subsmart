@@ -41,14 +41,14 @@
 
 #customer-single-modal .the-body .customer-list-section ul li {
     font-size: 12px;
-    padding: 5px 20px;
+    padding: 7px 20px;
     color: #464646;
     border-bottom: solid 1px #D6E0ED;
 }
 
 #customer-single-modal .the-body .customer-list-section ul li:hover,
 #customer-single-modal .the-body .customer-list-section ul li.active {
-    background-color: #F9FAFB;
+    background-color: #F3F8FE;
     cursor: pointer;
 }
 

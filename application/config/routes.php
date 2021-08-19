@@ -979,3 +979,7 @@ $route['mycrm/_buy_plan_license'] = 'Mycrm/company_buy_plan_license';
 //Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
 $route['more/_load_active_addons_list'] = 'More/ajax_load_active_addons_list';
+
+//Acounting Customers
+
+$route['portal/appinv/(:any)/view'] = 'public_view_controller/view_invoice/$1';
