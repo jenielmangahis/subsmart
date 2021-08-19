@@ -770,6 +770,8 @@ class Customer extends MY_Controller
                     'exp_date' => $exp_date,
                     'cvc' => $input['credit_card_exp_mm_yyyy'],
                     'ssl_amount' => 0,
+                    'ssl_first_name' => $input['first_name'],
+                    'ssl_last_name' => $input['last_name'],
                     'ssl_address' => $input['mail_add'] . ' ' . $input['city'] . ' ' . $input['state'],
                     'ssl_zip' => $input['zip_code']
                 ];
@@ -824,7 +826,7 @@ class Customer extends MY_Controller
         }
     }
 
-    public function converge_check_cc_details_valid(){
+    public function converge_check_cc_details_valid($data){
         include APPPATH . 'libraries/Converge/src/Converge.php';
 
         $msg = '';
@@ -855,7 +857,7 @@ class Customer extends MY_Controller
             }
             
         }else{
-            $msg = $generateToken['errorMessage'];
+            $msg = $verify['errorMessage'];
         }
         
         $return = ['is_success' => $is_success, 'msg' => $msg];
@@ -3187,7 +3189,63 @@ class Customer extends MY_Controller
     public function billing_errors(){
         $billingErrors = $this->customer_ad_model->get_customer_billing_errors(logged('company_id'));
         $this->page_data['billingErrors'] = $billingErrors;
-        $this->load->view('customer/billing_errors', $this->page_data);
+        $this->load->view('customer/billing_error/list', $this->page_data);
+    }
+
+    public function ajax_load_company_billing_credit_card_details(){
+        $post = $this->input->post();
+        $billing_id = $post['billing_id'];
+        $billing = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $billing_id);
+        if( $billing ){
+            $date_year = explode("/", $billing->credit_card_exp);
+
+            $this->page_data['cc_date_year'] = $date_year;
+            $this->page_data['billing'] = $billing;
+            $this->load->view('customer/billing_error/ajax_credit_card_details', $this->page_data);
+        }else{
+            echo "<div class='alert alert-danger'>Cannot find record</div>";
+        }        
+    }
+
+    public function ajax_update_billing_credit_card_details(){
+        $is_success = 0;
+        $msg        = '';
+        $post       = $this->input->post();
+
+        $billing     = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $post['bid']);
+        $cc_exp_date = $post['exp_month'] . date("y", strtotime("01-01-" . $post['exp_year']));
+        
+        $data_cc = [
+            'card_number' => $post['card_number'],
+            'exp_date' => $cc_exp_date,
+            'cvc' => $post['cvc'],
+            'ssl_amount' => 0,
+            'ssl_first_name' => $billing->card_fname,
+            'ssl_last_name' => $billing->card_lname,
+            'ssl_address' => $billing->card_address . ' ' . $billing->city . ' ' . $billing->state,
+            'ssl_zip' => $billing->zip
+        ];
+        $is_valid = $this->converge_check_cc_details_valid($data_cc);
+        if( $is_valid['is_success'] > 0 ){
+            $is_success = 1;
+            //Update cc
+            $billing_data = [
+                'credit_card_num' => $post['card_number'],
+                'credit_card_exp' => $post['exp_month'] . "/" . $post['exp_year'],
+                'credit_card_exp_mm_yyyy' => $post['cvc'],
+                'is_with_error' => 0,
+                'error_message' => '',
+                'error_type' => '',
+                'error_date' => ''
+            ];
+            $this->general->update_with_key_field($billing_data, $billing->bill_id, 'acs_billing', 'bill_id');
+        }else{
+            $msg = $is_valid['msg'];
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);
     }
 
 }
