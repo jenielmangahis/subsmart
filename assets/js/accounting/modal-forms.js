@@ -447,7 +447,8 @@ $(function() {
                                 var query = {
                                     search: params.term,
                                     type: 'public',
-                                    field: type
+                                    field: type,
+                                    modal: modal_element.replaceAll('#', '')
                                 }
 
                                 // Query parameters will be ?search=[term]&type=public&field=[type]
@@ -563,18 +564,18 @@ $(function() {
         });
     });
 
-    $(document).on('change', 'div#transferModal select#transferFrom, div#transferModal select#transferTo', function() {
-        var value = $(this).val();
-        var id = $(this).attr('id');
+    $(document).on('change', 'div#transferModal #transfer_from_account, div#transferModal #transfer_to_account', function() {
+        var el = $(this);
+        var value = el.val();
 
-        if (value !== '' && value !== null) {
+        if (value !== '' && value !== null && value !== 'add-new') {
             $.get('/accounting/get-account-balance/' + value, function(res) {
                 var result = JSON.parse(res);
 
-                $(`div#transferModal h3#${id}Balance`).html(result.balance);
+                el.parent().parent().next().find('h3').html(result.balance);
             });
         } else {
-            $(`div#transferModal h3#${id}Balance`).html('');
+            el.parent().parent().next().find('h3').html('');
         }
     });
 
@@ -1614,10 +1615,10 @@ $(function() {
     $(document).on('change', '#expenseModal #expense_payment_account', function() {
         var val = $(this).val();
 
-        if(val !== '' && val !== null && val !== 'add-new') {
+        if (val !== '' && val !== null && val !== 'add-new') {
             $.get('/accounting/get-account-balance/' + val, function(res) {
                 var result = JSON.parse(res);
-    
+
                 $('#expenseModal span#account-balance').html(result.balance);
             });
         }
@@ -3371,21 +3372,22 @@ $(function() {
 
     $(document).on('change', '#modal-container #modal-form select', function() {
         var value = $(this).val();
-        if(value === 'add-new' && $(this).attr('name').includes('account')) {
+        if (value === 'add-new' && $(this).attr('name').includes('account')) {
             dropdownEl = $(this);
             var modal = $('#modal-form').children('.modal');
             var modalName = modal.attr('id').toLowerCase().replaceAll('modal', '');
             var field = dropdownEl.attr('id');
             var fieldName = field === undefined ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
+            fieldName = fieldName.includes('from') || fieldName.includes('to') ? fieldName.replaceAll('from-', '').replaceAll('to-', '') : fieldName;
             var query = `?modal=${modalName}&field=${fieldName}`;
 
-            $.get('/accounting/get-add-account-modal'+query, function(result) {
+            $.get('/accounting/get-add-account-modal' + query, function(result) {
                 $('#modal-form').parent().append(result);
 
                 $('#modal-container #add-account-modal select').each(function() {
                     var id = $(this).attr('id').replaceAll('_', '-');
-                    switch(id) {
-                        case 'account-type' :
+                    switch (id) {
+                        case 'account-type':
                             $(this).select2({
                                 ajax: {
                                     url: '/accounting/get-dropdown-choices',
@@ -3408,8 +3410,8 @@ $(function() {
                             });
 
                             $(this).trigger('change');
-                        break;
-                        case 'detail-type' :
+                            break;
+                        case 'detail-type':
                             $(this).select2({
                                 ajax: {
                                     url: '/accounting/get-dropdown-choices',
@@ -3432,8 +3434,8 @@ $(function() {
                             });
 
                             $(this).trigger('change');
-                        break;
-                        case 'parent-account' :
+                            break;
+                        case 'parent-account':
                             $(this).select2({
                                 ajax: {
                                     url: '/accounting/get-dropdown-choices',
@@ -3454,9 +3456,9 @@ $(function() {
                                 dropdownParent: $('#modal-container #add-account-modal'),
                                 placeholder: 'Enter parent account'
                             });
-                        break;
-                        default :
-                            if($(this).find('option').length > 10) {
+                            break;
+                        default:
+                            if ($(this).find('option').length > 10) {
                                 $(this).select2({
                                     dropdownParent: $('#modal-container #add-account-modal')
                                 });
@@ -3466,11 +3468,11 @@ $(function() {
                                     dropdownParent: $('#modal-container #add-account-modal')
                                 });
                             }
-                        break;
+                            break;
                     }
                 });
                 var switchEl = $('#modal-container #add-account-modal #check_sub').get(0);
-                var switchery = new Switchery(switchEl, {size: 'small'});
+                var switchery = new Switchery(switchEl, { size: 'small' });
 
                 $('#modal-container #add-account-modal .date_picker input').datepicker({
                     uiLibrary: 'bootstrap',
@@ -3487,7 +3489,7 @@ $(function() {
 
     $(document).on('change', '#modal-container #add-account-modal #account_type', function() {
         var el = $(this);
-        $.get('/accounting/get-first-detail-type/'+el.val(), function(result) {
+        $.get('/accounting/get-first-detail-type/' + el.val(), function(result) {
             var res = JSON.parse(result);
 
             el.parent().next().find('#detail_type').append(`<option value="${res.acc_detail_id}" selected>${res.acc_detail_name}</option>`).trigger('change');
@@ -3498,7 +3500,7 @@ $(function() {
         var el = $(this);
         var id = el.val();
 
-        $.get('/accounting/chart-of-accounts/get-detail-type/'+id, function(result) {
+        $.get('/accounting/chart-of-accounts/get-detail-type/' + id, function(result) {
             var res = JSON.parse(result);
 
             el.parent().next().html(res.description);
@@ -3518,7 +3520,7 @@ $(function() {
     });
 
     $(document).on('change', '#add-account-modal #check_sub', function() {
-        if($(this).prop('checked')) {
+        if ($(this).prop('checked')) {
             $('#add-account-modal #parent_account').prop('disabled', false);
         } else {
             $('#add-account-modal #parent_account').prop('disabled', true);
@@ -3526,7 +3528,7 @@ $(function() {
     });
 
     $(document).on('change', '#add-account-modal #choose_time', function() {
-        if($(this).val() === 'other') {
+        if ($(this).val() === 'other') {
             $('#add-account-modal #balance').parent().addClass('hide');
             $('#add-account-modal #balance').val('');
             $('#add-account-modal #time_date').parent().parent().parent().removeClass('hide');
@@ -3587,11 +3589,11 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container #modal-form [name="category_customer[]"], #modal-container #modal-form #customer', function() {
+    $(document).on('change', '#modal-container #modal-form [name="category_customer[]"], #modal-container #modal-form #customer, #modal-container #modal-form [name="customer[]"]', function() {
         if ($(this).val() === 'add-new') {
             dropdownEl = $(this);
 
-            $.get('/accounting/get-add-payee-modal/vendor', function(result) {
+            $.get('/accounting/get-add-payee-modal/customer', function(result) {
                 $('#modal-form').parent().append(result);
 
                 $('#modal-container #add-payee-modal h4.modal-title').html('New Customer');
@@ -3982,7 +3984,7 @@ $(function() {
     });
 
     $(document).on('hidden.bs.modal', '#modal-container #new-customer-modal', function(e) {
-        $('#modal-container #new-customer-modal').remove();
+        $('#modal-container #new-customer-modal').hide();
     });
 
     $(document).on('submit', '#modal-container #new-vendor-modal #add-vendor-form', function(e) {

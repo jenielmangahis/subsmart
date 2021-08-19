@@ -333,7 +333,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="pull-right">
-                                                    <button class="btn btn-success apply-btn px-4" type="button">Apply</button>
+                                                    <button class="btn btn-success apply-btn px-4"
+                                                        type="button">Apply</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -528,6 +529,29 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="share-link-modal">
+    <div class="the-modal-body">
+        <div class="title">Share invoice link</div>
+        <div class="the-content">
+            <p> Enable your customers to pay, print and download this invoice</p>
+            <div class="form-group">
+                <div class="label">
+                    Copy and share link through email or SMS
+                </div>
+                <input type="text" class="form-control " name="shared_invoice_link">
+            </div>
+        </div>
+        <div class="btns">
+            <button class="btn btn-default float-left cancel-btn" type="button">
+                Cancel
+            </button>
+            <button class="btn btn-success float-right copy-btn" type="button">
+                Copy link and close
+            </button>
         </div>
     </div>
 </div>

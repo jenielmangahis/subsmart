@@ -275,6 +275,17 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+    public function get_invoice_by_invoice_id($id)
+    {
+        $this->db->select('*');
+
+        $this->db->from('invoices');
+        
+        $this->db->like('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
     public function get_sum_of_invoices_by_customer_id($customer_id="", $start_date="", $end_date="", $statement_type="")
     {
         if ($customer_id != "") {
@@ -337,6 +348,29 @@ class Accounting_invoices_model extends MY_Model
         $sql="SELECT * FROM accounting_receive_payment 
         JOIN accounting_receive_payment_invoices ON accounting_receive_payment_invoices.receive_payment_id=accounting_receive_payment.id 
         WHERE accounting_receive_payment_invoices.invoice_id = ".$invoice_id."";
+        $query = $this->db->query($sql);
+        return $query->row();
+    }
+    public function check_token_available_for_shared_invoice_link($token)
+    {
+        $query = $this->db->query("SELECT * FROM account_shared_invoice_links WHERE token = '".$token."' and expired_at <= '".date('Y-m-d')."'");
+        
+        if(count($query->result()) > 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    public function add_shared_invoice_link($data)
+    {
+        $query = $this->db->insert('account_shared_invoice_links', $data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+    public function get_shared_invoice_link($token)
+    {
+        $sql="SELECT * FROM account_shared_invoice_links WHERE token = '".$token."' ";
         $query = $this->db->query($sql);
         return $query->row();
     }

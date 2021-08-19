@@ -19,14 +19,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferFrom">Transfer Funds From</label>
-                                                <select name="transfer_from" id="transferFrom" class="form-control" required></select>
+                                                <select name="transfer_from_account" id="transfer_from_account" class="form-control" required></select>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferFromBalance">Balance</label>
-                                                <h3 id="transferFromBalance"></h3>
+                                                <h3></h3>
                                             </div>
                                         </div>
                                     </div>
@@ -35,14 +35,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferTo">Transfer Funds To</label>
-                                                <select name="transfer_to" id="transferTo" class="form-control" required></select>
+                                                <select name="transfer_from_account" id="transfer_to_account" class="form-control" required></select>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="transferToBalance">Balance</label>
-                                                <h3 id="transferToBalance"></h3>
+                                                <h3></h3>
                                             </div>
                                         </div>
                                     </div>

@@ -22,7 +22,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="creditCard">Which credit card did you pay?</label>
-                                                <select name="credit_card" id="credit_card_account" class="form-control" required></select>
+                                                <select name="credit_card_account" id="credit_card_account" class="form-control" required></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="payee">Payee (optional)</label>

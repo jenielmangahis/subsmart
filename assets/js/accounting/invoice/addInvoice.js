@@ -9,6 +9,7 @@
   const taxRateDefault = $taxRateSelect.find("[default]").val();
   const $sidebar = $("#addRateSidebar");
   const $taxDisplay = $("#total_tax_");
+  const $grandTotal = $("#grand_total");
 
   const showCustomRateOptions = (options) => {
     options.forEach(({ id, name, rate }) => {
@@ -21,13 +22,26 @@
     $taxRateSelect.prop("disabled", false);
   };
 
+  const displayValues = (config = {}) => {
+    if (config.rateId) {
+      const price = calculateInvoiceSubtotal();
+      const customRate = customRates.find((rate) => rate.id == config.rateId);
+      const taxValue = numberWithDecimal((Number(customRate.rate) / 100) * price); // prettier-ignore
+      $taxDisplay.text(taxValue);
+    } else {
+      $taxDisplay.text(calculateInvoiceTax());
+    }
+
+    $grandTotal.text(calculateInvoiceGrandTotal());
+  };
+
   const closeSidebar = (value = null) => {
     $sidebar.find(".form-control").val("");
     $sidebar.removeClass("sidebarForm--show");
     $taxRateSelect.val(value ? value : taxRateDefault);
 
     if (value === null) {
-      $taxDisplay.text(calculateInvoiceTax());
+      displayValues({ rateId: value });
     }
   };
 
@@ -109,14 +123,11 @@
     }
 
     if (value === taxRateDefault) {
-      $taxDisplay.text(calculateInvoiceTax());
+      displayValues();
       return;
     }
 
-    const price = calculateInvoicePrice();
-    const customRate = customRates.find((rate) => rate.id == value);
-    const taxValue = numberWithDecimal((Number(customRate.rate) / 100) * price);
-    $taxDisplay.text(taxValue);
+    displayValues({ rateId: value });
   });
 })();
 
