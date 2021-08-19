@@ -6,6 +6,12 @@ class Accounting__TaxItem {
   createElement(data) {
     const $templateCopy = $(document.importNode(this.$template.get(0).content, true)); // prettier-ignore
     const dataNames = ["date", "address", "due_date", "price"];
+
+    data.date = this.formatDate(data.date_issued);
+    data.due_date = this.formatDate(data.due_date);
+    data.address = data.billing_address || data.job_location;
+    data.price = `$${data.taxes}`;
+
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
     });
@@ -16,6 +22,12 @@ class Accounting__TaxItem {
     });
 
     return $templateCopy;
+  }
+
+  formatDate(date) {
+    const dateObject = new Date(date);
+    const options = { month: "long", day: "2-digit", year: "numeric" };
+    return new Intl.DateTimeFormat("en", options).format(dateObject);
   }
 }
 
@@ -44,26 +56,11 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 }
 
 (async function Accounting__SalesTax() {
-  const data = [
-    {
-      date: "July 2020",
-      address: "Philippines",
-      due_date: "August 2020",
-      price: "$34.22",
-    },
-    {
-      date: "August 2020",
-      address: "Florida",
-      due_date: "December 2020",
-      price: "$44.30",
-    },
-    {
-      date: "September 2020",
-      address: "Canada",
-      due_date: "January 2021",
-      price: "$12.21",
-    },
-  ];
+  const { Accounting__DropdownWithSearch } = await import("../dropdown-with-search/dropdown-with-search.js"); // prettier-ignore
+  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+  const endpoint = `${prefixURL}/AccountingSales/apiGetTaxedInvoices`;
+  const response = await fetch(endpoint);
+  const { data } = await response.json();
 
   const $overdueContainer = $("#overdueContainer");
   const $dueContainer = $("#dueContainer");
@@ -73,11 +70,9 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   const dueItem = new Accounting__DueItem();
   const upcoming = new Accounting__UpcomingItem();
 
-  const overdueItems = data.map(overdueItem.createElement);
-  const dueItems = data.map(dueItem.createElement);
-  const upcomings = data.map(upcoming.createElement);
-
-  await sleep(2500);
+  const overdueItems = data.overdue.map(overdueItem.createElement);
+  const dueItems = data.due.map(dueItem.createElement);
+  const upcomings = data.upcoming.map(upcoming.createElement);
 
   $overdueContainer.html(overdueItems);
   $dueContainer.html(dueItems);

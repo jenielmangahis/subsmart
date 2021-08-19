@@ -1,277 +1,349 @@
-    .dataTables_wrapper .dataTables_filter input {
-        position: relative;
-        visibility: inherit;
-    }
-    
-    input[type=checkbox] {
-        cursor: pointer;
-    }
-    
-    #customers_table ul.dropdown-menu li:hover {
-        background-color: #E8EAED;
-    }
-    
-    #customers_table ul.dropdown-menu li:hover a {
-        color: #28A745;
-    }
-    
-    #customers_table ul.dropdown-menu li a {
-        font-size: 13px;
-        text-align: left;
-    }
-    
-    #customers_table ul.dropdown-menu li {
-        text-align: right;
-    }
-    
-    #customers_table td div.dropdown a.first-option {
-        text-decoration: underline;
-        font-weight: 700;
-        font-size: 13px;
-        color: #0077C5;
-    }
-    
-    #customers_table td div.dropdown #dropdown-button-icon {
-        padding: 1px 5px;
-        margin-left: 10px;
-        border: solid 1px transparent;
-    }
-    
-    #customers_table td div.dropdown #dropdown-button-icon[aria-expanded="true"] {
-        border: solid 1px #E8EAED;
-    }
-    
-    #customers_table thead th {
-        font-weight: 700;
-    }
-    
-    #customers_table thead th:first-child {
-        border: none;
-    }
-    
-    #customers_table {
-        border: none;
-    }
-    
-    .section-above-table {
-        padding-bottom: 10px;
-        height: 45px;
-    }
-    
-    .section-above-table .dropdown-holder,
-    .section-above-table .search-holder,
-    .section-above-table .batch-actiom-icon-holder {
-        float: left;
-        position: relative;
-        margin-right: 10px;
-    }
-    
-    .section-above-table .batch-actiom-icon-holder img.batch-actiom-icon {
-        width: 20px;
-        position: inherit;
-        bottom: -15px;
-    }
-    
-    .section-above-table .batch-actiom-icon-holder {
-        padding-left: 15px;
-    }
-    
-    .section-above-table .dropdown-holder button {
-        font-size: 13px;
-        padding: 5px 25px;
-        font-weight: 700;
-        border: solid 2px #000;
-        height: auto;
-    }
-    
-    .section-above-table .search-holder input.search {
-        padding: 4px;
-        width: 250px;
-        padding-right: 30px;
-        font-style: italic;
-        padding-left: 10px;
-        border: solid 1px #BABEC5;
-        cursor: text;
-        font-size: 12px;
-        height: 33px;
-        color: #6B6C71;
-    }
-    
-    .section-above-table .search-holder input.search::placeholder {
-        font-style: italic;
-        color: #BABEC5;
-    }
-    
-    .section-above-table .search-holder input.search:focus,
-    .section-above-table .search-holder input.search:hover {
-        border-color: rgba(126, 239, 104, 0.8);
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-        outline: 0 none;
-        box-shadow: none;
-        border: solid 1px #80CF03;
-        font-style: normal;
-    }
-    
-    .section-above-table .search-holder .search-field i.fa {
-        position: absolute;
-        right: 0;
-        padding: 9px;
-    }
-    
-    .section-above-table .search-holder .search-field {
-        color: #989897;
-    }
-    
-    .section-above-table .dropdown-holder ul li {
-        font-size: 12px;
-        text-align: left;
-    }
-    
-    .section-above-table .dropdown-holder ul li:hover,
-    .section-above-table .dropdown-holder ul li:hover a,
-    .section-above-table .search-holder .search-result ul.dropdown-menu li:hover,
-    .section-above-table .search-holder .search-result ul.dropdown-menu li:hover a {
-        background: #E8EAED;
-        cursor: pointer;
-        color: #2BA01D;
-    }
-    
-    .section-above-table .search-holder .search-result ul.dropdown-menu {
-        width: 200%;
-        left: 0;
-        border-radius: 0;
-        font-size: 12px;
-        margin: 0;
-    }
-    
-    .section-above-table .search-holder .search-result .dropdown-menu {
-        max-height: 500px;
-    }
-    
-    div#send-reminder-modal {
-        position: fixed;
-        top: 0;
-        z-index: 1059;
-        width: 100%;
-        height: 100vh;
-        background: #00000082;
-        display: none;
-    }
-    
-    div#send-reminder-modal.show {
-        display: block;
-    }
-    
-    #send-reminder-modal .monal-body {
-        background: #ffffff;
-        width: 500px;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 30px;
-        font-size: 12px;
-    }
-    
-    #send-reminder-modal .close-btn {
-        width: 50px;
-        position: absolute;
-        z-index: 1;
-        top: 5px;
-        right: 5px;
-        padding: 10px;
-        cursor: pointer;
-    }
-    
-    #send-reminder-modal .monal-body .modal-title h2 {
-        font-size: 20px;
-    }
-    
-    #send-reminder-modal .monal-body .modal-title p {
-        font-size: 12px;
-    }
-    
-    #send-reminder-modal .form-group .label {
-        font-weight: 700;
-        font-size: 13px;
-        color: #333333;
-    }
-    
-    #send-reminder-modal .form-group {
-        margin: 10px!important;
-    }
-    
-    #send-reminder-modal .form-group input,
-    #send-reminder-modal .form-group textarea {
-        padding: 10px;
-        width: 100%;
-        border: solid 1px #BABEC5;
-        font-size: 12px;
-        color: #333333;
-        border-radius: 3px;
-        resize: none;
-    }
-    
-    #send-reminder-modal .form-group input:focus,
-    #send-reminder-modal .form-group textarea:focus {
-        border-color: rgba(126, 239, 104, 0.8);
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-        outline: 0 none;
-        box-shadow: none;
-        border: solid 1px #80CF03;
-        font-style: normal;
-    }
-    
-    #send-reminder-modal .form-group input[name="receint-email"],
-    #send-reminder-modal .form-group input[name="receint-email"]:focus {
-        border: none;
-        border-color: none;
-        box-shadow: none;
-        outline: 0 none;
-        box-shadow: none;
-        font-style: normal;
-    }
-    
-    #send-reminder-modal .send-reminder-modal-footer button {
-        padding: 5px 20px;
-        height: auto;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-    }
-    
-    #send-reminder-modal .error-found {
-        font-size: 12px;
-        padding: 20px;
-        border: solid 1px #DC3B1E;
-        display: none;
-    }
-    
-    #send-reminder-modal .error-found .error-title {
-        color: #DC3B1E;
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 10px;
-    }
-    
-    .section-above-table .dropdown-holder ul li.disabled,
-    .section-above-table .dropdown-holder ul li.disabled a {
-        pointer-events: none!important;
-        opacity: 0.6!important;
-        color: #333333!important;
-        cursor: auto!important;
-    }
-    
-    div#modalNewCustomer {
-        z-index: 1040!important;
-    }
-    
-    #customers_table tbody tr:hover {
-        background: #F4F5F8;
-    }
-    
-    #customers_table tbody tr td a.customer-full-page-btn:hover {
-        color: #315ABD;
-        cursor: pointer;
-        text-decoration: underline;
-    }
+.dataTables_wrapper .dataTables_filter input {
+    position: relative;
+    visibility: inherit;
+}
+
+input[type=checkbox] {
+    cursor: pointer;
+}
+
+#customers_table ul.dropdown-menu li:hover {
+    background-color: #E8EAED;
+}
+
+#customers_table ul.dropdown-menu li:hover a {
+    color: #28A745;
+}
+
+#customers_table ul.dropdown-menu li a {
+    font-size: 13px;
+    text-align: left;
+}
+
+#customers_table ul.dropdown-menu li {
+    text-align: right;
+}
+
+#customers_table td div.dropdown a.first-option {
+    text-decoration: underline;
+    font-weight: 700;
+    font-size: 13px;
+    color: #0077C5;
+}
+
+#customers_table td div.dropdown #dropdown-button-icon {
+    padding: 1px 5px;
+    margin-left: 10px;
+    border: solid 1px transparent;
+}
+
+#customers_table td div.dropdown #dropdown-button-icon[aria-expanded="true"] {
+    border: solid 1px #E8EAED;
+}
+
+#customers_table thead th {
+    font-weight: 700;
+}
+
+#customers_table thead th:first-child {
+    border: none;
+}
+
+#customers_table {
+    border: none;
+}
+
+.section-above-table {
+    padding-bottom: 10px;
+    height: 45px;
+}
+
+.section-above-table .dropdown-holder,
+.section-above-table .search-holder,
+.section-above-table .batch-actiom-icon-holder {
+    float: left;
+    position: relative;
+    margin-right: 10px;
+}
+
+.section-above-table .batch-actiom-icon-holder img.batch-actiom-icon {
+    width: 20px;
+    position: inherit;
+    bottom: -15px;
+}
+
+.section-above-table .batch-actiom-icon-holder {
+    padding-left: 15px;
+}
+
+.section-above-table .dropdown-holder button {
+    font-size: 13px;
+    padding: 5px 25px;
+    font-weight: 700;
+    border: solid 2px #000;
+    height: auto;
+}
+
+.section-above-table .search-holder input.search {
+    padding: 4px;
+    width: 250px;
+    padding-right: 30px;
+    font-style: italic;
+    padding-left: 10px;
+    border: solid 1px #BABEC5;
+    cursor: text;
+    font-size: 12px;
+    height: 33px;
+    color: #6B6C71;
+}
+
+.section-above-table .search-holder input.search::placeholder {
+    font-style: italic;
+    color: #BABEC5;
+}
+
+.section-above-table .search-holder input.search:focus,
+.section-above-table .search-holder input.search:hover {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+.section-above-table .search-holder .search-field i.fa {
+    position: absolute;
+    right: 0;
+    padding: 9px;
+}
+
+.section-above-table .search-holder .search-field {
+    color: #989897;
+}
+
+.section-above-table .dropdown-holder ul li {
+    font-size: 12px;
+    text-align: left;
+}
+
+.section-above-table .dropdown-holder ul li:hover,
+.section-above-table .dropdown-holder ul li:hover a,
+.section-above-table .search-holder .search-result ul.dropdown-menu li:hover,
+.section-above-table .search-holder .search-result ul.dropdown-menu li:hover a {
+    background: #E8EAED;
+    cursor: pointer;
+    color: #2BA01D;
+}
+
+.section-above-table .search-holder .search-result ul.dropdown-menu {
+    width: 200%;
+    left: 0;
+    border-radius: 0;
+    font-size: 12px;
+    margin: 0;
+}
+
+.section-above-table .search-holder .search-result .dropdown-menu {
+    max-height: 500px;
+}
+
+div#send-reminder-modal {
+    position: fixed;
+    top: 0;
+    z-index: 1059;
+    width: 100%;
+    height: 100vh;
+    background: #00000082;
+    display: none;
+}
+
+div#send-reminder-modal.show {
+    display: block;
+}
+
+#send-reminder-modal .monal-body {
+    background: #ffffff;
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    font-size: 12px;
+}
+
+#send-reminder-modal .close-btn {
+    width: 50px;
+    position: absolute;
+    z-index: 1;
+    top: 5px;
+    right: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#send-reminder-modal .monal-body .modal-title h2 {
+    font-size: 20px;
+}
+
+#send-reminder-modal .monal-body .modal-title p {
+    font-size: 12px;
+}
+
+#send-reminder-modal .form-group .label {
+    font-weight: 700;
+    font-size: 13px;
+    color: #333333;
+}
+
+#send-reminder-modal .form-group {
+    margin: 10px!important;
+}
+
+#send-reminder-modal .form-group input,
+#send-reminder-modal .form-group textarea {
+    padding: 10px;
+    width: 100%;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
+}
+
+#send-reminder-modal .form-group input:focus,
+#send-reminder-modal .form-group textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+#send-reminder-modal .form-group input[name="receint-email"],
+#send-reminder-modal .form-group input[name="receint-email"]:focus {
+    border: none;
+    border-color: none;
+    box-shadow: none;
+    outline: 0 none;
+    box-shadow: none;
+    font-style: normal;
+}
+
+#send-reminder-modal .send-reminder-modal-footer button {
+    padding: 5px 20px;
+    height: auto;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#send-reminder-modal .error-found {
+    font-size: 12px;
+    padding: 20px;
+    border: solid 1px #DC3B1E;
+    display: none;
+}
+
+#send-reminder-modal .error-found .error-title {
+    color: #DC3B1E;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.section-above-table .dropdown-holder ul li.disabled,
+.section-above-table .dropdown-holder ul li.disabled a {
+    pointer-events: none!important;
+    opacity: 0.6!important;
+    color: #333333!important;
+    cursor: auto!important;
+}
+
+div#modalNewCustomer {
+    z-index: 1040!important;
+}
+
+#customers_table tbody tr:hover {
+    background: #F4F5F8;
+}
+
+#customers_table tbody tr td a.customer-full-page-btn:hover {
+    color: #315ABD;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+div#share-link-modal {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: #0000005c;
+    top: 0;
+    z-index: 1064;
+    right: 0;
+    display: none;
+}
+
+div#share-link-modal .the-modal-body {
+    background: #ffffff;
+    width: 500px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+div#share-link-modal .the-modal-body .title {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+div#share-link-modal .the-modal-body .form-group .label {
+    margin-bottom: 5px;
+}
+
+div#share-link-modal .the-modal-body .form-group input[type="text"] {
+    padding: 10px;
+    width: 100%;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
+}
+
+div#share-link-modal .the-modal-body input[type="text"]:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+div#share-link-modal .the-modal-body .btns button {
+    padding: 5px 20px;
+    height: auto;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+div#lou-customer-pop-up-alert {
+    position: fixed;
+    z-index: 1064;
+    right: 10px;
+    background: #4EB246;
+    top: 10px;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    display: none;
+}

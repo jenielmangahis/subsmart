@@ -1,0 +1,151 @@
+body {
+    background-color: #F9F9FF;
+}
+
+.nav-bar .logo img {
+    width: 100px;
+}
+
+.nav-bar .logo {
+    padding: 15px 0;
+}
+
+.nav-bar {
+    padding: 0px 30px;
+    background-color: #fff;
+}
+
+.nav-bar .right-menu {
+    display: inline-flex;
+    float: right;
+    color: #6B6C71;
+}
+
+.nav-bar .right-menu .avatar {
+    padding: 5px;
+    font-size: 30px;
+}
+
+.nav-bar .right-menu .sign-in-btn {
+    padding: 15px 10px;
+    cursor: pointer;
+    font-weight: 200;
+}
+
+.nav-bar .right-menu .sign-in-btn:hover {
+    border-bottom: solid 3px #2BA01D;
+    color: #333333;
+}
+
+.widget {
+    background: #fff;
+    margin: 20px 0;
+    border-radius: 10px;
+    border: solid 1px #E3E5E8;
+}
+
+.widget .body div.info {
+    padding: 3px 0;
+}
+
+.widget .body div.info .value {
+    font-weight: 600;
+}
+
+.widget .body {
+    padding: 20px;
+    color: #4A4A4A;
+    font-size: 14px;
+}
+
+.widget .body img {
+    width: 100px;
+    margin-top: 10px;
+}
+
+.widget .body .company-name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.widget.main .body {
+    text-align: center;
+    color: #4A4A4A;
+    padding: 50px 20px;
+}
+
+.widget.main .footer .copyright {
+    font-size: 10px;
+    color: #4A4A4A;
+    font-weight: 300;
+    text-align: center;
+}
+
+.widget.main .body h1 {
+    font-size: 70px;
+}
+
+.widget.main .body h3 {
+    font-size: 30px;
+}
+
+.widget.main .body .paid {
+    color: #2BA01D;
+    text-transform: capitalize;
+}
+
+.widget.main .body .amount-due-label {
+    font-size: 13px;
+    font-weight: 300;
+    color: #8C9097;
+}
+
+.widget.main .footer {
+    border-top: solid 1px #E9EAEC;
+    padding-top: 15px;
+}
+
+.widget .footer {
+    border-top: solid 2px #E9EAEC;
+    padding: 15px;
+}
+
+.widget .btn-default {
+    font-size: 13px;
+    padding: 5px 25px;
+    font-weight: 700;
+    border: solid 2px #393A3D;
+    height: auto;
+    color: #393A3D;
+    border-radius: 20px;
+}
+
+.widget .btn-default:hover {
+    color: #363636;
+    background-color: #eaeaea;
+}
+
+button.non-styled {
+    height: auto;
+    margin-left: 13px;
+    background: none;
+    border: 0;
+    font-size: 25px;
+    color: #393A3D;
+    transition: 0.3s;
+}
+
+button.non-styled:hover {
+    background-color: #3333334d;
+}
+
+.widget .marchant-info-hiden .contacts .group {
+    display: inline-flex;
+    width: 100%;
+}
+
+.widget .marchant-info-hiden .contacts .group .icon,
+.widget .marchant-info-hiden .contacts .group .info {
+    float: left;
+    padding-right: 10px;
+}
