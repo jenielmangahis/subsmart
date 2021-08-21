@@ -2464,6 +2464,7 @@ class Accounting extends MY_Controller
             $quantity   = $this->input->post('quantity');
             $price      = $this->input->post('price');
             $h          = $this->input->post('tax');
+            $discounts  = $this->input->post('discount');
             $gtotal     = $this->input->post('total');
 
             $i = 0;
@@ -2471,9 +2472,10 @@ class Accounting extends MY_Controller
                 $data['items_id'] = str_replace(',', '', $a[$i]);
                 $data['qty'] = str_replace(',', '', $quantity[$i]);
                 $data['cost'] = str_replace(',', '', $price[$i]);
-                $data['tax'] = str_replace(',', '', $h[$i]);
-                $data['total'] = str_replace(',', '', $gtotal[$i]);
-                $data['invoice_id '] = $addQuery;
+                $data['tax'] = str_replace(',', '', $h[$i]); 
+                $data['discount'] = str_replace(',', '', $discounts[$i]);
+                $data['total'] = ((str_replace(',', '', $price[$i])*str_replace(',', '', $quantity[$i]))+str_replace(',', '', $h[$i]))-str_replace(',', '', $discounts[$i]);
+                $data['invoice_id'] = $addQuery;
                 $addQuery2 = $this->invoice_model->add_invoice_items($data);
                 $i++;
             }
@@ -8984,15 +8986,64 @@ class Accounting extends MY_Controller
     }
     public function generate_share_invoice_link()
     {
+        $invoice_id=$this->input->post("invoice_id");
         $token = "";
         $token_available = false;
         while (!$token_available) {
             $token = sha1(mt_rand(1, 90000) . 'SALT');
-            if($this->accounting_invoices_model->check_token_available_for_shared_invoice_link($token)){
+            if ($this->accounting_invoices_model->check_token_available_for_shared_invoice_link($token)) {
                 $token_available = true;
             }
         }
-        $invoice_id=$this->input->post("invoice_id");
+
+
+        $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+        $customer_id = $inv->customer_id;
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+                
+                
+        $receivable_payment = 0;
+        $total_amount_received =0;
+        if (is_numeric($inv->grand_total)) {
+            $receivable_payment=$inv->grand_total;
+        }
+        $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+        foreach ($receive_payment as $payment) {
+            $total_amount_received += $payment->payment_amount;
+        }
+    
+        $balance=$receivable_payment-$total_amount_received;
+
+        if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+            $status="Overdue";
+        } else {
+            if ($balance <= 0) {
+                $status="Paid";
+            } else {
+                $status="Open";
+            }
+        }
+
+        $pdf_data=array(
+            "invoice_date" => $inv->date_issued,
+            "invoice_no"=>$inv->invoice_number,
+            "payment"=>$total_amount_received,
+            "balance_due"=>$balance,
+            "due_date"=>$inv->due_date,
+            "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+            "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+            "business_name" => $customer_info->business_name,
+            "business_email" =>  $customer_info->business_email,
+            "business_website" =>  $customer_info->website,
+            "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+            "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+            "status" => $status
+        );
+        $pdf_file_name=$token."_portalappinv.pdf";
+        $this->pdf->save_pdf("accounting/customer_includes/public_view/shared_invoice_link_pdf", $pdf_data, $pdf_file_name, "P");
+        
+
+        
         $expired_at = date('Y-m-d', strtotime(date("Y-m-d"). ' + 24 days'));
         $data=array(
             "invoice_id" => $invoice_id,
@@ -9000,6 +9051,8 @@ class Accounting extends MY_Controller
             "expired_at" => $expired_at
         );
         $this->accounting_invoices_model->add_shared_invoice_link($data);
+
+        
 
         $shared_link=base_url("portal/appinv/".$token."/view");
         $data = new stdClass();

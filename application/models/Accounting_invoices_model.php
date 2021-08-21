@@ -281,7 +281,18 @@ class Accounting_invoices_model extends MY_Model
 
         $this->db->from('invoices');
         
-        $this->db->like('id', $id);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+    public function get_terms_by_id($term_id)
+    {
+        $this->db->select('*');
+
+        $this->db->from('accounting_terms');
+        
+        $this->db->where('id', $term_id);
 
         $query = $this->db->get();
         return $query->row();
@@ -355,9 +366,9 @@ class Accounting_invoices_model extends MY_Model
     {
         $query = $this->db->query("SELECT * FROM account_shared_invoice_links WHERE token = '".$token."' and expired_at <= '".date('Y-m-d')."'");
         
-        if(count($query->result()) > 0){
+        if (count($query->result()) > 0) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }

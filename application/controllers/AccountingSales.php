@@ -98,6 +98,13 @@ class AccountingSales extends MY_Controller
 
     public function apiGetTaxedInvoices()
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
         $records = [];
         $statuses = ['overdue', 'due', 'upcoming'];
 
@@ -108,18 +115,59 @@ class AccountingSales extends MY_Controller
             $this->db->where('user_id', logged('id'));
             $this->db->where('taxes >', '0');
 
-            if ($status === 'overdue') {
-                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $currentDate);
+            if (empty($payload)) {
+                if ($status === 'overdue') {
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $currentDate);
 
-            } else if ($status === 'due') {
-                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $currentDate);
+                } else if ($status === 'due') {
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $currentDate);
 
-            } else { // upcoming
-                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >", $currentDate);
-                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $nextWeekDate);
+                } else { // upcoming
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >", $currentDate);
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $nextWeekDate);
+                }
+            } else {
+                // TODO: debug/fix overdue, due and upcoming
+
+                $dueStart = strtotime($payload['due_start']);
+                $dueStart = date('Y-m-d', $dueStart);
+
+                $dueEnd = strtotime($payload['due_end']);
+                $dueEnd = date('Y-m-d', $dueEnd);
+
+                if ($status === 'overdue') {
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $dueEnd);
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
+
+                } else if ($status === 'due') {
+                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $dueEnd);
+
+                } else { // no upcoming
+                    $this->db->where('id', '-1');
+                }
             }
 
+            $this->db->order_by("STR_TO_DATE(due_date, '%Y-%m-%d')", 'DESC', false);
             $records[$status] = $this->db->get('invoices')->result();
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
+
+    public function apiGetTaxedInvoicesDueDates()
+    {
+        $this->db->where('user_id', logged('id'));
+        $this->db->select("STR_TO_DATE(due_date, '%Y-%m-%d') due_date");
+        $this->db->order_by('due_date', 'ASC');
+        $results = $this->db->get('invoices')->result();
+
+        $records = [];
+        foreach ($results as $result) {
+            $date = date('F Y', strtotime($result->due_date));
+            if (!in_array($date, $records)) {
+                array_push($records, $date);
+            }
         }
 
         header('content-type: application/json');
