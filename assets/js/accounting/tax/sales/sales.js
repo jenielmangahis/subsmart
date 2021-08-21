@@ -18,6 +18,7 @@ class Accounting__TaxItem {
 
     const $button = $templateCopy.find(".btn-primary");
     $button.on("click", () => {
+      // TODO: display data inside modal
       this.$modal.modal("show");
     });
 
@@ -57,26 +58,43 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
 (async function Accounting__SalesTax() {
   const { Accounting__DropdownWithSearch } = await import("../dropdown-with-search/dropdown-with-search.js"); // prettier-ignore
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-  const endpoint = `${prefixURL}/AccountingSales/apiGetTaxedInvoices`;
-  const response = await fetch(endpoint);
-  const { data } = await response.json();
 
-  const $overdueContainer = $("#overdueContainer");
-  const $dueContainer = $("#dueContainer");
-  const $upcomingContainer = $("#upcomingContainer");
+  const displayTaxedInvoices = (data) => {
+    const toggleDisplayNone = ($element, shouldHide = true) => {
+      if (shouldHide) {
+        $element.addClass("d-none");
+      } else {
+        $element.removeClass("d-none");
+      }
+    };
 
-  const overdueItem = new Accounting__OverdueItem();
-  const dueItem = new Accounting__DueItem();
-  const upcoming = new Accounting__UpcomingItem();
+    const $overdueContainer = $("#overdueContainer");
+    const $dueContainer = $("#dueContainer");
+    const $upcomingContainer = $("#upcomingContainer");
 
-  const overdueItems = data.overdue.map(overdueItem.createElement);
-  const dueItems = data.due.map(dueItem.createElement);
-  const upcomings = data.upcoming.map(upcoming.createElement);
+    const $overdueParent = $overdueContainer.closest(".taxList");
+    const $dueParent = $dueContainer.closest(".taxList");
+    const $upcomingParent = $upcomingContainer.closest(".taxList");
 
-  $overdueContainer.html(overdueItems);
-  $dueContainer.html(dueItems);
-  $upcomingContainer.html(upcomings);
+    const overdueItem = new Accounting__OverdueItem();
+    const dueItem = new Accounting__DueItem();
+    const upcoming = new Accounting__UpcomingItem();
+
+    const overdueItems = data.overdue.map(overdueItem.createElement);
+    const dueItems = data.due.map(dueItem.createElement);
+    const upcomings = data.upcoming.map(upcoming.createElement);
+
+    $overdueContainer.html(overdueItems);
+    $dueContainer.html(dueItems);
+    $upcomingContainer.html(upcomings);
+
+    toggleDisplayNone($overdueParent, data.overdue.length === 0);
+    toggleDisplayNone($dueParent, data.due.length === 0);
+    toggleDisplayNone($upcomingParent, data.upcoming.length === 0);
+  };
+
+  const { data: taxedInvoice } = await fetchGetTaxedInvoices();
+  displayTaxedInvoices(taxedInvoice);
 
   const $sidebar = $("#addAdjustment");
   const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
@@ -107,29 +125,17 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   const $dueStart = $("#dueDateInputs [data-type=due_start]");
   const $dueEnd = $("#dueDateInputs [data-type=due_end]");
   const $dueButton = $("#dueDateInputs .btn-primary");
+  const $refreshListBtn = $("#refreshList");
 
   const $dueStartInput = $dueStart.find("input");
   const $dueEndInput = $dueEnd.find("input");
   const $error = $("#dueDateInputs .dropdownWithSearchContainer__error");
 
-  const dates = [
-    "August 2020",
-    "September 2020",
-    "October 2020",
-    "November 2020",
-    "December 2020",
-    "January 2021",
-    "February 2021",
-    "March 2021",
-    "April 2021",
-    "May 2021",
-    "June 2021",
-    "July 2021",
-  ];
-
+  const { data: dueDates } = await fetchTaxedInvoicesDueDates();
+  $refreshListBtn.prop("disabled", false);
   [$dueStart, $dueEnd].forEach(($element) => {
     const element = $element.get(0);
-    const dropdown = new Accounting__DropdownWithSearch(element, dates);
+    const dropdown = new Accounting__DropdownWithSearch(element, dueDates);
     dropdown.onChange = function () {
       const dueEnd = new Date($dueEndInput.val()).getTime();
       const dueStart = new Date($dueStartInput.val()).getTime();
@@ -142,6 +148,24 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
         $error.addClass("d-none");
       }
     };
+  });
+
+  $refreshListBtn.on("click", async function () {
+    const dueStart = $dueStartInput.val();
+    const dueEnd = $dueEndInput.val();
+
+    if (isEmptyString(dueStart) || isEmptyString(dueEnd)) return;
+    if (!dueDates.some((d) => d === dueStart)) return;
+    if (!dueDates.some((d) => d === dueEnd)) return;
+
+    $refreshListBtn.prop("disabled", true);
+    const { data: taxedInvoice } = await fetchGetTaxedInvoices({
+      due_start: dueStart,
+      due_end: dueEnd,
+    });
+
+    displayTaxedInvoices(taxedInvoice);
+    $refreshListBtn.prop("disabled", false);
   });
 
   const creditOrDiscountOptions = [
@@ -684,4 +708,27 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+async function fetchGetTaxedInvoices(payload = {}) {
+  const endpoint = `${prefixURL}/AccountingSales/apiGetTaxedInvoices`;
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  return await response.json();
+}
+
+async function fetchTaxedInvoicesDueDates() {
+  const endpoint = `${prefixURL}/AccountingSales/apiGetTaxedInvoicesDueDates`;
+  const response = await fetch(endpoint);
+  return await response.json();
+}
+
+function isEmptyString(string) {
+  return !string || string.length === 0;
 }

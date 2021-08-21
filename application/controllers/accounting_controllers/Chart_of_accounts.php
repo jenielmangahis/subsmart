@@ -213,16 +213,32 @@ class Chart_of_accounts extends MY_Controller {
 
     public function add()
     {
+        $post = $this->input->post();
+        switch($post['choose_time']) {
+            case 'beginning-of-year' :
+                $date = date("01-01-Y");
+            break;
+            case 'beginning-of-month' :
+                $date = date("m-01-Y");
+            break;
+            case 'today' :
+                $date = date("m-d-Y");
+            break;
+            case 'other' :
+                $date = date("m-d-Y", strtotime($post['time_date']));
+            break;
+        }
+
         $data = [
             'company_id' => logged('company_id'),
-            'account_id' => $this->input->post('account_type'),
-            'acc_detail_id' => $this->input->post('detail_type'),
-            'name' => $this->input->post('name'),
-            'description' => $this->input->post('description'),
-            'parent_acc_id' => $this->input->post('sub_account_type'),
-            'time' => $this->input->post('choose_time'),
-            'balance' => $this->input->post('balance'),
-            'time_date' => $this->input->post('time_date')
+            'account_id' => $post['account_type'],
+            'acc_detail_id' => $post['detail_type'],
+            'name' => $post['name'],
+            'description' => $post['description'],
+            'parent_acc_id' => $post['sub_account_type'],
+            'time' => $post['choose_time'],
+            'balance' => $post['balance'],
+            'time_date' => $date
         ];
 
         $account = $this->chart_of_accounts_model->saverecords($data);

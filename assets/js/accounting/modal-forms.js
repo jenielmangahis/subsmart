@@ -3479,6 +3479,11 @@ $(function() {
                     todayBtn: "linked",
                     language: "de"
                 });
+
+                $('#modal-container #add-account-modal form').attr('id', 'ajax-add-account');
+                $('#modal-container #add-account-modal form').removeAttr('action');
+                $('#modal-container #add-account-modal form').removeAttr('method');
+                $('#modal-container #add-account-modal form').removeAttr('novalidate');
                 $('#modal-container #add-account-modal').modal({
                     backdrop: 'static',
                     keyboard: false
@@ -3511,7 +3516,9 @@ $(function() {
     $(document).on('click', '#add-account-modal .close-add-account', function(e) {
         e.preventDefault();
 
-        dropdownEl.val('').trigger('change');
+        if(dropdownEl !== null) {
+            dropdownEl.val('').trigger('change');
+        }
         $('#add-account-modal').modal('hide');
     });
 
@@ -3537,6 +3544,30 @@ $(function() {
             $('#add-account-modal #time_date').val('');
             $('#add-account-modal #balance').parent().removeClass('hide');
         }
+    });
+
+    $(document).on('submit', '#add-account-modal #ajax-add-account', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/accounting/ajax-add-account',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success) {
+                    dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
+                    dropdownEl.trigger('change');
+
+                    $('#add-account-modal').modal('hide');
+                }
+            }
+        });
     });
 
     $(document).on('change', '#modal-container #modal-form #payee', function() {

@@ -499,6 +499,9 @@ class Cron_Payment extends MY_Controller {
                     //Update billing
                     $transaction_data = array();
                     $transaction_data['is_with_error']     = 0;
+                    $transaction_data['error_type']        = '';
+                    $transaction_data['error_date']        = '';
+                    $transaction_data['error_message']     = '';
                     $transaction_data['next_billing_date'] = date("n/j/Y",strtotime("+" . $d->billing_frequency . " months"));
                     $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
 
@@ -528,12 +531,100 @@ class Cron_Payment extends MY_Controller {
                     $transaction_data['error_message'] = $createSale['errorMessage'];
                     $transaction_data['is_with_error'] = 1;
                     $transaction_data['error_type']    = 'CC';
+                    $transaction_data['error_date']    = date("Y-m-d");
+                    $transaction_data['unpaid_amount'] = $d->unpaid_amount + $total_amount;
+                    $transaction_data['next_billing_date'] = date("n/j/Y",strtotime("+" . $d->billing_frequency . " months"));
                     $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
                 }
             }
             
         }
         
+        //echo "Total updated " . $total_updated . " record(s)";
+        exit;
+    }
+
+    public function acs_billing_method_cc_unpaid_amount(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        ini_set('max_execution_time', 0);
+        
+        $this->load->model('General_model', 'general');
+        $date = date("n/j/Y");
+        $get_billing = array(
+            'where' => array(
+                'unpaid_amount >' => 0,
+                'is_with_error' => 0
+            ),
+            'table' => 'acs_billing',
+            'select' => 'acs_billing.*',
+            'limit' => 50
+        );
+
+        $data = $this->general->get_data_with_param($get_billing, true);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $total_updated = 0;
+        foreach( $data as $d ){
+            $total_amount = $d->unpaid_amount;
+            $a_exp_date = explode("/", $d->credit_card_exp);
+            $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
+            $createSale = $converge->request('ccsale', [
+                'ssl_card_number' => $d->credit_card_num,
+                'ssl_exp_date' => $exp_date,
+                'ssl_cvv2cvc2' => $d->credit_card_exp_mm_yyyy,
+                'ssl_first_name' => $d->card_fname,
+                'ssl_last_name' => $d->card_lname,
+                'ssl_amount' => $total_amount,
+                'ssl_avs_address' => $d->card_address,
+                'ssl_avs_zip' => $d->zip,
+            ]);
+            if( $createSale['success'] == 1 ){
+                //Update billing
+                $transaction_data = array();
+                $transaction_data['unpaid_amount']     = 0;
+                $transaction_data['error_type']        = '';
+                $transaction_data['error_date']        = '';
+                $transaction_data['error_message']     = '';
+                $transaction_data['next_billing_date'] = date("n/j/Y",strtotime("+" . $d->billing_frequency . " months"));
+                $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
+
+                //Add to payments table
+                if( $d->billing_frequency == 1 ){
+                    $frequency = 'One Time Only';
+                }elseif( $d->billing_frequency == '12' ){
+                    $frequency = 'Every 1 Year';
+                }else{
+                    $frequency = 'Every '.$d->billing_frequency.' Month(s)';
+                }
+                $transaction_details = array();
+                $transaction_details['customer_id'] = $d->fk_prof_id;
+                $transaction_details['subtotal'] = $total_amount;
+                $transaction_details['tax'] = 0;
+                $transaction_details['category'] = $d->transaction_category;
+                $transaction_details['method'] = 'CC';
+                $transaction_details['transaction_type'] = 'Recurring';
+                $transaction_details['frequency'] = $frequency;
+                $transaction_details['notes'] = 'Payment for unpaid amount of $' . number($total_amount,2);
+                $transaction_details['status'] = 'Approved';
+                $transaction_details['datetime'] = date("m-d-Y h:i A");
+                $this->general->add_($transaction_details, 'acs_transaction_history');
+
+                $total_updated++;
+            }else{
+                $transaction_data['error_message'] = $createSale['errorMessage'];
+                $transaction_data['is_with_error'] = 1;
+                $transaction_data['error_type']    = 'CC';
+                $transaction_data['error_date']    = date("Y-m-d");
+                $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
+            }
+        }
         //echo "Total updated " . $total_updated . " record(s)";
         exit;
     }

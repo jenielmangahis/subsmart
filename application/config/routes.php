@@ -54,8 +54,10 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
 $route['customer/tickets/(:any)?'] = 'customer/ticket/$1';
-$route['customer/tickets'] = 'customer/ticket';
+$route['customer/_load_billing_credit_card_details'] = 'customer/ajax_load_company_billing_credit_card_details';
+$route['customer/_update_billing_credit_card_details'] = 'customer/ajax_update_billing_credit_card_details';
 
+$route['customer/add_data_sheet'] = 'customer/add_data_sheet';
 $route['customer/add_data_sheet'] = 'customer/add_data_sheet';
 
 $route['equipments/(:any)?/(:any)?'] = 'equipment/$1/$2';
@@ -327,6 +329,7 @@ $route['accounting/get-add-customer-details-modal'] = 'accounting_modals/add_cus
 $route['accounting/add-full-payee-details']['post'] = 'accounting_modals/add_full_payee_details';
 $route['accounting/get-add-account-modal'] = 'accounting_modals/get_add_account_modal';
 $route['accounting/get-first-detail-type/(:any)'] = 'accounting_modals/first_detail_type/$1';
+$route['accounting/ajax-add-account']['post'] = 'accounting_modals/ajax_add_account';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -950,6 +953,7 @@ $route['eSign/manage'] = 'DocuSign/manage';
 
 // Cron Payment
 $route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';
+$route['cron/acs_billing_method_cc_unpaid_amount'] = 'Cron_Payment/acs_billing_method_cc_unpaid_amount';
 $route['cron/acs_subscription_method_cc'] = 'Cron_Payment/acs_subscription_method_cc';
 $route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
 $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';

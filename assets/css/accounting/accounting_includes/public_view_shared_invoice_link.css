@@ -28,8 +28,10 @@ body {
 
 .nav-bar .right-menu .sign-in-btn {
     padding: 15px 10px;
+    padding-bottom: 14px;
     cursor: pointer;
     font-weight: 200;
+    color: #333333;
 }
 
 .nav-bar .right-menu .sign-in-btn:hover {
@@ -89,8 +91,18 @@ body {
     font-size: 30px;
 }
 
-.widget.main .body .paid {
+.widget.main .body .status.Paid {
     color: #2BA01D;
+    text-transform: capitalize;
+}
+
+.widget.main .body .status.Overdue {
+    color: #CD5133;
+    text-transform: capitalize;
+}
+
+.widget.main .body .status.Open {
+    color: #F2B835;
     text-transform: capitalize;
 }
 
@@ -148,4 +160,49 @@ button.non-styled:hover {
 .widget .marchant-info-hiden .contacts .group .info {
     float: left;
     padding-right: 10px;
+}
+
+.widget .bold {
+    font-weight: 600;
+}
+
+div.widget .body.marchant-details .see-more-btn {
+    cursor: pointer;
+}
+
+.widget .body.marchant-details .marchant-info-hiden {
+    display: none;
+}
+
+#pdf-viewer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #000000ad;
+    display: none;
+}
+
+#pdf-viewer-modal .container {
+    max-width: 900px;
+}
+
+#pdf-viewer-modal .container .the-body {
+    height: 100vh;
+    background-color: #ffffff;
+}
+
+#pdf-viewer-modal .container .the-body iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#pdf-viewer-modal .container .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 40px;
 }

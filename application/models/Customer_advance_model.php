@@ -239,4 +239,22 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_billing_error($billing_id=0){        
+        $this->db->select('*');
+        $this->db->from("acs_billing");        
+        $this->db->where("bill_id", $billing_id);
+        $this->db->where("is_with_error", 1);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function get_company_billing_error($company_id = 0, $billing_id = 0){        
+        $this->db->select('*');
+        $this->db->from("acs_billing");        
+        $this->db->where("bill_id", $billing_id);
+        $this->db->where("is_with_error", 1);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
