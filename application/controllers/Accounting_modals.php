@@ -5634,73 +5634,46 @@ class Accounting_modals extends MY_Controller
 
     private function get_account_types_choices($choices, $search = null, $dropdown = null)
     {
+        $types = $this->account_model->getAccounts();
+
         switch ($dropdown) {
             case 'expense-payment-account' :
-                $typeNames = [
-                    'Bank',
-                    'Credit Card',
-                    'Other Current Assets'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return in_array($type->account_name, ['Bank', 'Credit Card', 'Other Current Assets']);
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'expense-account' :
-                $typeNames = [
-                    'Expenses',
-                    'Bank',
-                    'Accounts receivable (A/R)',
-                    'Other Current Assets',
-                    'Fixed Assets',
-                    'Accounts payable (A/P)',
-                    'Credit Card',
-                    'Other Current Liabilities',
-                    'Long Term Liabilities',
-                    'Equity',
-                    'Income',
-                    'Cost of Goods Sold',
-                    'Other Income',
-                    'Other Expense'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name !== 'Other Assets';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'bank-account' :
-                $typeNames = [
-                    'Bank'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Bank';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'payment-account' :
-                $typeNames = [
-                    'Bank',
-                    'Credit Card'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Bank' || $type->account_name === 'Credit Card';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'bank-credit-account' :
-                $typeNames = [
-                    'Credit Card'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Credit Card';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'bank-deposit-account' :
-                $typeNames = [
-                    'Bank',
-                    'Other Current Assets'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Bank' || $type->account_name === 'Other Current Assets';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'funds-account' :
-                $typeNames = [
-                    'Income',
-                    'Other Income',
-                    'Bank',
-                    'Other Current Assets',
-                    'Fixed Assets',
-                    'Accounts payable (A/P)',
-                    'Credit Card',
-                    'Other Current Liabilities',
-                    'Long Term Liabilities',
-                    'Equity',
-                    'Cost of Goods Sold',
-                    'Expenses',
-                    'Other Expense'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name !== 'Other Assets' || $type->account_name !== 'Accounts receivable (A/R)';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'transfer-account' :
-                $typeNames = [
+                $accTypes = [
                     'Bank',
                     'Other Current Assets',
                     'Fixed Assets',
@@ -5709,58 +5682,45 @@ class Accounting_modals extends MY_Controller
                     'Long Term Liabilities',
                     'Equity'
                 ];
-            break;
-            case 'journal-entry-accounts' :
-                $types = $this->account_model->getAccounts();
-                $typeNames = [];
-                foreach($types as $type) {
-                    $typeNames[] = $type->account_name;
-                }
+                $typeNames = array_filter($types, function($type, $key) use ($accTypes) {
+                    return in_array($type->account_name, $types);
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'inventory-adj-account' :
-                $typeNames = [
-                    'Cost of Goods Sold',
-                    'Expenses',
-                    'Other Expense',
-                    'Income',
-                    'Other Income',
-                    'Equity',
-                    'Other Current Assets',
-                    'Fixed Assets',
-                    'Bank',
-                    'Other Current Liabilities'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return !in_array($type->account_name, ['Accounts receivable (A/R)', 'Other Assets', 'Accounts payable (A/P)', 'Credit Card', 'Long Term Liabilities']);
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'credit-card-account' :
-                $typeNames = [
-                    'Credit Card'  
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Credit Card';
+                }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'cash-back-account' :
-                $typeNames = [
-                    'Bank',
-                    'Other Current Assets'
-                ];
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Bank' || $type->account_name === 'Other Current Assets';
+                }, ARRAY_FILTER_USE_BOTH);
+            break;
+            default :
+                $typeNames = $types;
             break;
         }
 
-        $accountTypes = $this->account_model->getAccTypeByName($typeNames);
-
         $choices['results'] = [];
-        foreach($accountTypes as $accountType) {
+        foreach($typeNames as $type) {
             if($search !== null && $search !== '') {
-                $stripos = stripos($accountType->account_name, $search);
+                $stripos = stripos($type->account_name, $search);
                 if($stripos !== false) {
-                    $searched = substr($accountType->account_name, $stripos, strlen($search));
+                    $searched = substr($type->account_name, $stripos, strlen($search));
                     $choices['results'][] = [
-                        'id' => $accountType->id,
-                        'text' => str_replace($searched, "<strong>$searched</strong>", $accountType->account_name)
+                        'id' => $type->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $type->account_name)
                     ];
                 }
             } else {
                 $choices['results'][] = [
-                    'id' => $accountType->id,
-                    'text' => $accountType->account_name
+                    'id' => $type->id,
+                    'text' => $type->account_name
                 ];
             }
         }
@@ -5951,6 +5911,7 @@ class Accounting_modals extends MY_Controller
         }
 
         $this->page_data['accountType'] = $accountType;
+        $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
         $this->load->view('accounting/modals/add_account_modal', $this->page_data);
     }
 
@@ -5959,5 +5920,51 @@ class Accounting_modals extends MY_Controller
         $detailType = $this->account_detail_model->getDetailTypesById($accTypeId)[0];
 
         echo json_encode($detailType);
+    }
+
+    public function ajax_add_account()
+    {
+        $post = $this->input->post();
+
+        switch($post['choose_time']) {
+            case 'beginning-of-year' :
+                $date = date("01-01-Y");
+            break;
+            case 'beginning-of-month' :
+                $date = date("m-01-Y");
+            break;
+            case 'today' :
+                $date = date("m-d-Y");
+            break;
+            case 'other' :
+                $date = date("m-d-Y", strtotime($post['time_date']));
+            break;
+        }
+
+        $data = [
+            'company_id' => logged('company_id'),
+            'account_id' => $post['account_type'],
+            'acc_detail_id' => $post['detail_type'],
+            'name' => $post['name'],
+            'description' => $post['description'],
+            'parent_acc_id' => isset($post['sub_account']) ? $post['parent_account'] : null,
+            'time' => $post['choose_time'],
+            'balance' => $post['balance'],
+            'time_date' => $date,
+            'active' => 1,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
+        ];
+
+        $accountId = $this->chart_of_accounts_model->saverecords($data);
+        $account = $this->chart_of_accounts_model->getById($accountId);
+
+        $return = [
+            'data' => $accountId ? $account : null,
+            'success' => $accountId ? true : false,
+            'message' => $accountId ? "Success!" : "Error!"
+        ];
+
+        echo json_encode($return);
     }
 }

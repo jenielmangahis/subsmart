@@ -149,9 +149,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
-    <?php 
-    if(count($pdf_data) > 0){
-        for($i_data=0;$i_data<count($pdf_data);$i_data++){
+    <?php
+    if (count($pdf_data) > 0) {
+        for ($i_data=0;$i_data<count($pdf_data);$i_data++) {
             $business_name=$pdf_data[$i_data]["business_name"];
             $business_address_street=$pdf_data[$i_data]["business_address_street"];
             $business_address_state=$pdf_data[$i_data]["business_address_state"];
@@ -167,8 +167,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $print_invoices=$pdf_data[$i_data]["print_invoices"];
             $sales_receipts=$pdf_data[$i_data]["sales_receipts"];
             $statement_id=$pdf_data[$i_data]["statement_id"];
-            $has_logo=$pdf_data[$i_data]["has_logo"];
-?>
+            $has_logo=$pdf_data[$i_data]["has_logo"]; ?>
     <table style="width: 100%;">
         <tbody>
             <tr>
@@ -266,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <!-- START OF TRANSACTION STATEMENT -->
     <?php if ($statement_type == "Transaction Statement") {
-    ?>
+                ?>
     <div class="items-table">
 
         <table>
@@ -281,11 +280,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <tbody>
                 <?php
                 $total_amount_receivable=0;
-    $total_amount_received =0;
-    foreach ($invoices as $invoice) {
-        $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
-        $total_amount_receivable+=$invoice->grand_total;
-        $total_amount_received+=$received->total_amount; ?>
+                $total_amount_received =0;
+                foreach ($invoices as $invoice) {
+                    $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                    $total_amount_receivable+=$invoice->grand_total;
+                    $total_amount_received+=$received->total_amount; ?>
                 <tr>
                     <td style="text-align: left;">
                         <?=date("m/d/Y", strtotime($invoice->date_issued))?>
@@ -301,10 +300,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </td>
                 </tr>
                 <?php
-    }
-    foreach ($sales_receipts as $receipt) {
-        $total_amount_receivable+=$receipt->grand_total;
-        $total_amount_received+=$receipt->grand_total; ?>
+                }
+                foreach ($sales_receipts as $receipt) {
+                    $total_amount_receivable+=$receipt->grand_total;
+                    $total_amount_received+=$receipt->grand_total; ?>
                 <tr>
                     <td style="text-align: left;">
                         <?=date("m/d/Y", strtotime($receipt->sales_receipt_date))?>
@@ -320,7 +319,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </td>
                 </tr>
                 <?php
-    } ?>
+                } ?>
             </tbody>
         </table>
 
@@ -360,8 +359,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- END OF TRANSACTION STATEMENT -->
     <?php
-} elseif ($statement_type == "Open Item") {
-        ?>
+            } elseif ($statement_type == "Open Item") {
+                ?>
     <div class="items-table">
 
         <table>
@@ -376,40 +375,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <tbody>
                 <?php
         $total_amount_receivable=0;
-        $total_amount_balance =0;
-        $total_amount_due =0;
-        $due_amount_0 =0;
-        $due_amount_1_30 =0;
-        $due_amount_31_60 =0;
-        $due_amount_61_90 =0;
-        $due_amount_91 =0;
-        foreach ($invoices as $invoice) {
-            $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
-            $total_amount_receivable+=$invoice->grand_total;
-            $total_amount_balance+=($invoice->grand_total-$received->total_amount);
-            $due_date=date("Y-m-d", strtotime($invoice->due_date));
-            if ($due_date < date("Y-m-d")) {
-                $total_amount_due+=($invoice->grand_total-$received->total_amount);
-                $days_due = round((time() - strtotime($due_date))/(60 * 60 * 24));
-                echo round($datediff / (60 * 60 * 24));
-                if ($days_due == 0) {
-                    $due_amount_0 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 91) {
-                    $due_amount_91 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 61) {
-                    $due_amount_61_90 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 31) {
-                    $due_amount_31_60 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 1) {
-                    $due_amount_1_30 += ($invoice->grand_total-$received->total_amount);
-                }
-            }elseif($due_date == date("Y-m-d")){
-                $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
-                $total_amount_due+=($invoice->grand_total-$received->total_amount);
-                $due_amount_0 += ($invoice->grand_total-$received->total_amount);
-            }
-            if (($invoice->grand_total-$received->total_amount)>0) {
-                ?>
+                $total_amount_balance =0;
+                $total_amount_due =0;
+                $due_amount_0 =0;
+                $due_amount_1_30 =0;
+                $due_amount_31_60 =0;
+                $due_amount_61_90 =0;
+                $due_amount_91 =0;
+                foreach ($invoices as $invoice) {
+                    $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                    $total_amount_receivable+=$invoice->grand_total;
+                    $total_amount_balance+=($invoice->grand_total-$received->total_amount);
+                    $due_date=date("Y-m-d", strtotime($invoice->due_date));
+                    if ($due_date < date("Y-m-d")) {
+                        $total_amount_due+=($invoice->grand_total-$received->total_amount);
+                        $days_due = round((time() - strtotime($due_date))/(60 * 60 * 24));
+                        echo round($datediff / (60 * 60 * 24));
+                        if ($days_due == 0) {
+                            $due_amount_0 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 91) {
+                            $due_amount_91 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 61) {
+                            $due_amount_61_90 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 31) {
+                            $due_amount_31_60 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 1) {
+                            $due_amount_1_30 += ($invoice->grand_total-$received->total_amount);
+                        }
+                    } elseif ($due_date == date("Y-m-d")) {
+                        $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                        $total_amount_due+=($invoice->grand_total-$received->total_amount);
+                        $due_amount_0 += ($invoice->grand_total-$received->total_amount);
+                    }
+                    if (($invoice->grand_total-$received->total_amount)>0) {
+                        ?>
                 <tr>
                     <td style="text-align: left;">
                         <?=date("m/d/Y", strtotime($invoice->date_issued))?>
@@ -425,8 +424,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </td>
                 </tr>
                 <?php
-            }
-        } ?>
+                    }
+                } ?>
             </tbody>
         </table>
     </div>
@@ -469,8 +468,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- END OF OPEN ITEM -->
     <?php
-    } elseif ($statement_type == "Balance Forward") {
-        ?>
+            } elseif ($statement_type == "Balance Forward") {
+                ?>
     <div class="items-table">
 
         <table>
@@ -485,46 +484,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <tbody>
                 <?php
         $array_table=array();
-        foreach ($print_invoices as $invoice) {
-            $due_date=date("Y-m-d", strtotime($invoice->due_date));
-            $array_table[]=array(
+                foreach ($print_invoices as $invoice) {
+                    $due_date=date("Y-m-d", strtotime($invoice->due_date));
+                    $array_table[]=array(
                 "date" => date("m/d/Y", strtotime($invoice->date_issued)),
                 "activity" => $invoice->invoice_number,
                 "amount"=>$invoice->grand_total,
                 "type"=> "Invoice"
             );
 
-            $receive_payments=$this->accounting_invoices_model->get_received_payment_by_invoice($invoice->id);
-            if ($receive_payments!=null) {
-                $array_table[]=array(
+                    $receive_payments=$this->accounting_invoices_model->get_received_payment_by_invoice($invoice->id);
+                    if ($receive_payments!=null) {
+                        $array_table[]=array(
                     "date" => date("m/d/Y", strtotime($receive_payments->payment_date)),
                     "activity" => "Receive Payment #".$receive_payments->receive_payment_id,
                     "amount"=>$receive_payments->amount,
                     "type"=> "Receive Payment"
                 );
-            }
-        }
-        foreach ($sales_receipts as $sales) {
-            $array_table[]=array(
+                    }
+                }
+                foreach ($sales_receipts as $sales) {
+                    $array_table[]=array(
                 "date" => date("m/d/Y", strtotime($sales->sales_receipt_date)),
                 "activity" => "Sales Receipt #".$sales->id,
                 "amount"=>0,
                 "type"=> "Sales Receipt"
             );
-        }
-        usort($array_table, function ($a, $b) {
-            return $a['date'] <=> $b['date'];
-        });
+                }
+                usort($array_table, function ($a, $b) {
+                    return $a['date'] <=> $b['date'];
+                });
 
-        $forward_amount =0;
-        for ($i=0;$i<count($array_table);$i++) {
-            $sign="";
-            if ($array_table[$i]['type'] == "Invoice") {
-                $forward_amount += $array_table[$i]['amount'];
-            } elseif ($array_table[$i]['type'] == "Receive Payment") {
-                $forward_amount -= $array_table[$i]['amount'];
-                $sign="-";
-            } ?>
+                $forward_amount =0;
+                for ($i=0;$i<count($array_table);$i++) {
+                    $sign="";
+                    if ($array_table[$i]['type'] == "Invoice") {
+                        $forward_amount += $array_table[$i]['amount'];
+                    } elseif ($array_table[$i]['type'] == "Receive Payment") {
+                        $forward_amount -= $array_table[$i]['amount'];
+                        $sign="-";
+                    } ?>
                 <tr>
                     <td style="text-align: left;">
                         <?=$array_table[$i]['date']?>
@@ -540,7 +539,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </td>
                 </tr>
                 <?php
-        } ?>
+                } ?>
 
 
             </tbody>
@@ -550,34 +549,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php
 
         $total_amount_due =0;
-        $due_amount_0 =0;
-        $due_amount_1_30 =0;
-        $due_amount_31_60 =0;
-        $due_amount_61_90 =0;
-        $due_amount_91 =0;
-        foreach ($invoices as $invoice) {
-            $due_date=date("Y-m-d", strtotime($invoice->due_date));
-            if ($due_date < date("Y-m-d")) {
-                $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
-                $total_amount_due+=($invoice->grand_total-$received->total_amount);
-                $days_due = round((time() - strtotime($due_date))/(60 * 60 * 24));
-                if ($days_due == 0) {
-                    $due_amount_0 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 91) {
-                    $due_amount_91 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 61) {
-                    $due_amount_61_90 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 31) {
-                    $due_amount_31_60 += ($invoice->grand_total-$received->total_amount);
-                } elseif ($days_due >= 1) {
-                    $due_amount_1_30 += ($invoice->grand_total-$received->total_amount);
-                }
-            }elseif($due_date == date("Y-m-d")){
-                $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
-                $total_amount_due+=($invoice->grand_total-$received->total_amount);
-                $due_amount_0 += ($invoice->grand_total-$received->total_amount);
-            }
-        } ?>
+                $due_amount_0 =0;
+                $due_amount_1_30 =0;
+                $due_amount_31_60 =0;
+                $due_amount_61_90 =0;
+                $due_amount_91 =0;
+                foreach ($invoices as $invoice) {
+                    $due_date=date("Y-m-d", strtotime($invoice->due_date));
+                    if ($due_date < date("Y-m-d")) {
+                        $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                        $total_amount_due+=($invoice->grand_total-$received->total_amount);
+                        $days_due = round((time() - strtotime($due_date))/(60 * 60 * 24));
+                        if ($days_due == 0) {
+                            $due_amount_0 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 91) {
+                            $due_amount_91 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 61) {
+                            $due_amount_61_90 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 31) {
+                            $due_amount_31_60 += ($invoice->grand_total-$received->total_amount);
+                        } elseif ($days_due >= 1) {
+                            $due_amount_1_30 += ($invoice->grand_total-$received->total_amount);
+                        }
+                    } elseif ($due_date == date("Y-m-d")) {
+                        $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+                        $total_amount_due+=($invoice->grand_total-$received->total_amount);
+                        $due_amount_0 += ($invoice->grand_total-$received->total_amount);
+                    }
+                } ?>
     <div class="items-table">
         <table style="width: 100%; ">
             <thead>
@@ -616,9 +615,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- END OF OPEN ITEM -->
     <?php
-    } ?>
-    <div style="<?php if($i_data < (count($pdf_data)-1)){echo "page-break-after: always;";}?>"></div>
-<?php
+            } ?>
+    <div
+        style="<?php if ($i_data < (count($pdf_data)-1)) {
+                echo "page-break-after: always;";
+            } ?>">
+    </div>
+    <?php
         }
     }
     ?>

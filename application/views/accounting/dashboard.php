@@ -190,8 +190,8 @@ input:checked + .slider:before {
 #circle {
     background: white;
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-style: solid;
     border-color: #55b702;
 }
@@ -200,7 +200,55 @@ input:checked + .slider:before {
     background: #def3cc;
 }
 
+.arrow {
+    width:88px;
+    margin:40px auto;
+}
+
+.line {
+    margin-top:7px;
+    width:81px;
+    background:#8d9096;
+    height:2px;
+    float:left;
+}
+.point {	
+    width: 0; 
+	height: 0; 
+	border-top: 7px solid transparent;
+	border-bottom: 7px solid transparent;
+	border-left: 7px solid #8d9096;
+    float:right;
+}
+
+.notification {
+  /* background-color: #555; */
+  color: white;
+  text-decoration: none;
+  /* padding: 15px 26px; */
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+/* .notification:hover {
+  background: red;
+} */
+
+.notification .badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+}
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link rel="stylesheet" href="<?php echo $url->assets ?>chart_styles/chart.css">
+<script src="<?php echo $url->assets ?>chart_styles/jquery.chart.js"></script>
+
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="padding-left:1%;">
@@ -268,18 +316,306 @@ input:checked + .slider:before {
 
                                             <br><br>
 
-                                            <div align="center">
-                                                <a href="#">
-                                                    <div id="circle" style="padding:20px 0 ;">
-                                                        <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:50px;" /></center>
+                                            <div style="background-color:#f9fafb;width:80%;border-radius:15px;">
+                                                <div class="row" style="">
+                                                    <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
+                                                        <center><h6>Money in</h6></center>
                                                     </div>
-                                                </a>
-                                                <p>Add products and services</p>
+                                                    <div class="col-md-11" style="padding:0 3% 3% 3%;">
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Add products and services</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Manage customers</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <div class="line"></div>
+                                                                <div class="point"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Create estimates</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <div class="line"></div>
+                                                                <div class="point"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#" class="notification">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <span class="badge"><b>99+</b></span>
+                                                                </div>
+                                                            </a>
+                                                            <p>Send invoices</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <div class="line"></div>
+                                                                <div class="point"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Receive payments</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Get funding</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-
+                                            <br>
+                                            <div style="background-color:#f9fafb;width:80%;">
+                                                <div class="row">
+                                                    <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
+                                                        <center><h6>Money out</h6></center>
+                                                    </div>
+                                                    <div class="col-md-11" style="padding:0 3% 3% 3%;">
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Pay bills</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;width:125px;">
+                                                            <!-- <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Manage customers</p> -->
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;width:125px;">
+                                                            <!-- <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Manage customers</p> -->
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Track time</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <div class="line"></div>
+                                                                <div class="point"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Manage payroll</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div style="background-color:#f9fafb;width:80%;">
+                                                <div class="row">
+                                                    <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
+                                                        <center><h6>Accounting and reports</h6></center>
+                                                    </div>
+                                                    <div class="col-md-11" style="padding:0 3% 3% 3%;">
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Get business banking</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <div class="line"></div>
+                                                                <div class="point"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#" class="notification">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                    <span class="badge"><b>NEW</b></span>
+                                                                </div>
+                                                            </a>
+                                                            <p>Review transactions</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>See reports and trends</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <!-- <div class="line"></div>
+                                                                <div class="point"></div> -->
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Track time</p>
+                                                        </div>
+                                                        <div align="center" style="padding:3% 0;display: inline-block;">
+                                                            <div class="arrow">
+                                                                <div class="line"></div>
+                                                                <div class="point"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div align="center" style="padding:;display: inline-block;">
+                                                            <a href="#">
+                                                                <div id="circle" style="padding:20px 0 ;">
+                                                                    <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
+                                                                </div>
+                                                            </a>
+                                                            <p>Manage payroll</p>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
 
                                         </div>
                                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                            <br>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                    <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
+                                                    <p>Some QuickBooks Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <a href="#"  style="color:#0077C5;">Take Action </a> </p>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true" style="font-size:20px;">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                    <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
+                                                    <p>Your customer made a payment more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a> </p>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true" style="font-size:20px;">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                    <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
+                                                    <p>A bank transfer from your customer received as payment for Invoice 13053 has been canceled due to a problem with their account. To keep your books accurate, you should follow the steps to <a href="#"  style="color:#0077C5;">handle a canceled bank transfer.</a></p>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true" style="font-size:20px;">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                    <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
+                                                    <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true" style="font-size:20px;">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                    <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
+                                                    <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true" style="font-size:20px;">X</span>
+                                                    </button>
+                                                </div>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                    <i class="fa fa-exclamation-circle" style="font-size:24px;color: #0098cd;"></i> Alert <br>
+                                                    <p>We just updated the info we share on commercial card transactions. We're now sharing line item details, also known as Level 3 data, with the card companies. This has benefits for both you and your customers. <a href="#"  style="color:#0077C5;">Tell me more</a></p>
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true" style="font-size:20px;">X</span>
+                                                    </button>
+                                                </div>
+
+                                                <br><br>
+                                                
+                                                <!-- <div class="chart">
+                                                    <ul class="bar-chart" data-bars="[4,2],[4,5],[8,3],[4,2],[4,2]" data-max="10" data-unit="k" data-width="24"></ul>
+                                                </div> -->
+                                                <div class="bar-chart" data-bars="[[4,2],[4,5],[10,3],[4,2],[4,2]]" data-max="10"  data-unit="k" data-grid="0"><a href="https://www.jqueryscript.net/tags.php?/grid/"> </a></div>
+
+
+                                                <br>
                                                 <div class="page-title-box">
                                                     <div class="row">
                                                         <div class="col-sm-4">
@@ -3045,5 +3381,10 @@ $(document).ready(function() {
              }
         });
     });
+});
+</script>
+<script>
+$(function() {
+    $('.bar-chart').cssCharts({type:"bar"});
 });
 </script>

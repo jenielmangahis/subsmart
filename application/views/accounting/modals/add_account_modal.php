@@ -24,14 +24,22 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="detail_type">Detail Type</label>
-                                                <select name="detail_type" id="detail_type" class="form-control select2" required></select>
+                                                <select name="detail_type" id="detail_type" class="form-control select2" required>
+                                                    <?php if(isset($detailType)) : ?>
+                                                        <option value="<?=$detailType->acc_detail_id?>" selected><?=$detailType->acc_detail_name?></option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
-                                            <div class="detail-type-desc"></div>
+                                            <div class="detail-type-desc">
+                                                <?php if(isset($detailType)) : ?>
+                                                    <?=$detailType->description?>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
-                                                <input type="text" class="form-control" name="name" id="name" required placeholder="Enter Name"/>
+                                                <input type="text" class="form-control" name="name" id="name" required placeholder="Enter Name" value="<?=isset($detailType) ? $detailType->acc_detail_name : ''?>"/>
                                             </div>
                                             <div class="form-group">
                                                 <label for="description">Description</label>
