@@ -822,76 +822,78 @@ $(function(){
     default_plan_selected();
 
     function default_plan_selected(){
-    	if( default_plan == 'essential' ){
-    		var plan_id = 2;
-	    	var plan_price = "59.99";
-	    	var plan_price_discounted = "49.99";
-	    	var plan_name  = "Essential";
-    	}else if( default_plan == 'simple-start' ){
-    		var plan_id = 1;
-	    	var plan_price = "24.99";
-	    	var plan_price_discounted = "19.99";
-	    	var plan_name  = "Simple Start";
-    	}else if( default_plan == 'plus' ){
-    		var plan_id = 3;
-	    	var plan_price = "79.99";
-	    	var plan_price_discounted = "69.99";
-	    	var plan_name  = "Plus";
-    	}else if( default_plan == 'premier-pro' ){
-    		var plan_id = 4;
-	    	var plan_price = "99.99";
-	    	var plan_price_discounted = "89.99";
-	    	var plan_name  = "PremierPro";
-    	}else if( default_plan == 'enterprise' ){
-    		var plan_id = 6;
-	    	var plan_price = "299.99";
-	    	var plan_price_discounted = "249.99";
-	    	var plan_name  = "Enterprise";
-    	}else if( default_plan == 'industry-specific' ){
-    		var plan_id = 5;
-	    	var plan_price = "179.99";
-	    	var plan_price_discounted = "149.99";
-	    	var plan_name  = "Industry Specific";
-    	} 
+    	if( default_plan != '' ){
+    		if( default_plan == 'essential' ){
+	    		var plan_id = 2;
+		    	var plan_price = "59.99";
+		    	var plan_price_discounted = "49.99";
+		    	var plan_name  = "Essential";
+	    	}else if( default_plan == 'simple-start' ){
+	    		var plan_id = 1;
+		    	var plan_price = "24.99";
+		    	var plan_price_discounted = "19.99";
+		    	var plan_name  = "Simple Start";
+	    	}else if( default_plan == 'plus' ){
+	    		var plan_id = 3;
+		    	var plan_price = "79.99";
+		    	var plan_price_discounted = "69.99";
+		    	var plan_name  = "Plus";
+	    	}else if( default_plan == 'premier-pro' ){
+	    		var plan_id = 4;
+		    	var plan_price = "99.99";
+		    	var plan_price_discounted = "89.99";
+		    	var plan_name  = "PremierPro";
+	    	}else if( default_plan == 'enterprise' ){
+	    		var plan_id = 6;
+		    	var plan_price = "299.99";
+		    	var plan_price_discounted = "249.99";
+		    	var plan_name  = "Enterprise";
+	    	}else if( default_plan == 'industry-specific' ){
+	    		var plan_id = 5;
+		    	var plan_price = "179.99";
+		    	var plan_price_discounted = "149.99";
+		    	var plan_name  = "Industry Specific";
+	    	} 
 
-    	var subscription_type = $(".subscription-type").val();
+	    	var subscription_type = $(".subscription-type").val();
 
-    	//alert(plan_price);
-    	//alert(plan_price_discounted);
-    	//alert(subscription_type);
+	    	//alert(plan_price);
+	    	//alert(plan_price_discounted);
+	    	//alert(subscription_type);
 
-    	$("#plan_id").val(plan_id);
-    	$("#plan_price").val(plan_price);
-    	$("#plan_price_discounted").val(plan_price_discounted);
-        $("#plan_name").val(plan_name);
-    	$(".plan-selected").text(plan_name);
-    	$(".plan-price").text("$" + plan_price);
+	    	$("#plan_id").val(plan_id);
+	    	$("#plan_price").val(plan_price);
+	    	$("#plan_price_discounted").val(plan_price_discounted);
+	        $("#plan_name").val(plan_name);
+	    	$(".plan-selected").text(plan_name);
+	    	$(".plan-price").text("$" + plan_price);
 
-    	step1Container.hide();
+	    	step1Container.hide();
 
-    	$("span.step-1").removeClass('btn-indigo');
-	    $("span.step-1").addClass("btn-default");
+	    	$("span.step-1").removeClass('btn-indigo');
+		    $("span.step-1").addClass("btn-default");
 
-    	if( subscription_type == 'trial' ){
-    		$(".total-amount").text("0.00 (Free Trial)");
-    		$("#plan_type").val('trial');
-    		$(".payment-method-container").hide();
-    		$(".trial-register-btn").show();
+	    	if( subscription_type == 'trial' ){
+	    		$(".total-amount").text("0.00 (Free Trial)");
+	    		$("#plan_type").val('trial');
+	    		$(".payment-method-container").hide();
+	    		$(".trial-register-btn").show();
 
-    		//$("#plan_price").val(0);
-    		/*step3Container.show(); 
-    		$("span.step-3").addClass('btn-indigo');*/
+	    		//$("#plan_price").val(0);
+	    		/*step3Container.show(); 
+	    		$("span.step-3").addClass('btn-indigo');*/
 
-    		step2Container.show();
-	    	$("span.step-2").addClass('btn-indigo');
+	    		step2Container.show();
+		    	$("span.step-2").addClass('btn-indigo');
 
-    	}else{
-    		$("#subscription_type").val('discounted');
-    		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
-    		$(".payment-method-container").show();
-    		$(".trial-register-btn").hide();
-    		step2Container.show();
-	    	$("span.step-2").addClass('btn-indigo');
+	    	}else{
+	    		$("#subscription_type").val('discounted');
+	    		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
+	    		$(".payment-method-container").show();
+	    		$(".trial-register-btn").hide();
+	    		step2Container.show();
+		    	$("span.step-2").addClass('btn-indigo');
+	    	}
     	}
     }
 
