@@ -979,6 +979,7 @@ $route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';
 $route['mycrm/_request_remove_addon'] = 'Mycrm/company_request_remove_addon';
 $route['mycrm/_cancel_remove_addon'] = 'Mycrm/company_cancel_remove_addon';
 $route['mycrm/_buy_plan_license'] = 'Mycrm/company_buy_plan_license';
+$route['mycrm/_get_plan_payment_details'] = 'Mycrm/ajax_load_plan_payment_form';
 
 //Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';

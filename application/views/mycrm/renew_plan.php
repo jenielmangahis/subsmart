@@ -107,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <p class="margin-top margin-bottom" style="font-size: 16px;">
                     Your current membership has expired on <?= date("d-M-Y", strtotime($client->plan_date_expiration)); ?>.
                 </p>
-                <a class="btn btn-primary btn-lg" href="https://www.markate.com/pro/shop/plan/select">Renew Membership</a>
+                <a class="btn btn-primary btn-lg" href="<?= url('mycrm/plan_select'); ?>">Renew Membership</a>
             </div>
         </div>
     </div>
