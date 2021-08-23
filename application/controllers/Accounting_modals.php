@@ -5895,26 +5895,6 @@ class Accounting_modals extends MY_Controller
         echo json_encode(['payee' => $payee,'updated' => $updated]);
     }
 
-    public function get_add_account_modal()
-    {
-        $field = $this->input->get('field');
-        switch($field) {
-            default :
-                $accountType = $this->account_model->getAccTypeByName('Bank');
-            break;
-            case 'bank-credit-account' :
-                $accountType = $this->account_model->getAccTypeByName('Credit Card');
-            break;
-            case 'credit-card-account' :
-                $accountType = $this->account_model->getAccTypeByName('Credit Card');
-            break;
-        }
-
-        $this->page_data['accountType'] = $accountType;
-        $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
-        $this->load->view('accounting/modals/add_account_modal', $this->page_data);
-    }
-
     public function first_detail_type($accTypeId)
     {
         $detailType = $this->account_detail_model->getDetailTypesById($accTypeId)[0];
@@ -5963,6 +5943,55 @@ class Accounting_modals extends MY_Controller
             'data' => $accountId ? $account : null,
             'success' => $accountId ? true : false,
             'message' => $accountId ? "Success!" : "Error!"
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function get_dropdown_modal($modal = '')
+    {
+        switch($modal) {
+            case 'account_modal' :
+                $field = $this->input->get('field');
+                switch($field) {
+                    default :
+                        $accountType = $this->account_model->getAccTypeByName('Bank');
+                    break;
+                    case 'bank-credit-account' :
+                        $accountType = $this->account_model->getAccTypeByName('Credit Card');
+                    break;
+                    case 'credit-card-account' :
+                        $accountType = $this->account_model->getAccTypeByName('Credit Card');
+                    break;
+                }
+        
+                $this->page_data['accountType'] = $accountType;
+                $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
+            break;
+        }
+        $this->load->view("accounting/modals/$modal", $this->page_data);
+    }
+
+    public function ajax_add_payment_method()
+    {
+        $post = $this->input->post();
+
+        $data = [
+            'company_id' => getLoggedCompanyID(),
+            'name' => $post['name'],
+            'credit_card' => $post['credit_card'],
+            'status' => 1,
+            'created_at' => date('Y-m-d h:i:s'),
+            'updated_at' => date('Y-m-d h:i:s')
+        ];
+
+        $methodId = $this->accounting_payment_methods_model->create($data);
+        $method = $this->accounting_payment_methods_model->getById($methodId);
+
+        $return = [
+            'data' => $methodId ? $method : null,
+            'success' => $methodId ? true : false,
+            'message' => $methodId ? "Success!" : "Error!"
         ];
 
         echo json_encode($return);

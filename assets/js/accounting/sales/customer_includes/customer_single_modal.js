@@ -95,6 +95,7 @@ $(document).on("change", "#customer-single-modal .single-customer-info-section .
     } else {
         $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").prop("checked", false);
     }
+    set_by_batch_menu_disabled();
 });
 $(document).on("change", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']", function(event) {
     single_customer_transaction_table_checkbox_changed();
@@ -142,8 +143,53 @@ function single_customer_transaction_table_checkbox_changed() {
             $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", false);
         }
     });
+    set_by_batch_menu_disabled();
+
 }
 
+function set_by_batch_menu_disabled() {
+    var invoice_selected = false;
+    var not_invoice_selected = false;
+    var no_selected = true;
+    var no_status_open_overdue = true;
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            no_selected = false;
+            if ($(this).attr("data-row-type") != "Invoice") {
+                not_invoice_selected = true;
+            } else {
+                invoice_selected = true;
+            }
+
+            if ($(this).attr("data-row-status") == "Open" || $(this).attr("data-row-status") == "Overdue") {
+                no_status_open_overdue = false;
+            }
+        }
+
+    });
+    $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn").removeClass("disabled");
+    $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn").removeClass("disabled");
+    $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn").removeClass("disabled");
+    $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn").removeClass("disabled");
+
+    if (not_invoice_selected) {
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn").addClass("disabled");
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn").addClass("disabled");
+        if (!invoice_selected) {
+            $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn").addClass("disabled");
+            $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn").addClass("disabled");
+        }
+    }
+    if (no_selected) {
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn").addClass("disabled");
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn").addClass("disabled");
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn").addClass("disabled");
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn").addClass("disabled");
+    }
+    if (no_status_open_overdue) {
+        $("#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn").addClass("disabled");
+    }
+}
 
 single_customer_table_columns_changed();
 
@@ -582,4 +628,196 @@ $(document).on("click", "div#share-link-modal .the-modal-body .btns button.copy-
         $("#lou-customer-pop-up-alert").fadeOut();
         setTimeout(function() { $("#lou-customer-pop-up-alert").remove(); }, 1000);
     }, 3000);
+});
+
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .print-invoice-btn", function(event) {
+    $("body").css({ 'cursor': 'wait' });
+    $(this).css({ 'cursor': 'wait' });
+    $.ajax({
+        url: baseURL + "accounting/customer_print_invoice_pdf",
+        type: "POST",
+        dataType: "json",
+        data: {
+            invoice_id: $(this).attr("data-invoice-id"),
+            invoice_no: $(this).attr("data-invoice-no")
+        },
+        success: function(data) {
+            var win = window.open(data.pdf_link, '_blank');
+            if (win) {
+                win.focus();
+            } else {
+                console.log('Please allow popups for this website');
+            }
+            $("body").css({ 'cursor': 'default' });
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .print-invoice-btn").css({ 'cursor': 'default' });
+        },
+    });
+});
+
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .print-invoice-packaging-slip-btn", function(event) {
+    $("body").css({ 'cursor': 'wait' });
+    $(this).css({ 'cursor': 'wait' });
+    $.ajax({
+        url: baseURL + "accounting/print_invoice_packaging_slip",
+        type: "POST",
+        dataType: "json",
+        data: {
+            invoice_id: $(this).attr("data-invoice-id"),
+            invoice_no: $(this).attr("data-invoice-no")
+        },
+        success: function(data) {
+            var win = window.open(data.pdf_link, '_blank');
+            if (win) {
+                win.focus();
+            } else {
+                console.log('Please allow popups for this website');
+            }
+            $("body").css({ 'cursor': 'default' });
+            $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .print-invoice-packaging-slip-btn").css({ 'cursor': 'default' });
+        },
+    });
+});
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn", function(event) {
+    Swal.fire({
+        title: "Delete Invoice?",
+        html: "Are you sure you want to delete this invoice? This invoice is linked to other transactions",
+        imageUrl: baseURL + "assets/img/accounting/customers/delete.png",
+        showCancelButton: true,
+        confirmButtonColor: "#2ca01c",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, I want to delete this invoice!",
+    }).then((result) => {
+        if (result.value) {
+            $("body").css({ 'cursor': 'wait' });
+            $(this).css({ 'cursor': 'wait' });
+            $.ajax({
+                type: 'POST',
+                url: baseURL + "invoice/deleteInvoiceBtnNew",
+                data: { id: $(this).attr("data-invoice-id") },
+                success: function(result) {
+                    $("body").css({ 'cursor': 'default' });
+                    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn").css({ 'cursor': 'default' });
+                    if (result) {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Success",
+                            html: "Invoice has been deleted.",
+                            icon: "success",
+                        });
+                    }
+                },
+            });
+            single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+        }
+    });
+});
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .copy-invoice-btn", function(event) {
+    $("#create_invoice_modal").modal('toggle');
+    $("#loader-modal").show();
+    $.ajax({
+        type: 'POST',
+        dataType: "json",
+        url: baseURL + "accounting/ajax_get_invoice_info",
+        data: { invoice_id: $(this).attr("data-invoice-id") },
+        success: function(data) {
+            var items_html = "<tr>" + $("#create_invoice_modal .items-section table tbody tr:first-child").html() + "</tr>";
+            console.log(data.invoice_items.length);
+            for (var i = 0; i < data.invoice_items.length - 1; i++) {
+                items_html += "<tr>" + $("#create_invoice_modal .items-section table tbody tr:first-child").html() + "</tr>";
+            }
+            $("#create_invoice_modal .items-section table tbody").html(items_html);
+            for (var i = 0; i < data.invoice_items.length; i++) {
+                $("#create_invoice_modal .items-section table tbody input[name='items[]']").eq(i).val(data.invoice_items[i]["title"]);
+                $("#create_invoice_modal .items-section table tbody input[name='itemid[]']").eq(i).val(data.itemid[i]["items_id"]);
+                $("#create_invoice_modal .items-section table tbody input[name='item_type[]']").eq(i).val(data.invoice_items[i]["item_type"]);
+                $("#create_invoice_modal .items-section table tbody input[name='quantity[]']").eq(i).val(data.invoice_items[i]["qty"]);
+                var cost = 0;
+                if (data.invoice_items[i]["iCost"] != null) {
+                    cost = data.invoice_items[i]["iCost"];
+                }
+                $("#create_invoice_modal .items-section table tbody input[name='price[]']").eq(i).val(cost);
+                $("#create_invoice_modal .items-section table tbody input[name='tax[]']").eq(i).val(data.invoice_items[i]["tax"]);
+                $("#create_invoice_modal .items-section table tbody input[name='discount[]']").eq(i).val("0.00");
+                $("#create_invoice_modal .items-section table tbody input[name='tax_percent[]']").eq(i).val(data.invoice_items[i]["tax"] / (data.invoice_items[i]["qty"] * data.invoice_items[i]["iCost"]));
+                $("#create_invoice_modal form .item-totals input[name='adjustment_name']").val(data.invoice_details["adjustment_name"]);
+                $("#create_invoice_modal form .item-totals input[name='adjustment_value']").val(data.invoice_details["adjustment_value"]);
+                $("#create_invoice_modal form input[name='invoice_job_location']").val(data.invoice_details["job_location"]);
+                $("#create_invoice_modal form input[name='job_name']").val(data.invoice_details["job_name"]);
+                $("#create_invoice_modal form select[name='terms']").val(data.invoice_details["terms"]);
+                $("#create_invoice_modal form input[name='customer_email']").val(data.customer_info["acs_email"]);
+                $("#create_invoice_modal form select[name='customer_id']").val(data.customer_info["prof_id"]);
+                $("#create_invoice_modal form input[name='location_scale']").val(data.invoice_details["location_scale"]);
+                $("#create_invoice_modal form input[name='tags']").val(data.invoice_details["tags"]);
+                $("#create_invoice_modal form input[name='work_order_number']").val(data.invoice_details["work_order_number"]);
+                $("#create_invoice_modal form input[name='purchase_order']").val(data.invoice_details["purchase_order"]);
+                $("#create_invoice_modal form input[name='invoice_number']").val(data.invoice_details["invoice_number"]);
+                $("#create_invoice_modal form input[name='date_issued']").val(data.invoice_details["date_issued"]);
+                $("#create_invoice_modal form input[name='online_payments']").val(data.invoice_details["online_payments"]);
+                $("#create_invoice_modal form textarea[name='billing_address']").html(data.invoice_details["billing_address"]);
+                $("#create_invoice_modal form textarea[name='shipping_to_address']").html(data.invoice_details["shipping_to_address"]);
+                $("#create_invoice_modal form input[name='ship_via']").val(data.invoice_details["ship_via"]);
+                $("#create_invoice_modal form input[name='shipping_date']").val(data.invoice_details["shipping_date"]);
+                $("#create_invoice_modal form input[name='tracking_number']").val(data.invoice_details["tracking_number"]);
+                $("#create_invoice_modal form input[name='due_date']").val(data.invoice_details["due_date"]);
+                $("#create_invoice_modal form textarea[name='message_to_customer']").html(data.invoice_details["message_to_customer"]);
+                $("#create_invoice_modal form textarea[name='terms_and_conditions']").html(data.invoice_details["terms_and_conditions"]);
+                $("#create_invoice_modal form input[name='status']").val(data.invoice_details["status"]);
+                $("#create_invoice_modal form input[name='deposit_request_type']").val(data.invoice_details["deposit_request_type"]);
+                $("#create_invoice_modal form input[name='deposit_amount']").val(data.invoice_details["deposit_request"]);
+            }
+            table_items_input_changed_auto();
+            $("#loader-modal").hide();
+        },
+    });
+
+});
+
+function table_items_input_changed_auto() {
+    $("#create_invoice_modal .items-section table tbody input[name='items[]']").map(function() {
+        var qty = $(this).parent("td").parent("tr").find("input[name='quantity[]']").val();
+        var price = $(this).parent("td").parent("tr").find("input[name='price[]']").val();
+        var discount = $(this).parent("td").parent("tr").find("input[name='discount[]']").val();
+
+        var tax = $(this).parent("td").parent("tr").find("input.tax-hide").val();
+        var total = ((qty * price) + ((qty * price) * (tax / 100))) - discount;
+        $(this).parent("td").parent("tr").find("input[name='tax[]']").val(Number((qty * price) * (tax / 100)).toLocaleString('en'));
+        $(this).parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
+    });
+    create_invoice_modal_compute_grand_total();
+}
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .void-invoice-btn", function(event) {
+    Swal.fire({
+        title: "Void Invoice?",
+        html: "Are you sure you want to void this invoice? This invoice is linked to other transactions",
+        imageUrl: baseURL + "assets/img/accounting/customers/cancellation.png",
+        showCancelButton: true,
+        confirmButtonColor: "#2ca01c",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, I want to voide this invoice!",
+    }).then((result) => {
+        if (result.value) {
+            $("body").css({ 'cursor': 'wait' });
+            $(this).css({ 'cursor': 'wait' });
+            $.ajax({
+                type: 'POST',
+                url: baseURL + "invoice/void_invoice",
+                data: { id: $(this).attr("data-invoice-id") },
+                success: function(result) {
+                    $("body").css({ 'cursor': 'default' });
+                    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .void-invoice-btn").css({ 'cursor': 'default' });
+                    if (result) {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Success",
+                            html: "Invoice has been voided.",
+                            icon: "success",
+                        });
+                        single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+                    }
+                },
+            });
+        }
+    });
 });

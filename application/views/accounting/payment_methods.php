@@ -48,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <a href="#" class="btn btn-secondary mr-2" style="padding: 10px 12px !important">
                                                 Run Report
                                             </a>
-                                            <a href="#" data-toggle="modal" data-target="#payment_method_modal" class="btn btn-success" style="padding: 10px 20px !important">
+                                            <a href="#" id="new-payment-method" class="btn btn-success" style="padding: 10px 20px !important">
                                                 New
                                             </a>
                                         </div>
@@ -121,112 +121,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
-    </div>
-
-    <div class="modal fade" id="payment_method_modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Payment Method</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
-                </div>
-                <form id="payment-method-form" action="/accounting/payment-methods/add" method="post">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="max-height: 650px;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" id="name" class="form-control">
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="credit_card" name="credit_card" value="1">
-                                                <label class="form-check-label" for="credit_card">This is a credit card.</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
-                    </div>
-                    <div class="col-sm-6">
-                        <button type="submit" class="btn btn-success btn-rounded border float-right">Save</button>
-                    </div>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="inactive_payment_method" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="max-height: 650px;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p>Are you sure you want to make <b><span class="method-name"></span></b> inactive?</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">No</button>
-                    </div>
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-success btn-rounded border float-right">Yes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal fade" id="active_payment_method" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body" style="max-height: 650px;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p>Are you sure you want to make <b><span class="method-name"></span></b> active?</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end card -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">No</button>
-                    </div>
-                    <div class="col-sm-6">
-                        <button type="button" class="btn btn-success btn-rounded border float-right">Yes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>

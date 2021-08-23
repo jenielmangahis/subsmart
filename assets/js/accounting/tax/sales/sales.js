@@ -18,7 +18,14 @@ class Accounting__TaxItem {
 
     const $button = $templateCopy.find(".btn-primary");
     $button.on("click", () => {
-      // TODO: display data inside modal
+      const $dataTypes = this.$modal.find("[data-type]");
+      data.date_issued = this.formatDate(data.date_issued);
+      data.due_date = this.formatDate(data.due_date);
+
+      $dataTypes.each(function (_, element) {
+        element.textContent = getValueByString(data, element.dataset.type);
+      });
+
       this.$modal.modal("show");
     });
 
@@ -731,4 +738,17 @@ async function fetchTaxedInvoicesDueDates() {
 
 function isEmptyString(string) {
   return !string || string.length === 0;
+}
+
+function getValueByString(object, string) {
+  const parts = string.split(".");
+  const newObject = object[parts[0]];
+
+  if (!parts[1]) {
+    return newObject;
+  }
+
+  parts.splice(0, 1);
+  var newString = parts.join(".");
+  return getValueByString(newObject, newString);
 }

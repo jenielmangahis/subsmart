@@ -236,6 +236,8 @@ class Accounting_invoices_model extends MY_Model
         $this->db->from('invoices');
         
         $this->db->where('customer_id', $customer_id);
+        $this->db->where('view_flag!=', 1);
+        $this->db->where('voided!=', 1);
 
         $query = $this->db->get();
         return $query->result();

@@ -111,6 +111,8 @@ class AccountingSales extends MY_Controller
         $currentDate = date('Y-m-d');
         $nextWeekDate = date('Y-m-d', strtotime('+7 days'));
 
+        $companyIdMap = [];
+
         foreach ($statuses as $status) {
             $this->db->where('user_id', logged('id'));
             $this->db->where('taxes >', '0');
@@ -118,9 +120,11 @@ class AccountingSales extends MY_Controller
             if (empty($payload)) {
                 if ($status === 'overdue') {
                     $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $currentDate);
+                    // $this->db->where('status', 'Overdue');
 
                 } else if ($status === 'due') {
                     $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $currentDate);
+                    // $this->db->where('status', 'Due');
 
                 } else { // upcoming
                     $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >", $currentDate);
@@ -135,12 +139,14 @@ class AccountingSales extends MY_Controller
                 $dueEnd = strtotime($payload['due_end']);
                 $dueEnd = date('Y-m-d', $dueEnd);
 
+                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
+                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $dueEnd);
+
                 if ($status === 'overdue') {
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $dueEnd);
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
+                    $this->db->where('status', 'Overdue');
 
                 } else if ($status === 'due') {
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $dueEnd);
+                    $this->db->where('status', 'Due');
 
                 } else { // no upcoming
                     $this->db->where('id', '-1');
@@ -148,7 +154,18 @@ class AccountingSales extends MY_Controller
             }
 
             $this->db->order_by("STR_TO_DATE(due_date, '%Y-%m-%d')", 'DESC', false);
-            $records[$status] = $this->db->get('invoices')->result();
+            $results = $this->db->get('invoices')->result();
+
+            foreach ($results as $result) {
+                if (!array_key_exists($result->company_id, $companyIdMap)) {
+                    $this->db->where('id', $result->company_id);
+                    $companyIdMap[$result->company_id] = $this->db->get('clients')->row();
+                }
+
+                $result->company = $companyIdMap[$result->company_id];
+            }
+
+            $records[$status] = $results;
         }
 
         header('content-type: application/json');
@@ -172,5 +189,23 @@ class AccountingSales extends MY_Controller
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
+    }
+
+    public function apiSaveAdjustment()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $payload['user_id'] = logged('id');
+        $this->db->insert('accounting_tax_adjustments', $payload);
+
+        $this->db->where('id', $this->db->insert_id());
+        $record = $this->db->get('accounting_tax_agencies')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
     }
 }

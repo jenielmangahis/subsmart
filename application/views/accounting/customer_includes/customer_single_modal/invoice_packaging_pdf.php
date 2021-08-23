@@ -205,7 +205,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <tbody>
                 <tr>
                     <td style="width: 50%;">
-                        <h2 class="receipt-title">INVOICE</h2>
+                        <h2 class="receipt-title">Packaging Slip</h2>
                     </td>
                     <td style="width: 50%;">
 
@@ -237,10 +237,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </p>
                                                     <p class="receipt-date">DATE
                                                     </p>
-                                                    <p class="receipt-date">DUE DATE
-                                                    </p>
-                                                    <p class="receipt-date">TERMS
-                                                    </p>
                                                 </td>
                                                 <td style="text-align:left;">
                                                     <p class="sales-number">
@@ -248,12 +244,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </p>
                                                     <p class="receipt-date">
                                                         <span><?=date("m/d/Y", strtotime($invoice_date))?></span>
-                                                    </p>
-                                                    <p class="receipt-date">
-                                                        <span><?=date("m/d/Y", strtotime($due_date))?></span>
-                                                    </p>
-                                                    <p class="receipt-date">
-                                                        <span><?=$terms?></span>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -284,9 +274,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <thead>
                 <tr>
                     <th style="text-align: left;">Description</th>
-                    <th>QTY</th>
-                    <th>RATE</th>
-                    <th>AMOUNT</th>
+                    <th style="text-align: center;">QTY</th>
                 </tr>
             </thead>
             <tbody>
@@ -297,14 +285,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <td style="text-align: left;">
                         <?=$item->title?>
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                         <?=$item->qty?>
-                    </td>
-                    <td>
-                        <?=$item->iCost?>
-                    </td>
-                    <td>
-                        <?=$item->total?>
                     </td>
                 </tr>
                 <?php
@@ -312,37 +294,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 ?>
             </tbody>
         </table>
-    </div>
-    <div class="cutter-dashed"></div>
-    <div class="total-section">
-        <table style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td style="width: 60%;"></td>
-                    <td style="width: 40%;">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <p>Payment</p>
-                                        <p>Balance Due</p>
-                                    </td>
-                                    <td>
-                                        <p>$<?=number_format($payment, 2, '.', ',')?></p>
-                                        <p>$<?=number_format($balance_due, 2, '.', ',')?></p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="overlay-status">
-        <h1 class="<?=$status?>">
-            <?=$status?>
-        </h1>
     </div>
 </body>
 

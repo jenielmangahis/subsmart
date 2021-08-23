@@ -255,27 +255,16 @@ class Chart_of_accounts extends MY_Controller {
 
     public function edit($id)
     {
-        $accountTypes = $this->account_model->getAccounts();
-        $accountsDropdown = [];
-        foreach($accountTypes as $type)
-        {
-            foreach($this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id')) as $account)
-            {
-                if($account->id !== $id) {
-                    $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $id);
-                    $accountsDropdown[$type->account_name][] = [
-                        'id' => $account->id,
-                        'name' => $account->name,
-                        'child_accounts' => $childAccounts
-                    ];
-                }
-            }
+        $account = $this->chart_of_accounts_model->getById($id);
+
+        if(!in_array($account->parent_acc_id, ['', null, 0])) {
+            $this->page_data['parentAcc'] = $this->chart_of_accounts_model->getById($account->parent_acc_id);
         }
         $this->page_data['alert'] = 'accounting/alert_promt';
-        $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
-        $this->page_data['accountsDropdown'] = $accountsDropdown;
-        $this->page_data['detail_type'] = $this->account_detail_model->getById($this->page_data['chart_of_accounts']->acc_detail_id);
-        $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
+        $this->page_data['account'] = $account;
+        $this->page_data['accountType'] = $this->account_model->getById($account->account_id);
+        $this->page_data['detailType'] = $this->account_detail_model->getById($account->acc_detail_id);
+        $this->load->view('accounting/modals/account_modal', $this->page_data);
     }
 
     public function update($id)
@@ -288,9 +277,6 @@ class Chart_of_accounts extends MY_Controller {
             'name' => $this->input->post('name'),
             'description' => $this->input->post('description'),
             'parent_acc_id' => $this->input->post('sub_account_type'),
-            'time' => $this->input->post('choose_time'),
-            'balance' => $this->input->post('balance'),
-            'time_date' => $this->input->post('time') === 'Other' ? $this->input->post('time_date') : null
         ];
 
         $accountUpdate = $this->chart_of_accounts_model->updaterecords($data);

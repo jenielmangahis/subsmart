@@ -3372,127 +3372,44 @@ $(function() {
 
     $(document).on('change', '#modal-container #modal-form select', function() {
         var value = $(this).val();
-        if (value === 'add-new' && $(this).attr('name').includes('account')) {
+        if (value === 'add-new') {
             dropdownEl = $(this);
-            var modal = $('#modal-form').children('.modal');
-            var modalName = modal.attr('id').toLowerCase().replaceAll('modal', '');
-            var field = dropdownEl.attr('id');
-            var fieldName = field === undefined ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
-            fieldName = fieldName.includes('from') || fieldName.includes('to') ? fieldName.replaceAll('from-', '').replaceAll('to-', '') : fieldName;
-            var query = `?modal=${modalName}&field=${fieldName}`;
+            var form = $(this).attr('name').includes('account') ? 'account' : $(this).attr('name');
 
-            $.get('/accounting/get-add-account-modal' + query, function(result) {
+            if(form === 'name') {
+                var modal = $('#modal-form').children('.modal');
+                var modalName = modal.attr('id').toLowerCase().replaceAll('modal', '');
+                var field = dropdownEl.attr('id');
+                var fieldName = field === undefined ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
+                fieldName = fieldName.includes('from') || fieldName.includes('to') ? fieldName.replaceAll('from-', '').replaceAll('to-', '') : fieldName;
+                var query = `?modal=${modalName}&field=${fieldName}`;
+            } else {
+                var query = '';
+            }
+
+            $.get(`/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
                 $('#modal-form').parent().append(result);
 
-                $('#modal-container #add-account-modal select').each(function() {
-                    var id = $(this).attr('id').replaceAll('_', '-');
-                    switch (id) {
-                        case 'account-type':
-                            $(this).select2({
-                                ajax: {
-                                    url: '/accounting/get-dropdown-choices',
-                                    dataType: 'json',
-                                    data: function(params) {
-                                        var query = {
-                                            search: params.term,
-                                            type: 'public',
-                                            field: id,
-                                            dropdown: fieldName
-                                        }
+                switch(form) {
+                    case 'account' :
+                        initAccountModal();
+                    break;
+                    case 'payment_method' :
+                        $('#modal-container #payment-method-modal form').attr('id', 'ajax-add-payment-method');
+                        $('#modal-container #payment-method-modal form').removeAttr('action');
+                        $('#modal-container #payment-method-modal form').removeAttr('method');
 
-                                        // Query parameters will be ?search=[term]&type=public&field=[type]
-                                        return query;
-                                    }
-                                },
-                                templateResult: formatResult,
-                                templateSelection: optionSelect,
-                                dropdownParent: $('#modal-container #add-account-modal')
-                            });
-
-                            $(this).trigger('change');
-                            break;
-                        case 'detail-type':
-                            $(this).select2({
-                                ajax: {
-                                    url: '/accounting/get-dropdown-choices',
-                                    dataType: 'json',
-                                    data: function(params) {
-                                        var query = {
-                                            search: params.term,
-                                            type: 'public',
-                                            field: id,
-                                            accType: $(this).parent().prev().find('#account_type').val()
-                                        }
-
-                                        // Query parameters will be ?search=[term]&type=public&field=[type]
-                                        return query;
-                                    }
-                                },
-                                templateResult: formatResult,
-                                templateSelection: optionSelect,
-                                dropdownParent: $('#modal-container #add-account-modal')
-                            });
-
-                            $(this).trigger('change');
-                            break;
-                        case 'parent-account':
-                            $(this).select2({
-                                ajax: {
-                                    url: '/accounting/get-dropdown-choices',
-                                    dataType: 'json',
-                                    data: function(params) {
-                                        var query = {
-                                            search: params.term,
-                                            type: 'public',
-                                            field: id
-                                        }
-
-                                        // Query parameters will be ?search=[term]&type=public&field=[type]
-                                        return query;
-                                    }
-                                },
-                                templateResult: formatResult,
-                                templateSelection: optionSelect,
-                                dropdownParent: $('#modal-container #add-account-modal'),
-                                placeholder: 'Enter parent account'
-                            });
-                            break;
-                        default:
-                            if ($(this).find('option').length > 10) {
-                                $(this).select2({
-                                    dropdownParent: $('#modal-container #add-account-modal')
-                                });
-                            } else {
-                                $(this).select2({
-                                    minimumResultsForSearch: -1,
-                                    dropdownParent: $('#modal-container #add-account-modal')
-                                });
-                            }
-                            break;
-                    }
-                });
-                var switchEl = $('#modal-container #add-account-modal #check_sub').get(0);
-                var switchery = new Switchery(switchEl, { size: 'small' });
-
-                $('#modal-container #add-account-modal .date_picker input').datepicker({
-                    uiLibrary: 'bootstrap',
-                    todayBtn: "linked",
-                    language: "de"
-                });
-
-                $('#modal-container #add-account-modal form').attr('id', 'ajax-add-account');
-                $('#modal-container #add-account-modal form').removeAttr('action');
-                $('#modal-container #add-account-modal form').removeAttr('method');
-                $('#modal-container #add-account-modal form').removeAttr('novalidate');
-                $('#modal-container #add-account-modal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
+                        $('#modal-container #payment-method-modal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                    break;
+                }
             });
         }
     });
 
-    $(document).on('change', '#modal-container #add-account-modal #account_type', function() {
+    $(document).on('change', '#modal-container #account-modal #account_type', function() {
         var el = $(this);
         $.get('/accounting/get-first-detail-type/' + el.val(), function(result) {
             var res = JSON.parse(result);
@@ -3501,7 +3418,7 @@ $(function() {
         });
     });
 
-    $(document).on('change', '#modal-container #add-account-modal #detail_type', function() {
+    $(document).on('change', '#modal-container #account-modal #detail_type', function() {
         var el = $(this);
         var id = el.val();
 
@@ -3513,40 +3430,57 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#add-account-modal .close-add-account', function(e) {
+    $(document).on('click', '#account-modal .close-account-modal', function(e) {
         e.preventDefault();
 
         if(dropdownEl !== null) {
             dropdownEl.val('').trigger('change');
         }
-        $('#add-account-modal').modal('hide');
+        $('#account-modal').modal('hide');
     });
 
-    $(document).on('hidden.bs.modal', '#modal-container #add-account-modal', function() {
-        $('#modal-container #add-account-modal').remove();
+    $(document).on('click', '#payment-method-modal .close-payment-method', function(e) {
+        e.preventDefault();
+
+        if(dropdownEl !== null) {
+            dropdownEl.val('').trigger('change');
+        }
+        $('#payment-method-modal').modal('hide');
     });
 
-    $(document).on('change', '#add-account-modal #check_sub', function() {
+    $(document).on('hidden.bs.modal', '#modal-container #account-modal', function() {
+        dropdownEl = null;
+
+        $('#modal-container #account-modal').remove();
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #payment-method-modal', function() {
+        dropdownEl = null;
+
+        $('#modal-container #payment-method-modal').remove();
+    });
+
+    $(document).on('change', '#account-modal #check_sub', function() {
         if ($(this).prop('checked')) {
-            $('#add-account-modal #parent_account').prop('disabled', false);
+            $('#account-modal #parent_account').prop('disabled', false);
         } else {
-            $('#add-account-modal #parent_account').prop('disabled', true);
+            $('#account-modal #parent_account').prop('disabled', true);
         }
     });
 
-    $(document).on('change', '#add-account-modal #choose_time', function() {
+    $(document).on('change', '#account-modal #choose_time', function() {
         if ($(this).val() === 'other') {
-            $('#add-account-modal #balance').parent().addClass('hide');
-            $('#add-account-modal #balance').val('');
-            $('#add-account-modal #time_date').parent().parent().parent().removeClass('hide');
+            $('#account-modal #balance').parent().addClass('hide');
+            $('#account-modal #balance').val('');
+            $('#account-modal #time_date').parent().parent().parent().removeClass('hide');
         } else {
-            $('#add-account-modal #time_date').parent().parent().parent().addClass('hide');
-            $('#add-account-modal #time_date').val('');
-            $('#add-account-modal #balance').parent().removeClass('hide');
+            $('#account-modal #time_date').parent().parent().parent().addClass('hide');
+            $('#account-modal #time_date').val('');
+            $('#account-modal #balance').parent().removeClass('hide');
         }
     });
 
-    $(document).on('submit', '#add-account-modal #ajax-add-account', function(e) {
+    $(document).on('submit', '#account-modal #ajax-add-account', function(e) {
         e.preventDefault();
 
         var data = new FormData(this);
@@ -3564,7 +3498,31 @@ $(function() {
                     dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
                     dropdownEl.trigger('change');
 
-                    $('#add-account-modal').modal('hide');
+                    $('#account-modal').modal('hide');
+                }
+            }
+        });
+    });
+
+    $(document).on('submit', '#payment-method-modal #ajax-add-payment-method', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/accounting/ajax-add-payment-method',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success) {
+                    dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
+                    dropdownEl.trigger('change');
+
+                    $('#payment-method-modal').modal('hide');
                 }
             }
         });
@@ -4011,10 +3969,14 @@ $(function() {
     });
 
     $(document).on('hidden.bs.modal', '#modal-container #new-vendor-modal', function(e) {
+        dropdownEl = null;
+
         $('#modal-container #new-vendor-modal').remove();
     });
 
     $(document).on('hidden.bs.modal', '#modal-container #new-customer-modal', function(e) {
+        dropdownEl = null;
+
         $('#modal-container #new-customer-modal').hide();
     });
 
@@ -5731,9 +5693,127 @@ const optionSelect = (data, container) => {
 }
 
 const showBalance = (el) => {
-    if($('#add-account-modal #choose_time').val() === 'other' && $(el).val() !== '') {
-        $('#add-account-modal #balance').parent().removeClass('hide');
+    if($('#account-modal #choose_time').val() === 'other' && $(el).val() !== '') {
+        $('#account-modal #balance').parent().removeClass('hide');
     } else {
-        $('#add-account-modal #balance').parent().addClass('hide');
+        $('#account-modal #balance').parent().addClass('hide');
+    }
+}
+
+const initAccountModal = () => {
+    $('#modal-container #account-modal select').each(function() {
+        var id = $(this).attr('id').replaceAll('_', '-');
+        switch (id) {
+            case 'account-type':
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: id
+                            }
+
+                            if(dropdownEl !== null) {
+                                var field = dropdownEl.attr('id');
+                                var fieldName = field === undefined ? dropdownEl.replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
+                                fieldName = fieldName.includes('from') || fieldName.includes('to') ? fieldName.replaceAll('from-', '').replaceAll('to-', '') : fieldName;
+
+                                query.dropdown = fieldName
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#modal-container #account-modal')
+                });
+
+                $(this).trigger('change');
+            break;
+            case 'detail-type':
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: id,
+                                accType: $(this).parent().prev().find('#account_type').val()
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#modal-container #account-modal')
+                });
+
+                $(this).trigger('change');
+            break;
+            case 'parent-account':
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: id
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#modal-container #account-modal'),
+                    placeholder: 'Enter parent account'
+                });
+            break;
+            default:
+                if ($(this).find('option').length > 10) {
+                    $(this).select2({
+                        dropdownParent: $('#modal-container #account-modal')
+                    });
+                } else {
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $('#modal-container #account-modal')
+                    });
+                }
+            break;
+        }
+    });
+    var switchEl = $('#modal-container #account-modal #check_sub').get(0);
+    var switchery = new Switchery(switchEl, { size: 'small' });
+
+    $('#modal-container #account-modal .date_picker input').datepicker({
+        uiLibrary: 'bootstrap',
+        todayBtn: "linked",
+        language: "de"
+    });
+
+    if(dropdownEl !== null) {
+        $('#modal-container #account-modal form').attr('id', 'ajax-add-account');
+        $('#modal-container #account-modal form').removeAttr('action');
+        $('#modal-container #account-modal form').removeAttr('method');
+        $('#modal-container #account-modal form').removeAttr('novalidate');
+        $('#modal-container #account-modal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    } else {
+        $('#modal-container #account-modal').modal('show');
     }
 }

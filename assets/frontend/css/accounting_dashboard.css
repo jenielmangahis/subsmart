@@ -1,0 +1,326 @@
+/* Style the tab */
+.tab_ {
+    /* float: left; */
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Style the buttons inside the tab */
+  .tab_ button {
+    display: block;
+    background-color: inherit;
+    color: black;
+    padding: 0 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab_ button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current "tab button" class */
+  .tab_ button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #ccc;
+    width: 80%;
+    border-left: none;
+    /* height: 300px; */
+  }  
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #53b700;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #53b700;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 20px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  
+  .card {
+      padding: 1px !important;
+  }
+  .card {
+      margin-bottom: 1px !important;
+  }
+  
+  #exTab1 .tab-content {
+    color : white;
+    background-color: #428bca;
+    padding : 5px 15px;
+  }
+  
+  #exTab2 h3 {
+    color : white;
+    background-color: #428bca;
+    padding : 5px 15px;
+  }
+  
+  /* remove border radius for the tab */
+  
+  #exTab1 .nav-pills > li > a {
+    border-radius: 0;
+  }
+  
+  /* change border radius for the tab , apply corners on top*/
+  
+  #exTab3 .nav-pills > li > a {
+    border-radius: 4px 4px 0 0 ;
+  }
+  
+  #exTab3 .tab-content {
+    color : white;
+    background-color: #428bca;
+    padding : 5px 15px;
+  }
+  
+  .project-tab {
+      padding: 10%;
+      margin-top: -8%;
+  }
+  .project-tab #tabs{
+      background: #007b5e;
+      color: #eee;
+  }
+  .project-tab #tabs h6.section-title{
+      color: #eee;
+  }
+  .project-tab #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+      color: #0062cc;
+      background-color: transparent;
+      border-color: transparent transparent #f3f3f3;
+      border-bottom: 3px solid !important;
+      font-size: 16px;
+      font-weight: bold;
+  }
+  .project-tab .nav-link {
+      border: 1px solid transparent;
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
+      color: #0062cc;
+      font-size: 16px;
+      font-weight: 600;
+  }
+  .project-tab .nav-link:hover {
+      border: none;
+  }
+  .project-tab thead{
+      background: #f3f3f3;
+      color: #333;
+  }
+  .project-tab a{
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+  }
+  
+  .nav {
+      width: 30%;
+  }
+  
+  #circle {
+      background: white;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      border-style: solid;
+      border-color: #55b702;
+  }
+  
+  #circle:hover {
+      background: #def3cc;
+  }
+  
+  .arrow {
+      width:88px;
+      margin:40px auto;
+  }
+  
+  .line {
+      margin-top:7px;
+      width:81px;
+      background:#8d9096;
+      height:2px;
+      float:left;
+  }
+  .point {	
+      width: 0; 
+      height: 0; 
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 7px solid #8d9096;
+      float:right;
+  }
+  
+  .notification {
+    /* background-color: #555; */
+    color: white;
+    text-decoration: none;
+    /* padding: 15px 26px; */
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+  }
+  
+  /* .notification:hover {
+    background: red;
+  } */
+  
+  .notification .badge {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+  }
+  
+  /* .canvasjs-chart-canvas
+  {
+      width:100%;
+  } */
+  
+  /* Style the tab */
+  .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+  }
+  
+  /* Style the buttons inside the tab */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    /* display: none; */
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+  
+  .canvasjs-chart-credit
+  {
+      display: none;
+  }
+
+  .area-chart {
+    /* Reset */
+    margin: 0;
+    padding: 0;
+    border: 0;
+  
+    /* Dimensions */
+    width: 100%;
+    max-width: var(--chart-width, 600px);
+    height: var(--chart-height, 300px);
+  
+    /* Layout */
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    flex-direction: row;
+  }
+  ul.area-chart,
+  ol.area-chart {
+    list-style: none;
+  }
+  .area-chart > * {
+    /* Even size items */
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+  
+    /* Color */
+    background: var(--color, rgba(240, 50, 50, .75));
+    clip-path: polygon(
+      0% calc(100% * (1 - var(--start))),
+      100% calc(100% * (1 - var(--end))),
+      100% 100%,
+      0% 100%
+    );
+  }
