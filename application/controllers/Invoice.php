@@ -1,11 +1,11 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 include_once 'application/services/InvoiceCustomer.php';
 
-class Invoice extends MY_Controller {
-
-	public function __construct()
+class Invoice extends MY_Controller
+{
+    public function __construct()
     {
         parent::__construct();
 
@@ -19,8 +19,8 @@ class Invoice extends MY_Controller {
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->model('Payment_records_model', 'payment_records_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');
-        $this->load->model('Accounting_terms_model','accounting_terms_model');
-        $this->load->model('Accounting_invoices_model','accounting_invoices_model');
+        $this->load->model('Accounting_terms_model', 'accounting_terms_model');
+        $this->load->model('Accounting_invoices_model', 'accounting_invoices_model');
 
         $user_id = getLoggedUserID();
 
@@ -46,9 +46,8 @@ class Invoice extends MY_Controller {
 
     public function index($tab = '')
     {
-
         $is_allowed = $this->isAllowedModuleAccess(35);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'invoice';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
@@ -66,14 +65,11 @@ class Invoice extends MY_Controller {
 
                 // search
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
                 } elseif (!empty(get('order'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
-
                 } else {
                     // $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
                     $this->page_data['invoices'] = $this->invoice_model->getAllData($comp_id);
@@ -82,22 +78,14 @@ class Invoice extends MY_Controller {
         }
 
         if ($role == 4) {
-
             if (!empty($tab)) {
-
                 $this->page_data['tab'] = $tab;
                 $this->page_data['invoice'] = $this->invoice_model->filterBy(array('status' => $tab), $type);
-
-
             } elseif (!empty(get('order'))) {
-
                 $this->page_data['order'] = get('order');
                 $this->page_data['invoice'] = $this->workorder_model->filterBy(array('order' => get('order')), $comp_id, $type);
-
             } else {
-
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['invoice'] = $this->workorder_model->filterBy(array('search' => get('search')), $comp_id, $type);
                 } else {
@@ -113,7 +101,7 @@ class Invoice extends MY_Controller {
     public function recurring($tab = '')
     {
         $is_allowed = $this->isAllowedModuleAccess(37);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'recurring_invoices';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
@@ -131,14 +119,11 @@ class Invoice extends MY_Controller {
 
                 // search
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['invoices'] = $this->invoice_model->filterBy(array('search' => get('search')), $comp_id, $type);
                 } elseif (!empty(get('order'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['invoices'] = $this->invoice_model->filterBy(array('order' => get('order')), $comp_id, $type);
-
                 } else {
                     $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($comp_id, $type);
                 }
@@ -150,22 +135,21 @@ class Invoice extends MY_Controller {
 
     public function add()
     {
-
         $user_id = logged('id');
         // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
         // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
         // } else {
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if( $role == 1 || $role == 2 ){
+        if ($role == 1 || $role == 2) {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }else{
+        } else {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
@@ -188,44 +172,43 @@ class Invoice extends MY_Controller {
         $this->page_data['items'] = $this->items_model->getItemlist();
 
         $this->load->view('invoice/add', $this->page_data);
-
     }
 
     public function addNewInvoice()
     {
-        if($this->input->post('custocredit_card_paymentsmer_id') == 1){
+        if ($this->input->post('custocredit_card_paymentsmer_id') == 1) {
             $credit_card = 'Credit Card';
-        }else{
+        } else {
             $credit_card = '0';
         }
 
-        if($this->input->post('bank_transfer') == 1){
+        if ($this->input->post('bank_transfer') == 1) {
             $bank_transfer = 'Bank Transfer';
-        }else{
+        } else {
             $bank_transfer = '0';
         }
 
-        if($this->input->post('instapay') == 1){
+        if ($this->input->post('instapay') == 1) {
             $instapay = 'Instapay';
-        }else{
+        } else {
             $instapay = '0';
         }
 
-        if($this->input->post('check') == 1){
+        if ($this->input->post('check') == 1) {
             $check = 'Check';
-        }else{
+        } else {
             $check = '0';
         }
 
-        if($this->input->post('cash') == 1){
+        if ($this->input->post('cash') == 1) {
             $cash = 'Cash';
-        }else{
+        } else {
             $cash = '0';
         }
 
-        if($this->input->post('deposit') == 1){
+        if ($this->input->post('deposit') == 1) {
             $deposit = 'Deposit';
-        }else{
+        } else {
             $deposit = '0';
         }
 
@@ -278,7 +261,7 @@ class Invoice extends MY_Controller {
 
         $addQuery = $this->invoice_model->createInvoice($new_data);
 
-        if($addQuery > 0){
+        if ($addQuery > 0) {
             //echo json_encode($addQuery);
             $new_data2 = array(
                 'item' => $this->input->post('item'),
@@ -305,37 +288,34 @@ class Invoice extends MY_Controller {
             $f = $this->input->post('tax');
             $g = $this->input->post('total');
 
-        $i = 0;
-        foreach($a as $row){
-            $data['item'] = $a[$i];
-            $data['item_type'] = $b[$i];
-            $data['qty'] = $c[$i];
-            $data['cost'] = $d[$i];
-            $data['discount'] = $e[$i];
-            $data['tax'] = $f[$i];
-            $data['total'] = $g[$i];
-            $data['type'] = 'Invoice';
-            $data['type_id'] = $addQuery;
-            $data['status'] = '1';
-            $data['created_at'] = date("Y-m-d H:i:s");
-            $data['updated_at'] = date("Y-m-d H:i:s");
-            // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
-            $addQuery2 = $this->accounting_invoices_model->additem_details($data);
-            $i++;
-        }
+            $i = 0;
+            foreach ($a as $row) {
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $c[$i];
+                $data['cost'] = $d[$i];
+                $data['discount'] = $e[$i];
+                $data['tax'] = $f[$i];
+                $data['total'] = $g[$i];
+                $data['type'] = 'Invoice';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $i++;
+            }
 
-        // redirect('accounting/banking');
-        redirect('invoice');
-
-        }
-        else{
+            // redirect('accounting/banking');
+            redirect('invoice');
+        } else {
             echo json_encode(0);
         }
     }
 
     public function recurring_add()
     {
-
         $user_id = logged('id');
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -357,14 +337,13 @@ class Invoice extends MY_Controller {
         }
 
         $this->load->view('invoice/add_recurring', $this->page_data);
-
     }
 
 
     public function settings()
     {
         $is_allowed = $this->isAllowedModuleAccess(38);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'settings3';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
@@ -386,13 +365,11 @@ class Invoice extends MY_Controller {
 
 
         $this->load->view('invoice/settings', $this->page_data);
-
     }
 
 
     public function save()
     {
-
         postAllowed();
 
         // echo '<pre>'; print_r($this->input->post()); die;
@@ -400,7 +377,6 @@ class Invoice extends MY_Controller {
         $user = (object)$this->session->userdata('logged');
 
         if (count(post('item')) > 0) {
-
             $items = post('item');
             $quantity = post('quantity');
             $price = post('price');
@@ -410,7 +386,6 @@ class Invoice extends MY_Controller {
             $total = post('total');
 
             foreach (post('item') as $key => $val) {
-
                 $itemArray[] = array(
 
                     'item' => $items[$key],
@@ -425,7 +400,6 @@ class Invoice extends MY_Controller {
 
             $invoice_items = serialize($itemArray);
         } else {
-
             $invoice_items = '';
         }
 
@@ -503,7 +477,6 @@ class Invoice extends MY_Controller {
         $user = (object)$this->session->userdata('logged');
 
         if (count(post('item')) > 0) {
-
             $items = post('item');
             $quantity = post('quantity');
             $price = post('price');
@@ -513,7 +486,6 @@ class Invoice extends MY_Controller {
             $total = post('total');
 
             foreach (post('item') as $key => $val) {
-
                 $itemArray[] = array(
 
                     'item' => $items[$key],
@@ -543,7 +515,7 @@ class Invoice extends MY_Controller {
             'repeat_on' => post('recurring_frequency_weekday')
         );
 
-        switch(post('recurring_end')) {
+        switch (post('recurring_end')) {
             case "on":
                 $end_date = post('recurring_until');
                 break;
@@ -599,7 +571,7 @@ class Invoice extends MY_Controller {
         $config = array(
             'upload_path' => "./uploads/",
             'allowed_types' => "gif|jpg|png|jpeg",
-            'overwrite' => TRUE,
+            'overwrite' => true,
             'max_size' => "2048000",
             'max_height' => "768",
             'max_width' => "1024"
@@ -607,7 +579,7 @@ class Invoice extends MY_Controller {
 
         $this->load->library('upload', $config);
 
-        if($this->upload->do_upload()) {
+        if ($this->upload->do_upload()) {
             $draftlogo = array('upload_data' => $this->upload->data());
             $logo = $draftlogo['upload_data']['file_name'];
         } else {
@@ -715,50 +687,45 @@ class Invoice extends MY_Controller {
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
 
-        if($this->input->post('notify_by_email') == 1){
+        if ($this->input->post('notify_by_email') == 1) {
             $notify_by_email = '1';
-        }else{
+        } else {
             $notify_by_email = '0';
         }
 
-        if($this->input->post('notify_by_sms') == 1){
+        if ($this->input->post('notify_by_sms') == 1) {
             $notify_by_sms = '1';
-        }else{
+        } else {
             $notify_by_sms = '0';
         }
 
-        if($this->input->post('street_address') == null)
-        {
+        if ($this->input->post('street_address') == null) {
             $street_address = '';
-        }else{
+        } else {
             $street_address = $this->input->post('street_address');
         }
 
-        if($this->input->post('suite_unit') == null)
-        {
+        if ($this->input->post('suite_unit') == null) {
             $suite_unit = '';
-        }else{
+        } else {
             $suite_unit = $this->input->post('suite_unit');
         }
 
-        if($this->input->post('city') == null)
-        {
+        if ($this->input->post('city') == null) {
             $city = '';
-        }else{
+        } else {
             $city = $this->input->post('city');
         }
 
-        if($this->input->post('postcode') == null)
-        {
+        if ($this->input->post('postcode') == null) {
             $postcode = '';
-        }else{
+        } else {
             $postcode = $this->input->post('postcode');
         }
 
-        if($this->input->post('state') == null)
-        {
+        if ($this->input->post('state') == null) {
             $state = '';
-        }else{
+        } else {
             $state = $this->input->post('state');
         }
 
@@ -788,12 +755,11 @@ class Invoice extends MY_Controller {
 
         $addQuery = $this->invoice_model->savenewCustomer($new_data);
 
-        if($addQuery > 0){
+        if ($addQuery > 0) {
             // echo 'Congrats, new customer added!';
             echo json_encode($addQuery);
-            //$this->session->set_flashdata('Method added');
-        }
-        else{
+        //$this->session->set_flashdata('Method added');
+        } else {
             echo json_encode(0);
         }
     }
@@ -808,6 +774,19 @@ class Invoice extends MY_Controller {
         );
 
         $delete = $this->invoice_model->deleteInvoice($data);
+
+        echo json_encode($delete);
+    }
+    public function void_invoice()
+    {
+        $id = $this->input->post('id');
+
+        $data = array(
+            'id' => $id,
+            'voided' => '1',
+        );
+
+        $delete = $this->invoice_model->void_invoice($data);
 
         echo json_encode($delete);
     }
@@ -944,9 +923,9 @@ class Invoice extends MY_Controller {
         // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
         // if ($parent_id->parent_id == 1) {
-            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
         // } else {
-            // $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
 
         $this->page_data['invoice'] = $this->invoice_model->getById($id);
@@ -956,7 +935,6 @@ class Invoice extends MY_Controller {
 
     public function update($id)
     {
-
         postAllowed();
 
         // echo '<pre>'; print_r($this->input->post()); die;
@@ -964,7 +942,6 @@ class Invoice extends MY_Controller {
         $user = (object)$this->session->userdata('logged');
 
         if (count(post('item')) > 0) {
-
             $items = post('item');
             $quantity = post('quantity');
             $price = post('price');
@@ -973,7 +950,6 @@ class Invoice extends MY_Controller {
             $location = post('location');
 
             foreach (post('item') as $key => $val) {
-
                 $itemArray[] = array(
 
                     'item' => $items[$key],
@@ -987,7 +963,6 @@ class Invoice extends MY_Controller {
 
             $invoice_items = serialize($itemArray);
         } else {
-
             $invoice_items = '';
         }
 
@@ -1031,9 +1006,9 @@ class Invoice extends MY_Controller {
         redirect('invoice');
     }
 
-     /**
-     * @param $id
-     */
+    /**
+    * @param $id
+    */
     public function genview($id)
     {
         $invoice = get_invoice_by_id($id);
@@ -1138,81 +1113,81 @@ class Invoice extends MY_Controller {
     {
         postAllowed();
         // if (!post('scheduled')) {
-            // $config = Array(
-            //     'protocol'  => 'smtp',
-            //     'smtp_host' => 'smtp.gmail.com',
-            //     'smtp_port' => 587,
-            //     'smtp_user' => 'nsmartrac@gmail.com',
-            //     'smtp_pass' => 'nSmarTrac1',
-            //     'mailtype'  => 'html',
-            //     'charset'   => 'iso-8859-1',
-            //     'wordwrap'  => TRUE
-            // );
+        // $config = Array(
+        //     'protocol'  => 'smtp',
+        //     'smtp_host' => 'smtp.gmail.com',
+        //     'smtp_port' => 587,
+        //     'smtp_user' => 'nsmartrac@gmail.com',
+        //     'smtp_pass' => 'nSmarTrac1',
+        //     'mailtype'  => 'html',
+        //     'charset'   => 'iso-8859-1',
+        //     'wordwrap'  => TRUE
+        // );
 
-            // $this->load->library('email', $config);
+        // $this->load->library('email', $config);
 
-            // $this->email->set_newline("\r\n");
-            // $this->email->from(post('from_email'), post('from_name'));
-            // // $this->email->to("jeykell125@gmail.com");
-            // $this->email->to("emploucelle@gmail.com");
-            // $this->email->cc(post('cc[]'));
-            // $this->email->bcc(post('bcc[]'));
+        // $this->email->set_newline("\r\n");
+        // $this->email->from(post('from_email'), post('from_name'));
+        // // $this->email->to("jeykell125@gmail.com");
+        // $this->email->to("emploucelle@gmail.com");
+        // $this->email->cc(post('cc[]'));
+        // $this->email->bcc(post('bcc[]'));
 
-            // $this->email->subject(post('mail_subject'));
-            // $this->email->message(post('mail_msg'));
+        // $this->email->subject(post('mail_subject'));
+        // $this->email->message(post('mail_msg'));
 
-            // $this->email->send();
+        // $this->email->send();
 
-            // $this->session->set_flashdata('alert-type', 'success');
-            // $this->session->set_flashdata('alert', 'Email has been Sent');
+        // $this->session->set_flashdata('alert-type', 'success');
+        // $this->session->set_flashdata('alert', 'Email has been Sent');
 
-            // $recipient  = "emploucelle@gmail.com";
-            $recipient  = post('from_email');
-            $message2 = post('mail_msg');
-            $subj = post('mail_subject');
+        // $recipient  = "emploucelle@gmail.com";
+        $recipient  = post('from_email');
+        $message2 = post('mail_msg');
+        $subj = post('mail_subject');
 
-                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-                    $server    = MAIL_SERVER;
-                    $port      = MAIL_PORT ;
-                    $username  = MAIL_USERNAME;
-                    $password  = MAIL_PASSWORD;
-                    $from      = MAIL_FROM;
-                    $subject   = $subj;
-                    $mail = new PHPMailer;
-                    //$mail->SMTPDebug = 4;
-                    $mail->isSMTP();
-                    $mail->Host = $server;
-                    $mail->SMTPAuth = true;
-                    $mail->Username   = $username;
-                    $mail->Password   = $password;
-                    $mail->getSMTPInstance()->Timelimit = 5;
-                    $mail->SMTPSecure = 'ssl';
-                    $mail->Timeout    =   10; // set the timeout (seconds)
-                    $mail->Port = $port;
-                    $mail->From = $from;
-                    $mail->FromName = 'NsmarTrac';
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $server    = MAIL_SERVER;
+        $port      = MAIL_PORT ;
+        $username  = MAIL_USERNAME;
+        $password  = MAIL_PASSWORD;
+        $from      = MAIL_FROM;
+        $subject   = $subj;
+        $mail = new PHPMailer;
+        //$mail->SMTPDebug = 4;
+        $mail->isSMTP();
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username   = $username;
+        $mail->Password   = $password;
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout    =   10; // set the timeout (seconds)
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'NsmarTrac';
 
-                    $mail->addAddress($recipient, $recipient);
-                    $mail->isHTML(true);
-                    // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
-                    $mail->Subject = $subject;
-                    $mail->Body    = $message2;
-                    // $cid = $email->attachment_cid($filename);
+        $mail->addAddress($recipient, $recipient);
+        $mail->isHTML(true);
+        // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
+        $mail->Subject = $subject;
+        $mail->Body    = $message2;
+        // $cid = $email->attachment_cid($filename);
 
 
-                    $json_data['is_success'] = 1;
-                    $json_data['error']      = '';
+        $json_data['is_success'] = 1;
+        $json_data['error']      = '';
 
-                    if(!$mail->Send()) {
-                        /*echo 'Message could not be sent.';
-                        echo 'Mailer Error: ' . $mail->ErrorInfo;
-                        exit;*/
-                        $json_data['is_success'] = 0;
-                        $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
-                    }
+        if (!$mail->Send()) {
+            /*echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit;*/
+            $json_data['is_success'] = 0;
+            $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+        }
 
-                    $this->session->set_flashdata('alert-type', 'success');
-                    $this->session->set_flashdata('alert', 'Scheduled invoice email has been set');
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Scheduled invoice email has been set');
         // } else {
         //     $this->session->set_flashdata('alert-type', 'success');
         //     $this->session->set_flashdata('alert', 'Scheduled invoice email has been set');
@@ -1221,14 +1196,15 @@ class Invoice extends MY_Controller {
         redirect('invoice/genview/'.post('invoice_id'));
     }
 
-    public function sendSMS($data) {
+    public function sendSMS($data)
+    {
         // Your Account SID and Auth Token from twilio.com/console
         $sid = 'your_sid';
         $token = 'your_token';
         $client = new Client($sid, $token);
 
         // Use the client to do fun stuff like send text messages!
-            return $client->messages->create(
+        return $client->messages->create(
             // the number you'd like to send the message to
             $data['phone'],
             array(
@@ -1245,9 +1221,9 @@ class Invoice extends MY_Controller {
         $this->index($index);
     }
 
-	 /**
-     *
-     */
+    /**
+    *
+    */
     public function customer()
     {
         // pass the $this so that we can use it to load view, model, library or helper classes
@@ -1267,7 +1243,6 @@ class Invoice extends MY_Controller {
         }
 
         die($this->load->view('invoice/new_customer_form', $this->page_data, true));
-
     }
 
     public function record_payment_form()
@@ -1289,7 +1264,6 @@ class Invoice extends MY_Controller {
         }
 
         die($this->load->view('invoice/record_payment_form', $this->page_data, true));
-
     }
 
     public function pay_now_form()
@@ -1311,7 +1285,6 @@ class Invoice extends MY_Controller {
         }
 
         die($this->load->view('invoice/pay_now_form', $this->page_data, true));
-
     }
     public function pay_now_form_fr_email($id)
     {
@@ -1335,10 +1308,9 @@ class Invoice extends MY_Controller {
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
 
         die($this->load->view('invoice/payNow', $this->page_data, true));
-
     }
 
-    function preview($id)
+    public function preview($id)
     {
         $invoice = get_invoice_by_id($id);
         $user = get_user_by_id(logged('id'));
@@ -1372,7 +1344,6 @@ class Invoice extends MY_Controller {
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->view('invoice/pdf/template', $this->page_data, "portrait");
         }
-
     }
 
     /**
@@ -1386,7 +1357,7 @@ class Invoice extends MY_Controller {
         require_once('application/libraries/stripe-php/init.php');
         \Stripe\Stripe::setApiKey($this->config->item('stripe_secret'));
 
-        \Stripe\Charge::create ([
+        \Stripe\Charge::create([
                 "amount" => 100 * 100,
                 "currency" => "usd",
                 "source" => $this->input->post('stripeToken'),

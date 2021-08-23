@@ -531,3 +531,15 @@
     background: #F4F5F8;
     cursor: pointer;
 }
+
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn.disabled,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn.disabled a,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn.disabled,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn.disabled a,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn.disabled,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn.disabled a,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn.disabled,
+#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn.disabled a {
+    cursor: default;
+    color: #A0A09F;
+}

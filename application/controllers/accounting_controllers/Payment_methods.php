@@ -159,11 +159,6 @@ class Payment_methods extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
-        // $result['success'] = $delete;
-        // $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
-
-        // echo json_encode($result);
-        // exit;
     }
 
     public function activate($id)
@@ -178,12 +173,13 @@ class Payment_methods extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
+    }
 
-        // $result['success'] = $activate;
-        // $result['message'] = $activate ? 'Successfully Activated' : 'Failed to activate';
+    public function edit($id)
+    {
+        $this->page_data['paymentMethod'] = $this->accounting_payment_methods_model->getById($id);
 
-        // echo json_encode($result);
-        // exit;
+        $this->load->view('accounting/modals/payment_method_modal', $this->page_data);
     }
 
     public function update($id)

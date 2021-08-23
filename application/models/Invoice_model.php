@@ -201,6 +201,13 @@ class Invoice_model extends MY_Model
         $this->db->update('invoices', array('view_flag' => $view_flag));
         return true;
     }
+    public function void_invoice($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('invoices', array('voided' => $voided));
+        return true;
+    }
 
     public function getInvoiceCustomer($id)
     {
@@ -642,7 +649,7 @@ class Invoice_model extends MY_Model
         // $this->db->from('work_orders');
         // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
 
-        $this->db->select('*, invoices_items.cost as iCost, invoices_items.tax as itax, invoices_items.total as iTotal');
+        $this->db->select('*, invoices_items.cost as iCost, invoices_items.tax as itax, invoices_items.total as iTotal, items.title, items.type as item_type');
         $this->db->from('invoices_items');
         $this->db->join('items', 'invoices_items.items_id  = items.id');
         $this->db->where('invoice_id', $id);

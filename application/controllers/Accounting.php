@@ -2472,7 +2472,7 @@ class Accounting extends MY_Controller
                 $data['items_id'] = str_replace(',', '', $a[$i]);
                 $data['qty'] = str_replace(',', '', $quantity[$i]);
                 $data['cost'] = str_replace(',', '', $price[$i]);
-                $data['tax'] = str_replace(',', '', $h[$i]); 
+                $data['tax'] = str_replace(',', '', $h[$i]);
                 $data['discount'] = str_replace(',', '', $discounts[$i]);
                 $data['total'] = ((str_replace(',', '', $price[$i])*str_replace(',', '', $quantity[$i]))+str_replace(',', '', $h[$i]))-str_replace(',', '', $discounts[$i]);
                 $data['invoice_id'] = $addQuery;
@@ -8660,78 +8660,80 @@ class Accounting extends MY_Controller
         $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
         $tr_html="";
         foreach ($invoices as $inv) {
-            $receivable_payment = 0;
-            $total_amount_received =0;
-            $tr_html="";
-            if (is_numeric($inv->grand_total)) {
-                $receivable_payment=$inv->grand_total;
-            }
-            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
-            foreach ($receive_payment as $payment) {
-                $total_amount_received += $payment->payment_amount;
-            }
+            if ($inv->view_flag != 1 && $inv->void != 1) {
+                $receivable_payment = 0;
+                $total_amount_received =0;
+                $tr_html="";
+                if (is_numeric($inv->grand_total)) {
+                    $receivable_payment=$inv->grand_total;
+                }
+                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->payment_amount;
+                }
 
-            $balance=$receivable_payment-$total_amount_received;
-            foreach ($receive_payment as $payment) {
-                $total_amount_received += $payment->payment_amount;
-                $amount_received=$payment->payment_amount;
+                $balance=$receivable_payment-$total_amount_received;
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->payment_amount;
+                    $amount_received=$payment->payment_amount;
                     
-                $this->page_data['date']=$payment->payment_date;
-                $this->page_data['type']="Payment";
-                $this->page_data['no']=$payment->ref_no;
+                    $this->page_data['date']=$payment->payment_date;
+                    $this->page_data['type']="Payment";
+                    $this->page_data['no']=$payment->ref_no;
+                    $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                    $this->page_data['method']=$payment->payment_method;
+                    $this->page_data['source']="";
+                    $this->page_data['memo']=$payment->memo;
+                    $this->page_data['duedate']=$inv->due_date;
+                    $this->page_data['aging']=$this->get_date_difference_indays($payment->payment_date, date("Y-m-d"));
+                    $this->page_data['balance']=$balance;
+                    $this->page_data['total']=$balance-$payment->payment_amount;
+                    $this->page_data['last_delivered']="";
+                    $this->page_data['email']=$customer_info->acs_email;
+                    $this->page_data['atatchement']="";
+                    $this->page_data['status']="Closed";
+                    $this->page_data['ponumber']="";
+                    $this->page_data['sales_rep']="";
+                    $this->page_data['customer_id']=$customer_id;
+                    $this->page_data['invoice_payment_id']=$payment->id;
+                    $this->page_data['invoice_id']=$inv->id;
+                    if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+                        $tr_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    }
+                }
+                if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+                    $status="Overdue";
+                } else {
+                    if ($balance <= 0) {
+                        $status="Paid";
+                    } else {
+                        $status="Open";
+                    }
+                }
+                $this->page_data['date']=$inv->date_issued;
+                $this->page_data['type']="Invoice";
+                $this->page_data['no']=$inv->invoice_number;
                 $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']=$payment->payment_method;
+                $this->page_data['method']="";
                 $this->page_data['source']="";
-                $this->page_data['memo']=$payment->memo;
+                $this->page_data['memo']="";
                 $this->page_data['duedate']=$inv->due_date;
-                $this->page_data['aging']=$this->get_date_difference_indays($payment->payment_date, date("Y-m-d"));
+                $this->page_data['aging']=$this->get_date_difference_indays($inv->date_issued, date("Y-m-d"));
                 $this->page_data['balance']=$balance;
-                $this->page_data['total']=$balance-$payment->payment_amount;
+                $this->page_data['total']=$receivable_payment;
                 $this->page_data['last_delivered']="";
-                $this->page_data['email']=$customer_info->acs_email;
+                $this->page_data['email']=$inv->customer_email;
                 $this->page_data['atatchement']="";
-                $this->page_data['status']="Closed";
+                $this->page_data['status']=$status;
                 $this->page_data['ponumber']="";
                 $this->page_data['sales_rep']="";
                 $this->page_data['customer_id']=$customer_id;
-                $this->page_data['invoice_payment_id']=$payment->id;
+                $this->page_data['invoice_payment_id']="";
                 $this->page_data['invoice_id']=$inv->id;
+                $tbody_html.=$tr_html;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                    $tr_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
-            }
-            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
-                $status="Overdue";
-            } else {
-                if ($balance <= 0) {
-                    $status="Paid";
-                } else {
-                    $status="Open";
-                }
-            }
-            $this->page_data['date']=$inv->date_issued;
-            $this->page_data['type']="Invoice";
-            $this->page_data['no']=$inv->invoice_number;
-            $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-            $this->page_data['method']="";
-            $this->page_data['source']="";
-            $this->page_data['memo']="";
-            $this->page_data['duedate']=$inv->due_date;
-            $this->page_data['aging']=$this->get_date_difference_indays($inv->date_issued, date("Y-m-d"));
-            $this->page_data['balance']=$balance;
-            $this->page_data['total']=$receivable_payment;
-            $this->page_data['last_delivered']="";
-            $this->page_data['email']=$inv->customer_email;
-            $this->page_data['atatchement']="";
-            $this->page_data['status']=$status;
-            $this->page_data['ponumber']="";
-            $this->page_data['sales_rep']="";
-            $this->page_data['customer_id']=$customer_id;
-            $this->page_data['invoice_payment_id']="";
-            $this->page_data['invoice_id']=$inv->id;
-            $tbody_html.=$tr_html;
-            if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
             }
         }
 
@@ -8758,7 +8760,7 @@ class Accounting extends MY_Controller
             $this->page_data['sales_rep']="";
             $this->page_data['customer_id']=$customer_id;
             $this->page_data['invoice_payment_id']="";
-            $this->page_data['invoice_id']=$inv->id;
+            $this->page_data['invoice_id']="";
             $this->page_data['sales_receipt_id']=$receipt->id;
             $tbody_html.=$tr_html;
             if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
@@ -8997,6 +8999,28 @@ class Accounting extends MY_Controller
         }
 
 
+        $pdf_file_name=$token."_portalappinv.pdf";
+        $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name);
+
+        
+        $expired_at = date('Y-m-d', strtotime(date("Y-m-d"). ' + 24 days'));
+        $data=array(
+            "invoice_id" => $invoice_id,
+            "token" => $token,
+            "expired_at" => $expired_at
+        );
+        $this->accounting_invoices_model->add_shared_invoice_link($data);
+
+        
+
+        $shared_link=base_url("portal/appinv/".$token."/view");
+        $data = new stdClass();
+        $data->shared_link = $shared_link;
+        echo json_encode($data);
+    }
+
+    public function customer_generate_invoice_pdf($invoice_id, $pdf_file_name, $action="")
+    {
         $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
         $customer_id = $inv->customer_id;
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
@@ -9039,24 +9063,44 @@ class Accounting extends MY_Controller
             "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
             "status" => $status
         );
-        $pdf_file_name=$token."_portalappinv.pdf";
-        $this->pdf->save_pdf("accounting/customer_includes/public_view/shared_invoice_link_pdf", $pdf_data, $pdf_file_name, "P");
-        
-
-        
-        $expired_at = date('Y-m-d', strtotime(date("Y-m-d"). ' + 24 days'));
-        $data=array(
-            "invoice_id" => $invoice_id,
-            "token" => $token,
-            "expired_at" => $expired_at
-        );
-        $this->accounting_invoices_model->add_shared_invoice_link($data);
-
-        
-
-        $shared_link=base_url("portal/appinv/".$token."/view");
+        if ($action=="invoice-packaging-slip") {
+            $html_pdf="accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
+        } else {
+            $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+        }
+        $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, "P");
+    }
+    public function customer_print_invoice_pdf()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $pdf_file_name = $this->input->post("invoice_no")."_portalappinv.pdf";
+        $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name);
         $data = new stdClass();
-        $data->shared_link = $shared_link;
+        $data->status = "success";
+        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        echo json_encode($data);
+    }
+    public function print_invoice_packaging_slip()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $pdf_file_name = $this->input->post("invoice_no")."_packaging_slip.pdf";
+        $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name, "invoice-packaging-slip");
+        $data = new stdClass();
+        $data->status = "success";
+        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        echo json_encode($data);
+    }
+    public function ajax_get_invoice_info()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+        $customer_id = $inv->customer_id;
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $invoice_items=$this->invoice_model->getInvoiceItems($invoice_id);
+        $data = new stdClass();
+        $data->customer_info = $customer_info;
+        $data->invoice_items = $invoice_items;
+        $data->invoice_details = $inv;
         echo json_encode($data);
     }
 }

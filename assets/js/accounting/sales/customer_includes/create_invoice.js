@@ -54,6 +54,8 @@ $(document).on("change", "#create_invoice_modal table td input", function(event)
     create_invoice_modal_compute_grand_total();
 
 });
+
+
 $(document).on("change", "#create_invoice_modal form select[name='customer_id']", function(event) {
     create_invoice_modal_customer_changed($(this).val());
 });

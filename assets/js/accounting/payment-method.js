@@ -119,28 +119,21 @@ $(document).on('click', '#payment_methods .edit-method', function(e) {
 
     var data = e.currentTarget.dataset;
 
-    $('#payment-method-form').prop(`action`, `/accounting/payment-methods/update/${data.id}`);
+    $.get(`/accounting/payment-methods/edit/${data.id}`, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
+        }
 
-    if(data.name !== null && data.name !== "null") {
-        $('#payment-method-form #name').val(data.name);
-    }
-
-    if(data.credit_card === '1' || data.credit_card === 1) {
-        $('#payment-method-form #credit_card').prop('checked', true);
-    } else {
-        $('#payment-method-form #credit_card').prop('checked', false);
-    }
-
-    $('#payment_method_modal h4.modal-title').html('Edit Payment Method');
-    $('#payment_method_modal').modal('show');
-});
-
-$('a[data-target="#payment_method_modal"]').on('click', function() {
-    $('#payment-method-form').prop('action', '/accounting/payment-methods/add');
-
-    $('#payment-method-form #name').val('');
-    $('#payment-method-form #credit_card').prop('checked', false);
-    $('#payment_method_modal h4.modal-title').html('New Payment Method');
+        $('#modal-container #payment-method-modal').modal('show');
+    });
 });
 
 $(document).on('click', '#payment_methods .make-inactive', function(e) {
@@ -149,22 +142,25 @@ $(document).on('click', '#payment_methods .make-inactive', function(e) {
     var id = e.currentTarget.dataset.id;
     var name = e.currentTarget.dataset.name;
 
-    $('#inactive_payment_method .modal-footer .btn-success').attr('data-id', id);
-    $('#inactive_payment_method span.method-name').html(name);
-
-    $('#inactive_payment_method').modal('show');
-});
-
-$(document).on('click', '#inactive_payment_method .modal-footer .btn-success', function(e) {
-    e.preventDefault();
-
-    var id = e.currentTarget.dataset.id;
-
-    $.ajax({
-        url: `/accounting/payment-methods/delete/${id}`,
-        type:"DELETE",
-        success:function (result) {
-            location.reload();
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/payment-methods/delete/${id}`,
+                type:"DELETE",
+                success:function (result) {
+                    location.reload();
+                }
+            });
         }
     });
 });
@@ -175,22 +171,46 @@ $(document).on('click', '#payment_methods .make-active', function(e) {
     var id = e.currentTarget.dataset.id;
     var name = e.currentTarget.dataset.name;
 
-    $('#active_payment_method .modal-footer .btn-success').attr('data-id', id);
-    $('#active_payment_method span.method-name').html(name);
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${name}</b> active?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/payment-methods/activate/${id}`,
+                type:"GET",
+                success:function (result) {
+                    location.reload();
+                }
+            });
+        }
+    });
 
-    $('#active_payment_method').modal('show');
 });
 
-$(document).on('click', '#active_payment_method .modal-footer .btn-success', function(e) {
+$(document).on('click', '#new-payment-method', function(e) {
     e.preventDefault();
 
-    var id = e.currentTarget.dataset.id;
-
-    $.ajax({
-        url: `/accounting/payment-methods/activate/${id}`,
-        type:"GET",
-        success:function (result) {
-            location.reload();
+    $.get(`/accounting/get-dropdown-modal/payment_method_modal`, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
         }
+
+        $('#modal-container #payment-method-modal').modal('show');
     });
 });

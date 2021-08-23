@@ -1,253 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-/* Style the tab */
-.tab_ {
-  /* float: left; */
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-  width: 100%;
-  height: 100%;
-}
-
-/* Style the buttons inside the tab */
-.tab_ button {
-  display: block;
-  background-color: inherit;
-  color: black;
-  padding: 0 16px;
-  width: 100%;
-  border: none;
-  outline: none;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab_ button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current "tab button" class */
-.tab_ button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  float: left;
-  padding: 0px 12px;
-  border: 1px solid #ccc;
-  width: 80%;
-  border-left: none;
-  /* height: 300px; */
-}  
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 30px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 24px;
-  width: 24px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #53b700;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #53b700;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(20px);
-  -ms-transform: translateX(20px);
-  transform: translateX(20px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 20px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.card {
-    padding: 1px !important;
-}
-.card {
-    margin-bottom: 1px !important;
-}
-
-#exTab1 .tab-content {
-  color : white;
-  background-color: #428bca;
-  padding : 5px 15px;
-}
-
-#exTab2 h3 {
-  color : white;
-  background-color: #428bca;
-  padding : 5px 15px;
-}
-
-/* remove border radius for the tab */
-
-#exTab1 .nav-pills > li > a {
-  border-radius: 0;
-}
-
-/* change border radius for the tab , apply corners on top*/
-
-#exTab3 .nav-pills > li > a {
-  border-radius: 4px 4px 0 0 ;
-}
-
-#exTab3 .tab-content {
-  color : white;
-  background-color: #428bca;
-  padding : 5px 15px;
-}
-
-.project-tab {
-    padding: 10%;
-    margin-top: -8%;
-}
-.project-tab #tabs{
-    background: #007b5e;
-    color: #eee;
-}
-.project-tab #tabs h6.section-title{
-    color: #eee;
-}
-.project-tab #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-    color: #0062cc;
-    background-color: transparent;
-    border-color: transparent transparent #f3f3f3;
-    border-bottom: 3px solid !important;
-    font-size: 16px;
-    font-weight: bold;
-}
-.project-tab .nav-link {
-    border: 1px solid transparent;
-    border-top-left-radius: .25rem;
-    border-top-right-radius: .25rem;
-    color: #0062cc;
-    font-size: 16px;
-    font-weight: 600;
-}
-.project-tab .nav-link:hover {
-    border: none;
-}
-.project-tab thead{
-    background: #f3f3f3;
-    color: #333;
-}
-.project-tab a{
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
-}
-
-.nav {
-    width: 20%;
-}
-
-#circle {
-    background: white;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    border-style: solid;
-    border-color: #55b702;
-}
-
-#circle:hover {
-    background: #def3cc;
-}
-
-.arrow {
-    width:88px;
-    margin:40px auto;
-}
-
-.line {
-    margin-top:7px;
-    width:81px;
-    background:#8d9096;
-    height:2px;
-    float:left;
-}
-.point {	
-    width: 0; 
-	height: 0; 
-	border-top: 7px solid transparent;
-	border-bottom: 7px solid transparent;
-	border-left: 7px solid #8d9096;
-    float:right;
-}
-
-.notification {
-  /* background-color: #555; */
-  color: white;
-  text-decoration: none;
-  /* padding: 15px 26px; */
-  position: relative;
-  display: inline-block;
-  border-radius: 2px;
-}
-
-/* .notification:hover {
-  background: red;
-} */
-
-.notification .badge {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  background-color: red;
-  color: white;
-}
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<link rel="stylesheet" href="<?php echo $url->assets ?>chart_styles/chart.css">
-<script src="<?php echo $url->assets ?>chart_styles/jquery.chart.js"></script>
+<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css">
 
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -264,8 +18,8 @@ input:checked + .slider:before {
                                 <div class="col-md-12">
                                     <nav>
                                         <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" style="color:#666666;">Get things done</a>
-                                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false" style="color:#666666;">Business overview</a> 
+                                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" style="color:#666666;display: inline-block;">Get things done</a>
+                                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false" style="color:#666666;display: inline-block;">Business overview</a> 
                                         </div>
                                     </nav>
                                     <div class="tab-content" id="nav-tabContent">
@@ -612,12 +366,44 @@ input:checked + .slider:before {
                                                 <!-- <div class="chart">
                                                     <ul class="bar-chart" data-bars="[4,2],[4,5],[8,3],[4,2],[4,2]" data-max="10" data-unit="k" data-width="24"></ul>
                                                 </div> -->
-                                                <div class="bar-chart" data-bars="[[4,2],[4,5],[10,3],[4,2],[4,2]]" data-max="10"  data-unit="k" data-grid="0"><a href="https://www.jqueryscript.net/tags.php?/grid/"> </a></div>
 
 
                                                 <br>
+
                                                 <div class="page-title-box">
                                                     <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <div class="income tile-container" style="height:580px;">
+                                                                <div class="inner-container">
+                                                                    <div class="tileContent">
+                                                                        <div class="clear">
+                                                                            <div class="inner-content">
+                                                                                <h6>CASH FLOW</h6>
+                                                                                <h4>$100,000</h4>
+                                                                                <h6>Current cash balance</h6>
+
+                                                                                <div class="tab" align="right" style="text-align:right;">
+                                                                                    <button class="tablinks" onclick="openCity(event, 'London2')">Money in/out</button>
+                                                                                    <button class="tablinks" onclick="openCity(event, 'Tokyo2')">Cash balance</button>
+                                                                                </div>
+                                                                                <div id="London2" class="tabcontent">
+                                                                                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                                                                                    <!-- <canvas id="bar-chart-grouped" width="100%" style="height:370px !important;"></canvas> -->
+                                                                                </div>
+
+                                                                                <div id="Tokyo2" class="tabcontent">
+                                                                                <!-- <h3>Tokyo</h3> -->
+                                                                                    <div id="areaChart" style="height: 370px; width: 100%;"></div>
+
+                                                                                </div>
+
+                                                                                <br>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="col-sm-4">
                                                             <div class="income tile-container" style="height:445px;">
                                                                 <div class="inner-container">
@@ -822,66 +608,8 @@ input:checked + .slider:before {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                        <!--                        <div class="col-sm-6">-->
-                                                        <!--                            <div class="float-right d-none d-md-block">-->
-                                                        <!--                                <div class="dropdown">-->
-                                                        <!--                                    --><?php ////if (hasPermissions('users_add')): ?>
-                                                        <!--                                        <!-- <a href="--><?php ////echo url('users/add') ?><!--" class="btn btn-primary"-->
-                                                        <!--                                       aria-expanded="false">-->
-                                                        <!--                                        <i class="mdi mdi-settings mr-2"></i> New Employee-->
-                                                        <!--                                    </a> -->
-                                                        <!--                                    --><?php //endif ?>
-                                                        <!--                                </div>-->
-                                                        <!--                            </div>-->
-                                                        <!--                        </div>-->
-
-                                                    <div class="row">
-                                                        <div class="col-lg-4 col-sm-6">
-                                                            <?php $this->load->view('accounting/shortcuts'); ?>
-                                                        </div>
+                                                        
                                                         <div class="col-sm-4">
-                                                            <div class="sales tile-container" style="height:445px;">
-                                                                <div class="inner-container">
-                                                                    <div class="tileContent">
-                                                                        <div class="clear">
-                                                                            <div class="inner-content">
-                                                                                <div class="header-container">
-                                                                                    <h3 class="header-content">Sales</h3>
-                                                                                    <div class="header-separator">
-                                                                                        <div class="hs-content">
-                                                                                            <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                                                                                                <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
-                                                                                                    Last 30 Days&nbsp;<span class="fa fa-caret-down"></span></span>
-                                                                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                                                                    <li><a href="#" class="dropdown-item">Last 30 Days</a></li>
-                                                                                                    <li><a href="#" class="dropdown-item">This month</a></li>
-                                                                                                    <li><a href="#" class="dropdown-item">This quarter</a></li>
-                                                                                                    <li><a href="#" class="dropdown-item">This year</a></li>
-                                                                                                    <li><a href="#" class="dropdown-item">Last month</a></li>
-                                                                                                    <li><a href="#" class="dropdown-item">Last quarter</a></li>
-                                                                                                    <li><a href="#" class="dropdown-item">Last year</a></li>
-                                                                                                </ul>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="moduleContent">
-                                                                                    <div class="subContainer salesValues" style="height:300px;">
-                                                                                        <div class="paid moneySection">
-                                                                                            <div class="fancyMoney">$4</div>
-                                                                                            <div class="fancyText dataSelection">Last 30 Days</div>
-                                                                                        </div>
-                                                                                        <div id="sales-line-chart" style="height: 200px"></div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4">
                                                             <div class="more tile-container" style="height:445px;">
                                                                 <div class="inner-container">
                                                                     <div class="tileContent">
@@ -1025,6 +753,65 @@ input:checked + .slider:before {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                        <!--                        <div class="col-sm-6">-->
+                                                        <!--                            <div class="float-right d-none d-md-block">-->
+                                                        <!--                                <div class="dropdown">-->
+                                                        <!--                                    --><?php ////if (hasPermissions('users_add')): ?>
+                                                        <!--                                        <!-- <a href="--><?php ////echo url('users/add') ?><!--" class="btn btn-primary"-->
+                                                        <!--                                       aria-expanded="false">-->
+                                                        <!--                                        <i class="mdi mdi-settings mr-2"></i> New Employee-->
+                                                        <!--                                    </a> -->
+                                                        <!--                                    --><?php //endif ?>
+                                                        <!--                                </div>-->
+                                                        <!--                            </div>-->
+                                                        <!--                        </div>-->
+
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-sm-6">
+                                                            <?php $this->load->view('accounting/shortcuts'); ?>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="sales tile-container" style="height:445px;">
+                                                                <div class="inner-container">
+                                                                    <div class="tileContent">
+                                                                        <div class="clear">
+                                                                            <div class="inner-content">
+                                                                                <div class="header-container">
+                                                                                    <h3 class="header-content">Sales</h3>
+                                                                                    <div class="header-separator">
+                                                                                        <div class="hs-content">
+                                                                                            <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                                                                                                <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
+                                                                                                    Last 30 Days&nbsp;<span class="fa fa-caret-down"></span></span>
+                                                                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                                                                    <li><a href="#" class="dropdown-item">Last 30 Days</a></li>
+                                                                                                    <li><a href="#" class="dropdown-item">This month</a></li>
+                                                                                                    <li><a href="#" class="dropdown-item">This quarter</a></li>
+                                                                                                    <li><a href="#" class="dropdown-item">This year</a></li>
+                                                                                                    <li><a href="#" class="dropdown-item">Last month</a></li>
+                                                                                                    <li><a href="#" class="dropdown-item">Last quarter</a></li>
+                                                                                                    <li><a href="#" class="dropdown-item">Last year</a></li>
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="moduleContent">
+                                                                                    <div class="subContainer salesValues" style="height:300px;">
+                                                                                        <div class="paid moneySection">
+                                                                                            <div class="fancyMoney">$4</div>
+                                                                                            <div class="fancyText dataSelection">Last 30 Days</div>
+                                                                                        </div>
+                                                                                        <div id="sales-line-chart" style="height: 200px"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <div class="col-md-4"></div>
                                                     </div>
                                                     <div class="activity-container">
@@ -1139,7 +926,7 @@ input:checked + .slider:before {
                     <div class="col-md-2" style="background-color:#eceef1;">
                         <!-- <p style="padding:2px;color:#898a8f;"><center>Company</center></p> -->
                         <div class="tab_">
-                            <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">Company</button>
+                            <button class="tablinks  active" onclick="openCity(event, 'London')" id="defaultOpen" >Company</button>
                             <button class="tablinks" onclick="">Billing & Subscription</button>
                             <button class="tablinks" onclick="openCity(event, 'Paris')">Usage</button>
                             <button class="tablinks" onclick="openCity(event, 'Tokyo')">Sales</button>
@@ -1148,7 +935,7 @@ input:checked + .slider:before {
                             <button class="tablinks" onclick="openCity(event, 'Advanced')">Advanced</button>
                         </div>
                     </div>
-                    <div id="London" class="tabcontent">
+                    <div id="London" class="tabcontent" style="display : block !important;">
                         <div class="col-md-10" style="padding:1%;">
                             <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> You don't currently have permission to edit all company information. Check with your QuickBooks admin if you require access.</p>
 
@@ -2207,12 +1994,12 @@ input:checked + .slider:before {
                                                 </label> -->
                                             </p> <br>
                                             <br>
-                                            <input type="checkbox" checked> Markup with a default rate of <input type="text" class="form-control" style="width:80px;display:inline-block;" value="0">%  <br>
-                                            <input type="checkbox" > Track billable expenses and items as income <br>
-                                            <input type="checkbox" > Charge sales tax <br>
+                                            <input type="checkbox" id="markup_default_rate" checked> Markup with a default rate of <input type="text" id="markup_default_rate_value" class="form-control" style="width:80px;display:inline-block;" value="0">%  <br>
+                                            <input type="checkbox" id="track_billable_exp_items" > Track billable expenses and items as income <br>
+                                            <input type="checkbox" id="charge_sales_tax" > Charge sales tax <br>
                                             <br>
                                             <b>Default bill payment terms</b> 
-                                            <select class="form-control" style="width:40%;">
+                                            <select class="form-control" style="width:40%;" id="default_bill_payment_terms">
                                                 <option>Net 10</option>
                                                 <option>Due 15</option>
                                                 <option>Due on receipt</option>
@@ -2224,36 +2011,36 @@ input:checked + .slider:before {
                                             <p>Tips (Gratuity)</p>
                                             <p>Tags</p> -->
                                             <br><br>
-                                            <input type="submit" value="Cancel" id="exp_sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                            <input type="submit" value="Cancel" id="exp_sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success  exp_sales_form_content_save_button">
                                         </td>
                                         <td style="padding:3%;">
                                             <p style="margin-top:-250px;">
                                                 <label class="switch">
-                                                <input type="checkbox" checked>
+                                                <input type="checkbox" id="show_items_exp_pur_forms" checked>
                                                 <span class="slider round"></span>
                                                 </label>
                                             </p>
                                             <p>
                                                 <label class="switch">
-                                                <input type="checkbox" checked>
+                                                <input type="checkbox" id="show_tags_exp_pur_forms" checked>
                                                 <span class="slider round"></span>
                                                 </label>
                                             </p>
                                             <p>
                                                 <label class="switch">
-                                                <input type="checkbox" checked>
+                                                <input type="checkbox"  id="track_exp_items_cust" checked>
                                                 <span class="slider round"></span>
                                                 </label>
                                             </p>
                                             <p>
                                                 <label class="switch">
-                                                <input type="checkbox" checked>
+                                                <input type="checkbox" id="make_exp_items_billable" checked>
                                                 <span class="slider round"></span>
                                                 </label>
                                             </p>
                                             <p>
                                                 <label class="switch">
-                                                <input type="checkbox" checked>
+                                                <input type="checkbox" id="default_bill_payment_terms" checked>
                                                 <span class="slider round"></span>
                                                 </label>
                                             </p>
@@ -2563,27 +2350,27 @@ input:checked + .slider:before {
                                         <p>Accounting method</p><br>
                                         <p>Close the books</p><br>
                                         <br>
-                                        <input type="submit" value="Cancel" id="adv_accounting_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        <input type="submit" value="Cancel" id="adv_accounting_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success adv_accounting_save_button">
                                     </td>
                                     <td style="padding:3%;">
                                         <p style="margin-top:-100px;">
-                                            <select class="form-control" style="width:20%;">
+                                            <select class="form-control" style="width:20%;" id="acct_first_month_fiscal_year">
                                                 <option>January</option>
                                             </select>
                                         </p>
                                         <p>
-                                            <select class="form-control" style="width:30%;">
+                                            <select class="form-control" style="width:30%;" id="acct_first_month_income_tax_yr">
                                                 <option>Same as fiscal year</option>
                                             </select>
                                         </p>
                                         <p>
-                                            <select class="form-control" style="width:20%;">
+                                            <select class="form-control" style="width:20%;" id="acct_accounting_method">
                                                 <option>Accrual</option>
                                             </select>
                                         </p>
                                         <p>
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="acct_close_books">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
@@ -2939,6 +2726,23 @@ input:checked + .slider:before {
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
 <script>
     $(document).ready(function () {
         // Donut Graph
@@ -3381,10 +3185,267 @@ $(document).ready(function() {
              }
         });
     });
+
+    $(".exp_sales_form_content_save_button").click(function() {
+        // alert('test');
+
+        var markup_default_rate_value = $("#markup_default_rate_value").val();
+        var default_bill_payment_terms = $("#default_bill_payment_terms").val();
+
+        if($("#show_items_exp_pur_forms").prop('checked') == true){
+            var show_items_exp_pur_forms = 1;
+        }else{
+            var show_items_exp_pur_forms = 0;
+        }
+
+        if($("#show_tags_exp_pur_forms").prop('checked') == true){
+            var show_tags_exp_pur_forms = 1;
+        }else{
+            var show_tags_exp_pur_forms = 0;
+        }
+
+        if($("#track_exp_items_cust").prop('checked') == true){
+            var track_exp_items_cust = 1;
+        }else{
+            var track_exp_items_cust = 0;
+        }
+
+        if($("#make_exp_items_billable").prop('checked') == true){
+            var make_exp_items_billable = 1;
+        }else{
+            var make_exp_items_billable = 0;
+        }
+
+        if($("#default_bill_payment_terms").prop('checked') == true){
+            var default_bill_payment_terms = 1;
+        }else{
+            var default_bill_payment_terms = 0;
+        }
+
+        if($("#markup_default_rate").prop('checked') == true){
+            var markup_default_rate = 1;
+        }else{
+            var markup_default_rate = 0;
+        }
+
+        if($("#track_billable_exp_items").prop('checked') == true){
+            var track_billable_exp_items = 1;
+        }else{
+            var track_billable_exp_items = 0;
+        }
+
+        if($("#charge_sales_tax").prop('checked') == true){
+            var charge_sales_tax = 1;
+        }else{
+            var charge_sales_tax = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/save_exp_sales_form_content",
+         data: {show_items_exp_pur_forms : show_items_exp_pur_forms, show_tags_exp_pur_forms : show_tags_exp_pur_forms, track_exp_items_cust : track_exp_items_cust, make_exp_items_billable : make_exp_items_billable, default_bill_payment_terms : default_bill_payment_terms, markup_default_rate : markup_default_rate, markup_default_rate_value : markup_default_rate_value, track_billable_exp_items : track_billable_exp_items, charge_sales_tax : charge_sales_tax, default_bill_payment_terms : default_bill_payment_terms },
+         dataType: 'json',
+         success: function(response){
+             alert('success');
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+    
+    $(".adv_accounting_save_button").click(function() {
+        // alert('test');
+
+        var acct_first_month_fiscal_year = $("#acct_first_month_fiscal_year").val();
+        var acct_first_month_income_tax_yr = $("#acct_first_month_income_tax_yr").val();
+        var acct_accounting_method = $("#acct_accounting_method").val();
+
+        if($("#acct_close_books").prop('checked') == true){
+            var acct_close_books = 1;
+        }else{
+            var acct_close_books = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/save_exp_sales_form_content",
+         data: {acct_first_month_fiscal_year : acct_first_month_fiscal_year, acct_first_month_income_tax_yr : acct_first_month_income_tax_yr, acct_accounting_method : acct_accounting_method, acct_close_books : acct_close_books },
+         dataType: 'json',
+         success: function(response){
+             alert('success');
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+    
 });
 </script>
 <script>
 $(function() {
     $('.bar-chart').cssCharts({type:"bar"});
 });
+</script>
+<script>
+// window.onload = function () {
+
+// var chart = new CanvasJS.Chart("chartContainer", {
+// 	animationEnabled: true,
+// 	// title:{
+// 	// 	text: "Crude Oil Reserves vs Production, 2016"
+// 	// },	
+// 	axisY: {
+// 		// title: "Money in",
+// 		titleFontColor: "#4F81BC",
+// 		lineColor: "#4F81BC",
+// 		labelFontColor: "#4F81BC",
+// 		tickColor: "#4F81BC"
+// 	},
+// 	axisY2: {
+// 		// title: "Money out",
+// 		titleFontColor: "#C0504E",
+// 		lineColor: "#C0504E",
+// 		labelFontColor: "#C0504E",
+// 		tickColor: "#C0504E"
+// 	},	
+// 	toolTip: {
+// 		shared: true
+// 	},
+// 	legend: {
+// 		cursor:"pointer",
+// 		itemclick: toggleDataSeries
+// 	},
+// 	data: [{
+// 		type: "column",
+// 		name: "Money in",
+// 		legendText: "Money in",
+//         // backgroundColor: "#2ed24a",
+// 		showInLegend: true, 
+// 		dataPoints:[
+// 			{ label: "Jan", y: 12000,backgroundColor: "#1ed2c1" },
+// 			{ label: "Feb", y: 1000,backgroundColor: "#1ed2c1" },
+// 			{ label: "Mar", y: 25000,backgroundColor: "#1ed2c1" },
+// 			{ label: "Apr", y: 60000,backgroundColor: "#1ed2c1" },
+// 			{ label: "May", y: 50000,backgroundColor: "#1ed2c1" },
+// 			{ label: "Jun", y: 88000,backgroundColor: "#1ed2c1" },
+//             { label: "Jul", y: 40000,backgroundColor: "#1ed2c1" },
+//             { label: "Aug", y: 75000,backgroundColor: "#1ed2c1" },
+//             { label: "Sep", y: 44000,backgroundColor: "#1ed2c1" },
+//             { label: "Oct", y: 66000,backgroundColor: "#1ed2c1" },
+//             { label: "Nov", y: 42000,backgroundColor: "#1ed2c1" },
+//             { label: "Dec", y: 20000,backgroundColor: "#1ed2c1" },
+// 		]
+// 	},
+// 	{
+// 		type: "column",	
+// 		name: "Money out",
+// 		legendText: "Money out",
+//         backgroundColor: "#3e95cd",
+// 		axisYType: "secondary",
+// 		showInLegend: true,
+// 		dataPoints:[
+// 			{ label: "Jan", y: 4000,backgroundColor: "#3e95cd" },
+// 			{ label: "Feb", y: 1000,backgroundColor: "#3e95cd" },
+// 			{ label: "Mar", y: 10000,backgroundColor: "#3e95cd" },
+// 			{ label: "Apr", y: 46000,backgroundColor: "#3e95cd" },
+// 			{ label: "May", y: 50000,backgroundColor: "#3e95cd" },
+// 			{ label: "Jun", y: 60000,backgroundColor: "#3e95cd" },
+//             { label: "Jul", y: 30000,backgroundColor: "#3e95cd" },
+//             { label: "Aug", y: 66000,backgroundColor: "#3e95cd" },
+//             { label: "Sept", y: 45000,backgroundColor: "#3e95cd" },
+//             { label: "Oct", y: 36000,backgroundColor: "#3e95cd" },
+//             { label: "Nov", y: 16000,backgroundColor: "#3e95cd" },
+//             { label: "Dec", y: 5000,backgroundColor: "#3e95cd" },
+// 		]
+// 	}]
+// });
+// chart.render();
+
+// function toggleDataSeries(e) {
+// 	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+// 		e.dataSeries.visible = false;
+// 	}
+// 	else {
+// 		e.dataSeries.visible = true;
+// 	}
+// 	chart.render();
+// }
+
+// }
+</script>
+
+
+<script>
+    new Chart(document.getElementById("bar-chart-grouped"), {
+    type: 'bar',
+    data: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
+      datasets: [
+        {
+          label: "Africa",
+          backgroundColor: "#3e95cd",
+          data: [12000,1000,25000,60000,50000,88000,40000,75000,44000,66000,42000,20000]
+        }, {
+          label: "Europe",
+          backgroundColor: "#8e5ea2",
+          data: [4000,1000,10000,46000,50000,60000,30000,66000,45000,36000,16000,5000]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Population growth (millions)'
+      }
+    }
+});
+</script>
+
+
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("areaChart", {
+	animationEnabled: true,
+	title: {
+		// text: "Number of iPhones Sold in Different Quarters"
+	},
+	axisX: {
+		minimum: new Date(2015, 01, 25),
+		maximum: new Date(2017, 02, 15),
+		valueFormatString: "MMM YY"
+	},
+	axisY: {
+		// title: "Number of Sales",
+		titleFontColor: "#4F81BC",
+		includeZero: true,
+		suffix: "k"
+	},
+	data: [{
+		indexLabelFontColor: "darkSlateGray",
+		name: "views",
+		type: "area",
+		yValueFormatString: "#,##k",
+		dataPoints: [
+			{ x: new Date(2015, 02, 1), y: 20, label: "Q1-2015" },
+			{ x: new Date(2015, 05, 1), y: 70, label: "Q2-2015" },
+			{ x: new Date(2015, 08, 1), y: 60, label: "Q3-2015" },
+			{ x: new Date(2015, 11, 1), y: 55, label: "Q4-2015" },
+			{ x: new Date(2016, 02, 1), y: 60, label: "Q1-2016" },
+			{ x: new Date(2016, 05, 1), y: 25, label: "Q2-2016" },
+			{ x: new Date(2016, 08, 1), y: 10, label: "Q3-2016" },
+			{ x: new Date(2016, 11, 1), y: 30, label: "Q4-2016" },
+			{ x: new Date(2017, 02, 1), y: 50, label: "Q1-2017", indexLabel: "Current", markerColor: "red" }
+		]
+	}]
+});
+chart.render();
+
+}
 </script>

@@ -327,9 +327,10 @@ $route['accounting/get-dropdown-choices'] = 'accounting_modals/get_dropdown_choi
 $route['accounting/get-add-vendor-details-modal'] = 'accounting_modals/add_vendor_details_modal';
 $route['accounting/get-add-customer-details-modal'] = 'accounting_modals/add_customer_details_modal';
 $route['accounting/add-full-payee-details']['post'] = 'accounting_modals/add_full_payee_details';
-$route['accounting/get-add-account-modal'] = 'accounting_modals/get_add_account_modal';
 $route['accounting/get-first-detail-type/(:any)'] = 'accounting_modals/first_detail_type/$1';
 $route['accounting/ajax-add-account']['post'] = 'accounting_modals/ajax_add_account';
+$route['accounting/get-dropdown-modal/(:any)'] = 'accounting_modals/get_dropdown_modal/$1';
+$route['accounting/ajax-add-payment-method']['post'] = 'accounting_modals/ajax_add_payment_method';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -348,6 +349,7 @@ $route['accounting/attachments/get-unlinked-attachments-ajax'] = 'accounting_con
 $route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/index';
 $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting_controllers/payment_methods/load_payment_methods';
 $route['accounting/payment-methods/add']['post'] = 'accounting_controllers/payment_methods/add';
+$route['accounting/payment-methods/edit/(:any)'] = 'accounting_controllers/payment_methods/edit/$1';
 $route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting_controllers/payment_methods/inactive/$1";
 $route['accounting/payment-methods/activate/(:any)'] = "accounting_controllers/payment_methods/activate/$1";
 $route['accounting/payment-methods/update/(:any)']['post'] = "accounting_controllers/payment_methods/update/$1";
@@ -979,6 +981,7 @@ $route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';
 $route['mycrm/_request_remove_addon'] = 'Mycrm/company_request_remove_addon';
 $route['mycrm/_cancel_remove_addon'] = 'Mycrm/company_cancel_remove_addon';
 $route['mycrm/_buy_plan_license'] = 'Mycrm/company_buy_plan_license';
+$route['mycrm/_get_plan_payment_details'] = 'Mycrm/ajax_load_plan_payment_form';
 
 //Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';

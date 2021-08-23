@@ -103,6 +103,19 @@ $(document).ready(function() {
                             // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         }
                     },
+                    error: function(xhr, status, error) {
+                        var errorMessage = xhr.status + ': ' + xhr.statusText
+                            // alert('Error - ' + errorMessage);
+                            // window.location.replace(baseURL + "mycrm/membership");
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: "Upgrade your subscription",
+                            html: "Account can't clockin due to membership limitation.",
+                            imageUrl: baseURL + "/assets/img/timesheet/subscription.png",
+                        });
+                        setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
+                    }
                 });
             }
         });

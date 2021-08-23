@@ -563,6 +563,149 @@ class Mycrm extends MY_Controller {
 
         echo json_encode(['is_success' => $is_success, 'message' => $message]);
     }
+
+    public function renew_plan()
+    {   
+        $this->load->model('Clients_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('CardsFile_model');
+        $this->load->model('OfferCodes_model');
+
+        $company_id = logged('company_id');
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        $nsPlans  = $this->NsmartPlan_model->getAll(); 
+        $addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+        $lastPayment  = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id);
+        $firstPayment = $this->CompanySubscriptionPayments_model->getCompanyFirstPayment($client->id);
+        $primaryCard  = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
+        $offerCode    = $this->OfferCodes_model->getByClientId($company_id);
+
+        $total_addon_price = 0;
+        foreach($addons as $a){
+            $total_addon_price += $a->service_fee;
+        }
+
+        $day = date("d", strtotime($client->plan_date_registered));
+        $date_start = date("Y-m-" . $day);
+        $start_billing_period = date("d-M-Y", strtotime($date_start));
+        $end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
+
+        $default_plan_feature = plan_default_features();
+        if( $plan->plan_name == 'Simple Start' ){
+            $default_plan_feature = $default_plan_feature['simple-start'];
+        }elseif( $plan->plan_name == 'Essential' ){
+            $default_plan_feature = $default_plan_feature['essential'];
+        }elseif( $plan->plan_name == 'Plus' ){
+            $default_plan_feature = $default_plan_feature['plus'];
+        }elseif( $plan->plan_name == 'PremierPro' ){
+            $default_plan_feature = $default_plan_feature['premier-pro'];
+        }elseif( $plan->plan_name == 'Industry Specific' ){
+            $default_plan_feature = $default_plan_feature['industry-specific'];
+        }elseif( $plan->plan_name == 'Enterprise' ){
+            $default_plan_feature = $default_plan_feature['enterprise'];
+        }
+
+        $this->page_data['plan_features'] = $plan_default_features;
+        $this->page_data['lastPayment']  = $lastPayment;
+        $this->page_data['firstPayment'] = $firstPayment;
+        $this->page_data['nsPlans'] = $nsPlans;
+        $this->page_data['start_billing_period'] = $start_billing_period;
+        $this->page_data['end_billing_period'] = $end_billing_period;
+        $this->page_data['total_monthly']      = $plan->price + $total_addon_price;
+        $this->page_data['total_addon_price']  = $total_addon_price;
+        $this->page_data['primaryCard'] = $primaryCard;
+        $this->page_data['addons'] = $addons;
+        $this->page_data['plan']   = $plan;
+        $this->page_data['default_plan_feature'] = $default_plan_feature;
+        $this->page_data['client'] = $client;
+        $this->page_data['offerCode'] = $offerCode;
+        $this->load->view('mycrm/renew_plan', $this->page_data);
+
+    }
+
+    public function plan_select()
+    {
+        $this->load->model('Clients_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('CardsFile_model');
+        $this->load->model('OfferCodes_model');
+
+        $company_id = logged('company_id');
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        $nsPlans  = $this->NsmartPlan_model->getAll(); 
+        $addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+        $lastPayment  = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id);
+        $firstPayment = $this->CompanySubscriptionPayments_model->getCompanyFirstPayment($client->id);
+        $primaryCard  = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
+        $offerCode    = $this->OfferCodes_model->getByClientId($company_id);
+
+        $total_addon_price = 0;
+        foreach($addons as $a){
+            $total_addon_price += $a->service_fee;
+        }
+
+        $day = date("d", strtotime($client->plan_date_registered));
+        $date_start = date("Y-m-" . $day);
+        $start_billing_period = date("d-M-Y", strtotime($date_start));
+        $end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
+
+        $monthly = number_format($plan->price,2);
+        $yearly  = number_format($plan->discount,2);
+
+        $a_monthly = explode(".", $monthly);
+        $a_yearly  = explode(".", $yearly);
+
+        $this->page_data['plan_features'] = $plan_default_features;
+        $this->page_data['lastPayment']  = $lastPayment;
+        $this->page_data['firstPayment'] = $firstPayment;
+        $this->page_data['nsPlans'] = $nsPlans;
+        $this->page_data['start_billing_period'] = $start_billing_period;
+        $this->page_data['end_billing_period'] = $end_billing_period;
+        $this->page_data['total_monthly']      = $plan->price + $total_addon_price;
+        $this->page_data['total_addon_price']  = $total_addon_price;
+        $this->page_data['primaryCard'] = $primaryCard;
+        $this->page_data['addons'] = $addons;
+        $this->page_data['plan']   = $plan;
+        $this->page_data['client'] = $client;
+        $this->page_data['offerCode'] = $offerCode;
+        $this->page_data['a_monthly'] = $a_monthly;
+        $this->page_data['a_yearly']  = $a_yearly;
+        $this->load->view('mycrm/plan_select', $this->page_data);        
+    }
+
+    public function ajax_load_plan_payment_form()
+    {
+        $this->load->model('Clients_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+
+        if( $post['plan_type'] == 'monthly' ){
+            $plan_type  = 'monthly';
+            $membership_price = $plan->price;
+        }else{
+            $plan_type = 'yearly';
+            $membership_price = $plan->discount;
+        }
+        
+        $this->page_data['membership_price'] = $membership_price;
+        $this->page_data['plan']      = $plan;
+        $this->page_data['plan_type'] = $plan_type;
+        $this->load->view('mycrm/ajax_load_plan_payment_form', $this->page_data);
+    }
+
+
 }
 
 

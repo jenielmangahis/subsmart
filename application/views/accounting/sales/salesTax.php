@@ -109,7 +109,7 @@ include viewPath('includes/header');
                             </div>
                         </div>
 
-                        <button class="btn btn-primary">Refresh</button>
+                        <button class="btn btn-primary" id="refreshList" disabled>Refresh</button>
                         <span class="dropdownWithSearchContainer__error d-none">
                             Invalid date range, end date must be after start date.
                         </span>
@@ -262,16 +262,17 @@ include viewPath('includes/header');
                     <div class="col">
                         <div>
                             <div class="taxModal__title">Florida Department of Revenue</div>
-                            <div>Tax Period: June 2021</div>
-                            <div>Due date:  Due July 20</div>
+                            <div>Tax Period: <span data-type="date_issued"></span></div>
+                            <div>Due date:  <span data-type="due_date"></span></div>
                         </div>
 
                         <div class="taxModal__spacer"></div>
 
                         <div>
-                            <div class="taxModal__title taxModal__title--secondary">ADI Smart Security</div>
-                            <div>6055 BORN CT</div>
-                            <div>Pensacola, FL 32504</div>
+                            <div class="taxModal__title taxModal__title--secondary">
+                                <span data-type="company.business_name"></span>
+                            </div>
+                            <div data-type="company.business_address"></div>
                         </div>
                     </div>
                     <div class="col">

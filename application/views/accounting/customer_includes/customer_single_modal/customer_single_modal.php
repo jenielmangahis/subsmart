@@ -272,17 +272,17 @@
                                             </div>
                                             <button class="btn btn-default" type="button" data-toggle="dropdown">
                                                 Batch action <span class="fa fa-caret-down"></span></button>
-                                            <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
-                                                <li>
+                                            <ul class="dropdown-menu dropdown-menu-right by-batch-btn" role="menu">
+                                                <li class="print-transaction-btn disabled">
                                                     <a href="#">Print transactions</a>
                                                 </li>
-                                                <li>
+                                                <li class="print-packaging-slip-btn disabled">
                                                     <a href="#">Print packaging slip</a>
                                                 </li>
-                                                <li>
+                                                <li class="send-transaction-btn disabled">
                                                     <a href="#">Send transactions</a>
                                                 </li>
-                                                <li>
+                                                <li class="send-reminder-btn disabled">
                                                     <a href="#">Send reminder</a>
                                                 </li>
                                             </ul>

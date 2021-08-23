@@ -9,7 +9,7 @@
    border-radius: 2px 2px 0 0;
    text-align: center;
    text-transform: uppercase;
-   font-size: 12px;
+   font-size: 18px;
    font-weight: 600;	
 }
 .plan-option-box .plan-option-box-cnt {
@@ -21,7 +21,7 @@
 }
 .plan-option-box .plan-option-box-cnt .plan-option-box-value {
    display: block;
-   font-size: 28px;
+   font-size: 34px;
    padding: 10px 0;
 }
 .plan-option-box .plan-option-box-cnt .plan-option-box-name {
@@ -54,4 +54,47 @@
 .plan {
    background: #f2f2f2 none repeat scroll 0 0;
    padding: 30px;
+}
+
+.plan-box {
+    border: 1px solid #dfdfdf;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 35px;
+    position: relative;
+}
+.plan-box-name {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+.plan-box-price {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+.plan-box-info {
+    margin-bottom: 0px;
+}
+.text-ter {
+    color: #888888;
+}
+.plan-box-savings {
+    color: #f43d34;
+    margin-bottom: 15px;
+}
+.plan-box-price-base {
+    font-size: 40px;
+}
+.plan-box-price {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+.plan-box-best {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #2ab363;
+    padding: 2px 15px;
+    font-size: 12px;
+    color: #fff;
+    margin-left: 20px;
 }

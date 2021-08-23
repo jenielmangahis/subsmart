@@ -796,7 +796,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     <input type="hidden" id="autoClockOut"
                         value="<?php echo $overtime_status; ?>">
                     <div class="clock-users "
-                        id="<?php echo $clock_btn ?>">
+                        id="<?php echo $clock_btn ?>" data-allow-module="<?=$_SESSION['alert_class']?>">
                         <div
                             class="clock <?php echo $analog_active ?>">
                             <div class="hour">

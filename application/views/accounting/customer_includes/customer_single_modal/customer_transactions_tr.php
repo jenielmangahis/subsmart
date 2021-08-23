@@ -2,10 +2,11 @@
     <td>
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
-                <input type="checkbox" name="single_customer_transaction_check_box"
+                <input type="checkbox" name="single_customer_transaction_check_box[]"
                     id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"
                     class="customer_checkbox"
-                    data-row-type="<?=$type?>">
+                    data-row-type="<?=$type?>"
+                    data-row-status="<?=$status?>">
                 <label
                     for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"><span></span></label>
             </div>
@@ -66,7 +67,9 @@
         <?php if ($type=="Invoice" && $status=="Paid") {
     ?>
         <div class="dropdown dropdown-btn text-right">
-            <a href="" class="">Print</a>
+            <a href="javascript:void(0)" class="print-invoice-btn"
+                data-invoice-no="<?=$no?>"
+                data-invoice-id="<?=$invoice_id?>">Print</a>
             <a type="button" data-toggle="dropdown">
                 <span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span>
             </a>
@@ -84,26 +87,32 @@
                     </a>
                 </li>
                 <li>
-                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="print-invoice-packaging-slip-btn"
+                        data-invoice-no="<?=$no?>"
+                        data-invoice-id="<?=$invoice_id?>">
                         Print packaging slip
                     </a>
                 </li>
                 <li>
-                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                    <a role="menuitem" tabindex="-1"
+                        href="<?=base_url("invoice/genview/".$invoice_id)?>">
                         View/edit
                     </a>
                 </li>
-                <li>
+                <li class="copy-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Copy
                     </a>
                 </li>
-                <li>
+                <li class="delete-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Delete
                     </a>
                 </li>
-                <li>
+                <li class="void-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Void
                     </a>
@@ -123,7 +132,9 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
                 aria-labelledby="dropdown-edit">
-                <li>
+                <li class="print-invoice-btn"
+                    data-invoice-no="<?=$no?>"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Print
                     </a>
@@ -147,27 +158,33 @@
                         Share invoice link
                     </a>
                 </li>
-                <li>
+                <li class="print-invoice-packaging-slip-btn"
+                    data-invoice-no="<?=$no?>"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Print package slip
                     </a>
                 </li>
                 <li>
-                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                    <a role="menuitem" tabindex="-1"
+                        href="<?=base_url("invoice/genview/".$invoice_id)?>">
                         View/Edit
                     </a>
                 </li>
-                <li>
+                <li class="copy-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Copy
                     </a>
                 </li>
-                <li>
+                <li class="delete-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Delete
                     </a>
                 </li>
-                <li>
+                <li class="void-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Void
                     </a>
