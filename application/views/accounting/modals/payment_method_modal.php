@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">New Payment Method</h4>
-                <button type="button" class="close close-payment-method"><i class="fa fa-times fa-lg"></i></button>
+                <button type="button" class="close close-payment-method">&times;</button>
             </div>
             <?php 
                 $action = isset($paymentMethod) ? "/accounting/payment-methods/update/$paymentMethod->id" : '/accounting/payment-methods/add';

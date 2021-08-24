@@ -922,11 +922,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="modal-body">
                 
-                <div class="row">
+                <div class="row" style="width:100%;">
                     <div class="col-md-2" style="background-color:#eceef1;">
                         <!-- <p style="padding:2px;color:#898a8f;"><center>Company</center></p> -->
                         <div class="tab_">
-                            <button class="tablinks  active" onclick="openCity(event, 'London')" id="defaultOpen" >Company</button>
+                            <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen" >Company</button>
                             <button class="tablinks" onclick="">Billing & Subscription</button>
                             <button class="tablinks" onclick="openCity(event, 'Paris')">Usage</button>
                             <button class="tablinks" onclick="openCity(event, 'Tokyo')">Sales</button>
@@ -935,7 +935,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <button class="tablinks" onclick="openCity(event, 'Advanced')">Advanced</button>
                         </div>
                     </div>
-                    <div id="London" class="tabcontent" style="display : block !important;">
+                    <div id="London" class="tabcontent">
                         <div class="col-md-10" style="padding:1%;">
                             <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> You don't currently have permission to edit all company information. Check with your QuickBooks admin if you require access.</p>
 
@@ -1394,14 +1394,120 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tr id="reminders_edit" style="display:none;">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Reminders</td>
                                     <td style="width:50%;padding:3%;">
-                                        <p>Default email message for invoice reminders</p>
+                                        <!-- <p>Default email message for invoice reminders</p>
                                         <p>Automatic invoice reminders 
                                             <label class="switch">
                                             <input type="checkbox">
                                             <span class="slider round"></span>
                                             </label></p>
-                                        <p>Automatic email reminders only apply to new invoices. Turning off automatic reminders removes them from all invoices.</p>
+                                        <p>Automatic email reminders only apply to new invoices. Turning off automatic reminders removes them from all invoices.</p> -->
                                         <div id="accordion">
+                                            <div class="card">
+                                                <div class="card-header" id="headingTwo">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">
+                                                    <span style="float:left;">Default email message for invoice reminders</span> 
+                                                    <b style="float:right;"><i class="fa fa-sort-down"></i></b>
+                                                    </button>
+                                                </h5>
+                                                </div>
+                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-3">
+                                                            <select class="form-control">
+                                                                <option>3</option>
+                                                                <option>7</option>
+                                                                <option>14</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            day(s)
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control">
+                                                                <option>Before</option>
+                                                                <option>After</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            due date
+                                                        </div>
+                                                    </div>
+                                                    <br> -->
+                                                    <div class="row">
+                                                        <!-- <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div> -->
+                                                        <div class="col-md-12">Use <span style="color:#0077c5;">[Invoice No.]</span> and <span style="color:#0077c5;">[Company Name]</span> as placeholders in the email.</div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">Subject line</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12"><input type="text" value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" class="form-control"></div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-4" style="text-align: center;vertical-align: center;"><input type="checkbox"> &emsp;Use email greeting</div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>Dear</option>
+                                                                <option>To</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <select class="form-control">
+                                                                <option>[Full Name]</option>
+                                                                <option>[First]</option>
+                                                                <option>[Company Name]</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <textarea class="form-control" rows="8">Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
+                                                            
+                                                            Thanks for your business!
+                                                            Alarm Direct, Inc
+                                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <!-- <div class="row">
+                                                        <div class="col-md-6">
+                                                            <select class="form-control">
+                                                                <option>Invoice</option>
+                                                                <option>Estimate</option>
+                                                                <option>Credit Memo</option>
+                                                                <option>Sales Receipt</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input type="button" value="Use standard message" class="btn btn-success">
+                                                        </div>
+                                                    </div>
+                                                    <br> 
+                                                    <div class="row">
+                                                        <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
+                                                    </div>-->
+                                                    <div class="row">
+                                                        <div class="col-md-1" style="text-align: center;"><input type="checkbox"></div>
+                                                        <div class="col-md-11">Send a copy to lauren@adialarms.com</div>
+                                                    </div>
+
+
+                                                </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <p>Automatic invoice reminders 
+                                            <label class="switch" style="float:right;margin-right: 350px;">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                            </label></p>
+                                            <p>Automatic email reminders only apply to new invoices. Turning off automatic reminders removes them from all invoices.</p>
+
                                             <div class="card">
                                                 <div class="card-header" id="headingOne">
                                                 <h5 class="mb-0">
@@ -1437,7 +1543,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                     <br>
                                                     <div class="row">
-                                                        <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div>
+                                                        <div class="col-md-12">Use <span style="color:#0077c5;">[Invoice No.]</span> and <span style="color:#0077c5;">[Company Name]</span> as placeholders in the email.</div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
@@ -1493,57 +1599,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
-                                                        <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Copy (Cc) new invoices to address
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Blind Copy (Bcc) new invoices to address
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Sales form
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <select class="form-control">
-                                                                <option>Estimate</option>
-                                                                <option>Invoice</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <textarea class="form-control"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-12">
-                                                            <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
-                                                        </div>
-                                                    </div> -->
+                                                
                                                 
                                                 </div>
                                                 </div>
@@ -1582,7 +1638,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                     <br>
                                                     <div class="row">
-                                                        <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div>
+                                                        <!-- <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div> -->
+                                                        <div class="col-md-12">Use <span style="color:#0077c5;">[Invoice No.]</span> and <span style="color:#0077c5;">[Company Name]</span> as placeholders in the email.</div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
@@ -1638,59 +1695,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
-                                                        <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Copy (Cc) new invoices to address
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Blind Copy (Bcc) new invoices to address
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Sales form
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <select class="form-control">
-                                                                <option>Estimate</option>
-                                                                <option>Invoice</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <textarea class="form-control"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-12">
-                                                            <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
-                                                        </div>
-                                                    </div> -->
-
-
                                                 </div>
                                                 </div>
                                             </div>
@@ -1728,7 +1732,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                     <br>
                                                     <div class="row">
-                                                        <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div>
+                                                        <!-- <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div> -->
+                                                        <div class="col-md-12">Use <span style="color:#0077c5;">[Invoice No.]</span> and <span style="color:#0077c5;">[Company Name]</span> as placeholders in the email.</div>
                                                     </div>
                                                     <br>
                                                     <div class="row">
@@ -1784,58 +1789,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
-                                                        <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Copy (Cc) new invoices to address
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Blind Copy (Bcc) new invoices to address
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12"><input type="text" class="form-control"></div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            Sales form
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <select class="form-control">
-                                                                <option>Estimate</option>
-                                                                <option>Invoice</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <textarea class="form-control"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-12">
-                                                            <input type="submit" value="Cancel" id="reminders_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
-                                                        </div>
-                                                    </div> -->
-
+                                                    
 
                                                 </div>
                                                 </div>
@@ -2712,7 +2666,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     
                 </div>
                 <div style="margin: auto;">
-                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmarTrac, the privacy and security of your information are top priorities.</span>
                 </div>
                 <div style="margin: auto">
                     <a href="" style="text-align: center">Privacy</a>
@@ -3126,7 +3080,8 @@ $(document).ready(function() {
          data: {sales_pref_inv_terms : sales_pref_inv_terms, sales_pref_del_method : sales_pref_del_method, sales_shipping : sales_shipping, sales_custom_fields : sales_custom_fields, sales_cust_trans_numbers : sales_cust_trans_numbers, sales_service_date : sales_service_date, sales_discount : sales_discount, sales_deposit : sales_deposit, sales_tips : sales_tips,  sales_tags : sales_tags },
          dataType: 'json',
          success: function(response){
-             alert('success');
+            //  alert('success');
+            sucess("Updated Successfully!");
      
          },
              error: function(response){
@@ -3135,6 +3090,22 @@ $(document).ready(function() {
              }
         });
     });
+
+    function sucess(information){
+        Swal.fire({
+            title: 'Good job!',
+            text: information,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                window.location.href="/accounting/banking";
+            }
+        });
+    }
 
 
     $(".product_services_save_button").click(function() {
@@ -3176,7 +3147,8 @@ $(document).ready(function() {
          data: {ps_column_sales_form : ps_column_sales_form, ps_show_sku_column : ps_show_sku_column, ps_price_rules : ps_price_rules, ps_track_qty_price : ps_track_qty_price, ps_track_inv_qty : ps_track_inv_qty },
          dataType: 'json',
          success: function(response){
-             alert('success');
+            //  alert('success');
+            sucess("Updated Successfully!");
      
          },
              error: function(response){
@@ -3246,7 +3218,8 @@ $(document).ready(function() {
          data: {show_items_exp_pur_forms : show_items_exp_pur_forms, show_tags_exp_pur_forms : show_tags_exp_pur_forms, track_exp_items_cust : track_exp_items_cust, make_exp_items_billable : make_exp_items_billable, default_bill_payment_terms : default_bill_payment_terms, markup_default_rate : markup_default_rate, markup_default_rate_value : markup_default_rate_value, track_billable_exp_items : track_billable_exp_items, charge_sales_tax : charge_sales_tax, default_bill_payment_terms : default_bill_payment_terms },
          dataType: 'json',
          success: function(response){
-             alert('success');
+            //  alert('success');
+            sucess("Updated Successfully!");
      
          },
              error: function(response){
@@ -3275,7 +3248,8 @@ $(document).ready(function() {
          data: {acct_first_month_fiscal_year : acct_first_month_fiscal_year, acct_first_month_income_tax_yr : acct_first_month_income_tax_yr, acct_accounting_method : acct_accounting_method, acct_close_books : acct_close_books },
          dataType: 'json',
          success: function(response){
-             alert('success');
+            //  alert('success');
+            sucess("Updated Successfully!");
      
          },
              error: function(response){

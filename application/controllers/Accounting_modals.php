@@ -3050,7 +3050,7 @@ class Accounting_modals extends MY_Controller
                     'company_id' => logged('company_id'),
                     'vendor_id' => $data['vendor_id'],
                     'mailing_address' => nl2br($data['mailing_address']),
-                    'term_id' => $data['term_id'],
+                    'term_id' => $data['term'],
                     'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
                     'due_date' => date("Y-m-d", strtotime($data['due_date'])),
                     'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,

@@ -7,7 +7,8 @@ export class TaxAgencyTable {
   render() {
     const columns = {
       agency: (_, __, row) => {
-        return `<span>${row.agency}</span>`;
+        const isActive = row.is_active === "1";
+        return `<span>${row.agency} ${!isActive ? "(inactive)" : ""}</span>`;
       },
       fillingFrequency: (_, __, row) => {
         return `<span class="text-capitalize">${row.frequency}</span>`;
@@ -19,6 +20,12 @@ export class TaxAgencyTable {
         return `<span>${moment(row.start_date).format("MM/DD/YYYY")}</span>`;
       },
       actions: (_, __, row) => {
+        if (row.is_active !== "1") {
+          return `
+            <button type="button" class="btn btn-sm btnGroup__main">Make active</button>
+          `;
+        }
+
         return `
             <div class="btn-group btnGroup">
                 <button data-action="edit" type="button" class="btn btn-sm btnGroup__main action">Edit</button>
@@ -26,12 +33,15 @@ export class TaxAgencyTable {
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item action" href="#">Make inactive</a>
+                    <a data-action="makeInactive" class="dropdown-item action" href="#">Make inactive</a>
                 </div>
             </div>
         `;
       },
     };
+
+    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+    const includeInactive = this.shouldIncludeInactive();
 
     const actions = {
       edit: (row) => {
@@ -41,11 +51,14 @@ export class TaxAgencyTable {
         const $sidebar = $("#editAgency");
         const $sidebarCloseBtn = $sidebar.find("[data-action=close]");
         const $sidebarSaveBtn = $sidebar.find("#editAgencyBtn");
+        const $editAgencyInactiveBtn = $sidebar.find("#editAgencyInactiveBtn");
 
         const closeSidebar = () => {
           $sidebar.removeClass("sidebarForm--show");
           $sidebar.off("click");
           $sidebarCloseBtn.off("click");
+          $sidebarSaveBtn.off("click");
+          $editAgencyInactiveBtn.off("click");
         };
 
         const $data = $sidebar.find("[data-type]");
@@ -92,7 +105,6 @@ export class TaxAgencyTable {
           $(this).attr("disabled", true);
           $(this).text("Saving...");
 
-          const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : ""; // prettier-ignore
           const response = await fetch(
             `${prefixURL}/AccountingSales/apiEditAgency/${row.id}`,
             {
@@ -108,12 +120,49 @@ export class TaxAgencyTable {
           const json = await response.json();
           window.location.reload();
         });
+
+        $editAgencyInactiveBtn.on("click", async function () {
+          $(this).attr("disabled", true);
+          await actions.makeInactive(row);
+        });
+      },
+      makeInactive: async (row) => {
+        const result = await Swal.fire({
+          title: `Change ${row.agency} to inactive`,
+          text: "Are you sure you want to make this tax agency inactive? This means that you'll stop collecting tax for it.",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Make inactive",
+        });
+
+        if (!result.isConfirmed) {
+          return;
+        }
+
+        const payload = { ...row, is_active: 0 };
+        payload.start_period = `${new Date().getFullYear()}-01-01`;
+
+        const response = await fetch(
+          `${prefixURL}/AccountingSales/apiEditAgency/${row.id}`,
+          {
+            method: "post",
+            body: JSON.stringify(payload),
+            headers: {
+              accept: "application/json",
+              "content-type": "application/json",
+            },
+          }
+        );
+
+        const json = await response.json();
+        window.location.reload();
       },
     };
 
     const table = this.$table.DataTable({
       searching: false,
-      ajax: `${prefixURL}/AccountingSales/apiGetAgencies`,
+      ajax: `${prefixURL}/AccountingSales/apiGetAgencies?include_inactive=${includeInactive}`,
       columns: [
         {
           sortable: false,
@@ -141,10 +190,15 @@ export class TaxAgencyTable {
       },
       createdRow: function (row, data) {
         $(row).attr("data-id", data.id);
+        if (data.is_active !== "1") {
+          $(row).addClass("row--inactive");
+        }
       },
     });
 
     this.$table.find("tbody").on("click", ".action", async function (event) {
+      event.preventDefault();
+
       const $parent = $(this).closest("tr");
       const rows = table.rows().data().toArray();
 
@@ -154,5 +208,10 @@ export class TaxAgencyTable {
       const action = $(this).data("action");
       await actions[action](row, table, event);
     });
+  }
+
+  shouldIncludeInactive() {
+    const includeInactiveKey = "nsmartrac::taxEditSettings__includeInactive";
+    return Boolean(JSON.parse(localStorage.getItem(includeInactiveKey)));
   }
 }

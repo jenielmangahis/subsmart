@@ -13,7 +13,6 @@ class Timesheet extends MY_Controller
         parent::__construct();
         $this->checkLogin();
         $this->hasAccessModule(77);
-
         $this->page_data['page']->title = 'Timesheet Management';
 
         $this->page_data['page']->menu = 'users';
@@ -1217,7 +1216,7 @@ class Timesheet extends MY_Controller
         $this->pusher_notification($data);
         // echo json_encode($attn_id);
     }
-
+    
 
     public function breakIn()
     {
@@ -1929,6 +1928,10 @@ class Timesheet extends MY_Controller
             $data->html = $html;
             $data->content_notification = $content_notification;
             $data->profile_img = $image;
+            $data->send_sms=false;
+            if (logged("company_id") == 1) {
+                $data->send_sms=true;
+            }
             if ($entry_type == "Manual") {
                 echo json_encode($data);
             } else {
@@ -2325,6 +2328,10 @@ class Timesheet extends MY_Controller
             $data->profile_img = $image;
             $data->device_type = "";
             $data->token = "";
+            $data->send_sms=false;
+            if (logged("company_id") == 1) {
+                $data->send_sms=true;
+            }
             $this->pusher_notification($data);
             echo json_encode($data);
         }
@@ -2463,7 +2470,7 @@ class Timesheet extends MY_Controller
         $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
         if (!@getimagesize($image)) {
             $image = base_url('uploads/users/default.png');
-        }   
+        }
 
         $data->user_id = $user_id;
         $data->html = "";

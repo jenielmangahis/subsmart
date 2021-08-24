@@ -1779,39 +1779,42 @@ $(function() {
     });
 
     $(document).on('change', '#billModal #terms', function() {
-        var billDate = new Date($('#billModal #bill_date').val());
-        var dueDate = new Date(`${billDate.getMonth()+1}/${billDate.getDate()}/${billDate.getFullYear()}`);
-        $.get('/accounting/get-term-details/' + $(this).val(), function(res) {
-            var term = JSON.parse(res);
+        if($(this).val() !== 'add-new') {
+            var billDate = new Date($('#billModal #bill_date').val());
+            var dueDate = new Date(`${billDate.getMonth()+1}/${billDate.getDate()}/${billDate.getFullYear()}`);
 
-            if (term.type === "1") {
-                dueDate.setDate(dueDate.getDate() + parseInt(term.net_due_days));
-            } else {
-                if (
-                    term.minimum_days_to_pay === null ||
-                    term.minimum_days_to_pay === "" ||
-                    term.minimum_days_to_pay === "0"
-                ) {
-                    dueDate.setDate(term.day_of_month_due);
-                    if (billDate.getDate() > parseInt(term.day_of_month_due)) {
-                        dueDate.setMonth(dueDate.getMonth() + 1);
-                    }
+            $.get('/accounting/get-term-details/' + $(this).val(), function(res) {
+                var term = JSON.parse(res);
+    
+                if (term.type === "1") {
+                    dueDate.setDate(dueDate.getDate() + parseInt(term.net_due_days));
                 } else {
-                    var expectedDue = new Date(`${dueDate.getMonth()+1}/${dueDate.getDate()}/${dueDate.getFullYear()}`);
-                    expectedDue.setDate(parseInt(term.day_of_month_due));
-                    expectedDue.setDate(expectedDue.getDate() - parseInt(term.minimum_days_to_pay));
-                    if (billDate.getDate() > expectedDue.getDate()) {
-                        dueDate = new Date(`${dueDate.getMonth() + 2}/${term.day_of_month_due}/${dueDate.getFullYear()}`);
+                    if (
+                        term.minimum_days_to_pay === null ||
+                        term.minimum_days_to_pay === "" ||
+                        term.minimum_days_to_pay === "0"
+                    ) {
+                        dueDate.setDate(term.day_of_month_due);
+                        if (billDate.getDate() > parseInt(term.day_of_month_due)) {
+                            dueDate.setMonth(dueDate.getMonth() + 1);
+                        }
                     } else {
-                        dueDate.setDate(parseInt(term.day_of_month_due));
+                        var expectedDue = new Date(`${dueDate.getMonth()+1}/${dueDate.getDate()}/${dueDate.getFullYear()}`);
+                        expectedDue.setDate(parseInt(term.day_of_month_due));
+                        expectedDue.setDate(expectedDue.getDate() - parseInt(term.minimum_days_to_pay));
+                        if (billDate.getDate() > expectedDue.getDate()) {
+                            dueDate = new Date(`${dueDate.getMonth() + 2}/${term.day_of_month_due}/${dueDate.getFullYear()}`);
+                        } else {
+                            dueDate.setDate(parseInt(term.day_of_month_due));
+                        }
                     }
                 }
-            }
-
-            dueDate = String(dueDate.getMonth() + 1).padStart(2, '0') + '/' + String(dueDate.getDate()).padStart(2, '0') + '/' + dueDate.getFullYear();
-
-            $('#billModal #due_date').val(dueDate);
-        });
+    
+                dueDate = String(dueDate.getMonth() + 1).padStart(2, '0') + '/' + String(dueDate.getDate()).padStart(2, '0') + '/' + dueDate.getFullYear();
+    
+                $('#billModal #due_date').val(dueDate);
+            });
+        }
     });
 
     $(document).on('change', '#checkModal #payee', function() {
@@ -3387,25 +3390,27 @@ $(function() {
                 var query = '';
             }
 
-            $.get(`/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
-                $('#modal-form').parent().append(result);
+            if(!form.includes('payee') && !form.includes('customer') && !form.includes('vendor')) {
+                $.get(`/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
+                    $('#modal-form').parent().append(result);
+    
+                    switch(form) {
+                        case 'account' :
+                            initAccountModal();
+                        break;
+                        default :
+                            $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
+                            $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
+                            $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
 
-                switch(form) {
-                    case 'account' :
-                        initAccountModal();
-                    break;
-                    case 'payment_method' :
-                        $('#modal-container #payment-method-modal form').attr('id', 'ajax-add-payment-method');
-                        $('#modal-container #payment-method-modal form').removeAttr('action');
-                        $('#modal-container #payment-method-modal form').removeAttr('method');
-
-                        $('#modal-container #payment-method-modal').modal({
-                            backdrop: 'static',
-                            keyboard: false
-                        });
-                    break;
-                }
-            });
+                            $(`#modal-container #${form.replaceAll('_', '-')}-modal`).modal({
+                                backdrop: 'static',
+                                keyboard: false
+                            });
+                        break;
+                    }
+                });
+            }
         }
     });
 
@@ -3458,6 +3463,12 @@ $(function() {
         dropdownEl = null;
 
         $('#modal-container #payment-method-modal').remove();
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #term-modal', function() {
+        dropdownEl = null;
+
+        $('#modal-container #term-modal').remove();
     });
 
     $(document).on('change', '#account-modal #check_sub', function() {
@@ -3523,6 +3534,30 @@ $(function() {
                     dropdownEl.trigger('change');
 
                     $('#payment-method-modal').modal('hide');
+                }
+            }
+        });
+    });
+
+    $(document).on('submit', '#term-modal #ajax-add-term', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/accounting/ajax-add-term',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success) {
+                    dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
+                    dropdownEl.trigger('change');
+
+                    $('#term-modal').modal('hide');
                 }
             }
         });
@@ -3849,6 +3884,20 @@ $(function() {
                     keyboard: false
                 });
             });
+        }
+    });
+
+    $(document).on('click', '#modal-container #term-modal input[name="payment_term_type"]', function() {
+        if($(this).val() === "1" || $(this).val() === 1) {
+            $('#modal-container #term-modal #net-due-days').prop('disabled', false);
+    
+            $('#modal-container #term-modal #day-of-month-due, #modal-container #term-modal #minimum-days-to-pay').prop('disabled', true);
+            $('#modal-container #term-modal #day-of-month-due, #modal-container #term-modal #minimum-days-to-pay').val('');
+        } else if($(this).val() === "2" || $(this).val() === 2) {
+            $('#modal-container #term-modal #net-due-days').val('');
+            $('#modal-container #term-modal #net-due-days').prop('disabled', true);
+    
+            $('#modal-container #term-modal #day-of-month-due, #modal-container #term-modal #minimum-days-to-pay').prop('disabled', false);
         }
     });
 
