@@ -5946,6 +5946,7 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
             'assets/js/accounting/invoice/addInvoice.js',
+            'assets/js/accounting/invoice/accounting.min.js',
         ]);
         
         $this->load->view('accounting/addInvoice', $this->page_data);
@@ -6680,6 +6681,7 @@ class Accounting extends MY_Controller
             'https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
             // 'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js', imported async.
+            'https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.all.min.js',
         ]);
 
         $this->load->view('accounting/sales/taxEditSettings', $this->page_data);

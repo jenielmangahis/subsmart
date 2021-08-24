@@ -23,7 +23,14 @@ class AccountingSales extends MY_Controller
 
     public function apiGetAgencies()
     {
+        $includeInactive = $this->input->get('include_inactive', true);
+        $includeInactive = filter_var($includeInactive, FILTER_VALIDATE_BOOLEAN);
+
         $this->db->where('user_id', logged('id'));
+        if (!$includeInactive) {
+            $this->db->where('is_active', 1);
+        }
+
         $agencies = $this->db->get('accounting_tax_agencies')->result();
 
         header('content-type: application/json');
@@ -69,8 +76,14 @@ class AccountingSales extends MY_Controller
 
     public function apiGetRates()
     {
+        $includeInactive = $this->input->get('include_inactive', true);
+        $includeInactive = filter_var($includeInactive, FILTER_VALIDATE_BOOLEAN);
+
         $this->db->where('user_id', logged('id'));
-        $this->db->where('is_active', 1);
+        if (!$includeInactive) {
+            $this->db->where('is_active', 1);
+        }
+
         $rates = $this->db->get('accounting_tax_rates')->result();
 
         header('content-type: application/json');

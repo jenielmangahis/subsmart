@@ -15,7 +15,23 @@ include viewPath('includes/header');
 
             <div class="settings__header">
                 <div class="settings__title">Edit settings</div>
-                <button class="settings__btn">Turn off sales tax</button>
+                <div class="d-flex">
+                    <button class="settings__btn">Turn off sales tax</button>
+
+                    <div class="settings__dropdown ml-1">
+                        <button class="settings__btn settings__btn--icon" id="settingsButton">
+                            <i class="fa fa-cog"></i>
+                        </button>
+                        <ul class="settings__dropdownOptions">
+                            <li class="settings__dropdownOptionsItem">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="includeInactive">
+                                    <label class="custom-control-label" for="includeInactive">Include inactive</label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div class="settings__spacer"></div>
@@ -23,10 +39,7 @@ include viewPath('includes/header');
             <div class="settings__taxAgencies">
                 <div class="settings__header settings__header--table">
                     <div class="settings__title settings__title--secondary">Tax agencies</div>
-                    <div>
-                        <button data-action="addAgency" class="settings__btn">Add agency</button>
-                        <button class="settings__btn settings__btn--icon" disabled><i class="fa fa-cog"></i></button>
-                    </div>
+                    <button data-action="addAgency" class="settings__btn">Add agency</button>
                 </div>
 
                 <table class="table table-hover settings__table" id="agencyTable">
@@ -107,7 +120,7 @@ include viewPath('includes/header');
             </form>
 
             <div class="sidebarForm__footer">
-                <button type="button" class="settings__btn mr-2">Make inactive</button>
+                <button id="editAgencyInactiveBtn" type="button" class="settings__btn mr-2">Make inactive</button>
                 <button id="editAgencyBtn" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>

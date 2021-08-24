@@ -171,8 +171,9 @@ function createUsername(name) {
     .replace(/[^\w-]+/g, "");
 }
 
-function numberWithDecimal(number) {
-  return Number(number) % 1 === 0 ? Math.floor(number).toFixed(2) : number;
+
+function formatCurrency(number) {
+  return accounting.formatMoney(number, { symbol: "" });
 }
 
 function calculateInvoiceTax() {
@@ -184,7 +185,7 @@ function calculateInvoiceTax() {
     total += Number($tax.val());
   });
 
-  return numberWithDecimal(Number(total));
+  return Number(total);
 }
 
 function calculateInvoiceSubtotal() {
@@ -197,11 +198,12 @@ function calculateInvoiceSubtotal() {
     total += Number($price.val()) * Number($quantity.val());
   });
 
-  return numberWithDecimal(Number(total));
+  return Number(total);
 }
 
 function calculateInvoiceGrandTotal() {
-  return numberWithDecimal(Number(calculateInvoiceSubtotal()) + Number($("#total_tax_").text()));
+  const totalTax = accounting.unformat($("#total_tax_").text());
+  return Number(calculateInvoiceSubtotal()) + Number(totalTax);
 }
 
 // $(document).on("focusout", ".price", function () {

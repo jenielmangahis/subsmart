@@ -6,7 +6,7 @@
             <form action="<?=$action?>" method="post" class="form-validate" novalidate="novalidate">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addLocationLabel">Accounts</h5>
-                    <button type="button" class="close close-account-modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" class="close close-account-modal" aria-label="Close">&times;</button>
                 </div>
                 <div class="modal-body" style="max-height: 650px;">
                     <div class="row">

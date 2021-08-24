@@ -100,6 +100,9 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
+                            if (data.send_sms) {
+                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
+                            }
                             // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         }
                     },
@@ -120,6 +123,19 @@ $(document).ready(function() {
             }
         });
     });
+
+    function clock_in_clock_out_send_sms(phone_number, message) {
+        $.ajax({
+            url: baseURL + "/cron_marketing/clockin_clockout_sms",
+            type: "POST",
+            dataType: "json",
+            data: { phone_number: phone_number, message: message },
+            success: function(data) {
+                console.log("sms_status")
+                console.log(data);
+            },
+        });
+    }
 
     function breakTime() {
         let latest_lunch = $("#latestLunchTime").val();
@@ -377,7 +393,10 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+
+                            if (data.send_sms) {
+                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
+                            } // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         },
                     });
                 }
@@ -437,7 +456,10 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
-                            // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+
+                            if (data.send_sms) {
+                                clock_in_clock_out_send_sms("+18506195914", data.FName + " " + data.LName + " " + data.content_notification)
+                            } // get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             // location.reload();
                         } else {
                             console.log("Autoc lockout: Something is wrong!");

@@ -85,32 +85,6 @@ var table = $('#terms_table').DataTable({
     }
 });
 
-$('a[data-target="#payment_term_modal"]').on('click', function() {
-    $('#payment_term_modal h4.modal-title').html('New Term');
-
-    $('#payment_term_modal input[name="id"]').remove();
-    $('#payment_term_modal input[name="type"][value="1"]').trigger('click');
-    $('#payment-term-form input[type="text"], #payment-term-form input[type="number"]').val('');
-});
-
-$('#payment_term_modal .form-check label').on('click', function() {
-    $(this).prev().trigger('click');
-});
-
-$('input[name="type"]').on('change', function() {
-    if($(this).val() === "1" || $(this).val() === 1) {
-        $('#payment_term_modal #net_due_days').prop('disabled', false);
-
-        $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', true);
-        $('#day_of_month_due, #minimum_days_to_pay').val('');
-    } else if($(this).val() === "2" || $(this).val() === 2) {
-        $('#payment_term_modal #net_due_days').val('');
-        $('#payment_term_modal #net_due_days').prop('disabled', true);
-
-        $('#day_of_month_due, #minimum_days_to_pay').prop('disabled', false);
-    }
-});
-
 $(document).on('click', '#terms_table .make-inactive', function(e) {
     e.preventDefault();
 
@@ -186,4 +160,24 @@ $(document).on('click', '#terms_table .edit-term', function(e) {
 
     $('#payment_term_modal h4.modal-title').html('Edit Term');
     $('#payment_term_modal').modal('show');
+});
+
+$(document).on('click', '#new-payment-term', function(e) {
+    e.preventDefault();
+
+    $.get(`/accounting/get-dropdown-modal/term_modal`, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
+        }
+
+        $(`#modal-container #term-modal`).modal('show');
+    });
 });

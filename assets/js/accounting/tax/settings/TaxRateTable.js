@@ -7,7 +7,8 @@ export class TaxRateTable {
   render() {
     const columns = {
       name: (_, __, row) => {
-        return `<span>${row.name}</span>`;
+        const isActive = row.is_active === "1";
+        return `<span>${row.name} ${!isActive ? "(inactive)" : ""}</span>`;
       },
       agency: (_, __, row) => {
         return `<span>${row.agency}</span>`;
@@ -16,6 +17,12 @@ export class TaxRateTable {
         return `<span>${row.rate}%</span>`;
       },
       actions: (_, __, row) => {
+        if (row.is_active !== "1") {
+          return `
+            <button type="button" class="btn btn-sm btnGroup__main">Make active</button>
+          `;
+        }
+
         return `
             <div class="btn-group btnGroup">
                 <button data-action="edit" type="button" class="btn btn-sm btnGroup__main action">Edit</button>
@@ -31,6 +38,8 @@ export class TaxRateTable {
     };
 
     const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+    const includeInactive = this.shouldIncludeInactive();
+
     const actions = {
       edit: (row) => {
         const $sidebar = $("#editRate");
@@ -126,7 +135,7 @@ export class TaxRateTable {
 
     const table = this.$table.DataTable({
       searching: false,
-      ajax: `${prefixURL}/AccountingSales/apiGetRates`,
+      ajax: `${prefixURL}/AccountingSales/apiGetRates?include_inactive=${includeInactive}`,
       columns: [
         {
           sortable: false,
@@ -150,6 +159,9 @@ export class TaxRateTable {
       },
       createdRow: function (row, data) {
         $(row).attr("data-id", data.id);
+        if (data.is_active !== "1") {
+          $(row).addClass("row--inactive");
+        }
       },
     });
 
@@ -165,5 +177,10 @@ export class TaxRateTable {
       const action = $(this).data("action");
       await actions[action](row, table, event);
     });
+  }
+
+  shouldIncludeInactive() {
+    const includeInactiveKey = "nsmartrac::taxEditSettings__includeInactive";
+    return Boolean(JSON.parse(localStorage.getItem(includeInactiveKey)));
   }
 }

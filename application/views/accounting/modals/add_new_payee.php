@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <!-- Modal content-->
         <form id="new-payee-form">
-        <div class="modal-content" style="height: 100%;">
+        <div class="modal-content" style="height: auto !important;">
             <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                 <h4 class="modal-title">New Name</h4>
                 <button type="button" class="close cancel-add-payee">&times;</button>

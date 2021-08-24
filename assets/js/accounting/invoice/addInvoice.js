@@ -9,7 +9,8 @@
   const taxRateDefault = $taxRateSelect.find("[default]").val();
   const $sidebar = $("#addRateSidebar");
   const $taxDisplay = $("#total_tax_");
-  const $grandTotal = $("#grand_total");
+  const $grandTotalDisplay = $("#grand_total");
+  const $subTotalDisplay = $("#span_sub_total_invoice");
 
   const showCustomRateOptions = (options) => {
     options.forEach(({ id, name, rate }) => {
@@ -23,16 +24,19 @@
   };
 
   const displayValues = (config = {}) => {
+    let taxValue = undefined;
+
     if (config.rateId) {
       const price = calculateInvoiceSubtotal();
       const customRate = customRates.find((rate) => rate.id == config.rateId);
-      const taxValue = numberWithDecimal((Number(customRate.rate) / 100) * price); // prettier-ignore
-      $taxDisplay.text(taxValue);
+      taxValue = (Number(customRate.rate) / 100) * price;
     } else {
-      $taxDisplay.text(calculateInvoiceTax());
+      taxValue = calculateInvoiceTax();
     }
 
-    $grandTotal.text(calculateInvoiceGrandTotal());
+    $taxDisplay.text(formatCurrency(taxValue));
+    $grandTotalDisplay.text(formatCurrency(calculateInvoiceGrandTotal()));
+    $subTotalDisplay.text(formatCurrency(calculateInvoiceSubtotal()));
   };
 
   const closeSidebar = (value = null) => {

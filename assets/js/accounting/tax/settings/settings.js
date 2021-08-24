@@ -8,6 +8,22 @@ const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   const { rateAgencies } = await import("./rateAgencies.js");
 
   const $sidebarTriggers = $("[data-action^=add]");
+  const $settingsButton = $("#settingsButton");
+
+  const $includeInactiveSwitch = $("#includeInactive");
+  const includeInactiveKey = "nsmartrac::taxEditSettings__includeInactive";
+  const includeInactive = Boolean(JSON.parse(localStorage.getItem(includeInactiveKey))); // prettier-ignore
+
+  $settingsButton.on("click", function () {
+    const $parent = $settingsButton.closest(".settings__dropdown");
+    $parent.addClass("settings__dropdown--active");
+  });
+
+  $includeInactiveSwitch.prop("checked", includeInactive);
+  $includeInactiveSwitch.on("change", function () {
+    localStorage.setItem(includeInactiveKey, this.checked);
+    window.location.reload();
+  });
 
   const closeSidebar = ($sidebar) => {
     $sidebar.find(".form-control").val("");

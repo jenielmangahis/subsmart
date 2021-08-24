@@ -38,7 +38,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="terms">Terms</label>
-                                                <select name="term_id" id="terms" class="form-control"></select>
+                                                <select name="term" id="terms" class="form-control"></select>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
