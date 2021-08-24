@@ -5767,7 +5767,7 @@ const initAccountModal = () => {
 
                             if(dropdownEl !== null) {
                                 var field = dropdownEl.attr('id');
-                                var fieldName = field === undefined ? dropdownEl.replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
+                                var fieldName = field === undefined ? dropdownEl.attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
                                 fieldName = fieldName.includes('from') || fieldName.includes('to') ? fieldName.replaceAll('from-', '').replaceAll('to-', '') : fieldName;
 
                                 query.dropdown = fieldName

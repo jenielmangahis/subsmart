@@ -16,9 +16,13 @@ include viewPath('includes/header');
             <div class="settings__header">
                 <div class="settings__title">Edit settings</div>
                 <div class="d-flex">
-                    <button class="settings__btn">Turn off sales tax</button>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="includeInactive">
+                        <label class="custom-control-label" for="includeInactive" style="cursor: pointer; font-size: 15px;">Include inactive records</label>
+                    </div>
 
-                    <div class="settings__dropdown ml-1">
+                    <button class="settings__btn d-none">Turn off sales tax</button>
+                    <div class="settings__dropdown ml-1 d-none">
                         <button class="settings__btn settings__btn--icon" id="settingsButton">
                             <i class="fa fa-cog"></i>
                         </button>
@@ -26,7 +30,7 @@ include viewPath('includes/header');
                             <li class="settings__dropdownOptionsItem">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" class="custom-control-input" id="includeInactive">
-                                    <label class="custom-control-label" for="includeInactive">Include inactive</label>
+                                    <label class="custom-control-label" for="includeInactive" style="cursor: pointer; font-size: 15px;">Include inactive</label>
                                 </div>
                             </li>
                         </ul>

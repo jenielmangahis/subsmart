@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | of this setting
 |
 */
-defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
+defined('SHOW_DEBUG_BACKTRACE') or define('SHOW_DEBUG_BACKTRACE', true);
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +26,10 @@ defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 | always be used to set the mode correctly.
 |
 */
-defined('FILE_READ_MODE')  OR define('FILE_READ_MODE', 0644);
-defined('FILE_WRITE_MODE') OR define('FILE_WRITE_MODE', 0666);
-defined('DIR_READ_MODE')   OR define('DIR_READ_MODE', 0755);
-defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
+defined('FILE_READ_MODE')  or define('FILE_READ_MODE', 0644);
+defined('FILE_WRITE_MODE') or define('FILE_WRITE_MODE', 0666);
+defined('DIR_READ_MODE')   or define('DIR_READ_MODE', 0755);
+defined('DIR_WRITE_MODE')  or define('DIR_WRITE_MODE', 0755);
 
 /*
 |--------------------------------------------------------------------------
@@ -39,14 +39,14 @@ defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 | These modes are used when working with fopen()/popen()
 |
 */
-defined('FOPEN_READ')                           OR define('FOPEN_READ', 'rb');
-defined('FOPEN_READ_WRITE')                     OR define('FOPEN_READ_WRITE', 'r+b');
-defined('FOPEN_WRITE_CREATE_DESTRUCTIVE')       OR define('FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb'); // truncates existing file data, use with care
-defined('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE')  OR define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b'); // truncates existing file data, use with care
-defined('FOPEN_WRITE_CREATE')                   OR define('FOPEN_WRITE_CREATE', 'ab');
-defined('FOPEN_READ_WRITE_CREATE')              OR define('FOPEN_READ_WRITE_CREATE', 'a+b');
-defined('FOPEN_WRITE_CREATE_STRICT')            OR define('FOPEN_WRITE_CREATE_STRICT', 'xb');
-defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
+defined('FOPEN_READ')                           or define('FOPEN_READ', 'rb');
+defined('FOPEN_READ_WRITE')                     or define('FOPEN_READ_WRITE', 'r+b');
+defined('FOPEN_WRITE_CREATE_DESTRUCTIVE')       or define('FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb'); // truncates existing file data, use with care
+defined('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE')  or define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b'); // truncates existing file data, use with care
+defined('FOPEN_WRITE_CREATE')                   or define('FOPEN_WRITE_CREATE', 'ab');
+defined('FOPEN_READ_WRITE_CREATE')              or define('FOPEN_READ_WRITE_CREATE', 'a+b');
+defined('FOPEN_WRITE_CREATE_STRICT')            or define('FOPEN_WRITE_CREATE_STRICT', 'xb');
+defined('FOPEN_READ_WRITE_CREATE_STRICT')       or define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
 
 /*
 |--------------------------------------------------------------------------
@@ -73,28 +73,28 @@ defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREA
 |       http://tldp.org/LDP/abs/html/exitcodes.html
 |
 */
-defined('EXIT_SUCCESS')        OR define('EXIT_SUCCESS', 0); // no errors
-defined('EXIT_ERROR')          OR define('EXIT_ERROR', 1); // generic error
-defined('EXIT_CONFIG')         OR define('EXIT_CONFIG', 3); // configuration error
-defined('EXIT_UNKNOWN_FILE')   OR define('EXIT_UNKNOWN_FILE', 4); // file not found
-defined('EXIT_UNKNOWN_CLASS')  OR define('EXIT_UNKNOWN_CLASS', 5); // unknown class
-defined('EXIT_UNKNOWN_METHOD') OR define('EXIT_UNKNOWN_METHOD', 6); // unknown class member
-defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user input
-defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
-defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
-defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+defined('EXIT_SUCCESS')        or define('EXIT_SUCCESS', 0); // no errors
+defined('EXIT_ERROR')          or define('EXIT_ERROR', 1); // generic error
+defined('EXIT_CONFIG')         or define('EXIT_CONFIG', 3); // configuration error
+defined('EXIT_UNKNOWN_FILE')   or define('EXIT_UNKNOWN_FILE', 4); // file not found
+defined('EXIT_UNKNOWN_CLASS')  or define('EXIT_UNKNOWN_CLASS', 5); // unknown class
+defined('EXIT_UNKNOWN_METHOD') or define('EXIT_UNKNOWN_METHOD', 6); // unknown class member
+defined('EXIT_USER_INPUT')     or define('EXIT_USER_INPUT', 7); // invalid user input
+defined('EXIT_DATABASE')       or define('EXIT_DATABASE', 8); // database error
+defined('EXIT__AUTO_MIN')      or define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
+defined('EXIT__AUTO_MAX')      or define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
-defined('DB_SETTINGS_TABLE_KEY_SCHEDULE')      OR define('DB_SETTINGS_TABLE_KEY_SCHEDULE', 'schedule');
-defined('DB_SETTINGS_TABLE_KEY_WORKORDER')      OR define('DB_SETTINGS_TABLE_KEY_WORKORDER', 'workorder');
-defined('WORKORDER_STATUS_SCHEDULE')      OR define('WORKORDER_STATUS_SCHEDULE', 'Sehcdule');
-defined('WORKORDER_STATUS_COMPLETE')      OR define('WORKORDER_STATUS_COMPLETE', 'Complete');
-defined('ESTIMATE_STATUS_SUBMITTED')      OR define('ESTIMATE_STATUS_SUBMITTED', 'Submitted');
-defined('ESTIMATE_STATUS_ACCEPTED')      OR define('ESTIMATE_STATUS_ACCEPTED', 'Accepted');
-defined('ESTIMATE_STATUS_INVOICED')      OR define('ESTIMATE_STATUS_INVOICED', 'Invoiced');
-defined('ESTIMATE_STATUS_DECLINED')      OR define('ESTIMATE_STATUS_DECLINED', 'Declined by customer');
-defined('ESTIMATE_STATUS_LOST')      OR define('ESTIMATE_STATUS_LOST', 'Lost');
-defined('ESTIMATE_STATUS_DRAFT')      OR define('ESTIMATE_STATUS_DRAFT', 'Draft');
+defined('DB_SETTINGS_TABLE_KEY_SCHEDULE')      or define('DB_SETTINGS_TABLE_KEY_SCHEDULE', 'schedule');
+defined('DB_SETTINGS_TABLE_KEY_WORKORDER')      or define('DB_SETTINGS_TABLE_KEY_WORKORDER', 'workorder');
+defined('WORKORDER_STATUS_SCHEDULE')      or define('WORKORDER_STATUS_SCHEDULE', 'Sehcdule');
+defined('WORKORDER_STATUS_COMPLETE')      or define('WORKORDER_STATUS_COMPLETE', 'Complete');
+defined('ESTIMATE_STATUS_SUBMITTED')      or define('ESTIMATE_STATUS_SUBMITTED', 'Submitted');
+defined('ESTIMATE_STATUS_ACCEPTED')      or define('ESTIMATE_STATUS_ACCEPTED', 'Accepted');
+defined('ESTIMATE_STATUS_INVOICED')      or define('ESTIMATE_STATUS_INVOICED', 'Invoiced');
+defined('ESTIMATE_STATUS_DECLINED')      or define('ESTIMATE_STATUS_DECLINED', 'Declined by customer');
+defined('ESTIMATE_STATUS_LOST')      or define('ESTIMATE_STATUS_LOST', 'Lost');
+defined('ESTIMATE_STATUS_DRAFT')      or define('ESTIMATE_STATUS_DRAFT', 'Draft');
 
 //Converge
 //Demo
@@ -119,21 +119,22 @@ define('STRIPE_PUBLISH_KEY', 'pk_test_51IcoTsKPiost1m5gilfxDCpqQR0T139pAGFVUv6rS
 
 //RING CENTRAL
 //Sandbox
-/*define('RINGCENTRAL_CLIENT_ID', 'yyGrSZo1SUaLHrh5VM-6Pw');
+define('RINGCENTRAL_CLIENT_ID', 'yyGrSZo1SUaLHrh5VM-6Pw');
 define('RINGCENTRAL_CLIENT_SECRET', 'JMU-sm7HQAKU60lEo6Zq9Qe2GFqhEQRVWXTDItUjqlNA');
 define('RINGCENTRAL_DEV_URL', 'https://platform.devtest.ringcentral.com');
 define('RINGCENTRAL_USER', '+13233646599');
 define('RINGCENTRAL_FROM', '+13233646599');
 define('RINGCENTRAL_PASSWORD', 's@634DFhy&*)2bNy');
-define('RINGCENTRAL_EXT', '101');*/
+define('RINGCENTRAL_EXT', '101');
 //Production
-define('RINGCENTRAL_CLIENT_ID', 'nUlEWd9qRE6SmXr-glhWIA');
+/*define('RINGCENTRAL_CLIENT_ID', 'nUlEWd9qRE6SmXr-glhWIA');
 define('RINGCENTRAL_CLIENT_SECRET', 'LLF8Pl45Suiad2qgQ4nxkQUl31OB7tRBmXkw1U1Rv0sA');
 define('RINGCENTRAL_DEV_URL', 'https://platform.ringcentral.com');
 define('RINGCENTRAL_USER', '+18504780530');
 define('RINGCENTRAL_PASSWORD', 'Ringmybell2021');
 define('RINGCENTRAL_FROM', '+18503081341');
-define('RINGCENTRAL_EXT', '101');
+define('RINGCENTRAL_EXT', '101');*/
+
 
 //PHPMAILER
 define('MAIL_SERVER', 'mail.nsmartrac.com');

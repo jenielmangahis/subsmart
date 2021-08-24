@@ -91,10 +91,27 @@ $(document).on('click', '#terms_table .make-inactive', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = table.row(row).data();
 
-    $('#inactive_term .modal-footer .btn-success').attr('data-id', data.id);
-    $('#inactive_term span.term-name').html(data.name);
-
-    $('#inactive_term').modal('show');
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${data.name}</b> inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/terms/delete/${data.id}`,
+                type:"DELETE",
+                success:function (result) {
+                    location.reload();
+                }
+            });
+        }
+    });
 });
 
 $(document).on('click', '#terms_table .make-active', function(e) {
@@ -103,36 +120,25 @@ $(document).on('click', '#terms_table .make-active', function(e) {
     var row = $(this).parent().parent().parent();
     var data = table.row(row).data();
 
-    $('#active_term .modal-footer .btn-success').attr('data-id', data.id);
-    $('#active_term span.term-name').html(data.name);
-
-    $('#active_term').modal('show');
-});
-
-$(document).on('click', '#inactive_term .modal-footer .btn-success', function(e) {
-    e.preventDefault();
-
-    var id = e.currentTarget.dataset.id;
-
-    $.ajax({
-        url: `/accounting/terms/delete/${id}`,
-        type:"DELETE",
-        success:function (result) {
-            location.reload();
-        }
-    });
-});
-
-$(document).on('click', '#active_term .modal-footer .btn-success', function(e) {
-    e.preventDefault();
-
-    var id = e.currentTarget.dataset.id;
-
-    $.ajax({
-        url: `/accounting/terms/activate/${id}`,
-        type:"GET",
-        success:function (result) {
-            location.reload();
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${data.name}</b> active?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/terms/activate/${data.id}`,
+                type:"GET",
+                success:function (result) {
+                    location.reload();
+                }
+            });
         }
     });
 });
@@ -143,23 +149,21 @@ $(document).on('click', '#terms_table .edit-term', function(e) {
     var row = $(this).parent().parent().parent().parent();
     var data = table.row(row).data();
 
-    $('#payment-term-form').prop('action', `/accounting/terms/update/${data.id}`);
+    $.get(`/accounting/terms/edit/${data.id}`, function(result) {
+        if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
+        }
 
-    if(data.name !== null && data.name !== "null") {
-        $('#payment-term-form #name').val(data.name);
-    }
-
-    $(`input[name="type"][value="${data.type}"]`).trigger('click');
-    
-    if(data.type === 1 || data.type === "1") {
-        $('#payment_term_modal #net_due_days').val(data.net_due_days);
-    } else if(data.type === 2 || data.type === "2") {
-        $('#payment_term_modal #day_of_month_due').val(data.day_of_month_due);
-        $('#payment_term_modal #minimum_days_to_pay').val(data.minimum_days_to_pay);
-    }
-
-    $('#payment_term_modal h4.modal-title').html('Edit Term');
-    $('#payment_term_modal').modal('show');
+        $('#modal-container #term-modal').modal('show');
+    });
 });
 
 $(document).on('click', '#new-payment-term', function(e) {

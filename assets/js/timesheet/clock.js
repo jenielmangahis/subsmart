@@ -126,7 +126,7 @@ $(document).ready(function() {
 
     function clock_in_clock_out_send_sms(phone_number, message) {
         $.ajax({
-            url: baseURL + "/cron_marketing/clockin_clockout_sms",
+            url: baseURL + "send-sms/clockin-clockout",
             type: "POST",
             dataType: "json",
             data: { phone_number: phone_number, message: message },
