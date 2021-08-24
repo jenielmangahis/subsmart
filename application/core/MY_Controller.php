@@ -50,9 +50,14 @@ class MY_Controller extends CI_Controller {
 		$method     = $this->router->fetch_method();
 		$controller = $this->router->fetch_class();		
 		
-		if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
-			//redirect('mycrm/membership'); 
-		}
+		/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
+			//redirect('mycrm/renew_plan'); 
+		}*/
+
+		/*if( $is_plan_active == 0 && $controller != 'mycrm'){			
+			if( $method != 'renew_plan' && $method != 'plan_select'  )
+			redirect('mycrm/renew_plan'); 
+		}*/
 	}
 
 	public function gtMyIpGlobal(){

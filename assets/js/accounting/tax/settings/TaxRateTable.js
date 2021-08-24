@@ -19,7 +19,7 @@ export class TaxRateTable {
       actions: (_, __, row) => {
         if (row.is_active !== "1") {
           return `
-            <button type="button" class="btn btn-sm btnGroup__main">Make active</button>
+            <button data-action="makeActive" type="button" class="btn btn-sm btnGroup__main action">Make active</button>
           `;
         }
 
@@ -131,6 +131,23 @@ export class TaxRateTable {
         const json = await response.json();
         window.location.reload();
       },
+      makeActive: async (row) => {
+        const payload = { ...row, is_active: 1 };
+        const response = await fetch(
+          `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
+          {
+            method: "post",
+            body: JSON.stringify(payload),
+            headers: {
+              accept: "application/json",
+              "content-type": "application/json",
+            },
+          }
+        );
+
+        const json = await response.json();
+        window.location.reload();
+      },
     };
 
     const table = this.$table.DataTable({
@@ -175,6 +192,9 @@ export class TaxRateTable {
       const row = rows.find(({ id }) => id == rowId);
 
       const action = $(this).data("action");
+      const func = actions[action];
+
+      if (!func) return;
       await actions[action](row, table, event);
     });
   }

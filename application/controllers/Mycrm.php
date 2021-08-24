@@ -657,9 +657,11 @@ class Mycrm extends MY_Controller {
 
         $monthly = number_format($plan->price,2);
         $yearly  = number_format($plan->discount,2);
+        $yearly_total = number_format($plan->discount * 12,2);
 
         $a_monthly = explode(".", $monthly);
         $a_yearly  = explode(".", $yearly);
+        $a_yearly_total = explode(".", $yearly_total);
 
         $this->page_data['plan_features'] = $plan_default_features;
         $this->page_data['lastPayment']  = $lastPayment;
@@ -676,6 +678,7 @@ class Mycrm extends MY_Controller {
         $this->page_data['offerCode'] = $offerCode;
         $this->page_data['a_monthly'] = $a_monthly;
         $this->page_data['a_yearly']  = $a_yearly;
+        $this->page_data['a_yearly_total'] =  $a_yearly_total;
         $this->load->view('mycrm/plan_select', $this->page_data);        
     }
 
@@ -693,16 +696,35 @@ class Mycrm extends MY_Controller {
 
         if( $post['plan_type'] == 'monthly' ){
             $plan_type  = 'monthly';
-            $membership_price = $plan->price;
+            $membership_price    = $plan->price;
+            $license_total_price = $plan->price_per_license;
+            $billing_start = date("d-M-Y");
+            $billing_end   = date("d-M-Y", strtotime("+1 month"));
         }else{
             $plan_type = 'yearly';
-            $membership_price = $plan->discount;
+            $membership_price = $plan->discount * 12;
+            $license_total_price = $plan->price_per_license * 12;
+            $billing_start = date("d-M-Y");
+            $billing_end   = date("d-M-Y", strtotime("+1 year"));
         }
+
+        $billing_period = $billing_start . " to " . $billing_end;
+        $grand_total    = $membership_price + $license_total_price;
         
+        $this->page_data['billing_period'] = $billing_period;
+        $this->page_data['grand_total']    = $grand_total;
+        $this->page_data['license_total_price'] = $license_total_price;
         $this->page_data['membership_price'] = $membership_price;
         $this->page_data['plan']      = $plan;
         $this->page_data['plan_type'] = $plan_type;
         $this->load->view('mycrm/ajax_load_plan_payment_form', $this->page_data);
+    }
+
+    public function ajax_renew_subscription(){
+        $post = $this->input->post();
+        echo "<pre>";
+        print_r($post);
+        exit;
     }
 
 
@@ -712,4 +734,4 @@ class Mycrm extends MY_Controller {
 
 /* End of file Comapny.php */
 
-/* Location: ./application/controllers/Users.php */
+/* Location: ./application/controllers/Mycrm.php */

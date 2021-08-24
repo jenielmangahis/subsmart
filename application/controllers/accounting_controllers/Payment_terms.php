@@ -185,14 +185,22 @@ class Payment_terms extends MY_Controller {
         }
     }
 
+    public function edit($id)
+    {
+        $this->page_data['term'] = $this->accounting_terms_model->getById($id);
+
+        $this->load->view('accounting/modals/term_modal', $this->page_data);
+    }
+
     public function update($id)
     {
         $data = [
             'name' => $this->input->post('name'),
-            'type' => $this->input->post('type'),
-            'net_due_days' => $this->input->post('type') === "1" ? $this->input->post('net_due_days') === "" ? 0 : $this->input->post('net_due_days') : null,
-            'day_of_month_due' => $this->input->post('type') === "2" ? $this->input->post('day_of_month_due') === "" ? 0 : $this->input->post('day_of_month_due') : null,
-            'minimum_days_to_pay' => $this->input->post('type') === "2" ? $this->input->post('minimum_days_to_pay') === "" ? 0 : $this->input->post('minimum_days_to_pay') : null,
+            'type' => $this->input->post('payment_term_type'),
+            'net_due_days' => $this->input->post('payment_term_type') === "1" ? $this->input->post('net_due_days') === "" ? 0 : $this->input->post('net_due_days') : null,
+            'day_of_month_due' => $this->input->post('payment_term_type') === "2" ? $this->input->post('day_of_month_due') === "" ? 0 : $this->input->post('day_of_month_due') : null,
+            'minimum_days_to_pay' => $this->input->post('payment_term_type') === "2" ? $this->input->post('minimum_days_to_pay') === "" ? 0 : $this->input->post('minimum_days_to_pay') : null,
+            'updated_at' => date('Y-m-d h:i:s')
         ];
 
         $update = $this->accounting_terms_model->updateTerm($id, $data);

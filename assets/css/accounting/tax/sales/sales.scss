@@ -247,6 +247,14 @@
     padding: 16px;
     background-color: #f5f5f5;
   }
+
+  .form-group--error {
+    input,
+    button,
+    select {
+      border-color: #ec4561 !important;
+    }
+  }
 }
 
 .banking-tab {

@@ -331,6 +331,7 @@ $route['accounting/get-first-detail-type/(:any)'] = 'accounting_modals/first_det
 $route['accounting/ajax-add-account']['post'] = 'accounting_modals/ajax_add_account';
 $route['accounting/get-dropdown-modal/(:any)'] = 'accounting_modals/get_dropdown_modal/$1';
 $route['accounting/ajax-add-payment-method']['post'] = 'accounting_modals/ajax_add_payment_method';
+$route['accounting/ajax-add-term']['post'] = 'accounting_modals/ajax_add_payment_term';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -365,6 +366,7 @@ $route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "acco
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";
 $route['accounting/terms/add'] = "accounting_controllers/payment_terms/add";
 $route['accounting/terms/load-terms']['post'] = 'accounting_controllers/payment_terms/load_terms';
+$route['accounting/terms/edit/(:any)'] = 'accounting_controllers/payment_terms/edit/$1';
 $route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/payment_terms/delete/$1";
 $route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";
 $route['accounting/terms/update/(:any)']['post'] = "accounting_controllers/payment_terms/update/$1";
@@ -982,6 +984,7 @@ $route['mycrm/_request_remove_addon'] = 'Mycrm/company_request_remove_addon';
 $route['mycrm/_cancel_remove_addon'] = 'Mycrm/company_cancel_remove_addon';
 $route['mycrm/_buy_plan_license'] = 'Mycrm/company_buy_plan_license';
 $route['mycrm/_get_plan_payment_details'] = 'Mycrm/ajax_load_plan_payment_form';
+$route['mycrm/_renew_membership_plan'] = 'Mycrm/ajax_renew_subscription';
 
 //Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
@@ -990,3 +993,9 @@ $route['more/_load_active_addons_list'] = 'More/ajax_load_active_addons_list';
 //Acounting Customers
 
 $route['portal/appinv/(:any)/view'] = 'public_view_controller/view_invoice/$1';
+
+
+// Time Sheet
+
+
+$route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';

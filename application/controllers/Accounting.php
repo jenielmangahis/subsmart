@@ -6640,6 +6640,7 @@ class Accounting extends MY_Controller
     public function salesTax()
     {
         add_css([
+            'assets/css/accounting/tax/settings/settings.css',
             'assets/css/accounting/tax/sales/sales.css',
             'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
             'https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css'
