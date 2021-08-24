@@ -1,3 +1,6 @@
+<input type="hidden" id="payment-grand-total" name="membership_grand_total" id="membership-grand-total" value="<?= $grand_total; ?>">
+<input type="hidden" name="membership_plan_type" value="<?= $plan_type; ?>">
+<input type="hidden" name="membership_license_amount" value="<?= $license_total_price; ?>">
 <div class="row margin-bottom-sec">
     <div class="col-md-2">Membership</div>
     <div class="col-md-2"><?= $plan->plan_name; ?> / <?= $plan_type == 'monthly' ? 'Monthly Plan' : 'Yearly Plan'; ?></div>
@@ -11,7 +14,7 @@
         <div class="form-control-text">Employees</div>
     </div>
     <div class="col-md-1">
-        <select name="qty[8]" data-plan="plan-item-qty" class="form-control">
+        <select name="num_license" id="num-license"  class="form-control">
             <option value="1" selected="selected">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -44,16 +47,16 @@
             <option value="30">30</option>
         </select>
     </div>
-    <div class="col-md-1">
+    <div class="col-md-2">
         <div class="form-control-text">
-            <span class="text-ter">x</span>&nbsp;$<?= number_format($plan->price_per_license, 2); ?>/mo</div>
+            <span class="text-ter">x</span>&nbsp;$<?= number_format($plan->price_per_license, 2); ?>/mo <?= $plan_type == 'yearly' ? ' x 12 months' : ''; ?></div>
     </div>
-    <div class="col-md-2 text-right">
-        <div class="form-control-text plan-item__price-total">$<?= number_format($plan->price_per_license, 2); ?></div>
+    <div class="col-md-1 text-right">
+        <div class="form-control-text plan-item__price-total">$<span id="total-license-price"><?= number_format($license_total_price, 2); ?></span></div>
     </div>
 </div>
 
-<div class="row margin-bottom-sec">
+<!-- <div class="row margin-bottom-sec">
     <div class="col-md-2">
         <div class="form-control-text">Postcard Automation</div>
     </div>
@@ -85,14 +88,14 @@
     <div class="col-md-2 text-right">
         <div class="form-control-text plan-item__price-total">$0.00</div>
     </div>
-</div>
+</div> -->
 
 <div class="row margin-bottom-sec">
     <div class="col-md-5 text-right">
         <span class="bold">Total</span>
     </div>
     <div class="col-md-1 text-right">
-        <div class="plan-item__price-total"><span class="bold">$34.95</span></div>
+        <div class="plan-item__price-total"><span class="bold">$<span id="total-amount"><?= number_format($grand_total, 2); ?></span></span></div>
     </div>
 </div>
 <hr class="card-hr">
@@ -100,7 +103,7 @@
 <div class="row margin-bottom-sec">
     <div class="col-md-2">Billing Period</div>
     <div class="col-md-5">
-        <span data-plan="billing-period">22-Aug-2021 to 22-Sep-2021</span>
+        <span data-plan="billing-period"><?= $billing_period; ?></span>
     </div>
 </div>
 <div class="row margin-bottom">
@@ -108,13 +111,57 @@
         <strong>You need to Pay</strong>
     </div>
     <div class="col-md-5">
-        <span class="bold" data-plan="price">$34.95/month</span>
-        <div class="text-ter price-total__text">(this amount will be charged every month)</div>
+        <span class="bold" data-plan="price">$<span id="grand-total"><?= number_format($grand_total, 2); ?></span>/<?= $plan_type == 'monthly' ? 'month' : 'year'; ?></span>
+        <div class="text-ter price-total__text">(this amount will be charged every <?= $plan_type == 'monthly' ? 'month' : 'year'; ?>)</div>
     </div>
 </div>
 <div class="row margin-bottom">
     <div class="col-md-2"></div>
     <div class="col-md-4">
-        <button class="btn btn-primary btn-lg" data-plan="to-cart">&nbsp; Pay Now &nbsp;</button>
+        <a class="btn btn-primary btn-lg btn-pay-subscription" href="javascript:void(0);">&nbsp; Pay Now &nbsp;</a>        
     </div>
 </div>
+<script>
+$(function(){
+    var price_per_license = "<?= $plan->price_per_license; ?>";
+    var membership_price  = parseFloat("<?= $membership_price; ?>");
+    var plan_type = "<?= $plan_type; ?>";
+
+    load_default_values();
+
+    function load_default_values(){
+        var num_selected = 1;
+        if( plan_type == 'monthly' ){
+            var total_license_price = parseFloat(price_per_license * num_selected);
+        }else{
+            var total_license_price = parseFloat((price_per_license * num_selected) * 12);
+        }
+
+        var grand_total = parseFloat(total_license_price) + parseFloat(membership_price);
+
+        $("#m-license-amount").val(total_license_price.toFixed(2));
+        $("#m-grand-total").val(grand_total.toFixed(2));       
+        $("#m-membership-amount").val(membership_price.toFixed(2)); 
+    }
+
+    $("#num-license").change(function(){
+        var num_selected = $(this).val();
+        if( plan_type == 'monthly' ){
+            var total_license_price = parseFloat(price_per_license * num_selected);
+        }else{
+            var total_license_price = parseFloat((price_per_license * num_selected) * 12);
+        }
+
+        var grand_total = parseFloat(total_license_price) + parseFloat(membership_price);
+
+        $("#total-amount").text(grand_total.toFixed(2));
+        $("#grand-total").text(grand_total.toFixed(2));
+        $("#membership-grand-total").val(grand_total.toFixed(2));
+        $("#total-license-price").text(total_license_price.toFixed(2));        
+
+        //Modal input
+        $("#m-license-amount").val(total_license_price.toFixed(2));
+        $("#m-grand-total").val(grand_total.toFixed(2));
+    });
+});
+</script>
