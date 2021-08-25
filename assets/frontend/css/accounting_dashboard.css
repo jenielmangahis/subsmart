@@ -324,3 +324,15 @@
       0% 100%
     );
   }
+
+  @media only screen and (max-device-width: 1400px) {
+    .arrow
+    {
+      display: none;
+    }
+
+    #dashboardDivs
+    {
+      width:100%;
+    }
+  }
