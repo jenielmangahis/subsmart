@@ -98,6 +98,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             border: solid 1px #5998BF;
             margin: 30px 0;
         }
+
         .cutter-dashed {
             border: dashed 1px #333333;
             margin: 30px 0;
@@ -148,26 +149,84 @@ defined('BASEPATH') or exit('No direct script access allowed');
         h2 {
             font-size: 15px;
         }
-        .overlay-status{
+
+        .overlay-status {
             position: absolute;
             top: 300px;
             z-index: 1;
         }
-        .overlay-status h1.Open{
+
+        .overlay-status h1.Open {
             color: #F2B835;
         }
-        .overlay-status h1.Paid{
+
+        .overlay-status h1.Paid {
             color: #2BA01D;
         }
-        .overlay-status h1.Overdue{
-           color: #CD5133;
+
+        .overlay-status h1.Overdue {
+            color: #CD5133;
         }
-        .overlay-status h1{
+
+        .overlay-status h1 {
             font-size: 70px;
             text-transform: uppercase;
             text-align: center;
             transform: rotate(-60deg);
             opacity: 0.3;
+        }
+
+        p {
+            font-size: 11px;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+        }
+
+        table td {
+            vertical-align: top;
+            padding: 0;
+        }
+
+        p.large-text {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        p.with-border {
+            border: solid 1px #000;
+            padding-top: 10px;
+        }
+
+        table.with-border td,
+        td.with-border {
+            border: solid 1px #000;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table.with-border th {
+            border: solid 1px #000;
+            padding: 0 10px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .bold {
+            font-weight: bold;
         }
     </style>
 
@@ -175,6 +234,109 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <body>
     <table style="width: 100%;">
+        <tbody>
+            <tr>
+                <td style="width: 50%;">
+                    <p class="business-logo">
+                        <img src="<?=base_url($business_logo)?>"
+                            alt="">
+                    </p>
+                    <p class="address">P.O. BOX 731340 <br>DALLAS, TX 75373-1340</p>
+                    <br><br>
+                    <p class="address">ADI SMART HOME <br>9175 KINGS COLONY ROAD <br>JACKSONVILLE, FL
+                        32257</p>
+                </td>
+                <td style="width: 50%;">
+                    <table style="width: 100%;">
+                        <td style="width: 50%; padding-right:10px;">
+                            <p class="large-text">ORIGINAL INVOICE</p>
+                            <p>CUSTOMER NUMBER<br>PLEASE WRITE THIS NUMBER<br>ON ALL ORDERS AND
+                                CHECKS</p>
+                            <p class="with-border text-center">DP311-000</p>
+                        </td>
+                        <td style="width: 50%;">
+                            <table class="with-border" style="width: 100%; ">
+                                <thead>
+                                    <tr>
+                                        <th>PAGE</th>
+                                        <th>INVOICE DATE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>08/20/21</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="with-border" style="width: 100%;margin-top:2px;">
+                                <thead>
+                                    <tr>
+                                        <th>INVOICE NUMBER</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Z8SJX801</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </table>
+                    <table style="width: 100%;">
+                        <tbody>
+                            <tr>
+                                <td style="width: 50%; padding-right:20px;">
+                                    <p class="text-right bold">PLEASE PAY THIS AMMOUNT</p>
+                                </td>
+                                <td class="with-border" style="width: 50%;">
+                                    0.00
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%; padding-right:20px;">
+                                    <p class="text-right bold">DUE DATE</p>
+                                </td style="width: 50%;">
+                                <td class="with-border">
+                                    08/20/21
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right:20px;">
+                                    <p class="large-text">REMIT TO:</p>
+                                    <p>ADEMCO INC., DBA ADI<br>P.O. BOX 731340<br>DALLAS, TX 75373-1340</p>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                        <table style="width: 100%;margin-top:10px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width:20%">
+                                    </td>
+                                    <td>
+                                        <p>TEL: (800) 545-6776 EXT: 5306<br>FAX: (302) 689-4996</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td
+                    style="border-bottom:dashed 1px #000; padding-top:10px;font-size: 10px; font-weight:bold; text-align:center;">
+                    Please detach and enclose top portion with your payment
+                </td>
+                <td
+                    style="border-bottom:dashed 1px #000; padding-top:10px;font-size: 10px; font-weight:bold; text-align:center;">
+                    Make check payable and remit to above address
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="width: 100%;page-break-before: always;">
         <tbody>
             <tr>
                 <td style="width: 60%;">
