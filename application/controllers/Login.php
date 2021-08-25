@@ -182,12 +182,12 @@ class Login extends CI_Controller
             redirect('onboarding/business_info');
         } else {
             if( $client->is_plan_active == 1 ){
-                /*$billingErrors = $this->Customer_advance_model->get_customer_billing_errors($client->id);
+                $billingErrors = $this->Customer_advance_model->get_customer_billing_errors($client->id);
                 if( $billingErrors ){
                     redirect('customer/billing_errors');
                 }else{
                     redirect('dashboard');
-                }*/           
+                }           
                 redirect('dashboard');
             }else{
                 if( $client->id == 1 ){
