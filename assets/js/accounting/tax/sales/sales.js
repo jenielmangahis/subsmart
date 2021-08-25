@@ -18,18 +18,91 @@ class Accounting__TaxItem {
 
     const $button = $templateCopy.find(".btn-primary");
     $button.on("click", () => {
-      const $dataTypes = this.$modal.find("[data-type]");
-      data.date_issued = this.formatDate(data.date_issued);
-      data.due_date = this.formatDate(data.due_date);
-
-      $dataTypes.each(function (_, element) {
-        element.textContent = getValueByString(data, element.dataset.type);
-      });
-
+      this.onShowModal(data);
       this.$modal.modal("show");
     });
 
+    // https://stackoverflow.com/a/38614737/8062659
+    this.$modal.on("shown.bs.modal", () => {
+      $(document).off("focusin.modal");
+    });
+
     return $templateCopy;
+  }
+
+  onShowModal(data) {
+    const $dataTypes = this.$modal.find("[data-type]");
+    const $sidebar = $("#addAdjustment");
+    const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
+    const $addAdjustmentLink = this.$modal.find("#addAdjustmentLink");
+    const $addAdjustmentBtn = $sidebar.find("#addAdjustmentBtn");
+
+    $addAdjustmentLink.off();
+    $sidebarCloseBtn.off();
+    $sidebar.off();
+
+    data.date_issued = this.formatDate(data.date_issued);
+    data.due_date = this.formatDate(data.due_date);
+
+    $dataTypes.each(function (_, element) {
+      element.textContent = getValueByString(data, element.dataset.type);
+    });
+
+    $addAdjustmentLink.on("click", (event) => {
+      event.preventDefault();
+      $sidebar.addClass("addAdjustment--show");
+    });
+
+    $sidebarCloseBtn.on("click", () => {
+      $sidebar.removeClass("addAdjustment--show");
+    });
+
+    $sidebar.on("click", (event) => {
+      if ($sidebar.is(event.target)) {
+        $sidebar.removeClass("addAdjustment--show");
+      }
+    });
+
+    $addAdjustmentBtn.on("click", async function () {
+      const $inputs = $sidebar.find("[data-type]");
+
+      const payload = { invoice_id: data.id };
+      for (let index = 0; index < $inputs.length; index++) {
+        const input = $inputs[index];
+        const value = input.value;
+        const key = input.dataset.type;
+
+        const $input = $(input);
+        const $formGroup = $input.closest(".form-group");
+
+        $formGroup.removeClass("form-group--error");
+        if (!value) {
+          $formGroup.addClass("form-group--error");
+          $input.focus();
+          return;
+        }
+
+        payload[key] = value;
+      }
+
+      $(this).attr("disabled", true);
+
+      const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+      const response = await fetch(
+        `${prefixURL}/AccountingSales/apiSaveAdjustment`,
+        {
+          method: "post",
+          body: JSON.stringify(payload),
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+        }
+      );
+
+      const json = await response.json();
+      window.location.reload();
+    });
   }
 
   formatDate(date) {
@@ -102,31 +175,6 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
   const { data: taxedInvoice } = await fetchGetTaxedInvoices();
   displayTaxedInvoices(taxedInvoice);
-
-  const $sidebar = $("#addAdjustment");
-  const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
-  const $modal = $("#reviewSalesTaxModal");
-  const $addAdjustmentLink = $modal.find("#addAdjustmentLink");
-
-  $addAdjustmentLink.on("click", (event) => {
-    event.preventDefault();
-    $sidebar.addClass("addAdjustment--show");
-  });
-
-  $sidebarCloseBtn.on("click", () => {
-    $sidebar.removeClass("addAdjustment--show");
-  });
-
-  $sidebar.on("click", (event) => {
-    if ($sidebar.is(event.target)) {
-      $sidebar.removeClass("addAdjustment--show");
-    }
-  });
-
-  // https://stackoverflow.com/a/38614737/8062659
-  $modal.on("shown.bs.modal", () => {
-    $(document).off("focusin.modal");
-  });
 
   // setup dropdown with search
   const $dueStart = $("#dueDateInputs [data-type=due_start]");

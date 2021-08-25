@@ -6640,6 +6640,7 @@ class Accounting extends MY_Controller
     public function salesTax()
     {
         add_css([
+            'assets/css/accounting/tax/settings/settings.css',
             'assets/css/accounting/tax/sales/sales.css',
             'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
             'https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css'
@@ -8971,6 +8972,7 @@ class Accounting extends MY_Controller
 
         echo json_encode($addQuery);
     }
+    
 
     public function save_product_services_content()
     {
@@ -8988,6 +8990,73 @@ class Accounting extends MY_Controller
 
         echo json_encode($addQuery);
     }
+
+    public function save_exp_sales_form_content()
+    {
+        $new_data = array(
+            
+            'show_items_exp_pur_forms'          => $this->input->post("show_items_exp_pur_forms"),
+            'show_tags_exp_pur_forms'           => $this->input->post("show_tags_exp_pur_forms"),
+            'track_exp_items_cust'              => $this->input->post("track_exp_items_cust"),
+            'make_exp_items_billable'           => $this->input->post("make_exp_items_billable"),
+            'default_bill_payment_terms'        => $this->input->post("default_bill_payment_terms"),
+            'markup_default_rate'               => $this->input->post("markup_default_rate"),
+            'markup_default_rate_value'         => $this->input->post("markup_default_rate_value"),
+            'track_billable_exp_items'          => $this->input->post("track_billable_exp_items"),
+            'charge_sales_tax'                  => $this->input->post("charge_sales_tax"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->save_exp_sales_form_content($new_data);
+
+        echo json_encode($addQuery);
+    }
+
+    public function save_adv_accounting()
+    {
+        $new_data = array(
+            
+            'acct_first_month_fiscal_year'      => $this->input->post("acct_first_month_fiscal_year"),
+            'acct_first_month_income_tax_yr'    => $this->input->post("acct_first_month_income_tax_yr"),
+            'acct_accounting_method'            => $this->input->post("acct_accounting_method"),
+            'acct_close_books'                  => $this->input->post("acct_close_books"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->save_adv_accounting($new_data);
+
+        echo json_encode($addQuery);
+    }
+
+    public function save_progress_invoicing()
+    {
+        $new_data = array(
+            
+            'sales_progress_invoicing'      => $this->input->post("sales_progress_invoicing"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->save_progress_invoicing($new_data);
+
+        echo json_encode($addQuery);
+    }
+    
+    public function save_adv_chart_of_accounts()
+    {
+        $new_data = array(
+            
+            'adv_enable_account_no'     => $this->input->post("adv_enable_account_no"),
+            'adv_tips_account'          => $this->input->post("adv_tips_account"),
+            'adv_markup_inc_acct'       => $this->input->post("adv_markup_inc_acct"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->save_adv_chart_of_accounts($new_data);
+
+        echo json_encode($addQuery);
+    }
+
+    
     public function generate_share_invoice_link()
     {
         $invoice_id=$this->input->post("invoice_id");
@@ -9067,10 +9136,12 @@ class Accounting extends MY_Controller
         );
         if ($action=="invoice-packaging-slip") {
             $html_pdf="accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
+            $orientation = "P";
         } else {
             $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+            $orientation = "P";
         }
-        $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, "P");
+        $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
     }
     public function customer_print_invoice_pdf()
     {

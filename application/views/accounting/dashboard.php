@@ -70,7 +70,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                             <br><br>
 
-                                            <div style="background-color:#f9fafb;width:80%;border-radius:15px;">
+                                            <div style="background-color:#f9fafb;width:80%;border-radius:15px;" id="dashboardDivs">
                                                 <div class="row" style="">
                                                     <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
                                                         <center><h6>Money in</h6></center>
@@ -159,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <br>
-                                            <div style="background-color:#f9fafb;width:80%;">
+                                            <div style="background-color:#f9fafb;width:80%;" id="dashboardDivs">
                                                 <div class="row">
                                                     <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
                                                         <center><h6>Money out</h6></center>
@@ -239,7 +239,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <br>
-                                            <div style="background-color:#f9fafb;width:80%;">
+                                            <div style="background-color:#f9fafb;width:80%;" id="dashboardDivs">
                                                 <div class="row">
                                                     <div class="col-md-1" style="background-color:#eceef1;padding: 80px 0;border-radius:15px 0 0 15px;">
                                                         <center><h6>Accounting and reports</h6></center>
@@ -1376,9 +1376,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <!-- </div> -->
                                     </td>
                                     <td align="right"><i class="fa fa-edit" style="font-size:36px"></i></td>
-                                    <!-- <td style="padding:3%;">
-                                        <p style="margin-top:-100px;"></p>
-                                    </td> -->
                                 </tr>
                                 <tr id="reminders">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Reminders</td>
@@ -1405,36 +1402,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="card">
                                                 <div class="card-header" id="headingTwo">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">
+                                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#defaultEmail" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">
                                                     <span style="float:left;">Default email message for invoice reminders</span> 
                                                     <b style="float:right;"><i class="fa fa-sort-down"></i></b>
                                                     </button>
                                                 </h5>
                                                 </div>
-                                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                                <div id="defaultEmail" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                                                 <div class="card-body">
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-3">
-                                                            <select class="form-control">
-                                                                <option>3</option>
-                                                                <option>7</option>
-                                                                <option>14</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            day(s)
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <select class="form-control">
-                                                                <option>Before</option>
-                                                                <option>After</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            due date
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
                                                     <div class="row">
                                                         <!-- <div class="col-md-12">Use [Invoice No.] and [Company Name] as placeholders in the email.</div> -->
                                                         <div class="col-md-12">Use <span style="color:#0077c5;">[Invoice No.]</span> and <span style="color:#0077c5;">[Company Name]</span> as placeholders in the email.</div>
@@ -1474,23 +1449,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-6">
-                                                            <select class="form-control">
-                                                                <option>Invoice</option>
-                                                                <option>Estimate</option>
-                                                                <option>Credit Memo</option>
-                                                                <option>Sales Receipt</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <input type="button" value="Use standard message" class="btn btn-success">
-                                                        </div>
-                                                    </div>
-                                                    <br> 
-                                                    <div class="row">
-                                                        <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
-                                                    </div>-->
                                                     <div class="row">
                                                         <div class="col-md-1" style="text-align: center;"><input type="checkbox"></div>
                                                         <div class="col-md-11">Send a copy to lauren@adialarms.com</div>
@@ -1581,20 +1539,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-6">
-                                                            <select class="form-control">
-                                                                <option>Invoice</option>
-                                                                <option>Estimate</option>
-                                                                <option>Credit Memo</option>
-                                                                <option>Sales Receipt</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <input type="button" value="Use standard message" class="btn btn-success">
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
                                                     <div class="row">
                                                         <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
                                                     </div>
@@ -1677,20 +1621,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-6">
-                                                            <select class="form-control">
-                                                                <option>Invoice</option>
-                                                                <option>Estimate</option>
-                                                                <option>Credit Memo</option>
-                                                                <option>Sales Receipt</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <input type="button" value="Use standard message" class="btn btn-success">
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
                                                     <div class="row">
                                                         <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
                                                     </div>
@@ -1771,20 +1701,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </div>
                                                     <br>
-                                                    <!-- <div class="row">
-                                                        <div class="col-md-6">
-                                                            <select class="form-control">
-                                                                <option>Invoice</option>
-                                                                <option>Estimate</option>
-                                                                <option>Credit Memo</option>
-                                                                <option>Sales Receipt</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <input type="button" value="Use standard message" class="btn btn-success">
-                                                        </div>
-                                                    </div>
-                                                    <br> -->
                                                     <div class="row">
                                                         <div class="col-md-12"><a href="#" style="color:blue;">Use default reminder message</a></div>
                                                     </div>
@@ -1877,15 +1793,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-md-12" style="padding:1%;">
                             <div style="padding:1%;width:100%;"> 
                                 <table class="table">
-                                    <!-- <tr>
-                                        <td style="width:10%;">Customize</td>
-                                        <td style="width:30%;padding:3%;">
-                                            <p>Customize the way forms look to your customers</p>
-                                        </td>
-                                        <td style="padding:3%;">
-                                            <p><button class="btn btn-success">Customize look and feel</button></p>
-                                        </td>
-                                    </tr> -->
                                     <tr id="exp_sales_form_content">
                                         <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Sales form content</td>
                                         <td style="width:30%;padding:3%;">
@@ -1894,11 +1801,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <p>Track expenses and items by customer</p>
                                             <p>Make expenses and items billable</p>
                                             <p>Default bill payment terms</p>
-                                            <!-- <p>Service date</p>
-                                            <p>Discount</p>
-                                            <p>Deposit </p>
-                                            <p>Tips (Gratuity)</p>
-                                            <p>Tags</p> -->
                                         </td>
                                         <td style="padding:3%;">
                                             <p>On</p>
@@ -1906,47 +1808,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <p>On</p>
                                             <p>On</p>
                                             <p>Net 30</p>
-                                            <!-- <p>Off</p>
-                                            <p>Off</p>
-                                            <p>Off</p>
-                                            <p>Off</p>
-                                            <p>Off</p>
-                                            <p>On</p> -->
                                         </td>
                                     </tr>
                                     <tr id="exp_sales_form_content_edit" style="display:none;">
                                         <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Sales form content</td>
                                         <td style="width:40%;padding:3%;">
-                                            <p>Show Items table on expense and purchase forms
-                                                <!-- <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                                </label> -->
-                                            </p> <br>
-                                            <p>Show Tags field on expense and purchase forms 
-                                                <!-- <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                                </label> -->
-                                            </p> <br>
-                                            <p>Track expenses and items by customer
-                                                <!-- <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                                </label> -->
-                                            </p> <br>
-                                            <p>Make expenses and items billable
-                                                <!-- <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                                </label> -->
-                                            </p> <br>
-                                            <p>Default bill payment terms
-                                                <!-- <label class="switch">
-                                                <input type="checkbox" checked>
-                                                <span class="slider round"></span>
-                                                </label> -->
-                                            </p> <br>
+                                            <p>Show Items table on expense and purchase forms</p> <br>
+                                            <p>Show Tags field on expense and purchase forms </p> <br>
+                                            <p>Track expenses and items by customer</p> <br>
+                                            <p>Make expenses and items billable</p> <br>
+                                            <p>Default bill payment terms</p> <br>
                                             <br>
                                             <input type="checkbox" id="markup_default_rate" checked> Markup with a default rate of <input type="text" id="markup_default_rate_value" class="form-control" style="width:80px;display:inline-block;" value="0">%  <br>
                                             <input type="checkbox" id="track_billable_exp_items" > Track billable expenses and items as income <br>
@@ -1959,11 +1830,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <option>Due on receipt</option>
                                             </select>
 
-                                            <!-- <p>Service date</p>
-                                            <p>Discount</p>
-                                            <p>Deposit </p>
-                                            <p>Tips (Gratuity)</p>
-                                            <p>Tags</p> -->
                                             <br><br>
                                             <input type="submit" value="Cancel" id="exp_sales_form_content_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success  exp_sales_form_content_save_button">
                                         </td>
@@ -2272,15 +2138,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-md-12" style="padding:1%;">
 
                             <table class="table">
-                                <!-- <tr>
-                                    <td style="width:10%;">Customize</td>
-                                    <td style="width:30%;padding:3%;">
-                                        <p>Customize the way forms look to your customers</p>
-                                    </td>
-                                    <td style="padding:3%;">
-                                        <p><button class="btn btn-success">Customize look and feel</button></p>
-                                    </td>
-                                </tr> -->
                                 <tr id="adv_accounting">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Accounting</td>
                                     <td style="width:30%;padding:3%;">
@@ -2351,22 +2208,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>Tips account</p><br>
                                         <p>Markup income account</p>
                                         <br><br>
-                                        <input type="submit" value="Cancel" id="adv_chart_of_accounts_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                        <input type="submit" value="Cancel" id="adv_chart_of_accounts_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success adv_chart_of_accounts_save_button">
                                     </td>
                                     <td style="padding:3%;">
                                         <p style="margin-top:-100px;">
                                             <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="adv_enable_account_no">
                                             <span class="slider round"></span>
                                             </label>
                                         </p>
                                         <p>
-                                            <select class="form-control" style="width:30%;">
+                                            <select class="form-control" style="width:30%;" id="adv_tips_account">
                                                 <option></option>
                                             </select> 
                                         </p>
                                         <p>
-                                            <select class="form-control" style="width:30%;">
+                                            <select class="form-control" style="width:30%;" id="adv_markup_inc_acct">
                                                 <option>Markup</option>
                                             </select> 
                                         </p>
@@ -2654,16 +2511,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
 
-
-
-
-
                 </div>
 
-                
-
-
-                    
                 </div>
                 <div style="margin: auto;">
                     <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmarTrac, the privacy and security of your information are top priorities.</span>
@@ -3215,7 +3064,7 @@ $(document).ready(function() {
         $.ajax({
          type: 'POST',
          url:"<?php echo base_url(); ?>accounting/save_exp_sales_form_content",
-         data: {show_items_exp_pur_forms : show_items_exp_pur_forms, show_tags_exp_pur_forms : show_tags_exp_pur_forms, track_exp_items_cust : track_exp_items_cust, make_exp_items_billable : make_exp_items_billable, default_bill_payment_terms : default_bill_payment_terms, markup_default_rate : markup_default_rate, markup_default_rate_value : markup_default_rate_value, track_billable_exp_items : track_billable_exp_items, charge_sales_tax : charge_sales_tax, default_bill_payment_terms : default_bill_payment_terms },
+         data: {show_items_exp_pur_forms : show_items_exp_pur_forms, show_tags_exp_pur_forms : show_tags_exp_pur_forms, track_exp_items_cust : track_exp_items_cust, make_exp_items_billable : make_exp_items_billable, default_bill_payment_terms : default_bill_payment_terms, markup_default_rate : markup_default_rate, markup_default_rate_value : markup_default_rate_value, track_billable_exp_items : track_billable_exp_items, charge_sales_tax : charge_sales_tax },
          dataType: 'json',
          success: function(response){
             //  alert('success');
@@ -3244,8 +3093,63 @@ $(document).ready(function() {
 
         $.ajax({
          type: 'POST',
-         url:"<?php echo base_url(); ?>accounting/save_exp_sales_form_content",
+         url:"<?php echo base_url(); ?>accounting/save_adv_accounting",
          data: {acct_first_month_fiscal_year : acct_first_month_fiscal_year, acct_first_month_income_tax_yr : acct_first_month_income_tax_yr, acct_accounting_method : acct_accounting_method, acct_close_books : acct_close_books },
+         dataType: 'json',
+         success: function(response){
+            //  alert('success');
+            sucess("Updated Successfully!");
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+
+    $(".progress_invoicing_save_button").click(function() {
+        // alert('test');
+
+        if($("#sales_progress_invoicing").prop('checked') == true){
+            var sales_progress_invoicing = 1;
+        }else{
+            var sales_progress_invoicing = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/save_progress_invoicing",
+         data: {sales_progress_invoicing : sales_progress_invoicing },
+         dataType: 'json',
+         success: function(response){
+            //  alert('success');
+            sucess("Updated Successfully!");
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+
+    $(".adv_chart_of_accounts_save_button").click(function() {
+        // alert('test');
+
+        var adv_tips_account = $("#adv_tips_account").val();
+        var adv_markup_inc_acct = $("#adv_markup_inc_acct").val();
+
+        if($("#adv_enable_account_no").prop('checked') == true){
+            var adv_enable_account_no = 1;
+        }else{
+            var adv_enable_account_no = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/save_adv_chart_of_accounts",
+         data: {adv_enable_account_no : adv_enable_account_no, adv_tips_account : adv_tips_account, adv_markup_inc_acct : adv_markup_inc_acct },
          dataType: 'json',
          success: function(response){
             //  alert('success');

@@ -5996,4 +5996,33 @@ class Accounting_modals extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function ajax_add_payment_term()
+    {
+        $post = $this->input->post();
+
+        $data = [
+            'company_id' => getLoggedCompanyID(),
+            'name' => $post['name'],
+            'type' => $post['payment_term_type'],
+            'net_due_days' => $post['payment_term_type'] === "1" ? $post['net_due_days'] === "" ? 0 : $post['net_due_days'] : null,
+            'day_of_month_due' => $post['payment_term_type'] === "2" ? $post['day_of_month_due'] === "" ? 0 : $post['day_of_month_due'] : null,
+            'minimum_days_to_pay' => $post['payment_term_type'] === "2" ? $post['minimum_days_to_pay'] === "" ? 0 : $post['minimum_days_to_pay'] : null,
+            'discount_days' => 0,
+            'status' => 1,
+            'created_at' => date('Y-m-d h:i:s'),
+            'updated_at' => date('Y-m-d h:i:s')
+        ];
+
+        $termId = $this->accounting_terms_model->create($data);
+        $term = $this->accounting_terms_model->getById($termId);
+
+        $return = [
+            'data' => $termId ? $term : null,
+            'success' => $termId ? true : false,
+            'message' => $termId ? "Success!" : "Error!"
+        ];
+
+        echo json_encode($return);
+    }
 }
