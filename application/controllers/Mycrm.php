@@ -720,11 +720,88 @@ class Mycrm extends MY_Controller {
         $this->load->view('mycrm/ajax_load_plan_payment_form', $this->page_data);
     }
 
-    public function ajax_renew_subscription(){
-        $post = $this->input->post();
-        echo "<pre>";
-        print_r($post);
-        exit;
+    public function ajax_renew_subscription(){        
+        $this->load->model('Business_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('Clients_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+
+        $is_success = 0;        
+        $message    = '';
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $client = $this->Clients_model->getById($company_id);
+        $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        if( $plan ){
+            if( $post['membership_plan_type'] == 'monthly' ){
+                $recurring_payment_type = 'monthly';
+                $membership_price    = $plan->price;
+                $license_total_price = $post['num_license'] * $plan->price_per_license;
+                $billing_start = date("Y-m-d");
+                $billing_end   = date("Y-m-d", strtotime("+1 month"));
+            }else{
+                $recurring_payment_type = 'yearly';
+                $membership_price = $plan->discount * 12;
+                $license_total_price = ($post['num_license'] * $plan->price_per_license) * 12;
+                $billing_start = date("Y-m-d");
+                $billing_end   = date("Y-m-d", strtotime("+1 year"));
+            }
+
+            $amount   = $membership_price + $license_total_price;
+            $company  = $this->Business_model->getByCompanyId($company_id);
+            $address  = $company->street . " " . $company->city . " " . $company->state;
+            $zip_code = $company->postal_code;
+            $converge_data = [
+                'company_id' => $company->company_id,
+                'amount' => $amount,
+                'card_number' => $post['card_number'],
+                'exp_month' => $post['exp_month'],
+                'exp_year' => $post['exp_year'],
+                'card_cvc' => $post['cvc'],
+                'address' => $address,
+                'zip' => $zip_code
+            ];
+            $result = $this->converge_send_sale($converge_data);
+            if( $result['is_success'] == 1 ){
+                $new_total_num_license = $client->number_of_license + $post['num_license'];
+                $data = [           
+                    'plan_date_expiration' => $billing_end,                
+                    'number_of_license' => $new_total_num_license,
+                    'date_modified' => date("Y-m-d H:i:s"),
+                    'is_plan_active' => 1,
+                    'is_trial' => 0,
+                    'recurring_payment_type' => $recurring_payment_type,
+                    'payment_method' => 'converge',
+                    'next_billing_date' => $billing_end,
+                    'num_months_discounted' => 0
+                ];
+                $this->Clients_model->update($company_id, $data);
+
+                //Record payment
+                $data_payment = [
+                    'company_id' => $company_id,
+                    'description' => 'Renew Membership, ' . ucfirst($post['membership_plan_type']),
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                        
+                $data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($id, $data);
+
+                $is_success = 1;
+            }else{
+                $message = $result['msg'];
+            }
+
+            echo json_encode(['is_success' => $is_success, 'message' => $message]);
+
+        }
     }
 
 
