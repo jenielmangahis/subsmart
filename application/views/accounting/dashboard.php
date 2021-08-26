@@ -1265,15 +1265,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         
                                         <!-- <div class="row"> -->
                                             <div class="row">
-                                                <div class="col-md-2" style="text-align: center;vertical-align: center;"><input type="checkbox"></div>
+                                                <div class="col-md-2" style="text-align: center;vertical-align: center;"><input type="checkbox" id="sales_messages_enable"></div>
                                                 <div class="col-md-5">
-                                                    <select class="form-control">
+                                                    <select class="form-control" id="sales_messages_salutation">
                                                         <option>Dear</option>
                                                         <option>To</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <select class="form-control">
+                                                    <select class="form-control" id="sales_messages_name">
                                                         <option>[Full Name]</option>
                                                         <option>[First]</option>
                                                         <option>[Company Name]</option>
@@ -1287,15 +1287,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <br>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <select class="form-control">
+                                                    <select class="form-control" id="sales_messages_document_type">
                                                         <option>Invoice</option>
                                                         <option>Estimate</option>
                                                         <option>Credit Memo</option>
                                                         <option>Sales Receipt</option>
+                                                        <option>Statement</option>
+                                                        <option>Refund Receipt</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input type="button" value="Use standard message" class="btn btn-success">
+                                                    <input type="button" value="Use standard message" class="btn btn-success sales_use_standard_messages">
                                                 </div>
                                             </div>
                                             <br>
@@ -1304,7 +1306,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <br>
                                             <div class="row">
-                                                <div class="col-md-12"><input type="text" value="New invoice [Invoice No.] from ADI Smart Security" class="form-control"></div>
+                                                <div class="col-md-12"><input type="text" value="New invoice [Invoice No.] from ADI Smart Security" class="form-control" id="sales_messages_subj_line"></div>
                                             </div>
                                             <br>
                                             <div class="row">
@@ -1313,17 +1315,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <br>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <textarea class="form-control">
+                                                    <!-- <textarea class="form-control" id="sales_messages_body">
                                                     Here's your invoice! We appreciate your prompt payment.
 
                                                     Thanks for your business!
                                                     ADi Smart Security
-                                                    </textarea>
+                                                    </textarea> -->
+                                                    <div contenteditable="true" id="sales_messages_body" style="background-color: white;border: solid gray 1px;padding:8px;">
+                                                        Here's your invoice! We appreciate your prompt payment. <br><br>
+
+                                                        Thanks for your business!
+                                                        <br>ADi Smart Security.
+                                                    </div>
                                                 </div>
                                             </div>
                                             <br>
                                             <div class="row">
-                                                <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                <div class="col-md-2" style="text-align: center;"><input type="checkbox" id="sales_messages_send_to_admin"></div>
                                                 <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
                                             </div>
                                             <br>
@@ -1334,7 +1342,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <br>
                                             <div class="row">
-                                                <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                <div class="col-md-12"><input type="text" class="form-control" id="sales_messages_cc"></div>
                                             </div>
                                             <br>
                                             <div class="row">
@@ -1344,7 +1352,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <br>
                                             <div class="row">
-                                                <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                <div class="col-md-12"><input type="text" class="form-control" id="sales_messages_bcc"></div>
                                             </div>
                                             <br>
                                             <div class="row">
@@ -1355,22 +1363,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <br>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <select class="form-control">
+                                                    <select class="form-control" id="sales_messages_form">
                                                         <option>Estimate</option>
-                                                        <option>Invoice</option>
+                                                        <option>Invoices and other sales forms</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <br>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <textarea class="form-control"></textarea>
+                                                    <textarea class="form-control" id="sales_messages_note"></textarea>
                                                 </div>
                                             </div>
                                             <br>
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <input type="submit" value="Cancel" id="messages_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                    <input type="submit" value="Cancel" id="messages_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success sales_messages_save_button">
                                                 </div>
                                             </div>
                                         <!-- </div> -->
@@ -1914,20 +1922,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tr>
                                     <tr id="exp_messages_edit" style="display:none;">
                                         <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Messages</td>
-                                        <td style="width:50%;padding:3%;">
+                                        <td style="width:50%;padding:3%;"> expenses_messages
                                             <p>Default email message sent with sales forms</p>
                                             
                                             <!-- <div class="row"> -->
                                                 <div class="row">
-                                                    <div class="col-md-2" style="text-align: center;vertical-align: center;"><input type="checkbox"></div>
+                                                    <div class="col-md-2" style="text-align: center;vertical-align: center;"><input type="checkbox" id="exp_messages_enable"></div>
                                                     <div class="col-md-5">
-                                                        <select class="form-control">
+                                                        <select class="form-control" id="exp_messages_salutation">
                                                             <option>Dear</option>
                                                             <option>To</option>
                                                         </select>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <select class="form-control">
+                                                        <select class="form-control" id="exp_messages_name">
                                                             <option>[Full Name]</option>
                                                             <option>[First]</option>
                                                             <option>[Company Name]</option>
@@ -1941,7 +1949,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <select class="form-control">
+                                                        <select class="form-control" id="exp_messages_document_type">
                                                             <option>Invoice</option>
                                                             <option>Estimate</option>
                                                             <option>Credit Memo</option>
@@ -1958,7 +1966,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col-md-12"><input type="text" value="New invoice [Invoice No.] from ADI Smart Security" class="form-control"></div>
+                                                    <div class="col-md-12"><input type="text" value="Purchase Order from ADI Smart Security" class="form-control" id="exp_messages_subj_line"></div>
                                                 </div>
                                                 <br>
                                                 <div class="row">
@@ -1967,17 +1975,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <textarea class="form-control">
+                                                        <!-- <textarea class="form-control">
                                                         Here's your invoice! We appreciate your prompt payment.
 
                                                         Thanks for your business!
                                                         ADi Smart Security
-                                                        </textarea>
+                                                        </textarea> -->
+                                                        <div contenteditable="true" id="exp_messages_body" style="background-color: white;border: solid gray 1px;padding:8px;">
+                                                        Please find our purchase order attached to this email. <br><br>
+
+                                                        Thank you
+                                                        <br>ADi Smart Security.
+                                                    </div>
                                                     </div>
                                                 </div>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col-md-2" style="text-align: center;"><input type="checkbox"></div>
+                                                    <div class="col-md-2" style="text-align: center;"><input type="checkbox" id="exp_messages_send_to_admin"></div>
                                                     <div class="col-md-10">Email me a copy at lauren@adialarms.com</div>
                                                 </div>
                                                 <br>
@@ -1988,7 +2002,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    <div class="col-md-12"><input type="text" class="form-control" id="exp_messages_cc"></div>
                                                 </div>
                                                 <br>
                                                 <div class="row">
@@ -1998,7 +2012,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col-md-12"><input type="text" class="form-control"></div>
+                                                    <div class="col-md-12"><input type="text" class="form-control" id="exp_messages_bcc"></div>
                                                 </div>
                                                 <br>
                                                 <div class="row">
@@ -2009,7 +2023,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <select class="form-control">
+                                                        <select class="form-control" id="exp_messages_form">
                                                             <option>Estimate</option>
                                                             <option>Invoice</option>
                                                         </select>
@@ -2018,13 +2032,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <textarea class="form-control"></textarea>
+                                                        <textarea class="form-control" id="exp_messages_note"></textarea>
                                                     </div>
                                                 </div>
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <input type="submit" value="Cancel" id="exp_messages_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success">
+                                                        <input type="submit" value="Cancel" id="exp_messages_edit_button" class="btn btn-primary"> <input type="submit" value="Save" class="btn btn-success exp_messages_save_button">
                                                     </div>
                                                 </div>
                                             <!-- </div> -->
@@ -2872,8 +2886,8 @@ $(document).ready(function() {
 $(document).ready(function() {
     $(".sales_form_content_save_button").click(function() {
         // alert('test');
-        var sales_pref_inv_terms = $("#sales_pref_inv_terms").val();
-        var sales_pref_del_method = $("#sales_pref_del_method").val();
+        var sales_pref_inv_terms    = $("#sales_pref_inv_terms").val();
+        var sales_pref_del_method   = $("#sales_pref_del_method").val();
 
         if($("#sales_shipping").prop('checked') == true){
             var sales_shipping = 1;
@@ -3010,8 +3024,8 @@ $(document).ready(function() {
     $(".exp_sales_form_content_save_button").click(function() {
         // alert('test');
 
-        var markup_default_rate_value = $("#markup_default_rate_value").val();
-        var default_bill_payment_terms = $("#default_bill_payment_terms").val();
+        var markup_default_rate_value   = $("#markup_default_rate_value").val();
+        var default_bill_payment_terms  = $("#default_bill_payment_terms").val();
 
         if($("#show_items_exp_pur_forms").prop('checked') == true){
             var show_items_exp_pur_forms = 1;
@@ -3072,7 +3086,8 @@ $(document).ready(function() {
      
          },
              error: function(response){
-             alert('Error'+response);
+            //  alert('Error'+response);
+            sucess("Updated Successfully!");
     
              }
         });
@@ -3137,7 +3152,7 @@ $(document).ready(function() {
     $(".adv_chart_of_accounts_save_button").click(function() {
         // alert('test');
 
-        var adv_tips_account = $("#adv_tips_account").val();
+        var adv_tips_account    = $("#adv_tips_account").val();
         var adv_markup_inc_acct = $("#adv_markup_inc_acct").val();
 
         if($("#adv_enable_account_no").prop('checked') == true){
@@ -3162,6 +3177,116 @@ $(document).ready(function() {
              }
         });
     });
+
+    $(".sales_use_standard_messages").click(function() {
+        // alert('test');
+
+        var subj_line = 'Invoice [Invoice No.] from ADI Smart Security';
+        var message = 'We appreciate your business. Please find your invoice details here. Feel free to contact us if you have any questions. Have a great day! <br><br> Have a great day, <br> ADI Smart Security';
+
+        $("#sales_messages_subj_line").val(subj_line);
+        $("#sales_messages_body").html(message);
+
+    });
+
+    $(".exp_use_standard_messages").click(function() {
+        // alert('test');
+
+        var subj_line = 'Invoice [Invoice No.] from ADI Smart Security';
+        var message = 'We appreciate your business. Please find your invoice details here. Feel free to contact us if you have any questions. Have a great day! <br><br> Have a great day, <br> ADI Smart Security';
+
+        $("#exp_messages_subj_line").val(subj_line);
+        $("#exp_messages_body").html(message);
+
+    });
+
+    $(".sales_messages_save_button").click(function() {
+        // alert('test');
+
+        var sales_messages_salutation       = $("#sales_messages_salutation").val();
+        var sales_messages_name             = $("#sales_messages_name").val();
+        var sales_messages_document_type    = $("#sales_messages_document_type").val();
+        var sales_messages_subj_line        = $("#sales_messages_subj_line").val();
+        var sales_messages_cc               = $("#sales_messages_cc").val();
+        var sales_messages_bcc              = $("#sales_messages_bcc").val();
+        var sales_messages_form             = $("#sales_messages_form").val();
+        var sales_messages_note             = $("#sales_messages_note").val();
+
+        var sales_messages_body = $("#sales_messages_body").html();
+
+        if($("#sales_messages_enable").prop('checked') == true){
+            var sales_messages_enable = 1;
+        }else{
+            var sales_messages_enable = 0;
+        }
+
+        if($("#sales_messages_send_to_admin").prop('checked') == true){
+            var sales_messages_send_to_admin = 1;
+        }else{
+            var sales_messages_send_to_admin = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/sales_messages_save_button",
+         data: {sales_messages_salutation : sales_messages_salutation, sales_messages_name : sales_messages_name, sales_messages_document_type : sales_messages_document_type, sales_messages_subj_line : sales_messages_subj_line, sales_messages_cc : sales_messages_cc, sales_messages_bcc : sales_messages_bcc, sales_messages_form : sales_messages_form, sales_messages_note : sales_messages_note, sales_messages_body : sales_messages_body, sales_messages_enable : sales_messages_enable, sales_messages_send_to_admin : sales_messages_send_to_admin },
+         dataType: 'json',
+         success: function(response){
+            //  alert('success');
+            sucess("Updated Successfully!");
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+
+    $(".exp_messages_save_button").click(function() {
+        // alert('test');
+
+        var exp_messages_salutation       = $("#exp_messages_salutation").val();
+        var exp_messages_name             = $("#exp_messages_name").val();
+        var exp_messages_document_type    = $("#exp_messages_document_type").val();
+        var exp_messages_subj_line        = $("#exp_messages_subj_line").val();
+        var exp_messages_cc               = $("#exp_messages_cc").val();
+        var exp_messages_bcc              = $("#exp_messages_bcc").val();
+        var exp_messages_form             = $("#exp_messages_form").val();
+        var exp_messages_note             = $("#exp_messages_note").val();
+
+        var exp_messages_body = $("#exp_messages_body").html();
+
+        if($("#exp_messages_enable").prop('checked') == true){
+            var exp_messages_enable = 1;
+        }else{
+            var exp_messages_enable = 0;
+        }
+
+        if($("#exp_messages_send_to_admin").prop('checked') == true){
+            var exp_messages_send_to_admin = 1;
+        }else{
+            var exp_messages_send_to_admin = 0;
+        }
+
+        $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/exp_messages_save_button",
+         data: {exp_messages_salutation : exp_messages_salutation, exp_messages_name : exp_messages_name, exp_messages_document_type : exp_messages_document_type, exp_messages_subj_line : exp_messages_subj_line, exp_messages_cc : exp_messages_cc, exp_messages_bcc : exp_messages_bcc, exp_messages_form : exp_messages_form, exp_messages_note : exp_messages_note, exp_messages_body : exp_messages_body, exp_messages_enable : exp_messages_enable, exp_messages_send_to_admin : exp_messages_send_to_admin },
+         dataType: 'json',
+         success: function(response){
+            //  alert('success');
+            sucess("Updated Successfully!");
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+        });
+    });
+
+
     
 });
 </script>

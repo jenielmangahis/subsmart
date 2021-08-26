@@ -459,8 +459,8 @@ function get_differenct_of_dates($date_start, $date_end)
   });
 </script>
 <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo&callback=initMap&libraries=&v=weekly"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly"
   async></script>
 <script
-  src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyASLBI1gI3Kx9K__jLuwr9xuQaBkymC4Jo">
+  src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU">
 </script>

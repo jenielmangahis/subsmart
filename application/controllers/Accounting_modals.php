@@ -276,16 +276,15 @@ class Accounting_modals extends MY_Controller
                                 if ($count === 1) {
                                     $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
 
-                                    $startingCheckNo = intval($lastAssignedCheck->check_no) + 1;
+                                    $this->page_data['startingCheckNo'] = intval($lastAssignedCheck->check_no) + 1;
+                                    $this->page_data['account'] = $account;
+                                    $this->page_data['balance'] = '$'.number_format(floatval($account->balance), 2, '.', ',');
                                 }
     
                                 $count++;
                             }
                         }
                     }
-
-                    $this->page_data['balance'] = '$0.00';
-                    $this->page_data['startingCheckNo'] = $startingCheckNo;
                 break;
             }
 
@@ -5114,7 +5113,7 @@ class Accounting_modals extends MY_Controller
             case 'payment-method':
                 $return = $this->get_payment_method_choices($return, $search);
             break;
-            case 'terms' :
+            case 'term' :
                 $return = $this->get_terms_choices($return, $search);
             break;
             case 'expense-account':
@@ -5267,6 +5266,12 @@ class Accounting_modals extends MY_Controller
             case 'detail-type' :
                 $accType = $this->input->get('accType');
                 $return = $this->get_account_details_choices($return, $search, $accType);
+            break;
+            case 'service' :
+                $return = $this->get_services_choices($return, $search);
+            break;
+            case 'product' :
+                $return = $this->get_products_choices($return, $search);
             break;
         }
 
@@ -5750,6 +5755,56 @@ class Accounting_modals extends MY_Controller
                 $choices['results'][] = [
                     'id' => $accDetail->acc_detail_id,
                     'text' => $accDetail->acc_detail_name
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_services_choices($choices, $search = null)
+    {
+        $services = $this->items_model->getItemsWithFilter(['type' => ['service', 'Service'], 'status' => [1]]);
+
+        foreach($services as $service) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($service->title, $search);
+                if($stripos !== false) {
+                    $searched = substr($service->title, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $service->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $service->title)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $service->id,
+                    'text' => $service->title
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_products_choices($choices, $search = null)
+    {
+        $products = $this->items_model->getItemsWithFilter(['type' => 'product', 'status' => [1]]);
+
+        foreach($products as $product) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($product->title, $search);
+                if($stripos !== false) {
+                    $searched = substr($product->title, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $product->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $product->title)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $product->id,
+                    'text' => $product->title
                 ];
             }
         }
