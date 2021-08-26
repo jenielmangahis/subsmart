@@ -183,9 +183,6 @@
                                                                                 <div class="service-cont <?=$timesheetSettings->service === "0" ? 'hide' : ''?>">
                                                                                     <select name="service[]" class="form-control">
                                                                                         <option value="" disabled selected>Choose the service worked on</option>
-                                                                                        <?php foreach($dropdown['services'] as $service) : ?>
-                                                                                            <option value="<?=$service->id?>"><?=$service->title?></option>
-                                                                                        <?php endforeach; ?>
                                                                                     </select>
                                                                                 </div>
                                                                                 <textarea name="description[]" class="form-control" placeholder="Description"></textarea>

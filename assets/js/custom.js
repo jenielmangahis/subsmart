@@ -171,41 +171,6 @@ function createUsername(name) {
     .replace(/[^\w-]+/g, "");
 }
 
-
-function formatCurrency(number) {
-  return accounting.formatMoney(number, { symbol: "" });
-}
-
-function calculateInvoiceTax() {
-  let total = 0;
-  const $rows = $("#jobs_items_table_body tr");
-
-  $rows.each((_, row) => {
-    const $tax = $(row).find("input[name='tax[]']");
-    total += Number($tax.val());
-  });
-
-  return Number(total);
-}
-
-function calculateInvoiceSubtotal() {
-  let total = 0;
-  const $rows = $("#jobs_items_table_body tr");
-
-  $rows.each((_, row) => {
-    const $price = $(row).find("input[name='price[]']");
-    const $quantity = $(row).find("input[name='quantity[]']");
-    total += Number($price.val()) * Number($quantity.val());
-  });
-
-  return Number(total);
-}
-
-function calculateInvoiceGrandTotal() {
-  const totalTax = accounting.unformat($("#total_tax_").text());
-  return Number(calculateInvoiceSubtotal()) + Number(totalTax);
-}
-
 // $(document).on("focusout", ".price", function () {
 //   var counter = $(this).data("counter");
 //   calculation(counter);

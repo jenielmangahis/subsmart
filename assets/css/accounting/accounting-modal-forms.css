@@ -48,6 +48,7 @@ span.select2-selection.select2-selection--single {
     display: inline-flex;
     border-radius: 20px;
     border: 1px solid #6b6c72;
+    width: auto !important;
 }
 
 #statementModal #recipientsTab li:first-child {
@@ -67,7 +68,8 @@ span.select2-selection.select2-selection--single {
 #statementModal #recipientsTab li a.active {
     border-bottom: none !important;
     font-weight: 900;
-    background-color: #fff !important;
+    background-color: transparent !important;
+    color: #495057;
 }
 
 #statementModal #recipientsTab li a:hover,

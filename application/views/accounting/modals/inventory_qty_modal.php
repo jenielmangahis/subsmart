@@ -58,12 +58,7 @@
                                                                 <td></td>
                                                                 <td>1</td>
                                                                 <td>
-                                                                    <select name="product[]" class="form-control" required>
-                                                                        <option value="" disabled selected>&nbsp;</option>
-                                                                        <?php foreach($items as $item) : ?>
-                                                                            <option value="<?=$item->id?>"><?=$item->title?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </select>
+                                                                    <select name="product[]" class="form-control" required></select>
                                                                 </td>
                                                                 <td></td>
                                                                 <td>

@@ -2,11 +2,13 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="payFrom">Pay from</label>
-            <select name="pay_from_account" id="bank-account" class="form-control" required></select>
+            <select name="pay_from_account" id="bank-account" class="form-control" required>
+                <option value="<?=$accounts[array_key_first($accounts)]->id?>" selected><?=$accounts[array_key_first($accounts)]->name?></option>
+            </select>
         </div>
     </div>
     <div class="col-md-2 d-flex align-items-center">
-        <h6>Balance $0.00</h6>
+        <h6>Balance $<?=number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ',')?></h6>
     </div>
     <div class="col-md-3">
         <div class="form-group">

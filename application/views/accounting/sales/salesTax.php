@@ -362,8 +362,8 @@ include viewPath('includes/header');
             <form>
                 <div class="form-group">
                     <label for="reason">Reason</label>
-                    <select class="form-control" id="reason">
-                        <option selected hidden>Reason</option>
+                    <select data-type="reason" class="form-control" id="reason">
+                        <option value="" selected hidden>Reason</option>
                         <option value="credit_or_discount">Credit/Discount</option>
                         <option value="prior_prepayments">Prior prepayments</option>
                         <option value="pre_payments">Pre payments</option>
@@ -373,13 +373,13 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="adjustment_date">Adjustment Date</label>
-                    <input type="date" class="form-control" id="adjustment_date">
+                    <input data-type="adjustment_date" type="date" class="form-control" id="adjustment_date">
                 </div>
 
                 <div class="form-group">
                     <label for="account">Account</label>
                     <div class="dropdownWithSearch" id="adjustmentAccount">
-                        <input type="text" class="form-control dropdownWithSearch__input" id="account" placeholder="Select account">
+                        <input data-type="account" type="text" class="form-control dropdownWithSearch__input" id="account" placeholder="Select account">
                         <button type="button" class="dropdownWithSearch__btn">
                             <i class="fa fa-chevron-down"></i>
                         </button>
@@ -388,7 +388,7 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="amount">Amount</label>
-                    <input type="number" class="form-control" id="amount" placeholder="Enter amount">
+                    <input data-type="amount" type="number" class="form-control" id="amount" placeholder="Enter amount">
                 </div>
 
                 <div>
@@ -398,7 +398,7 @@ include viewPath('includes/header');
             </form>
 
             <div class="addAdjustment__footer">
-                <button type="button" class="btn btn-primary">Add Adjustment</button>
+                <button type="button" class="btn btn-primary" id="addAdjustmentBtn">Add Adjustment</button>
             </div>
 
         </div>

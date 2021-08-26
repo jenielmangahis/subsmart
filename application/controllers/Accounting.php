@@ -9056,6 +9056,52 @@ class Accounting extends MY_Controller
         echo json_encode($addQuery);
     }
 
+    public function sales_messages_save_button()
+    {
+        $new_data = array(
+            
+            'salutation'        => $this->input->post("sales_messages_salutation"),
+            'messages_name'     => $this->input->post("sales_messages_name"),
+            'document_type'     => $this->input->post("sales_messages_document_type"),
+            'subj_line'         => $this->input->post("sales_messages_subj_line"),
+            'messages_cc'       => $this->input->post("sales_messages_cc"),
+            'messages_bcc'      => $this->input->post("sales_messages_bcc"),
+            'messages_form'     => $this->input->post("sales_messages_form"),
+            'messages_note'     => $this->input->post("sales_messages_note"),
+            'messages_body'     => $this->input->post("sales_messages_body"),
+            'messages_enable'   => $this->input->post("sales_messages_enable"),
+            'send_to_admin'     => $this->input->post("sales_messages_send_to_admin"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->sales_messages_save_button($new_data);
+
+        echo json_encode($addQuery);
+    }
+
+    public function exp_messages_save_button()
+    {
+        $new_data = array(
+            
+            'salutation'        => $this->input->post("exp_messages_salutation"),
+            'messages_name'     => $this->input->post("exp_messages_name"),
+            'document_type'     => $this->input->post("exp_messages_document_type"),
+            'subj_line'         => $this->input->post("exp_messages_subj_line"),
+            'messages_cc'       => $this->input->post("exp_messages_cc"),
+            'messages_bcc'      => $this->input->post("exp_messages_bcc"),
+            'messages_form'     => $this->input->post("exp_messages_form"),
+            'messages_note'     => $this->input->post("exp_messages_note"),
+            'messages_body'     => $this->input->post("exp_messages_body"),
+            'messages_enable'   => $this->input->post("exp_messages_enable"),
+            'send_to_admin'     => $this->input->post("exp_messages_send_to_admin"),
+
+        );
+
+        $addQuery = $this->accounting_account_settings_model->exp_messages_save_button($new_data);
+
+        echo json_encode($addQuery);
+    }
+
     
     public function generate_share_invoice_link()
     {

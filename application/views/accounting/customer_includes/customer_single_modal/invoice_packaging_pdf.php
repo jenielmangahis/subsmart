@@ -186,6 +186,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
         table td {
             vertical-align: top;
             padding: 0;
+            font-size: 11px;
+        }
+
+        table th {
+            font-size: 12px;
+            font-weight: bold;
         }
 
         p.large-text {
@@ -204,6 +210,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             padding-top: 15px;
             text-align: center;
             font-size: 11px;
+            margin: 2px;
         }
 
         table {
@@ -213,6 +220,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
         table.with-border th {
             border: solid 1px #000;
             padding: 0 10px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        table.above-items th {
             text-align: center;
             font-size: 11px;
         }
@@ -228,6 +240,36 @@ defined('BASEPATH') or exit('No direct script access allowed');
         .bold {
             font-weight: bold;
         }
+
+        td {
+            vertical-align: top;
+        }
+
+        table.item-list thead th {
+            border: solid 1px #A0A09F;
+        }
+
+        table.item-list tbody td {
+            border: solid 1px #A0A09F;
+            padding: 5px 10px;
+        }
+
+        table.item-list tbody td.no-border {
+            border: none !important;
+        }
+
+        .color-red {
+            color: red;
+        }
+
+        .color-blue {
+            color: blue;
+        }
+
+        .extra-large-text {
+            font-size: 25px;
+            font-weight: bold;
+        }
     </style>
 
 </head>
@@ -237,10 +279,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <tbody>
             <tr>
                 <td style="width: 50%;">
-                    <p class="business-logo">
-                        <img src="<?=base_url($business_logo)?>"
-                            alt="">
-                    </p>
+                    <table style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td style="width: 130px;">
+                                    <img src="<?=base_url($business_logo)?>"
+                                        alt="">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <p class="address">P.O. BOX 731340 <br>DALLAS, TX 75373-1340</p>
                     <br><br>
                     <p class="address">ADI SMART HOME <br>9175 KINGS COLONY ROAD <br>JACKSONVILLE, FL
@@ -325,16 +373,168 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
             <tr>
                 <td
-                    style="border-bottom:dashed 1px #000; padding-top:10px;font-size: 10px; font-weight:bold; text-align:center;">
+                    style="border-bottom:dashed 1px #000; padding-top:10px;font-size: 10px; font-weight:bold; text-align:center;padding-bottom:5px;">
                     Please detach and enclose top portion with your payment
                 </td>
                 <td
-                    style="border-bottom:dashed 1px #000; padding-top:10px;font-size: 10px; font-weight:bold; text-align:center;">
+                    style="border-bottom:dashed 1px #000; padding-top:10px;font-size: 10px; font-weight:bold; text-align:center;padding-bottom:5px;">
                     Make check payable and remit to above address
                 </td>
             </tr>
         </tbody>
     </table>
+    <table style="width: 100%;margin-top:10px;">
+        <tbody>
+            <tr>
+                <td style="width: 130px;">
+                    <img src="<?=base_url($business_logo)?>" alt="">
+                </td>
+                <td>
+                    <table class="above-items" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>CUSTOMER NUMBER</th>
+                                <th>INVOICE NUMBER</th>
+                                <th>DATE</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="with-border" style="width: 25%;">
+                                    DP311-000
+                                </td>
+                                <td class="with-border" style="width: 25%;">
+                                    Z8SJX801
+                                </td>
+                                <td class="with-border" style="width: 25%;">
+                                    08/20/21
+                                </td>
+                                <td style="width: 25%;">
+                                    <p class="bold" style="padding-left: 10px;">
+                                        Retain this portion <br>for your records
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="item-list" style="width: 100%; margin-top:10px">
+        <thead>
+            <tr>
+                <th style="width: 50%;">SHIP DATA/ITEM DESCRIPTIONS</th>
+                <th>CATALOG <br>NUMBER</th>
+                <th>QTY <br>SHIPPED</th>
+                <th>UNIT PRICE</th>
+                <th>AMOUNT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="height: 240px;">
+                    <p style="height: 80px;">
+                        SHIP FROM: DALLAS &nbsp;&nbsp;&nbsp;TO: PENSACOLA, FL<br>
+                        &nbsp;&nbsp;ADI SMART HOME BRANNON NGUYEN<br>
+                        &nbsp;&nbsp;6866 PINE FOREST ROAD B<br>
+                        &nbsp;&nbsp;PENSACOLA, FL 32526 <br>
+                        SHIP VIA: UPS GROUND
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8CH 1080P TVI KIT 6 CAMS2.8 2T
+                    </p>
+                </td>
+                <td>
+                    <p style="height: 80px;"></p>
+                    <p>
+                        BX-A91E6282T
+                    </p>
+                </td>
+                <td>
+                    <p style="height: 80px;"></p>
+                    <p>
+                        1
+                    </p>
+                </td>
+                <td>
+                    <p style="height: 80px;"></p>
+                    <p>
+                        414.99
+                    </p>
+                </td>
+                <td>
+                    <p style="height: 80px;"></p>
+                    <p>
+                        414.99
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" rowspan="5" class="no-border">
+                    <p>REC-VISA #---------4699 414.99<br>
+                        P A I D I N F U L L<br>
+                        E-CHECK NOW AVAILABLE. CONTACT YOUR ADI CREDIT ANALYST. SIGN UP FOR E-INVOICING GO TO:<br>
+                        ADIGLOBAL.COM/GOGREEN
+                    </p>
+                </td>
+                <td colspan="2">
+                    RORAL MATERIAL
+                </td>
+                <td>414.99</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    SALES TAX
+                </td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p class="bold">SHIPPING & HANDLING</p>
+                </td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p class="large-text">TOTAL INVOICE</p>
+                </td>
+                <td>414.99</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p class="bold">DUE DATE</p>
+                </td>
+                <td>08/20/21</td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="width: 100%;">
+        <tbody>
+            <tr>
+                <td style="width: 100%">
+                    <p class="extra-large-text color-red" style="width: 80%; text-align:left; padding-left:50px;">THANK
+                        YOU FOR YOUR
+                        ORDER</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100%">
+                    <p class="bold" style="font-size: 10px;">
+                        All claims must be made within 5 days after receipt of goods. Goods returned without our
+                        authorized return number on the carton will be refused. <br>The purchase of products and
+                        services
+                        from ADI are subject to and governed solely by the Terms and Conditions available at<br>
+                        <span class="color-blue">https://www.adiglobaldistribution.us/TermsAndConditionsPage</span> <br>
+                        <span class="color-red">Past due balances may be subject to a Late Charge not to exceed 1.5% per
+                            month.</span>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 
     <table style="width: 100%;page-break-before: always;">
         <tbody>

@@ -19,7 +19,9 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <select name="payment_account" id="payment_account" class="form-control" required></select>
+                                                        <select name="payment_account" id="payment_account" class="form-control" required>
+                                                            <option value="<?=$account->id?>" selected><?=$account->name?></option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-2 d-flex">

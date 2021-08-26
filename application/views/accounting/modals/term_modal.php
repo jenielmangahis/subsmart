@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">New Term</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close close-term-modal">&times;</button>
             </div>
             <?php 
                 $action = isset($term) ? "/accounting/terms/update/$term->id" : "/accounting/terms/add";
@@ -69,7 +69,7 @@
             </div>
             <div class="modal-footer">
                 <div class="col-sm-6">
-                    <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-rounded border close-term-modal">Close</button>
                 </div>
                 <div class="col-sm-6">
                     <button type="submit" class="btn btn-success btn-rounded border float-right">Save</button>
