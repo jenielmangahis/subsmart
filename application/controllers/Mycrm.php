@@ -176,7 +176,14 @@ class Mycrm extends MY_Controller {
 
 		$plan   = $this->NsmartPlan_model->getById($post['plan_id']);
 		if( $plan ){
-			$amount   = $plan->price;
+			if( $post['subscription_type'] == 'yearly' ){
+				$amount   = $plan->price * 12;
+				$next_billing_date = date("Y-m-d", strtotime("+1 year"));
+			}else{
+				$amount   = $plan->price;
+				$next_billing_date = date("Y-m-d", strtotime("+1 month"));
+			}
+			
 			$company  = $this->Business_model->getByCompanyId($company_id);
             $client   = $this->Clients_model->getById($company_id);
 			$address  = $company->street . " " . $company->city . " " . $company->state;
@@ -204,7 +211,8 @@ class Mycrm extends MY_Controller {
 	                'is_trial' => 0,
 	                'payment_method' => 'converge',
 	                'next_billing_date' => $next_billing_date,
-	                'num_months_discounted' => 0
+	                'num_months_discounted' => 0,
+	                'recurring_payment_type' => $post['subscription_type']
             	];
             	$this->Clients_model->update($company_id, $data);
 
@@ -223,7 +231,7 @@ class Mycrm extends MY_Controller {
             	//Record payment
                 $data_payment = [
                     'company_id' => $company_id,
-                    'description' => 'Paid Membership, Monthly',
+                    'description' => 'Paid Membership, ' . ucwords($post['subscription_type']),
                     'payment_date' => date("Y-m-d"),
                     'total_amount' => $amount,
                     'date_created' => date("Y-m-d H:i:s")
