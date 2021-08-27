@@ -3390,6 +3390,9 @@ $(function() {
                 var fieldName = field === undefined ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
                 fieldName = fieldName.includes('from') || fieldName.includes('to') ? fieldName.replaceAll('from-', '').replaceAll('to-', '') : fieldName;
                 var query = `?modal=${modalName}&field=${fieldName}`;
+            } else if(form === 'product' || form === 'service') {
+                var query = `?field=${form}`;
+                form = 'item';
             } else {
                 var query = '';
             }
@@ -3403,9 +3406,11 @@ $(function() {
                             initAccountModal();
                         break;
                         default :
-                            $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
-                            $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
-                            $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
+                            if(form !== 'item') {
+                                $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
+                                $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
+                                $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
+                            }
 
                             $(`#modal-container #${form.replaceAll('_', '-')}-modal`).modal({
                                 backdrop: 'static',
@@ -3466,6 +3471,15 @@ $(function() {
         $('#term-modal').modal('hide');
     });
 
+    $(document).on('click', '#item-modal .close-item-modal', function(e) {
+        e.preventDefault();
+
+        if(dropdownEl !== null) {
+            dropdownEl.val('').trigger('change');
+        }
+        $('#item-modal').modal('hide');
+    });
+
     $(document).on('hidden.bs.modal', '#modal-container #account-modal', function() {
         dropdownEl = null;
 
@@ -3482,6 +3496,12 @@ $(function() {
         dropdownEl = null;
 
         $('#modal-container #term-modal').remove();
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #item-modal', function() {
+        dropdownEl = null;
+
+        $('#modal-container #item-modal').remove();
     });
 
     $(document).on('change', '#account-modal #check_sub', function() {
@@ -3502,6 +3522,27 @@ $(function() {
             $('#account-modal #time_date').val('');
             $('#account-modal #balance').parent().removeClass('hide');
         }
+    });
+
+    $(document).on('click', '#modal-container #item-modal #types-table tr', function(e) {
+        var type = e.currentTarget.dataset.href;
+
+        $.get('/accounting/item-form/'+type, function(result) {
+            $('#item-modal .modal-content').html(result);
+    
+            $(`#item-modal .datepicker input`).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+    
+            $(`#item-modal select`).select2({
+                dropdownParent: $('#item-modal')
+            });
+    
+            $(`#item-modal`).modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
     });
 
     $(document).on('submit', '#account-modal #ajax-add-account', function(e) {

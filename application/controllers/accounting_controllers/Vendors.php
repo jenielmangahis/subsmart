@@ -31,7 +31,9 @@ class Vendors extends MY_Controller
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
-            "assets/css/accounting/accounting_includes/create_charge.css"
+            "assets/css/accounting/accounting_includes/create_charge.css",
+            'assets/css/accounting/tax/settings/settings.css',
+            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
         ));
 
         add_footer_js(array(
@@ -43,6 +45,9 @@ class Vendors extends MY_Controller
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
             "assets/js/accounting/sales/customer_includes/create_charge.js",
+            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            'assets/js/accounting/invoice/addInvoice.js',
+            'assets/js/accounting/invoice/accounting.min.js',
         ));
 
         $this->page_data['menu_name'] =
@@ -229,7 +234,7 @@ class Vendors extends MY_Controller
             'tax_id' => $this->input->post('tax_id'),
             'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
-            'attachments' => isset($this->input->post('attachments')) ? json_encode($this->input->post('attachments')) : null,
+            'attachments' => !is_null($this->input->post('attachments')) ? json_encode($this->input->post('attachments')) : null,
             'status' => 1,
             'created_by' => logged('id'),
             'created_at' => date("Y-m-d H:i:s"),

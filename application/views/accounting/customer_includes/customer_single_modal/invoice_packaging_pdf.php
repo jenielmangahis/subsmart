@@ -213,12 +213,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
             margin: 2px;
         }
 
+        table.with-border td {
+            border: solid 1px #A0A09F;
+        }
+
         table {
             border-collapse: collapse;
         }
 
         table.with-border th {
-            border: solid 1px #000;
+            border: solid 1px #A0A09F;
             padding: 0 10px;
             text-align: center;
             font-size: 11px;
@@ -249,12 +253,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
             border: solid 1px #A0A09F;
         }
 
-        table.item-list tbody td {
+        table.item-list tbody td,
+        table.item-list tfoot td {
             border: solid 1px #A0A09F;
             padding: 5px 10px;
         }
 
-        table.item-list tbody td.no-border {
+        table.item-list td.no-border {
             border: none !important;
         }
 
@@ -270,11 +275,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
             font-size: 25px;
             font-weight: bold;
         }
+
+        img {
+            position: absolute;
+        }
     </style>
 
 </head>
 
 <body>
+    <?php
+    for ($data_i=0; $data_i< count($data_pdf); $data_i++) {
+        ?>
     <table style="width: 100%;">
         <tbody>
             <tr>
@@ -282,17 +294,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <table style="width:100%">
                         <tbody>
                             <tr>
-                                <td style="width: 130px;">
+                                <td style="width: 130px;height:130px;">
                                     <img src="<?=base_url($business_logo)?>"
-                                        alt="">
+                                        class="logo" alt="" style="width: 130px;">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <p class="address">P.O. BOX 731340 <br>DALLAS, TX 75373-1340</p>
+                    <p class="address">P.O. BOX <?=$data_pdf[$data_i]["inv_location_scale"]?>
+                    </p>
                     <br><br>
-                    <p class="address">ADI SMART HOME <br>9175 KINGS COLONY ROAD <br>JACKSONVILLE, FL
-                        32257</p>
+                    <p class="address"><?=$data_pdf[$data_i]["business_name"]?>
+                        <br><?=$data_pdf[$data_i]["bus_street"]?>
+                        <br><?=$data_pdf[$data_i]["bus_city"]?>,
+                        <?=$data_pdf[$data_i]["bus_state"]?>
+                        <?=$data_pdf[$data_i]["bus_postal_code"]?>
+                    </p>
                 </td>
                 <td style="width: 50%;">
                     <table style="width: 100%;">
@@ -300,7 +317,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <p class="large-text">ORIGINAL INVOICE</p>
                             <p>CUSTOMER NUMBER<br>PLEASE WRITE THIS NUMBER<br>ON ALL ORDERS AND
                                 CHECKS</p>
-                            <p class="with-border text-center">DP311-000</p>
+                            <p class="with-border text-center">
+                                ACS<?=str_pad($data_pdf[$data_i]["customer_id"], 6, 0, STR_PAD_LEFT)?>
+                            </p>
                         </td>
                         <td style="width: 50%;">
                             <table class="with-border" style="width: 100%; ">
@@ -312,8 +331,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
-                                        <td>08/20/21</td>
+                                        <td><?=$data_i+1?>
+                                        </td>
+                                        <td><?=date("m/d/Y", strtotime($data_pdf[$data_i]["due_date"]))?>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -325,7 +346,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Z8SJX801</td>
+                                        <td><?=$data_pdf[$data_i]["invoice_no"]?>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -338,7 +360,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <p class="text-right bold">PLEASE PAY THIS AMMOUNT</p>
                                 </td>
                                 <td class="with-border" style="width: 50%;">
-                                    0.00
+                                    <?=number_format($data_pdf[$data_i]["balance_due"], 2, '.', ',')?>
                                 </td>
                             </tr>
                             <tr>
@@ -346,13 +368,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <p class="text-right bold">DUE DATE</p>
                                 </td style="width: 50%;">
                                 <td class="with-border">
-                                    08/20/21
+                                    <?=date("m/d/Y", strtotime($data_pdf[$data_i]["due_date"]))?>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-right:20px;">
                                     <p class="large-text">REMIT TO:</p>
-                                    <p>ADEMCO INC., DBA ADI<br>P.O. BOX 731340<br>DALLAS, TX 75373-1340</p>
+                                    <p>ADEMCO INC., DBA ADI<br>P.O. BOX <?=$data_pdf[$data_i]["inv_location_scale"]?>
+                                    </p>
                                 </td>
                                 <td></td>
                             </tr>
@@ -386,8 +409,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <table style="width: 100%;margin-top:10px;">
         <tbody>
             <tr>
-                <td style="width: 130px;">
-                    <img src="<?=base_url($business_logo)?>" alt="">
+                <td style="width: 130px; vertical-align:center; padding-right:10px">
+                    <img src="<?=base_url($business_logo)?>"
+                        class="logo" alt="" style="width: 120px;">
                 </td>
                 <td>
                     <table class="above-items" style="width:100%;">
@@ -402,13 +426,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tbody>
                             <tr>
                                 <td class="with-border" style="width: 25%;">
-                                    DP311-000
+                                    ACS<?=str_pad($data_pdf[$data_i]["customer_id"], 6, 0, STR_PAD_LEFT)?>
                                 </td>
                                 <td class="with-border" style="width: 25%;">
-                                    Z8SJX801
+                                    <?=$data_pdf[$data_i]["invoice_no"]?>
                                 </td>
                                 <td class="with-border" style="width: 25%;">
-                                    08/20/21
+                                    <?=date("m/d/Y", strtotime($data_pdf[$data_i]["due_date"]))?>
                                 </td>
                                 <td style="width: 25%;">
                                     <p class="bold" style="padding-left: 10px;">
@@ -434,47 +458,67 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </thead>
         <tbody>
             <tr>
+                <?php
+        $items_catalog_html="";
+        $items_qty_html="";
+        $items_costs_html="";
+        $items_total_html="";
+        $item_names_html="";
+        $total_cost=0;
+        foreach ($data_pdf[$data_i]["invoice_items"] as $item) {
+            $item_names_html.='
+            <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$item->title.'
+            </p>';
+            $items_catalog_html.= '<p>BX-A91E6282T</p>';
+            $items_qty_html.='<p>'.$item->qty.'</p>';
+            $items_costs_html.='<p>'.$item->iCost.'</p>';
+            $items_total_html.='<p>'.$item->total.'</p>';
+            $total_cost+=$item->iCost;
+        } ?>
                 <td style="height: 240px;">
                     <p style="height: 80px;">
-                        SHIP FROM: DALLAS &nbsp;&nbsp;&nbsp;TO: PENSACOLA, FL<br>
-                        &nbsp;&nbsp;ADI SMART HOME BRANNON NGUYEN<br>
-                        &nbsp;&nbsp;6866 PINE FOREST ROAD B<br>
-                        &nbsp;&nbsp;PENSACOLA, FL 32526 <br>
-                        SHIP VIA: UPS GROUND
+                        SHIP FROM: <?=$data_pdf[$data_i]["bus_city"]?>
+                        &nbsp;&nbsp;&nbsp;TO: <?=$data_pdf[$data_i]["inv_shipping_to_address"]?><br>
+                        &nbsp;&nbsp;<?=$data_pdf[$data_i]["business_name"]?>
+                        <?=$data_pdf[$data_i]["customer_name"]?><br>
+                        &nbsp;&nbsp;<?=$data_pdf[$data_i]["bus_street"]?><br>
+                        &nbsp;&nbsp;<?=$data_pdf[$data_i]["bus_city"]?>,
+                        <?=$data_pdf[$data_i]["bus_state"]?>
+                        <?=$data_pdf[$data_i]["bus_postal_code"]?>
+                        <br>
+                        SHIP VIA: <?=$data_pdf[$data_i]["inv_ship_via"]?>
                     </p>
-                    <p>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8CH 1080P TVI KIT 6 CAMS2.8 2T
-                    </p>
+                    <?=$item_names_html?>
                 </td>
                 <td>
                     <p style="height: 80px;"></p>
-                    <p>
-                        BX-A91E6282T
-                    </p>
+                    <?=$items_catalog_html?>
                 </td>
                 <td>
                     <p style="height: 80px;"></p>
-                    <p>
-                        1
-                    </p>
+                    <?=$items_qty_html?>
                 </td>
                 <td>
                     <p style="height: 80px;"></p>
-                    <p>
-                        414.99
-                    </p>
+                    <?=$items_costs_html?>
                 </td>
                 <td>
                     <p style="height: 80px;"></p>
-                    <p>
-                        414.99
-                    </p>
+                    <?=$items_total_html?>
                 </td>
             </tr>
+        </tbody>
+        <tfoot>
             <tr>
                 <td colspan="2" rowspan="5" class="no-border">
-                    <p>REC-VISA #---------4699 414.99<br>
-                        P A I D I N F U L L<br>
+                    <p>REC-VISA #---------4699 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=number_format($data_pdf[$data_i]["balance_due"], 2, '.', ',')?><br>
+                        <?php
+                            if ($data_pdf[$data_i]["balance_due"] > 0) {
+                                echo "P E N D I N G &nbsp;P A Y M E N T";
+                            } else {
+                                echo "P A I D I N F U L L";
+                            } ?> <br>
                         E-CHECK NOW AVAILABLE. CONTACT YOUR ADI CREDIT ANALYST. SIGN UP FOR E-INVOICING GO TO:<br>
                         ADIGLOBAL.COM/GOGREEN
                     </p>
@@ -482,13 +526,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td colspan="2">
                     RORAL MATERIAL
                 </td>
-                <td>414.99</td>
+                <td>
+                    <?=number_format($data_pdf[$data_i]["inv_sub_total"], 2, '.', ',')?>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
                     SALES TAX
                 </td>
-                <td>0</td>
+                <td><?=number_format($data_pdf[$data_i]["inv_taxes"], 2, '.', ',')?>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
@@ -500,17 +547,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td colspan="2">
                     <p class="large-text">TOTAL INVOICE</p>
                 </td>
-                <td>414.99</td>
+                <td>
+                    <?=number_format($data_pdf[$data_i]["inv_grand_total"], 2, '.', ',')?>
+                </td>
             </tr>
             <tr>
                 <td colspan="2">
                     <p class="bold">DUE DATE</p>
                 </td>
-                <td>08/20/21</td>
+                <td>
+                    <?=date("m/d/Y", strtotime($data_pdf[$data_i]["due_date"]))?>
+                </td>
             </tr>
-        </tbody>
+        </tfoot>
     </table>
-    <table style="width: 100%;">
+    <table style="width: 100%; page-break-after: always;">
         <tbody>
             <tr>
                 <td style="width: 100%">
@@ -534,7 +585,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
         </tbody>
     </table>
-
+    <?php
+    }
+    ?>
 
     <table style="width: 100%;page-break-before: always;">
         <tbody>
@@ -555,7 +608,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td style="width: 40%;">
                     <div class="business-logo">
                         <img src="<?=base_url($business_logo)?>"
-                            alt="">
+                            alt="" style="width: 130px;">
                     </div>
                 </td>
             </tr>

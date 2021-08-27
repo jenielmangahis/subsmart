@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <div class="row align-items-center" style="margin-top: 30px;">
   <div class="col-sm-12">
-      <h3 class="page-title">Monthly Membership</h3>
+      <h3 class="page-title"><?= $client->recurring_payment_type == 'monthly' ? 'Monthly' : 'Yearly'; ?> Membership</h3>
   </div>
 </div>
 <div class="pl-3 pr-3 mt-1 row">
@@ -69,10 +69,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="row">
                     <div class="col-sm-12 col-md-4">
                         <div class="plan-option-box">
-                            <span class="plan-option-box-header">Total Monthly</span>
+                            <span class="plan-option-box-header">Total <?= $client->recurring_payment_type == 'monthly' ? 'Monthly' : 'Yearly'; ?></span>
                             <div class="plan-option-box-cnt">
-                                <span class="plan-option-box-value">$<?= number_format($total_monthly,2); ?></span>
-                                <span class="plan-option-box-name">For 1 month</span>
+                                <span class="plan-option-box-value">$<?= number_format($total_membership_cost,2); ?></span>
+                                <span class="plan-option-box-name">For 1 <?= $client->recurring_payment_type == 'month' ? : 'year'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -80,8 +80,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="plan-option-box">
                             <span class="plan-option-box-header" style="background: #909da7;">Membership</span>
                             <div class="plan-option-box-cnt">
-                                <span class="plan-option-box-value">$<?= number_format($plan->price,2); ?></span>
-                                <span class="plan-option-box-name">For 1 month</span>
+                                <span class="plan-option-box-value">$<?= number_format($total_plan_cost,2); ?></span>
+                                <span class="plan-option-box-name">For 1 <?= $client->recurring_payment_type == 'month' ? : 'year'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span class="plan-option-box-header" style="background: #909da7;">Add-ons</span>
                             <div class="plan-option-box-cnt">
                                 <span class="plan-option-box-value">$<?= number_format($total_addon_price, 2); ?></span>
-                                <span class="plan-option-box-name">For 1 month</span>
+                                <span class="plan-option-box-name">For 1 <?= $client->recurring_payment_type == 'month' ? : 'year'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -700,7 +700,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($plan->price,2); ?>" disabled="">
+                                        <input type="text" class="form-control" name="plan_amount" id="" value="<?= number_format($total_plan_cost,2); ?>" disabled="">
                                     </div>
                                 </div>
                             </div>
@@ -713,7 +713,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($total_addon_price,2); ?>" disabled="">
+                                        <input type="text" class="form-control" name="plan_amount" id="" value="<?= number_format($total_addon_price,2); ?>" disabled="">
                                     </div>
                                 </div>
                             </div>
@@ -726,7 +726,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($total_monthly,2); ?>" disabled="">
+                                        <input type="text" class="form-control" name="plan_amount" id="" value="<?= number_format($total_membership_cost,2); ?>" disabled="">
                                     </div>
                                 </div>
                             </div>

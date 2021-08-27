@@ -306,10 +306,10 @@ $(function(){
                {
                     $("#modal-buy-license").modal('hide'); 
                     if( o.is_success == 1 ){
-                      
+                      $("#modal-pay-renewal-subscription").modal('hide');
                       Swal.fire({
                           title: 'Payment Successful!',
-                          text: "Your plan license was successfully updated",
+                          text: "Your plan subscription was successfully renewed",
                           icon: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#32243d',
@@ -317,7 +317,7 @@ $(function(){
                           confirmButtonText: 'Ok'
                       }).then((result) => {
                           if (result.value) {
-                              location.reload();
+                              location.href = base_url + 'mycrm/membership';
                           }
                       });
                     }else{

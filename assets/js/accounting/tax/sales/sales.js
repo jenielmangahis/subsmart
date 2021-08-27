@@ -171,6 +171,13 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     toggleDisplayNone($overdueParent, data.overdue.length === 0);
     toggleDisplayNone($dueParent, data.due.length === 0);
     toggleDisplayNone($upcomingParent, data.upcoming.length === 0);
+
+    const $totalTax = $("#totalTax");
+    const total = data.overdue.reduce((carry, curr) => {
+      return carry + Number(curr.taxes);
+    }, 0);
+
+    $totalTax.text(accounting.formatMoney(total, { symbol: "" }));
   };
 
   const { data: taxedInvoice } = await fetchGetTaxedInvoices();

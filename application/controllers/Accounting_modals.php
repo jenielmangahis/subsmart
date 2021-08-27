@@ -45,6 +45,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('expenses_model');
         $this->load->model('accounting_assigned_checks_model');
         $this->load->model('accounting_timesheet_settings_model');
+        $this->load->model('TaxRates_model');
         $this->load->library('form_validation');
     }
 
@@ -6023,6 +6024,9 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['accountType'] = $accountType;
                 $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
             break;
+            case 'item_modal' :
+                $this->page_data['field'] = $this->input->get('field');
+            break;
         }
         $this->load->view("accounting/modals/$modal", $this->page_data);
     }
@@ -6079,5 +6083,17 @@ class Accounting_modals extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function get_item_form($type = "")
+    {
+        if($type) {
+            $this->page_data['inventory_asset_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 2, 5);
+            $this->page_data['income_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 11, 86);
+            $this->page_data['expense_accounts'] = $this->chart_of_accounts_model->getByAccAndDetailType(1, 13, 98);
+            $this->page_data['tax_rates'] = $this->TaxRates_model->getAllByCompanyId(getLoggedCompanyID());
+            $this->page_data['vendors'] = $this->vendors_model->getAllByCompany();
+            $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
+        }
     }
 }

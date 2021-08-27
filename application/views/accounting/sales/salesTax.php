@@ -84,7 +84,7 @@ include viewPath('includes/header');
 
             <div class="row">
                 <div class="col-md-8">
-                    <h3>$0.08</h3>
+                    <h3>$<span id="totalTax">0.00</span></h3>
                     <h5>SALES TAX DUE</h5>
 
                     <br>
