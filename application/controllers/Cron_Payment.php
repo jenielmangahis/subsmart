@@ -60,7 +60,14 @@ class Cron_Payment extends MY_Controller {
                         $amount   = $plan->discount;    
                     }
 
-                    $amount = $amount + $total_addon_price;
+                    if( $client->recurring_payment_type == 'monthly' ){
+                        $amount = $amount + $total_addon_price;
+                        $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                    }else{
+                        $amount = ($amount + $total_addon_price) * 12;
+                        $next_billing_date = date("Y-m-d", strtotime("+1 year", strtotime($client->next_billing_date)));
+                    }
+                    
 
                     $businessProfile  = $this->Business_model->getByCompanyId($client->id);
                     $address  = $businessProfile->street . " " . $businessProfile->city . " " . $businessProfile->state;
@@ -87,7 +94,7 @@ class Cron_Payment extends MY_Controller {
                             $num_months_discounted = $client->num_months_discounted - 1;    
                         }
 
-                        $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                        
                         $data = [           
                             'payment_method' => 'converge',     
                             //'plan_date_registered' => date("Y-m-d"),
@@ -104,7 +111,7 @@ class Cron_Payment extends MY_Controller {
                         //Record payment
                         $data_payment = [
                             'company_id' => $client->id,
-                            'description' => 'Paid Membership, Monthly',
+                            'description' => 'Paid Membership, ' . ucwords($client->recurring_payment_type),
                             'payment_date' => date("Y-m-d"),
                             'total_amount' => $amount,
                             'date_created' => date("Y-m-d H:i:s")
@@ -187,7 +194,13 @@ class Cron_Payment extends MY_Controller {
                         $amount   = $plan->discount;    
                     }
 
-                    $amount = $amount + $total_addon_price;
+                    if( $client->recurring_payment_type == 'monthly' ){
+                        $amount = $amount + $total_addon_price;
+                        $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                    }else{
+                        $amount = ($amount + $total_addon_price) * 12;
+                        $next_billing_date = date("Y-m-d", strtotime("+1 year", strtotime($client->next_billing_date)));
+                    }
 
                     $businessProfile  = $this->Business_model->getByCompanyId($client->id);
                     $address  = $businessProfile->street . " " . $businessProfile->city . " " . $businessProfile->state;
@@ -214,7 +227,7 @@ class Cron_Payment extends MY_Controller {
                             $num_months_discounted = $client->num_months_discounted - 1;    
                         }
 
-                        $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                        
                         $data = [           
                             'payment_method' => 'converge',     
                             //'plan_date_registered' => date("Y-m-d"),
@@ -233,7 +246,7 @@ class Cron_Payment extends MY_Controller {
                         //Record payment
                         $data_payment = [
                             'company_id' => $client->id,
-                            'description' => 'Paid Membership, Monthly',
+                            'description' => 'Paid Membership, ' . ucwords($client->recurring_payment_type),
                             'payment_date' => date("Y-m-d"),
                             'total_amount' => $amount,
                             'date_created' => date("Y-m-d H:i:s")

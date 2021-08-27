@@ -78,13 +78,23 @@ class Mycrm extends MY_Controller {
             $default_plan_feature = $default_plan_feature['enterprise'];
         }
 
+        if( $client->recurring_payment_type == 'monthly' ){
+            $total_membership_cost = $plan->price + $total_addon_price;
+            $total_plan_cost = $plan->price;
+        }else{
+            $total_membership_cost = ($plan->price + $total_addon_price) * 12;
+            $total_plan_cost = $plan->price * 12;
+            $total_addon_price = $total_addon_price * 12;
+        }
+
         $this->page_data['plan_features'] = $plan_default_features;
 		$this->page_data['lastPayment']  = $lastPayment;
 		$this->page_data['firstPayment'] = $firstPayment;
 		$this->page_data['nsPlans'] = $nsPlans;
 		$this->page_data['start_billing_period'] = $start_billing_period;
 		$this->page_data['end_billing_period'] = $end_billing_period;
-		$this->page_data['total_monthly']      = $plan->price + $total_addon_price;
+		$this->page_data['total_membership_cost']      = $total_membership_cost;
+        $this->page_data['total_plan_cost'] = $total_plan_cost;
 		$this->page_data['total_addon_price']  = $total_addon_price;
 		$this->page_data['primaryCard'] = $primaryCard;
 		$this->page_data['addons'] = $addons;
@@ -262,8 +272,16 @@ class Mycrm extends MY_Controller {
 			foreach($addons as $a){
 				$total_addon_price += $a->service_fee;
 			}
-			
+
 			$amount = $amount + $total_addon_price;
+
+            if( $client->recurring_payment_type == 'monthly' ){
+                $amount = $amount;
+                $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+            }else{
+                $amount = $amount * 12;
+                $next_billing_date = date("Y-m-d", strtotime("+1 year", strtotime($client->next_billing_date)));
+            }
 
 			$company  = $this->Business_model->getByCompanyId($company_id);
 			$address  = $company->street . " " . $company->city . " " . $company->state;
@@ -284,8 +302,7 @@ class Mycrm extends MY_Controller {
             	if( $client->num_months_discounted > 0 ){
             		$num_months_discounted = $client->num_months_discounted - 1;	
             	}
-
-            	$next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+            	
             	$data = [           
 	            	'payment_method' => 'converge',     
 	                //'plan_date_registered' => date("Y-m-d"),
@@ -314,7 +331,7 @@ class Mycrm extends MY_Controller {
             	//Record payment
                 $data_payment = [
                     'company_id' => $company_id,
-                    'description' => 'Paid Membership, Monthly',
+                    'description' => 'Paid Membership, ' . ucwords($client->recurring_payment_type),
                     'payment_date' => date("Y-m-d"),
                     'total_amount' => $amount,
                     'date_created' => date("Y-m-d H:i:s")
