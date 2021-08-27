@@ -52,13 +52,15 @@ class MY_Controller extends CI_Controller {
 		$company_id = logged('company_id');
 
 		if( $company_id != 1 ){
-			if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
+			/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
 				redirect('mycrm/renew_plan'); 
-			}
+			}*/
 
 			if( $is_plan_active == 0 && $controller != 'mycrm'){			
-				if( $method != 'renew_plan' && $method != 'plan_select'  )
-				redirect('mycrm/renew_plan'); 
+				if( $method != 'renew_plan' && $method != 'plan_select'  ){
+					redirect('mycrm/renew_plan'); 	
+				}
+				
 			}
 		}		
 	}
