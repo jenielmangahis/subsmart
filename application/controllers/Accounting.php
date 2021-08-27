@@ -153,6 +153,17 @@ class Accounting extends MY_Controller
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();*/
 
+        add_css([
+            'assets/css/accounting/tax/settings/settings.css',
+            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            'assets/js/accounting/invoice/addInvoice.js',
+            'assets/js/accounting/invoice/accounting.min.js',
+        ]);
+
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
@@ -2320,6 +2331,16 @@ class Accounting extends MY_Controller
 
     public function lists()
     {
+        add_css([
+            'assets/css/accounting/tax/settings/settings.css',
+            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            'assets/js/accounting/invoice/addInvoice.js',
+            'assets/js/accounting/invoice/accounting.min.js',
+        ]);
         $this->load->view('accounting/list', $this->page_data);
     }
 
@@ -6649,7 +6670,10 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
             'assets/js/accounting/tax/sales/sales.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js'
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js',
+
+            'assets/js/accounting/invoice/addInvoice.js',
+            'assets/js/accounting/invoice/accounting.min.js',
         ]);
 
         $this->load->view('accounting/sales/salesTax', $this->page_data);
@@ -9153,7 +9177,7 @@ class Accounting extends MY_Controller
             $total_amount_received += $payment->payment_amount;
         }
     
-        $balance=$receivable_payment-$total_amount_received;
+        $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
 
         if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
             $status="Overdue";
@@ -9165,17 +9189,29 @@ class Accounting extends MY_Controller
             }
         }
 
-        $pdf_data=array(
+        $pdf_data["data_pdf"][]=array(
             "invoice_date" => $inv->date_issued,
             "invoice_no"=>$inv->invoice_number,
             "payment"=>$total_amount_received,
             "balance_due"=>$balance,
+            "inv_location_scale"=>$inv->location_scale,
+            "inv_ship_from"=>$inv->bus_state,
+            "inv_ship_via"=>$inv->ship_via,
+            "inv_taxes"=>$inv->taxes,
+            "inv_grand_total"=>$inv->grand_total,
+            "inv_sub_total"=>$inv->sub_total,
+            "inv_shipping_to_address"=>$inv->shipping_to_address,
             "due_date"=>$inv->due_date,
             "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
             "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
             "business_name" => $customer_info->business_name,
+            "customer_id" => $customer_info->prof_id,
             "business_email" =>  $customer_info->business_email,
             "business_website" =>  $customer_info->website,
+            "bus_street" =>  $customer_info->bus_street,
+            "bus_city" =>  $customer_info->bus_city,
+            "bus_state" =>  $customer_info->bus_state,
+            "bus_postal_code" =>  $customer_info->bus_postal_code,
             "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
             "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
             "status" => $status

@@ -197,3 +197,48 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     height: 40%;
     margin: auto;
 }
+
+#item-modal #types-table .type-icon {
+    height: 100%;
+    background-position: center;
+    border-radius: 100%;
+    background-repeat: no-repeat;
+    background-color: #0077c5;
+}
+
+#item-modal #types-table tr:hover {
+    background-color: #fff;
+}
+
+#item-modal #types-table tr:last-child td {
+    border-bottom: 1px solid #dee2e6;
+}
+
+#item-modal #types-table tr td {
+    padding: 12px 30px;
+}
+
+#item-modal .no-icon {
+    background-image: url('/uploads/accounting/attachments/default-item.png');
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#item-modal .no-icon:hover,
+#item-modal .preview-uploaded:hover {
+    cursor: pointer;
+    border-color: #8d9096 !important;
+}
+
+#item-modal .preview-uploaded {
+    height: 100%;
+}
+
+#item-modal .type-icon {
+    height: 100%;
+    background-position: center;
+    border-radius: 100%;
+    background-repeat: no-repeat;
+    background-color: #0077c5;
+}
