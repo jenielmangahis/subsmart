@@ -58,10 +58,15 @@ class Mycrm extends MY_Controller {
 			$total_addon_price += $a->service_fee;
 		}
 
-		$day = date("d", strtotime($client->plan_date_registered));
-		$date_start = date("Y-m-" . $day);
-		$start_billing_period = date("d-M-Y", strtotime($date_start));
-		$end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
+		if( $client->renewal_date != '' ){
+			$start_billing_period = date("d-M-Y", strtotime($client->renewal_date));
+			$end_billing_period   = date("d-M-Y", strtotime($client->plan_date_expiration));
+		}else{
+			$day = date("d", strtotime($client->plan_date_registered));
+			$date_start = date("Y-m-" . $day);
+			$start_billing_period = date("d-M-Y", strtotime($date_start));
+			$end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
+		}	
 
         $default_plan_feature = plan_default_features();
         if( $plan->plan_name == 'Simple Start' ){
@@ -600,6 +605,10 @@ class Mycrm extends MY_Controller {
 
         $company_id = logged('company_id');
         $client = $this->Clients_model->getById($company_id);
+        if( $client->is_plan_active == 1  ){
+        	//return redirect('mycrm/membership');
+        }
+
         $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
         $nsPlans  = $this->NsmartPlan_model->getAll(); 
         $addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
@@ -662,6 +671,10 @@ class Mycrm extends MY_Controller {
 
         $company_id = logged('company_id');
         $client = $this->Clients_model->getById($company_id);
+        if( $client->is_plan_active == 1  ){
+        	//return redirect('mycrm/membership');
+        }
+
         $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
         $nsPlans  = $this->NsmartPlan_model->getAll(); 
         $addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
@@ -800,6 +813,7 @@ class Mycrm extends MY_Controller {
                     'recurring_payment_type' => $recurring_payment_type,
                     'payment_method' => 'converge',
                     'next_billing_date' => $billing_end,
+                    'renewal_date' => date("Y-m-d"),
                     'num_months_discounted' => 0
                 ];
                 $this->Clients_model->update($company_id, $data);
@@ -819,6 +833,9 @@ class Mycrm extends MY_Controller {
                 $data = ['order_number' => $order_number];
                 $this->CompanySubscriptionPayments_model->update($id, $data);
 
+                //Send mail
+                //$this->send_invoice($payment_id);
+
                 $is_success = 1;
             }else{
                 $message = $result['msg'];
@@ -829,11 +846,93 @@ class Mycrm extends MY_Controller {
         }
     }
 
+    public function send_invoice($payment_id)
+    {
+    	$this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
 
+        $company_id = logged('company_id');        
+        $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $this->page_data['payment'] = $payment;
+        $this->page_data['company'] = $company;
+        $content    = $this->load->view('mycrm/email_template/invoice', $this->page_data, true);
+        $attachment = $this->create_attachment_invoice($payment_id);
+
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+        $subject = 'nSmarTrac: Order# ' . $payment->order_number;
+
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+        $mail->addAttachment($attachment);
+        $mail->MsgHTML($content);
+        $mail->addAddress('bryann.revina@gmail.com');
+        $mail->send();
+        
+        return true;
+    }
+
+    public function create_attachment_invoice($payment_id){
+
+    	$this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        
+        $company_id = logged('company_id');
+        $payment    = $this->CompanySubscriptionPayments_model->getById($id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $this->page_data['payment']   = $payment;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('mycrm/subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
+
+        $this->load->library('Reportpdf');
+        $title = 'subscription_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetMargins(10, 5, 10, 0, true);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        //$obj_pdf->SetFont('courierI', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $obj_pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        ob_clean();
+        $obj_pdf->lastPage();
+        // $obj_pdf->Output($title, 'I');
+        $filename = strtolower($payment->order_number) . ".pdf";
+        $file     = dirname(__DIR__, 2) . '/uploads/subscription_invoice/' . $filename;
+        $obj_pdf->Output($file, 'F');
+        //$obj_pdf->Output($file, 'F');
+        return $file;
+    }
 }
 
 
 
-/* End of file Comapny.php */
+/* End of file Mycrm.php */
 
 /* Location: ./application/controllers/Mycrm.php */

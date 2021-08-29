@@ -152,7 +152,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-md-4">
                     <strong>Billing Cycle</strong>
                 </div>
-                <div class="col-md-5">1 month</div>
+                <div class="col-md-5">1 <?= $client->recurring_payment_type == 'month' ? 'Monthly' : 'year'; ?></div>
             </div>
             <div class="row margin-bottom-sec">
                 <div class="col-md-4">
