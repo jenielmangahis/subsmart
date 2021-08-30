@@ -6,6 +6,7 @@
                     id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"
                     class="customer_checkbox"
                     data-row-type="<?=$type?>"
+                    data-invoice-id="<?=$invoice_id?>"
                     data-row-status="<?=$status?>">
                 <label
                     for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"><span></span></label>

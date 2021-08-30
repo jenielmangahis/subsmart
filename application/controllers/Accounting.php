@@ -80,6 +80,7 @@ class Accounting extends MY_Controller
             array(
                 array("Dashboard",  array()),
                 array("Banking",    array('Link Bank','Rules','Receipts','Tags')),
+                array("Cash Flow",   array()),
                 array("Expenses",   array('Expenses','Vendors')),
                 array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
                 array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
@@ -92,6 +93,7 @@ class Accounting extends MY_Controller
             array(
                 array('/accounting/banking',array()),
                 array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
+                array('/accounting/cashflowplanner',array()),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
                 array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
@@ -9191,30 +9193,33 @@ class Accounting extends MY_Controller
 
         $pdf_data["data_pdf"][]=array(
             "invoice_date" => $inv->date_issued,
-            "invoice_no"=>$inv->invoice_number,
-            "payment"=>$total_amount_received,
-            "balance_due"=>$balance,
-            "inv_location_scale"=>$inv->location_scale,
-            "inv_ship_from"=>$inv->bus_state,
-            "inv_ship_via"=>$inv->ship_via,
-            "inv_taxes"=>$inv->taxes,
-            "inv_grand_total"=>$inv->grand_total,
-            "inv_sub_total"=>$inv->sub_total,
-            "inv_shipping_to_address"=>$inv->shipping_to_address,
-            "due_date"=>$inv->due_date,
-            "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
-            "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
-            "business_name" => $customer_info->business_name,
-            "customer_id" => $customer_info->prof_id,
-            "business_email" =>  $customer_info->business_email,
-            "business_website" =>  $customer_info->website,
-            "bus_street" =>  $customer_info->bus_street,
-            "bus_city" =>  $customer_info->bus_city,
-            "bus_state" =>  $customer_info->bus_state,
-            "bus_postal_code" =>  $customer_info->bus_postal_code,
-            "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
-            "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
-            "status" => $status
+                "invoice_no"=>$inv->invoice_number,
+                "payment"=>$total_amount_received,
+                "balance_due"=>$balance,
+                "inv_location_scale"=>$inv->location_scale,
+                "inv_ship_from"=>$inv->bus_state,
+                "inv_ship_via"=>$inv->ship_via,
+                "inv_taxes"=>$inv->taxes,
+                "inv_grand_total"=>$inv->grand_total,
+                "inv_sub_total"=>$inv->sub_total,
+                "inv_shipping_to_address"=>$inv->shipping_to_address,
+                "due_date"=>$inv->due_date,
+                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "customer_mail_add" => $customer_info->acs_mail_add,
+                "customer_phone_h" => $customer_info->customer_phone_h,
+                "customer_city" => $customer_info->acs_city,
+                "business_name" => $customer_info->business_name,
+                "customer_id" => $customer_info->prof_id,
+                "business_email" =>  $customer_info->business_email,
+                "business_website" =>  $customer_info->website,
+                "bus_street" =>  $customer_info->bus_street,
+                "bus_city" =>  $customer_info->bus_city,
+                "bus_state" =>  $customer_info->bus_state,
+                "bus_postal_code" =>  $customer_info->bus_postal_code,
+                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+                "status" => $status
         );
         if ($action=="invoice-packaging-slip") {
             $html_pdf="accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
@@ -9257,5 +9262,282 @@ class Accounting extends MY_Controller
         $data->invoice_items = $invoice_items;
         $data->invoice_details = $inv;
         echo json_encode($data);
+    }
+    public function generate_customer_invoice_packaging_slip_by_batch()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $invoice_ids = $this->input->post("invoice_ids");
+        for ($ids_i=0; $ids_i<count($invoice_ids);$ids_i++) {
+            $invoice_id = $invoice_ids[$ids_i];
+            $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+            $customer_id = $inv->customer_id;
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+                
+                
+            $receivable_payment = 0;
+            $total_amount_received =0;
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment=$inv->grand_total;
+            }
+            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+            }
+    
+            $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+                $status="Overdue";
+            } else {
+                if ($balance <= 0) {
+                    $status="Paid";
+                } else {
+                    $status="Open";
+                }
+            }
+
+            $pdf_data["data_pdf"][]=array(
+                "invoice_date" => $inv->date_issued,
+                "invoice_no"=>$inv->invoice_number,
+                "payment"=>$total_amount_received,
+                "balance_due"=>$balance,
+                "inv_location_scale"=>$inv->location_scale,
+                "inv_ship_from"=>$inv->bus_state,
+                "inv_ship_via"=>$inv->ship_via,
+                "inv_taxes"=>$inv->taxes,
+                "inv_grand_total"=>$inv->grand_total,
+                "inv_sub_total"=>$inv->sub_total,
+                "inv_shipping_to_address"=>$inv->shipping_to_address,
+                "due_date"=>$inv->due_date,
+                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "customer_mail_add" => $customer_info->acs_mail_add,
+                "customer_phone_h" => $customer_info->customer_phone_h,
+                "customer_city" => $customer_info->acs_city,
+                "business_name" => $customer_info->business_name,
+                "customer_id" => $customer_info->prof_id,
+                "business_email" =>  $customer_info->business_email,
+                "business_website" =>  $customer_info->website,
+                "bus_street" =>  $customer_info->bus_street,
+                "bus_city" =>  $customer_info->bus_city,
+                "bus_state" =>  $customer_info->bus_state,
+                "bus_postal_code" =>  $customer_info->bus_postal_code,
+                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+                "status" => $status
+            );
+        }
+        $pdf_file_name = "batched_inv_".$customer_id."_portalappinv.pdf";
+
+        $html_pdf="accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
+        $orientation = "P";
+        $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
+
+        $data = new stdClass();
+        $data->status = "success";
+        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        $data->invoice_ids=$invoice_ids;
+        echo json_encode($data);
+    }
+    public function print_transactions_by_batch()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $invoice_ids = $this->input->post("invoice_ids");
+        for ($ids_i=0; $ids_i<count($invoice_ids);$ids_i++) {
+            $invoice_id = $invoice_ids[$ids_i];
+            $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+            $customer_id = $inv->customer_id;
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+                
+                
+            $receivable_payment = 0;
+            $total_amount_received =0;
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment=$inv->grand_total;
+            }
+            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+            }
+    
+            $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+                $status="Overdue";
+            } else {
+                if ($balance <= 0) {
+                    $status="Paid";
+                } else {
+                    $status="Open";
+                }
+            }
+
+            $pdf_data["data_pdf"][]=array(
+                "invoice_date" => $inv->date_issued,
+                "invoice_no"=>$inv->invoice_number,
+                "payment"=>$total_amount_received,
+                "balance_due"=>$balance,
+                "inv_location_scale"=>$inv->location_scale,
+                "inv_ship_from"=>$inv->bus_state,
+                "inv_ship_via"=>$inv->ship_via,
+                "inv_taxes"=>$inv->taxes,
+                "inv_grand_total"=>$inv->grand_total,
+                "inv_sub_total"=>$inv->sub_total,
+                "inv_shipping_to_address"=>$inv->shipping_to_address,
+                "due_date"=>$inv->due_date,
+                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "customer_mail_add" => $customer_info->acs_mail_add,
+                "customer_phone_h" => $customer_info->customer_phone_h,
+                "customer_city" => $customer_info->acs_city,
+                "business_name" => $customer_info->business_name,
+                "customer_id" => $customer_info->prof_id,
+                "business_email" =>  $customer_info->business_email,
+                "business_website" =>  $customer_info->website,
+                "bus_street" =>  $customer_info->bus_street,
+                "bus_city" =>  $customer_info->bus_city,
+                "bus_state" =>  $customer_info->bus_state,
+                "bus_postal_code" =>  $customer_info->bus_postal_code,
+                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+                "status" => $status
+            );
+        }
+        $pdf_file_name = "batched_transactions_".$customer_id."_portalappinv.pdf";
+
+        $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+        $orientation = "P";
+        $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
+
+        $data = new stdClass();
+        $data->status = "success";
+        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        $data->invoice_ids=$invoice_ids;
+        echo json_encode($data);
+        # code...
+    }
+    public function send_transaction_by_batch()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $invoice_ids = $this->input->post("invoice_ids");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+        for ($ids_i=0; $ids_i<count($invoice_ids);$ids_i++) {
+            $invoice_id = $invoice_ids[$ids_i];
+            $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+                
+                
+            $receivable_payment = 0;
+            $total_amount_received =0;
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment=$inv->grand_total;
+            }
+            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+            }
+    
+            $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+                $status="Overdue";
+            } else {
+                if ($balance <= 0) {
+                    $status="Paid";
+                } else {
+                    $status="Open";
+                }
+            }
+
+            $pdf_data["data_pdf"][]=array(
+                "invoice_date" => $inv->date_issued,
+                "invoice_no"=>$inv->invoice_number,
+                "payment"=>$total_amount_received,
+                "balance_due"=>$balance,
+                "inv_location_scale"=>$inv->location_scale,
+                "inv_ship_from"=>$inv->bus_state,
+                "inv_ship_via"=>$inv->ship_via,
+                "inv_taxes"=>$inv->taxes,
+                "inv_grand_total"=>$inv->grand_total,
+                "inv_sub_total"=>$inv->sub_total,
+                "inv_shipping_to_address"=>$inv->shipping_to_address,
+                "due_date"=>$inv->due_date,
+                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "customer_mail_add" => $customer_info->acs_mail_add,
+                "customer_phone_h" => $customer_info->customer_phone_h,
+                "customer_city" => $customer_info->acs_city,
+                "business_name" => $customer_info->business_name,
+                "customer_id" => $customer_info->prof_id,
+                "business_email" =>  $customer_info->business_email,
+                "business_website" =>  $customer_info->website,
+                "bus_street" =>  $customer_info->bus_street,
+                "bus_city" =>  $customer_info->bus_city,
+                "bus_state" =>  $customer_info->bus_state,
+                "bus_postal_code" =>  $customer_info->bus_postal_code,
+                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+                "status" => $status
+            );
+        }
+        $pdf_file_name = "batched_transactions_".$customer_id."_portalappinv.pdf";
+
+        $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+        $orientation = "P";
+        $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
+
+        $subject=$customer_info->business_name." || Transactions";
+
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        //get job data
+
+        $this->page_data['customer_name'] = $customer_info->first_name.' '.$customer_info->last_name;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/'.$pdf_file_name);
+
+        $mail->Body =  'Send Transactions';
+        $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        $mail->MsgHTML($content);
+        $mail->addAddress($customer_info->acs_email);
+
+        $data = new stdClass();
+        $data->status = "success";
+        if (!$mail->Send()) {
+            $data->status = "error";
+            $data->status = "Mailer Error: ".$mail->ErrorInfo;
+            exit;
+        }
+        echo json_encode($data);
+    }
+
+    public function cashflowplanner()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+
+        $this->page_data['page_title'] = "Cash Flow";
+        $this->load->view('accounting/cashflowplanner', $this->page_data);
     }
 }

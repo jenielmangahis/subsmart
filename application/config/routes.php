@@ -380,7 +380,6 @@ $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
 $route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
 $route['accounting/products-and-services/item-form/(:any)'] = 'accounting_controllers/products_and_services/get_item_form/$1';
-$route['accounting/products-and-services/items-dropdown'] = 'accounting_controllers/products_and_services/get_item_dropdown';
 $route['accounting/products-and-services/inactive/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1";
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting_controllers/products_and_services/create/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting_controllers/products_and_services/update/$1/$2';

@@ -176,15 +176,15 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     opacity: .75;
 }
 
-#modal-container .modal .action-bar ul li a:after {
+#modal-container .modal:not(#item-modal) .action-bar ul li a:after {
     width: 0;
 }
 
-#modal-container .modal .action-bar ul li a {
+#modal-container .modal:not(#item-modal) .action-bar ul li a {
     font-size: 20px;
 }
 
-#modal-container .modal .action-bar ul li {
+#modal-container .modal:not(#item-modal) .action-bar ul li {
     margin-right: 5px;
 }
 
@@ -241,4 +241,9 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     border-radius: 100%;
     background-repeat: no-repeat;
     background-color: #0077c5;
+}
+
+#item-modal .modal-footer .dropdown-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }

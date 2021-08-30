@@ -26,6 +26,8 @@ var custAttFiles = [];
 var catDetailsInputs = '';
 var catDetailsBlank = '';
 
+var itemTypeSelection = '';
+
 var submitType = 'save-and-close';
 
 var dropdownEl = null;
@@ -54,7 +56,12 @@ const dropdownFields = [
     'inventory-adj-account',
     'credit-card-account',
     'service',
-    'product'
+    'product',
+    'category',
+    'inv-asset-account',
+    'income-account',
+    'item-expense-account',
+    'sales-tax-category'
 ];
 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
@@ -1524,16 +1531,18 @@ $(function() {
     $(document).on('change', '#inventory-adjustments-table select[name="product[]"]', function() {
         var input = $(this);
 
-        $.get(`/accounting/get-item-details/${input.val()}`, function(res) {
-            var result = JSON.parse(res);
-
-            input.parent().next().html(result.item.description);
-
-            input.parent().next().next().children('select').html('<option value="" disabled selected>&nbsp;</option>');
-            for (i in result.locations) {
-                input.parent().next().next().children('select').append(`<option value="${result.locations[i].id}" data-quantity="${result.locations[i].qty}">${result.locations[i].name}</option>`);
-            }
-        });
+        if(input.val() !== 'add-new') {
+            $.get(`/accounting/get-item-details/${input.val()}`, function(res) {
+                var result = JSON.parse(res);
+    
+                input.parent().next().html(result.item.description);
+    
+                input.parent().next().next().children('select').html('<option value="" disabled selected>&nbsp;</option>');
+                for (i in result.locations) {
+                    input.parent().next().next().children('select').append(`<option value="${result.locations[i].id}" data-quantity="${result.locations[i].qty}">${result.locations[i].name}</option>`);
+                }
+            });
+        }
     });
 
     $(document).on('change', '#inventory-adjustments-table select[name="location[]"]', function() {
@@ -3527,15 +3536,58 @@ $(function() {
     $(document).on('click', '#modal-container #item-modal #types-table tr', function(e) {
         var type = e.currentTarget.dataset.href;
 
+        itemTypeSelection = $('#modal-container #item-modal .modal-content').html();
         $.get('/accounting/item-form/'+type, function(result) {
             $('#item-modal .modal-content').html(result);
     
+            if(dropdownEl !== null) {
+                $('#item-modal form').removeAttr('action');
+                $('#item-modal form').removeAttr('method');
+                $('#item-modal form').removeAttr('enctype');
+                $('#item-modal form').attr('id', `ajax-${type}-item-form`);
+            }
+
             $(`#item-modal .datepicker input`).datepicker({
                 uiLibrary: 'bootstrap'
             });
     
-            $(`#item-modal select`).select2({
-                dropdownParent: $('#item-modal')
+            $('#item-modal select').each(function() {
+                var type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+                if (dropdownFields.includes(type)) {
+                    $(this).select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: type,
+                                    modal: 'item-modal'
+                                }
+
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect,
+                        dropdownParent: $('#item-modal')
+                    });
+                } else {
+                    var options = $(this).find('option');
+                    if (options.length > 10) {
+                        $(this).select2({
+                            dropdownParent: $('#item-modal')
+                        });
+                    } else {
+                        $(this).select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#item-modal')
+                        });
+                    }
+                }
             });
     
             $(`#item-modal`).modal({
@@ -3543,6 +3595,122 @@ $(function() {
                 keyboard: false
             });
         });
+    });
+
+    $(document).on('click', '#modal-container #item-modal #select-item-type', function(e) {
+        e.preventDefault();
+
+        $('#modal-container #item-modal .modal-content').html(itemTypeSelection);
+    });
+
+    $(document).on('click', '#modal-container #item-modal #remove-item-icon', function(e) {
+        e.preventDefault();
+
+        $('#modal-container #item-modal #icon').val('').trigger('change');
+    });
+
+    $(document).on('change', '#modal-container #item-modal #icon', function() {
+        if($(this)[0].files && $(this)[0].files[0]) {
+            var reader = new FileReader();
+    
+            reader.onload = function(e) {
+                $('#modal-container #item-modal img.image-prev').attr('src', e.target.result);
+            }
+    
+            reader.readAsDataURL($(this)[0].files[0]);
+    
+            $('#modal-container #item-modal img.image-prev').parent().addClass('d-flex justify-content-center');
+            $('#modal-container #item-modal img.image-prev').parent().removeClass('hide');
+            $('#modal-container #item-modal img.image-prev').parent().prev().addClass('hide');
+        } else {
+            $('#modal-container #item-modal img.image-prev').parent().removeClass('d-flex justify-content-center');
+            $('#modal-container #item-modal img.image-prev').parent().addClass('hide');
+            $('#modal-container #item-modal img.image-prev').parent().prev().removeClass('hide');
+        }
+    });
+
+    $(document).on('click', '#modal-container #item-modal #storage-locations tbody tr td:not(:last-child)', function() {
+        if($(this).parent().find('input[name="location_name[]"]').length < 1) {
+            $(this).parent().children('td:first-child').append('<input type="text" name="location_name[]" class="form-control">');
+            $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+        }
+    });
+
+    $(document).on('click', '#modal-container #item-modal #addBundleItem, #modal-container #item-modal #addLocationLine', function(e) {
+        e.preventDefault();
+        $(this).prev().children('tbody').append(`
+        <tr>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+        </tr>
+        `);
+    });
+
+    $(document).on('click', '#modal-container #item-modal #bundle-items-table .deleteRow, #modal-container #item-modal #storage-locations .deleteRow', function(e) {
+        e.preventDefault();
+    
+        if($(this).parent().parent().parent().children('tr').length > 2) {
+            $(this).parent().parent().remove();
+        } else {
+            $(this).parent().parent().children('td:not(:last-child)').html('');
+        }
+    });
+
+    $(document).on('click', '#modal-container #item-modal #bundle-items-table tbody tr td:not(:last-child)', function() {
+        if($(this).parent().find('select[name="item[]"]').length < 1) {
+            $(this).parent().children('td:first-child').append('<select name="item[]" class="form-control"></select>');
+            $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+
+            $(this).parent().find('select[name="item[]"]').select2({
+                ajax: {
+                    url: '/accounting/get-dropdown-choices',
+                    dataType: 'json',
+                    data: function(params) {
+                        var query = {
+                            search: params.term,
+                            type: 'public',
+                            field: 'item',
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public&field=[type]
+                        return query;
+                    }
+                },
+                templateResult: formatResult,
+                templateSelection: optionSelect,
+                dropdownParent: $('#modal-container #item-modal')
+            });
+        }
+    });
+
+    $(document).on('change', '#modal-container #item-modal #selling, #modal-container #item-modal #purchasing', function() {
+        if($(this).prop('checked') === false) {
+            $(this).parent().parent().parent().parent().children('div:not(:first-child)').addClass('hide');
+    
+            if($(this).attr('id') === 'selling') {
+                $(this).parent().parent().parent().parent().parent().parent().next().addClass('hide');
+    
+                if($('#modal-container #item-modal #purchasing').prop('checked') === false) {
+                    $('#modal-container #item-modal #purchasing').prop('checked', true).trigger('change');
+                }
+            } else {
+                if($('#modal-container #item-modal #selling').prop('checked') === false) {
+                    $('#modal-container #item-modal #selling').prop('checked', true).trigger('change');
+                }
+            }
+        } else {
+            $(this).parent().parent().parent().parent().children('div:not(:first-child)').removeClass('hide');
+    
+            if($(this).attr('id') === 'selling') {
+                $(this).parent().parent().parent().parent().parent().parent().next().removeClass('hide');
+            }
+        }
     });
 
     $(document).on('submit', '#account-modal #ajax-add-account', function(e) {
@@ -5919,4 +6087,62 @@ const initAccountModal = () => {
     } else {
         $('#modal-container #account-modal').modal('show');
     }
+}
+
+// const selectItemType = () => {
+// 	$(`#modal-container #item-modal .modal-container`).html(itemTypeSelection);
+// }
+
+const changeItemType = (type) => {
+	var action = $(`#${type}-item-form`).attr('action');
+	var formId = $(`#${type}-item-form`).attr('id');
+	form = new FormData(document.getElementById(`${type}-item-form`));
+	$(`#${type}-form-modal`).modal('hide');
+	$('#type-selection-modal').modal('show');
+	$('#type-selection-modal table tbody tr:last-child').hide();
+
+	$(document).on('show.bs.modal', '#inventory-form-modal, #non-inventory-form-modal, #service-form-modal', function() {
+		var modalId = $(this).attr('id');
+		switch(modalId) {
+			case 'inventory-form-modal' :
+				action = action.replace('/'+type, '/inventory');
+				type = 'inventory';
+			break;
+			case 'non-inventory-form-modal' :
+				action = action.replace('/'+type, '/non-inventory');
+				type = 'non-inventory';
+			break;
+			case 'service-form-modal' :
+				action = action.replace('/'+type, '/service');
+				type = 'service';
+			break;
+		}
+
+		$(this).find('form').attr('action', action);
+		$(this).find('form').attr('id', `${type}-item-form`);
+		if(form.has('name')) {
+			for(var data  of form.entries()) {
+				if(data[0] !== 'icon') {
+					$(this).find(`[name="${data[0]}"]`).val(data[1]).trigger('change');
+				} else {
+					if(rowData.icon !== null && rowData.icon !== "") {
+						$(this).find('img.image-prev').attr('src', `/uploads/${rowData.icon}`);
+						$(this).find('img.image-prev').parent().addClass('d-flex justify-content-center');
+						$(this).find('img.image-prev').parent().removeClass('hide');
+						$(this).find('img.image-prev').parent().prev().addClass('hide');
+					}
+				}
+			}
+
+			if(form.has('selling')) {
+				$(this).find('#selling').prop('checked', true).trigger('change');
+			}
+
+			if(form.has('purchasing')) {
+				$(this).find('#purchasing').prop('checked', true).trigger('change');
+			}
+		}
+
+		form = new FormData();
+	});
 }

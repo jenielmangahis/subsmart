@@ -98,6 +98,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             border: solid 1px #5998BF;
             margin: 30px 0;
         }
+
         .cutter-dashed {
             border: dashed 1px #333333;
             margin: 30px 0;
@@ -148,21 +149,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
         h2 {
             font-size: 15px;
         }
-        .overlay-status{
+
+        .overlay-status {
             position: absolute;
             top: 300px;
             z-index: 1;
         }
-        .overlay-status h1.Open{
+
+        .overlay-status h1.Open {
             color: #F2B835;
         }
-        .overlay-status h1.Paid{
+
+        .overlay-status h1.Paid {
             color: #2BA01D;
         }
-        .overlay-status h1.Overdue{
-           color: #CD5133;
+
+        .overlay-status h1.Overdue {
+            color: #CD5133;
         }
-        .overlay-status h1{
+
+        .overlay-status h1 {
             font-size: 70px;
             text-transform: uppercase;
             text-align: center;
@@ -174,25 +180,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
+
+    <?php
+    for ($data_i=0; $data_i< count($data_pdf); $data_i++) {
+        ?>
     <table style="width: 100%;">
         <tbody>
             <tr>
                 <td style="width: 60%;">
                     <div class="business-info">
                         <h2 class="business-name" style="margin: 0;font-size: 15px;">
-                            <?=$business_name?>
+                            <?=$data_pdf[$data_i]["business_name"]?>
                         </h2>
                         <p class="address-strees" style="margin: 0;">
-                            <?=$business_email?>
+                            <?=$data_pdf[$data_i]["business_email"]?>
                         </p>
                         <p class="address-state">
-                            <?=$business_website?>
+                            <?=$data_pdf[$data_i]["business_website"]?>
                         </p>
                     </div>
                 </td>
                 <td style="width: 40%;">
                     <div class="business-logo">
-                        <img src="<?=base_url($business_logo)?>"
+                        <img src="<?=base_url($data_pdf[$data_i]["business_logo"])?>"
                             alt="">
                     </div>
                 </td>
@@ -222,7 +232,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <td style="vertical-align:top;">
                             <div class="customer-info">
                                 <h2 style="font-size: 15px;">BILL To</h2>
-                                <p class="customer-name"><?=$customer_name?>
+                                <p class="customer-name"><?=$data_pdf[$data_i]["customer_name"]?>
                                 </p>
                             </div>
                         </td>
@@ -244,16 +254,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </td>
                                                 <td style="text-align:left;">
                                                     <p class="sales-number">
-                                                        <span><?=$invoice_no?></span>
+                                                        <span><?=$data_pdf[$data_i]["invoice_no"]?></span>
                                                     </p>
                                                     <p class="receipt-date">
-                                                        <span><?=date("m/d/Y", strtotime($invoice_date))?></span>
+                                                        <span><?=date("m/d/Y", strtotime($data_pdf[$data_i]["invoice_date"]))?></span>
                                                     </p>
                                                     <p class="receipt-date">
-                                                        <span><?=date("m/d/Y", strtotime($due_date))?></span>
+                                                        <span><?=date("m/d/Y", strtotime($data_pdf[$data_i]["due_date"]))?></span>
                                                     </p>
                                                     <p class="receipt-date">
-                                                        <span><?=$terms?></span>
+                                                        <span><?=$data_pdf[$data_i]["terms"]?></span>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -291,7 +301,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </thead>
             <tbody>
                 <?php
-                    foreach ($invoice_items as $item) {
+                    foreach ($data_pdf[$data_i]["invoice_items"] as $item) {
                         ?>
                 <tr>
                     <td style="text-align: left;">
@@ -308,8 +318,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </td>
                 </tr>
                 <?php
-                    }
-                ?>
+                    } ?>
             </tbody>
         </table>
     </div>
@@ -328,8 +337,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <p>Balance Due</p>
                                     </td>
                                     <td>
-                                        <p>$<?=number_format($payment, 2, '.', ',')?></p>
-                                        <p>$<?=number_format($balance_due, 2, '.', ',')?></p>
+                                        <p>$<?=number_format($data_pdf[$data_i]["payment"], 2, '.', ',')?>
+                                        </p>
+                                        <p>$<?=number_format($data_pdf[$data_i]["balance_due"], 2, '.', ',')?>
+                                        </p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -340,10 +351,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </table>
     </div>
     <div class="overlay-status">
-        <h1 class="<?=$status?>">
-            <?=$status?>
+        <h1
+            class="<?=$data_pdf[$data_i]["status"]?>">
+            <?=$data_pdf[$data_i]["status"]?>
         </h1>
     </div>
+    <div style="width: 100%; <?php if ($data_i< count($data_pdf)-1) {
+                        echo "page-break-after: always;";
+                    } ?>"></div>
+    <?php
+    }
+    ?>
 </body>
 
 </html>

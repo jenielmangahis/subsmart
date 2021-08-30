@@ -194,9 +194,18 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   const $error = $("#dueDateInputs .dropdownWithSearchContainer__error");
 
   const { data: dueDates } = await fetchTaxedInvoicesDueDates();
+
+  // Maybe use find function? We're just expecting here
+  // that the last element is for the current month.
+  const currentMonth = dueDates[dueDates.length - 1];
+
   $refreshListBtn.prop("disabled", false);
   [$dueStart, $dueEnd].forEach(($element) => {
     const element = $element.get(0);
+
+    // We expect that the list shows the records of the current month.
+    $element.find("input").val(currentMonth);
+
     const dropdown = new Accounting__DropdownWithSearch(element, dueDates);
     dropdown.onChange = function () {
       const dueEnd = new Date($dueEndInput.val()).getTime();

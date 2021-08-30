@@ -44,7 +44,7 @@ include viewPath('includes/header');
 <template id="upcomingItemTemplate">
     <div class="taxItem taxItem--isUpcoming">
         <div>
-            <div class="taxItem__textSecondary" data-value="date"></div>
+            <div class="taxItem__textSecondary" data-value="due_date"></div>
             <div class="taxItem__textPrimary" data-value="address"></div>
         </div>
         <div class="text-right">
@@ -183,7 +183,7 @@ include viewPath('includes/header');
                             </li>
 
                             <li class="shortcuts__item">
-                                <a href="#" class="shortcuts__itemMain">
+                                <a href="<?php echo url('/accounting/products-and-services') ?>" class="shortcuts__itemMain">
                                     <div class="shortcuts__logo">
                                         <img src="<?php echo $url->assets ?>img/taxlogo/l2.png">
                                     </div>
@@ -197,7 +197,7 @@ include viewPath('includes/header');
                             </li>
 
                             <li class="shortcuts__item">
-                                <a href="#" class="shortcuts__itemMain">
+                                <a href="<?php echo url('/accounting/customers') ?>" class="shortcuts__itemMain">
                                     <div class="shortcuts__logo">
                                         <img src="<?php echo $url->assets ?>img/taxlogo/l3.png">
                                     </div>
@@ -211,7 +211,7 @@ include viewPath('includes/header');
                             </li>
 
                             <li class="shortcuts__item">
-                                <a href="#" class="shortcuts__itemMain">
+                                <a href="<?php echo url('/accounting/reports') ?>" class="shortcuts__itemMain">
                                     <div class="shortcuts__logo">
                                         <img src="<?php echo $url->assets ?>img/taxlogo/l4.png">
                                     </div>

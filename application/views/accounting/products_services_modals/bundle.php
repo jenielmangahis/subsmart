@@ -13,7 +13,7 @@
                             <div class="type-icon" style="background-image: url('/assets/img/accounting/bundle.png')"></div>
                         </div>
                         <div class="col-sm-10 d-flex align-items-center">
-                            <h5><span>Bundle</span></h5> &nbsp;&nbsp; <a href="#" class="text-info" onclick="selectType('bundle')"><span>Change type</span></a>
+                            <h5><span>Bundle</span></h5> &nbsp;&nbsp; <a href="#" class="text-info" id="select-item-type"><span>Change type</span></a>
                         </div>
                     </div>
                 </th>
@@ -43,15 +43,17 @@
                             </div>
                             <div class="action-bar h-25 d-flex align-items-center justify-content-center">
                                 <ul>
-                                    <li><a href="#" onclick="document.getElementById('icon').click()"><i class="fa fa-pencil"></i></li>
-                                    <li><a href="#" onclick="removeIcon()"><i class="fa fa-trash-o"></i></a></li>
+                                    <li><a href="#" onclick="document.getElementById('icon').click()"><i class="fa fa-pencil"></i></a></li>
+                                    <li><a href="#" id="remove-item-icon"><i class="fa fa-trash-o"></i></a></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group form-check" style="margin-bottom: 0 !important">
-                                <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
-                                <label for="rebate-item" class="form-check-lable">Rebate Item</label>
+                            <div class="form-group form-check p-0" style="margin-bottom: 0 !important">
+                                <div class="checkbox checkbox-sec m-0">
+                                    <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
+                                    <label for="rebate-item" class="form-check-lable">Rebate Item</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,11 +76,13 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <label>Products/services included in the bundle</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="displayBundle" name="display_on_print" value="1">
-                                <label class="form-check-label" for="displayBundle">
-                                    Display bundle components when printing or sending transactions
-                                </label>
+                            <div class="form-check p-0">
+                                <div class="checkbox checkbox-sec">
+                                    <input class="form-check-input" type="checkbox" id="displayBundle" name="display_on_print" value="1">
+                                    <label class="form-check-label" for="displayBundle">
+                                        Display bundle components when printing or sending transactions
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -113,14 +117,14 @@
 </div>
 <div class="modal-footer">
     <div class="btn-group dropup float-right">
-        <button type="submit" class="btn btn-success">
+        <button type="button" class="btn btn-success" id="save-and-close">
             Save and close
         </button>
         <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Save and new</a>
+            <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
         </div>
     </div>
 </div>

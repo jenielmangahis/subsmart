@@ -417,7 +417,17 @@ $('#types-table tr').on('click', function(e) {
 	$('#type-selection-modal').modal('hide');
 
 	$.get('products-and-services/item-form/'+type, function(result) {
-		$('.modal-form-container').html(result);
+		$('.modal-form-container').html(`
+		<div class="modal-right-side">
+			<div class="modal right fade" id="${type}-form-modal" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						${result}
+					</div>
+				</div>
+			</div>
+		</div>
+		`);
 
 		$(`#${type}-form-modal .datepicker input`).datepicker({
 			uiLibrary: 'bootstrap'
