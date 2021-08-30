@@ -47,4 +47,9 @@ class Account_detail_model extends MY_Model {
 		$this->db->where('acc_detail_id', $id);
 		return $this->db->get($this->table)->row();
 	}
+	public function getByName($name)
+	{
+		$this->db->where('acc_detail_name', $name);
+		return $this->db->get($this->table)->row();
+	}
 }

@@ -51,6 +51,41 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getParentAccsByAccAndDetailType($status, $accTypeId, $accDetailId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('active', $status);
+		$this->db->where('account_id', $accTypeId);
+		if(is_array($accDetailId)) {
+			$this->db->where_in('acc_detail_id', $accDetailId);
+		} else {
+			$this->db->where('acc_detail_id', $accDetailId);
+		}
+		$this->db->where('parent_acc_id', null);
+
+		$this->db->or_where('company_id', $company_id);
+		$this->db->where('active', $status);
+		$this->db->where('account_id', $accTypeId);
+		if(is_array($accDetailId)) {
+			$this->db->where_in('acc_detail_id', $accDetailId);
+		} else {
+			$this->db->where('acc_detail_id', $accDetailId);
+		}
+		$this->db->where('parent_acc_id', 0);
+
+		$this->db->or_where('company_id', $company_id);
+		$this->db->where('active', $status);
+		$this->db->where('account_id', $accTypeId);
+		if(is_array($accDetailId)) {
+			$this->db->where_in('acc_detail_id', $accDetailId);
+		} else {
+			$this->db->where('acc_detail_id', $accDetailId);
+		}
+		$this->db->where('parent_acc_id', '');
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
 	public function getByAccountType($accTypeId, $parentAccId = null, $company_id)
 	{
 		$this->db->where('company_id', $company_id);

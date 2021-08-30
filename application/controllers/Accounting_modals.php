@@ -5274,6 +5274,48 @@ class Accounting_modals extends MY_Controller
             case 'product' :
                 $return = $this->get_products_choices($return, $search);
             break;
+            case 'item' :
+                $return = $this->get_items_choices($return, $search);
+            break;
+            case 'category' :
+                $return = $this->get_product_category_choices($return, $search);
+            break;
+            case 'inv-asset-account' :
+                $accountTypes = [
+                    'Other Current Assets'
+                ];
+
+                $detailTypes = [
+                    'Inventory'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
+            break;
+            case 'income-account' :
+                $accountTypes = [
+                    'Income'
+                ];
+
+                $detailTypes = [
+                    'Sales of Product Income'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
+            break;
+            case 'item-expense-account' :
+                $accountTypes = [
+                    'Cost of Goods Sold'
+                ];
+
+                $detailTypes = [
+                    'Supplies & Materials - COGS'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes, $detailTypes);
+            break;
+            case 'sales-tax-category' :
+                $return = $this->get_tax_rates_choices($return, $search);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -5353,7 +5395,7 @@ class Accounting_modals extends MY_Controller
         if ($field === 'pay-bills-vendor') {
             array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
         } else {
-            if(!in_array($field, ['account-type', 'detail-type', 'parent-account']) && $this->input->get('modal') !== 'printChecksModal') {
+            if(!in_array($field, ['account-type', 'detail-type', 'parent-account']) && $this->input->get('modal') !== 'printChecksModal' && $field !== 'sales-tax-category') {
                 array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
             }
         }
@@ -5534,13 +5576,25 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_account_choices($choices, $search = null, $accountTypes)
+    private function get_account_choices($choices, $search = null, $accountTypes = [], $detailTypes = [])
     {
         $choices['results'] = [];
+
+        if(count($detailTypes) > 0) {
+            $detailTypeIds = [];
+            foreach($detailTypes as $detailType) {
+                $detailTypeIds[] = $this->account_detail_model->getByName($detailType)->acc_detail_id;
+            }
+        }
+
         foreach ($accountTypes as $typeName) {
             $accType = $this->account_model->getAccTypeByName($typeName);
 
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+            if(count($detailTypes) < 1) {
+                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+            } else {
+                $accounts = $this->chart_of_accounts_model->getParentAccsByAccAndDetailType(1, $accType->id, $detailTypeIds);
+            }
 
             if($search === null || $search === '') {
                 if (count($accounts) > 0) {
@@ -5763,6 +5817,34 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
+    private function get_items_choices($choices, $search = null)
+    {
+        $filters = [
+            'status' => [1]
+        ];
+        $items = $this->items_model->getItemsWithFilter($filters);
+
+        foreach($items as $item) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($item->title, $search);
+                if($stripos !== false) {
+                    $searched = substr($item->title, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $item->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $item->title)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $item->id,
+                    'text' => $item->title
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
     private function get_services_choices($choices, $search = null)
     {
         $services = $this->items_model->getItemsWithFilter(['type' => ['service', 'Service'], 'status' => [1]]);
@@ -5808,6 +5890,72 @@ class Accounting_modals extends MY_Controller
                     'text' => $product->title
                 ];
             }
+        }
+
+        return $choices;
+    }
+
+    private function get_product_category_choices($choices, $search = null)
+    {
+        $categories = $this->items_model->getItemCategories();
+
+        foreach($categories as $category) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($category->name, $search);
+                if($stripos !== false) {
+                    $searched = substr($category->name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $category->item_categories_id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $category->name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $category->item_categories_id,
+                    'text' => $category->name
+                ];
+            }
+        }
+
+        return $choices;
+    }
+
+    private function get_tax_rates_choices($choices, $search = null)
+    {
+        $rates = $this->TaxRates_model->getAllByCompanyId(getLoggedCompanyID());
+
+        foreach($rates as $rate) {
+            if($search !== null && $search !== '') {
+                $stripos = stripos($rate->name, $search);
+                if($stripos !== false) {
+                    $searched = substr($rate->name, $stripos, strlen($search));
+                    $choices['results'][] = [
+                        'id' => $rate->id,
+                        'text' => str_replace($searched, "<strong>$searched</strong>", $rate->name)
+                    ];
+                }
+            } else {
+                $choices['results'][] = [
+                    'id' => $rate->id,
+                    'text' => $rate->name
+                ];
+            }
+        }
+
+        if($search !== null && $search !== '') {
+            $stripos = stripos('Nontaxable', $search);
+            if($stripos !== false) {
+                $searched = substr('Nontaxable', $stripos, strlen($search));
+                $choices['results'][] = [
+                    'id' => 0,
+                    'text' => str_replace($searched, "<strong>$searched</strong>", 'Nontaxable')
+                ];
+            }
+        } else {
+            $choices['results'][] = [
+                'id' => 0,
+                'text' => 'Nontaxable'
+            ];
         }
 
         return $choices;

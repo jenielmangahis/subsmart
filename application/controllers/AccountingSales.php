@@ -117,68 +117,57 @@ class AccountingSales extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
+        if (empty($payload)) {
+            $payload['due_start'] = date('Y-m-01');
+            $payload['due_end'] = $payload['due_start'];
+        }
 
-        $records = [];
-        $statuses = ['overdue', 'due', 'upcoming'];
+        $dueStart = strtotime($payload['due_start']);
+        $dueStart = date('Y-m-d', $dueStart);
 
-        $currentDate = date('Y-m-d');
-        $nextWeekDate = date('Y-m-d', strtotime('+7 days'));
+        $dueEnd = strtotime($payload['due_end']);
+        $dueEnd = date('Y-m-t', $dueEnd);
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('taxes >', '0');
+
+        $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
+        $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $dueEnd);
+
+        $this->db->order_by("STR_TO_DATE(due_date, '%Y-%m-%d')", 'DESC', false);
+        $results = $this->db->get('invoices')->result();
 
         $companyIdMap = [];
+        $records = [
+            'due' => [],
+            'upcoming' => [],
+            'overdue' => [],
+        ];
 
-        foreach ($statuses as $status) {
-            $this->db->where('user_id', logged('id'));
-            $this->db->where('taxes >', '0');
+        $currentDate = date('Y-m-d');
+        $currentDateUnix = strtotime($currentDate);
 
-            if (empty($payload)) {
-                if ($status === 'overdue') {
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <", $currentDate);
-                    // $this->db->where('status', 'Overdue');
-
-                } else if ($status === 'due') {
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') =", $currentDate);
-                    // $this->db->where('status', 'Due');
-
-                } else { // upcoming
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >", $currentDate);
-                    $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $nextWeekDate);
-                }
-            } else {
-                // TODO: debug/fix overdue, due and upcoming
-
-                $dueStart = strtotime($payload['due_start']);
-                $dueStart = date('Y-m-d', $dueStart);
-
-                $dueEnd = strtotime($payload['due_end']);
-                $dueEnd = date('Y-m-d', $dueEnd);
-
-                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
-                $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $dueEnd);
-
-                if ($status === 'overdue') {
-                    $this->db->where('status', 'Overdue');
-
-                } else if ($status === 'due') {
-                    $this->db->where('status', 'Due');
-
-                } else { // no upcoming
-                    $this->db->where('id', '-1');
-                }
+        foreach ($results as $result) {
+            if (!array_key_exists($result->company_id, $companyIdMap)) {
+                $this->db->where('id', $result->company_id);
+                $companyIdMap[$result->company_id] = $this->db->get('clients')->row();
             }
 
-            $this->db->order_by("STR_TO_DATE(due_date, '%Y-%m-%d')", 'DESC', false);
-            $results = $this->db->get('invoices')->result();
+            $result->company = $companyIdMap[$result->company_id];
+            $dueDateUnix = strtotime($result->due_date);
+            $type = null;
 
-            foreach ($results as $result) {
-                if (!array_key_exists($result->company_id, $companyIdMap)) {
-                    $this->db->where('id', $result->company_id);
-                    $companyIdMap[$result->company_id] = $this->db->get('clients')->row();
-                }
+            if ($result->due_date === $currentDate) {
+                $type = 'due';
 
-                $result->company = $companyIdMap[$result->company_id];
+            } else if ($dueDateUnix > $currentDateUnix) {
+                $type = 'upcoming';
+
+            } else if ($dueDateUnix < $currentDateUnix) {
+                $type = 'overdue';
             }
 
-            $records[$status] = $results;
+            $records[$type][] = $result;
         }
 
         header('content-type: application/json');
@@ -192,13 +181,37 @@ class AccountingSales extends MY_Controller
         $this->db->order_by('due_date', 'ASC');
         $results = $this->db->get('invoices')->result();
 
-        $records = [];
+        $records = [date('F Y')];
         foreach ($results as $result) {
             $date = date('F Y', strtotime($result->due_date));
             if (!in_array($date, $records)) {
                 array_push($records, $date);
             }
         }
+
+        $orderFunc = function ($a, $b) {
+            return strtotime($a) - strtotime($b);
+        };
+
+        usort($records, $orderFunc);
+
+        if (count($records) > 2) {
+            // List all months between first and last date
+            // https://stackoverflow.com/a/18743012/8062659
+
+            $start = (new DateTime(array_shift($records)))->modify('first day of this month');
+            $end = (new DateTime(array_pop($records)))->modify('first day of next month');
+            $interval = DateInterval::createFromDateString('1 month');
+            $period = new DatePeriod($start, $interval, $end);
+
+            $records = [];
+            foreach ($period as $date) {
+                array_push($records, $date->format('F Y'));
+            }
+        }
+
+        // not necessary? :D
+        usort($records, $orderFunc);
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);

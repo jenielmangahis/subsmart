@@ -940,22 +940,50 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> You don't currently have permission to edit all company information. Check with your QuickBooks admin if you require access.</p>
 
                             <table class="table">
-                                <tr>
+                                <tr id="company_details">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Company name</td>
                                     <td style="width:16%;padding:3%;">
                                         <p></p>
+                                        <p></p><br><br>
                                         <p>Company name</p>
                                         <p>Legal name</p>
                                         <p>EIN</p>
                                     </td>
                                     <td style="padding:3%;">
-                                        <p><img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" /></p>
+                                        <p><img src="<?= getCompanyBusinessProfileImage(); ?>" class=""  style="max-width: 180px; max-height: 160px;" /></p>
                                         <p><?php echo $clients->business_name; ?></p>
                                         <p><?php echo $clients->business_name; ?></p>
                                         <p>XX-XXX6593</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="company_details_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Company name</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p></p>
+                                        <p></p><br><br><br>
+                                        <p> </p>
+                                        <p>Company name</p><br>
+                                        <p>Legal name</p><br>
+                                        <p>EIN</p><br><br>
+                                        <input type="submit" value="Cancel" id="company_details_edit_button" class="btn btn-primary">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p>
+                                            <div class="companyLogoEdit">
+                                                <i class="fa fa-pencil" aria-hidden="true" style="float:left;"></i>
+                                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 180px; max-height: 160px;" class="image"/>
+                                                <div class="middle">
+                                                    <div class="text"><a hrefd="#" data-toggle="modal" data-target="#upload_company_logo">Upload</a></div>
+                                                </div></i>
+                                            </div>
+                                        </p>
+                                        <p><input type="text"  value="<?php echo $clients->business_name; ?>" class="form-control" style="width:30%;"></p>
+                                        <p><input type="text"  value="<?php echo $clients->business_name; ?>" class="form-control" style="width:30%;"></p>
+                                        <p><input type="text"  value="<?php echo "12-3456593"; ?>" class="form-control" style="width:30%;"></p> <br>
+                                        <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                </tr>
+                                <tr id="company_type">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Company type</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Tax form</p>
@@ -966,7 +994,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>Information</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="company_type_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Company type</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Tax form</p><br>
+                                        <p>Industry</p><br><br>
+                                        <input type="submit" value="Cancel" id="company_type_edit_button" class="btn btn-primary">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><input type="text"  value="Limited liability" class="form-control" style="width:30%;"></p>
+                                        <p><input type="text"  value="Information" class="form-control" style="width:30%;"></p> <br>
+                                        <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                </tr>
+                                <tr id="company_contact">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Contact info</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Company email</p>
@@ -981,13 +1022,45 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <p>-</p>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="company_contact_info_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Contact info</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Company email</p><br>
+                                        <p>Customer-facing email</p><br>
+                                        <p>Company phone</p><br>
+                                        <p>Website</p>
+                                        <br>
+                                        <input type="submit" value="Cancel" id="company_contact_info_edit_button" class="btn btn-primary">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><input type="text"  value="<?php echo $clients->email_address; ?>" class="form-control" style="width:30%;"></p>
+                                        <p><input type="text"  value="<?php echo $clients->email_address; ?>>" class="form-control" style="width:30%;"></p>
+                                        <p><input type="text"  value="<?php echo $clients->phone_number; ?>" class="form-control" style="width:30%;"></p>
+                                        <p><input type="text"  value="" class="form-control" style="width:30%;" placeholder="https://www.website.com"></p>
+                                            <br>
+                                            <input type="submit" value="Save" class="btn btn-success">
+                                    </td>
+                                </tr>
+                                <tr id="company_address">
                                     <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Address</td>
                                     <td style="width:16%;padding:3%;">
                                         <p>Company address</p>
                                     </td>
                                     <td style="padding:3%;">
                                         <p><?php echo $clients->business_address; ?></p>
+                                    </td>
+                                </tr>
+                                <tr id="company_address_edit" style="display:none;">
+                                    <td style="width:10%;vertical-align: top;text-align: left;font-weight:bold;">Address</td>
+                                    <td style="width:16%;padding:3%;">
+                                        <p>Company address</p>
+                                        <br><br>
+                                        <input type="submit" value="Cancel" id="company_address_edit_button" class="btn btn-primary">
+                                    </td>
+                                    <td style="padding:3%;">
+                                        <p><input type="text"  value="<?php echo $clients->business_address; ?>" class="form-control" style="width:30%;"></p>
+                                        <br>
+                                        <input type="submit" value="Save" class="btn btn-success">
                                     </td>
                                 </tr>
                                 <tr>
@@ -2539,8 +2612,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!--end of modal-->
+
+    <div class="modal fade" id="upload_company_logo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Change company logo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+                <div class="file-upload">
+                    <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Upload Image</button>
+
+                    <div class="image-upload-wrap">
+                        <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                        <div class="drag-text">
+                        <h3>Drag and drop a file or select add Image</h3>
+                        </div>
+                    </div>
+                    <div class="file-upload-content">
+                        <img class="file-upload-image" src="#" alt="your image" />
+                        <div class="image-title-wrap">
+                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Update</button>
+            </div>
+            </div>
+        </div>
+    </div>
     
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+    <script src="<?php echo $url->assets ?>js/dashboard_js.js"></script>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
 
@@ -2626,260 +2737,316 @@ function openCity(evt, cityName) {
 </script>
 
 <script>
-$(document).ready(function() {
-    $("#sales_form_content").click(function() {
-        var test = $(this).val();
+// $(document).ready(function() {
+//     $("#sales_form_content").click(function() {
+//         var test = $(this).val();
 
-        $("#sales_form_content").hide();
-        $("#sales_form_content_edit" + test).show();
-    });
+//         $("#sales_form_content").hide();
+//         $("#sales_form_content_edit" + test).show();
+//     });
 
-    $("#sales_form_content_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#sales_form_content_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#sales_form_content_edit").hide();
-        $("#sales_form_content").show();
-    });
+//         $("#sales_form_content_edit").hide();
+//         $("#sales_form_content").show();
+//     });
 
 
-    $("#product_services").click(function() {
-        var test = $(this).val();
+//     $("#product_services").click(function() {
+//         var test = $(this).val();
 
-        $("#product_services").hide();
-        $("#product_services_edit" + test).show();
-    });
+//         $("#product_services").hide();
+//         $("#product_services_edit" + test).show();
+//     });
 
-    $("#product_services_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#product_services_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#product_services_edit").hide();
-        $("#product_services").show();
-    });
+//         $("#product_services_edit").hide();
+//         $("#product_services").show();
+//     });
 
-    $("#progress_invoicing").click(function() {
-        var test = $(this).val();
+//     $("#progress_invoicing").click(function() {
+//         var test = $(this).val();
 
-        $("#progress_invoicing").hide();
-        $("#progress_invoicing_edit" + test).show();
-    });
+//         $("#progress_invoicing").hide();
+//         $("#progress_invoicing_edit" + test).show();
+//     });
 
-    $("#progress_invoicing_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#progress_invoicing_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#progress_invoicing_edit").hide();
-        $("#progress_invoicing").show();
-    });
+//         $("#progress_invoicing_edit").hide();
+//         $("#progress_invoicing").show();
+//     });
 
-    $("#messages").click(function() {
-        var test = $(this).val();
+//     $("#messages").click(function() {
+//         var test = $(this).val();
 
-        $("#messages").hide();
-        $("#messages_edit" + test).show();
-    });
+//         $("#messages").hide();
+//         $("#messages_edit" + test).show();
+//     });
 
-    $("#messages_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#messages_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#messages_edit").hide();
-        $("#messages").show();
-    });
+//         $("#messages_edit").hide();
+//         $("#messages").show();
+//     });
 
-    $("#reminders").click(function() {
-        var test = $(this).val();
+//     $("#reminders").click(function() {
+//         var test = $(this).val();
 
-        $("#reminders").hide();
-        $("#reminders_edit" + test).show();
-    });
+//         $("#reminders").hide();
+//         $("#reminders_edit" + test).show();
+//     });
 
-    $("#reminders_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#reminders_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#reminders_edit").hide();
-        $("#reminders").show();
-    });
+//         $("#reminders_edit").hide();
+//         $("#reminders").show();
+//     });
 
-    $("#online_delivery").click(function() {
-        var test = $(this).val();
+//     $("#online_delivery").click(function() {
+//         var test = $(this).val();
 
-        $("#online_delivery").hide();
-        $("#online_delivery_edit" + test).show();
-    });
+//         $("#online_delivery").hide();
+//         $("#online_delivery_edit" + test).show();
+//     });
 
-    $("#online_delivery_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#online_delivery_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#online_delivery_edit").hide();
-        $("#online_delivery").show();
-    });
+//         $("#online_delivery_edit").hide();
+//         $("#online_delivery").show();
+//     });
 
-    $("#statements").click(function() {
-        var test = $(this).val();
+//     $("#statements").click(function() {
+//         var test = $(this).val();
 
-        $("#statements").hide();
-        $("#statements_edit" + test).show();
-    });
+//         $("#statements").hide();
+//         $("#statements_edit" + test).show();
+//     });
 
-    $("#statements_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#statements_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#statements_edit").hide();
-        $("#statements").show();
-    });
+//         $("#statements_edit").hide();
+//         $("#statements").show();
+//     });
 
-    $("#exp_sales_form_content").click(function() {
-        var test = $(this).val();
+//     $("#exp_sales_form_content").click(function() {
+//         var test = $(this).val();
 
-        $("#exp_sales_form_content").hide();
-        $("#exp_sales_form_content_edit" + test).show();
-    });
+//         $("#exp_sales_form_content").hide();
+//         $("#exp_sales_form_content_edit" + test).show();
+//     });
 
-    $("#exp_sales_form_content_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#exp_sales_form_content_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#exp_sales_form_content_edit").hide();
-        $("#exp_sales_form_content").show();
-    });
+//         $("#exp_sales_form_content_edit").hide();
+//         $("#exp_sales_form_content").show();
+//     });
 
-    $("#purchase_orders").click(function() {
-        var test = $(this).val();
+//     $("#purchase_orders").click(function() {
+//         var test = $(this).val();
 
-        $("#purchase_orders").hide();
-        $("#purchase_orders_edit" + test).show();
-    });
+//         $("#purchase_orders").hide();
+//         $("#purchase_orders_edit" + test).show();
+//     });
 
-    $("#purchase_orders_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#purchase_orders_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#purchase_orders_edit").hide();
-        $("#purchase_orders").show();
-    });
+//         $("#purchase_orders_edit").hide();
+//         $("#purchase_orders").show();
+//     });
 
-    $("#exp_messages").click(function() {
-        var test = $(this).val();
+//     $("#exp_messages").click(function() {
+//         var test = $(this).val();
 
-        $("#exp_messages").hide();
-        $("#exp_messages_edit" + test).show();
-    });
+//         $("#exp_messages").hide();
+//         $("#exp_messages_edit" + test).show();
+//     });
 
-    $("#exp_messages_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#exp_messages_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#exp_messages_edit").hide();
-        $("#exp_messages").show();
-    });
+//         $("#exp_messages_edit").hide();
+//         $("#exp_messages").show();
+//     });
 
-    $("#adv_accounting").click(function() {
-        var test = $(this).val();
+//     $("#adv_accounting").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_accounting").hide();
-        $("#adv_accounting_edit" + test).show();
-    });
+//         $("#adv_accounting").hide();
+//         $("#adv_accounting_edit" + test).show();
+//     });
 
-    $("#adv_accounting_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_accounting_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_accounting_edit").hide();
-        $("#adv_accounting").show();
-    });
+//         $("#adv_accounting_edit").hide();
+//         $("#adv_accounting").show();
+//     });
 
-    $("#adv_chart_of_accounts").click(function() {
-        var test = $(this).val();
+//     $("#adv_chart_of_accounts").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_chart_of_accounts").hide();
-        $("#adv_chart_of_accounts_edit" + test).show();
-    });
+//         $("#adv_chart_of_accounts").hide();
+//         $("#adv_chart_of_accounts_edit" + test).show();
+//     });
 
-    $("#adv_chart_of_accounts_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_chart_of_accounts_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_chart_of_accounts_edit").hide();
-        $("#adv_chart_of_accounts").show();
-    });
+//         $("#adv_chart_of_accounts_edit").hide();
+//         $("#adv_chart_of_accounts").show();
+//     });
 
-    $("#adv_categories").click(function() {
-        var test = $(this).val();
+//     $("#adv_categories").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_categories").hide();
-        $("#adv_categories_edit" + test).show();
-    });
+//         $("#adv_categories").hide();
+//         $("#adv_categories_edit" + test).show();
+//     });
 
-    $("#adv_categories_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_categories_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_categories_edit").hide();
-        $("#adv_categories").show();
-    });
+//         $("#adv_categories_edit").hide();
+//         $("#adv_categories").show();
+//     });
 
-    $("#adv_automation").click(function() {
-        var test = $(this).val();
+//     $("#adv_automation").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_automation").hide();
-        $("#adv_automation_edit" + test).show();
-    });
+//         $("#adv_automation").hide();
+//         $("#adv_automation_edit" + test).show();
+//     });
 
-    $("#adv_automation_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_automation_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_automation_edit").hide();
-        $("#adv_automation").show();
-    });
+//         $("#adv_automation_edit").hide();
+//         $("#adv_automation").show();
+//     });
 
-    $("#adv_projects").click(function() {
-        var test = $(this).val();
+//     $("#adv_projects").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_projects").hide();
-        $("#adv_projects_edit" + test).show();
-    });
+//         $("#adv_projects").hide();
+//         $("#adv_projects_edit" + test).show();
+//     });
 
-    $("#adv_projects_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_projects_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_projects_edit").hide();
-        $("#adv_projects").show();
-    });
+//         $("#adv_projects_edit").hide();
+//         $("#adv_projects").show();
+//     });
 
-    $("#time_tracking").click(function() {
-        var test = $(this).val();
+//     $("#time_tracking").click(function() {
+//         var test = $(this).val();
 
-        $("#time_tracking").hide();
-        $("#time_tracking_edit" + test).show();
-    });
+//         $("#time_tracking").hide();
+//         $("#time_tracking_edit" + test).show();
+//     });
 
-    $("#time_tracking_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#time_tracking_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#time_tracking_edit").hide();
-        $("#time_tracking").show();
-    });
+//         $("#time_tracking_edit").hide();
+//         $("#time_tracking").show();
+//     });
 
-    $("#adv_currency").click(function() {
-        var test = $(this).val();
+//     $("#adv_currency").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_currency").hide();
-        $("#adv_currency_edit" + test).show();
-    });
+//         $("#adv_currency").hide();
+//         $("#adv_currency_edit" + test).show();
+//     });
 
-    $("#adv_currency_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_currency_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_currency_edit").hide();
-        $("#adv_currency").show();
-    });
+//         $("#adv_currency_edit").hide();
+//         $("#adv_currency").show();
+//     });
 
-    $("#adv_other_preferences").click(function() {
-        var test = $(this).val();
+//     $("#adv_other_preferences").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_other_preferences").hide();
-        $("#adv_other_preferences_edit" + test).show();
-    });
+//         $("#adv_other_preferences").hide();
+//         $("#adv_other_preferences_edit" + test).show();
+//     });
 
-    $("#adv_other_preferences_edit_button").click(function() {
-        var test = $(this).val();
+//     $("#adv_other_preferences_edit_button").click(function() {
+//         var test = $(this).val();
 
-        $("#adv_other_preferences_edit").hide();
-        $("#adv_other_preferences").show();
-    });
-});
+//         $("#adv_other_preferences_edit").hide();
+//         $("#adv_other_preferences").show();
+//     });
+
+//     $("#company_details").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_details").hide();
+//         $("#company_details_edit" + test).show();
+//     });
+
+//     $("#company_details_edit_button").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_details_edit").hide();
+//         $("#company_details").show();
+//     });
+
+//     $("#company_type").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_type").hide();
+//         $("#company_type_edit" + test).show();
+//     });
+
+//     $("#company_type_edit_button").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_type_edit").hide();
+//         $("#company_type").show();
+//     });
+
+//     $("#company_contact").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_contact").hide();
+//         $("#company_contact_info_edit" + test).show();
+//     });
+
+//     $("#company_contact_info_edit_button").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_contact_info_edit").hide();
+//         $("#company_contact").show();
+//     });
+
+//     $("#company_address").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_address").hide();
+//         $("#company_address_edit" + test).show();
+//     });
+
+//     $("#company_address_edit_button").click(function() {
+//         var test = $(this).val();
+
+//         $("#company_address_edit").hide();
+//         $("#company_address").show();
+//     });
+// });
 </script>
 
 <script>
@@ -3451,4 +3618,39 @@ var chart = new CanvasJS.Chart("areaChart", {
 chart.render();
 
 }
+</script>
+
+<script>
+    function readURL(input) {
+  if (input.files && input.files[0]) {
+
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('.image-upload-wrap').hide();
+
+      $('.file-upload-image').attr('src', e.target.result);
+      $('.file-upload-content').show();
+
+      $('.image-title').html(input.files[0].name);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+
+  } else {
+    removeUpload();
+  }
+}
+
+function removeUpload() {
+  $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+  $('.file-upload-content').hide();
+  $('.image-upload-wrap').show();
+}
+$('.image-upload-wrap').bind('dragover', function () {
+        $('.image-upload-wrap').addClass('image-dropping');
+    });
+    $('.image-upload-wrap').bind('dragleave', function () {
+        $('.image-upload-wrap').removeClass('image-dropping');
+});
 </script>

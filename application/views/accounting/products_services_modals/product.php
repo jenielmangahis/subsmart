@@ -13,7 +13,7 @@
                             <div class="type-icon" style="background-image: url('/assets/img/accounting/inventory.png')"></div>
                         </div>
                         <div class="col-sm-10 d-flex align-items-center">
-                            <h5><span>Inventory</span></h5> &nbsp;&nbsp; <a href="#" class="text-info" onclick="selectType('product')"><span>Change type</span></a>
+                            <h5><span>Inventory</span></h5> &nbsp;&nbsp; <a href="#" class="text-info" id="select-item-type"><span>Change type</span></a>
                         </div>
                     </div>
                 </th>
@@ -43,8 +43,8 @@
                             </div>
                             <div class="action-bar h-25 d-flex align-items-center justify-content-center">
                                 <ul>
-                                    <li><a href="#" onclick="document.getElementById('icon').click()"><i class="fa fa-pencil"></i></li>
-                                    <li><a href="#" onclick="removeIcon()"><i class="fa fa-trash-o"></i></a></li>
+                                    <li><a href="#" onclick="document.getElementById('icon').click()"><i class="fa fa-pencil"></i></a></li>
+                                    <li><a href="#" id="remove-item-icon"><i class="fa fa-trash-o"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -53,18 +53,15 @@
                         <div class="col-sm-12">
                             <div class="form-group" style="margin-bottom: 12px !important">
                                 <label for="category">Category</label>
-                                <select name="category" id="category" class="form-control">
-                                    <option value="">&nbsp;</option>
-                                    <?php foreach($this->items_model->getItemCategories() as $category) : ?>
-                                        <option value="<?=$category->item_categories_id?>"><?=$category->name?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <select name="category" id="category" class="form-control"></select>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="form-group form-check" style="margin-bottom: 0 !important">
-                                <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
-                                <label for="rebate-item" class="form-check-lable">Rebate Item</label>
+                            <div class="form-group form-check p-0" style="margin-bottom: 0 !important">
+                                <div class="checkbox checkbox-sec m-0">
+                                    <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
+                                    <label for="rebate-item" class="form-check-lable">Rebate Item</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -116,13 +113,7 @@
                         <div class="col-sm-12">
                             <div class="form-group" style="margin-bottom: 0 !important">
                                 <label for="invAssetAcc">Inventory asset account</label>
-                                <select name="inv_asset_acc" id="invAssetAcc" class="form-control" required>
-                                    <?php if(count($inventory_asset_accounts) > 0) : ?>
-                                        <?php foreach($inventory_asset_accounts as $invAssetAcc) : ?>
-                                            <option value="<?=$invAssetAcc->id?>"><?=$invAssetAcc->name?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
+                                <select name="inv_asset_account" id="invAssetAcc" class="form-control" required></select>
                             </div>
                         </div>
                     </div>
@@ -146,13 +137,7 @@
                         <div class="col-sm-6">
                             <div class="form-group" style="margin-bottom: 0 !important">
                                 <label for="incomeAccount">Income account</label>
-                                <select name="income_account" id="incomeAccount" class="form-control" required>
-                                    <?php if(count($income_accounts) > 0) : ?>
-                                        <?php foreach($income_accounts as $incomeAcc) : ?>
-                                            <option value="<?=$incomeAcc->id?>"><?=$incomeAcc->name?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
+                                <select name="income_account" id="incomeAccount" class="form-control" required></select>
                             </div>
                         </div>
                     </div>
@@ -164,14 +149,7 @@
                         <div class="col-sm-12">
                             <div class="form-group" style="margin-bottom: 0 !important">
                                 <label for="salesTaxCat">Sales tax category</label>
-                                <select name="sales_tax_cat" id="salesTaxCat" class="form-control">
-                                    <?php if(count($tax_rates) > 0) : ?>
-                                        <?php foreach($tax_rates as $taxRate) : ?>
-                                            <option value="<?=$taxRate->id?>"><?=$taxRate->name?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                    <option value="0">Nontaxable</option>
-                                </select>
+                                <select name="sales_tax_category" id="salesTaxCat" class="form-control"></select>
                             </div>
                         </div>
                     </div>
@@ -197,25 +175,13 @@
                         <div class="col-sm-6">
                             <div class="form-group" style="margin-bottom: 0 !important">
                                 <label for="expenseAcc">Expense account</label>
-                                <select name="expense_account" id="expenseAcc" class="form-control">
-                                    <?php if(count($expense_accounts) > 0) : ?>
-                                        <?php foreach($expense_accounts as $expenseAcc) : ?>
-                                            <option value="<?=$expenseAcc->id?>"><?=$expenseAcc->name?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
+                                <select name="item_expense_account" id="expenseAcc" class="form-control"></select>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group" style="margin-bottom: 0 !important">
                                 <label for="vendor">Preferred vendor</label>
-                                <select name="vendor_id" id="vendor" class="form-control">
-                                    <?php if(count($vendors) > 0) : ?>
-                                        <?php foreach($vendors as $vendor) : ?>
-                                            <option value="<?=$vendor->id?>"><?=$vendor->f_name . ' ' . $vendor->l_name;?></option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
+                                <select name="vendor" id="vendor" class="form-control"></select>
                             </div>
                         </div>
                     </div>
@@ -226,14 +192,14 @@
 </div>
 <div class="modal-footer">
     <div class="btn-group dropup float-right">
-        <button type="submit" class="btn btn-success">
+        <button type="button" class="btn btn-success" id="save-and-close">
             Save and close
         </button>
         <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Save and new</a>
+            <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
         </div>
     </div>
 </div>

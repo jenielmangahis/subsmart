@@ -294,14 +294,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <table style="width:100%">
                         <tbody>
                             <tr>
-                                <td style="width: 130px;height:130px;">
-                                    <img src="<?=base_url($business_logo)?>"
+                                <td style="width: 130px;height:80px;">
+                                    <img src="<?=base_url($data_pdf[$data_i]["business_logo"])?>"
                                         class="logo" alt="" style="width: 130px;">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <p class="address">P.O. BOX <?=$data_pdf[$data_i]["inv_location_scale"]?>
+                    <p class="address">P.O. BOX <?=$data_pdf[$data_i]["customer_mail_add"]?>
                     </p>
                     <br><br>
                     <p class="address"><?=$data_pdf[$data_i]["business_name"]?>
@@ -374,7 +374,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <tr>
                                 <td style="padding-right:20px;">
                                     <p class="large-text">REMIT TO:</p>
-                                    <p>ADEMCO INC., DBA ADI<br>P.O. BOX <?=$data_pdf[$data_i]["inv_location_scale"]?>
+                                    <p><?=$data_pdf[$data_i]["inv_shipping_to_address"]?><br>P.O.
+                                        BOX <?=$data_pdf[$data_i]["customer_mail_add"]?>
                                     </p>
                                 </td>
                                 <td></td>
@@ -386,7 +387,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <td style="width:20%">
                                     </td>
                                     <td>
-                                        <p>TEL: (800) 545-6776 EXT: 5306<br>FAX: (302) 689-4996</p>
+                                        <p>TEL: <?=$data_pdf[$data_i]["customer_phone_h"]?>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXT: -<br>FAX: -</p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -410,7 +412,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <tbody>
             <tr>
                 <td style="width: 130px; vertical-align:center; padding-right:10px">
-                    <img src="<?=base_url($business_logo)?>"
+                    <img src="<?=base_url($data_pdf[$data_i]["business_logo"])?>"
                         class="logo" alt="" style="width: 120px;">
                 </td>
                 <td>
@@ -450,7 +452,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <thead>
             <tr>
                 <th style="width: 50%;">SHIP DATA/ITEM DESCRIPTIONS</th>
-                <th>CATALOG <br>NUMBER</th>
+                <th>SERIAL <br>NUMBER</th>
                 <th>QTY <br>SHIPPED</th>
                 <th>UNIT PRICE</th>
                 <th>AMOUNT</th>
@@ -459,7 +461,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <tbody>
             <tr>
                 <?php
-        $items_catalog_html="";
+        $items_serial_html="";
         $items_qty_html="";
         $items_costs_html="";
         $items_total_html="";
@@ -470,7 +472,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <p>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$item->title.'
             </p>';
-            $items_catalog_html.= '<p>BX-A91E6282T</p>';
+            $items_serial_html.= '<p>'.$item->serial_number.'</p>';
             $items_qty_html.='<p>'.$item->qty.'</p>';
             $items_costs_html.='<p>'.$item->iCost.'</p>';
             $items_total_html.='<p>'.$item->total.'</p>';
@@ -479,7 +481,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td style="height: 240px;">
                     <p style="height: 80px;">
                         SHIP FROM: <?=$data_pdf[$data_i]["bus_city"]?>
-                        &nbsp;&nbsp;&nbsp;TO: <?=$data_pdf[$data_i]["inv_shipping_to_address"]?><br>
+                        &nbsp;&nbsp;&nbsp;TO: <?=$data_pdf[$data_i]["customer_city"]?><br>
                         &nbsp;&nbsp;<?=$data_pdf[$data_i]["business_name"]?>
                         <?=$data_pdf[$data_i]["customer_name"]?><br>
                         &nbsp;&nbsp;<?=$data_pdf[$data_i]["bus_street"]?><br>
@@ -493,7 +495,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </td>
                 <td>
                     <p style="height: 80px;"></p>
-                    <?=$items_catalog_html?>
+                    <?=$items_serial_html?>
                 </td>
                 <td>
                     <p style="height: 80px;"></p>
@@ -512,7 +514,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <tfoot>
             <tr>
                 <td colspan="2" rowspan="5" class="no-border">
-                    <p>REC-VISA #---------4699 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=number_format($data_pdf[$data_i]["balance_due"], 2, '.', ',')?><br>
+                    <p>REC-VISA #--------- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=number_format($data_pdf[$data_i]["inv_grand_total"]-$data_pdf[$data_i]["balance_due"], 2, '.', ',')?><br>
                         <?php
                             if ($data_pdf[$data_i]["balance_due"] > 0) {
                                 echo "P E N D I N G &nbsp;P A Y M E N T";
@@ -527,14 +529,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     RORAL MATERIAL
                 </td>
                 <td>
-                    <?=number_format($data_pdf[$data_i]["inv_sub_total"], 2, '.', ',')?>
+                    <?php
+                    if ($data_pdf[$data_i]["inv_sub_total"]!="") {
+                        echo number_format($data_pdf[$data_i]["inv_sub_total"], 2, '.', ',');
+                    } ?>
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
                     SALES TAX
                 </td>
-                <td><?=number_format($data_pdf[$data_i]["inv_taxes"], 2, '.', ',')?>
+                <td>
+                    <?php
+                    if ($data_pdf[$data_i]["inv_taxes"]!="") {
+                        echo number_format($data_pdf[$data_i]["inv_taxes"], 2, '.', ',');
+                    } ?>
                 </td>
             </tr>
             <tr>
@@ -548,7 +557,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <p class="large-text">TOTAL INVOICE</p>
                 </td>
                 <td>
-                    <?=number_format($data_pdf[$data_i]["inv_grand_total"], 2, '.', ',')?>
+                    <?php
+                    if ($data_pdf[$data_i]["inv_grand_total"]!="") {
+                        echo number_format($data_pdf[$data_i]["inv_grand_total"], 2, '.', ',');
+                    } ?>
                 </td>
             </tr>
             <tr>
@@ -561,7 +573,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tr>
         </tfoot>
     </table>
-    <table style="width: 100%; page-break-after: always;">
+    <table style="width: 100%; <?php if ($data_i< count($data_pdf)-1) {
+                        echo "page-break-after: always;";
+                    } ?>">
         <tbody>
             <tr>
                 <td style="width: 100%">
@@ -589,127 +603,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
     ?>
 
-    <table style="width: 100%;page-break-before: always;">
-        <tbody>
-            <tr>
-                <td style="width: 60%;">
-                    <div class="business-info">
-                        <h2 class="business-name" style="margin: 0;font-size: 15px;">
-                            <?=$business_name?>
-                        </h2>
-                        <p class="address-strees" style="margin: 0;">
-                            <?=$business_email?>
-                        </p>
-                        <p class="address-state">
-                            <?=$business_website?>
-                        </p>
-                    </div>
-                </td>
-                <td style="width: 40%;">
-                    <div class="business-logo">
-                        <img src="<?=base_url($business_logo)?>"
-                            alt="" style="width: 130px;">
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="receipt-info-section">
-        <table style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td style="width: 50%;">
-                        <h2 class="receipt-title">Packaging Slip</h2>
-                    </td>
-                    <td style="width: 50%;">
-
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td style="vertical-align:top;">
-                            <div class="customer-info">
-                                <h2 style="font-size: 15px;">BILL To</h2>
-                                <p class="customer-name"><?=$customer_name?>
-                                </p>
-                            </div>
-                        </td>
-                        <td style="vertical-align:top;">
-                            <div class="receipt-info-section">
-                                <div class="receipt-info">
-                                    <table style="width: 100%;">
-                                        <tbody>
-                                            <tr>
-                                                <td style="width: 50%; text-align:right;">
-                                                    <p class="sales-number">INVOICE #
-                                                    </p>
-                                                    <p class="receipt-date">DATE
-                                                    </p>
-                                                </td>
-                                                <td style="text-align:left;">
-                                                    <p class="sales-number">
-                                                        <span><?=$invoice_no?></span>
-                                                    </p>
-                                                    <p class="receipt-date">
-                                                        <span><?=date("m/d/Y", strtotime($invoice_date))?></span>
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div style="margin-bottom: 50px;">
-        <table style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td>
-                        <p class="cutter"></p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="items-table">
-        <table>
-            <thead>
-                <tr>
-                    <th style="text-align: left;">Description</th>
-                    <th style="text-align: center;">QTY</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    foreach ($invoice_items as $item) {
-                        ?>
-                <tr>
-                    <td style="text-align: left;">
-                        <?=$item->title?>
-                    </td>
-                    <td style="text-align: center;">
-                        <?=$item->qty?>
-                    </td>
-                </tr>
-                <?php
-                    }
-                ?>
-            </tbody>
-        </table>
-    </div>
 </body>
 
 </html>

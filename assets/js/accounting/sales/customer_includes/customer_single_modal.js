@@ -191,6 +191,7 @@ function set_by_batch_menu_disabled() {
     }
 }
 
+
 single_customer_table_columns_changed();
 
 function single_customer_update_customer_notes() {
@@ -817,6 +818,98 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
                         single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
                     }
                 },
+            });
+        }
+    });
+});
+
+$(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn", function(event) {
+    print_by_batch("packaging_slip");
+});
+$(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn", function(event) {
+    print_by_batch("transactions");
+});
+
+function print_by_batch(action = "") {
+    var php_function = "";
+    if (action == "packaging_slip") {
+        php_function = "generate_customer_invoice_packaging_slip_by_batch";
+    } else if (action == "transactions") {
+        php_function = "print_transactions_by_batch";
+    }
+    var invoice_ids = new Array();
+    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            if ($(this).attr("data-row-type") == "Invoice") {
+                invoice_ids.push($(this).attr("data-invoice-id"));
+            }
+        }
+    });
+
+    $("#loader-modal").show();
+    $.ajax({
+        url: baseURL + "accounting/" + php_function,
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: customer_id,
+            invoice_ids: invoice_ids,
+        },
+        success: function(data) {
+            var win = window.open(data.pdf_link, '_blank');
+            if (win) {
+                win.focus();
+            } else {
+                alert('Please allow popups for this website');
+            }
+            $("#loader-modal").hide();
+        },
+    });
+}
+
+$(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn", function(event) {
+    event.preventDefault();
+    $("body").css({ 'cursor': 'wait' });
+    var invoice_ids = new Array();
+    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            if ($(this).attr("data-row-type") == "Invoice") {
+                invoice_ids.push($(this).attr("data-invoice-id"));
+            }
+        }
+    });
+
+    $.ajax({
+        url: baseURL + "accounting/send_transaction_by_batch",
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: customer_id,
+            invoice_ids: invoice_ids,
+        },
+        success: function(data) {
+            $("body").css({ 'cursor': 'default' });
+            if (data.status == "success") {
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: "Success",
+                    html: "Transactions has been sent!",
+                    icon: "success",
+                });
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+            $("body").css({ 'cursor': 'default' });
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Error",
+                html: "Something went wrong.",
+                icon: "error",
             });
         }
     });

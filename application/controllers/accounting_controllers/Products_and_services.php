@@ -352,30 +352,6 @@ class Products_and_services extends MY_Controller {
         }
     }
 
-    public function get_item_dropdown()
-    {
-        $filters = [
-            'status' => [1]
-        ];
-        $items = $this->items_model->getItemsWithFilter($filters);
-
-        $return = [];
-
-        foreach($items as $item) {
-            $name = $item->title;
-            if($item->item_categories_id !== null && $item->item_categories_id !== "" && $item->item_categories_id !== "0") {
-                $category = $this->items_model->getCategory($item->item_categories_id);
-                $name = $category->name.': '.$item->title;
-            }
-            $return['results'][] = [
-                'id' => $item->id,
-                'text' => $name
-            ];
-        }
-
-        echo json_encode($return);
-    }
-
     public function inactive($id)
     {
         $inactive = $this->items_model->inactiveItem($id);

@@ -152,7 +152,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-md-4">
                     <strong>Billing Cycle</strong>
                 </div>
-                <div class="col-md-5">1 month</div>
+                <div class="col-md-5">1 <?= $client->recurring_payment_type == 'month' ? 'Monthly' : 'year'; ?></div>
             </div>
             <div class="row margin-bottom-sec">
                 <div class="col-md-4">
@@ -376,8 +376,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <div class="modal fade" id="modal-upgrade-plan" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content" style="width:130%;">
         <div class="modal-header">
           <h5 class="modal-title" id="">Upgrade Plan</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -404,6 +404,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-3">
                                     <a class="btn btn-primary btn-sm" style="margin-top: 10px;" href="<?= base_url("/pricing"); ?>" target="_new">Plan list</a>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Subscription Type
+                                </div>
+                                <div class="col-md-8">
+                                    <select name="subscription_type" id="upgrade-subscription-type" class="form-control">
+                                        <option value="monthly">Monthly</option>
+                                        <option value="yearly">Yearly</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row form_line">
@@ -461,7 +472,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                             <div class="row form_line">
                                 <div class="col-md-4">
-                                    Total Amount
+                                    Plan Amount
                                 </div>
                                 <div class="col-md-8">
                                     <div class="input-group">
@@ -469,6 +480,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
                                         <input type="number" class="form-control" name="plan_amount" id="upgrade_plan_amount" value="0.00" disabled="">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    Total Amount <span class="upgrade-text-subscription-type">Monthly</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="total_amount" id="upgrade_total_amount" value="0.00" disabled="">
                                     </div>
                                 </div>
                                 <?php if( $client->num_months_discounted > 0 ){ ?>
@@ -492,8 +514,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <div class="modal fade" id="modal-buy-license" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content" style="width:140%;">
         <div class="modal-header">
           <h5 class="modal-title" id="">Buy License</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -608,8 +630,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <div class="modal fade" id="modal-pay-subscription" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content" style="width:120%;">
         <div class="modal-header">
           <h5 class="modal-title" id="">
             <?php if($client->is_plan_active == 1){ ?>
@@ -755,13 +777,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     $(".exp_month").select2({
-        placeholder: "Select Month"
+        placeholder: "Month"
     });
     $(".subscription_plans").select2({
         placeholder: "Select Plan"
     });
     $(".exp_year").select2({
-        placeholder: "Select Year"
+        placeholder: "Year"
     });
 
     $(".btn-buy-license").click(function(){
@@ -779,9 +801,23 @@ $(function(){
         console.log('Selecting: ' , e.params.args.data);
         console.log(e);
     });*/
-    $(".subscription_plans").change(function(){
-        var plan_price = $(this).select2().find(":selected").data("price"); 
-        $("#upgrade_plan_amount").val(plan_price);
+
+    function compute_plan_amount(){
+        var subscription_type = $("#upgrade-subscription-type").val();
+        var plan_price = parseFloat($(".subscription_plans").select2().find(":selected").data("price")); 
+
+        if( subscription_type == 'monthly' ){
+            var total_amount = plan_price;
+        }else{
+            var total_amount = plan_price * 12;
+        }
+
+        $("#upgrade_total_amount").val(total_amount.toFixed(2));
+        $("#upgrade_plan_amount").val(plan_price.toFixed(2));
+    }
+
+    $(".subscription_plans").change(function(){        
+        compute_plan_amount();
     });
     $(".btn-pay-subscription").click(function(){
         $("#modal-pay-subscription").modal('show');
@@ -824,6 +860,17 @@ $(function(){
     $(".btn-modal-auto-recurring").click(function(){
         var is_active = $("#is_active").val();
         recurring_auto_renewal(is_active);
+    });
+
+    $("#upgrade-subscription-type").change(function(){
+        var selected = $(this).val();
+        if( selected == 'monthly' ){
+            $(".upgrade-text-subscription-type").text("Monthly")
+        }else{
+            $(".upgrade-text-subscription-type").text("Yearly")
+        }
+
+        compute_plan_amount();
     });
 
     $(".btn-modal-remove-addon").click(function(){
