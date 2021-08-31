@@ -70,6 +70,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
  {
      display:none;
  }
+
+ #myChart_
+ {
+	height:350px !important;
+ }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css"> -->
@@ -114,9 +119,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
 
-                    <div id="container" style="width: 100%;">
+                    <!-- <div id="container" style="width: 100%;">
                         <canvas id="canvas"></canvas>
-                    </div>
+                    </div> -->
+					<canvas id="myChart_" style="width:80%;"></canvas>
 
                     <br><br>
                     <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p>
@@ -126,7 +132,46 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h5>Overdue Transactions</h5>
                         You have 130 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.
                     </div>
-
+					<br><br>
+					<div class="row pb-2">
+						<div class="col-md-12 banking-tab-container">
+							<a href="#"
+								class="banking-tab">All</a>
+							<a href="#"
+								class="banking-tab">Money in</a>
+							<a href="#"
+								class="banking-tab">Money out</a>
+						</div>
+					</div>
+					<br><br>
+					<table class="table">
+						<thead>
+							<th>DATE</th>
+							<th>DESCRIPTION</th>
+							<th>AMOUNT</th>
+							<th>TYPE</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>08/30/2021</td>
+								<td>Amazon</td>
+								<td>$100.00</td>
+								<td>Invoice</td>
+							</tr>
+							<tr>
+								<td>08/30/2021</td>
+								<td>Loucelle Emperio</td>
+								<td>$200.00</td>
+								<td>Check</td>
+							</tr>
+							<tr>
+								<td>08/30/2021</td>
+								<td>Brannon Nguyen</td>
+								<td>$500.00</td>
+								<td>Invoice</td>
+							</tr>
+						</tbody>
+					</table>
 
                 </div>
             </div>
@@ -146,7 +191,8 @@ $(document).ready(function(){
     $('[data-toggle="popover"]').popover();   
 });
 </script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script>
     // $(document).ready(function() {
     //     var ctx = $("#chart-line");
@@ -442,4 +488,30 @@ var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'A
 
 			window.myBar.update();
 		});
+</script>
+
+<script>
+var xValues = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
+var yValues = [10,20, 25, 24, 35, 15, 2, 15, 18, 36, 20, 12, 16, 10, 24, 15, 35, 40, 42, 46, 49, 35, 38, 50, 55, 49, 44, 24, 15,55, 49, 44, 24, 15, 88, 49, 44,55, 49, 44, 24, 15, 55, 49, 44, 24, 15,55, 49, 100, 24, 15, 2, 15, 18, 36, 20, 12, 24, 15, 55, 49, 44, 24, 15,55, 49, 44, 24, 15, 55, 49, 44];
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("myChart_", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: [
+			'rgba(186, 226, 153, 0.6)',
+            ],
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+    //   text: "World Wine Production 2018"
+    }
+  }
+});
 </script>

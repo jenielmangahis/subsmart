@@ -17,6 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -401,7 +402,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
 <!-- Modal for add account-->

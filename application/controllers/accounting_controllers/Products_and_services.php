@@ -25,8 +25,6 @@ class Products_and_services extends MY_Controller {
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
-            'assets/css/accounting/tax/settings/settings.css',
-            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
         ));
 
         add_footer_js(array(
@@ -38,9 +36,6 @@ class Products_and_services extends MY_Controller {
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
             "assets/js/accounting/sales/customer_includes/create_charge.js",
-            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
-            'assets/js/accounting/invoice/addInvoice.js',
-            'assets/js/accounting/invoice/accounting.min.js',
         ));
 
 		$this->page_data['menu_name'] =
@@ -398,37 +393,6 @@ class Products_and_services extends MY_Controller {
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
                     'description' => $input['description'],
-                    // 'attached_image' => $product_image,
-                    'is_active' => 1
-                ];
-            break;
-            case 'service' :
-                $data = [
-                    'company_id' => logged('company_id'),
-                    'title' => $name,
-                    'type' => $type,
-                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    // 'attached_image' => $product_image,
-                    'item_categories_id' => $input['category'],
-                    'description' => isset($input['selling']) ? $input['description'] : null,
-                    'price' => isset($input['selling']) ? $input['price'] : null,
-                    'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
-                    'cost' => isset($input['purchasing']) ? $input['cost'] : null,
-                    'is_active' => 1
-                ];
-            break;
-            case 'non-inventory' :
-                $data = [
-                    'company_id' => logged('company_id'),
-                    'title' => $name,
-                    'type' => $type,
-                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    // 'attached_image' => $product_image,
-                    'item_categories_id' => $input['category'],
-                    'description' => isset($input['selling']) ? $input['description'] : null,
-                    'price' => isset($input['selling']) ? $input['price'] : null,
-                    'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
-                    'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     'is_active' => 1
                 ];
             break;
@@ -438,13 +402,26 @@ class Products_and_services extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    // 'attached_image' => $product_image,
                     'item_categories_id' => $input['category'],
                     're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
                     'price' => $input['price'],
-                    'vendor_id' => $input['vendor_id'],
+                    'vendor_id' => $input['vendor'],
                     'cost' => $input['cost'],
+                    'is_active' => 1
+                ];
+            break;
+            default :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
+                    'item_categories_id' => $input['category'],
+                    'description' => isset($input['selling']) ? $input['description'] : null,
+                    'price' => isset($input['selling']) ? $input['price'] : null,
+                    'vendor_id' => isset($input['purchasing']) ? $input['vendor'] : 0,
+                    'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     'is_active' => 1
                 ];
             break;

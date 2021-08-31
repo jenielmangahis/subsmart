@@ -29,8 +29,6 @@ class Chart_of_accounts extends MY_Controller {
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
-            'assets/css/accounting/tax/settings/settings.css',
-            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
         ));
 
         add_footer_js(array(
@@ -42,9 +40,6 @@ class Chart_of_accounts extends MY_Controller {
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
             "assets/js/accounting/sales/customer_includes/create_charge.js",
-            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
-            'assets/js/accounting/invoice/addInvoice.js',
-            'assets/js/accounting/invoice/accounting.min.js',
         ));
 
 		$this->page_data['menu_name'] =

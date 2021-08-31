@@ -544,7 +544,7 @@
                                 <div class="total-amount text-right">
                                     <div class="amount-to-apply">
                                         <label class="label">Amount to Apply</label>
-                                        <label class="amount">$422.00</span>
+                                        <label class="amount">$422.00</label>
                                     </div>
                                     <div class="amount-to-credit">
                                         <label class="label">Amount to Credit</label>

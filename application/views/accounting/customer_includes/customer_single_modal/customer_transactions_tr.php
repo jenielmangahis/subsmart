@@ -7,7 +7,8 @@
                     class="customer_checkbox"
                     data-row-type="<?=$type?>"
                     data-invoice-id="<?=$invoice_id?>"
-                    data-row-status="<?=$status?>">
+                    data-row-status="<?=$status?>"
+                    data-invoice-number="<?=$no?>">
                 <label
                     for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"><span></span></label>
             </div>

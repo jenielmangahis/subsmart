@@ -198,6 +198,13 @@ class Dashboard extends Widgets {
         $this->page_data['invoice_due'] = $this->general->get_data_with_param($invoice_due,FALSE);
 
 
+        $invoice_paid_last_30days = array(
+            'where' => array('company_id' => logged('company_id'), 'status' => 'Paid','due_date ' => 'Paid'),
+            'table' => 'invoices',
+            'select' => 'count(*) as total',
+        );
+        $this->page_data['invoice_paid_last_30days'] = $this->general->get_data_with_param($invoice_paid_last_30days,FALSE);
+
         // fetch open estimates
         $total_amount_invoice = array(
             'where' => array('company_id' => logged('company_id'), 'status' => 'Paid'),
