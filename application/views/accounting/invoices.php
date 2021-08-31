@@ -1,6 +1,37 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.tooltip_ {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip_ .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip_:hover .tooltiptext {
+  visibility: visible;
+}
+
+.filtering {
+  display: inline-block;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
@@ -45,7 +76,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-sm-12 mt-0">
                                 <div class="pull-left">
-                                    <h3 class="mb-0"><strong>$0.00</strong></h3>
+                                    <h3 class="mb-0"><strong>$4.00</strong></h3>
                                     <h6 class="font-weight-normal text-dark mt-1">Overdue</h6>
                                 </div>
                                 <div class="pull-right">
@@ -55,8 +86,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-sm-12 mt-1">
                                 <div class="progress" style="height:30px">
-                                    <div class="progress-bar bg-secondary w-50"></div>
-                                    <div class="progress-bar bg-dark  w-50"></div>
+                                    <div class="progress-bar bg-secondary w-50" style="background-color:#ff8000 !important;"></div>
+                                    <div class="progress-bar bg-dark  w-50" style="background-color:#d4d7dc !important;"></div>
                                 </div>
                             </div>
                         </div>
@@ -69,17 +100,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-sm-12 mt-0">
                                 <div class="pull-left">
-                                    <h3 class="mb-0"><strong>$0</strong></h3>
+                                    <h3 class="mb-0"><strong>$12</strong></h3>
                                     <h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
                                 </div>
                                 <div class="pull-right">
-                                    <h3 class="mb-0"><strong>$0</strong></h3>
+                                    <h3 class="mb-0"><strong>$12</strong></h3>
                                     <h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
                                 </div>
                             </div>
                             <div class="col-sm-12 mt-1">
                                 <div class="progress" style="height:30px">
-                                    <div class="progress-bar bg-success w-50"></div>
+                                    <div class="progress-bar bg-success w-50" style="background-color:#2ca01c !important;"></div>
                                     <div class="progress-bar bg-info  w-50"></div>
                                 </div>
                             </div>
@@ -87,13 +118,32 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <div class="row mt-5">
+                    <div class="">
+                        <div class="filtering" style="padding: 0 20px 0 0;">
+                            <select class="form-control" style="width:180px; border-radius:60px;">
+                                <option>Batch Actions</option>
+                            </select>
+                        </div>
+                        <div class="filtering" style="padding: 0 10px 0 0;">
+                            Status <br>
+                            <select class="form-control" style="width:180px;">
+                                <option>All</option>
+                            </select>
+                        </div>
+                        <div class="filtering">
+                            Date <br>
+                            <select class="form-control" style="width:180px;">
+                                <option>This month</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-lg-12 px-0">
                         <div class="bg-white p-4">
-                            <div class="row" style="margin-top:-50px;">
+                            <div class="row" style="margin-top:-60px;float:right;">
                                 <div class="col-md-12" style="text-align:right;padding-bottom:10px;">
                                     <a class="btn btn-primary"
                                         href="<?php echo base_url('accounting/addnewInvoice') ?>"><span
-                                            class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
+                                            class="fa fa-plus fa-margin-right"></span> Create Invoice</a>
                                 </div>
                             </div>
 
@@ -103,7 +153,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         Listing all invoices.
                                     </p>
                                 </div> -->
-                                <div class="col text-right-sm d-flex justify-content-end align-items-center">
+                                <!-- <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <form style="display: inline-flex;" class="form-inline form-search"
                                         name="form-search"
                                         action="<?php echo base_url('invoice') ?>"
@@ -167,7 +217,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     Highest</a></li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
 
@@ -242,22 +292,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <thead>
                     <tr>
                         <th>
+                            <!-- <div class="checkbox checkbox-sm select-all-checkbox">
                             <div class="table-name">
-                                <div class="checkbox checkbox-sm select-all-checkbox">
+                                <div class="checkbox checkbox-sm select-all-checkbox"> -->
                                     <input type="checkbox" name="id_selector" value="0" id="select-all"
                                         class="select-all">
-                                    <label for="select-all">Invoice#</label>
+                                    <!-- <label for="select-all">Invoice#</label>
                                 </div>
 
-                            </div>
+                            </div> -->
                         </th>
-
-                        <th>Date Issued</th>
-                        <th>Date Due</th>
-                        <th>Job & Customer</th>
-                        <th>Status</th>
-                        <th>Amount</th>
                         <th></th>
+                        <th>Date</th>
+                        <th>Invoice No.</th>
+                        <!-- <th>Date Due</th> -->
+                        <th style="width:30%;">Job & Customer</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th class="text-right">Action</th>
                     </tr>
                 </thead>
 
@@ -266,20 +318,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <?php foreach ($invoices as $invoice) { ?>
                     <tr>
                         <td>
-                            <div class="table-name">
-                                <div class="checkbox checkbox-sm">
+                            <!-- <div class="table-name">
+                                <div class="checkbox checkbox-sm"> -->
                                     <input type="checkbox"
                                         name="id[<?php echo $invoice->id ?>]"
                                         value="<?php echo $invoice->id ?>"
                                         class="select-one"
                                         id="invoice_id_<?php echo $invoice->id ?>">
-                                    <label
-                                        for="invoice_id_<?php echo $invoice->id ?>">
-                                        <a class="a-default"
-                                            href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>"><?php echo $invoice->invoice_number ?></a></label>
-                                </div>
-                            </div>
+                                <!-- </div>
+                            </div> -->
                         </td>
+                        <td><div class="tooltip_"><a href="#" alt="Reccuring Invoice"><i class="fa fa-refresh" aria-hidden="true"></i></a><span class="tooltiptext">Reccuring Invoice</span></div></td>
 
                         <td>
                             <div class="table-nowrap">
@@ -287,10 +336,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </td>
                         <td>
-                            <div class="table-nowrap">
-                                <label for=""><?php echo get_format_date($invoice->due_date) ?></label>
-                            </div>
+                            <label for="invoice_id_<?php echo $invoice->id ?>">
+                                <a class="a-default" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>"><?php echo $invoice->invoice_number ?></a></label>
                         </td>
+
+                        <!-- <td>
+                            <div class="table-nowrap">
+                                <label for=""><?php //echo get_format_date($invoice->due_date) ?></label>
+                            </div>
+                        </td> -->
                         <td>
                             <div class="table-nowrap">
                                 <p class="mb-0"> <label for=""><?php echo $invoice->first_name.' '. $invoice->last_name; ?></label>
@@ -304,20 +358,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td>
                             <div class="table-nowrap">
-                                <label><?php echo $invoice->INV_status ?></label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="table-nowrap">
                                 <label for="">$<?php echo($invoice->grand_total); ?>
                                 </label>
                             </div>
                         </td>
+                        <td>
+                            <div class="table-nowrap">
+                                <label><?php echo $invoice->INV_status ?></label>
+                            </div>
+                        </td>
                         <td class="text-right">
                             <div class="dropdown dropdown-btn open">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit"
+                                <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="#" style="color:#3a96d2;">Receive payment</a>
+                                <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
                                     data-toggle="dropdown" aria-expanded="true">
-                                    <span class="btn-label">Manage</span>
+                                    <span class="btn-label"></span>
                                     <span class="caret-holder">
                                         <span class="caret"></span>
                                     </span>

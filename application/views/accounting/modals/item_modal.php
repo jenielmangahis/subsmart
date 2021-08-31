@@ -1,6 +1,5 @@
 <div class="modal-right-side">
-    <div class="modal right fade" id="item-modal" tabindex="" role="dialog"
-        aria-labelledby="myModalLabel2">
+    <div class="modal right fade" id="item-modal" role="dialog" aria-labelledby="myModalLabel2">
         <div class="modal-dialog" role="document" style="width: 25%">
             <div class="modal-content">
                 <div class="modal-header">

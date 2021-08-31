@@ -9,7 +9,6 @@ $(document).on("click", function(event) {
 
 $(document).on("click", "#customer-single-modal .the-body .dropdown-menu li a.send-reminder-btn", function() {
     get_info_customer_reminder($(this).attr("data-customer-id"), $(this).attr("data-action-from"), $(this).attr("data-invoice-number"));
-
 });
 
 $(document).on("click", ".customer-full-page-btn", function(event) {
@@ -903,6 +902,55 @@ $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batc
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
 
+            $("body").css({ 'cursor': 'default' });
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Error",
+                html: "Something went wrong.",
+                icon: "error",
+            });
+        }
+    });
+});
+$(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn", function(event) {
+    var invoice_numbers = "";
+    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            if ($(this).attr("data-row-status") == "Overdue" || $(this).attr("data-row-status") == "Open") {
+                invoice_numbers += ($(this).attr("data-invoice-number")) + ", ";
+            }
+        }
+    });
+
+    $("body").css({ 'cursor': 'wait' });
+    $.ajax({
+        url: baseURL + "accounting/get_customer_info",
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: customer_id,
+        },
+        success: function(data) {
+            $("body").css({ 'cursor': 'default' });
+            $("#send-reminder-modal .form-group input[name='subject']").val(`Reminder: Invoices from ` + data.business_name);
+
+            var message = `Dear ` + data.customer_name + `,
+
+Just a reminder that we have not received a payment for the following invoices. 
+
+` + invoice_numbers + `
+
+Let us know if you have questions.
+                                    
+Thanks for your business!
+` + data.business_name;
+
+            $("#send-reminder-modal .form-group textarea").html(message);
+            $("#send-reminder-modal").addClass("show");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
             $("body").css({ 'cursor': 'default' });
             Swal.fire({
                 showConfirmButton: false,

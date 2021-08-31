@@ -3139,14 +3139,14 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#modal-container .modal .modal-footer #save-and-close', function(e) {
+    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save-and-close', function(e) {
         e.preventDefault();
 
         submitType = $(this).attr('id');
         $('#modal-container form#modal-form').submit();
     });
 
-    $(document).on('click', '#modal-container .modal .modal-footer #save-and-new', function(e) {
+    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save-and-new', function(e) {
         e.preventDefault();
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -3218,7 +3218,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#modal-container .modal .modal-footer #save', function(e) {
+    $(document).on('click', '#modal-container #modal-form .modal .modal-footer #save', function(e) {
         e.preventDefault();
 
         submitType = $(this).attr('id');
@@ -3386,7 +3386,7 @@ $(function() {
         $('#weeklyTimesheetModal').parent('form').submit();
     });
 
-    $(document).on('change', '#modal-container #modal-form select', function() {
+    $(document).on('change', '#modal-container select', function() {
         var value = $(this).val();
         if (value === 'add-new') {
             dropdownEl = $(this);
@@ -3544,6 +3544,7 @@ $(function() {
                 $('#item-modal form').removeAttr('action');
                 $('#item-modal form').removeAttr('method');
                 $('#item-modal form').removeAttr('enctype');
+                $('#item-modal form').addClass('ajax-add-item');
                 $('#item-modal form').attr('id', `ajax-${type}-item-form`);
             }
 
@@ -3713,6 +3714,37 @@ $(function() {
         }
     });
 
+    $(document).on('click', '#item-modal .modal-footer #save-and-close', function(e) {
+        e.preventDefault();
+
+        $('#item-modal form').trigger('submit');
+        $('#item-modal').modal('hide');
+    });
+
+    $(document).on('submit', '#item-modal form', function(e) {
+        if($(this).attr('id').includes('ajax')) {
+            e.preventDefault();
+            var data = new FormData(this);
+            var type = $(this).attr('id').replaceAll('ajax-', '').replaceAll('-item-form', '');
+
+            $.ajax({
+                url: '/accounting/ajax-add-item/'+type,
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    var res = JSON.parse(result);
+
+                    if(res.success) {
+                        dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.title}</option>`);
+                        dropdownEl.trigger('change');
+                    }
+                }
+            });
+        }
+    });
+
     $(document).on('submit', '#account-modal #ajax-add-account', function(e) {
         e.preventDefault();
 
@@ -3804,7 +3836,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container #modal-form #vendor', function() {
+    $(document).on('change', '#modal-container #vendor', function() {
         if ($(this).val() === 'add-new') {
             dropdownEl = $(this);
 

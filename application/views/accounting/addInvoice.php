@@ -619,7 +619,7 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                         <div class="col-md-7">
                                         </div>
                                         <div class="col-md-5">
-                                            <table class="table table_mobile" style="text-align:left;">
+                                            <table class="table table_mobile" style="text-align:left;" id="summaryContainer">
                                                 <tr>
                                                     <td>Subtotal</td>
                                                     <!-- <td></td> -->
@@ -1513,3 +1513,20 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
         });
     });
 </script>
+
+<!-- add tax rate sidebar -->
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
+<style>
+    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
+    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
+</style>
+<script>
+    new TaxRateAdder($("#invoiceTaxRate"), {
+        tableRows: "#jobs_items_table_body tr",
+        totalTax: "#summaryContainer #total_tax_",
+        grandTotal: "#summaryContainer #grand_total",
+        subTotal: "#summaryContainer #span_sub_total_invoice",
+    });
+</script>
+<!-- end add tax rate sidebar -->

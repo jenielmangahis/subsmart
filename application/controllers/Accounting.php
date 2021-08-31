@@ -78,8 +78,6 @@ class Accounting extends MY_Controller
 
         $this->page_data['menu_name'] =
             array(
-                array("Dashboard",  array()),
-                array("Banking",    array('Link Bank','Rules','Receipts','Tags')),
                 array("Cash Flow",   array()),
                 array("Expenses",   array('Expenses','Vendors')),
                 array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
@@ -91,8 +89,6 @@ class Accounting extends MY_Controller
             );
         $this->page_data['menu_link'] =
             array(
-                array('/accounting/banking',array()),
-                array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array('/accounting/cashflowplanner',array()),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
                 array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
@@ -104,7 +100,7 @@ class Accounting extends MY_Controller
             );
 
 
-        $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+        $this->page_data['menu_icon'] = array("fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
         $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
@@ -154,17 +150,6 @@ class Accounting extends MY_Controller
         $this->page_data['list_categories'] = $this->categories_model->getCategories();
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();*/
-
-        add_css([
-            'assets/css/accounting/tax/settings/settings.css',
-            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
-            'assets/js/accounting/invoice/addInvoice.js',
-            'assets/js/accounting/invoice/accounting.min.js',
-        ]);
 
         $this->load->view('accounting/dashboard', $this->page_data);
     }
@@ -283,6 +268,7 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         
         $this->page_data['page_title'] = "Customers";
@@ -2333,16 +2319,6 @@ class Accounting extends MY_Controller
 
     public function lists()
     {
-        add_css([
-            'assets/css/accounting/tax/settings/settings.css',
-            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
-            'assets/js/accounting/invoice/addInvoice.js',
-            'assets/js/accounting/invoice/accounting.min.js',
-        ]);
         $this->load->view('accounting/list', $this->page_data);
     }
 
@@ -5960,18 +5936,6 @@ class Accounting extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
-
-        add_css([
-            'assets/css/accounting/tax/settings/settings.css',
-            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
-        ]);
-
-        add_footer_js([
-            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
-            'assets/js/accounting/invoice/addInvoice.js',
-            'assets/js/accounting/invoice/accounting.min.js',
-        ]);
-        
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
 
@@ -7909,6 +7873,18 @@ class Accounting extends MY_Controller
     {
         $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
         $data = new stdClass();
+        $data->customer_address=$customer_info->acs_mail_add." ".$customer_info->acs_city.", ".$customer_info->acs_state." ".$customer_info->acs_zip_code;
+        $data->business_address=$customer_info->bus_street." ".$customer_info->bus_city.", ".$customer_info->bus_state." ".$customer_info->bus_postal_code;
+        $data->date_now=date('m/d/Y');
+        echo json_encode($data);
+    }
+    public function get_customer_info()
+    {
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
+        $data = new stdClass();
+        $data->customer_name = $customer_info->first_name." ".$customer_info->last_name;
+        $data->customer_email = $customer_info->acs_email;
+        $data->business_name = $customer_info->business_name;
         $data->customer_address=$customer_info->acs_mail_add." ".$customer_info->acs_city.", ".$customer_info->acs_state." ".$customer_info->acs_zip_code;
         $data->business_address=$customer_info->bus_street." ".$customer_info->bus_city.", ".$customer_info->bus_state." ".$customer_info->bus_postal_code;
         $data->date_now=date('m/d/Y');

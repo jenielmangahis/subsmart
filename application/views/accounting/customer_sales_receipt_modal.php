@@ -876,7 +876,7 @@ Alarm Direct, Inc</textarea>
                                     <td>$0.00</td>
                                 </tr>
                             </table> -->
-                                    <table class="table" style="text-align:left;">
+                                    <table class="table" style="text-align:left;" id="summaryContainer__sales">
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
@@ -888,7 +888,7 @@ Alarm Direct, Inc</textarea>
                                             <td>
                                                 <div class="addInvoiceTax">
                                                     <div class="form-group" style="margin-bottom: 0 !important;">
-                                                        <select class="form-control" id="invoiceTaxRate" disabled>
+                                                        <select class="form-control" id="invoiceTaxRate__sales" disabled>
                                                             <option value="items_tax" default="true" selected>Items total tax rate</option>
                                                             <option value="add_custom">+ Add custom rate</option>
                                                         </select>
@@ -1966,3 +1966,20 @@ Alarm Direct, Inc</textarea>
         }
     });
 </script>
+
+<!-- add tax rate sidebar -->
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
+<style>
+    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
+    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
+</style>
+<script>
+    new TaxRateAdder($("#invoiceTaxRate__sales"), {
+        tableRows: "#items_table_body_sales_receipt tr",
+        totalTax: "#summaryContainer__sales #total_tax_sr_",
+        grandTotal: "#summaryContainer__sales #grand_total_sr",
+        subTotal: "#summaryContainer__sales #span_sub_total_sr",
+    });
+</script>
+<!-- end add tax rate sidebar -->

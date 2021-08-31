@@ -6244,4 +6244,187 @@ class Accounting_modals extends MY_Controller
             $this->load->view("accounting/products_services_modals/".$type, $this->page_data);
         }
     }
+
+    public function ajax_add_item($type)
+    {
+        $post = $this->input->post();
+        $name = $post['name'];
+
+        if($_FILES['icon']['name'] !== "") {
+            $files = [
+                'name' => [
+                    $_FILES['icon']['name']
+                ],
+                'type' => [
+                    $_FILES['icon']['type']
+                ],
+                'tmp_name' => [
+                    $_FILES['icon']['tmp_name']
+                ],
+                'error' => [
+                    $_FILES['icon']['tmp_name']
+                ],
+                'size' => [
+                    $_FILES['icon']['size']
+                ]
+            ];
+
+            $attachmentId = $this->uploadFile($files);
+        }
+
+        switch($type) {
+            case 'bundle' :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'rebate' => isset($post['rebate_item']) ? $post['rebate_item'] : 0,
+                    'description' => $post['description'],
+                    'is_active' => 1
+                ];
+            break;
+            case 'product' :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'rebate' => isset($post['rebate_item']) ? $post['rebate_item'] : 0,
+                    'item_categories_id' => $post['category'],
+                    're_order_points' => $post['reorder_point'],
+                    'description' => $post['description'],
+                    'price' => $post['price'],
+                    'vendor_id' => $post['vendor'],
+                    'cost' => $post['cost'],
+                    'is_active' => 1
+                ];
+            break;
+            default :
+                $data = [
+                    'company_id' => logged('company_id'),
+                    'title' => $name,
+                    'type' => $type,
+                    'rebate' => isset($post['rebate_item']) ? $post['rebate_item'] : 0,
+                    'item_categories_id' => $post['category'],
+                    'description' => isset($post['selling']) ? $post['description'] : null,
+                    'price' => isset($post['selling']) ? $post['price'] : null,
+                    'vendor_id' => isset($post['purchasing']) ? $post['vendor'] : 0,
+                    'cost' => isset($post['purchasing']) ? $post['cost'] : null,
+                    'is_active' => 1
+                ];
+            break;
+        }
+
+        $create = $this->items_model->create($data);
+
+        if($create) {
+            switch($type) {
+                case 'bundle' :
+                    $accountingDetails = [
+                        'item_id' => $create,
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'display_on_print' => isset($post['display_on_print']) ? $post['display_on_print'] : null,
+                        'sku' => $post['sku']
+                    ];
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+
+                    $bundleItems = [];
+                    foreach($post['item'] as $key => $value) {
+                        $bundleItems[] = [
+                            'company_id' => logged('company_id'),
+                            'item_id' => $create,
+                            'bundle_item_id' => $value,
+                            'quantity' => $post['quantity'][$key]
+                        ];
+                    }
+                    $addBundleItems = $this->items_model->addBundleItems($bundleItems);
+                break;
+                case 'product' :
+                    $accountingDetails = [
+                        'item_id' => $create,
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'sku' => $post['sku'],
+                        'as_of_date' => date('Y-m-d', strtotime($post['as_of_date'])),
+                        'qty_po' => 0,
+                        'inv_asset_acc_id' => $post['inv_asset_account'],
+                        'income_account_id' => $post['income_account'],
+                        'tax_rate_id' => $post['sales_tax_category'],
+                        'purchase_description' => $post['purchase_description'],
+                        'expense_account_id' => $post['item_expense_account'],
+                    ];
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+    
+                    $locations = [];
+                    foreach($post['location_name'] as $key => $locName) {
+                        if($locName !== "") {
+                            $locations[] = [
+                                'company_id' => logged('company_id'),
+                                'qty' => $post['quantity'][$key],
+                                'name' => $locName,
+                                'item_id' => $create,
+                                'insert_date' => date('Y-m-d H:i:s')
+                            ];
+                        }
+                    }
+                    $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
+                break;
+                default :
+                    $accountingDetails = [
+                        'item_id' => $create,
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'sku' => $post['sku'],
+                        'income_account_id' => isset($post['selling']) ? $post['income_account'] : null,
+                        'tax_rate_id' => isset($post['selling']) ? $post['sales_tax_category'] : 0,
+                        'purchase_description' => isset($post['purchasing']) ? $post['purchase_description'] : null,
+                        'expense_account_id' => isset($post['purchasing']) ? $post['item_expense_account'] : null,
+                    ];
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+                break;
+            }
+        }
+
+        $return = [
+            'data' => $this->items_model->getItemById($create)[0],
+            'success' => $create && $itemAccDetails ? true : false,
+            'message' => $create && $itemAccDetails ? "Item $name has been successfully added." : "Please try again!"
+        ];
+
+        echo json_encode($return);
+    }
+
+    private function uploadFile($files)
+    {
+        $this->load->helper('string');
+        $data = [];
+        foreach($files['name'] as $key => $name) {
+            $extension = end(explode('.', $name));
+
+            do {
+                $randomString = random_string('alnum');
+                $fileNameToStore = $randomString . '.' .$extension;
+                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+            } while ($exists);
+
+            $fileType = explode('/', $files['type'][$key]);
+            $uploadedName = str_replace('.'.$extension, '', $name);
+
+            $data[] = [
+                'company_id' => getLoggedCompanyID(),
+                'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+                'uploaded_name' => $uploadedName,
+                'stored_name' => $fileNameToStore,
+                'file_extension' => $extension,
+                'size' => $files['size'][$key],
+                'notes' => null,
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+        }
+
+        $insert = $this->accounting_attachments_model->insertBatch($data);
+
+        return $insert;
+    }
 }
