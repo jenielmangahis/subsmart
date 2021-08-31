@@ -267,7 +267,7 @@ class Cron_Marketing extends MY_Controller
         $err_msg   = '';
         //$recipient = 'bryann.revina03@gmail.com';
         
-        $this->page_data['company']    = $company;
+        /*$this->page_data['company']    = $company;
         $this->page_data['email_body'] = replaceSmartTags($message);
         $msg = $this->load->view('cron_marketing/email_campaign_template', $this->page_data, true);
 
@@ -294,7 +294,7 @@ class Cron_Marketing extends MY_Controller
             $err_msg = $mail->ErrorInfo;
         } else {
             $is_sent = 1;
-        }
+        }*/
 
         $return = ['is_sent' => $is_sent, 'err_msg' => $err_msg];
 
