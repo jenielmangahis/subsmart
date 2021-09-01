@@ -49,6 +49,7 @@ class MY_Controller extends CI_Controller {
 
 		$method     = $this->router->fetch_method();
 		$controller = $this->router->fetch_class();		
+		$controller = strtolower($controller);
 		$company_id = logged('company_id');
 
 		if( $company_id != 1 ){
@@ -56,11 +57,10 @@ class MY_Controller extends CI_Controller {
 				redirect('mycrm/renew_plan'); 
 			}*/
 
-			if( $is_plan_active == 0 && $controller != 'mycrm'){			
-				if( $method != 'renew_plan' && $method != 'plan_select'  ){
+			if( $is_plan_active == 1 && $controller != 'mycrm'){	
+				if( $method != 'renew_plan' && $method != 'plan_select' && $method != '_renew_membership_plan' ){
 					redirect('mycrm/renew_plan'); 	
 				}
-				
 			}
 		}		
 	}

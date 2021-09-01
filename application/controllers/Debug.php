@@ -410,7 +410,7 @@
 
             echo "<pre>";
             print_r($data_cc);
-            print_r($result)
+            print_r($result);
         }
 
         public function converge_verify_cc( $data ){
