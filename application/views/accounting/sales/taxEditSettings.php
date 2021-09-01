@@ -191,7 +191,7 @@ include viewPath('includes/header');
                         </label>
                     </div>
                     <div class="form-check">
-                        <input data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType2" value="combined">
+                        <input disabled data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType2" value="combined">
                         <label class="form-check-label" for="addRate__rateType2">
                             Combined
                         </label>

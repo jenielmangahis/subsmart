@@ -1451,8 +1451,6 @@ $(function() {
 
                     form.next().removeClass('hide');
                 } else {
-                    console.log(res);
-
                     toast(res.success, res.message);
 
                     showTagsList(form.children().children('.modal-header').children('a'));
@@ -3719,6 +3717,16 @@ $(function() {
 
         $('#item-modal form').trigger('submit');
         $('#item-modal').modal('hide');
+    });
+
+    $(document).on('click', '#item-modal .modal-footer #save-and-new', function(e) {
+        e.preventDefault();
+
+        $('#item-modal form').trigger('submit');
+        $('#item-modal form select').val('').trigger('change');
+        $('#item-modal form input:not([type="checkbox"])').val('');
+        $('#item-modal form input[type="checkbox"]').prop('checked', false);
+        $('#item-modal form textarea').val('');
     });
 
     $(document).on('submit', '#item-modal form', function(e) {

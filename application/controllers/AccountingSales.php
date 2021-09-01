@@ -65,6 +65,22 @@ class AccountingSales extends MY_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
         $payload['user_id'] = logged('id');
+
+        if (!array_key_exists('agency_id', $payload)) {
+            // No agency_id is given, we have to create
+            // create it on db first.
+
+            $this->db->insert('accounting_tax_agencies', [
+                'user_id' => $payload['user_id'],
+                'agency' => $payload['agency'],
+                'frequency' => 'yearly',
+                'start_date' => date('Y-m-d'),
+                'start_period' => date('Y') . '-01-01',
+            ]);
+
+            $payload['agency_id'] = $this->db->insert_id();
+        }
+
         $this->db->insert('accounting_tax_rates', $payload);
 
         $this->db->where('id', $this->db->insert_id());

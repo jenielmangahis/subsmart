@@ -154,6 +154,12 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/dashboard', $this->page_data);
     }
 
+    public function bank_connect()
+    {
+        $this->page_data['title'] = 'Bank Connect';
+        $this->load->view('accounting/banking/link_bank', $this->page_data);
+    }
+
     public function apply_for_capital()
     {
         $this->load->view('includes/header', $this->page_data);

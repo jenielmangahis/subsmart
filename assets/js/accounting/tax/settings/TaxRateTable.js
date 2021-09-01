@@ -11,7 +11,8 @@ export class TaxRateTable {
         return `<span>${row.name} ${!isActive ? "(inactive)" : ""}</span>`;
       },
       agency: (_, __, row) => {
-        return `<span>${row.agency}</span>`;
+        const agency = row.agency.replaceAll(":", ", ");
+        return `<span>${agency}</span>`;
       },
       rate: (_, __, row) => {
         return `<span>${row.rate}%</span>`;

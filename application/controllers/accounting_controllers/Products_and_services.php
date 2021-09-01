@@ -396,7 +396,7 @@ class Products_and_services extends MY_Controller {
                     'is_active' => 1
                 ];
             break;
-            case 'inventory' :
+            case 'product' :
                 $data = [
                     'company_id' => logged('company_id'),
                     'title' => $name,
@@ -430,65 +430,68 @@ class Products_and_services extends MY_Controller {
         $create = $this->items_model->create($data);
 
         if($create) {
-            
-            if($type === 'bundle') {
-                $accountingDetails = [
-                    'item_id' => $create,
-                    'attachment_id' => isset($attachmentId) ? $attachmentId : null,
-                    'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
-                    'sku' => $input['sku']
-                ];
-                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
-
-                $bundleItems = [];
-                foreach($input['item_id'] as $key => $value) {
-                    $bundleItems[] = [
-                        'company_id' => logged('company_id'),
+            switch($type) {
+                case 'bundle' :
+                    $accountingDetails = [
                         'item_id' => $create,
-                        'bundle_item_id' => $value,
-                        'quantity' => $input['quantity'][$key]
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
+                        'sku' => $input['sku']
                     ];
-                }
-                $addBundleItems = $this->items_model->addBundleItems($bundleItems);
-            } else if($type === 'inventory') {
-                $accountingDetails = [
-                    'item_id' => $create,
-                    'attachment_id' => isset($attachmentId) ? $attachmentId : null,
-                    'sku' => $input['sku'],
-                    'as_of_date' => date('Y-m-d', strtotime($input['as_of_date'])),
-                    'qty_po' => 0,
-                    'inv_asset_acc_id' => $input['inv_asset_acc'],
-                    'income_account_id' => $input['income_account'],
-                    'tax_rate_id' => $input['sales_tax_cat'],
-                    'purchase_description' => $input['purchase_description'],
-                    'expense_account_id' => $input['expense_account'],
-                ];
-                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
 
-                $locations = [];
-                foreach($input['location_name'] as $key => $locName) {
-                    if($locName !== "") {
-                        $locations[] = [
+                    $bundleItems = [];
+                    foreach($input['item'] as $key => $value) {
+                        $bundleItems[] = [
                             'company_id' => logged('company_id'),
-                            'qty' => $input['quantity'][$key],
-                            'name' => $locName,
                             'item_id' => $create,
-                            'insert_date' => date('Y-m-d H:i:s')
+                            'bundle_item_id' => $value,
+                            'quantity' => $input['quantity'][$key]
                         ];
                     }
-                }
-                $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
-            } else {
-                $accountingDetails = [
-                    'item_id' => $create,
-                    'attachment_id' => isset($attachmentId) ? $attachmentId : null,
-                    'sku' => $input['sku'],
-                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
-                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
-                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
-                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
-                ];
-                $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+                    $addBundleItems = $this->items_model->addBundleItems($bundleItems);
+                break;
+                case 'product' :
+                    $accountingDetails = [
+                        'item_id' => $create,
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'sku' => $input['sku'],
+                        'as_of_date' => date('Y-m-d', strtotime($input['as_of_date'])),
+                        'qty_po' => 0,
+                        'inv_asset_acc_id' => $input['inv_asset_account'],
+                        'income_account_id' => $input['income_account'],
+                        'tax_rate_id' => $input['sales_tax_category'],
+                        'purchase_description' => $input['purchase_description'],
+                        'expense_account_id' => $input['item_expense_account'],
+                    ];
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+    
+                    $locations = [];
+                    foreach($input['location_name'] as $key => $locName) {
+                        if($locName !== "") {
+                            $locations[] = [
+                                'company_id' => logged('company_id'),
+                                'qty' => $input['quantity'][$key],
+                                'name' => $locName,
+                                'item_id' => $create,
+                                'insert_date' => date('Y-m-d H:i:s')
+                            ];
+                        }
+                    }
+                    $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
+                break;
+                default :
+                    $accountingDetails = [
+                        'item_id' => $create,
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'sku' => $input['sku'],
+                        'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
+                        'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_category'] : 0,
+                        'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
+                        'expense_account_id' => isset($input['purchasing']) ? $input['item_expense_account'] : null,
+                    ];
+                    $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
+                break;
             }
 
             $this->session->set_flashdata('success', "Item $name has been successfully added.");

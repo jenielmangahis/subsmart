@@ -1,5 +1,6 @@
 export class TaxAgencyTable {
-  constructor() {
+  constructor(data) {
+    this.data = data;
     this.$table = $("#agencyTable");
     this.render();
   }
@@ -8,7 +9,8 @@ export class TaxAgencyTable {
     const columns = {
       agency: (_, __, row) => {
         const isActive = row.is_active === "1";
-        return `<span>${row.agency} ${!isActive ? "(inactive)" : ""}</span>`;
+        const agency = row.agency.replaceAll(":", ", ");
+        return `<span>${agency} ${!isActive ? "(inactive)" : ""}</span>`;
       },
       fillingFrequency: (_, __, row) => {
         return `<span class="text-capitalize">${row.frequency}</span>`;
@@ -39,9 +41,6 @@ export class TaxAgencyTable {
         `;
       },
     };
-
-    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-    const includeInactive = this.shouldIncludeInactive();
 
     const actions = {
       edit: (row) => {
@@ -181,7 +180,7 @@ export class TaxAgencyTable {
 
     const table = this.$table.DataTable({
       searching: false,
-      ajax: `${prefixURL}/AccountingSales/apiGetAgencies?include_inactive=${includeInactive}`,
+      data: this.data,
       columns: [
         {
           sortable: false,
@@ -230,10 +229,5 @@ export class TaxAgencyTable {
       if (!func) return;
       await actions[action](row, table, event);
     });
-  }
-
-  shouldIncludeInactive() {
-    const includeInactiveKey = "nsmartrac::taxEditSettings__includeInactive";
-    return Boolean(JSON.parse(localStorage.getItem(includeInactiveKey)));
   }
 }

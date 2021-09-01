@@ -3,7 +3,7 @@ export const rateAgencies = [
     text: "All Agencies",
     disabled: true,
   },
-  "Alabama Department of Revenue",
+  // "Alabama Department of Revenue",
   "Alabama, Alabaster",
   "Alabama, Auburn",
   "Alabama, Baldwin County",
