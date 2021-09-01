@@ -100,56 +100,51 @@ function removeIcon()
 function occupyFields(rowData, type, action = 'edit')
 {
 	var name = action === 'duplicate' ? rowData.name+' - copy' : rowData.name;
-	$(`#${type}-form-modal #name`).val(name);
-	$(`#${type}-form-modal #sku`).val(rowData.sku);
-	$(`#${type}-form-modal #category`).val(rowData.category_id);
-	$(`#${type}-form-modal #rebate-item`).prop('checked', rowData.rebate === '1');
-	$(`#${type}-form-modal #reorderPoint`).val(rowData.reorder_point);
-	$(`#${type}-form-modal #description`).val(rowData.sales_desc);
-	$(`#${type}-form-modal #price`).val(rowData.sales_price);
+	$(`#item-modal #name`).val(name);
+	$(`#item-modal #sku`).val(rowData.sku);
+	$(`#item-modal #category`).val(rowData.category_id);
+	$(`#item-modal #rebate-item`).prop('checked', rowData.rebate === '1');
+	$(`#item-modal #reorderPoint`).val(rowData.reorder_point);
+	$(`#item-modal #description`).val(rowData.sales_desc);
+	$(`#item-modal #price`).val(rowData.sales_price);
 	if(rowData.purch_desc !== null && rowData.purch_desc !== "") {
-		$(`#${type}-form-modal #purchasing`).prop('checked', true).trigger('change');
+		$(`#item-modal #purchasing`).prop('checked', true).trigger('change');
 	}
-	$(`#${type}-form-modal #purchaseDescription`).val(rowData.purch_desc);
-	$(`#${type}-form-modal #cost`).val(rowData.cost);
-	$(`#${type}-form-modal #vendor`).val(rowData.vendor_id);
-	$(`#${type}-form-modal #salesTaxCat`).val(rowData.sales_tax_cat).trigger('change');
-	$(`#${type}-form-modal #incomeAccount option`).each(function() {
-		if($(this).html() === rowData.income_account) {
-			$(this).parent().val($(this).attr('value'));
-		}
-	});
-	$(`#${type}-form-modal #expenseAcc option`).each(function() {
-		if($(this).html() === rowData.expense_account) {
-			$(this).parent().val($(this).attr('value'));
-		}
-	});
-	$(`#${type}-form-modal #invAssetAcc option`).each(function() {
-		if($(this).html() === rowData.inventory_account) {
-			$(this).parent().val($(this).attr('value'));
-		}
-	});
+	$(`#item-modal #purchaseDescription`).val(rowData.purch_desc);
+	$(`#item-modal #cost`).val(rowData.cost);
 	if(rowData.icon !== null && rowData.icon !== "" && action === 'edit') {
-		$(`#${type}-form-modal img.image-prev`).attr('src', `${rowData.icon}`);
-		$(`#${type}-form-modal img.image-prev`).parent().addClass('d-flex justify-content-center');
-		$(`#${type}-form-modal img.image-prev`).parent().removeClass('hide');
-		$(`#${type}-form-modal img.image-prev`).parent().prev().addClass('hide');
+		$(`#item-modal img.image-prev`).attr('src', `${rowData.icon}`);
+		$(`#item-modal img.image-prev`).parent().addClass('d-flex justify-content-center');
+		$(`#item-modal img.image-prev`).parent().removeClass('hide');
+		$(`#item-modal img.image-prev`).parent().prev().addClass('hide');
 	}
 
 	if(rowData.display_on_print === "1" || rowData.display_on_print === 1) {
-		$('#bundle-form-modal #displayBundle').prop('checked', true);
-	}
-
-	if(type !== 'bundle') {
-		$(`#${type}-form-modal select`).select2();
+		$('#item-modal #displayBundle').prop('checked', true);
 	}
 }
 
-$('#type-selection-modal').on('show.bs.modal', function (event) {
-	var triggerElement = $(event.relatedTarget); // Button that triggered the modal
-	if(triggerElement.length > 0) {
-		$('#type-selection-modal table tbody tr:last-child').show();
-	}
+$('#add-item-button').on('click', function(e) {
+	e.preventDefault();
+
+	$.get(`/accounting/get-dropdown-modal/item_modal?field=product`, function(result) {
+		if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+                        ${result}
+                    </div>
+                </div>
+            `);
+        }
+
+		$(`#modal-container #item-modal`).modal({
+			backdrop: 'static',
+			keyboard: true
+		});
+	});
 });
 
 $('#assign-category').select2({
@@ -290,26 +285,6 @@ $(document).on('click', '#products-services-table .make-inactive', function(e) {
     });
 });
 
-$(document).on('change', '.modal-right-side input#icon', function() {
-	if($(this)[0].files && $(this)[0].files[0]) {
-		var reader = new FileReader();
-
-		reader.onload = function(e) {
-			$('img.image-prev').attr('src', e.target.result);
-		}
-
-		reader.readAsDataURL($(this)[0].files[0]);
-
-		$('img.image-prev').parent().addClass('d-flex justify-content-center');
-		$('img.image-prev').parent().removeClass('hide');
-		$('img.image-prev').parent().prev().addClass('hide');
-	} else {
-		$('img.image-prev').parent().removeClass('d-flex justify-content-center');
-		$('img.image-prev').parent().addClass('hide');
-		$('img.image-prev').parent().prev().removeClass('hide');
-	}
-});
-
 $(document).on('click', '#bundle-item-form #bundle-items-table tbody tr td:not(:last-child)', function() {
 	if($(this).parent().find('select[name="item_id[]"]').length < 1) {
 		$(this).parent().children('td:first-child').append('<select name="item_id[]" class="form-control"></select>');
@@ -369,74 +344,6 @@ $(document).on('click', '#bundle-form-modal #addBundleItem, #inventory-form-moda
 		<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
 	</tr>
 	`);
-});
-
-$(document).on('click', '#storage-locations tbody tr td:not(:last-child)', function() {
-	if($(this).parent().find('input[name="location_name[]"]').length < 1) {
-		$(this).parent().children('td:first-child').append('<input type="text" name="location_name[]" class="form-control">');
-		$(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
-	}
-});
-
-$(document).on('click', '#bundle-form-modal #bundle-items-table .deleteRow, #inventory-form-modal #storage-locations .deleteRow', function(e) {
-	e.preventDefault();
-
-	if($(this).parent().parent().parent().children('tr').length > 2) {
-		$(this).parent().parent().remove();
-	} else {
-		$(this).parent().parent().children('td:not(:last-child)').html('');
-	}
-});
-
-$(document).on('change', '.modal-right-side .modal #selling, .modal-right-side .modal #purchasing', function() {
-	if($(this).prop('checked') === false) {
-		$(this).parent().parent().parent().children('div:not(:first-child)').addClass('hide');
-
-		if($(this).attr('id') === 'selling') {
-			$(this).parent().parent().parent().parent().parent().next().addClass('hide');
-
-			if($('.modal-right-side .modal #purchasing').prop('checked') === false) {
-				$('.modal-right-side .modal #purchasing').prop('checked', true).trigger('change');
-			}
-		} else {
-			if($('.modal-right-side .modal #selling').prop('checked') === false) {
-				$('.modal-right-side .modal #selling').prop('checked', true).trigger('change');
-			}
-		}
-	} else {
-		$(this).parent().parent().parent().children('div:not(:first-child)').removeClass('hide');
-
-		if($(this).attr('id') === 'selling') {
-			$(this).parent().parent().parent().parent().parent().next().removeClass('hide');
-		}
-	}
-});
-
-$('#types-table tr').on('click', function(e) {
-	var type = e.currentTarget.dataset.href;
-	$('#type-selection-modal').modal('hide');
-
-	$.get('products-and-services/item-form/'+type, function(result) {
-		$('.modal-form-container').html(`
-		<div class="modal-right-side">
-			<div class="modal right fade" id="${type}-form-modal" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						${result}
-					</div>
-				</div>
-			</div>
-		</div>
-		`);
-
-		$(`#${type}-form-modal .datepicker input`).datepicker({
-			uiLibrary: 'bootstrap'
-		});
-
-		$(`#${type}-form-modal select`).select2();
-
-		$(`#${type}-form-modal`).modal('show');
-	});
 });
 
 $(document).on('click', '#products-services-table .adjust-starting-value', function(e) {
@@ -605,20 +512,88 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 	rowData = $('#products-services-table').DataTable().row(row).data();
 	var type = rowData.type.toLowerCase();
 
-	$.get('products-and-services/item-form/'+type, function(result) {
-		$('.modal-form-container').html(result);
+	$.get('/accounting/item-form/'+type, function(result) {
+		if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">
+				<div class="modal-right-side">
+					<div class="modal right fade" tabindex="-1" id="item-modal" role="dialog" aria-labelledby="myModalLabel2">
+						<div class="modal-dialog" role="document" style="width: 25%">
+							<div class="modal-content">
+								${result}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+						<div class="modal-right-side">
+							<div class="modal right fade" tabindex="-1" id="item-modal" role="dialog" aria-labelledby="myModalLabel2">
+								<div class="modal-dialog" role="document" style="width: 25%">
+									<div class="modal-content">
+                        				${result}
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `);
+        }
+
+		$(`#item-modal .datepicker input`).datepicker({
+			uiLibrary: 'bootstrap'
+		});
+
+		$('#item-modal select').each(function() {
+			var type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'item-modal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect,
+					dropdownParent: $('#item-modal')
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2({
+						dropdownParent: $('#item-modal')
+					});
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1,
+						dropdownParent: $('#item-modal')
+					});
+				}
+			}
+		});
 
 		if(type === 'product' || type === 'bundle') {
-			$('#inventory-form-modal table thead tr th a').remove();
-			$('#bundle-form-modal table thead tr th a').remove();
-		} else {
-			$(`#${type}-form-modal table thead tr th a`).attr('onclick', `changeType('${type}')`);
+			$('#item-modal a#select-item-type').remove();
 		}
 
 		occupyFields(rowData, type);
 
-		$('#product-form-modal #storage-locations').next().remove();
-		$('#product-form-modal label[for="asOfDate"]').parent().remove();
+		$('#item-modal #storage-locations').next().remove();
+		$('#item-modal label[for="asOfDate"]').parent().remove();
 		$(`
 		<div class="form-group row" style="margin: 0 !important">
 			<div class="col-sm-6">
@@ -628,8 +603,8 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			<div class="col-sm-6">
 				<p class="text-right m-0">${rowData.qty_on_hand}</p>
 			</div>
-		</div>`).insertAfter('#product-form-modal #storage-locations');
-		$('#product-form-modal #storage-locations').parent().append(`
+		</div>`).insertAfter('#item-modal #storage-locations');
+		$('#item-modal #storage-locations').parent().append(`
 		<div class="form-group row" style="margin: 0 !important">
 			<div class="col-sm-6">
 				<label for="" class="m-0">Quantity on PO</label>
@@ -639,27 +614,27 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			</div>
 		</div>
 		`);
-		$('#product-form-modal #storage-locations').remove();
+		$('#item-modal #storage-locations').remove();
 		
-		$('#bundle-form-modal form').attr('id', 'update-bundle-form');
-		$(`#${type}-form-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${rowData.id}`);
+		$('#item-modal form').attr('id', `update-${type}-form`);
+		$(`#item-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${rowData.id}`);
 		for(i in rowData.bundle_items) {
-			if($($('#bundle-form-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-id', `${rowData.bundle_items[i].id}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${rowData.bundle_items[i].item_id}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${rowData.bundle_items[i].name}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${rowData.bundle_items[i].quantity}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
+			if($($('#item-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
+				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-id', `${rowData.bundle_items[i].id}`);
+				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${rowData.bundle_items[i].item_id}`);
+				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${rowData.bundle_items[i].name}`);
+				$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${rowData.bundle_items[i].quantity}`);
+				$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
 				<span>${rowData.bundle_items[i].name}</span>
 				<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
 				<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
 				`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
+				$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
 				<span>${rowData.bundle_items[i].quantity}</span>
 				<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
 				`);
 			} else {
-				$('#bundle-form-modal #bundle-items-table tbody').append(`
+				$('#item-modal #bundle-items-table tbody').append(`
 				<tr data-id="${rowData.bundle_items[i].id}" data-item="${rowData.bundle_items[i].item_id}" data-name="${rowData.bundle_items[i].name}" data-quantity="${rowData.bundle_items[i].quantity}">
 					<td>
 						<span>${rowData.bundle_items[i].name}</span>
@@ -676,7 +651,10 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			}
 		}
 
-		$(`#${type}-form-modal`).modal('show');
+		$(`#modal-container #item-modal`).modal({
+			backdrop: 'static',
+			keyboard: true
+		});
 	});
 });
 

@@ -89,7 +89,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-md-4" style="text-align: right">
                         <div style="float: right;position: relative;display: inline-block; margin-left: 10px">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#addAccountModal" style="border-radius: 20px 20px 20px 20px;">Add account</button>
+                            <a href="<?= base_url('accounting/bank_connect') ?>">
+                                <button class="btn btn-success"  style="border-radius: 20px 20px 20px 20px;">Add account</button>
+                            </a>
                         </div>
                         <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                             <button type="button" class="btn btn-default"  style="border-radius: 20px 0 0 20px">Update</button>

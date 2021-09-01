@@ -7,6 +7,11 @@ const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   const { agencies } = await import("./agencies.js");
   const { rateAgencies } = await import("./rateAgencies.js");
 
+  const { data: savedAgencies } = await fetchAgencies();
+
+  new TaxAgencyTable(savedAgencies);
+  new TaxRateTable();
+
   const $sidebarTriggers = $("[data-action^=add]");
   const $settingsButton = $("#settingsButton");
 
@@ -52,7 +57,15 @@ const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
   new Accounting__DropdownWithSearch($agencySelect, agencies);
 
   const $rateAgencySelect = $("#rateAgencySelect");
-  new Accounting__DropdownWithSearch($rateAgencySelect, rateAgencies);
+  let allAgencies = rateAgencies;
+  if (savedAgencies.length) {
+    allAgencies = [
+      { text: "Saved Agencies", disabled: true },
+      ...savedAgencies.map((a) => a.agency),
+      ...rateAgencies,
+    ];
+  }
+  new Accounting__DropdownWithSearch($rateAgencySelect, allAgencies);
 
   const $addAgencyBtn = $("#addAgencyBtn");
   $addAgencyBtn.on("click", async function () {
@@ -119,7 +132,14 @@ const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
         return;
       }
 
-      if ($(input).is(":checkbox") && !input.checked) {
+      if (key === "agency") {
+        const match = savedAgencies.find(({ agency }) => agency === value);
+        if (match) {
+          payload["agency_id"] = match.id;
+        }
+      }
+
+      if ($(input).is(":radio") && !input.checked) {
         continue;
       }
 
@@ -141,7 +161,18 @@ const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
     const json = await response.json();
     window.location.reload();
   });
-
-  new TaxAgencyTable();
-  new TaxRateTable();
 })();
+
+window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+async function fetchAgencies() {
+  const includeInactive = shouldIncludeInactive();
+  const endpoint = `${prefixURL}/AccountingSales/apiGetAgencies?include_inactive=${includeInactive}`;
+  const response = await fetch(endpoint);
+  return response.json();
+}
+
+function shouldIncludeInactive() {
+  const includeInactiveKey = "nsmartrac::taxEditSettings__includeInactive";
+  return Boolean(JSON.parse(localStorage.getItem(includeInactiveKey)));
+}

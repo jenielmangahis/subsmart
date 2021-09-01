@@ -31,6 +31,79 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 .filtering {
   display: inline-block;
 }
+
+.StepProgress {
+  position: relative;
+  padding-left: 45px;
+  list-style: none;
+}
+.StepProgress::before {
+  display: inline-block;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15px;
+  width: 10px;
+  height: 100%;
+  border-left: 2px solid #CCC;
+}
+.StepProgress-item {
+  position: relative;
+  counter-increment: list;
+}
+.StepProgress-item:not(:last-child) {
+  padding-bottom: 20px;
+}
+.StepProgress-item::before {
+  display: inline-block;
+  content: '';
+  position: absolute;
+  left: -30px;
+  height: 100%;
+  width: 10px;
+}
+.StepProgress-item::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: -37px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #CCC;
+  border-radius: 50%;
+  background-color: #FFF;
+}
+.StepProgress-item.is-done::before {
+  border-left: 2px solid green;
+}
+.StepProgress-item.is-done::after {
+  content: "";
+  font-size: 10px;
+  color: #FFF;
+  text-align: center;
+  border: 2px solid green;
+  background-color: green;
+}
+.StepProgress-item.current::before {
+  border-left: 2px solid green;
+}
+.StepProgress-item.current::after {
+  content: counter(list);
+  padding-top: 1px;
+  width: 19px;
+  height: 18px;
+  top: -4px;
+  left: -40px;
+  font-size: 14px;
+  text-align: center;
+  color: green;
+  border: 2px solid green;
+  background-color: white;
+}
+.StepProgress strong {
+  display: block;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -337,7 +410,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td>
                             <label for="invoice_id_<?php echo $invoice->id ?>">
-                                <a class="a-default" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>"><?php echo $invoice->invoice_number ?></a></label>
+                                <!-- <a class="a-default" href="<?php //echo base_url('invoice/genview/' . $invoice->id) ?>"><?php //echo $invoice->invoice_number ?></a> -->
+                                <a class="a-default" href="#" data-toggle="modal" data-target="#type-selection-modal"><?php echo $invoice->invoice_number ?>
+                            </label>
                         </td>
 
                         <!-- <td>
@@ -564,6 +639,71 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
+
+                            <!--    Modal for creating rules-->
+                            <div class="modal-right-side">
+								<div class="modal right fade" id="type-selection-modal" tabindex="" role="dialog"
+									aria-labelledby="myModalLabel2">
+									<div class="modal-dialog" role="document" style="width: 25%">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h3 class="modal-title" id="myModalLabel2"><center>INV-000000002</center>
+												</h3>
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close"><span aria-hidden="true">&times;</span></button>
+											</div>
+											<div class="modal-body p-0">
+												<div class="row" style="padding:5%;">
+                                                    <div class="col-md-12">
+                                                        <i class="fa fa-check-square" style="font-size:24px;color:#108000;"></i> Paid (Deposited)
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <br>
+                                                        Total
+                                                        <h2>$2,211.98</h2>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <h6>Invoice date</h6>
+                                                        4/8/2021
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <h6>Due date</h6>
+                                                        4/23/2021
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row" style="padding:1% 5% 1% 5%;">
+                                                    <div class="col-md-12">
+                                                        <span style="font-size:18px;color:gray;">90 Works (Panama City)</span>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="wrapper">
+                                                    <span style="font-size:18px;color:gray;">Invoice activity</span> 
+                                                    <ul class="StepProgress">
+                                                    <li class="StepProgress-item is-done"><strong>Opened</strong>4/8/2021</li>
+                                                    <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li>
+                                                    <!-- <li class="StepProgress-item current"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li> -->
+                                                    <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
+                                                    <li class="StepProgress-item is-done"><strong>Deposited</strong></li>
+                                                    </ul>
+                                                </div>
+                                                <hr>
+                                                <div class="row" style="padding:1% 5% 1% 5%;">
+                                                    <div class="col-md-12" align="center">
+                                                        <input type="submit" value="More Actions" class="btn btn-primary">
+                                                        <input type="submit" value="Edit Invoice" class="btn btn-success">
+                                                    </div>
+                                                </div>
+                                                <hr>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--    end of modal-->
+						</div>
 
 <?php include viewPath('includes/footer_accounting'); ?>
 
