@@ -81,6 +81,7 @@ class AccountingSales extends MY_Controller
             $payload['agency_id'] = $this->db->insert_id();
         }
 
+        unset($payload['agency']);
         $this->db->insert('accounting_tax_rates', $payload);
 
         $this->db->where('id', $this->db->insert_id());
@@ -101,6 +102,16 @@ class AccountingSales extends MY_Controller
         }
 
         $rates = $this->db->get('accounting_tax_rates')->result();
+
+        $agencyIdMap = [];
+        foreach ($rates as $rate) {
+            if (!array_key_exists($rate->agency_id, $agencyIdMap)) {
+                $this->db->where('id', $rate->agency_id);
+                $agencyIdMap[$rate->agency_id] = $this->db->get('accounting_tax_agencies')->row();
+            }
+
+            $rate->agency = $agencyIdMap[$rate->agency_id];
+        }
 
         header('content-type: application/json');
         echo json_encode(['data' => $rates]);

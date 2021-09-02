@@ -39,9 +39,9 @@ function selectType(type)
 
 function changeType(type)
 {
-	var action = $(`#${type}-item-form`).attr('action');
-	var formId = $(`#${type}-item-form`).attr('id');
-	form = new FormData(document.getElementById(`${type}-item-form`));
+	var action = $(`#item-modal form#update-${type}-form`).attr('action');
+	var formId = `update-${type}-form`;
+	formData = new FormData(document.getElementById(formId));
 	$(`#${type}-form-modal`).modal('hide');
 	$('#type-selection-modal').modal('show');
 	$('#type-selection-modal table tbody tr:last-child').hide();
@@ -102,16 +102,30 @@ function occupyFields(rowData, type, action = 'edit')
 	var name = action === 'duplicate' ? rowData.name+' - copy' : rowData.name;
 	$(`#item-modal #name`).val(name);
 	$(`#item-modal #sku`).val(rowData.sku);
-	$(`#item-modal #category`).val(rowData.category_id);
+	if(rowData.category !== null && rowData.category !== "") {
+		$(`#item-modal #category`).append(`<option value="${rowData.category_id}" selected>${rowData.category}</option>`);
+	}
 	$(`#item-modal #rebate-item`).prop('checked', rowData.rebate === '1');
 	$(`#item-modal #reorderPoint`).val(rowData.reorder_point);
+	if(rowData.inventory_account !== null && rowData.inventory_account !== "") {
+		$(`#item-modal #invAssetAcc`).append(`<option value="${rowData.inventory_account_id}" selected>${rowData.inventory_account}</option>`);
+	}
 	$(`#item-modal #description`).val(rowData.sales_desc);
 	$(`#item-modal #price`).val(rowData.sales_price);
+	if(rowData.income_account !== null && rowData.income_account !== "") {
+		$(`#item-modal #incomeAccount`).append(`<option value="${rowData.income_account_id}" selected>${rowData.income_account}</option>`);
+	}
+	if(rowData.sales_tax_cat !== null && rowData.sales_tax_cat !== "") {
+		$(`#item-modal #salesTaxCat`).append(`<option value="${rowData.sales_tax_cat_id}" selected>${rowData.sales_tax_cat}</option>`);
+	}
 	if(rowData.purch_desc !== null && rowData.purch_desc !== "") {
 		$(`#item-modal #purchasing`).prop('checked', true).trigger('change');
 	}
 	$(`#item-modal #purchaseDescription`).val(rowData.purch_desc);
 	$(`#item-modal #cost`).val(rowData.cost);
+	if(rowData.expense_account !== null && rowData.expense_account !== "") {
+		$(`#item-modal #expenseAcc`).append(`<option value="${rowData.expense_account_id}" selected>${rowData.expense_account}</option>`);
+	}
 	if(rowData.icon !== null && rowData.icon !== "" && action === 'edit') {
 		$(`#item-modal img.image-prev`).attr('src', `${rowData.icon}`);
 		$(`#item-modal img.image-prev`).parent().addClass('d-flex justify-content-center');
@@ -121,6 +135,9 @@ function occupyFields(rowData, type, action = 'edit')
 
 	if(rowData.display_on_print === "1" || rowData.display_on_print === 1) {
 		$('#item-modal #displayBundle').prop('checked', true);
+	}
+	if(rowData.vendor !== null && rowData.vendor !== "") {
+		$(`#item-modal #vendor`).append(`<option value="${rowData.vendor_id}" selected>${rowData.vendor}</option>`);
 	}
 }
 
@@ -588,6 +605,8 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 
 		if(type === 'product' || type === 'bundle') {
 			$('#item-modal a#select-item-type').remove();
+		} else {
+			$(`#item-modal a#select-item-type`).attr('id', `change-item-type`);
 		}
 
 		occupyFields(rowData, type);
@@ -627,7 +646,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 				$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
 				<span>${rowData.bundle_items[i].name}</span>
 				<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
-				<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
+				<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item[]">
 				`);
 				$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
 				<span>${rowData.bundle_items[i].quantity}</span>
@@ -639,7 +658,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 					<td>
 						<span>${rowData.bundle_items[i].name}</span>
 						<input type="hidden" value="${rowData.bundle_items[i].id}" name="bundle_item_content_id[]">
-						<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
+						<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item[]">
 					</td>
 					<td>
 						<span>${rowData.bundle_items[i].quantity}</span>
@@ -656,6 +675,14 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			keyboard: true
 		});
 	});
+});
+
+$(document).on('click', '#item-modal #change-item-type', function(e) {
+	e.preventDefault();
+
+	var type = $('#item-modal form').attr('id').replaceAll('update-', '').replaceAll('-form', '');
+
+	changeType(type);
 });
 
 $('#category').select2({

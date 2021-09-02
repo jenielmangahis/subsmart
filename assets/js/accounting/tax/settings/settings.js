@@ -1,5 +1,3 @@
-const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
 (async () => {
   const { Accounting__DropdownWithSearch } = await import("../dropdown-with-search/dropdown-with-search.js"); // prettier-ignore
   const { TaxAgencyTable } = await import("./TaxAgencyTable.js");

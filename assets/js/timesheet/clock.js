@@ -124,18 +124,6 @@ $(document).ready(function() {
         });
     });
 
-    function clock_in_clock_out_send_sms(phone_number, message) {
-        $.ajax({
-            url: baseURL + "send-sms/clockin-clockout",
-            type: "POST",
-            dataType: "json",
-            data: { phone_number: phone_number, message: message },
-            success: function(data) {
-                console.log("sms_status")
-                console.log(data);
-            },
-        });
-    }
 
     function breakTime() {
         let latest_lunch = $("#latestLunchTime").val();
@@ -186,6 +174,19 @@ $(document).ready(function() {
         clearTimeout(counter);
     }
 
+    function clock_in_clock_out_send_sms(phone_number, message) {
+        $.ajax({
+            url: baseURL + "send-sms/clockin-clockout",
+            type: "POST",
+            dataType: "json",
+            data: { phone_number: phone_number, message: message },
+            success: function(data) {
+                console.log("sms_status")
+                console.log(data);
+            },
+        });
+    }
+
     function remainTwoDigit(number, targetLength) {
         let output = number + "";
         while (output.length < targetLength) {
@@ -194,26 +195,6 @@ $(document).ready(function() {
         return output;
     }
 
-    $(document).on("click", "#clockOut", function() {
-        let attn_id = $("#attendanceId").val();
-        // alert(attn_id);
-        $.ajax({
-            url: baseURL + "/timesheet/clockOut_validation",
-            type: "POST",
-            dataType: "json",
-            data: { attn_id: attn_id },
-            success: function(data) {
-                // alert(data);
-                if (data.noLunch) {
-                    confirmLunchin();
-                } else if (data.onLunch) {
-                    confirmLunchOut();
-                } else {
-                    confirmClockOut();
-                }
-            },
-        });
-    });
 
     let confirmLunchin = (function() {
         let executed = false;
@@ -280,6 +261,26 @@ $(document).ready(function() {
         };
     })();
 
+    $(document).on("click", "#clockOut", function() {
+        let attn_id = $("#attendanceId").val();
+        // alert(attn_id);
+        $.ajax({
+            url: baseURL + "/timesheet/clockOut_validation",
+            type: "POST",
+            dataType: "json",
+            data: { attn_id: attn_id },
+            success: function(data) {
+                // alert(data);
+                if (data.noLunch) {
+                    confirmLunchin();
+                } else if (data.onLunch) {
+                    confirmLunchOut();
+                } else {
+                    confirmClockOut();
+                }
+            },
+        });
+    });
     let confirmLunchOut = (function() {
         let executed = false;
         return function() {

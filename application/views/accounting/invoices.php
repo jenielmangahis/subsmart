@@ -104,6 +104,61 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 .StepProgress strong {
   display: block;
 }
+
+/* section{
+	padding: 60px 0;
+} */
+
+#accordion-style-1 h1,
+#accordion-style-1 a{
+    color:#007b5e;
+}
+#accordion-style-1 .btn-link {
+    font-weight: 400;
+    color: #007b5e;
+    background-color: transparent;
+    text-decoration: none !important;
+    font-size: 16px;
+    font-weight: bold;
+	padding-left: 25px;
+}
+
+#accordion-style-1 .card-body {
+    border-top: 2px solid #007b5e;
+}
+
+#accordion-style-1 .card-header .btn.collapsed .fa.main{
+	display:none;
+}
+
+#accordion-style-1 .card-header .btn .fa.main{
+	background: #007b5e;
+    padding: 13px 11px;
+    color: #ffffff;
+    width: 35px;
+    height: 41px;
+    position: absolute;
+    left: -1px;
+    top: 10px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+	display:block;
+}
+.card {
+    padding: 0px !important;
+    color: black;
+    margin-bottom: 0px !important;
+}
+.card:hover{
+    padding: 0px !important;
+    color: blue;
+}
+.btn:hover, .btn:focus, .btn.focus {
+    color: #000;
+    text-decoration: none;
+    border: 1px solid transparent;
+    box-shadow: none;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -671,7 +726,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         4/23/2021
                                                     </div>
                                                 </div>
-                                                <hr>
+                                                <!-- <hr>
                                                 <div class="row" style="padding:1% 5% 1% 5%;">
                                                     <div class="col-md-12">
                                                         <span style="font-size:18px;color:gray;">90 Works (Panama City)</span>
@@ -682,9 +737,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <span style="font-size:18px;color:gray;">Invoice activity</span> 
                                                     <ul class="StepProgress">
                                                     <li class="StepProgress-item is-done"><strong>Opened</strong>4/8/2021</li>
-                                                    <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li>
+                                                    <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li> -->
                                                     <!-- <li class="StepProgress-item current"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li> -->
-                                                    <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
+                                                    <!-- <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
                                                     <li class="StepProgress-item is-done"><strong>Deposited</strong></li>
                                                     </ul>
                                                 </div>
@@ -695,9 +750,142 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <input type="submit" value="Edit Invoice" class="btn btn-success">
                                                     </div>
                                                 </div>
-                                                <hr>
+                                                <hr> -->
 
-											</div>
+                                            <!-- <div id="accordion">
+                                                <div class="card">
+                                                    <div class="card-header" id="headingOne">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="width: 100%;">
+                                                        <span style="float:left;">Reminder 1 (3 day(s) before due date)</span> 
+                                                        <b style="float:right;">On <i class="fa fa-sort-down"></i></b>
+                                                        </button>
+                                                    </h5>
+                                                    </div>
+
+                                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            Test A
+                                                        
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card">
+                                                    <div class="card-header" id="headingTwo">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="width: 100%;">
+                                                        <span style="float:left;">Reminder 2 (On due date)</span> 
+                                                        <b style="float:right;">On <i class="fa fa-sort-down"></i></b>
+                                                        </button>
+                                                    </h5>
+                                                    </div>
+                                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            Test B
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card">
+                                                    <div class="card-header" id="headingThree">
+                                                        <h5 class="mb-0">
+                                                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;">
+                                                            <span style="float:left;">Reminder 3 (3 day(s) after due date)</span> 
+                                                            <b style="float:right;">On <i class="fa fa-sort-down"></i></b>
+                                                            </button>
+                                                        </h5>
+                                                    </div>
+                                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            Test C
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+											</div> -->
+                                            <section>
+                                                <div class="row">
+                                                    <!-- <div class="col-12">
+                                                        <h1 class="text-green mb-4 text-center"></h1>
+                                                    </div> -->
+                                                    <div class="col-md-12">
+                                                        <div class="accordion" id="accordionExample">
+                                                            <div class="card">
+                                                                <div class="card-header" id="headingTwo">
+                                                                    <h5 class="mb-0">
+                                                                <button class="btn btn-link collapsed btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                                <span style="font-size:18px;color:gray;">90 Works (Panama City)</span> <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
+                                                                </button>
+                                                                </h5>
+                                                                </div>
+                                                                <div id="collapseTwo" class="collapse fade" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                                                    <div class="card-body">
+                                                                        <b>Billing address</b> <br>
+                                                                        Tim Howard <br>
+                                                                        602 Gabriel Street <br>
+                                                                        Panama City, FL  32405 <br>
+                                                                        <br>
+                                                                        thoward377@hotmail.com <br>
+                                                                        Phone:	(850) 866-1683 <br>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div class="card-header" id="headingOne">
+                                                                    <h5 class="mb-0">
+                                                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                                        <span style="font-size:18px;color:gray;">Invoice activity</span>  <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
+                                                                </button>
+                                                            </h5>
+                                                                </div>
+
+                                                                <div id="collapseOne" class="collapse show fade" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                    <div class="card-body">
+                                                                        <div class="wrapper">
+                                                                            <ul class="StepProgress" style="margin-top:-100px;">
+                                                                                <li class="StepProgress-item is-done"><strong>Opened</strong>4/8/2021</li>
+                                                                                <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li> 
+                                                                                <li class="StepProgress-item is-done"><strong>Viewed</strong>4/10/2021</li> 
+                                                                                <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
+                                                                                <li class="StepProgress-item is-done"><strong>Deposited</strong></li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+                                                                <div class="card-header" id="headingThree">
+                                                                    <h5 class="mb-0">
+                                                                <button class="btn btn-link collapsed btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                                    <span style="font-size:18px;color:gray;">Product and services</span>  <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
+                                                                </button>
+                                                            </h5>
+                                                                </div>
+                                                                <div id="collapseThree" class="collapse fade" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                                                    <div class="card-body">
+                                                                        <table class="table" style="font-size:16px;font-weight:bold;">
+                                                                            <tr>
+                                                                                <td>Services</td>
+                                                                                <td align="right">$49.99</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>Invoicing</td>
+                                                                                <td align="right">$3.00</td>
+                                                                            </tr>
+                                                                            <!-- <tr>
+                                                                                <td><span>More details</span></td>
+                                                                            </tr> -->
+                                                                        </table>
+                                                                        <a href="#" style="color:blue;text-decoration: underline;"><u>More details</u></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>	
+                                                </div>
+                                            </section>
+
+
 										</div>
 									</div>
 								</div>
@@ -742,6 +930,29 @@ $(document).on('click touchstart','#deleteInvoiceBtnNew',function(){
   }
 
 });
+
+$(document).on('click touchstart','#inv_number_details',function(){
+
+var id = $(this).attr('data-id');
+// alert(id);
+
+$.ajax({
+type : 'GET',
+url : "<?php echo base_url(); ?>invoice/inv_number_details",
+data : {id: id},
+success: function(result){
+
+    // if (confirm('Some message')) {
+    //     alert('Thanks for confirming');
+    // } else {
+    //     alert('Why did you press cancel? You should have confirmed');
+    // }
+
+    // location.reload();
+    // sucess("Data Deleted Successfully!");
+},
+});
+
 
 function sucess(information,$id){
             Swal.fire({
