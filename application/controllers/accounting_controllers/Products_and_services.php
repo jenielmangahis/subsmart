@@ -190,12 +190,16 @@ class Products_and_services extends MY_Controller {
                         'id' => $item->id,
                         'name' => $item->title,
                         'category_id' => $item->item_categories_id,
+                        'category' => !is_null($this->items_model->getCategory($item->item_categories_id)) ? $this->items_model->getCategory($item->item_categories_id)->name : '',
                         'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
                         'type' => ucfirst($item->type),
                         'rebate' => $item->rebate,
                         'sales_desc' => $item->description,
+                        'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
                         'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                        'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
                         'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                        'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
                         'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
                         'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                         'sales_price' => $item->price,
@@ -204,10 +208,11 @@ class Products_and_services extends MY_Controller {
                         'qty_on_hand' => $qty,
                         'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                         'reorder_point' => $item->re_order_points,
-                        'item_categories_id' => $item->item_categories_id,
                         'icon' => $icon,
                         'vendor_id' => $item->vendor_id,
-                        'sales_tax_cat' => $accountingDetails->tax_rate_id,
+                        'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
+                        'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
+                        'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
                         'bundle_items' => $bundItems,
                         'locations' => $this->items_model->getLocationByItemId($item->id),
                         'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : ''
@@ -218,12 +223,16 @@ class Products_and_services extends MY_Controller {
                     'id' => $item->id,
                     'name' => $item->title,
                     'category_id' => $item->item_categories_id,
+                    'category' => $this->items_model->getCategory($item->item_categories_id)->name,
                     'sku' => !is_null($accountingDetails) ? $accountingDetails->sku : '',
                     'type' => ucfirst($item->type),
                     'rebate' => $item->rebate,
                     'sales_desc' => $item->description,
+                    'income_account_id' => !is_null($accountingDetails) ? $accountingDetails->income_account_id : '',
                     'income_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                    'expense_account_id' => !is_null($accountingDetails) ? $accountingDetails->expense_account_id : '',
                     'expense_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                    'inventory_account_id' => !is_null($accountingDetails) ? $accountingDetails->inv_asset_acc_id : '',
                     'inventory_account' => !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
                     'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                     'sales_price' => $item->price,
@@ -232,10 +241,11 @@ class Products_and_services extends MY_Controller {
                     'qty_on_hand' => $qty,
                     'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                     'reorder_point' => $item->re_order_points,
-                    'item_categories_id' => $item->item_categories_id,
                     'icon' => $icon,
                     'vendor_id' => $item->vendor_id,
-                    'sales_tax_cat' => $accountingDetails->tax_rate_id,
+                    'vendor' => !is_null($this->vendors_model->get_vendor_by_id($item->vendor_id)) ? $this->vendors_model->get_vendor_by_id($item->vendor_id)->display_name : '',
+                    'sales_tax_cat_id' => !is_null($accountingDetails) ? $accountingDetails->tax_rate_id : '',
+                    'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
                     'bundle_items' => $bundItems,
                     'locations' => $this->items_model->getLocationByItemId($item->id),
                     'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : ''
@@ -275,7 +285,7 @@ class Products_and_services extends MY_Controller {
 
         if($postData['group_by_category'] === "1" || $postData['group_by_category'] === 1) {
             $uncategorized = array_filter($data, function($item) {
-                return $item['item_categories_id'] === "0" || $item['item_categories_id'] === null || $item['item_categories_id'] === "";
+                return $item['category_id'] === "0" || $item['category_id'] === null || $item['category_id'] === "";
             });
 
             $categories = $this->items_model->getItemCategories();
@@ -283,7 +293,7 @@ class Products_and_services extends MY_Controller {
             $categorized = [];
             foreach($categories as $category) {
                 $catItems = array_filter($data, function($item) use ($category) {
-                    return $item['item_categories_id'] === $category->item_categories_id;
+                    return $item['category_id'] === $category->item_categories_id;
                 });
 
                 if(!empty($catItems)) {
@@ -392,6 +402,7 @@ class Products_and_services extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
+                    'item_categories_id' => 0,
                     'description' => $input['description'],
                     'is_active' => 1
                 ];
@@ -402,11 +413,11 @@ class Products_and_services extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    'item_categories_id' => $input['category'],
+                    'item_categories_id' => isset($input['category']) ? $input['category'] : 0,
                     're_order_points' => $input['reorder_point'],
                     'description' => $input['description'],
                     'price' => $input['price'],
-                    'vendor_id' => $input['vendor'],
+                    'vendor_id' => isset($input['vendor']) ? $input['vendor'] : 0,
                     'cost' => $input['cost'],
                     'is_active' => 1
                 ];
@@ -417,10 +428,10 @@ class Products_and_services extends MY_Controller {
                     'title' => $name,
                     'type' => $type,
                     'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
-                    'item_categories_id' => $input['category'],
+                    'item_categories_id' => isset($input['category']) ? $input['category'] : 0,
                     'description' => isset($input['selling']) ? $input['description'] : null,
                     'price' => isset($input['selling']) ? $input['price'] : null,
-                    'vendor_id' => isset($input['purchasing']) ? $input['vendor'] : 0,
+                    'vendor_id' => isset($input['purchasing']) && isset($input['vendor']) ? $input['vendor'] : 0,
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     'is_active' => 1
                 ];
@@ -544,34 +555,38 @@ class Products_and_services extends MY_Controller {
         $input = $this->input->post();
         $name = $input['name'];
 
-        switch ($type) {
-            case 'inventory' : 
-                $data = [
-                    'title' => $name,
-                    'type' => $type,
-                    'item_categories_id' => $input['category'],
-                    're_order_points' => $input['reorder_point'],
-                    'description' => $input['description'],
-                    'price' => $input['price'],
-                    'vendor_id' => $input['vendor_id'],
-                    'cost' => $input['cost'],
-                ];
-            break;
+        switch($type) {
             case 'bundle' :
                 $data = [
                     'title' => $name,
+                    'type' => $type,
+                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
                     'description' => $input['description'],
                     're_order_points' => null
                 ];
             break;
-            default : 
+            case 'product' :
                 $data = [
                     'title' => $name,
                     'type' => $type,
+                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
+                    'item_categories_id' => $input['category'],
+                    're_order_points' => $input['reorder_point'],
+                    'description' => $input['description'],
+                    'price' => $input['price'],
+                    'vendor_id' => $input['vendor'],
+                    'cost' => $input['cost'],
+                ];
+            break;
+            default :
+                $data = [
+                    'title' => $name,
+                    'type' => $type,
+                    'rebate' => isset($input['rebate_item']) ? $input['rebate_item'] : 0,
                     'item_categories_id' => $input['category'],
                     'description' => isset($input['selling']) ? $input['description'] : null,
                     'price' => isset($input['selling']) ? $input['price'] : null,
-                    'vendor_id' => isset($input['purchasing']) ? $input['vendor_id'] : 0,
+                    'vendor_id' => isset($input['purchasing']) ? $input['vendor'] : 0,
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     're_order_points' => null
                 ];
@@ -604,61 +619,65 @@ class Products_and_services extends MY_Controller {
         $update = $this->items_model->update($data, $condition);
 
         if($update) {
-            if($type === 'inventory') {
-                $accountingDetails = [
-                    'attachment_id' => $attachmentId,
-                    'sku' => $input['sku'],
-                    'inv_asset_acc_id' => $input['inv_asset_acc'],
-                    'income_account_id' => $input['income_account'],
-                    'tax_rate_id' => $input['sales_tax_cat'],
-                    'purchase_description' => $input['purchase_description'],
-                    'expense_account_id' => $input['expense_account'],
-                ];
-            } else if($type === 'bundle') {
-                $accountingDetails = [
-                    'attachment_id' => $attachmentId,
-                    'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
-                    'sku' => $input['sku']
-                ];
+            switch($type) {
+                case 'bundle' :
+                    $accountingDetails = [
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
+                        'sku' => $input['sku']
+                    ];
 
-                $bundleItems = $this->items_model->getBundleContents($id);
+                    $bundleItems = $this->items_model->getBundleContents($id);
 
-                foreach($bundleItems as $bundleItem) {
-                    if(!in_array($bundleItem->id, $input['bundle_item_content_id'])) {
-                        $this->items_model->deleteBundleItem($bundleItem->id, $id);
+                    foreach($bundleItems as $bundleItem) {
+                        if(!in_array($bundleItem->id, $input['bundle_item_content_id'])) {
+                            $this->items_model->deleteBundleItem($bundleItem->id, $id);
+                        }
                     }
-                }
 
-                foreach($input['item_id'] as $key => $item) {
-                    if($input['bundle_item_content_id'][$key] === null) {
-                        $itemContent = [
-                            [
-                                'company_id' => logged('company_id'),
-                                'item_id' => $id,
+                    foreach($input['item'] as $key => $item) {
+                        if($input['bundle_item_content_id'][$key] === null) {
+                            $itemContent = [
+                                [
+                                    'company_id' => logged('company_id'),
+                                    'item_id' => $id,
+                                    'bundle_item_id' => $item,
+                                    'quantity' => $input['quantity'][$key]
+                                ]
+                            ];
+    
+                            $addBundleItem = $this->items_model->addBundleItems($itemContent);
+                        } else {
+                            $itemContent = [
                                 'bundle_item_id' => $item,
                                 'quantity' => $input['quantity'][$key]
-                            ]
-                        ];
-
-                        $addBundleItem = $this->items_model->addBundleItems($itemContent);
-                    } else {
-                        $itemContent = [
-                            'bundle_item_id' => $item,
-                            'quantity' => $input['quantity'][$key]
-                        ];
-
-                        $updateBundleItem = $this->items_model->updateBundleItem($itemContent, $input['bundle_item_content_id'][$key]);
+                            ];
+    
+                            $updateBundleItem = $this->items_model->updateBundleItem($itemContent, $input['bundle_item_content_id'][$key]);
+                        }
                     }
-                }
-            } else {
-                $accountingDetails = [
-                    'attachment_id' => $attachmentId,
-                    'sku' => $input['sku'],
-                    'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
-                    'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_cat'] : 0,
-                    'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
-                    'expense_account_id' => isset($input['purchasing']) ? $input['expense_account'] : null,
-                ];
+                break;
+                case 'product' :
+                    $accountingDetails = [
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'sku' => $input['sku'],
+                        'inv_asset_acc_id' => $input['inv_asset_account'],
+                        'income_account_id' => $input['income_account'],
+                        'tax_rate_id' => $input['sales_tax_category'],
+                        'purchase_description' => $input['purchase_description'],
+                        'expense_account_id' => $input['item_expense_account'],
+                    ];
+                break;
+                default :
+                    $accountingDetails = [
+                        'attachment_id' => isset($attachmentId) ? $attachmentId : null,
+                        'sku' => $input['sku'],
+                        'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
+                        'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_category'] : 0,
+                        'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
+                        'expense_account_id' => isset($input['purchasing']) ? $input['item_expense_account'] : null,
+                    ];
+                break;
             }
 
             if($this->items_model->getItemAccountingDetails($id) === null) {

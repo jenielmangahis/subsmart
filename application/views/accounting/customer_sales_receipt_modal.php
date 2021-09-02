@@ -890,6 +890,7 @@ Alarm Direct, Inc</textarea>
                                                     <div class="form-group" style="margin-bottom: 0 !important;">
                                                         <select class="form-control" id="invoiceTaxRate__sales" disabled>
                                                             <option value="items_tax" default="true" selected>Items total tax rate</option>
+                                                            <option value="location">Based on location</option>
                                                             <option value="add_custom">+ Add custom rate</option>
                                                         </select>
                                                     </div>

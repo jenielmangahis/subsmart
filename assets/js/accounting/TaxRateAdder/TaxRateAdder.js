@@ -111,6 +111,8 @@ class TaxRateAdder {
 
       if (value === "add_custom") {
         this.$sidebar.addClass("sidebarForm--show");
+      } else if (value === "location") {
+        this.displayComputed({ tax: 7.5 });
       } else if (value === this.defaultSelected) {
         this.displayComputed();
       } else {
@@ -133,21 +135,23 @@ class TaxRateAdder {
     const { nextValue } = params;
     this.$sidebar.find(".form-control").val("");
     this.$sidebar.removeClass("sidebarForm--show");
-    this.$select.val(nextValue ? nextValue : taxRateDefault);
-
-    if (nextValue === null) {
-      this.displayComputed({ rateId: nextValue });
-    }
+    this.$select.val(nextValue ? nextValue : this.defaultSelected);
+    this.displayComputed({ rateId: nextValue });
   }
 
   displayComputed(params = {}) {
-    const { rateId } = params;
+    const { rateId, tax } = params;
 
     let taxValue = this.calculateTax();
     if (rateId !== undefined) {
       const price = this.calculateSubtotal();
       const customRate = this.customRates.find(({ id }) => id == rateId);
       taxValue = (Number(customRate.rate) / 100) * price;
+    }
+
+    if (tax !== undefined) {
+      const price = this.calculateSubtotal();
+      taxValue = (Number(tax) / 100) * price;
     }
 
     this.$taxDisplay.text(this.formatCurrency(taxValue));

@@ -407,6 +407,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
+
+
 <!-- Modal for add account-->
 <div class="full-screen-modal">
     <div id="addAccountModal" class="modal fade modal-fluid" role="dialog">
@@ -652,6 +654,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
     // DataTable JS
     $(document).ready(function() {
+        $('#addAccountModal').modal('show');
+
         $('#forReview_table').DataTable({
             "paging": false,
             "filter":false

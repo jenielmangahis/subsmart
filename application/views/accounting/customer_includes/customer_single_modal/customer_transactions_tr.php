@@ -3,14 +3,14 @@
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
                 <input type="checkbox" name="single_customer_transaction_check_box[]"
-                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"
+                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_"
                     class="customer_checkbox"
                     data-row-type="<?=$type?>"
                     data-invoice-id="<?=$invoice_id?>"
                     data-row-status="<?=$status?>"
                     data-invoice-number="<?=$no?>">
                 <label
-                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>"><span></span></label>
+                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_"><span></span></label>
             </div>
         </div>
     </td>
@@ -36,7 +36,7 @@
         <?=$memo?>
     </td>
     <td data-column="duedate">
-        <?=date("m/d/Y", strtotime($duedate))?>
+        <?php if($duedate!=""){date("m/d/Y", strtotime($duedate));}?>
     </td>
     <td data-column="aging">
         <?=$aging?>
@@ -57,7 +57,11 @@
         <?=$attachment?>
     </td>
     <td data-column="status">
-        <?=$status?>
+        <?php if($status==1){
+            echo "Success";
+        }else{
+            echo $status;
+        }?>
     </td>
     <td data-column="ponumber">
         <?=$ponumber?>

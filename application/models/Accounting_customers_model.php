@@ -176,4 +176,9 @@ class Accounting_customers_model extends MY_Model
             return false;
         }
     }
+    public function get_customer_deposits($customer_id)
+    {
+        $query = $this->db->query("SELECT * FROM accounting_bank_deposit WHERE customer_id = ".$customer_id);
+        return $query->result();
+    }
 }

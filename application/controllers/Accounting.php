@@ -8736,6 +8736,7 @@ class Accounting extends MY_Controller
                 $this->page_data['email']=$inv->customer_email;
                 $this->page_data['atatchement']="";
                 $this->page_data['status']=$status;
+                $this->page_data['invoice_status']=$inv->status;
                 $this->page_data['ponumber']="";
                 $this->page_data['sales_rep']="";
                 $this->page_data['customer_id']=$customer_id;
@@ -8776,6 +8777,37 @@ class Accounting extends MY_Controller
             $tbody_html.=$tr_html;
             if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
                 $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+            }
+        }
+        if ($filter_type == "All plus deposits") {
+            $all_deposits = $this->accounting_customers_model->get_customer_deposits($customer_id);
+            foreach ($all_deposits as $deposit) {
+                $this->page_data['date']=$deposit->date;
+                $this->page_data['type']="Deposit";
+                $this->page_data['no']="";
+                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                $this->page_data['method']="";
+                $this->page_data['source']="";
+                $this->page_data['memo']=$deposit->memo;
+                $this->page_data['duedate']="";
+                $this->page_data['aging']=$this->get_date_difference_indays($deposit->date, date("Y-m-d"));
+                $this->page_data['balance']=0;
+                $this->page_data['total']=$deposit->total_amount;
+                $this->page_data['last_delivered']="";
+                $this->page_data['email']=$customer_info->customer_email;
+                $this->page_data['atatchement']="";
+                $this->page_data['status']=$deposit->status;
+                $this->page_data['ponumber']="";
+                $this->page_data['sales_rep']="";
+                $this->page_data['customer_id']=$customer_id;
+                $this->page_data['invoice_payment_id']="";
+                $this->page_data['invoice_id']="";
+                $this->page_data['sales_receipt_id']=$receipt->id;
+                $this->page_data['deposit_id']=$deposit->id;
+                $tbody_html.=$tr_html;
+                if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                }
             }
         }
 
@@ -8885,7 +8917,7 @@ class Accounting extends MY_Controller
         if ($filter_type == "All transactions") {
             return true;
         } elseif ($filter_type == "All plus deposits") {
-            return false;
+            return true;
         } elseif ($filter_type == "All invoices") {
             if ($data["type"]=="Invoice") {
                 return true;

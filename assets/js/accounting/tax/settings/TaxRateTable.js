@@ -153,7 +153,16 @@ export class TaxRateTable {
 
     const table = this.$table.DataTable({
       searching: false,
-      ajax: `${prefixURL}/AccountingSales/apiGetRates?include_inactive=${includeInactive}`,
+      ajax: {
+        type: "GET",
+        url: `${prefixURL}/AccountingSales/apiGetRates?include_inactive=${includeInactive}`,
+        dataSrc: (json) => {
+          return json.data.map((rate) => {
+            rate.agency = rate.agency.agency;
+            return rate;
+          });
+        },
+      },
       columns: [
         {
           sortable: false,
