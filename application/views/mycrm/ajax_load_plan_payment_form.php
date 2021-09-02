@@ -8,6 +8,16 @@
         <div class="plan-item__price-total">$<?= number_format($membership_price, 2); ?></div>
     </div>
 </div>
+<div class="row margin-bottom-sec">
+    <div class="col-md-2">Plan number of license</div>
+    <div class="col-md-2"><?= $plan->num_license; ?> licenses</div>
+    <div class="col-md-2 text-right"></div>
+</div>
+<div class="row margin-bottom-sec">
+    <div class="col-md-2">Remaining License</div>
+    <div class="col-md-2"><?= $remaining_license; ?> <?= $remaining_license > 1 ? 'licenses' : 'license'; ?></div>
+    <div class="col-md-2 text-right"></div>
+</div>
 
 <div class="row margin-bottom-sec">
     <div class="col-md-2">

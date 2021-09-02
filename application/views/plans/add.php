@@ -95,6 +95,10 @@ a.btn-primary.btn-md {
   position: relative;
   left: 17px;
 }
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
+}
 @media only screen and (max-width: 1300px) {
   .card-deck-upgrades div a {
       min-height: 440px;
@@ -240,7 +244,7 @@ a.btn-primary.btn-md {
 
 <!-- Modal -->
 <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -251,25 +255,21 @@ a.btn-primary.btn-md {
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                        <table id="modal_items_table_estimate" class="table table-hover" style="width: 100%;">
                             <thead>
                             <tr>
-                                <td> Name</td>
-                                <td> Rebatable</td>
-                                <td> Qty</td>
-                                <td> Price</td>
-                                <td> Action</td>
+                                <th><b>Name</b></th>
+                                <th><b>Price</b></th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach($items as $item){ // print_r($item); ?>
                                 <tr>
                                     <td><?php echo $item->title; ?></td>
-                                    <td><?php echo $item->rebate; ?></td>
-                                    <td></td>
-                                    <td><?php echo $item->price; ?></td>
+                                    <td style="text-align: right;"><?php echo $item->price; ?></td>
                                     <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                    <span class="fa fa-plus"></span>
+                                    <span class="fa fa-plus"></span> Add
                                 </button></td>
                                 </tr>
                                 
@@ -281,7 +281,7 @@ a.btn-primary.btn-md {
             </div>
             <div class="modal-footer modal-footer-detail">
                 <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -297,6 +297,15 @@ a.btn-primary.btn-md {
      });
 
      $('.table-DT').DataTable({
+       "ordering": false,
+     });
+     $('#modal_items_table_estimate').DataTable({
+       "autoWidth" : false,
+       "columnDefs": [
+        { width: 540, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 100, targets: 0 }
+      ],
        "ordering": false,
      });
    });
