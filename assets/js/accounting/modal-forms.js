@@ -3551,9 +3551,9 @@ $(function() {
             });
     
             $('#item-modal select').each(function() {
-                var type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+                var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
 
-                if (dropdownFields.includes(type)) {
+                if (dropdownFields.includes(dropdownType)) {
                     $(this).select2({
                         ajax: {
                             url: '/accounting/get-dropdown-choices',
@@ -3562,7 +3562,7 @@ $(function() {
                                 var query = {
                                     search: params.term,
                                     type: 'public',
-                                    field: type,
+                                    field: dropdownType,
                                     modal: 'item-modal'
                                 }
 
@@ -3588,11 +3588,42 @@ $(function() {
                     }
                 }
             });
+
+            if(typeof itemFormData !== 'undefined' && itemFormData.has('name')) {
+                $('#item-modal form').attr('action', `/accounting/products-and-services/update/${type}/${itemFormData.get('id')}`);
+                $('#item-modal form').attr('id', `update-${type}-form`);
+
+                for(var data  of itemFormData.entries()) {
+                    if(data[0] !== 'icon') {
+                        if(data[0].includes('category') || data[0].includes('account') || data[0].includes('vendor')) {
+                            fillItemDropdownFields(data);
+                        } else {
+                            $('#item-modal form').find(`[name="${data[0]}"]`).val(data[1]).trigger('change');
+                        }
+                    } else {
+                        if(rowData.icon !== null && rowData.icon !== "") {
+                            $('#item-modal form').find('img.image-prev').attr('src', `/uploads/${rowData.icon}`);
+                            $('#item-modal form').find('img.image-prev').parent().addClass('d-flex justify-content-center');
+                            $('#item-modal form').find('img.image-prev').parent().removeClass('hide');
+                            $('#item-modal form').find('img.image-prev').parent().prev().addClass('hide');
+                        }
+                    }
+                }
     
-            $(`#item-modal`).modal({
-                backdrop: 'static',
-                keyboard: false
-            });
+                if(itemFormData.has('rebate_item')) {
+                    $('#item-modal form').find('#rebate-item').prop('checked', true).trigger('change');
+                }
+
+                if(itemFormData.has('selling')) {
+                    $('#item-modal form').find('#selling').prop('checked', true).trigger('change');
+                }
+    
+                if(itemFormData.has('purchasing')) {
+                    $('#item-modal form').find('#purchasing').prop('checked', true).trigger('change');
+                }
+            }
+
+            itemFormData = new FormData();
         });
     });
 
@@ -6185,4 +6216,33 @@ const changeItemType = (type) => {
 
 		form = new FormData();
 	});
+}
+
+const fillItemDropdownFields = (data) => {
+    switch(data[0]) {
+        case 'vendor' :
+            $.get(`/accounting/get-vendor-details/${data[1]}`, function(result) {
+                var vendor = JSON.parse(result);
+                $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${vendor.display_name}</option>`);
+            });
+        break;
+        case 'category' :
+            $.get(`/accounting/get-item-category-details/${data[1]}`, function(result) {
+                var category = JSON.parse(result);
+                $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${category.name}</option>`);
+            });
+        break;
+        case 'sales_tax_category' :
+            $.get(`/accounting/get-sales-tax-category-details/${data[1]}`, function(result) {
+                var category = JSON.parse(result);
+                $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${category.name}</option>`);
+            });
+        break;
+        default :
+            $.get(`/accounting/get-account-details/${data[1]}`, function(result) {
+                var account = JSON.parse(result);
+                $('#item-modal form').find(`[name="${data[0]}"]`).append(`<option value="${data[1]}" selected>${account.name}</option>`);
+            });
+        break;
+    }
 }

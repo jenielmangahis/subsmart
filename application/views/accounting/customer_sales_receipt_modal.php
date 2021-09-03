@@ -1,3 +1,23 @@
+<!-- add tax rate sidebar -->
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
+<style>
+    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
+    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
+    @import url("<?=$url->assets?>css/accounting/tax/taxrate-select/taxrate-select.css");
+</style>
+<script>
+    $(document).ready(function() {
+        new TaxRateAdder($("#invoiceTaxRate__sales"), {
+            tableRows: "#items_table_body_sales_receipt tr",
+            totalTax: "#summaryContainer__sales #total_tax_sr_",
+            grandTotal: "#summaryContainer__sales #grand_total_sr",
+            subTotal: "#summaryContainer__sales #span_sub_total_sr",
+        });
+    });
+</script>
+<!-- end add tax rate sidebar -->
+
 <div id="saved-notification-modal-section" style="display: none;">
     <div class="body">
         <div class="content">
@@ -888,11 +908,25 @@ Alarm Direct, Inc</textarea>
                                             <td>
                                                 <div class="addInvoiceTax">
                                                     <div class="form-group" style="margin-bottom: 0 !important;">
-                                                        <select class="form-control" id="invoiceTaxRate__sales" disabled>
-                                                            <option value="items_tax" default="true" selected>Items total tax rate</option>
-                                                            <option value="location">Based on location</option>
-                                                            <option value="add_custom">+ Add custom rate</option>
-                                                        </select>
+                                                        <div class="taxRateSelect" id="invoiceTaxRate__sales">
+                                                            <button class="taxRateSelect__main" type="button" disabled>
+                                                                <span>Items total tax rate</span>
+                                                                <i class="fa fa-angle-down"></i>
+                                                            </button>
+
+                                                            <div class="taxRateSelect__options">
+                                                                <div class="taxRateSelect__item" value="items_tax" default="true">Items total tax rate</div>
+                                                                <div class="taxRateSelect__item" value="location">Based on location</div>
+
+                                                                <div class="taxRateSelect__item taxRateSelect__item--customWrapper">
+                                                                    <div class="taxRateSelect__title">Custom Rates</div>
+                                                                    <div class="taxRateSelect__item taxRateSelect__item--custom" value="add_custom">
+                                                                        <i class="fa fa-plus"></i>
+                                                                        <span>Add rate</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1967,20 +2001,3 @@ Alarm Direct, Inc</textarea>
         }
     });
 </script>
-
-<!-- add tax rate sidebar -->
-<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
-<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
-<style>
-    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
-    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
-</style>
-<script>
-    new TaxRateAdder($("#invoiceTaxRate__sales"), {
-        tableRows: "#items_table_body_sales_receipt tr",
-        totalTax: "#summaryContainer__sales #total_tax_sr_",
-        grandTotal: "#summaryContainer__sales #grand_total_sr",
-        subTotal: "#summaryContainer__sales #span_sub_total_sr",
-    });
-</script>
-<!-- end add tax rate sidebar -->

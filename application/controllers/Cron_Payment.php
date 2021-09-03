@@ -104,7 +104,8 @@ class Cron_Payment extends MY_Controller {
                             'nsmart_plan_id' => $plan->nsmart_plans_id,
                             'is_trial' => 0,
                             'next_billing_date' => $next_billing_date,
-                            'num_months_discounted' => $num_months_discounted
+                            'num_months_discounted' => $num_months_discounted,
+                            'renewal_date' => date("Y-m-d")
                         ];
                         $this->Clients_model->update($client->id, $data);
 
@@ -239,7 +240,8 @@ class Cron_Payment extends MY_Controller {
                             'next_billing_date' => $next_billing_date,
                             'num_months_discounted' => $num_months_discounted,
                             'recurring_subscription_payment_error' => '',
-                            'is_with_payment_error' => 0
+                            'is_with_payment_error' => 0,
+                            'renewal_date' => date("Y-m-d")
                         ];
                         $this->Clients_model->update($client->id, $data);
 

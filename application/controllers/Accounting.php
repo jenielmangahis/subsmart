@@ -251,6 +251,26 @@ class Accounting extends MY_Controller
         // print_r($this->page_data);
         $this->load->view('accounting/invoices', $this->page_data);
     }
+
+    public function inv_number_details()
+    {
+        $id = $this->input->post('id');
+
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Clients_model');
+
+        $invoice = $this->invoice_model->getinvoice($id);
+
+        $customer = $this->accounting_customers_model->get_customer_by_id($invoice->customer_id);
+        //  $client   = $this->Clients_model->getById($company_id);
+
+        $this->page_data['invoices'] = $invoice;
+        $this->page_data['customers'] = $customer;
+        // $this->page_data['client'] = $client;
+
+        echo json_encode($this->page_data);
+    }
+
     public function customers()
     {
         add_css(array(
@@ -5913,7 +5933,7 @@ class Accounting extends MY_Controller
         //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
 
-        $company_id = logged('company_id');
+        $company_id = logged('company_id'); //clients
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
         if ($role == 1 || $role == 2) {
@@ -5937,6 +5957,8 @@ class Accounting extends MY_Controller
             $this->page_data['terms'] = $terms;
         }
 
+        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
+        
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();

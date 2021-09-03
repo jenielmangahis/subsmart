@@ -726,11 +726,13 @@ class Mycrm extends MY_Controller {
         $this->load->model('NsmartPlan_model');
         $this->load->model('SubscriberNsmartUpgrade_model');
         $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Users_model');
 
         $post = $this->input->post();
         $company_id = logged('company_id');
         $client = $this->Clients_model->getById($company_id);
         $plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+        $company_total_users = $this->Users_model->countAllCompanyUsers($company_id);
 
         if( $post['plan_type'] == 'monthly' ){
             $plan_type  = 'monthly';
@@ -747,12 +749,17 @@ class Mycrm extends MY_Controller {
         }
 
         $billing_period = $billing_start . " to " . $billing_end;
-        $grand_total    = $membership_price + $license_total_price;
+        $grand_total    = $membership_price + $license_total_price;        
+        $remaining_license = $client->number_of_license - $company_total_users;
+        if( $remaining_license < 0 ){
+        	$remaining_license = 0;
+        }
         
         $this->page_data['billing_period'] = $billing_period;
         $this->page_data['grand_total']    = $grand_total;
         $this->page_data['license_total_price'] = $license_total_price;
         $this->page_data['membership_price'] = $membership_price;
+        $this->page_data['remaining_license'] = $remaining_license;
         $this->page_data['plan']      = $plan;
         $this->page_data['plan_type'] = $plan_type;
         $this->load->view('mycrm/ajax_load_plan_payment_form', $this->page_data);

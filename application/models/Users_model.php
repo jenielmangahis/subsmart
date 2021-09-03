@@ -256,6 +256,16 @@ class Users_model extends MY_Model
         return $query->totalUsers;
     }
 
+    public function countAllCompanyUsers($company_id)
+    {
+        $this->db->select('COUNT(id) as totalUsers');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get()->row();
+
+        return $query->totalUsers;
+    }
+
     public function login($row, $remember = false)
     {
         $time = time();

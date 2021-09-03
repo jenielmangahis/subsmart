@@ -140,21 +140,13 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   const { Accounting__DropdownWithSearch } = await import("../dropdown-with-search/dropdown-with-search.js"); // prettier-ignore
 
   const displayTaxedInvoices = (data) => {
-    const toggleDisplayNone = ($element, shouldHide = true) => {
-      if (shouldHide) {
-        $element.addClass("d-none");
-      } else {
-        $element.removeClass("d-none");
-      }
+    const render = ($element, items) => {
+      $element.html(items.length === 0 ? "<p>No item to display.</p>" : items);
     };
 
     const $overdueContainer = $("#overdueContainer");
     const $dueContainer = $("#dueContainer");
     const $upcomingContainer = $("#upcomingContainer");
-
-    const $overdueParent = $overdueContainer.closest(".taxList");
-    const $dueParent = $dueContainer.closest(".taxList");
-    const $upcomingParent = $upcomingContainer.closest(".taxList");
 
     const overdueItem = new Accounting__OverdueItem();
     const dueItem = new Accounting__DueItem();
@@ -164,13 +156,9 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     const dueItems = data.due.map(dueItem.createElement);
     const upcomings = data.upcoming.map(upcoming.createElement);
 
-    $overdueContainer.html(overdueItems);
-    $dueContainer.html(dueItems);
-    $upcomingContainer.html(upcomings);
-
-    toggleDisplayNone($overdueParent, data.overdue.length === 0);
-    toggleDisplayNone($dueParent, data.due.length === 0);
-    toggleDisplayNone($upcomingParent, data.upcoming.length === 0);
+    render($overdueContainer, overdueItems);
+    render($dueContainer, dueItems);
+    render($upcomingContainer, upcomings);
 
     const $totalTax = $("#totalTax");
     const total = data.overdue.reduce((carry, curr) => {

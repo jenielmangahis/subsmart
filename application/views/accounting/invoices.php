@@ -466,7 +466,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <td>
                             <label for="invoice_id_<?php echo $invoice->id ?>">
                                 <!-- <a class="a-default" href="<?php //echo base_url('invoice/genview/' . $invoice->id) ?>"><?php //echo $invoice->invoice_number ?></a> -->
-                                <a class="a-default" href="#" data-toggle="modal" data-target="#type-selection-modal"><?php echo $invoice->invoice_number ?>
+                                <a class="a-default" href="#" id="inv_number_details" inv-no="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><?php echo $invoice->invoice_number ?> </a>
                             </label>
                         </td>
 
@@ -702,7 +702,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									<div class="modal-dialog" role="document" style="width: 25%">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h3 class="modal-title" id="myModalLabel2"><center>INV-000000002</center>
+												<h3 class="modal-title" id="myModalLabel2"><span id="inv_modal_invNo" style="align:center;"><span>
 												</h3>
 												<button type="button" class="close" data-dismiss="modal"
 													aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -715,7 +715,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="col-md-12">
                                                         <br>
                                                         Total
-                                                        <h2>$2,211.98</h2>
+                                                        <h2>$177.35</h2>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <h6>Invoice date</h6>
@@ -813,19 +813,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <div class="card-header" id="headingTwo">
                                                                     <h5 class="mb-0">
                                                                 <button class="btn btn-link collapsed btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                <span style="font-size:18px;color:gray;">90 Works (Panama City)</span> <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
+                                                                <span style="font-size:18px;color:gray;">Panama City</span> <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
                                                                 </button>
                                                                 </h5>
                                                                 </div>
                                                                 <div id="collapseTwo" class="collapse fade" aria-labelledby="headingTwo" data-parent="#accordionExample">
                                                                     <div class="card-body">
                                                                         <b>Billing address</b> <br>
-                                                                        Tim Howard <br>
-                                                                        602 Gabriel Street <br>
-                                                                        Panama City, FL  32405 <br>
+                                                                        <span id="billingName"></span> <br>
+                                                                        <span id="billing_address"></span> <br>
+                                                                        <!-- Panama City, FL  32405 <br> -->
                                                                         <br>
-                                                                        thoward377@hotmail.com <br>
-                                                                        Phone:	(850) 866-1683 <br>
+                                                                        <span id="billing_customer_email"></span><br>
+                                                                        Phone:	<span id="billing_customer_phone"></span> <br>
 
                                                                     </div>
                                                                 </div>
@@ -934,23 +934,49 @@ $(document).on('click touchstart','#deleteInvoiceBtnNew',function(){
 $(document).on('click touchstart','#inv_number_details',function(){
 
 var id = $(this).attr('data-id');
+var inv_no = $(this).attr('inv-no');
+
+
+$('#type-selection-modal').modal('show');
+$('#inv_modal_invNo').text(inv_no);
+
 // alert(id);
 
-$.ajax({
-type : 'GET',
-url : "<?php echo base_url(); ?>invoice/inv_number_details",
-data : {id: id},
-success: function(result){
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>accounting/inv_number_details",
+    data : { id: id },
+    dataType: 'json',
+    success: function(response){
+        console.log('test '+ response['invoices'].customer_id);
+        console.log('test 2 '+ response['customers'].first_name);
 
-    // if (confirm('Some message')) {
-    //     alert('Thanks for confirming');
-    // } else {
-    //     alert('Why did you press cancel? You should have confirmed');
-    // }
+        var fullname = response['customers'].first_name + ' ' + response['customers'].last_name;
 
-    // location.reload();
-    // sucess("Data Deleted Successfully!");
-},
+        // result['invoices'].billingName
+        $('#billingName').text(fullname);
+        $('#billing_address').text(response['invoices'].billing_address);
+        $('#billing_customer_email').text(response['invoices'].customer_email);
+
+        if(response['customers'].phone_h == '')
+        {
+            var phone = response['customers'].phone_m;
+        }else{
+            var phone = response['customers'].phone_h;
+        }
+
+        $('#billing_customer_phone').text(phone);
+
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        // sucess("Data Deleted Successfully!");
+    },
+    });
 });
 
 

@@ -216,8 +216,6 @@ label>input {
                            <?php //endif ?>
                            <?php //if (hasPermissions('plan_delete')): ?>
                            <a class="btn btn-sm btn-primary btn-delete-plan" data-name="<?= $row->plan_name; ?>" href="javascript:void(0);" data-id="<?= $row->id; ?>"><i class="fa fa-trash"></i> Delete</a>
-
-                           <a href="<?php echo url('plans/delete/'.$row->id) ?>" class="btn btn-sm btn-primary" onclick='return confirm("Do you really want to delete this item ? \nIt may cause errors where it is currently being used !!")' title="Delete item" data-toggle="tooltip"><i class="fa fa-trash"></i> Delete</a>
                            <?php //endif ?>
                         </td>
                      </tr>
