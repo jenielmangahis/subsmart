@@ -1197,11 +1197,12 @@ $("#total_tax_").text(over_tax);
   
   
   
-
+  // grand_total_input
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#payment_amount").val(grand_total_w.toFixed(2));
+  $("#balanceDueText").text(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1476,6 +1477,7 @@ $(document).on("focusout", ".qtyest2", function () {
   $("#grand_total_input").val(s_grandtotal.toFixed(2));
   $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
+  $("#balanceDueText").text(s_grandtotal.toFixed(2));
   
 });
 
@@ -1766,6 +1768,7 @@ function calculation(counter) {
   $("#eqpt_cost").val(eqpt_cost);
 
   // alert('dri');
+  // grand_total_input
 
   if($("#grand_total").length && $("#grand_total").val().length)
   {
@@ -1776,6 +1779,7 @@ function calculation(counter) {
     $("#grand_total_input").val(grand_total_w.toFixed(2));
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
     $("#payment_amount").val(grand_total_w.toFixed(2));
+    $("#balanceDueText").text(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();
@@ -2161,6 +2165,7 @@ $(document).on("focusout", ".price2", function () {
   var pricetotal  = $("#item_total").val();
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#balanceDueText").text(s_grandtotal.toFixed(2));
   $("#grand_total_input").val(s_grandtotal.toFixed(2));
   // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   $("#payment_amount").val(s_grandtotal.toFixed(2));
@@ -2545,12 +2550,13 @@ function calculation(counter) {
   $("#total_tax_").text(subtotaltax.toFixed(2));
   $("#total_tax_input").val(subtotaltax.toFixed(2));
   
-
+  // grand_total_input
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
   $("#payment_amount").val(grand_total_w.toFixed(2));
+  $("#balanceDueText").text(grand_total_w.toFixed(2));
   
 
   if($("#grand_total").length && $("#grand_total").val().length)
@@ -2562,6 +2568,7 @@ function calculation(counter) {
     $("#grand_total_input").val(grand_total_w.toFixed(2));
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
     $("#payment_amount").val(grand_total_w.toFixed(2));
+    $("#balanceDueText").text(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();

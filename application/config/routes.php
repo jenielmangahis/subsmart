@@ -334,6 +334,9 @@ $route['accounting/ajax-add-payment-method']['post'] = 'accounting_modals/ajax_a
 $route['accounting/ajax-add-term']['post'] = 'accounting_modals/ajax_add_payment_term';
 $route['accounting/item-form/(:any)'] = 'accounting_modals/get_item_form/$1';
 $route['accounting/ajax-add-item/(:any)']['post'] = 'accounting_modals/ajax_add_item/$1';
+$route['accounting/get-account-details/(:any)'] = 'accounting_modals/get_account_details/$1';
+$route['accounting/get-item-category-details/(:any)'] = 'accounting_modals/get_item_category_details/$1';
+$route['accounting/get-sales-tax-category-details/(:any)'] = 'accounting_modals/get_sales_tax_category_details/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

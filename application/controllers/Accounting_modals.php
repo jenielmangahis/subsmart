@@ -6427,4 +6427,27 @@ class Accounting_modals extends MY_Controller
 
         return $insert;
     }
+
+    public function get_account_details($accountId)
+    {
+        echo json_encode($this->chart_of_accounts_model->getById($accountId));
+    }
+
+    public function get_item_category_details($categoryId)
+    {
+        echo json_encode($this->items_model->getCategory($categoryId));
+    }
+
+    public function get_sales_tax_category_details($taxCategoryId)
+    {
+        if($taxCategoryId === "0") {
+            $taxCategory = new stdClass();
+            $taxCategory->id = "0";
+            $taxCategory->name = "Nontaxable";
+
+            echo json_encode($taxCategory);
+        } else {
+            echo json_encode($this->TaxRates_model->getById($taxCategoryId));
+        }
+    }
 }
