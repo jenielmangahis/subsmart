@@ -2,6 +2,27 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header');?>
+
+<!-- add tax rate sidebar -->
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
+<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
+<style>
+    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
+    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
+    @import url("<?=$url->assets?>css/accounting/tax/taxrate-select/taxrate-select.css");
+</style>
+<script>
+    $(document).ready(function() {
+        new TaxRateAdder($("#invoiceTaxRate"), {
+            tableRows: "#jobs_items_table_body tr",
+            totalTax: "#summaryContainer #total_tax_",
+            grandTotal: "#summaryContainer #grand_total",
+            subTotal: "#summaryContainer #span_sub_total_invoice",
+        });
+    });
+</script>
+<!-- end add tax rate sidebar -->
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/accounting/accounting');?>
     <style>
@@ -278,12 +299,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php endforeach;?>
                                     </select>
                                 </div>
-                                <div class="col-md-5 form-group">
+                                <div class="col-md-3 form-group">
                                     <p>&nbsp;</p>
                                     <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
                                         data-target="#modalNewCustomer" style="color:#02A32C;"><span
                                             class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New
                                         Customer</a>
+                                </div>
+                                <div class="col-md-4 form-group" style="text-align:right;">
+                                    <div style="padding:10px;box-shadow: 0 0 5px 5px #F0F0F0;min-width:50%;float:right;">
+                                        <p>BALANCE DUE</p>
+                                        <h1>$ <span id="balanceDueText">0.00</span></h1>
+                                    </div>
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="invoice_job_location">Job Location <small
@@ -332,7 +359,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                         <div class="col-md-3">
                                             <label>Location of sale</label>
-                                            <input type="text" class="form-control" name="location_scale">
+                                            <input type="text" class="form-control" name="location_scale" value="<?php echo $clients->business_address; ?>">
                                         </div>
                                         <div class="col-md-3">
                                             <label>Tracking no.</label>
@@ -474,7 +501,7 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                         <option value="Rooms">Rooms</option>
                                     </select>
                                 </div>
-                                <div class="col-md-12 table-responsive">
+                                <div class="col-md-12 table-responsive" style="overflow: initial;">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead>
@@ -632,11 +659,25 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                                     <td>
                                                         <div class="addInvoiceTax">
                                                             <div class="form-group" style="margin-bottom: 0 !important;">
-                                                                <select class="form-control" id="invoiceTaxRate" disabled>
-                                                                    <option value="items_tax" default="true" selected>Items total tax rate</option>
-                                                                    <option value="location">Based on location</option>
-                                                                    <option value="add_custom">+ Add custom rate</option>
-                                                                </select>
+                                                                <div class="taxRateSelect" id="invoiceTaxRate">
+                                                                    <button class="taxRateSelect__main" type="button" disabled>
+                                                                        <span>Items total tax rate</span>
+                                                                        <i class="fa fa-angle-down"></i>
+                                                                    </button>
+
+                                                                    <div class="taxRateSelect__options">
+                                                                        <div class="taxRateSelect__item" value="items_tax" default="true">Items total tax rate</div>
+                                                                        <div class="taxRateSelect__item" value="location">Based on location</div>
+
+                                                                        <div class="taxRateSelect__item taxRateSelect__item--customWrapper">
+                                                                            <div class="taxRateSelect__title">Custom Rates</div>
+                                                                            <div class="taxRateSelect__item taxRateSelect__item--custom" value="add_custom">
+                                                                                <i class="fa fa-plus"></i>
+                                                                                <span>Add rate</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -1514,20 +1555,3 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
         });
     });
 </script>
-
-<!-- add tax rate sidebar -->
-<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
-<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
-<style>
-    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
-    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
-</style>
-<script>
-    new TaxRateAdder($("#invoiceTaxRate"), {
-        tableRows: "#jobs_items_table_body tr",
-        totalTax: "#summaryContainer #total_tax_",
-        grandTotal: "#summaryContainer #grand_total",
-        subTotal: "#summaryContainer #span_sub_total_invoice",
-    });
-</script>
-<!-- end add tax rate sidebar -->

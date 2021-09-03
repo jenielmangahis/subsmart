@@ -1,4 +1,4 @@
-let form = new FormData();
+let itemFormData = new FormData();
 let rowData = {};
 function col(el)
 {
@@ -41,54 +41,18 @@ function changeType(type)
 {
 	var action = $(`#item-modal form#update-${type}-form`).attr('action');
 	var formId = `update-${type}-form`;
-	formData = new FormData(document.getElementById(formId));
-	$(`#${type}-form-modal`).modal('hide');
-	$('#type-selection-modal').modal('show');
-	$('#type-selection-modal table tbody tr:last-child').hide();
+	var itemId = action.split('/');
+	itemId = itemId[itemId.length - 1];
+	itemFormData = new FormData(document.getElementById(formId));
+	itemFormData.set('id', itemId);
 
-	$(document).on('show.bs.modal', '#inventory-form-modal, #non-inventory-form-modal, #service-form-modal', function() {
-		var modalId = $(this).attr('id');
-		switch(modalId) {
-			case 'inventory-form-modal' :
-				action = action.replace('/'+type, '/inventory');
-				type = 'inventory';
-			break;
-			case 'non-inventory-form-modal' :
-				action = action.replace('/'+type, '/non-inventory');
-				type = 'non-inventory';
-			break;
-			case 'service-form-modal' :
-				action = action.replace('/'+type, '/service');
-				type = 'service';
-			break;
-		}
+	$.get(`/accounting/get-dropdown-modal/item_modal?field=${type}`, function(result) {
+		$('#modal-container .full-screen-modal').append(result);
 
-		$(this).find('form').attr('action', action);
-		$(this).find('form').attr('id', `${type}-item-form`);
-		if(form.has('name')) {
-			for(var data  of form.entries()) {
-				if(data[0] !== 'icon') {
-					$(this).find(`[name="${data[0]}"]`).val(data[1]).trigger('change');
-				} else {
-					if(rowData.icon !== null && rowData.icon !== "") {
-						$(this).find('img.image-prev').attr('src', `/uploads/${rowData.icon}`);
-						$(this).find('img.image-prev').parent().addClass('d-flex justify-content-center');
-						$(this).find('img.image-prev').parent().removeClass('hide');
-						$(this).find('img.image-prev').parent().prev().addClass('hide');
-					}
-				}
-			}
+		itemTypeSelection = $('#modal-container .full-screen-modal .modal-right-side:last-child() .modal').find('.modal-content').html();
+		$('#modal-container .full-screen-modal .modal-right-side:last-child()').remove();
 
-			if(form.has('selling')) {
-				$(this).find('#selling').prop('checked', true).trigger('change');
-			}
-
-			if(form.has('purchasing')) {
-				$(this).find('#purchasing').prop('checked', true).trigger('change');
-			}
-		}
-
-		form = new FormData();
+		$('#modal-container #item-modal .modal-content').html(itemTypeSelection);
 	});
 }
 
@@ -606,7 +570,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 		if(type === 'product' || type === 'bundle') {
 			$('#item-modal a#select-item-type').remove();
 		} else {
-			$(`#item-modal a#select-item-type`).attr('id', `change-item-type`);
+			$(`#item-modal a#select-item-type`).attr('onclick', `changeType('${type}')`);
 		}
 
 		occupyFields(rowData, type);
@@ -675,14 +639,6 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 			keyboard: true
 		});
 	});
-});
-
-$(document).on('click', '#item-modal #change-item-type', function(e) {
-	e.preventDefault();
-
-	var type = $('#item-modal form').attr('id').replaceAll('update-', '').replaceAll('-form', '');
-
-	changeType(type);
 });
 
 $('#category').select2({

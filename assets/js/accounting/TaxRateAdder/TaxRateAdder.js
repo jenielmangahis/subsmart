@@ -5,7 +5,10 @@ class TaxRateAdder {
   constructor($select, selectors) {
     this.loadDependencies().then(async () => {
       this.$select = $select;
-      this.defaultSelected = $select.find("[default]").val();
+      this.$mainBtn = $select.find(".taxRateSelect__main");
+      this.$itemWrapper = $select.find(".taxRateSelect__item--customWrapper");
+      this.defaultSelected = $select.find("[default]").attr("value");
+
       this.selectors = selectors;
 
       this.$sidebar = $("#addRateSidebar");
@@ -42,12 +45,12 @@ class TaxRateAdder {
   }
 
   async render() {
-    this.$select.prop("disabled", true);
+    this.$mainBtn.prop("disabled", true);
     const response = await this.api.getRates();
 
     this.state.setRates(response.data);
     this.renderOptions();
-    this.$select.prop("disabled", false);
+    this.$mainBtn.prop("disabled", false);
 
     new this.Accounting__DropdownWithSearch(
       this.$rateAgencySelect,
@@ -57,10 +60,15 @@ class TaxRateAdder {
 
   renderOptions() {
     this.customRates.forEach(({ id, name, rate }) => {
-      if (this.$select.find(`[data-id=${id}]`).length === 0) {
-        this.$select.append(
-          `<option data-id="${id}" value="${id}">${name} (${rate}%)</option>`
-        );
+      if (this.$itemWrapper.find(`[data-id=${id}]`).length === 0) {
+        const $item = $("<div></div>");
+        $item.addClass("taxRateSelect__item");
+        $item.addClass("taxRateSelect__item--custom");
+        $item.addClass("ellipsis");
+        $item.attr("data-id", id);
+        $item.attr("value", id);
+        $item.text(`${name} (${rate}%)`);
+        this.$itemWrapper.append($item);
       }
     });
   }
@@ -106,8 +114,19 @@ class TaxRateAdder {
       $this.text("Save");
     });
 
-    this.$select.on("change", (event) => {
-      const { value } = event.target;
+    this.$mainBtn.on("click", () => {
+      this.toggleOptions();
+    });
+
+    const $options = this.$select.find(".taxRateSelect__options");
+    $options.on("click", (event) => {
+      let $target = $(event.target);
+      if (!$target.hasClass("taxRateSelect__item")) {
+        $target = $target.closest(".taxRateSelect__item");
+      }
+
+      const value = $target.attr("value");
+      if (!value) return;
 
       if (value === "add_custom") {
         this.$sidebar.addClass("sidebarForm--show");
@@ -118,6 +137,12 @@ class TaxRateAdder {
       } else {
         this.displayComputed({ rateId: value });
       }
+
+      if (value !== "add_custom") {
+        this.setButtonText($target.text());
+      }
+
+      this.hideOptions();
     });
 
     this.$sidebarCloseBtn.on("click", () => {
@@ -129,13 +154,45 @@ class TaxRateAdder {
         this.closeSidebar();
       }
     });
+
+    $(document.body).on("click", (event) => {
+      if (this.$select.has(event.target).length === 1) return;
+      if (this.isOptionOpen()) {
+        this.hideOptions();
+      }
+    });
+  }
+
+  isOptionOpen() {
+    return this.$select.hasClass("taxRateSelect--open");
+  }
+
+  toggleOptions() {
+    this.$select.toggleClass("taxRateSelect--open");
+  }
+
+  hideOptions() {
+    this.$select.removeClass("taxRateSelect--open");
+  }
+
+  setButtonText(text) {
+    this.$mainBtn.find("span").text(text);
   }
 
   closeSidebar(params = {}) {
-    const { nextValue } = params;
     this.$sidebar.find(".form-control").val("");
     this.$sidebar.removeClass("sidebarForm--show");
-    this.$select.val(nextValue ? nextValue : this.defaultSelected);
+
+    const { nextValue } = params;
+    let $selected = undefined;
+
+    if (nextValue) {
+      $selected = this.$select.find(`[value=${nextValue}]`);
+    } else {
+      $selected = this.$select.find(`[value=${this.defaultSelected}]`);
+    }
+
+    this.setButtonText($selected.text());
     this.displayComputed({ rateId: nextValue });
   }
 
