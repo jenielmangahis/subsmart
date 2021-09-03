@@ -826,6 +826,7 @@ if (!function_exists('getLoggedIsPlanActive')) {
 
         $CI = &get_instance();
         $user = (object)$CI->session->userdata('logged');
+        print_r($user);exit;
         return $user->is_plan_active;
     }
 }
@@ -839,6 +840,19 @@ if (!function_exists('getLoggedCompanyID')) {
         $CI = &get_instance();
         $company_id = logged('company_id');
         return $company_id;
+    }
+}
+
+if (!function_exists('isCompanyPlanActive')) {
+
+
+    function isCompanyPlanActive()
+    {
+
+        $ci = &get_instance();
+        $ci->load->library('session');
+        $is_plan_active = $ci->session->userdata('is_plan_active');
+        return $is_plan_active;
     }
 }
 

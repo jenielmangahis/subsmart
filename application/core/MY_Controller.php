@@ -42,7 +42,7 @@ class MY_Controller extends CI_Controller {
 		];
 
 		$company_id     = logged('company_id');
-		$is_plan_active = getLoggedIsPlanActive();
+		$is_plan_active = isCompanyPlanActive();
 		if(!empty($company_id)){
 			$company = getCompanyFolder();
 		}
@@ -56,8 +56,7 @@ class MY_Controller extends CI_Controller {
 			/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
 				redirect('mycrm/renew_plan'); 
 			}*/
-
-			if( $is_plan_active == 1 && $controller != 'mycrm'){	
+			if( $is_plan_active == 0 && $controller != 'mycrm'){	
 				if( $method != 'renew_plan' && $method != 'plan_select' && $method != '_renew_membership_plan' ){
 					redirect('mycrm/renew_plan'); 	
 				}

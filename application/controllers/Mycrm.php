@@ -840,6 +840,7 @@ class Mycrm extends MY_Controller {
                 $data = ['order_number' => $order_number];
                 $this->CompanySubscriptionPayments_model->update($id, $data);
 
+                $this->session->set_userdata('is_plan_active', 1);
                 //Send mail
                 //$this->send_invoice($payment_id);
 
