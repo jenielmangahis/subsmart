@@ -215,6 +215,7 @@ label>input {
                            <a href="<?php echo url('plans/edit/'.$row->id) ?>" class="btn btn-sm btn-primary" title="Edit item" data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit</a>
                            <?php //endif ?>
                            <?php //if (hasPermissions('plan_delete')): ?>
+                           <a href="<?php echo url('plans/view/'.$row->id) ?>" class="btn btn-sm btn-primary" title="Edit item" data-toggle="tooltip"><i class="fa fa-eye"></i> View</a>
                            <a class="btn btn-sm btn-primary btn-delete-plan" data-name="<?= $row->plan_name; ?>" href="javascript:void(0);" data-id="<?= $row->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                            <?php //endif ?>
                         </td>

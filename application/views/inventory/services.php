@@ -3,6 +3,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <?php include viewPath('inventory/css/lists_css'); ?>
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+</style>
     <div class="wrapper" role="wrapper">
         <?php include viewPath('includes/sidebars/inventory'); ?>
         <!-- page wrapper start -->
@@ -19,7 +27,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
                                     <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                         <div class="float-right d-md-block">
-                                            <a class="btn btn-primary btn-sm" href="<?= base_url('inventory/services/add') ?>"><span class="fa fa-plus"></span> Add New Service</a>
+                                            <a class="btn btn-primary btn-sm" href="<?= base_url('inventory/services/add'); ?>"><span class="fa fa-plus"></span> Add New Service</a>
                                         </div>
                                     </div>
                                 </div>
@@ -41,10 +49,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
                                             </ul>
                                         </div>
-                                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="serviceItemsTable">
+                                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="customServiceItemsTable">
                                             <thead>
                                             <tr>
-                                                <th class="text-center"><input type="checkbox" class="form-control" id="inventoryServiceCheckAll" value=""></th>
+                                                <th class="text-center"><input style="transform: scale(2.0); height: 20px;" type="checkbox" class="form-control" id="inventoryServiceCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Estimated Time</strong></th>
@@ -56,7 +64,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php foreach($items as $item) : ?>
                                                 <?php if($item[1] != "header") : ?>
                                                     <tr>
-                                                        <td class="text-center"><input type="checkbox" class="inventoryService" data-id="<?php echo $item[3]; ?>" value=""></td>
+                                                        <td class="text-center"><input style="transform: scale(1.5);" type="checkbox" class="inventoryService" data-id="<?php echo $item[3]; ?>" value=""></td>
                                                         <td><?php echo $item[0]; ?></td>
                                                         <td><?php echo $item[4]; ?></td>
                                                         <td><?php echo $item[6]; ?></td>
@@ -67,7 +75,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                     <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                                                    <li role="presentation">
+                                                                        <a role="menuitem" tabindex="-1" href="<?= base_url('inventory/edit_services/' . $item[10]); ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                                        <!-- <a role="menuitem" tabindex="-1" href="javascript:void(0)" class="editItemBtn"  data-id="<?php echo $item[3]; ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a> -->
+                                                                    </li>
                                                                     <li role="separator" class="divider"></li>
                                                                     <li role="presentation">
                                                                         <a href="javascript:void(0)" id="<?= $item[3]; ?>" role="menuitem" tabindex="-1"  class="delete_service">
@@ -81,7 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php else : ?>
                                                     <tr style="background-color:#D3D3D3;">
                                                         <td>&nbsp;</td>
-                                                        <td colspan="4"><?php echo $item[0]; ?></td>
+                                                        <td colspan="4"><b><?php echo $item[0]; ?></b></td>
                                                         <td style="display: none"></td>
                                                         <td style="display: none"></td>
                                                         <td style="display: none"></td>
@@ -121,7 +132,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "/inventory/delete",
+                    url: base_url + "/inventory/delete",
                     data: { id: ID}, // serializes the form's elements.
                     success: function(data) {
                         if (data === "1") {
@@ -133,5 +144,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 });
             }
         });
+    });
+
+    $("#customServiceItemsTable").DataTable({
+        "autoWidth" : false,
+       "columnDefs": [
+            { width: 10, targets: 0 }            
+        ],
+        "ordering": false,
     });
 </script>

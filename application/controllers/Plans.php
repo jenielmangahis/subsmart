@@ -60,6 +60,13 @@ class Plans extends MY_Controller {
 		$this->load->view('plans/edit', $this->page_data);
 	}
 
+	public function view($id){
+
+		$this->page_data['items'] = $this->items_model->getItemlist();
+		$this->page_data['plan'] = $this->plans_model->getById($id);
+		$this->load->view('plans/view', $this->page_data);
+	}
+
 	public function save(){		
 
 		postAllowed();		
