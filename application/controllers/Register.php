@@ -771,7 +771,8 @@ class Register extends MYF_Controller {
                 'payment_method' => 'offer code',
                 'is_auto_renew' => 0,  
                 'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => 0
+                'num_months_discounted' => 0,
+                'recurring_payment_type' => 'monthly'
             ]);
 
             $uid = $this->users_model->create([
@@ -791,16 +792,26 @@ class Register extends MYF_Controller {
                 'status' => 1
             ));
 
-            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
-            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
-            {
-                $leads_input['tablename'] = "ac_leads";
-                $leads_input['field_name'] = "leads_id";
-                $leads_input['id'] = $reg_temp_user_id;
-                $this->Customer_advance_model->delete($leads_input);
-
-                $this->session->unset_userdata('reg_temp_user_id');
-            }
+            //Create customer
+            $customer_data = array(
+                'company_id'      => 1,
+                'fk_user_id'      => 5,
+                'fk_sa_id'        => 0,
+                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
+                'status'          => '',
+                'customer_type'   => 'Business',
+                'business_name'   => $post['business_name'],
+                'first_name'      => $post['firstname'],
+                'middle_name'     => '',
+                'last_name'       => $post['lastname'],
+                'mail_add'        => $post['business_address'],
+                'city'            => '',
+                'state'           => '',
+                'zip_code'        => $post['zip_code'],
+                'phone_h'         => '',
+                'phone_m'         => $post['phone']
+            );
+            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
             
             $is_valid = true;
             $msg      = 'Registration completed. Redirecting to login page.';
@@ -965,7 +976,8 @@ class Register extends MYF_Controller {
                 'is_auto_renew' => 0,  
                 'number_of_license' => $plan->num_license,
                 'next_billing_date' => $next_billing_date,
-                'num_months_discounted' => $num_months_discounted
+                'num_months_discounted' => $num_months_discounted,
+                'recurring_payment_type' => 'monthly'
             ]);
 
             $uid = $this->users_model->create([
