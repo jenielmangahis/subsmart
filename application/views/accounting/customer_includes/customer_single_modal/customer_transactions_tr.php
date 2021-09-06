@@ -3,14 +3,14 @@
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
                 <input type="checkbox" name="single_customer_transaction_check_box[]"
-                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_"
+                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_"
                     class="customer_checkbox"
                     data-row-type="<?=$type?>"
                     data-invoice-id="<?=$invoice_id?>"
                     data-row-status="<?=$status?>"
                     data-invoice-number="<?=$no?>">
                 <label
-                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_"><span></span></label>
+                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_"><span></span></label>
             </div>
         </div>
     </td>
@@ -26,6 +26,15 @@
     <td data-column="customer">
         <?=$customer?>
     </td>
+    <td data-column="start-date">
+        <?=$start_date?>
+    </td>
+    <td data-column="end-date">
+        <?=$end_date?>
+    </td>
+    <td data-column="statement-type">
+        <?=$statement_type?>
+    </td>
     <td data-column="method">
         <?=$method?>
     </td>
@@ -36,16 +45,26 @@
         <?=$memo?>
     </td>
     <td data-column="duedate">
-        <?php if($duedate!=""){date("m/d/Y", strtotime($duedate));}?>
+        <?php if ($duedate!="") {
+    echo date("m/d/Y", strtotime($duedate));
+}?>
     </td>
     <td data-column="aging">
         <?=$aging?>
     </td>
     <td data-column="balance">
-        $<?=number_format(($balance), 2)?>
+        <?php
+        if ($balance!="") {
+            echo "$ ".number_format(($balance), 2);
+        }
+        ?>
     </td>
-    <td>
-        $<?=number_format(($total), 2)?>
+    <td data-column="total">
+        <?php
+        if ($total!="") {
+            echo "$ ".number_format(($total), 2);
+        }
+        ?>
     </td>
     <td data-column="last-delivered">
         <?=$last_deliverd?>
@@ -57,9 +76,11 @@
         <?=$attachment?>
     </td>
     <td data-column="status">
-        <?php if($status==1){
+        <?php if ($type == "Deposit" && $status==1) {
             echo "Success";
-        }else{
+        } elseif ($type == "Credit memo" && $status==1) {
+            echo "Active";
+        } else {
             echo $status;
         }?>
     </td>
@@ -69,9 +90,35 @@
     <td data-column="sales-rep">
         <?=$sales_rep?>
     </td>
-    <td>
-        <?php if ($type=="Invoice" && $status=="Paid") {
-    ?>
+    <td data-column="action">
+
+        <?php
+        if ($type == "Deposit") {
+            ?>
+        <a href="javascript:void(0)" class="print-deposit-btn"
+            data-invoice-no="<?=$no?>"
+            data-invoice-id="<?=$invoice_id?>">Print</a>
+        <?php
+        } elseif ($type == "Estimate") {
+            ?>
+        <a href="javascript:void(0)" class="print-estimate-btn"
+            data-invoice-no="<?=$no?>"
+            data-invoice-id="<?=$invoice_id?>">Print</a>
+        <?php
+        } elseif ($type == "Credit memo") {
+            ?>
+        <a href="javascript:void(0)" class="print-credit-memo-btn"
+            data-invoice-no="<?=$no?>"
+            data-invoice-id="<?=$invoice_id?>">Print</a>
+        <?php
+        } elseif ($type == "Transaction Statement") {
+            ?>
+        <a href="javascript:void(0)" class="print-transaction-statement-memo-btn"
+            data-invoice-no="<?=$no?>"
+            data-invoice-id="<?=$invoice_id?>">Print</a>
+        <?php
+        } elseif ($type=="Invoice" && $status=="Paid") {
+            ?>
         <div class="dropdown dropdown-btn text-right">
             <a href="javascript:void(0)" class="print-invoice-btn"
                 data-invoice-no="<?=$no?>"
@@ -127,8 +174,8 @@
             </ul>
         </div>
         <?php
-} elseif ($type=="Invoice" && ($status=="Open" || $status=="Overdue")) {
-        ?>
+        } elseif ($type=="Invoice" && ($status=="Open" || $status=="Overdue")) {
+            ?>
         <div class="dropdown dropdown-btn text-right">
             <a href="" class="first-option customer_receive_payment_btn"
                 data-customer-id="<?=$customer_id?>">Receive payment
@@ -198,6 +245,6 @@
             </ul>
         </div>
         <?php
-    } ?>
+        } ?>
     </td>
 </tr>

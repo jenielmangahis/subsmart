@@ -38,29 +38,31 @@ class Contractors extends MY_Controller {
 
 		$this->page_data['menu_name'] =
             array(
-                array("Dashboard",	array()),
-                array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
-                array("Expenses", 	array('Expenses','Vendors')),
-                array("Sales", 		array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
-                array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
-                array("Reports",	array()),
-                array("Taxes",		array("Sales Tax","Payroll Tax")),
-                array("Mileage",	array()),
-                array("Accounting",	array("Chart of Accounts","Reconcile"))
+                // array("Dashboard",	array()),
+                // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
+                array("Cash Flow",   array()),
+                array("Expenses",   array('Expenses','Vendors')),
+                array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
+                array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
+                array("Reports",    array()),
+                array("Taxes",      array("Sales Tax","Payroll Tax")),
+                array("Mileage",    array()),
+                array("Accounting", array("Chart of Accounts","Reconcile"))
             );
         $this->page_data['menu_link'] =
             array(
-                array('/accounting/banking',array()),
-                array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
+                // array('/accounting/banking',array()),
+                // array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
+                array('/accounting/cashflowplanner',array()),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', 'credit_notes')),
+                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
-                array("",	array('/accounting/salesTax','/accounting/payrollTax')),
-                array('#',	array()),
-                array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
+                array("",   array('/accounting/salesTax','/accounting/payrollTax')),
+                array('#',  array()),
+                array("",   array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
-        $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+        $this->page_data['menu_icon'] = array("fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }
 
     public function index()

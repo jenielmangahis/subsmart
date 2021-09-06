@@ -181,4 +181,19 @@ class Accounting_customers_model extends MY_Model
         $query = $this->db->query("SELECT * FROM accounting_bank_deposit WHERE customer_id = ".$customer_id);
         return $query->result();
     }
+    public function get_customer_estimates($customer_id, $status)
+    {
+        $query = $this->db->query("SELECT * FROM estimates WHERE customer_id = ".$customer_id." AND status = '".$status."'");
+        return $query->result();
+    }
+    public function get_customer_credit_memo($customer_id)
+    {
+        $query = $this->db->query("SELECT * FROM accounting_credit_memo WHERE customer_id = ".$customer_id);
+        return $query->result();
+    }
+    public function get_customer_statement($customer_id)
+    {
+        $query = $this->db->query("SELECT * FROM accounting_statements WHERE customer_id = ".$customer_id);
+        return $query->result();
+    }
 }

@@ -67,18 +67,23 @@ class AccountingSales extends MY_Controller
         $payload['user_id'] = logged('id');
 
         if (!array_key_exists('agency_id', $payload)) {
-            // No agency_id is given, we have to create
-            // create it on db first.
+            $this->db->select('id');
+            $this->db->where('user_id', $payload['user_id']);
+            $this->db->where('agency', $payload['agency']);
+            $agency = $this->db->get('accounting_tax_agencies')->row();
+            $payload['agency_id'] = $agency ? $agency->id : null;
 
-            $this->db->insert('accounting_tax_agencies', [
-                'user_id' => $payload['user_id'],
-                'agency' => $payload['agency'],
-                'frequency' => 'yearly',
-                'start_date' => date('Y-m-d'),
-                'start_period' => date('Y') . '-01-01',
-            ]);
+            if (is_null($payload['agency_id'])) {
+                $this->db->insert('accounting_tax_agencies', [
+                    'user_id' => $payload['user_id'],
+                    'agency' => $payload['agency'],
+                    'frequency' => 'yearly',
+                    'start_date' => date('Y-m-d'),
+                    'start_period' => date('Y') . '-01-01',
+                ]);
 
-            $payload['agency_id'] = $this->db->insert_id();
+                $payload['agency_id'] = $this->db->insert_id();
+            }
         }
 
         unset($payload['agency']);
@@ -198,7 +203,11 @@ class AccountingSales extends MY_Controller
         }
 
         header('content-type: application/json');
-        echo json_encode(['data' => $records]);
+        echo json_encode([
+            'data' => $records,
+            'due_start' => $dueStart,
+            'due_end' => $dueEnd,
+        ]);
     }
 
     public function apiGetTaxedInvoicesDueDates()

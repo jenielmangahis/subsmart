@@ -256,12 +256,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             Status <br>
                             <select class="form-control" style="width:180px;">
                                 <option>All</option>
+                                <option>Needs Attention</option>
+                                <option>Overdue</option>
+                                <option>Not Due</option>
+                                <option>Not Deposited</option>
+                                <option>Deposited</option>
                             </select>
                         </div>
                         <div class="filtering">
                             Date <br>
                             <select class="form-control" style="width:180px;">
                                 <option>This month</option>
+                                <option>Last month</option>
+                                <option>Last 3 month</option>
+                                <option>Last 6 month</option>
+                                <option>Last 12 month</option>
+                                <option>Year to date</option>
+                                <option>2020</option>
                             </select>
                         </div>
                     </div>
@@ -499,7 +510,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td class="text-right">
                             <div class="dropdown dropdown-btn open">
-                                <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="#" style="color:#3a96d2;">Receive payment</a>
+                                <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>
                                 <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
                                     data-toggle="dropdown" aria-expanded="true">
                                     <span class="btn-label"></span>
@@ -715,15 +726,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="col-md-12">
                                                         <br>
                                                         Total
-                                                        <h2>$177.35</h2>
+                                                        <h2>$ <span id="billing_total"><span></h2>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <h6>Invoice date</h6>
-                                                        4/8/2021
+                                                        <span id="billing_in_date"><span>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <h6>Due date</h6>
-                                                        4/23/2021
+                                                        <span id="billing_due_date"><span>
                                                     </div>
                                                 </div>
                                                 <!-- <hr>
@@ -813,7 +824,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <div class="card-header" id="headingTwo">
                                                                     <h5 class="mb-0">
                                                                 <button class="btn btn-link collapsed btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                <span style="font-size:18px;color:gray;">Panama City</span> <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
+                                                                <span style="font-size:18px;color:gray;" id="billing_city"></span> City <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
                                                                 </button>
                                                                 </h5>
                                                                 </div>
@@ -846,7 +857,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                 <li class="StepProgress-item is-done"><strong>Opened</strong>4/8/2021</li>
                                                                                 <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li> 
                                                                                 <li class="StepProgress-item is-done"><strong>Viewed</strong>4/10/2021</li> 
-                                                                                <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
+                                                                                <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #<span id="inv_modal_invNo2" style="align:center;"><span></a></li>
                                                                                 <li class="StepProgress-item is-done"><strong>Deposited</strong></li>
                                                                             </ul>
                                                                         </div>
@@ -863,19 +874,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 </div>
                                                                 <div id="collapseThree" class="collapse fade" aria-labelledby="headingThree" data-parent="#accordionExample">
                                                                     <div class="card-body">
-                                                                        <table class="table" style="font-size:16px;font-weight:bold;">
-                                                                            <tr>
-                                                                                <td>Services</td>
-                                                                                <td align="right">$49.99</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>Invoicing</td>
-                                                                                <td align="right">$3.00</td>
-                                                                            </tr>
-                                                                            <!-- <tr>
-                                                                                <td><span>More details</span></td>
-                                                                            </tr> -->
-                                                                        </table>
+                                                                        <div id="billing_items"></div>
                                                                         <a href="#" style="color:blue;text-decoration: underline;"><u>More details</u></a>
                                                                     </div>
                                                                 </div>
@@ -892,6 +891,168 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 							<!--    end of modal-->
 						</div>
+
+                        <!-- Modal for add account-->
+<div class="full-screen-modal">
+    <div id="addreceivepaymentModal" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                        Receive Payment
+                    </div>
+                    <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal"
+                        aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <form
+                    action="<?php echo site_url()?>accounting/addReceivePayment"
+                    method="post">
+                    <div class="modal-body" style="height:1000px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Customer
+                                        <select class="form-control" name="customer_id">
+                                            <option></option>
+                                            <?php foreach ($customers as $customer) : ?>
+                                            <option
+                                                value="<?php echo $customer->prof_id; ?>">
+                                                <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br>
+                                        <input type="button" class="form-control" value="Find by invoice no.">
+                                        Don't have an invoice? Create a new sale
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Payment date
+                                        <input type="text" class="form-control" name="payment_date"
+                                            id="rp_payment_date">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Payment method<br>
+                                        <select class="form-control" name="payment_method" id="rp_payment_method">
+                                            <option></option>
+                                            <option value="0">Add New</option>
+                                            <?php foreach ($paymethods as $paymethod) { ?>
+                                            <option
+                                                value="<?php echo $paymethod->payment_method_id ; ?>">
+                                                <?php echo $paymethod->quick_name; ?>
+                                            </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        Reference no.
+                                        <input type="text" class="form-control" name="ref_number">
+                                    </div>
+                                    <div class="col-md-3">
+                                        Deposit to
+                                        <select class="form-control" name="deposit_to">
+                                            <option></option>
+                                            <option value="1">Cash on hand</option>
+                                            <option value="2">Cash</option>
+                                            <option value="3">Credit</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6" align="right">
+                                AMOUNT RECEIVED<h2>$0.00</h2><br>
+                                <p style="margin-top:100px;">Amount received</p><br>
+                                <input type="text" class="form-control" style="width:200px;text-align:right;"
+                                    name="amount" placeholder="0.00">
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                Memo<br>
+                                <textarea style="height:200px;width:100%;" name="memo"></textarea><br>
+                                <div class="file-upload">
+                                    <button class="file-upload-btn" type="button"
+                                        onclick="$('.file-upload-input').trigger( 'click' )">Attachments</button>
+
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type='file' onchange="readURL(this);"
+                                            accept="image/*" name="attachments" />
+                                        <div class="drag-text">
+                                            <i>Drag and drop files here or click the icon</i>
+                                        </div>
+                                    </div>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image" />
+                                        <div class="image-title-wrap">
+                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove
+                                                <span class="image-title">Uploaded File</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <hr>
+                    <div class="modal-footer-check">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                    type="button">Cancel</button>
+
+                            </div>
+                            <div class="col-md-5" align="center">
+                                <div class="middle-links">
+                                    <a href="">Print or Preview</a>
+                                </div>
+                                <div class="middle-links end">
+                                    <a href="">Make recurring</a>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="dropdown" style="float: right">
+                                    <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
+                                    <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved"
+                                        style="border-radius: 20px 0 0 20px">Save and new</button>
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown"
+                                        style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div style="margin: auto;">
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg"
+                            style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and
+                        security of your information are top priorities.</span>
+                </div>
+                <div style="margin: auto">
+                    <a href="" style="text-align: center">Privacy</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end of modal-->
+</div>
 
 <?php include viewPath('includes/footer_accounting'); ?>
 
@@ -939,6 +1100,7 @@ var inv_no = $(this).attr('inv-no');
 
 $('#type-selection-modal').modal('show');
 $('#inv_modal_invNo').text(inv_no);
+$('#inv_modal_invNo2').text(inv_no);
 
 // alert(id);
 
@@ -966,6 +1128,32 @@ $('#inv_modal_invNo').text(inv_no);
         }
 
         $('#billing_customer_phone').text(phone);
+
+        $('#billing_total').text(response['invoices'].grand_total);
+        $('#billing_in_date').text(response['invoices'].date_issued);
+        $('#billing_due_date').text(response['invoices'].due_date);
+
+        $('#billing_city').text(response['customers'].city);
+
+        
+                var inputs = "";
+                    $.each(response['items'], function (i, v) {
+                        inputs += v.title ;
+        
+                        console.log('test 3 '+ v.title);
+
+                    markup2 = "<table><tr width=\"10%\" id=\"sss\">" +
+                        // "<tr>"+
+                            "<td></td>"+
+                            "<td>"+ v.title +"</td>"+
+                            "<td>"+ v.quantity +"</td>"+
+                            "<td>"+ v.iCost +"</td>"+
+                        "</tr></table>";
+                    sulod = $("#billing_items");
+                    sulod.append(markup2);
+
+                });
+
 
         // if (confirm('Some message')) {
         //     alert('Thanks for confirming');

@@ -61,12 +61,13 @@
             <button class="btn btn-tranparent acct-btn-add mx-auto" type="button" data-toggle="modal" data-target="#new-popup"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
         </li>
 
+
         <li class="submenus <?= $this->uri->segment(2) == 'banking' ? "active" : "";  ?>">
             <a href="<?= base_url('accounting/banking') ?>"><span class="fa fa-tachometer"></span>Dashboard</a>
         </li>
         <li class="submenus dropright <?= $this->uri->segment(2) == 'link_bank' ? "active" : "";  ?>">
-            <a href="#menu1" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-university pr-3"></i>Banking</a>
-            <ul class="collapse list-unstyled" id="menu1">
+            <a href="#menu11111" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-university pr-3"></i>Banking</a>
+            <ul class="collapse list-unstyled" id="menu11111">
                 <li> <a href="<?= base_url('accounting/link_bank') ?>">Link Bank</a></li>
                 <li> <a href="<?= base_url('accounting/rules') ?>">Rules</a></li>
                 <li> <a href="<?= base_url('accounting/receipts') ?>">Receipts</a></li>

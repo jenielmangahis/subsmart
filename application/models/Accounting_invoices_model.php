@@ -281,6 +281,14 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+    public function get_invoice_by_estimate_id($estimate_id)
+    {
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->where('estimate_id', $estimate_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
     public function get_terms_by_id($term_id)
     {
         $this->db->select('*');

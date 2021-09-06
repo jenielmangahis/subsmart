@@ -140,6 +140,14 @@ class Items_model extends MY_Model
         return $inactive ? true : false;
     }
 
+    public function activeItem($id)
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('id', $id);
+        $inactive = $this->db->update($this->table, ['is_active' => 1]);
+        return $inactive ? true : false;
+    }
+
     public function addBundleItems($data)
     {
         $this->db->insert_batch('bundle_item_contents', $data);

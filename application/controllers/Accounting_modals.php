@@ -5400,6 +5400,11 @@ class Accounting_modals extends MY_Controller
             }
         }
 
+        if($field === 'category' && $this->input->get('field_id') === 'assign-category') {
+            $return['results'][0]['id'] = 0;
+            $return['results'][0]['text'] = "Uncategorized";
+        }
+
         echo json_encode($return);
     }
 

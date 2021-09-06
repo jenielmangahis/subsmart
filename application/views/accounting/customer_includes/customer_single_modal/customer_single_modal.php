@@ -372,6 +372,33 @@
                                                             <label for="tbl-colum-no"><span>No.</span></label>
                                                         </div>
                                                     </div>
+
+                                                    <div class="form-check" style="display: none;">
+                                                        <div class="checkbox checkbox-sec margin-right">
+                                                            <input type="checkbox" name="tbl-colum-start-date"
+                                                                id="tbl-colum-start-date" data-column="start-date">
+                                                            <label for="tbl-colum-start-date"><span>Start
+                                                                    Date</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-check" style="display: none;">
+                                                        <div class="checkbox checkbox-sec margin-right">
+                                                            <input type="checkbox" name="tbl-colum-end-date"
+                                                                id="tbl-colum-end-date" data-column="end-date">
+                                                            <label for="tbl-colum-end-date"><span>End
+                                                                    Date</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-check" style="display: none;">
+                                                        <div class="checkbox checkbox-sec margin-right">
+                                                            <input type="checkbox" name="tbl-colum-statement-type"
+                                                                id="tbl-colum-statement-type"
+                                                                data-column="statement-type">
+                                                            <label for="tbl-colum-statement-type"><span>Statement
+                                                                    Type</span></label>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="form-check">
                                                         <div class="checkbox checkbox-sec margin-right">
                                                             <input type="checkbox" name="tbl-colum-customer"
@@ -503,13 +530,16 @@
                                             <th data-column="type">Type</th>
                                             <th data-column="no">No.</th>
                                             <th data-column="customer">Customer</th>
+                                            <th data-column="start-date">Start Date</th>
+                                            <th data-column="end-date">End Date</th>
+                                            <th data-column="statement-type">Statement Type</th>
                                             <th data-column="method">Method</th>
                                             <th data-column="source">Source</th>
                                             <th data-column="memo">Memo</th>
                                             <th data-column="duedate">Due Date</th>
                                             <th data-column="aging">Aging</th>
                                             <th data-column="balance">Balance</th>
-                                            <th>TOTAL</th>
+                                            <th data-column="total">TOTAL</th>
                                             <th data-column="last-delivered">Last Delevired</th>
                                             <th data-column="email">Email</th>
                                             <th data-column="attachment"><i class="fa fa-paperclip"
@@ -518,7 +548,7 @@
                                             <th data-column="status">Status</th>
                                             <th data-column="ponumber">P.O. Number</th>
                                             <th data-column="sales-rep">SALES REP</th>
-                                            <th>ACTION</th>
+                                            <th data-column="action">ACTION</th>
                                         </tr>
                                     </thead>
                                     <tbody>

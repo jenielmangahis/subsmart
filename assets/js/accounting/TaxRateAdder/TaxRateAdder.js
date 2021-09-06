@@ -8,6 +8,7 @@ class TaxRateAdder {
       this.$mainBtn = $select.find(".taxRateSelect__main");
       this.$itemWrapper = $select.find(".taxRateSelect__item--customWrapper");
       this.defaultSelected = $select.find("[default]").attr("value");
+      this.$agencyIdInput = $("[name=agency_id]");
 
       this.selectors = selectors;
 
@@ -46,15 +47,34 @@ class TaxRateAdder {
 
   async render() {
     this.$mainBtn.prop("disabled", true);
-    const response = await this.api.getRates();
+    const { data: rates } = await this.api.getRates();
 
-    this.state.setRates(response.data);
+    this.state.setRates(rates);
     this.renderOptions();
     this.$mainBtn.prop("disabled", false);
 
+    const { data: agencies } = await this.api.getAgencies();
+    let allAgencies = this.rateAgencies;
+
+    if (agencies.length) {
+      // Disable saved agencies.
+      allAgencies = allAgencies.map((currAgency) => {
+        return {
+          text: currAgency,
+          disabled: agencies.some(({ agency }) => agency === currAgency),
+        };
+      });
+
+      allAgencies = [
+        { text: "Saved Agencies", disabled: true },
+        ...agencies.map(({ agency }) => agency),
+        ...allAgencies,
+      ];
+    }
+
     new this.Accounting__DropdownWithSearch(
       this.$rateAgencySelect,
-      this.rateAgencies
+      allAgencies
     );
   }
 
@@ -62,12 +82,15 @@ class TaxRateAdder {
     this.customRates.forEach(({ id, name, rate }) => {
       if (this.$itemWrapper.find(`[data-id=${id}]`).length === 0) {
         const $item = $("<div></div>");
+        const text = `${name} (${rate}%)`;
+
         $item.addClass("taxRateSelect__item");
         $item.addClass("taxRateSelect__item--custom");
         $item.addClass("ellipsis");
         $item.attr("data-id", id);
+        $item.attr("title", text);
         $item.attr("value", id);
-        $item.text(`${name} (${rate}%)`);
+        $item.text(text);
         this.$itemWrapper.append($item);
       }
     });
@@ -128,6 +151,8 @@ class TaxRateAdder {
       const value = $target.attr("value");
       if (!value) return;
 
+      let agencyId = null;
+
       if (value === "add_custom") {
         this.$sidebar.addClass("sidebarForm--show");
       } else if (value === "location") {
@@ -135,6 +160,8 @@ class TaxRateAdder {
       } else if (value === this.defaultSelected) {
         this.displayComputed();
       } else {
+        const customRate = this.customRates.find(({ id }) => id == value);
+        agencyId = customRate.agency_id;
         this.displayComputed({ rateId: value });
       }
 
@@ -142,6 +169,7 @@ class TaxRateAdder {
         this.setButtonText($target.text());
       }
 
+      this.$agencyIdInput.val(agencyId);
       this.hideOptions();
     });
 

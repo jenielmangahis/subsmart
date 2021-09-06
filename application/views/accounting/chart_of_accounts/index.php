@@ -120,12 +120,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
-                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
-                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
-                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> nSmarTrac Balance</p>
-                                                        <p><input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance"> Balance</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type">
+                                                            <label for="chk_type">Type</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type">
+                                                            <label for="chk_detail_type">Detail Type</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> 
+                                                            <label for="chk_nsmart_balance">nSmarTrac Balance</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance">
+                                                            <label for="chk_balance">Balance</label>
+                                                        </div>
 											            <p class="m-0">Other</p>
-                                                        <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="inc_inactive" value="1">
+                                                            <label for="inc_inactive">Include Inactive</label>
+                                                        </div>
                                                         <p class="m-0">Rows</p>
                                                         <p class="m-0">
                                                             <select name="table_rows" id="table_rows" class="form-control">

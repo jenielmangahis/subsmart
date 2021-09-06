@@ -78,6 +78,8 @@ class Accounting extends MY_Controller
 
         $this->page_data['menu_name'] =
             array(
+                // array("Dashboard",	array()),
+                // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
                 array("Cash Flow",   array()),
                 array("Expenses",   array('Expenses','Vendors')),
                 array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
@@ -89,6 +91,8 @@ class Accounting extends MY_Controller
             );
         $this->page_data['menu_link'] =
             array(
+                // array('/accounting/banking',array()),
+                // array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array('/accounting/cashflowplanner',array()),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
                 array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
@@ -264,8 +268,11 @@ class Accounting extends MY_Controller
         $customer = $this->accounting_customers_model->get_customer_by_id($invoice->customer_id);
         //  $client   = $this->Clients_model->getById($company_id);
 
+        $item = $this->invoice_model->getInvoiceItems($invoice->id);
+
         $this->page_data['invoices'] = $invoice;
         $this->page_data['customers'] = $customer;
+        $this->page_data['items'] = $item;
         // $this->page_data['client'] = $client;
 
         echo json_encode($this->page_data);
@@ -2440,6 +2447,14 @@ class Accounting extends MY_Controller
         $addQuery = $this->invoice_model->createInvoice($new_data);
 
         if ($addQuery > 0) {
+
+            if($this->input->post('agency_id')) {
+                $this->db->insert('accounting_invoice_tax_agencies', [
+                    'invoice_id' => $addQuery,
+                    'agency_id' => $this->input->post('agency_id'),
+                ]);
+            }
+
             //echo json_encode($addQuery);
             // $new_data2 = array(
             //     'item' => $this->input->post('item'),
@@ -8286,6 +8301,7 @@ class Accounting extends MY_Controller
                 $insert=array(
                     "statement_type"=>$this->input->post("statement_type"),
                     "statement_date"=>$statement_date,
+                    "customer_id"=>$customer_id,
                     "start_date"=>$start_date,
                     "end_date"=>$end_date,
                     "company_id"=>$customer_info->company_id,
@@ -8723,7 +8739,7 @@ class Accounting extends MY_Controller
                     $this->page_data['total']=$balance-$payment->payment_amount;
                     $this->page_data['last_delivered']="";
                     $this->page_data['email']=$customer_info->acs_email;
-                    $this->page_data['atatchement']="";
+                    $this->page_data['attatchement']="";
                     $this->page_data['status']="Closed";
                     $this->page_data['ponumber']="";
                     $this->page_data['sales_rep']="";
@@ -8756,7 +8772,7 @@ class Accounting extends MY_Controller
                 $this->page_data['total']=$receivable_payment;
                 $this->page_data['last_delivered']="";
                 $this->page_data['email']=$inv->customer_email;
-                $this->page_data['atatchement']="";
+                $this->page_data['attatchement']="";
                 $this->page_data['status']=$status;
                 $this->page_data['invoice_status']=$inv->status;
                 $this->page_data['ponumber']="";
@@ -8788,7 +8804,7 @@ class Accounting extends MY_Controller
             $this->page_data['total']=$receipt->grand_total;
             $this->page_data['last_delivered']=$receipt->shipping_date;
             $this->page_data['email']=$customer_info->customer_email;
-            $this->page_data['atatchement']="";
+            $this->page_data['attatchement']="";
             $this->page_data['status']="Paid";
             $this->page_data['ponumber']="";
             $this->page_data['sales_rep']="";
@@ -8796,7 +8812,6 @@ class Accounting extends MY_Controller
             $this->page_data['invoice_payment_id']="";
             $this->page_data['invoice_id']="";
             $this->page_data['sales_receipt_id']=$receipt->id;
-            $tbody_html.=$tr_html;
             if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
                 $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
             }
@@ -8817,17 +8832,144 @@ class Accounting extends MY_Controller
                 $this->page_data['total']=$deposit->total_amount;
                 $this->page_data['last_delivered']="";
                 $this->page_data['email']=$customer_info->customer_email;
-                $this->page_data['atatchement']="";
+                $this->page_data['attatchement']="";
                 $this->page_data['status']=$deposit->status;
                 $this->page_data['ponumber']="";
                 $this->page_data['sales_rep']="";
                 $this->page_data['customer_id']=$customer_id;
                 $this->page_data['invoice_payment_id']="";
                 $this->page_data['invoice_id']="";
-                $this->page_data['sales_receipt_id']=$receipt->id;
+                $this->page_data['sales_receipt_id']="";
                 $this->page_data['deposit_id']=$deposit->id;
-                $tbody_html.=$tr_html;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                }
+            }
+        } elseif ($filter_type == "Open estimates") {
+            $all_estimates = $this->accounting_customers_model->get_customer_estimates($customer_id, "Submitted");
+            foreach ($all_estimates as $estimates) {
+                $this->page_data['date']=$estimates->estimate_date;
+                $this->page_data['type']="Estimate";
+                $this->page_data['no']=$estimates->purchase_order_number;
+                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                $this->page_data['method']="";
+                $this->page_data['source']="";
+                $this->page_data['memo']="";
+                $this->page_data['duedate']=$estimates->expiry_date;
+                $this->page_data['aging']=$this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
+                $this->page_data['balance']=0;
+                $this->page_data['total']=$estimates->estimate_value;
+                $this->page_data['last_delivered']="";
+                $this->page_data['email']=$customer_info->customer_email;
+                $this->page_data['attatchement']="";
+                $this->page_data['status']="Open";
+                $this->page_data['ponumber']="";
+                $this->page_data['sales_rep']="";
+                $this->page_data['customer_id']=$customer_id;
+                $this->page_data['invoice_payment_id']="";
+                $this->page_data['invoice_id']="";
+                $this->page_data['sales_receipt_id']="";
+                $this->page_data['deposit_id']="";
+                $this->page_data['estimate_id']=$estimates->id;
+                if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                }
+            }
+        } elseif ($filter_type == "Unbilled income") {
+            $all_estimates = $this->accounting_customers_model->get_customer_estimates($customer_id, "Accepted");
+            foreach ($all_estimates as $estimates) {
+                if ($this->accounting_invoices_model->get_invoice_by_estimate_id($estimates->id) == null) {
+                    $this->page_data['date']=$estimates->estimate_date;
+                    $this->page_data['type']="Estimate";
+                    $this->page_data['no']=$estimates->purchase_order_number;
+                    $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                    $this->page_data['method']="";
+                    $this->page_data['source']="";
+                    $this->page_data['memo']="";
+                    $this->page_data['duedate']=$estimates->expiry_date;
+                    $this->page_data['aging']=$this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
+                    $this->page_data['balance']=0;
+                    $this->page_data['total']=$estimates->estimate_value;
+                    $this->page_data['last_delivered']="";
+                    $this->page_data['email']=$customer_info->customer_email;
+                    $this->page_data['attatchement']="";
+                    $this->page_data['status']="Unbilled";
+                    $this->page_data['ponumber']="";
+                    $this->page_data['sales_rep']="";
+                    $this->page_data['customer_id']=$customer_id;
+                    $this->page_data['invoice_payment_id']="";
+                    $this->page_data['invoice_id']="";
+                    $this->page_data['sales_receipt_id']="";
+                    $this->page_data['deposit_id']="";
+                    $this->page_data['estimate_id']=$estimates->id;
+                    if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+                        $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    }
+                }
+            }
+        } elseif ($filter_type == "Credit memos") {
+            $all_credit_memos = $this->accounting_customers_model->get_customer_credit_memo($customer_id);
+            foreach ($all_credit_memos as $credit_memo) {
+                $this->page_data['date']=$credit_memo->credit_memo_date;
+                $this->page_data['type']="Credit memo";
+                $this->page_data['no']="";
+                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                $this->page_data['method']="";
+                $this->page_data['source']="";
+                $this->page_data['memo']=$credit_memo->message_credit_memo;
+                $this->page_data['duedate']="";
+                $this->page_data['aging']=$this->get_date_difference_indays($credit_memo->credit_memo_date, date("Y-m-d"));
+                $this->page_data['balance']=0;
+                $this->page_data['total']=$credit_memo->grand_total;
+                $this->page_data['last_delivered']="";
+                $this->page_data['email']=$customer_info->customer_email;
+                $this->page_data['attatchement']="";
+                $this->page_data['status']=$credit_memo->status;
+                $this->page_data['ponumber']="";
+                $this->page_data['sales_rep']="";
+                $this->page_data['customer_id']=$customer_id;
+                $this->page_data['invoice_payment_id']="";
+                $this->page_data['invoice_id']="";
+                $this->page_data['sales_receipt_id']="";
+                $this->page_data['deposit_id']="";
+                $this->page_data['estimate_id']="";
+                $this->page_data['credit_memo_id']=$credit_memo->id;
+                if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                }
+            }
+        } elseif ($filter_type == "Statements") {
+            $all_statements = $this->accounting_customers_model->get_customer_statement($customer_id);
+            foreach ($all_statements as $statement) {
+                $this->page_data['date']=$statement->statement_date;
+                $this->page_data['type']=$statement->statement_type;
+                $this->page_data['no']="";
+                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                $this->page_data['method']="";
+                $this->page_data['source']="";
+                $this->page_data['memo']="";
+                $this->page_data['duedate']="";
+                $this->page_data['aging']=$this->get_date_difference_indays($statement->statement_date, date("Y-m-d"));
+                $this->page_data['balance']="";
+                $this->page_data['total']="";
+                $this->page_data['last_delivered']="";
+                $this->page_data['email']=$customer_info->customer_email;
+                $this->page_data['attatchement']="";
+                $this->page_data['status']="";
+                $this->page_data['ponumber']="";
+                $this->page_data['sales_rep']="";
+                $this->page_data['start_date']=$statement->start_date;
+                $this->page_data['end_date']=$statement->end_date;
+                $this->page_data['statement_type']=$statement->statement_type;
+                $this->page_data['customer_id']=$customer_id;
+                $this->page_data['invoice_payment_id']="";
+                $this->page_data['invoice_id']="";
+                $this->page_data['sales_receipt_id']="";
+                $this->page_data['deposit_id']="";
+                $this->page_data['estimate_id']="";
+                $this->page_data['credit_memo_id']="";
+                $this->page_data['statement_id']=$statement->id;
+                if ($this->filter_date_qualified($filter_date, $this->page_data['date'])) {
                     $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
@@ -8959,11 +9101,23 @@ class Accounting extends MY_Controller
                 return false;
             }
         } elseif ($filter_type == "Open estimates") {
-            return false;
+            if ($data["type"] == "Estimate" && $data["status"]=="Open") {
+                return true;
+            } else {
+                return false;
+            }
         } elseif ($filter_type == "Credit memos") {
-            return false;
+            if ($data["type"] == "Credit memo") {
+                return true;
+            } else {
+                return false;
+            }
         } elseif ($filter_type == "Unbilled income") {
-            return false;
+            if ($data["type"] == "Estimate" && $data["status"]=="Unbilled") {
+                return true;
+            } else {
+                return false;
+            }
         } elseif ($filter_type == "Recently paid") {
             $firstday = date("Y-m-d", strtotime('monday last week'));
             $lastday = date("Y-m-d", strtotime('sunday this week'));
