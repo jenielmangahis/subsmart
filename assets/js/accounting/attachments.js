@@ -119,7 +119,7 @@ $(function(){
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item edit-attachment" href="#" data-type="${rowData.type}" data-name="${rowData.name}" data-notes="${rowData.notes}" data-id="${rowData.id}" data-file="${rowData.thumbnail}">Edit</a>
-                            <a class="dropdown-item delete-attachment" href="#" data-id="${rowData.id}">Delete</a>
+                            <a class="dropdown-item delete-attachment" href="#">Delete</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addinvoiceModal">Create invoice</a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#expense-modal">Create expense</a>
                         </div>
@@ -139,23 +139,28 @@ $(function(){
     $(document).on('click', '#attachments_table a.delete-attachment', function(e) {
         e.preventDefault();
 
-        var id = e.currentTarget.dataset.id;
+        var row = $(this).parent().parent().parent().parent();
+        var rowData = table.row(row).data();
 
-        $('#delete_attachment .modal-footer .btn-success').attr('data-id', id);
-
-        $('#delete_attachment').modal('show');
-    });
-
-    $(document).on('click', '#delete_attachment .modal-footer .btn-success', function(e) {
-        e.preventDefault();
-
-        var id = e.currentTarget.dataset.id;
-
-        $.ajax({
-            url: `/accounting/attachments/delete/${id}`,
-            type:"DELETE",
-            success:function (result) {
-                location.reload();
+        Swal.fire({
+            title: 'Are you sure?',
+            html: `You want to make <b>${rowData.name}.${rowData.extension}</b> active?`,
+            icon: 'warning',
+            showCloseButton: false,
+            confirmButtonColor: '#2ca01c',
+            confirmButtonText: 'Yes',
+            showCancelButton: true,
+            cancelButtonText: 'No',
+            cancelButtonColor: '#d33'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                $.ajax({
+                    url: `/accounting/attachments/delete/${rowData.id}`,
+                    type:"DELETE",
+                    success:function (result) {
+                        location.reload();
+                    }
+                });
             }
         });
     });

@@ -138,24 +138,23 @@ label>input {
    <div wrapper__section>
    <div class="container-fluid p-40">
       <section class="content">
-         <!-- Default box -->
          <div class="box">
             <?php echo form_open('plans/save', [ 'class' => 'form-validate' ]); ?>
             <div class="row custom__border">
 				<div class="col-xl-12">
 					<div class="card">
-            <div style="padding:14px ​0px 11px !important;">
-              <div class="row align-items-center">
-                <div class="col-sm-6">
-                  <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Add Plan</h5>
-                </div>                
-              </div>
-            </div>
-            <div class="pl-3 pr-3 mt-2 row">
-              <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add New Plan.</span>
-              </div>
-            </div>
+                        <div style="padding:14px ​0px 11px !important;">
+                          <div class="row align-items-center">
+                            <div class="col-sm-6">
+                              <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Add Plan</h5>
+                            </div>                
+                          </div>
+                        </div>
+                        <div class="pl-3 pr-3 mt-2 row">
+                          <div class="col mb-4 left alert alert-warning mt-0 mb-0">
+                              <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Add New Plan.</span>
+                          </div>
+                        </div>
 						<div class="card-body" style="padding: 0px;">
 							<div class="row">
 								<div class="col-sm-6">

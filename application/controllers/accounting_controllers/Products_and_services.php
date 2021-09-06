@@ -40,29 +40,31 @@ class Products_and_services extends MY_Controller {
 
 		$this->page_data['menu_name'] =
             array(
-                array("Dashboard",	array()),
-                array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
-                array("Expenses", 	array('Expenses','Vendors')),
-                array("Sales", 		array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
-                array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
-                array("Reports",	array()),
-                array("Taxes",		array("Sales Tax","Payroll Tax")),
-                array("Mileage",	array()),
-                array("Accounting",	array("Chart of Accounts","Reconcile"))
+                // array("Dashboard",	array()),
+                // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
+                array("Cash Flow",   array()),
+                array("Expenses",   array('Expenses','Vendors')),
+                array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
+                array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
+                array("Reports",    array()),
+                array("Taxes",      array("Sales Tax","Payroll Tax")),
+                array("Mileage",    array()),
+                array("Accounting", array("Chart of Accounts","Reconcile"))
             );
         $this->page_data['menu_link'] =
             array(
-                array('/accounting/banking',array()),
-                array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
+                // array('/accounting/banking',array()),
+                // array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
+                array('/accounting/cashflowplanner',array()),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', 'credit_notes')),
+                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
-                array("",	array('/accounting/salesTax','/accounting/payrollTax')),
-                array('#',	array()),
-                array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
+                array("",   array('/accounting/salesTax','/accounting/payrollTax')),
+                array('#',  array()),
+                array("",   array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
-        $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+        $this->page_data['menu_icon'] = array("fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }
 
     public function index()
@@ -70,6 +72,21 @@ class Products_and_services extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/sales/products-and-services.js"
         ));
+
+        $products = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'Inventory', 'product', 'Product']]);
+
+        $outOfStock = 0;
+        $lowStock = 0;
+        foreach($products as $product) {
+            $totalQty = $this->items_model->countQty($product->id);
+            $reorderPoint = intval($product->re_order_points);
+
+            $outOfStock += $totalQty === 0 ? 1 : 0;
+            $lowStock += $totalQty <= $reorderPoint ? 1 : 0;
+        }
+
+        $this->page_data['low_stock_count'] = $lowStock;
+        $this->page_data['out_of_stock'] = $outOfStock;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('accounting/products_and_services', $this->page_data);
@@ -215,7 +232,8 @@ class Products_and_services extends MY_Controller {
                         'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
                         'bundle_items' => $bundItems,
                         'locations' => $this->items_model->getLocationByItemId($item->id),
-                        'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : ''
+                        'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                        'status' => $item->is_active
                     ];
                 }
             } else {
@@ -248,17 +266,24 @@ class Products_and_services extends MY_Controller {
                     'sales_tax_cat' => !is_null($this->TaxRates_model->getById($accountingDetails->tax_rate_id)) ? $this->TaxRates_model->getById($accountingDetails->tax_rate_id)->name : $accountingDetails->tax_rate_id === "0" ? "Nontaxable" : '',
                     'bundle_items' => $bundItems,
                     'locations' => $this->items_model->getLocationByItemId($item->id),
-                    'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : ''
+                    'display_on_print' => !is_null($accountingDetails) ? $accountingDetails->display_on_print : '',
+                    'status' => $item->is_active
                 ];
             }
         }
 
         if($postData['stock_status'] !== 'all') {
             $data = array_filter($data, function($item) use ($postData) {
+                $invArray = [
+                    'product',
+                    'Product',
+                    'inventory',
+                    'Inventory'
+                ];
                 if($postData['stock_status'] === 'low stock') {
-                    return $item['qty_on_hand'] <= $item['reorder_point'] && $item['type'] === 'Inventory';
+                    return $item['qty_on_hand'] <= intval($item['reorder_point']) && in_array($item['type'], $invArray);
                 } else {
-                    return $item['qty_on_hand'] === 0 && $item['type'] === 'Inventory';
+                    return $item['qty_on_hand'] === 0 && in_array($item['type'], $invArray);
                 }
             });
         }
@@ -363,6 +388,17 @@ class Products_and_services extends MY_Controller {
 
         if($inactive) {
             $this->session->set_flashdata('success', "Item is now inactive.");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+    }
+
+    public function active($id)
+    {
+        $inactive = $this->items_model->activeItem($id);
+
+        if($inactive) {
+            $this->session->set_flashdata('success', "Item is now active.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }

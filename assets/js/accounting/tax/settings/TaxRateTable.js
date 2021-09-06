@@ -115,10 +115,10 @@ export class TaxRateTable {
           window.location.reload();
         });
       },
-      makeInactive: async (row) => {
-        const payload = { ...row, is_active: 0 };
+      makeInactive: async ({ agency, ...rest }) => {
+        const payload = { ...rest, is_active: 0 };
         const response = await fetch(
-          `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
+          `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`,
           {
             method: "post",
             body: JSON.stringify(payload),
@@ -132,10 +132,10 @@ export class TaxRateTable {
         const json = await response.json();
         window.location.reload();
       },
-      makeActive: async (row) => {
-        const payload = { ...row, is_active: 1 };
+      makeActive: async ({ agency, ...rest }) => {
+        const payload = { ...rest, is_active: 1 };
         const response = await fetch(
-          `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
+          `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`,
           {
             method: "post",
             body: JSON.stringify(payload),

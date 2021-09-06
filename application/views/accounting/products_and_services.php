@@ -87,6 +87,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 	.modal-form-container .modal.right .modal-dialog {
 		width: 25%;
 	}
+	
+	.opacity-50 {
+		opacity: 0.5;
+	}
+
+	#myTabContent .action-bar ul li a:after {
+        width: 0;
+    }
+
+    #myTabContent .action-bar ul li a {
+    font-size: 20px;
+    }
+
+    #myTabContent .action-bar ul li {
+        margin-right: 5px;
+    }
+
+	#myTabContent .action-bar ul li .dropdown-menu a {
+		font-size: 14px;
+	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -173,27 +193,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									</div>
 								</div>
 								<div class="col-sm-6 pl-0 border-right">
-									<div class="row align-items-center">
+									<div class="row align-items-center cursor-pointer" id="low-stock-cont">
 										<div class="col-sm-3 offset-sm-6">
 											<p class="mb-0 bg-warning border border-dark rounded-circle p-4"><img
 													src="<?php echo base_url();?>assets/img/accounting/low-stock.png"
 													class="w-100 img-responsive"></p>
 										</div>
 										<div class="col-sm-3">
-											<h1 class="text-warning">0</h1>
+											<h1 class="text-warning"><?=$low_stock_count?></h1>
 											<h5>LOW STOCK</h5>
 										</div>
 									</div>
 								</div>
 								<div class="col-sm-6 pr-0">
-									<div class="row  pl-3 align-items-center">
+									<div class="row pl-3 align-items-center cursor-pointer" id="out-of-stock-cont">
 										<div class="col-sm-3">
 											<p class="mb-0 bg-danger border border-dark rounded-circle p-3"><img
 													src="<?php echo base_url();?>assets/img/accounting/out-of-stock.png"
 													class="w-100 img-responsive"></p>
 										</div>
 										<div class="col-sm-4">
-											<h1 class="text-danger">0</h1>
+											<h1 class="text-danger"><?=$out_of_stock?></h1>
 											<h5>OUT OF STOCK</h5>
 										</div>
 									</div>
@@ -296,16 +316,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										<div class="action-bar h-100 d-none align-items-center">
 											<ul class="ml-auto" style="min-width: 50%">
 												<li class="d-flex align-items-center">
-													<select id="assign-category" class="form-control">
-														<option></option>
-														<option value="0">Uncategorized</option>
-														<?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-														<option
-															value="<?=$category->item_categories_id?>">
-															<?=$category->name?>
-														</option>
-														<?php endforeach; ?>
-													</select>
+													<select id="assign-category" class="form-control"></select>
 
 													<div class="ml-2 btn-group">
 														<button type="button"
@@ -343,41 +354,61 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 													</a>
 													<div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
 														<p class="m-0">Columns</p>
-														<p class="m-0"><input type="checkbox" onchange="col(this)"
-																id="chk_income_account"> Income account</p>
-														<p class="m-0"><input type="checkbox" onchange="col(this)"
-																id="chk_expense_account"> Expense account</p>
-														<p class="m-0"><input type="checkbox" onchange="col(this)"
-																id="chk_inventory_account"> Inventory account</p>
-														<p class="m-0"><input type="checkbox" onchange="col(this)"
-																id="chk_purch_desc"> Purchase description</p>
-														<p class="m-0"><input type="checkbox" onchange="col(this)"
-																id="chk_qty_po"> Qty on PO</p>
-														<p class="m-0"><input type="checkbox" checked="checked"
-																onchange="col(this)" id="chk_sku"> SKU</p>
-														<p class="m-0"><input type="checkbox" checked="checked"
-																onchange="col(this)" id="chk_type"> Type</p>
-														<div class="show-more hide">
-															<p class="m-0"><input type="checkbox" checked="checked"
-																	onchange="col(this)" id="chk_sales_desc"> Sales
-																description</p>
-															<p class="m-0"><input type="checkbox" checked="checked"
-																	onchange="col(this)" id="chk_sales_price"> Sales
-																price</p>
-															<p class="m-0"><input type="checkbox" checked="checked"
-																	onchange="col(this)" id="chk_cost"> Cost</p>
-															<p class="m-0"><input type="checkbox" checked="checked"
-																	onchange="col(this)" id="chk_taxable"> Taxable</p>
-															<p class="m-0"><input type="checkbox" checked="checked"
-																	onchange="col(this)" id="chk_qty_on_hand"> Qty on
-																hand</p>
-															<p class="m-0"><input type="checkbox" checked="checked"
-																	onchange="col(this)" id="chk_reorder_point"> Reorder
-																point</p>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" onchange="col(this)" id="chk_income_account">
+															<label for="chk_income_account">Income account</label>
+														</div>	
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" onchange="col(this)" id="chk_expense_account">
+															<label for="chk_expense_account">Expense account</label>
+														</div>	
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" onchange="col(this)" id="chk_inventory_account">
+															<label for="chk_inventory_account">Inventory account</label>
 														</div>
-														<a href="#" class="text-info text-center show-more-button"><i
-																class="fa fa-caret-down text-info"></i> &nbsp;Show
-															more</a>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" onchange="col(this)" id="chk_purch_desc">
+															<label for="chk_purch_desc">Purchase description</label>
+														</div>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" onchange="col(this)" id="chk_qty_po">
+															<label for="chk_qty_po">Qty on PO</label>
+														</div>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" checked="checked" onchange="col(this)" id="chk_sku">
+															<label for="chk_sku">SKU</label>
+														</div>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" checked="checked" onchange="col(this)" id="chk_type">
+															<label for="chk_type">Type</label>
+														</div>
+														<div class="show-more hide">
+															<div class="checkbox checkbox-sec d-block my-2">
+																<input type="checkbox" checked="checked" onchange="col(this)" id="chk_sales_desc"> 
+																<label for="chk_sales_desc">Sales description</label>
+															</div>
+															<div class="checkbox checkbox-sec d-block my-2">
+																<input type="checkbox" checked="checked" onchange="col(this)" id="chk_sales_price"> 
+																<label for="chk_sales_price">Sales price</label>
+															</div>
+															<div class="checkbox checkbox-sec d-block my-2">
+																<input type="checkbox" checked="checked" onchange="col(this)" id="chk_cost"> 
+																<label for="chk_cost">Cost</label>
+															</div>
+															<div class="checkbox checkbox-sec d-block my-2">
+																<input type="checkbox" checked="checked" onchange="col(this)" id="chk_taxable"> 
+																<label for="chk_taxable">Taxable</label>
+															</div>
+															<div class="checkbox checkbox-sec d-block my-2">
+																<input type="checkbox" checked="checked" onchange="col(this)" id="chk_qty_on_hand"> 
+																<label for="chk_qty_on_hand">Qty on hand</label>
+															</div>
+															<div class="checkbox checkbox-sec d-block my-2">
+																<input type="checkbox" checked="checked" onchange="col(this)" id="chk_reorder_point"> 
+																<label for="chk_reorder_point">Reorder point</label>
+															</div>
+														</div>
+														<a href="#" class="text-info text-center show-more-button"><i class="fa fa-caret-down text-info"></i> &nbsp;Show more</a>
 														<p class="m-0">Rows</p>
 														<p class="m-0">
 															<select name="table_rows" id="table_rows"
@@ -389,15 +420,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 																<option value="300">300</option>
 															</select>
 														</p>
-														<p class="m-0"><input type="checkbox" id="compact"> Compact</p>
-														<p class="m-0"><input type="checkbox" checked="checked"
-																id="group_by_category" value="1"> Group by category</p>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" id="compact">
+															<label for="compact">Compact</label>
+														</div>
+														<div class="checkbox checkbox-sec d-block my-2">
+															<input type="checkbox" checked="checked" id="group_by_category" value="1"> 
+															<label for="group_by_category">Group by category</label>
+														</div>
 													</div>
 												</li>
 											</ul>
 										</div>
 									</div>
-
 								</div>
 								<table id="products-services-table" class="table table-striped table-bordered"
 									style="width:100%">

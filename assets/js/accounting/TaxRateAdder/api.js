@@ -18,3 +18,9 @@ export async function saveRate(payload) {
 
   return response.json();
 }
+
+export async function getAgencies() {
+  const endpoint = `${prefixURL}/AccountingSales/apiGetAgencies?include_inactive=true`;
+  const response = await fetch(endpoint);
+  return response.json();
+}

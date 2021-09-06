@@ -106,6 +106,17 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function edit_services($id)
+    {
+        $comp_id = logged('company_id');        
+        $arg     = array('company_id'=>$comp_id, 'id' => $id, 'is_active'=>1);
+        $item    = $this->items_model->getCompanyItemById($comp_id, $id);
+        /*echo "<pre>";
+        print_r($item);
+        exit;*/
+        $this->load->view('inventory/services_edit', $this->page_data);
+    }
+
     public function fees($page = null)
     {
         $get = $this->input->get();
@@ -672,7 +683,7 @@ class Inventory extends MY_Controller
                 array_push($result,$header);
 
                 foreach($c as $v) {
-                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model,$v->qty_order,$v->re_order_points);
+                    $value = array($v->title, $v->description, $v->brand, $v->id, $v->price, $v->frequency, $v->estimated_time, $v->model,$v->qty_order,$v->re_order_points, $v->id);
                     array_push($result,$value);
                 }
             }

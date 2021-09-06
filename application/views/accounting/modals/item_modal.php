@@ -67,7 +67,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <?php if($field === 'product') : ?>
+                            <?php if($field === 'product' || $field === '') : ?>
                             <tr data-href="bundle">
                                 <td>
                                     <div class="row" style="height: 117px">

@@ -39,12 +39,15 @@ function selectType(type)
 
 function changeType(type)
 {
-	var action = $(`#item-modal form#update-${type}-form`).attr('action');
-	var formId = `update-${type}-form`;
-	var itemId = action.split('/');
-	itemId = itemId[itemId.length - 1];
-	itemFormData = new FormData(document.getElementById(formId));
-	itemFormData.set('id', itemId);
+	var form = $('#item-modal form');
+	itemFormData = new FormData(document.getElementById(form.attr('id')));
+	itemFormData.set('type', type);
+	if(form.attr('id').includes('update')) {
+		var action = form.attr('action');
+		var itemId = action.split('/');
+		itemId = itemId[itemId.length - 1];
+		itemFormData.set('id', itemId);
+	}
 
 	$.get(`/accounting/get-dropdown-modal/item_modal?field=${type}`, function(result) {
 		$('#modal-container .full-screen-modal').append(result);
@@ -70,6 +73,7 @@ function occupyFields(rowData, type, action = 'edit')
 		$(`#item-modal #category`).append(`<option value="${rowData.category_id}" selected>${rowData.category}</option>`);
 	}
 	$(`#item-modal #rebate-item`).prop('checked', rowData.rebate === '1');
+	$(`#item-modal #asOfDate`).val(rowData.as_of_date);
 	$(`#item-modal #reorderPoint`).val(rowData.reorder_point);
 	if(rowData.inventory_account !== null && rowData.inventory_account !== "") {
 		$(`#item-modal #invAssetAcc`).append(`<option value="${rowData.inventory_account_id}" selected>${rowData.inventory_account}</option>`);
@@ -103,6 +107,50 @@ function occupyFields(rowData, type, action = 'edit')
 	if(rowData.vendor !== null && rowData.vendor !== "") {
 		$(`#item-modal #vendor`).append(`<option value="${rowData.vendor_id}" selected>${rowData.vendor}</option>`);
 	}
+
+	for(i in rowData.locations) {
+		if($($(`#item-modal #storage-locations tbody tr`)[i]).length < 1) {
+			$(`#item-modal #storage-locations tbody`).append(`
+			<tr>
+				<td></td>
+				<td></td>
+				<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+			</tr>
+			`);
+		}
+		$($(`#item-modal #storage-locations tbody tr`)[i]).children('td:first-child').html(`<input type="text" name="location_name[]" class="form-control" value="${rowData.locations[i].name}">`);
+		$($(`#item-modal #storage-locations tbody tr`)[i]).children('td:nth-child(2)').html(`<input type="number" name="quantity[]" class="text-right form-control" value="${rowData.locations[i].qty}">`);
+	}
+
+	for(i in rowData.bundle_items) {
+		if($($('#item-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
+			$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${rowData.bundle_items[i].item_id}`);
+			$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${rowData.bundle_items[i].name}`);
+			$($('#item-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${rowData.bundle_items[i].quantity}`);
+			$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
+			<span>${rowData.bundle_items[i].name}</span>
+			<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
+			`);
+			$($('#item-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
+			<span>${rowData.bundle_items[i].quantity}</span>
+			<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
+			`);
+		} else {
+			$('#item-modal #bundle-items-table tbody').append(`
+			<tr data-item="${rowData.bundle_items[i].item_id}" data-name="${rowData.bundle_items[i].name}" data-quantity="${rowData.bundle_items[i].quantity}">
+				<td>
+					<span>${rowData.bundle_items[i].name}</span>
+					<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
+				</td>
+				<td>
+					<span>${rowData.bundle_items[i].quantity}</span>
+					<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
+				</td>
+				<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+			</tr>
+			`);
+		}
+	}
 }
 
 $('#add-item-button').on('click', function(e) {
@@ -128,8 +176,29 @@ $('#add-item-button').on('click', function(e) {
 	});
 });
 
+$('select:not(#assign-category)').select2({
+	minimumResultsForSearch: -1
+});
+
 $('#assign-category').select2({
-	placeholder: "Assign category"
+	placeholder: "Assign category",
+	ajax: {
+		url: '/accounting/get-dropdown-choices',
+		dataType: 'json',
+		data: function(params) {
+			var query = {
+				search: params.term,
+				type: 'public',
+				field: 'category',
+				field_id: 'assign-category'
+			}
+
+			// Query parameters will be ?search=[term]&type=public&field=[type]
+			return query;
+		}
+	},
+	templateResult: formatResult,
+	templateSelection: optionSelect,
 });
 
 $(document).on('change', '#assign-category', function() {
@@ -257,27 +326,56 @@ $(document).on('click', '#products-services-table .make-inactive', function(e) {
 	var row = $(this).parent().parent().parent().parent();
 	var rowData = $('#products-services-table').DataTable().row(row).data();
 
-	$.ajax({
-        url: `/accounting/products-and-services/inactive/${rowData.id}`,
-        type: 'DELETE',
-        success: function(result) {
-            location.reload();
+	Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${rowData.name}</b> inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+				url: `/accounting/products-and-services/inactive/${rowData.id}`,
+				type: 'DELETE',
+				success: function(result) {
+					location.reload();
+				}
+			});
         }
     });
 });
 
-$(document).on('click', '#bundle-item-form #bundle-items-table tbody tr td:not(:last-child)', function() {
-	if($(this).parent().find('select[name="item_id[]"]').length < 1) {
-		$(this).parent().children('td:first-child').append('<select name="item_id[]" class="form-control"></select>');
-		$(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
+$(document).on('click', '#products-services-table .make-active', function(e) {
+	e.preventDefault();
 
-		$(this).parent().find('select[name="item_id[]"]').select2({
-			ajax: {
-				url: 'products-and-services/items-dropdown',
-				dataType: 'json'
-			}
-		});
-	}
+	var row = $(this).parent().parent().parent();
+	var rowData = $('#products-services-table').DataTable().row(row).data();
+
+	Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make <b>${rowData.name}</b> active?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+				url: `/accounting/products-and-services/active/${rowData.id}`,
+				type: 'GET',
+				success: function(result) {
+					location.reload();
+				}
+			});
+        }
+    });
 });
 
 $(document).on('click', '#update-bundle-form #bundle-items-table tbody tr td:not(:last-child), #duplicate-item-form #bundle-items-table tbody tr td:not(:last-child)', function() {
@@ -295,14 +393,27 @@ $(document).on('click', '#update-bundle-form #bundle-items-table tbody tr td:not
 		if(data.item !== undefined) {
 			$(this).parent().children('td:first-child').children('select').append(`<option value="${data.item}">${data.name}</option>`);
 		} else {
-			$(this).parent().children('td:first-child').children('select').attr('name', 'item_id[]');
+			$(this).parent().children('td:first-child').children('select').attr('name', 'item[]');
 		}
 
 		$(this).parent().find('select').select2({
 			ajax: {
-				url: 'products-and-services/items-dropdown',
-				dataType: 'json'
-			}
+				url: '/accounting/get-dropdown-choices',
+				dataType: 'json',
+				data: function(params) {
+					var query = {
+						search: params.term,
+						type: 'public',
+						field: 'item',
+					}
+
+					// Query parameters will be ?search=[term]&type=public&field=[type]
+					return query;
+				}
+			},
+			templateResult: formatResult,
+			templateSelection: optionSelect,
+			dropdownParent: $('#modal-container #item-modal')
 		});
 	}
 });
@@ -357,45 +468,91 @@ $(document).on('click', '#products-services-table .duplicate-item', function(e) 
 	rowData = $('#products-services-table').DataTable().row(row).data();
 	var type = rowData.type.toLowerCase();
 
-	$.get('products-and-services/item-form/'+type, function(result) {
-		$('.modal-form-container').html(result);
+	$.get('/accounting/item-form/'+type, function(result) {
+		if ($('#modal-container').length > 0) {
+            $('div#modal-container').html(`<div class="full-screen-modal">
+				<div class="modal-right-side">
+					<div class="modal right fade" tabindex="-1" id="item-modal" role="dialog" aria-labelledby="myModalLabel2">
+						<div class="modal-dialog" role="document" style="width: 25%">
+							<div class="modal-content">
+								${result}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    <div class="full-screen-modal">
+						<div class="modal-right-side">
+							<div class="modal right fade" tabindex="-1" id="item-modal" role="dialog" aria-labelledby="myModalLabel2">
+								<div class="modal-dialog" role="document" style="width: 25%">
+									<div class="modal-content">
+                        				${result}
+									</div>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </div>
+            `);
+        }
 
-		$('#bundle-form-modal table thead tr th a').remove();
+		$(`#item-modal a#select-item-type`).attr('onclick', `changeType('')`);
+
+		$(`#item-modal .datepicker input`).datepicker({
+			uiLibrary: 'bootstrap'
+		});
+
+		$('#item-modal select').each(function() {
+			var type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'item-modal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect,
+					dropdownParent: $('#item-modal')
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2({
+						dropdownParent: $('#item-modal')
+					});
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1,
+						dropdownParent: $('#item-modal')
+					});
+				}
+			}
+		});
+
+		$('#item-modal #bundle-item-form table thead tr th a').remove();
 		occupyFields(rowData, type, 'duplicate');
 
-		for(i in rowData.bundle_items) {
-			if($($('#bundle-form-modal #bundle-items-table tbody tr')[i]).length > 0 ) {
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-item', `${rowData.bundle_items[i].item_id}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-name', `${rowData.bundle_items[i].name}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).attr('data-quantity', `${rowData.bundle_items[i].quantity}`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).children('td:first-child').html(`
-				<span>${rowData.bundle_items[i].name}</span>
-				<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
-				`);
-				$($('#bundle-form-modal #bundle-items-table tbody tr')[i]).children('td:nth-child(2)').html(`
-				<span>${rowData.bundle_items[i].quantity}</span>
-				<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
-				`);
-			} else {
-				$('#bundle-form-modal #bundle-items-table tbody').append(`
-				<tr data-item="${rowData.bundle_items[i].item_id}" data-name="${rowData.bundle_items[i].name}" data-quantity="${rowData.bundle_items[i].quantity}">
-					<td>
-						<span>${rowData.bundle_items[i].name}</span>
-						<input type="hidden" value="${rowData.bundle_items[i].item_id}" name="item_id[]">
-					</td>
-					<td>
-						<span>${rowData.bundle_items[i].quantity}</span>
-						<input type="number" name="quantity[]" class="text-right form-control hide" value="${rowData.bundle_items[i].quantity}">
-					</td>
-					<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-				</tr>
-				`);
-			}
-		}
+		$(`#item-modal form`).attr('id', 'duplicate-item-form');
 
-		$(`#${type}-form-modal form`).attr('id', 'duplicate-item-form');
-
-		$(`#${type}-form-modal`).modal('show');
+		$(`#item-modal`).modal({
+			backdrop: 'static',
+			keyboard: true
+		});
 	});
 });
 
@@ -681,6 +838,37 @@ $('#table_rows, #group_by_category').on('change', function() {
 	applybtn();
 });
 
+$('#low-stock-cont').on('click', function() {
+	if($(this).hasClass('opacity-50') === false && $('#out-of-stock-cont').hasClass('opacity-50') === false) {
+		$('#out-of-stock-cont').addClass('opacity-50');
+		$('#stock_status').val('low stock').trigger('change');
+	} else if($(this).hasClass('opacity-50') === false && $('#out-of-stock-cont').hasClass('opacity-50')) {
+		$('#out-of-stock-cont').removeClass('opacity-50');
+		$('#stock_status').val('all').trigger('change');
+	} else if($(this).hasClass('opacity-50') && $('#out-of-stock-cont').hasClass('opacity-50') === false) {
+		$('#out-of-stock-cont').addClass('opacity-50');
+		$(this).removeClass('opacity-50');
+		$('#stock_status').val('low stock').trigger('change');
+	}
+
+	applybtn();
+});
+
+$('#out-of-stock-cont').on('click', function() {
+	if($(this).hasClass('opacity-50') === false && $('#low-stock-cont').hasClass('opacity-50') === false) {
+		$('#low-stock-cont').addClass('opacity-50');
+		$('#stock_status').val('out of stock').trigger('change');
+	} else if($(this).hasClass('opacity-50') === false && $('#low-stock-cont').hasClass('opacity-50')) {
+		$('#low-stock-cont').removeClass('opacity-50');
+		$('#stock_status').val('all').trigger('change');
+	} else if($(this).hasClass('opacity-50') && $('#low-stock-cont').hasClass('opacity-50') === false) {
+		$('#low-stock-cont').addClass('opacity-50');
+		$(this).removeClass('opacity-50');
+		$('#stock_status').val('out of stock').trigger('change');
+	}
+	applybtn();
+});
+
 $(`#products-services-table`).DataTable({
 	autoWidth: false,
     searching: false,
@@ -942,37 +1130,53 @@ $(`#products-services-table`).DataTable({
 			data: null,
 			name: 'action',
 			fnCreatedCell: function(td, cellData, rowData,row, col) {
-				if(rowData.type !== "Bundle") {
-					if(rowData.type !== "Inventory" && rowData.type !== "Product") {
-						$(td).html(`
-						<div class="btn-group float-right">
-							<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
-
-							<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<span class="sr-only">Toggle Dropdown</span>
-							</button>
-							<div class="dropdown-menu">
-								<a class="dropdown-item make-inactive" href="#">Make inactive</a>
-								<a class="dropdown-item" href="#">Run report</a>
-								<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
+				if(rowData.status === "1") {
+					if(rowData.type !== "Bundle") {
+						if(rowData.type !== "Inventory" && rowData.type !== "Product") {
+							$(td).html(`
+							<div class="btn-group float-right">
+								<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+	
+								<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item make-inactive" href="#">Make inactive</a>
+									<a class="dropdown-item" href="#">Run report</a>
+									<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
+								</div>
 							</div>
-						</div>
-						`);
+							`);
+						} else {
+							$(td).html(`
+							<div class="btn-group float-right">
+								<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+	
+								<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item make-inactive" href="#">Make inactive</a>
+									<a class="dropdown-item" href="#">Run report</a>
+									<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
+									<a class="dropdown-item adjust-quantity" href="#">Adjust quantity</a>
+									<a class="dropdown-item adjust-starting-value" href="#">Adjust starting value</a>
+									<a class="dropdown-item" href="#">Reorder</a>
+								</div>
+							</div>
+							`);
+						}
 					} else {
 						$(td).html(`
 						<div class="btn-group float-right">
 							<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
-
+	
 							<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<span class="sr-only">Toggle Dropdown</span>
 							</button>
 							<div class="dropdown-menu">
 								<a class="dropdown-item make-inactive" href="#">Make inactive</a>
-								<a class="dropdown-item" href="#">Run report</a>
 								<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
-								<a class="dropdown-item adjust-quantity" href="#">Adjust quantity</a>
-								<a class="dropdown-item adjust-starting-value" href="#">Adjust starting value</a>
-								<a class="dropdown-item" href="#">Reorder</a>
 							</div>
 						</div>
 						`);
@@ -980,14 +1184,13 @@ $(`#products-services-table`).DataTable({
 				} else {
 					$(td).html(`
 					<div class="btn-group float-right">
-						<a href="#" class="edit-item btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+						<a href="#" class="btn text-primary d-flex align-items-center justify-content-center make-active">Make active</a>
 
 						<button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<span class="sr-only">Toggle Dropdown</span>
 						</button>
 						<div class="dropdown-menu">
-							<a class="dropdown-item make-inactive" href="#">Make inactive</a>
-							<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
+							<a class="dropdown-item" href="#">Run report</a>
 						</div>
 					</div>
 					`);

@@ -57,10 +57,18 @@
   const $rateAgencySelect = $("#rateAgencySelect");
   let allAgencies = rateAgencies;
   if (savedAgencies.length) {
+    // Disable saved agencies.
+    allAgencies = allAgencies.map((currAgency) => {
+      return {
+        text: currAgency,
+        disabled: savedAgencies.some(({ agency }) => agency === currAgency),
+      };
+    });
+
     allAgencies = [
       { text: "Saved Agencies", disabled: true },
       ...savedAgencies.map((a) => a.agency),
-      ...rateAgencies,
+      ...allAgencies,
     ];
   }
   new Accounting__DropdownWithSearch($rateAgencySelect, allAgencies);
@@ -95,6 +103,7 @@
     $(this).attr("disabled", true);
     $(this).text("Saving...");
 
+    payload.agency = payload.agency.replaceAll(":", ", ");
     const response = await fetch(`${prefixURL}/AccountingSales/apiSaveAgency`, {
       method: "post",
       body: JSON.stringify(payload),

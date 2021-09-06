@@ -842,6 +842,19 @@ if (!function_exists('getLoggedCompanyID')) {
     }
 }
 
+if (!function_exists('isCompanyPlanActive')) {
+
+
+    function isCompanyPlanActive()
+    {
+
+        $ci = &get_instance();
+        $ci->load->library('session');
+        $is_plan_active = $ci->session->userdata('is_plan_active');
+        return $is_plan_active;
+    }
+}
+
 
 /**
  * Redirects with error if user doesnt have the permission to passed key/module

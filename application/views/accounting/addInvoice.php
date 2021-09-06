@@ -289,7 +289,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select customer">
                                     </select> -->
-                                    <select name="customer_id" id="customer_id" class="form-control" required>
+                                    <select name="customer_id" id="sel-customer" class="form-control" required>
                                         <option>Select a customer</option>
                                         <?php foreach ($customers as $customer): ?>
                                         <option
@@ -451,16 +451,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
                                     <input type="text" class="form-control" name="invoice_number" id="invoice_number"
                                         value="<?php echo "INV-";
-foreach ($number as $num):
-    $next = $num->invoice_number;
-    $arr = explode("-", $next);
-    $date_start = $arr[0];
-    $nextNum = $arr[1];
-    //    echo $number;
-endforeach;
-$val = $nextNum + 1;
-echo str_pad($val, 9, "0", STR_PAD_LEFT);
-?>" required placeholder="Enter Invoice#" />
+                                        foreach ($number as $num):
+                                            $next = $num->invoice_number;
+                                            $arr = explode("-", $next);
+                                            $date_start = $arr[0];
+                                            $nextNum = $arr[1];
+                                            //    echo $number;
+                                        endforeach;
+                                        $val = $nextNum + 1;
+                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
+                                        ?>" required placeholder="Enter Invoice#" readonly/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
@@ -562,10 +562,10 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                                     <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
                                                 <td width="10%"><input type="number"
-                                                        class="form-control quantity mobile_qty" name="quantity[]"
+                                                        class="form-control quantity_inv mobile_qty" name="quantity[]"
                                                         data-counter="0" id="quantity_0" value="1"></td>
                                                 <td width="10%"><input type="number"
-                                                        class="form-control price hidden_mobile_view" name="price[]"
+                                                        class="form-control price price_inv hidden_mobile_view" name="price[]"
                                                         data-counter="0" id="price_0" min="0" value="0"> <input
                                                         type="hidden" class="priceqty" id="priceqty_0">
                                                     <div class="show_mobile_view"><span class="price">0</span>
@@ -658,6 +658,7 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                                 <tr>
                                                     <td>
                                                         <div class="addInvoiceTax">
+                                                            <input type="hidden" name="agency_id" />
                                                             <div class="form-group" style="margin-bottom: 0 !important;">
                                                                 <div class="taxRateSelect" id="invoiceTaxRate">
                                                                     <button class="taxRateSelect__main" type="button" disabled>
@@ -1268,7 +1269,7 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
 
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:100px;">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1404,6 +1405,102 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
         });
     });
 </script>
+<script>
+    function validatecard() {
+        var inputtxt = $('.card-number').val();
+
+        if (inputtxt == 4242424242424242) {
+            $('.require-validation').submit();
+        } else {
+            alert("Not a valid card number!");
+            return false;
+        }
+    }
+
+
+    $(document).ready(function () {
+        $('#sel-customer').select2();
+        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+
+        /*$('#customers')
+            .empty() //empty select
+            .append($("<option/>") //add option tag in select
+                .val(customer_id) //set value for option to post it
+                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+            .val(customer_id) //select option of select2
+            .trigger("change"); //apply to select2*/
+    });
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#sel-customer').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+
+            // var phone = response['customer'].phone_h;
+            // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
+            var phone = response['customer'].phone_h;
+                // phone = normalize(phone);
+            
+            var mobile = response['customer'].phone_m;
+                // mobile = normalize(mobile);
+
+            var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            
+            $("#job_location").val(response['customer'].mail_add);
+            $("#email").val(response['customer'].email);
+            $("#date_of_birth").val(response['customer'].date_of_birth);
+            $("#phone_no").val(test_p);
+            $("#mobile_no").val(test_m);
+            $("#city").val(response['customer'].city);
+            $("#state").val(response['customer'].state);
+            $("#zip").val(response['customer'].zip_code);
+            $("#cross_street").val(response['customer'].cross_street);
+            $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+
+            $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+
+            $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+
+        function normalize(phone) {
+            //normalize string and remove all unnecessary characters
+            phone = phone.replace(/[^\d]/g, "");
+
+            //check if number length equals to 10
+            if (phone.length == 10) {
+                //reformat and return phone number
+                return phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+            }
+
+            return null;
+        }
+
+    });
+
+});
+
+</script>
 <!-- <script type="text/javascript"
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?=google_credentials()['api_key']?>&callback=initialize&libraries=&v=weekly"></script>
@@ -1424,7 +1521,7 @@ echo str_pad($val, 9, "0", STR_PAD_LEFT);
 <script>
     $(document).ready(function() {
 
-        $('#customer_id').change(function() {
+        $('#sel-customer').change(function() {
             var id = $(this).val();
             // alert(id);
 

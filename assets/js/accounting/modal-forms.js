@@ -3589,9 +3589,14 @@ $(function() {
                 }
             });
 
-            if(typeof itemFormData !== 'undefined' && itemFormData.has('name')) {
-                $('#item-modal form').attr('action', `/accounting/products-and-services/update/${type}/${itemFormData.get('id')}`);
-                $('#item-modal form').attr('id', `update-${type}-form`);
+            if(typeof itemFormData !== 'undefined' && itemFormData.has('name') && type !== 'bundle') {
+                if(itemFormData.has('id')) {
+                    $('#item-modal form').attr('action', `/accounting/products-and-services/update/${type}/${itemFormData.get('id')}`);
+                    $('#item-modal form').attr('id', `update-${type}-form`);
+                    $(`#item-modal a#select-item-type`).attr('onclick', `changeType('${itemFormData.get('type')}')`);
+                } else {
+                    $(`#item-modal a#select-item-type`).attr('onclick', `changeType('')`);
+                }
 
                 for(var data  of itemFormData.entries()) {
                     if(data[0] !== 'icon') {
@@ -3622,8 +3627,6 @@ $(function() {
                     $('#item-modal form').find('#purchasing').prop('checked', true).trigger('change');
                 }
             }
-
-            itemFormData = new FormData();
         });
     });
 
@@ -3692,7 +3695,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#modal-container #item-modal #bundle-items-table tbody tr td:not(:last-child)', function() {
+    $(document).on('click', '#modal-container #item-modal #bundle-item-form #bundle-items-table tbody tr td:not(:last-child)', function() {
         if($(this).parent().find('select[name="item[]"]').length < 1) {
             $(this).parent().children('td:first-child').append('<select name="item[]" class="form-control"></select>');
             $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control">');
@@ -3705,7 +3708,7 @@ $(function() {
                         var query = {
                             search: params.term,
                             type: 'public',
-                            field: 'item',
+                            field: 'item'
                         }
 
                         // Query parameters will be ?search=[term]&type=public&field=[type]
@@ -3782,6 +3785,8 @@ $(function() {
                 }
             });
         }
+
+        itemFormData = new FormData();
     });
 
     $(document).on('submit', '#account-modal #ajax-add-account', function(e) {

@@ -22,11 +22,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row pl-0 pr-0">
                             <div class="col-md-12 pl-0 pr-0">
                                 <div class="col-md-12 pr-3" style="padding-left: 15px;">
-                                    <h3 class="page-title mt-0">Add New Service</h3>
+                                    <h3 class="page-title mt-0">Edit Service</h3>
                                     <div class="pl-3 pr-3 mt-1 row">
                                         <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                           <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                              Create new service.
+                                              Edit service.
                                           </span>
                                         </div>
                                     </div>
