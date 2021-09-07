@@ -38,6 +38,9 @@
     <td data-column="method">
         <?=$method?>
     </td>
+    <td data-column="expiration-date">
+        <?=$expiration_date?>
+    </td>
     <td data-column="source">
         <?=$source?>
     </td>
@@ -71,6 +74,12 @@
     </td>
     <td data-column="email">
         <?=$email?>
+    </td>
+    <td data-column="accepted-by">
+        <?=$accepted_by?>
+    </td>
+    <td data-column="accepted-date">
+        <?=$accepted_date?>
     </td>
     <td data-column="attachment">
         <?=$attachment?>

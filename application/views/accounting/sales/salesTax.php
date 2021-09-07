@@ -261,7 +261,7 @@ include viewPath('includes/header');
                 <div class="taxModal__section row mb-3">
                     <div class="col">
                         <div>
-                            <div class="taxModal__title">Florida Department of Revenue</div>
+                            <div class="taxModal__title" data-type="agency_name">Florida Department of Revenue</div>
                             <div>Tax Period: <span data-type="date_issued"></span></div>
                             <div>Due date:  <span data-type="due_date"></span></div>
                         </div>

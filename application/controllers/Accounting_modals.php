@@ -6455,4 +6455,25 @@ class Accounting_modals extends MY_Controller
             echo json_encode($this->TaxRates_model->getById($taxCategoryId));
         }
     }
+
+    public function ajax_add_item_category()
+    {
+        $post = $this->input->post();
+
+        $data = [
+            'company_id' => getLoggedCompanyID(),
+            'name' => $post['name']
+        ];
+
+        $categoryId = $this->items_model->insertCategory($data);
+        $category = $this->items_model->getCategory($categoryId);
+
+        $return = [
+            'data' => $categoryId ? $category : null,
+            'success' => $categoryId ? true : false,
+            'message' => $categoryId ? "Success!" : "Error!"
+        ];
+
+        echo json_encode($return);
+    }
 }

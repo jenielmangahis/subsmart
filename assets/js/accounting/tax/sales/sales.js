@@ -11,6 +11,7 @@ class Accounting__TaxItem {
     data.due_date = this.formatDate(data.due_date);
     data.address = data.billing_address || data.job_location;
     data.price = `$${data.taxes}`;
+    data.agency_name = data.agency ? data.agency.agency : "";
 
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
