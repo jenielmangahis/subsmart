@@ -3389,6 +3389,7 @@ $(function() {
         if (value === 'add-new') {
             dropdownEl = $(this);
             var form = $(this).attr('name').includes('account') ? 'account' : $(this).attr('name').replaceAll('[]', '');
+            form = form === 'category' ? 'item_category' : form;
 
             if(form === 'name') {
                 var modal = $('#modal-form').children('.modal');
@@ -3406,11 +3407,14 @@ $(function() {
 
             if(!form.includes('payee') && !form.includes('customer') && !form.includes('vendor')) {
                 $.get(`/accounting/get-dropdown-modal/${form}_modal${query}`, function(result) {
-                    $('#modal-form').parent().append(result);
+                    $('#modal-container div.full-screen-modal:first-child()').append(result);
     
                     switch(form) {
                         case 'account' :
                             initAccountModal();
+                        break;
+                        case 'item_category' :
+                            $('#modal-container #item-category-modal').modal('show');
                         break;
                         default :
                             if(form !== 'item') {
@@ -3487,6 +3491,14 @@ $(function() {
         $('#item-modal').modal('hide');
     });
 
+    $(document).on('click', '#item-category-modal #cancel-add-category', function(e) {
+        e.preventDefault();
+
+        dropdownEl.val('').trigger('change');
+
+        $('#item-category-modal').modal('hide');
+    });
+
     $(document).on('hidden.bs.modal', '#modal-container #account-modal', function() {
         dropdownEl = null;
 
@@ -3509,6 +3521,12 @@ $(function() {
         dropdownEl = null;
 
         $('#modal-container #item-modal').remove();
+    });
+
+    $(document).on('hidden.bs.modal', '#modal-container #item-category-modal', function() {
+        dropdownEl = null;
+
+        $('#modal-container #item-category-modal').remove();
     });
 
     $(document).on('change', '#account-modal #check_sub', function() {
@@ -3761,6 +3779,30 @@ $(function() {
         $('#item-modal form input:not([type="checkbox"])').val('');
         $('#item-modal form input[type="checkbox"]').prop('checked', false);
         $('#item-modal form textarea').val('');
+    });
+
+    $(document).on('submit', '#item-category-modal form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $.ajax({
+            url: '/accounting/ajax-add-item-category',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+
+                if(res.success) {
+                    dropdownEl.append(`<option value="${res.data.item_categories_id}" selected>${res.data.name}</option>`);
+                    dropdownEl.trigger('change');
+
+                    $('#item-category-modal').modal('hide');
+                }
+            }
+        });
     });
 
     $(document).on('submit', '#item-modal form', function(e) {
@@ -6164,10 +6206,6 @@ const initAccountModal = () => {
         $('#modal-container #account-modal').modal('show');
     }
 }
-
-// const selectItemType = () => {
-// 	$(`#modal-container #item-modal .modal-container`).html(itemTypeSelection);
-// }
 
 const changeItemType = (type) => {
 	var action = $(`#${type}-item-form`).attr('action');

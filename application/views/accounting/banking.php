@@ -654,7 +654,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
     // DataTable JS
     $(document).ready(function() {
-        $('#addAccountModal').modal('show');
+        //$('#addAccountModal').modal('show');
 
         $('#forReview_table').DataTable({
             "paging": false,

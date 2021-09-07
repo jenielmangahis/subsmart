@@ -2447,8 +2447,7 @@ class Accounting extends MY_Controller
         $addQuery = $this->invoice_model->createInvoice($new_data);
 
         if ($addQuery > 0) {
-
-            if($this->input->post('agency_id')) {
+            if ($this->input->post('agency_id')) {
                 $this->db->insert('accounting_invoice_tax_agencies', [
                     'invoice_id' => $addQuery,
                     'agency_id' => $this->input->post('agency_id'),
@@ -8855,7 +8854,9 @@ class Accounting extends MY_Controller
                 $this->page_data['method']="";
                 $this->page_data['source']="";
                 $this->page_data['memo']="";
-                $this->page_data['duedate']=$estimates->expiry_date;
+                $this->page_data['expiration_date']=$estimates->expiry_date;
+                $this->page_data['accepted_date']=$estimates->accepted_date;
+                $this->page_data['accepted_by']="";//to be ask
                 $this->page_data['aging']=$this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
                 $this->page_data['balance']=0;
                 $this->page_data['total']=$estimates->estimate_value;
@@ -9729,5 +9730,11 @@ class Accounting extends MY_Controller
 
         $this->page_data['page_title'] = "Cash Flow";
         $this->load->view('accounting/cashflowplanner', $this->page_data);
+    }
+
+
+    public function stripe_response()
+    {
+
     }
 }

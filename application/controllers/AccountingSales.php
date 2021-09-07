@@ -161,15 +161,17 @@ class AccountingSales extends MY_Controller
         $dueEnd = date('Y-m-t', $dueEnd);
 
         $this->db->where('user_id', logged('id'));
-        $this->db->where('taxes >', '0');
+        // $this->db->where('taxes >', '0');
 
         $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
         $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $dueEnd);
 
+        $this->db->join('accounting_invoice_tax_agencies agencies', 'agencies.invoice_id = invoices.id', 'left');
         $this->db->order_by("STR_TO_DATE(due_date, '%Y-%m-%d')", 'DESC', false);
         $results = $this->db->get('invoices')->result();
 
         $companyIdMap = [];
+        $agencyIdMap = [];
         $records = [
             'due' => [],
             'upcoming' => [],
@@ -185,7 +187,14 @@ class AccountingSales extends MY_Controller
                 $companyIdMap[$result->company_id] = $this->db->get('clients')->row();
             }
 
+            if (!is_null($result->agency_id) && !array_key_exists($result->agency_id, $agencyIdMap)) {
+                $this->db->where('id', $result->agency_id);
+                $agencyIdMap[$result->agency_id] = $this->db->get('accounting_tax_agencies')->row();
+            }
+
             $result->company = $companyIdMap[$result->company_id];
+            $result->agency = $agencyIdMap[$result->agency_id];
+
             $dueDateUnix = strtotime($result->due_date);
             $type = null;
 

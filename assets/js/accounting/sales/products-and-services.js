@@ -842,6 +842,8 @@ $('#low-stock-cont').on('click', function() {
 	if($(this).hasClass('opacity-50') === false && $('#out-of-stock-cont').hasClass('opacity-50') === false) {
 		$('#out-of-stock-cont').addClass('opacity-50');
 		$('#stock_status').val('low stock').trigger('change');
+		$('#type').val('inventory').trigger('change');
+		$('#status').val('active').trigger('change');
 	} else if($(this).hasClass('opacity-50') === false && $('#out-of-stock-cont').hasClass('opacity-50')) {
 		$('#out-of-stock-cont').removeClass('opacity-50');
 		$('#stock_status').val('all').trigger('change');
@@ -849,6 +851,8 @@ $('#low-stock-cont').on('click', function() {
 		$('#out-of-stock-cont').addClass('opacity-50');
 		$(this).removeClass('opacity-50');
 		$('#stock_status').val('low stock').trigger('change');
+		$('#type').val('inventory').trigger('change');
+		$('#status').val('active').trigger('change');
 	}
 
 	applybtn();
@@ -858,6 +862,8 @@ $('#out-of-stock-cont').on('click', function() {
 	if($(this).hasClass('opacity-50') === false && $('#low-stock-cont').hasClass('opacity-50') === false) {
 		$('#low-stock-cont').addClass('opacity-50');
 		$('#stock_status').val('out of stock').trigger('change');
+		$('#type').val('inventory').trigger('change');
+		$('#status').val('active').trigger('change');
 	} else if($(this).hasClass('opacity-50') === false && $('#low-stock-cont').hasClass('opacity-50')) {
 		$('#low-stock-cont').removeClass('opacity-50');
 		$('#stock_status').val('all').trigger('change');
@@ -865,7 +871,10 @@ $('#out-of-stock-cont').on('click', function() {
 		$('#low-stock-cont').addClass('opacity-50');
 		$(this).removeClass('opacity-50');
 		$('#stock_status').val('out of stock').trigger('change');
+		$('#type').val('inventory').trigger('change');
+		$('#status').val('active').trigger('change');
 	}
+
 	applybtn();
 });
 
