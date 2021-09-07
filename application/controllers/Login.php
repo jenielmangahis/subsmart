@@ -117,7 +117,7 @@ class Login extends CI_Controller
                 $deactivatedModules  = $this->CompanyDeactivatedModule_model->getAllByCompanyId($client->id);
                 $deactivated_modules = array();
 
-                foreach( $deactivated_modules as $dm ){
+                foreach( $deactivatedModules as $dm ){
                     $deactivated_modules[$dm->industry_module_id] = $dm->industry_module_id;
                 } 
 

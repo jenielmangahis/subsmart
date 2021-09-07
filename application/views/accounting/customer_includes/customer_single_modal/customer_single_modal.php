@@ -435,6 +435,15 @@
                                                             <label for="tbl-colum-duedate"><span>Due date</span></label>
                                                         </div>
                                                     </div>
+                                                    <div class="form-check">
+                                                        <div class="checkbox checkbox-sec margin-right">
+                                                            <input type="checkbox" name="tbl-colum-expiration-date"
+                                                                id="tbl-colum-expiration-date"
+                                                                data-column="expiration-date">
+                                                            <label for="tbl-colum-expiration-date"><span>Expiration
+                                                                    date</span></label>
+                                                        </div>
+                                                    </div>
                                                     <div class="extra-group" style="display: none;">
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
@@ -459,6 +468,24 @@
                                                                     data-column="last-delivered" checked>
                                                                 <label for="tbl-colum-last-delivered"><span>Last
                                                                         delivered</span></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-accepted-by"
+                                                                    id="tbl-colum-accepted-by"
+                                                                    data-column="accepted-by">
+                                                                <label for="tbl-colum-accepted-by"><span>Accepted
+                                                                        by</span></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-accepted-date"
+                                                                    id="tbl-colum-accepted-date"
+                                                                    data-column="accepted-date">
+                                                                <label for="tbl-colum-accepted-date"><span>Accepted
+                                                                        date</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="form-check">
@@ -536,11 +563,15 @@
                                             <th data-column="method">Method</th>
                                             <th data-column="source">Source</th>
                                             <th data-column="memo">Memo</th>
+                                            <th data-column="expiration-date">Expiration Date</th>
                                             <th data-column="duedate">Due Date</th>
                                             <th data-column="aging">Aging</th>
                                             <th data-column="balance">Balance</th>
                                             <th data-column="total">TOTAL</th>
                                             <th data-column="last-delivered">Last Delevired</th>
+                                            <th data-column="email">Email</th>
+                                            <th data-column="accepted-by">Accepted by</th>
+                                            <th data-column="accepted-date">Accepted date</th>
                                             <th data-column="email">Email</th>
                                             <th data-column="attachment"><i class="fa fa-paperclip"
                                                     aria-hidden="true"></i>

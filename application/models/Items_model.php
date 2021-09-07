@@ -62,7 +62,7 @@ class Items_model extends MY_Model
     public function insertCategory($data)
     {
         $insert = $this->db->insert($this->table_categories, $data);
-        return $insert ? true : false;
+        return $this->db->insert_id();
     }
     
     public function getCategory($id)
