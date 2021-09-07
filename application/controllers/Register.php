@@ -735,6 +735,8 @@ class Register extends MYF_Controller {
 
     public function registration_use_code()
     {
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
+        
         $is_valid = false;
         $msg      = '';
 
