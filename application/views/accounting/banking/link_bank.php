@@ -433,7 +433,7 @@
 
 <script>
     $('#open_stripe').click(function () {
-        window.open('https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_IQWfSvWnKy1ghonWSRomLWiStpewHdv5&scope=read_write','Ratting','width=550,height=650,left=450,top=200,toolbar=0,status=0');
+        window.open('https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_KBQqImsoRKsn8QTIvr9DdP0dH37hPQ3Y&scope=read_write','Ratting','width=550,height=650,left=450,top=200,toolbar=0,status=0');
     });
     $('.click-stripe').click(function () {
         $('.accounts-list').hide();

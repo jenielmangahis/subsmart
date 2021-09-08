@@ -287,10 +287,10 @@ include viewPath('includes/header');
                 </div>
 
                 <div class="taxModal__section">
-                    <table class="table table-hover table-sm">
+                    <table class="table table-hover table-sm" id="taxItemsTable">
                         <thead>
                             <tr>
-                                <th>Level</th>
+                                <th>Tax Agency</th>
                                 <th class="text-right">Gross Sales</th>
                                 <th class="text-right">Nontaxable Sales</th>
                                 <th class="text-right">Taxable Sales</th>
@@ -298,26 +298,27 @@ include viewPath('includes/header');
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>State</th>
-                                <td class="text-right">7720.12</td>
-                                <td class="text-right">378.83</td>
-                                <td class="text-right">7341.29</td>
-                                <td class="text-right">337.12</td>
+                            <tr class="emptyMessageRow">
+                                <td colspan="5">
+                                    <div class="text-center">No transactions available for this period.</div>
+                                </td>
                             </tr>
-                            <tr>
-                                <th>County</th>
-                                <td class="text-right">7720.12</td>
-                                <td class="text-right">378.83</td>
-                                <td class="text-right">7341.29</td>
-                                <td class="text-right">64.68</td>
+
+                            <tr class="dataRow d-none">
+                                <th data-table-type="agency_name"></th>
+                                <td data-table-type="gross" class="text-right"></td>
+                                <td data-table-type="nontaxable" class="text-right"></td>
+                                <td data-table-type="taxable" class="text-right"></td>
+                                <td data-table-type="tax" class="text-right"></td>
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="taxModal__total">
                         <div class="taxModal__title taxModal__title--secondary">Total tax</div>
-                        <div class="taxModal__title taxModal__title--secondary">$401.80</div>
+                        <div class="taxModal__title taxModal__title--secondary">
+                            $<span data-table-type="tax"></span>
+                        </div>
                     </div>
 
                     <div class="taxModal__spacer"></div>
@@ -328,7 +329,9 @@ include viewPath('includes/header');
 
                     <div class="taxModal__total taxModal__total--big">
                         <div class="taxModal__title taxModal__title--secondary">Total after adjustments</div>
-                        <div class="taxModal__title taxModal__title--secondary">$401.80</div>
+                        <div class="taxModal__title taxModal__title--secondary">
+                            $<span data-table-type="tax"></span>
+                        </div>
                     </div>
 
                     <div class="taxModal__spacer"></div>

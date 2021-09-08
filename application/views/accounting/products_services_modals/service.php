@@ -95,7 +95,7 @@
                         <div class="col-sm-6">
                             <div class="form-group" style="margin: 0 !important">
                                 <label for="incomeAccount">Income account</label>
-                                <select name="income_account" id="incomeAccount" class="form-control" required></select>
+                                <select name="income_account" class="form-control" required></select>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                         <div class="col-sm-12">
                             <div class="form-group" style="margin: 0 !important">
                                 <label for="salesTaxCat">Sales tax category</label>
-                                <select name="sales_tax_category" id="salesTaxCat" class="form-control"></select>
+                                <select name="sales_tax_category" class="form-control"></select>
                             </div>
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                         <div class="col-sm-6 hide">
                             <div class="form-group" style="margin: 0 !important">
                                 <label for="expenseAcc">Expense account</label>
-                                <select name="item_expense_account" id="expenseAcc" class="form-control"></select>
+                                <select name="item_expense_account" class="form-control"></select>
                             </div>
                         </div>
                         <div class="col-sm-12 hide">

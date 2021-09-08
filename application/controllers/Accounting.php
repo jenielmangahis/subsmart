@@ -2505,6 +2505,7 @@ class Accounting extends MY_Controller
             $h          = $this->input->post('tax');
             $discounts  = $this->input->post('discount');
             $gtotal     = $this->input->post('total');
+            $tax_rate   = $this->input->post('tax_rate');
 
             $i = 0;
             foreach ($a as $row) {
@@ -2515,6 +2516,7 @@ class Accounting extends MY_Controller
                 $data['discount'] = str_replace(',', '', $discounts[$i]);
                 $data['total'] = ((str_replace(',', '', $price[$i])*str_replace(',', '', $quantity[$i]))+str_replace(',', '', $h[$i]))-str_replace(',', '', $discounts[$i]);
                 $data['invoice_id'] = $addQuery;
+                $data['tax_rate_used'] = $tax_rate;
                 $addQuery2 = $this->invoice_model->add_invoice_items($data);
                 $i++;
             }
@@ -9733,8 +9735,5 @@ class Accounting extends MY_Controller
     }
 
 
-    public function stripe_response()
-    {
 
-    }
 }

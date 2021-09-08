@@ -5266,7 +5266,8 @@ class Accounting_modals extends MY_Controller
             break;
             case 'detail-type' :
                 $accType = $this->input->get('accType');
-                $return = $this->get_account_details_choices($return, $search, $accType);
+                $dropdown = $this->input->get('dropdown');
+                $return = $this->get_account_details_choices($return, $search, $accType, $dropdown);
             break;
             case 'service' :
                 $return = $this->get_services_choices($return, $search);
@@ -5395,7 +5396,7 @@ class Accounting_modals extends MY_Controller
         if ($field === 'pay-bills-vendor') {
             array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
         } else {
-            if(!in_array($field, ['account-type', 'detail-type', 'parent-account']) && $this->input->get('modal') !== 'printChecksModal' && $field !== 'sales-tax-category') {
+            if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) && $this->input->get('modal') !== 'printChecksModal' && $field !== 'sales-tax-category') {
                 array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
             }
         }
@@ -5748,7 +5749,7 @@ class Accounting_modals extends MY_Controller
                     'Equity'
                 ];
                 $typeNames = array_filter($types, function($type, $key) use ($accTypes) {
-                    return in_array($type->account_name, $types);
+                    return in_array($type->account_name, $accTypes);
                 }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'inventory-adj-account' :
@@ -5764,6 +5765,21 @@ class Accounting_modals extends MY_Controller
             case 'cash-back-account' :
                 $typeNames = array_filter($types, function($type, $key) {
                     return $type->account_name === 'Bank' || $type->account_name === 'Other Current Assets';
+                }, ARRAY_FILTER_USE_BOTH);
+            break;
+            case 'inv-asset-account' :
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Other Current Assets';
+                }, ARRAY_FILTER_USE_BOTH);
+            break;
+            case 'income-account' :
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Income';
+                }, ARRAY_FILTER_USE_BOTH);
+            break;
+            case 'item-expense-account' :
+                $typeNames = array_filter($types, function($type, $key) {
+                    return $type->account_name === 'Cost of Goods Sold';
                 }, ARRAY_FILTER_USE_BOTH);
             break;
             default :
@@ -5797,9 +5813,29 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_account_details_choices($choices, $search = null, $accType)
+    private function get_account_details_choices($choices, $search = null, $accType, $dropdown = null)
     {
         $accDetails = $this->account_detail_model->getDetailTypesById($accType);
+
+        if ($dropdown) {
+            switch($dropdown) {
+                case 'inv-asset-account' :
+                    $accDetails = array_filter($accDetails, function($detailType, $key) {
+                        return $detailType->acc_detail_name === 'Inventory';
+                    }, ARRAY_FILTER_USE_BOTH);
+                break;
+                case 'income-account' :
+                    $accDetails = array_filter($accDetails, function($detailType, $key) {
+                        return $detailType->acc_detail_name === 'Sales of Product Income';
+                    }, ARRAY_FILTER_USE_BOTH);
+                break;
+                case 'item-expense-account' :
+                    $accDetails = array_filter($accDetails, function($detailType, $key) {
+                        return $detailType->acc_detail_name === 'Supplies & Materials - COGS';
+                    }, ARRAY_FILTER_USE_BOTH);
+                break;
+            }
+        }
 
         foreach($accDetails as $accDetail) {
             if($search !== null && $search !== '') {
@@ -6165,17 +6201,31 @@ class Accounting_modals extends MY_Controller
                 switch($field) {
                     default :
                         $accountType = $this->account_model->getAccTypeByName('Bank');
+                        $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
                     break;
                     case 'bank-credit-account' :
                         $accountType = $this->account_model->getAccTypeByName('Credit Card');
+                        $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
                     break;
                     case 'credit-card-account' :
                         $accountType = $this->account_model->getAccTypeByName('Credit Card');
+                        $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
+                    break;
+                    case 'inv-asset-account' :
+                        $accountType = $this->account_model->getAccTypeByName('Other Current Assets');
+                        $this->page_data['detailType'] = $this->account_detail_model->getByName('Inventory');
+                    break;
+                    case 'income-account' :
+                        $accountType = $this->account_model->getAccTypeByName('Income');
+                        $this->page_data['detailType'] = $this->account_detail_model->getByName('Sales of Product Income');
+                    break;
+                    case 'item-expense-account' :
+                        $accountType = $this->account_model->getAccTypeByName('Cost of Goods Sold');
+                        $this->page_data['detailType'] = $this->account_detail_model->getByName('Supplies & Materials - COGS');
                     break;
                 }
-        
+
                 $this->page_data['accountType'] = $accountType;
-                $this->page_data['detailType'] = $this->account_detail_model->getDetailTypesById($accountType->id)[0];
             break;
             case 'item_modal' :
                 $this->page_data['field'] = $this->input->get('field');

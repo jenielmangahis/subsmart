@@ -3391,8 +3391,8 @@ $(function() {
             var form = $(this).attr('name').includes('account') ? 'account' : $(this).attr('name').replaceAll('[]', '');
             form = form === 'category' ? 'item_category' : form;
 
-            if(form === 'name') {
-                var modal = $('#modal-form').children('.modal');
+            if(form === 'account') {
+                var modal = $('#modal-container').find('.modal:first-child()');
                 var modalName = modal.attr('id').toLowerCase().replaceAll('modal', '');
                 var field = dropdownEl.attr('id');
                 var fieldName = field === undefined ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-').toLowerCase() : field.toLowerCase().replaceAll('_', '-');
@@ -3726,7 +3726,8 @@ $(function() {
                         var query = {
                             search: params.term,
                             type: 'public',
-                            field: 'item'
+                            field: 'item',
+                            modal: 'item-modal'
                         }
 
                         // Query parameters will be ?search=[term]&type=public&field=[type]
@@ -3908,7 +3909,7 @@ $(function() {
             dropdownEl = $(this);
 
             $.get('/accounting/get-add-payee-modal/payee', function(result) {
-                $('#modal-form').parent().append(result);
+                $('#modal-container div.full-screen-modal:first-child()').parent().append(result);
                 $('#modal-container #add-payee-modal select').select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $('#modal-container #add-payee-modal')
@@ -3927,7 +3928,7 @@ $(function() {
             dropdownEl = $(this);
 
             $.get('/accounting/get-add-payee-modal/vendor', function(result) {
-                $('#modal-form').parent().append(result);
+                $('#modal-container div.full-screen-modal:first-child()').parent().append(result);
 
                 $('#modal-container #add-payee-modal h4.modal-title').html('New Vendor');
                 $('#modal-container #add-payee-modal').modal({
@@ -3943,7 +3944,7 @@ $(function() {
             dropdownEl = $(this);
 
             $.get('/accounting/get-add-payee-modal/vendor', function(result) {
-                $('#modal-form').parent().append(result);
+                $('#modal-container div.full-screen-modal:first-child()').parent().append(result);
 
                 $('#modal-container #add-payee-modal').modal({
                     backdrop: 'static',
@@ -3958,7 +3959,7 @@ $(function() {
             dropdownEl = $(this);
 
             $.get('/accounting/get-add-payee-modal/customer', function(result) {
-                $('#modal-form').parent().append(result);
+                $('#modal-container div.full-screen-modal:first-child()').parent().append(result);
 
                 $('#modal-container #add-payee-modal h4.modal-title').html('New Customer');
                 $('#modal-container #add-payee-modal').modal({
@@ -3974,7 +3975,7 @@ $(function() {
             dropdownEl = $(this);
 
             $.get('/accounting/get-add-payee-modal/received-from', function(result) {
-                $('#modal-form').parent().append(result);
+                $('#modal-container div.full-screen-modal:first-child()').parent().append(result);
                 $('#modal-container #add-payee-modal select').select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $('#modal-container #add-payee-modal')
@@ -3993,7 +3994,7 @@ $(function() {
             dropdownEl = $(this);
 
             $.get('/accounting/get-add-payee-modal/received-from', function(result) {
-                $('#modal-form').parent().append(result);
+                $('#modal-container div.full-screen-modal:first-child()').parent().append(result);
                 $('#modal-container #add-payee-modal select').select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $('#modal-container #add-payee-modal')
@@ -6121,8 +6122,6 @@ const initAccountModal = () => {
                     templateSelection: optionSelect,
                     dropdownParent: $('#modal-container #account-modal')
                 });
-
-                $(this).trigger('change');
             break;
             case 'detail-type':
                 $(this).select2({
@@ -6137,6 +6136,10 @@ const initAccountModal = () => {
                                 accType: $(this).parent().prev().find('#account_type').val()
                             }
 
+                            if(dropdownEl !== null) {
+                                query.dropdown = dropdownEl.attr('name').replaceAll('_', '-');
+                            }
+
                             // Query parameters will be ?search=[term]&type=public&field=[type]
                             return query;
                         }
@@ -6145,8 +6148,6 @@ const initAccountModal = () => {
                     templateSelection: optionSelect,
                     dropdownParent: $('#modal-container #account-modal')
                 });
-
-                $(this).trigger('change');
             break;
             case 'parent-account':
                 $(this).select2({
