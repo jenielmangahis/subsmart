@@ -50,7 +50,7 @@ class MYF_Controller extends CI_Controller {
 		$method     = $this->router->fetch_method();
 		$controller = $this->router->fetch_class();		
 
-		//if( $controller != '' )
+		//if( $controller != '' )my
 		/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
 			redirect('mycrm/membership'); 
 		}*/
@@ -86,6 +86,8 @@ class MYF_Controller extends CI_Controller {
         date_default_timezone_set($utimezone);*/
 		
     }
+
+
 
 	protected function checkLogin($is_front = '') {
 		$user_id =  logged('id');		

@@ -599,6 +599,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             data-target="#item_list"><span
                                                 class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
                                         <!-- <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> -->
+                                        <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".modal-add-by-group"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
+                                        <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Add/Create Package</a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
                                     <!-- <div class="row">
@@ -662,13 +664,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             <div class="form-group" style="margin-bottom: 0 !important;">
                                                                 <div class="taxRateSelect" id="invoiceTaxRate">
                                                                     <button class="taxRateSelect__main" type="button" disabled>
-                                                                        <span>Items total tax rate</span>
+                                                                        <span class="type-text">Items total tax rate</span>
                                                                         <i class="fa fa-angle-down"></i>
                                                                     </button>
 
                                                                     <div class="taxRateSelect__options">
-                                                                        <div class="taxRateSelect__item" value="items_tax" default="true">Items total tax rate</div>
-                                                                        <div class="taxRateSelect__item" value="location">Based on location</div>
+                                                                        <div class="taxRateSelect__item" value="items_tax" data-type-value="items_tax" default="true">Items total tax rate</div>
+                                                                        <div class="taxRateSelect__item" value="location" data-type-value="location">Based on location</div>
 
                                                                         <div class="taxRateSelect__item taxRateSelect__item--customWrapper">
                                                                             <div class="taxRateSelect__title">Custom Rates</div>
@@ -678,6 +680,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <input type="hidden" id="tax_rate" name="tax_rate" class="type-input">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1376,6 +1379,220 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
 </div>
 
+<div class="modal fade modal-add-by-group" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add By Group</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body pt-0 pl-3 pb-3">
+                                        <table id="items_table_newWorkorder" class="table table-hover" style="width: 100%;">
+                                            <thead>
+                                            <tr>
+                                                <td> Name</td>
+                                                <td> Action</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($packages as $package){ // print_r($item); ?>
+                                                <tr>
+                                                    <td><?php echo $package->name; ?></td>
+                                                    <td>
+                                                        <button id="<?= $package->item_categories_id ; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
+                                                </td>
+                                                </tr>
+                                                
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- add manual package -->
+            <div class="modal fade createPackage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add/Create Package</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body pt-0 pl-3 pb-3" id="divcreatePackage">
+                                <section id="tabs" class="project-tab">
+                                    <!-- <div class="container"> -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <nav>
+                                                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Add Package</a>
+                                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Create Package</a>
+                                                    </div>
+                                                </nav>
+                                                <div class="tab-content" id="nav-tabContent">
+                                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                                        <!-- <div class="container"> -->
+                                                            <table class="table table-condensed"  id="myTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID #</th>
+                                                                        <th>Package Name</th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th>Amount</th>
+                                                                        <th>Action</th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="panel">
+                                                                <?php foreach($itemPackages as $pItems){ ?>
+                                                                    <tr data-toggle="collapse" data-target="#demo<?php echo  $pItems->id; ?>" data-parent="#myTable" id="packageID" pack-id="<?php echo  $pItems->id; ?>">
+                                                                        <td><?php echo  $pItems->id; ?></td>
+                                                                        <td><?php echo  $pItems->name; ?></td>
+                                                                        <td></td>
+                                                                        <td class="text-success"></td>
+                                                                        <td class="text-success"><?php echo  $pItems->amount_set; ?></td>
+                                                                        <td class="text-error"><button id="<?= $pItems->id; ?>" pack-id="<?= $pItems->id; ?>"  class="btn btn-sm btn-default addNewPackageToList"><span class="fa fa-plus"></span></button></td>
+                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
+                                                                    </tr>
+                                                                    <tr id="demo<?php echo  $pItems->id; ?>" class="collapse">
+                                                                        <td colspan="6" class="hiddenRow"><div id="packageItems<?php echo  $pItems->id; ?>"></div> </td>
+                                                                    </tr>
+                                                                <?php } ?>
+                                                                    <!-- <tr data-toggle="collapse" data-target="#demo2" data-parent="#myTable">
+                                                                        <td>2</td>
+                                                                        <td>05 May 2013</td>
+                                                                        <td></td>
+                                                                        <td class="text-success"></td>
+                                                                        <td class="text-error"></td>
+                                                                        <td class="text-success">$600.00</td>
+                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
+                                                                    </tr>
+                                                                    <tr id="demo2" class="collapse">
+                                                                        <td colspan="6" class="hiddenRow"><div>Demo2</div></td>
+                                                                    </tr>
+                                                                    <tr data-toggle="collapse" data-target="#demo3" data-parent="#myTable">
+                                                                        <td>3</td>
+                                                                        <td>05 May 2013</td>
+                                                                        <td></td>
+                                                                        <td class="text-success"></td>
+                                                                        <td class="text-error"></td>
+                                                                        <td class="text-success">$661.00</td>
+                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
+                                                                    </tr>
+                                                                    <tr id="demo3" class="collapse">
+                                                                        <td colspan="6" class="hiddenRow"><div>Demo3</div></td>
+                                                                    </tr> -->
+                                                                </tbody>
+                                                            </table>
+                                                        <!-- </div> -->
+                                                    </div>
+                                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="width:100%;">
+                                                        <input type="hidden" name="count" value="0" id="count">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                            <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;" name="package_name" id="package_name">
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <table class="table table-hover" style="width:100%;">
+                                                            <input type="hidden" name="count" value="0" id="count">
+                                                            <thead style="background-color:#E9E8EA;">
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Group</th>
+                                                                <!-- <th>Description</th> -->
+                                                                <th width="150px">Quantity</th>
+                                                                <!-- <th>Location</th> -->
+                                                                <th width="150px">Price</th>
+                                                                <!-- <th class="hidden_mobile_view" width="150px">Discount</th>
+                                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th> -->
+                                                                <!-- <th class="hidden_mobile_view">Total</th> -->
+                                                                <th></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="items_package_table">
+                                                                <!-- <tr>
+                                                                    <td width="35%">
+                                                                        <input type="text" class="form-control getItemsPackage"
+                                                                            onKeyup="getItemsPackage(this)" name="itemsPackage[]">
+                                                                        <ul class="suggestions"></ul>
+                                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                                        <input type="hidden" name="itemid[]" id="itemid" class="itemid_package" value="0">
+                                                                    </td>
+                                                                    <td width="25%">
+                                                                    <div class="dropdown-wrapper">
+                                                                        <select name="item_typePackage[]" id="item_typeid" class="form-control">
+                                                                            <option value="product">Product</option>
+                                                                            <option value="material">Material</option>
+                                                                            <option value="service">Service</option>
+                                                                            <option value="fee">Fee</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    </td>
+                                                                    <td width=""><input type="number" class="form-control quantityPackage" name="quantityPackage[]"
+                                                                            data-counter="0" id="quantity_package_0" value="1"></td>
+                                                                    <td width=""><input type="number" class="form-control price_package hidden_mobile_view" name="pricePackage[]"
+                                                                            data-counter="0" id="price_package_0" min="0" value="0"> <input type="hidden" class="priceqty priceqty_package" value="0" id="priceqty_0"> 
+                                                                            <div class="show_mobile_view"><span class="price">0</span>
+                                                                            </div><input id="priceqty_package_0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view priceqty_package"></td>
+                                                                    
+                                                                    <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                                </tr> -->
+                                                                </tbody>
+                                                        </table>
+                                                        <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list_package" style="float:left;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                        <br>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td><b>Total Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price" id="package_price"></td>
+                                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price_set" id="package_price_set"></td>
+                                                                    <tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                            </div>
+                                                            <div class="col-md-6" align="right">
+                                                                <!-- <div style="align:right;"> -->
+                                                                    <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
+                                                                <!-- </div> -->
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!-- </div> -->
+                                </section>
+                                    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- edd package -->
+
 <?php include viewPath('accounting/add_new_term');?>
 <?php include viewPath('includes/footer_accounting');?>
 <script>
@@ -1651,4 +1868,289 @@ $(document).ready(function(){
             }
         });
     });
+</script>
+<script>
+        // function validatecard() {
+        //     var inputtxt = $('.card-number').val();
+
+        //     if (inputtxt == 4242424242424242) {
+        //         $('.require-validation').submit();
+        //     } else {
+        //         alert("Not a valid card number!");
+        //         return false;
+        //     }
+        // }
+
+        $(document).ready(function () {
+
+            // phone type change, add the value to hiddend field and show the text
+            $(document.body).on('click', '.taxRateSelect__item', function () {
+                $(this).closest('.taxRateSelect').find('.type-text').text($(this).text());
+                $(this).closest('.taxRateSelect').find('.type-input').val($(this).data('type-value'));
+            });
+        });
+</script>
+
+<script>
+// $('.addCreatePackage').on('click', function(){
+$(".addCreatePackage").click(function () {
+// var item = $("#itemidPackage").val();
+var item = $('input[name="itemidPackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var type = $('input[name="item_typePackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var quantity = $('input[name="quantityPackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var price = $('input[name="pricePackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var package_name =  $("#package_name").val();
+var package_price =  $("#package_price").val();
+var package_price_set =  $("#package_price_set").val();
+
+// console.log('items '+item);
+// console.log('type '+type);
+// console.log('quantity '+quantity);
+// console.log('price '+price);
+    $.ajax({
+        type : 'POST',
+        url : "<?php echo base_url(); ?>workorder/createPackage",
+        data : {item: item, type:type, quantity:quantity, price:price, package_price:package_price, package_name:package_name, package_price_set:package_price_set },
+        dataType: 'json',
+        success: function(response){
+
+        // console.log(result);
+        var Randnumber = 1 + Math.floor(Math.random() * 99999);
+
+        console.log(response['pName']);
+
+                    // var inputs1 = "";
+                        $.each(response['pName'], function (a, b) {
+                            // inputs1 += b.name;
+                            var pName = b.name;
+                            // var Rnumber = 3 + Math.floor(Math.random() * 9);
+                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
+
+                        
+
+                markup = "<tr id=\"ss\">" +
+                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
+                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                        // "<td>\n" +
+                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                        // "</td>\n" +
+                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
+                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
+
+                        "</tbody></table></div></td>\n" +
+                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
+                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
+                    "</tr>";
+                    tableBody = $("#jobs_items_table_body");
+                    tableBody.append(markup);
+                });
+                    
+                    var inputs = "";
+                        $.each(response['details'], function (i, v) {
+                            inputs += v.package_name ;
+                            // "<tr>"+
+                            // "<td>"+ v.item_id +"</td>"+
+                            // "<td>"+ v.quantity +"</td>"+
+                            // "<td>"+ v.price +"</td>"+
+                            // "</tr>"+
+                        // });
+
+                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
+                        // "<tr>"+
+                            "<td></td>"+
+                            "<td>"+ v.title +"</td>"+
+                            "<td>"+ v.quantity +"</td>"+
+                            "<td>"+ v.price +"</td>"+
+                        "</tr>";
+                    tableBody2 = $("#packageBody"+Randnumber);
+                    tableBody2.append(markup2);
+
+                });
+
+
+                var priceqty2 = 0;
+                $('*[id^="priceqty_"]').each(function(){
+                priceqty2 += parseFloat($(this).val());
+                });
+                $("#item_total").val(priceqty2.toFixed(2));
+                $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
+
+                
+                var subtotal = 0;
+                // $("#span_total_0").each(function(){
+                $('*[id^="span_total_"]').each(function(){
+                subtotal += parseFloat($(this).text());
+                });
+                var s_total = subtotal.toFixed(2);
+                var adjustment = $("#adjustment_input").val();
+                var grand_total = s_total - parseFloat(adjustment);
+                var markup = $("#markup_input_form").val();
+                var grand_total_w = grand_total + parseFloat(markup);
+                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+                $("#grand_total").text(grand_total_w.toFixed(2));
+                $("#grand_total_input").val(grand_total_w.toFixed(2));
+                $("#payment_amount").val(grand_total_w.toFixed(2));
+
+        },
+    });
+
+    
+
+    $(".createPackage").modal("hide");
+    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
+    // $(document.body).on('hidden.bs.modal', function () {
+    //     $('.createPackage').removeData('bs.modal')
+    // });
+    $("#divcreatePackage").load(" #divcreatePackage");
+
+});
+</script>
+
+<script>
+$(".addNewPackageToList").click(function () {
+    var packId = $(this).attr('pack-id');
+
+    $.ajax({
+        type : 'POST',
+        url : "<?php echo base_url(); ?>workorder/addNewPackageToList",
+        data : {packId: packId },
+        dataType: 'json',
+        success: function(response){
+
+        // console.log(result);
+        var Randnumber = 1 + Math.floor(Math.random() * 99999);
+
+        console.log(response['pName']);
+
+                    // var inputs1 = "";
+                        $.each(response['pName'], function (a, b) {
+                            // inputs1 += b.name;
+                            var pName = b.name;
+                            // var Rnumber = 3 + Math.floor(Math.random() * 9);
+                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
+
+                        
+
+                markup = "<tr id=\"ss\">" +
+                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
+                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                        // "<td>\n" +
+                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                        // "</td>\n" +
+                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
+                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
+
+                        "</tbody></table></div></td>\n" +
+                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
+                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
+                    "</tr>";
+                    tableBody = $("#jobs_items_table_body");
+                    tableBody.append(markup);
+                });
+                    
+                    var inputs = "";
+                        $.each(response['details'], function (i, v) {
+                            inputs += v.package_name ;
+                            // "<tr>"+
+                            // "<td>"+ v.item_id +"</td>"+
+                            // "<td>"+ v.quantity +"</td>"+
+                            // "<td>"+ v.price +"</td>"+
+                            // "</tr>"+
+                        // });
+
+                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
+                        // "<tr>"+
+                            "<td></td>"+
+                            "<td>"+ v.title +"</td>"+
+                            "<td>"+ v.quantity +"</td>"+
+                            "<td>"+ v.price +"</td>"+
+                        "</tr>";
+                    tableBody2 = $("#packageBody"+Randnumber);
+                    tableBody2.append(markup2);
+
+                });
+
+
+                var priceqty2 = 0;
+                $('*[id^="priceqty_"]').each(function(){
+                priceqty2 += parseFloat($(this).val());
+                });
+                $("#item_total").val(priceqty2.toFixed(2));
+                $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
+
+                
+                var subtotal = 0;
+                // $("#span_total_0").each(function(){
+                $('*[id^="span_total_"]').each(function(){
+                subtotal += parseFloat($(this).text());
+                });
+                var s_total = subtotal.toFixed(2);
+                var adjustment = $("#adjustment_input").val();
+                var grand_total = s_total - parseFloat(adjustment);
+                var markup = $("#markup_input_form").val();
+                var grand_total_w = grand_total + parseFloat(markup);
+                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+                $("#grand_total").text(grand_total_w.toFixed(2));
+                $("#grand_total_input").val(grand_total_w.toFixed(2));
+                $("#payment_amount").val(grand_total_w.toFixed(2));
+
+        },
+    });
+
+    $(".createPackage").modal("hide");
+    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
+    // $(document.body).on('hidden.bs.modal', function () {
+    //     $('.createPackage').removeData('bs.modal')
+    // });
+    // $("#divcreatePackage").load(" #divcreatePackage");
+
+});
+</script>
+<script>
+// $("#packageID").click(function () {
+$(document).ready(function()
+{
+    // $( "#packageID" ).each(function(i) {
+    //     $(this).on("click", function(){
+    //     var packId = $(this).attr('pack-id');
+    //     alert(packId);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>workorder/getPackageItemsById",
+            // data : {packId: packId },
+            dataType: 'json',
+            success: function(response){
+                var inputs = "";
+                $.each(response['pItems'], function (i, v) {
+                    // inputs += v.package_name ;
+                    markup2 = "<tr>" +
+                                "<td></td>"+
+                                "<td>"+ v.title +"</td>"+
+                                "<td>"+ v.quantity +"</td>"+
+                                "<td>"+ v.price +"</td>"+
+                            "</tr>";
+                        tableBody2 = $("#packageItems"+v.package_id);
+                        tableBody2.append(markup2);
+                });
+            },
+        // });
+        // });
+    });
+});
 </script>

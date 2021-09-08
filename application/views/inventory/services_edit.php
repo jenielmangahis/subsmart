@@ -44,7 +44,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="title">Service Name</label>                                            
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <input type="text" class="form-control " name="title" id="title" required/>
+                                                    <input type="text" class="form-control" value="<?= $item->title; ?>" name="title" id="title" required/>
                                                 </div>
                                             </div>
                                             <div class="row form_line">
@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="description">Description</label>                                            
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <input type="text" class="form-control " name="description" id="description"/>
+                                                    <input type="text" class="form-control" value="<?= $item->description; ?>" name="description" id="description"/>
                                                 </div>
                                             </div>
                                             <div class="row form_line">
@@ -60,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="price">Price</label>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <input type="number" step="any" class="form-control" name="price" id="price" required/>
+                                                    <input type="number" step="any" value="<?= number_format($item->price,2); ?>" class="form-control" name="price" id="price" required/>
                                                 </div>
                                             </div>
                                             <div class="row form_line">
@@ -69,10 +69,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </div>
                                                 <div class="col-md-8">
                                                     <select class="form-control" name="frequency" id="frequency">
-                                                        <option value="One Time" selected>One Time</option>
-                                                        <option value="Daily">Daily</option>
-                                                        <option value="Monthly">Monthly</option>
-                                                        <option value="Yearly">Yearly</option>
+                                                        <option <?= $item->frequency == 'One Time' ? 'selected="selected"' : ''; ?> value="One Time" selected>One Time</option>
+                                                        <option <?= $item->frequency == 'Daily' ? 'selected="selected"' : ''; ?> value="Daily">Daily</option>
+                                                        <option <?= $item->frequency == 'Monthly' ? 'selected="selected"' : ''; ?> value="Monthly">Monthly</option>
+                                                        <option <?= $item->frequency == 'Yearly' ? 'selected="selected"' : ''; ?> value="Yearly">Yearly</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -81,12 +81,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <label for="estimated_time">Time Estimate</label>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <input type="text" class="form-control timepicker col-md-5" name="estimated_time" id="estimated_time" />
+                                                    <input type="text" value="<?= $item->estimated_time; ?>" class="form-control timepicker col-md-5" name="estimated_time" id="estimated_time" />
                                                 </div>
                                             </div>
                                             <br><br>
                                             <div class="d-md-block">
-                                                <input type="hidden" name="type" value="service"/>                                        
+                                                <input type="hidden" name="type" value="service"/>
+                                                <input type="hidden" name="sid" value="<?= $item->id; ?>"/>                                        
                                                 <button type="submit" class="btn btn-flat btn-primary">Save</button>
                                                 <a class="btn btn-primary" href="<?php echo base_url('inventory/services'); ?>">Cancel</a>
                                             </div>
@@ -123,15 +124,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
             scrollbar: true
         });
         $("#service_form").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
+            e.preventDefault(); 
             var form = $(this);
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>/inventory/save_new_item",
-                data: form.serialize(), // serializes the form's elements.
+                url: "<?= base_url() ?>/inventory/update_service_item",
+                data: form.serialize(), 
                 success: function(data) {
-                    console.log(data);
+                    //console.log(data);
                     window.location.href="<?= base_url()?>/inventory/services";
                     //sucess_add_job(data);
                 }, beforeSend: function() {

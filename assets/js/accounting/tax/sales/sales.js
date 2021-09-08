@@ -45,6 +45,49 @@ class Accounting__TaxItem {
     data.date_issued = this.formatDate(data.date_issued);
     data.due_date = this.formatDate(data.due_date);
 
+    const { items } = data;
+    const $emptyMessageRow = this.$modal.find(".emptyMessageRow");
+    const $dataRow = this.$modal.find(".dataRow");
+    let tableData = {
+      agency_name: "",
+      gross: 0,
+      nontaxable: 0,
+      taxable: 0,
+      tax: 0,
+    };
+
+    if (items && items.length) {
+      const getSumCurrency = (numbers) =>
+        formatCurrency(numbers.reduce((p, c) => p + c, 0));
+
+      const gross = getSumCurrency(items.map((i) => Number(i.total)));
+      const nontaxable = 0;
+      const taxable = gross;
+      const tax = getSumCurrency(items.map((i) => Number(i.tax)));
+
+      tableData = {
+        agency_name: data.agency_name,
+        gross,
+        nontaxable,
+        taxable,
+        tax,
+      };
+
+      $emptyMessageRow.addClass("d-none");
+      $dataRow.removeClass("d-none");
+    } else {
+      $emptyMessageRow.removeClass("d-none");
+      $dataRow.addClass("d-none");
+    }
+
+    const $dataTableTypes = this.$modal.find("[data-table-type]");
+    $dataTableTypes.each(function (_, element) {
+      element.textContent = getValueByString(
+        tableData,
+        element.dataset.tableType
+      );
+    });
+
     $dataTypes.each(function (_, element) {
       element.textContent = getValueByString(data, element.dataset.type);
     });

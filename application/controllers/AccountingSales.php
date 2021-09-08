@@ -160,15 +160,16 @@ class AccountingSales extends MY_Controller
         $dueEnd = strtotime($payload['due_end']);
         $dueEnd = date('Y-m-t', $dueEnd);
 
-        $this->db->where('user_id', logged('id'));
-        // $this->db->where('taxes >', '0');
+        $query = <<<SQL
+        SELECT `i`.*, `a`.`agency_id` FROM `invoices` AS `i`
+        LEFT JOIN `accounting_invoice_tax_agencies` AS `a` ON `a`.`invoice_id` = `i`.`id`
+        WHERE `i`.`user_id` = ? AND STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') >= ? AND
+        STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') <= ? ORDER BY STR_TO_DATE(`i`.`due_date`, '%Y-%m-%d') DESC
 
-        $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') >=", $dueStart);
-        $this->db->where("STR_TO_DATE(due_date,'%Y-%m-%d') <=", $dueEnd);
+SQL;
 
-        $this->db->join('accounting_invoice_tax_agencies agencies', 'agencies.invoice_id = invoices.id', 'left');
-        $this->db->order_by("STR_TO_DATE(due_date, '%Y-%m-%d')", 'DESC', false);
-        $results = $this->db->get('invoices')->result();
+        $params = [logged('id'), $dueStart, $dueEnd];
+        $results = $this->db->query($query, $params)->result();
 
         $companyIdMap = [];
         $agencyIdMap = [];
@@ -194,6 +195,9 @@ class AccountingSales extends MY_Controller
 
             $result->company = $companyIdMap[$result->company_id];
             $result->agency = $agencyIdMap[$result->agency_id];
+
+            $this->db->where('invoice_id', $result->id);
+            $result->items = $this->db->get('invoices_items')->result();
 
             $dueDateUnix = strtotime($result->due_date);
             $type = null;

@@ -266,6 +266,11 @@ class Items_model extends MY_Model
         $this->db->delete($this->table, array("id" => $id));
     }
 
+    public function deleteCompanyItem($id, $company_id)
+    {
+        $this->db->delete($this->table, array("id" => $id, 'company_id' => $company_id));
+    }
+
     public function getLocationByItemId($id)
     {
         $this->db->select('*');
@@ -434,7 +439,7 @@ class Items_model extends MY_Model
         $this->db->where('id', $item_id);
         $this->db->where('company_id', $company_id);
         $query = $this->db->get();
-        return $query->result();
+        return $query->row();
     }
 }
 

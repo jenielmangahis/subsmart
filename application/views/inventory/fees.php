@@ -3,6 +3,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <?php include viewPath('inventory/css/lists_css'); ?>
+<style>
+.page-title, .box-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+  padding-top: 5px;
+}
+</style>
     <div class="wrapper" role="wrapper">
         <?php include viewPath('includes/sidebars/inventory'); ?>
         <!-- page wrapper start -->
@@ -12,10 +20,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="row custom__border">
                     <div class="col-xl-12">
                         <div class="card">
-                            <div class="card-body hid-desk pt-0"
-                                 style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
-                                <div class="row margin-bottom-ter mb-2 align-items-center"
-                                     style="background-color:white; padding:0px;">
+                            <div class="card-body hid-desk pt-0" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
+                                <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0px;">
                                     <div class="col-auto pl-0">
                                         <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Fees</h5>
                                     </div>
@@ -43,10 +49,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
                                             </ul>
                                         </div>
-                                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="feesItemsTable">
+                                        <table class="table table-hover table-bordered table-striped" style="width:100%;" id="customFeesItemsTable">
                                             <thead>
                                             <tr>
-                                                <th class="text-center"><input type="checkbox" class="form-control" id="inventoryFeesCheckAll" value=""></th>
+                                                <th class="text-center"><input type="checkbox" style="transform: scale(1.5); height: 20px;" id="inventoryFeesCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Billing Type</strong></th>
@@ -57,11 +63,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php foreach($items as $item) : ?>
                                                 <?php if($item[1] != "header") : ?>
                                                     <tr>
-                                                        <td class="text-center"><input type="checkbox" class="inventoryFees" data-id="<?php echo $item[3]; ?>" value=""></td>
+                                                        <td class="text-center"><input type="checkbox" style="transform: scale(1.5); height: 20px;" class="inventoryFees" data-id="<?php echo $item[3]; ?>" value=""></td>
                                                         <td><?php echo $item[0]; ?></td>
                                                         <td><?php echo $item[4]; ?></td>
                                                         <td><?php echo $item[5]; ?></td>
-                                                        <td style="width:12%" class="pl-3">
+                                                        <td class="pl-3">
                                                             <div class="dropdown dropdown-btn text-center">
                                                                 <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                                                     <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
@@ -81,7 +87,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <?php else : ?>
                                                     <tr style="background-color:#D3D3D3;">
                                                         <td>&nbsp;</td>
-                                                        <td colspan="3"><?php echo $item[0]; ?></td>
+                                                        <td colspan="3"><b><?php echo $item[0]; ?></b></td>
                                                         <td style="display: none"></td>
                                                         <td style="display: none"></td>
                                                         <td>&nbsp;</td>
@@ -159,5 +165,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 });
             }
         });
+    });
+
+    $("#customFeesItemsTable").DataTable({
+        "autoWidth" : false,
+       "columnDefs": [
+            { width: 10, targets: 0 }            
+        ],
+        "ordering": false,
     });
 </script>

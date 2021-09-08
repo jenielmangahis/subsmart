@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <table class="table table-hover table-bordered table-striped" style="width:100%;" id="customServiceItemsTable">
                                             <thead>
                                             <tr>
-                                                <th class="text-center"><input style="transform: scale(2.0); height: 20px;" type="checkbox" class="form-control" id="inventoryServiceCheckAll" value=""></th>
+                                                <th class="text-center"><input style="transform: scale(1.5); height: 20px;" type="checkbox" class="" id="inventoryServiceCheckAll" value=""></th>
                                                 <th scope="col"><strong>Item</strong></th>
                                                 <th scope="col"><strong>Cost</strong></th>
                                                 <th scope="col"><strong>Estimated Time</strong></th>

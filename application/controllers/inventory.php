@@ -111,9 +111,8 @@ class Inventory extends MY_Controller
         $comp_id = logged('company_id');        
         $arg     = array('company_id'=>$comp_id, 'id' => $id, 'is_active'=>1);
         $item    = $this->items_model->getCompanyItemById($comp_id, $id);
-        /*echo "<pre>";
-        print_r($item);
-        exit;*/
+
+        $this->page_data['item'] = $item;
         $this->load->view('inventory/services_edit', $this->page_data);
     }
 
@@ -338,6 +337,19 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function  update_service_item()
+    {
+        $data = $this->input->post();
+        $id   = $data['sid'];
+        unset($data['sid']);        
+        $company_id =  logged('company_id');
+        if ( $this->items_model->update($data, array("id" => $id, 'company_id' => $company_id)) ) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
+
     public function  save_new_service()
     {
         $input = $this->input->post();
@@ -353,8 +365,9 @@ class Inventory extends MY_Controller
     public function delete()
     {
         $id = $_POST['id'];
+        $$company_id =  logged('company_id');
         $remove_item = array(
-            'where' => array('id' =>$id),
+            'where' => array('id' =>$id, 'company_id' => $company_id),
             'table' => 'items'
         );
         if ($this->general->delete_($remove_item)) {
