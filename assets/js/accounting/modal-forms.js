@@ -1773,7 +1773,16 @@ $(function() {
             if ($('#modal-container #item-details-table thead tr th').length > $('#modal-container #item-details-table tbody tr:last-child td')) {
                 $(`<td></td>`).insertBefore($('#modal-container .modal table#item-details-table tbody tr:last-child td:last-child'));
             }
-            $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child select').select2();
+
+            $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child select').each(function() {
+                if($(this).find('option').length > 10) {
+                    $(this).select2();
+                } else {
+                    $(this).select2({
+						minimumResultsForSearch: -1
+					});
+                }
+            });
         });
     });
 

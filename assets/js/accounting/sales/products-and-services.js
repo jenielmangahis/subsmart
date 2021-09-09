@@ -597,6 +597,313 @@ $(document).on('click', '#products-services-table .duplicate-item', function(e) 
 	});
 });
 
+$('.dropdown-item.batch-reoder').on('click', function(e) {
+	e.preventDefault();
+
+	var items = [];
+	var itemIds = [];
+	$('#products-services-table td:first-child input[type="checkbox"]').each(function() {
+		if($(this).prop('checked')) {
+			var row = $(this).parent().parent();
+			var data = $('#products-services-table').DataTable().row(row).data();
+			items.push(data);
+			itemIds.push($(this).val());
+		}
+	});
+
+	$.get('/accounting/get-other-modals/purchase_order_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		rowCount = 2;
+		catDetailsInputs = $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html();
+		catDetailsBlank = $(`#purchaseOrderModal table#category-details-table tbody tr:nth-child(2)`).html();
+
+		$(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+		$(`#purchaseOrderModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+
+		if ($(`#purchaseOrderModal table#category-details-table tbody tr`).length > 2) {
+			$(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).remove();
+		}
+
+		for(i in items) {
+			var locs = '';
+			for(o in items[i].locations) {
+				locs += `<option value="${items[i].locations[o].id}">${items[i].locations[o].name}</option>`;
+			}
+
+			$('#purchaseOrderModal #item-details-table tbody').append(`
+			<tr>
+				<td>${items[i].name}<input type="hidden" name="item[]" value="${items[i].id}"></td>
+				<td>Product</td>
+				<td><select name="location[]" class="form-control" required>${locs}</select></td>
+				<td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+				<td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${items[i].price}"></td>
+				<td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+				<td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+				<td>$<span class="row-total">0.00</span></td>
+				<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+			</tr>
+			`);
+		}
+
+		$(`#purchaseOrderModal select`).each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+
+				if (type.includes('transfer')) {
+					type = 'transfer-account';
+				}
+			}
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'purchaseOrderModal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1
+					});
+				}
+			}
+		});
+
+		$('#purchaseOrderModal select#tags').select2({
+			placeholder: 'Start typing to add a tag',
+			allowClear: true,
+			ajax: {
+				url: '/accounting/get-job-tags',
+				dataType: 'json'
+			}
+		});
+
+		$(`#purchaseOrderModal .date`).each(function() {
+			$(this).datepicker({
+				uiLibrary: 'bootstrap'
+			});
+		});
+
+		var attachmentContId = $(`#purchaseOrderModal .attachments .dropzone`).attr('id');
+		var attachments = new Dropzone(`#${attachmentContId}`, {
+			url: '/accounting/attachments/attach',
+			maxFilesize: 20,
+			uploadMultiple: true,
+			// maxFiles: 1,
+			addRemoveLinks: true,
+			init: function() {
+				this.on("success", function(file, response) {
+					var ids = JSON.parse(response)['attachment_ids'];
+					var modal = $(`#purchaseOrderModal`);
+
+					for (i in ids) {
+						if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+							modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+						}
+
+						modalAttachmentId.push(ids[i]);
+					}
+					modalAttachedFiles.push(file);
+				});
+			},
+			removedfile: function(file) {
+				var ids = modalAttachmentId;
+				var index = modalAttachedFiles.map(function(d, index) {
+					if (d == file) return index;
+				}).filter(isFinite)[0];
+
+				$(`#purchaseOrderModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+				//remove thumbnail
+				var previewElement;
+				return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+			}
+		});
+
+		$('#purchaseOrderModal button[data-target="#category-details"]').trigger('click');
+		$('#purchaseOrderModal button[data-target="#item-details"]').trigger('click');
+
+		$(`#purchaseOrderModal`).modal('show');
+	});
+});
+
+$(document).on('click', '#products-services-table .reorder', function(e) {
+	e.preventDefault();
+	var row = $(this).parent().parent().parent().parent();
+	rowData = $('#products-services-table').DataTable().row(row).data();
+
+	$.get('/accounting/get-other-modals/purchase_order_modal', function(res) {
+		if ($('div#modal-container').length > 0) {
+			$('div#modal-container').html(res);
+		} else {
+			$('body').append(`
+				<div id="modal-container"> 
+					${res}
+				</div>
+			`);
+		}
+
+		rowCount = 2;
+		catDetailsInputs = $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html();
+		catDetailsBlank = $(`#purchaseOrderModal table#category-details-table tbody tr:nth-child(2)`).html();
+
+		$(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+		$(`#purchaseOrderModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+
+		if ($(`#purchaseOrderModal table#category-details-table tbody tr`).length > 2) {
+			$(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).remove();
+		}
+
+		var locs = '';
+		for(i in rowData.locations) {
+			locs += `<option value="${rowData.locations[i].id}">${rowData.locations[i].name}</option>`;
+		}
+
+		$('#purchaseOrderModal #item-details-table tbody').append(`
+		<tr>
+			<td>${rowData.name}<input type="hidden" name="item[]" value="${rowData.id}"></td>
+			<td>Product</td>
+			<td><select name="location[]" class="form-control" required>${locs}</select></td>
+			<td><input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0"></td>
+			<td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${rowData.price}"></td>
+			<td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+			<td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+			<td>$<span class="row-total">0.00</span></td>
+			<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+		</tr>
+		`);
+
+		$(`#purchaseOrderModal select`).each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+
+				if (type.includes('transfer')) {
+					type = 'transfer-account';
+				}
+			}
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'purchaseOrderModal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1
+					});
+				}
+			}
+		});
+
+		$('#purchaseOrderModal select#tags').select2({
+			placeholder: 'Start typing to add a tag',
+			allowClear: true,
+			ajax: {
+				url: '/accounting/get-job-tags',
+				dataType: 'json'
+			}
+		});
+
+		$(`#purchaseOrderModal .date`).each(function() {
+			$(this).datepicker({
+				uiLibrary: 'bootstrap'
+			});
+		});
+
+		var attachmentContId = $(`#purchaseOrderModal .attachments .dropzone`).attr('id');
+		var attachments = new Dropzone(`#${attachmentContId}`, {
+			url: '/accounting/attachments/attach',
+			maxFilesize: 20,
+			uploadMultiple: true,
+			// maxFiles: 1,
+			addRemoveLinks: true,
+			init: function() {
+				this.on("success", function(file, response) {
+					var ids = JSON.parse(response)['attachment_ids'];
+					var modal = $(`#purchaseOrderModal`);
+
+					for (i in ids) {
+						if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+							modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+						}
+
+						modalAttachmentId.push(ids[i]);
+					}
+					modalAttachedFiles.push(file);
+				});
+			},
+			removedfile: function(file) {
+				var ids = modalAttachmentId;
+				var index = modalAttachedFiles.map(function(d, index) {
+					if (d == file) return index;
+				}).filter(isFinite)[0];
+
+				$(`#purchaseOrderModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+				//remove thumbnail
+				var previewElement;
+				return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+			}
+		});
+
+		$('#purchaseOrderModal button[data-target="#category-details"]').trigger('click');
+		$('#purchaseOrderModal button[data-target="#item-details"]').trigger('click');
+
+		$(`#purchaseOrderModal`).modal('show');
+	});
+});
+
 $(document).on('click', '#products-services-table .adjust-quantity', function(e) {
 	e.preventDefault();
 	var row = $(this).parent().parent().parent().parent();
@@ -1302,7 +1609,7 @@ $(`#products-services-table`).DataTable({
 									<a class="dropdown-item duplicate-item" href="#">Duplicate</a>
 									<a class="dropdown-item adjust-quantity" href="#">Adjust quantity</a>
 									<a class="dropdown-item adjust-starting-value" href="#">Adjust starting value</a>
-									<a class="dropdown-item" href="#">Reorder</a>
+									<a class="dropdown-item reorder" href="#">Reorder</a>
 								</div>
 							</div>
 							`);
