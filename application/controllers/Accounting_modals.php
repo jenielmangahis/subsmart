@@ -5229,18 +5229,33 @@ class Accounting_modals extends MY_Controller
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
             case 'inventory-adj-account' :
-                $accountTypes = [
-                    'Cost of Goods Sold',
-                    'Expenses',
-                    'Other Expense',
-                    'Income',
-                    'Other Income',
-                    'Equity',
-                    'Other Current Assets',
-                    'Fixed Assets',
-                    'Bank',
-                    'Other Current Liabilities'
-                ];
+                if($this->input->get('field') === 'inventoryModal') {
+                    $accountTypes = [
+                        'Cost of Goods Sold',
+                        'Expenses',
+                        'Other Expense',
+                        'Income',
+                        'Other Income',
+                        'Equity',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Other Assets',
+                        'Bank',
+                        'Other Current Liabilities'
+                    ];
+                } else {
+                    $accountTypes = [
+                        'Bank',
+                        'Cost of Goods Sold',
+                        'Equity',
+                        'Expenses',
+                        'Fixed Assets',
+                        'Other Current Assets',
+                        'Other Assets',
+                        'Other Current Liabilities',
+                        'Other Expense'
+                    ];
+                }
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
@@ -5273,7 +5288,8 @@ class Accounting_modals extends MY_Controller
                 $return = $this->get_services_choices($return, $search);
             break;
             case 'product' :
-                $return = $this->get_products_choices($return, $search);
+                $selected = is_null($this->input->get('selected')) ? [] : json_decode($this->input->get('selected'), true);
+                $return = $this->get_products_choices($return, $search, $selected);
             break;
             case 'item' :
                 $return = $this->get_items_choices($return, $search);
@@ -5399,6 +5415,10 @@ class Accounting_modals extends MY_Controller
             if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) && $this->input->get('modal') !== 'printChecksModal' && $field !== 'sales-tax-category') {
                 array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
             }
+        }
+
+        if($field === 'product' && count($selected) > 0) {
+            array_shift($return['results']);
         }
 
         if($field === 'category' && $this->input->get('field_id') === 'assign-category') {
@@ -5911,9 +5931,15 @@ class Accounting_modals extends MY_Controller
         return $choices;
     }
 
-    private function get_products_choices($choices, $search = null)
+    private function get_products_choices($choices, $search = null, $selected = [])
     {
         $products = $this->items_model->getItemsWithFilter(['type' => 'product', 'status' => [1]]);
+
+        if(count($selected) > 0) {
+            $products = array_filter($products, function($prod, $key) use ($selected) {
+                return in_array($prod->id, $selected);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
 
         foreach($products as $product) {
             if($search !== null && $search !== '') {

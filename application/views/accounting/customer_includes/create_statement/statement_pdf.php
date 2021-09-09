@@ -616,8 +616,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- END OF OPEN ITEM -->
     <?php
             } ?>
-    <div
-        style="<?php if ($i_data < (count($pdf_data)-1)) {
+    <div style="<?php if ($i_data < (count($pdf_data)-1)) {
                 echo "page-break-after: always;";
             } ?>">
     </div>

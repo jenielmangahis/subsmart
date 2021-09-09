@@ -844,28 +844,6 @@ function single_customer_get_customers_details(customer_id) {
 }
 
 
-function single_customer_sortTable() {
-    var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("single_customer_table");
-    switching = true;
-    while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++) {
-            shouldSwitch = false;
-            x = rows[i].getElementsByTagName("TD")[1];
-            y = rows[i + 1].getElementsByTagName("TD")[1];
-            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                shouldSwitch = true;
-                break;
-            }
-        }
-        if (shouldSwitch) {
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-        }
-    }
-}
 
 
 $('#customer-single-modal .seaction-above-table .print-export-settings-btns button.export-btn').click(function() {
@@ -959,6 +937,41 @@ $(document).on("click", "div#share-link-modal .the-modal-body .btns button.cance
     $("div#share-link-modal").fadeOut();
 });
 
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn", function(event) {
+    Swal.fire({
+        title: "Delete Invoice?",
+        html: "Are you sure you want to delete this invoice? This invoice is linked to other transactions",
+        imageUrl: baseURL + "assets/img/accounting/customers/delete.png",
+        showCancelButton: true,
+        confirmButtonColor: "#2ca01c",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, I want to delete this invoice!",
+    }).then((result) => {
+        if (result.value) {
+            $("body").css({ 'cursor': 'wait' });
+            $(this).css({ 'cursor': 'wait' });
+            $.ajax({
+                type: 'POST',
+                url: baseURL + "invoice/deleteInvoiceBtnNew",
+                data: { id: $(this).attr("data-invoice-id") },
+                success: function(result) {
+                    $("body").css({ 'cursor': 'default' });
+                    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn").css({ 'cursor': 'default' });
+                    if (result) {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Success",
+                            html: "Invoice has been deleted.",
+                            icon: "success",
+                        });
+                    }
+                },
+            });
+            single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+        }
+    });
+});
 $(document).on("click", "div#share-link-modal .the-modal-body .btns button.copy-btn", function(event) {
     $('div#share-link-modal .the-modal-body .form-group input[name="shared_invoice_link"]').select();
     document.execCommand("copy");
@@ -1021,41 +1034,29 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
         },
     });
 });
-$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn", function(event) {
-    Swal.fire({
-        title: "Delete Invoice?",
-        html: "Are you sure you want to delete this invoice? This invoice is linked to other transactions",
-        imageUrl: baseURL + "assets/img/accounting/customers/delete.png",
-        showCancelButton: true,
-        confirmButtonColor: "#2ca01c",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, I want to delete this invoice!",
-    }).then((result) => {
-        if (result.value) {
-            $("body").css({ 'cursor': 'wait' });
-            $(this).css({ 'cursor': 'wait' });
-            $.ajax({
-                type: 'POST',
-                url: baseURL + "invoice/deleteInvoiceBtnNew",
-                data: { id: $(this).attr("data-invoice-id") },
-                success: function(result) {
-                    $("body").css({ 'cursor': 'default' });
-                    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn").css({ 'cursor': 'default' });
-                    if (result) {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: "Success",
-                            html: "Invoice has been deleted.",
-                            icon: "success",
-                        });
-                    }
-                },
-            });
-            single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+
+function single_customer_sortTable() {
+    var table, rows, switching, i, x, y, shouldSwitch;
+    table = document.getElementById("single_customer_table");
+    switching = true;
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[1];
+            y = rows[i + 1].getElementsByTagName("TD")[1];
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                shouldSwitch = true;
+                break;
+            }
         }
-    });
-});
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        }
+    }
+}
 $(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .copy-invoice-btn", function(event) {
     $("#create_invoice_modal").modal('toggle');
     $("#loader-modal").show();
@@ -1130,6 +1131,44 @@ function table_items_input_changed_auto() {
     });
     create_invoice_modal_compute_grand_total();
 }
+
+function print_by_batch(action = "") {
+    var php_function = "";
+    if (action == "packaging_slip") {
+        php_function = "generate_customer_invoice_packaging_slip_by_batch";
+    } else if (action == "transactions") {
+        php_function = "print_transactions_by_batch";
+    }
+    var invoice_ids = new Array();
+    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            if ($(this).attr("data-row-type") == "Invoice") {
+                invoice_ids.push($(this).attr("data-invoice-id"));
+            }
+        }
+    });
+
+    $("#loader-modal").show();
+    $.ajax({
+        url: baseURL + "accounting/" + php_function,
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: customer_id,
+            invoice_ids: invoice_ids,
+        },
+        success: function(data) {
+            var win = window.open(data.pdf_link, '_blank');
+            if (win) {
+                win.focus();
+            } else {
+                alert('Please allow popups for this website');
+            }
+            $("#loader-modal").hide();
+        },
+    });
+}
 $(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .void-invoice-btn", function(event) {
     Swal.fire({
         title: "Void Invoice?",
@@ -1173,43 +1212,6 @@ $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batc
     print_by_batch("transactions");
 });
 
-function print_by_batch(action = "") {
-    var php_function = "";
-    if (action == "packaging_slip") {
-        php_function = "generate_customer_invoice_packaging_slip_by_batch";
-    } else if (action == "transactions") {
-        php_function = "print_transactions_by_batch";
-    }
-    var invoice_ids = new Array();
-    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
-    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
-        if ($(this).is(":checked")) {
-            if ($(this).attr("data-row-type") == "Invoice") {
-                invoice_ids.push($(this).attr("data-invoice-id"));
-            }
-        }
-    });
-
-    $("#loader-modal").show();
-    $.ajax({
-        url: baseURL + "accounting/" + php_function,
-        type: "POST",
-        dataType: "json",
-        data: {
-            customer_id: customer_id,
-            invoice_ids: invoice_ids,
-        },
-        success: function(data) {
-            var win = window.open(data.pdf_link, '_blank');
-            if (win) {
-                win.focus();
-            } else {
-                alert('Please allow popups for this website');
-            }
-            $("#loader-modal").hide();
-        },
-    });
-}
 
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn", function(event) {
     event.preventDefault();
@@ -1305,4 +1307,7 @@ Thanks for your business!
             });
         }
     });
+});
+$(document).on("click", "#customer-single-modal #single_customer_table .print-statement-btn ", function(event) {
+    window.open(baseURL + "assets/pdf/" + $(this).attr("type") + "_" + $(this).attr("data-statement-id") + ".pdf");
 });

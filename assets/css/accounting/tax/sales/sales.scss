@@ -158,6 +158,14 @@
       text-decoration: underline;
     }
   }
+
+  &__adjustmentItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 35px;
+    border-bottom: 1px solid #e4e6e9;
+  }
 }
 
 .addAdjustment {
@@ -251,7 +259,8 @@
   .form-group--error {
     input,
     button,
-    select {
+    select,
+    textarea {
       border-color: #ec4561 !important;
     }
   }
@@ -345,5 +354,60 @@
 
   &__body {
     font-weight: 400;
+  }
+}
+
+.recordModal {
+  &__title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  &__steps {
+    padding: 30px 15px;
+  }
+
+  &__stepsItem {
+    list-style: auto;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+
+  &__taxPayment,
+  &__taxDue {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 45px;
+    padding: 0 16px;
+  }
+
+  &__taxDue {
+    background-color: #f6f7f9;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  &__formGroup {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 8px !important;
+  }
+
+  &__link {
+    color: #055393;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: #055393;
+      text-decoration: underline;
+    }
   }
 }

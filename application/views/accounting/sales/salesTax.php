@@ -321,6 +321,8 @@ include viewPath('includes/header');
                         </div>
                     </div>
 
+                    <div id="adjustmentsWrapper"></div>
+
                     <div class="taxModal__spacer"></div>
 
                     <a class="taxModal__link" href="#" id="addAdjustmentLink">+ Add an adjustment</a>
@@ -330,7 +332,7 @@ include viewPath('includes/header');
                     <div class="taxModal__total taxModal__total--big">
                         <div class="taxModal__title taxModal__title--secondary">Total after adjustments</div>
                         <div class="taxModal__title taxModal__title--secondary">
-                            $<span data-table-type="tax"></span>
+                            $<span data-table-type="tax_adjusted"></span>
                         </div>
                     </div>
 
@@ -342,9 +344,89 @@ include viewPath('includes/header');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Record Payment</button>
+                <button type="button" class="btn btn-primary" id="openRecordPaymentBtn">Record Payment</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade recordModal" tabindex="-1" role="dialog" id="recordPaymentModal">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Record payment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="recordModal__title">File your sales tax</div>
+
+                        <div class="recordModal__taxPayment">
+                            <span>Total tax payment</span>
+                            <span>-$<span data-type="tax_adjusted"></span></span>
+                        </div>
+
+                        <div class="recordModal__taxDue">
+                            <span>Tax due</span>
+                            <span>-$<span data-type="tax_adjusted"></span></span>
+                        </div>
+
+                        <ol class="recordModal__steps">
+                            <li class="recordModal__stepsItem">
+                                Download your full <a class="recordModal__link" href="#">report</a>.
+                            </li>
+                            <li class="recordModal__stepsItem">
+                                Fill out the tax form on your tax agency's <a class="recordModal__link" href="#">website</a>.
+                            </li>
+                            <li class="recordModal__stepsItem">
+                                Send the form and payment to your agency.
+                            </li>
+                            <li class="recordModal__stepsItem">
+                                Don't forget to record the payment!
+                            </li>
+                        </ol>
+
+                        <div>
+                            <div class="recordModal__title">Record payment</div>
+
+                            <form>
+                                <div class="recordModal__formGroup">
+                                    <div class="form-group">
+                                        <label for="tax_amount">Tax amount</label>
+                                        <input data-type="tax_amount" class="form-control" id="tax_amount">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="Payment_date">Payment date</label>
+                                        <input data-type="Payment_date" type="date" class="form-control" id="Payment_date">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="bank_acount">Bank acount</label>
+                                        <input data-type="bank_acount" class="form-control" id="bank_acount">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="memo">Memo</label>
+                                    <textarea data-type="memo" class="form-control" id="memo" placeholder="Enter memo text here"></textarea>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="print_check">
+                                    <label class="form-check-label" for="print_check">Print check</label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Record Payment</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -394,9 +476,14 @@ include viewPath('includes/header');
                     <input data-type="amount" type="number" class="form-control" id="amount" placeholder="Enter amount">
                 </div>
 
+                <div class="form-group d-none" id="memoFormGroup">
+                    <label for="amount">Memo</label>
+                    <textarea  data-type="memo" class="form-control" id="memo" placeholder="Enter memo text here"></textarea>
+                </div>
+
                 <div>
                     <div class="addAdjustment__title addAdjustment__title--small">Total tax due</div>
-                    <div class="addAdjustment__total">$401.80</div>
+                    <div class="addAdjustment__total">$<span data-type="tax_adjusted"></span></div>
                 </div>
             </form>
 

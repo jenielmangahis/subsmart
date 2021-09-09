@@ -122,9 +122,9 @@
         <?php
         } elseif ($type == "Transaction Statement") {
             ?>
-        <a href="javascript:void(0)" class="print-transaction-statement-memo-btn"
-            data-invoice-no="<?=$no?>"
-            data-invoice-id="<?=$invoice_id?>">Print</a>
+        <a href="javascript:void(0)" class="print-statement-btn"
+            type="<?=ucwords(str_replace(" ", "_", $type))?>"
+            data-statement-id="<?=$statement_id?>">Print</a>
         <?php
         } elseif ($type=="Invoice" && $status=="Paid") {
             ?>
