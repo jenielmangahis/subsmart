@@ -309,7 +309,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="col-md-4 form-group" style="text-align:right;">
                                     <div style="padding:10px;box-shadow: 0 0 5px 5px #F0F0F0;min-width:50%;float:right;">
                                         <p>BALANCE DUE</p>
-                                        <h1>$ <span id="balanceDueText">0.00</span></h1>
+                                        <h1>$<span id="balanceDueText">0.00</span></h1>
                                     </div>
                                 </div>
                                 <div class="col-md-5 form-group">
@@ -2005,6 +2005,8 @@ var package_price_set =  $("#package_price_set").val();
                 $("#grand_total_input").val(grand_total_w.toFixed(2));
                 $("#payment_amount").val(grand_total_w.toFixed(2));
 
+                $("#balanceDueText").text(grand_total_w.toFixed(2));
+
         },
     });
 
@@ -2109,6 +2111,8 @@ $(".addNewPackageToList").click(function () {
                 $("#grand_total").text(grand_total_w.toFixed(2));
                 $("#grand_total_input").val(grand_total_w.toFixed(2));
                 $("#payment_amount").val(grand_total_w.toFixed(2));
+
+                $("#balanceDueText").text(grand_total_w.toFixed(2));
 
         },
     });

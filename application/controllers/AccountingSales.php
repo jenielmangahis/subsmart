@@ -199,6 +199,9 @@ SQL;
             $this->db->where('invoice_id', $result->id);
             $result->items = $this->db->get('invoices_items')->result();
 
+            $this->db->where('invoice_id', $result->id);
+            $result->adjustments = $this->db->get('accounting_tax_adjustments')->result();
+
             $dueDateUnix = strtotime($result->due_date);
             $type = null;
 

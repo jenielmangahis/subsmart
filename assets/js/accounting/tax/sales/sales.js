@@ -10,8 +10,12 @@ class Accounting__TaxItem {
     data.date = this.formatDate(data.date_issued);
     data.due_date = this.formatDate(data.due_date);
     data.address = data.billing_address || data.job_location;
-    data.price = `$${data.taxes}`;
     data.agency_name = data.agency ? data.agency.agency : "";
+
+    // should display adjusted price/tax
+    const totalAdjustments = this.getSumAdjustments(data.adjustments);
+    data.price = formatCurrency(Number(data.taxes) - Number(totalAdjustments));
+    data.price = `$${data.price}`;
 
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
@@ -45,6 +49,7 @@ class Accounting__TaxItem {
     data.date_issued = this.formatDate(data.date_issued);
     data.due_date = this.formatDate(data.due_date);
 
+    // display tax agency
     const { items } = data;
     const $emptyMessageRow = this.$modal.find(".emptyMessageRow");
     const $dataRow = this.$modal.find(".dataRow");
@@ -54,6 +59,7 @@ class Accounting__TaxItem {
       nontaxable: 0,
       taxable: 0,
       tax: 0,
+      tax_adjusted: 0,
     };
 
     if (items && items.length) {
@@ -80,6 +86,32 @@ class Accounting__TaxItem {
       $dataRow.addClass("d-none");
     }
 
+    // display tax adjustments
+    const { adjustments } = data;
+    const $adjustmentsWrapper = this.$modal.find("#adjustmentsWrapper");
+    $adjustmentsWrapper.empty();
+
+    if (adjustments && adjustments.length) {
+      const $adjustments = adjustments.map((adjustment) => {
+        // Gets the select item's text by value
+        const reasonText = $sidebar.find(`[value=${adjustment.reason}]`).text();
+
+        return `
+          <div class="taxModal__adjustmentItem">
+            <span>${reasonText}</span>
+            <span>-$${formatCurrency(adjustment.amount)}</span>
+          </div>
+        `;
+      });
+
+      $adjustmentsWrapper.append($adjustments);
+    }
+
+    const totalAdjustments = this.getSumAdjustments(adjustments);
+    tableData.tax_adjusted = formatCurrency(
+      Number(tableData.tax) - Number(totalAdjustments)
+    );
+
     const $dataTableTypes = this.$modal.find("[data-table-type]");
     $dataTableTypes.each(function (_, element) {
       element.textContent = getValueByString(
@@ -95,6 +127,7 @@ class Accounting__TaxItem {
     $addAdjustmentLink.on("click", (event) => {
       event.preventDefault();
       $sidebar.addClass("addAdjustment--show");
+      $sidebar.find("[data-type=tax]").text(tableData.tax);
     });
 
     $sidebarCloseBtn.on("click", () => {
@@ -108,19 +141,27 @@ class Accounting__TaxItem {
     });
 
     $addAdjustmentBtn.on("click", async function () {
-      const $inputs = $sidebar.find("[data-type]");
+      const $inputs = $sidebar.find("input[data-type], select[data-type], textarea[data-type]"); // prettier-ignore
+      const $memo = $sidebar.find("#memoFormGroup");
 
       const payload = { invoice_id: data.id };
       for (let index = 0; index < $inputs.length; index++) {
         const input = $inputs[index];
-        const value = input.value;
         const key = input.dataset.type;
+
+        let isRequired = true;
+        let value = input.value;
 
         const $input = $(input);
         const $formGroup = $input.closest(".form-group");
 
+        if ($memo.has($input).length && $memo.hasClass("d-none")) {
+          isRequired = false;
+          value = null;
+        }
+
         $formGroup.removeClass("form-group--error");
-        if (!value) {
+        if (isRequired && !value) {
           $formGroup.addClass("form-group--error");
           $input.focus();
           return;
@@ -147,6 +188,11 @@ class Accounting__TaxItem {
       const json = await response.json();
       window.location.reload();
     });
+  }
+
+  getSumAdjustments(adjustments) {
+    if (!adjustments) return 0;
+    return adjustments.reduce((p, c) => p + Number(c.amount), 0);
   }
 
   formatDate(date) {
@@ -273,128 +319,156 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
   const creditOrDiscountOptions = [
     {
-      text: "Accounting",
-      right_text: "Expenses",
+      text: "ACH Settlement / NMI",
+      right_text: "Income",
     },
     {
-      text: "Advertising/Promotional/Incentives",
-      right_text: "Expenses",
+      text: "Billable Expense Income",
+      right_text: "Income",
     },
     {
-      text: "Auto Expense",
-      right_text: "Expenses",
+      text: "Guardian",
+      right_text: "Income",
     },
     {
-      text: "Building Expense",
-      right_text: "Expenses",
+      text: "Income - Revenue",
+      right_text: "Income",
+      sub_texts: [
+        {
+          text: "ACH Settlement",
+          right_text: "Income",
+        },
+        {
+          text: "Check Deposits - Regions",
+          right_text: "Income",
+        },
+        {
+          text: "Intuit Payments",
+          right_text: "Income",
+        },
+        {
+          text: "NMI Processing",
+          right_text: "Income",
+        },
+      ],
     },
     {
-      text: "Commission",
-      right_text: "Expenses",
+      text: "Insurance",
+      right_text: "Income",
     },
     {
-      text: "Customer Reimbursement",
-      sub_texts: ["Intuit Return", "NMI"],
-      right_text: "Expenses",
+      text: "Intuit",
+      right_text: "Income",
     },
     {
-      text: "Depreciation Expense",
-      right_text: "Expenses",
+      text: "Markup",
+      right_text: "Income",
     },
     {
-      text: "Donations",
-      right_text: "Expenses",
+      text: "Reimbursements/Bkcd Charge",
+      right_text: "Income",
+      sub_texts: [
+        {
+          text: "ACH Settlement",
+          right_text: "Income",
+        },
+        {
+          text: "Intuit Payments",
+          right_text: "Income",
+        },
+        {
+          text: "NMI Processing",
+          right_text: "Income",
+        },
+      ],
     },
     {
-      text: "Gifts",
-      right_text: "Expenses",
+      text: "Rental Property Transfer",
+      right_text: "Income",
     },
     {
-      text: "Legal Exspenses",
-      right_text: "Expenses",
+      text: "Returned payment",
+      right_text: "Income",
     },
     {
-      text: "License",
-      right_text: "Expenses",
+      text: "Sales",
+      right_text: "Income",
     },
     {
-      text: "Loan",
-      right_text: "Expenses",
+      text: "Sales of Product Income",
+      right_text: "Income",
     },
     {
-      text: "Loss of Income",
-      sub_texts: ["Collections", "Late - Overdue >90 days"],
-      right_text: "Expenses",
+      text: "Sales of Product Income-1",
+      right_text: "Income",
     },
     {
-      text: "Merchant Fees",
-      sub_texts: ["Intuit / QuickBooks", "NMI"],
-      right_text: "Expenses",
+      text: "Shipping Income",
+      right_text: "Income",
+    },
+
+    {
+      text: "Unapplied Cash Payment Income",
+      right_text: "Income",
     },
     {
-      text: "Office Expenses",
-      right_text: "Expenses",
+      text: "Unapplied Cash Payment Income-1",
+      right_text: "Income",
     },
     {
-      text: "Office/General Administrative E",
-      right_text: "Expenses",
-    },
-    {
-      text: "Payroll Expenses",
-      sub_texts: ["Taxes", "Wages"],
-      right_text: "Expenses",
-    },
-    {
-      text: "Purchases-1",
-      right_text: "Expenses",
-    },
-    {
-      text: "QuickBooks Payments Fees",
-      right_text: "Expenses",
-    },
-    {
-      text: "QuickBooks Payments Fees-1",
-      right_text: "Expenses",
-    },
-    {
-      text: "Reimburstment",
-      right_text: "Expenses",
-    },
-    {
-      text: "Rental Reimbursement",
-      right_text: "Expenses",
-    },
-    {
-      text: "Technician/Installer",
-      right_text: "Expenses",
-    },
-    {
-      text: "Travel Meals",
-      right_text: "Expenses",
-    },
-    {
-      text: "Unapplied Cash Bill Payment Exp",
-      right_text: "Expenses",
-    },
-    {
-      text: "Unapplied Cash Bill Payment Expense",
-      right_text: "Expenses",
-    },
-    {
-      text: "Uncategorized Expense",
-      right_text: "Expenses",
-    },
-    {
-      text: "Utilities",
-      right_text: "Expenses",
-    },
-    {
-      text: "Other Miscellaneous Expense",
-      right_text: "Other Expenses",
-    },
-    {
-      text: "Reconciliation Discrepancies",
-      right_text: "Other Expenses",
+      text: "Additional Income",
+      right_text: "Other Income",
+      sub_texts: [
+        {
+          text: "Activations",
+          right_text: "Other Income",
+        },
+        {
+          text: "Customer Processing Fees",
+          right_text: "Other Income",
+        },
+        {
+          text: "Early Termination",
+          right_text: "Other Income",
+        },
+
+        {
+          text: "Equipment",
+          right_text: "Other Income",
+        },
+        {
+          text: "Equipment Removal",
+          right_text: "Other Income",
+        },
+        {
+          text: "Installations",
+          right_text: "Other Income",
+        },
+        {
+          text: "Invoicing",
+          right_text: "Other Income",
+        },
+        {
+          text: "Late Fees",
+          right_text: "Other Income",
+        },
+        {
+          text: "Other Miscellaneous Income",
+          right_text: "Other Income",
+        },
+        {
+          text: "Service Calls",
+          right_text: "Other Income",
+        },
+        {
+          text: "Service Cancellation (BOC)",
+          right_text: "Other Income",
+        },
+        {
+          text: "System Move",
+          right_text: "Other Income",
+        },
+      ],
     },
   ];
 
@@ -798,6 +872,9 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
   const $reasonInput = $("#addAdjustment #reason");
   const $adjustmentAccount = $("#adjustmentAccount");
+  const $memoFormGroup = $("#memoFormGroup");
+  const $memoTextarea = $memoFormGroup.find("textarea");
+  const memoDefaultValue = "Other (penalties, interest, rounding errors)";
 
   const { credit_or_discount: defaultOption } = options;
   new Accounting__DropdownWithSearch($adjustmentAccount, defaultOption);
@@ -806,6 +883,15 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     $adjustmentAccount.find("#account").val("");
     $adjustmentAccount.find(".dropdownWithSearch__options").remove();
     new Accounting__DropdownWithSearch($adjustmentAccount, options[this.value]);
+
+    $memoTextarea.val(memoDefaultValue);
+    $memoFormGroup.removeClass("form-group--error");
+
+    if (this.value === "other") {
+      $memoFormGroup.removeClass("d-none");
+    } else {
+      $memoFormGroup.addClass("d-none");
+    }
   });
 })();
 

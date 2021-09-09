@@ -158,6 +158,14 @@
       text-decoration: underline;
     }
   }
+
+  &__adjustmentItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 35px;
+    border-bottom: 1px solid #e4e6e9;
+  }
 }
 
 .addAdjustment {
@@ -251,7 +259,8 @@
   .form-group--error {
     input,
     button,
-    select {
+    select,
+    textarea {
       border-color: #ec4561 !important;
     }
   }
