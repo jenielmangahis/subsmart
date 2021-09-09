@@ -61,7 +61,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .modal-dialog {
     max-width: 596px !important;
 }
-
+.modal-body{
+    font-size: 19px;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/mycrm'); ?>
@@ -240,12 +242,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   </div>
                 </div>
             </div>
-
             </form>
+
+            <div class="modal fade" id="modal-manage-employees" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+                <div class="modal-dialog modal-md" style="max-width: 896px !important;" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id=""><i class="fa fa-user"></i> Employees</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" style="padding-bottom: 0px;">
+                        <div class="manage-employee-container"></div>
+                        <hr />
+                        <br />
+                        <form id="frm-add-employee">
+                        <div class="row margin-bottom-sec">
+                            <div class="col-md-7"><b>Add Employee Name</b></div>
+                            <div class="col-md-3"><b>Employee Email</b></div>
+                            <div class="col-md-1 text-right"></div>
+                        </div>
+                        <div class="row margin-bottom-sec">
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" style="width:45%; display: inline-block;" name="manage_employee_fname" placeholder="First Name" required="">
+                                <input type="text" class="form-control" style="width:45%; display: inline-block;" name="manage_employee_lname" placeholder="Last Name" required="">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="email" class="form-control" name="manage_employee_email" required="">
+                            </div>
+                            <div class="col-md-1 text-right">
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(function(){
     $(".plan-box-btn").click(function(){
@@ -287,9 +331,118 @@ $(function(){
         placeholder: "Select Year"
     });
 
+    $(document).on('submit', '#frm-add-employee', function(e){
+        e.preventDefault();
+
+        var url = base_url + 'mycrm/_add_employee';
+
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: "json",
+           data: $('#frm-add-employee').serialize(),
+           success: function(o)
+           {
+                if( o.is_success ){
+                    var total_license = parseInt($('.company-remaining-license').html());
+                    $('.company-remaining-license').html(total_license - 1);
+                    load_employee_list();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'User was successfully added.',
+                        icon: 'success',
+                        confirmButtonColor: '#32243d'
+                    });
+                    $("#frm-add-employee").trigger('reset');
+                }else{
+                    if( o.err_num == 1 ){
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Cannot add employee. Insufficient license!',
+                            icon: 'error',
+                            confirmButtonColor: '#32243d'
+                        });
+                    }else if( o.err_num == 2 ){
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Email already taken!',
+                            icon: 'error',
+                            confirmButtonColor: '#32243d'
+                        });
+                    }
+                    
+                }
+           }
+        });   
+    });
+
     $(document).on('click', '.btn-pay-subscription', function(){        
         $("#modal-pay-renewal-subscription").modal('show');
     });
+
+    $(document).on('click', '.btn-manage-employees', function(){
+        $("#modal-manage-employees").modal('show');
+        $(".manage-employee-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        load_employee_list();
+    });
+
+    $(document).on('click', '.btn-delete-employee', function(){
+        var url = base_url + 'mycrm/_delete_employee';
+        var eid = $(this).attr('data-id');
+        
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#32243d',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Delete'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: {eid:eid},
+               success: function(o)
+               {
+                    if( o.is_success ){
+                        var total_license = parseInt($(".company-remaining-license").html());
+                        $(".company-remaining-license").html(total_license + 1);
+                        load_employee_list();
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: "User was successfully deleted.",
+                            icon: 'success',
+                            confirmButtonColor: '#32243d'
+                        });
+                    }else{
+                        Swal.fire(
+                          'Error!',
+                          'Cannot find user',
+                          'danger'
+                        );
+                    }
+               }
+            });            
+          }
+        });
+    });
+
+    function load_employee_list(){
+        var url = base_url + 'mycrm/_get_employee_list';
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               success: function(o)
+               {
+                 $(".manage-employee-container").hide().html(o).fadeIn();
+               }
+            });
+        }, 10);
+    }
 
     $("#frm-renew-membership").submit(function(e){
         e.preventDefault();

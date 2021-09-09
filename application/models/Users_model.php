@@ -243,6 +243,26 @@ class Users_model extends MY_Model
         return $query->row();
     }
 
+    public function getCompanyUser($id, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getCompanyUserByEmail($company_id, $email)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('email', $email);
+        $query = $this->db->get();        
+        return $query->row();
+    }
+
     public function countAllUsers()
     {
         $parent_id = getLoggedUserID();
@@ -546,6 +566,11 @@ class Users_model extends MY_Model
     public function deleteUser($id)
     {
         $this->db->delete($this->table, array('id' => $id));
+    }
+
+    public function deleteCompanyUser($id, $company_id)
+    {
+        $this->db->delete($this->table, array('id' => $id, 'company_id' => $company_id));
     }
 
     public function getUserByUsernname($user_name)

@@ -3552,4 +3552,41 @@ if (!function_exists('is_admin_logged')) {
 
         return $plan;
     }
+
+    function sendEmail( $data ){
+        $is_valid = true;
+
+        $CI =& get_instance();
+        $CI->load->model('MailSendTo_model');
+
+        if( $data['subject'] == '' ){            
+            $is_valid = false;
+        }
+
+        if( $data['to'] == '' && $data['bcc'] == '' && $data['cc'] == '' ){
+            $is_valid = false;            
+        }
+
+        if( $data['body'] == '' ){
+            $is_valid == false;
+        }
+
+        if( $is_valid ){
+            $data_mail_send = [
+                'email_subject' => $data['subject'],
+                'email_to' => $data['to'],
+                'email_bcc' => $data['cc'],
+                'email_body' => $data['body'],
+                'is_sent' => 0,
+                'is_with_error' => 0,
+                'note' => '',
+                'email_attachment' => $data['attachment'],
+                'created' => date('Y-m-d H:i:s'),
+            ];
+
+            $CI->MailSendTo_model->create($data_mail_send);
+        }
+
+        return $is_valid;
+    }
 }

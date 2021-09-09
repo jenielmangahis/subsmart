@@ -937,6 +937,78 @@ class Mycrm extends MY_Controller {
         //$obj_pdf->Output($file, 'F');
         return $file;
     }
+
+    public function ajax_load_employee_list(){
+    	$this->load->model('Users_model');
+
+        $company_id  = logged('company_id');
+        $users       = $this->users_model->getCompanyUsers($company_id);
+        $total_users = count($users);
+
+        $this->page_data['users'] = $users;
+        $this->page_data['total_users'] = $total_users;
+        $this->load->view('mycrm/ajax_load_employee_list', $this->page_data);
+    }
+
+    public function ajax_delete_employee(){
+    	$this->load->model('Users_model');
+
+    	$is_success = false;
+
+    	$post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( $this->Users_model->getCompanyUser($post['eid'], $company_id) ){
+        	$this->Users_model->deleteCompanyUser($post['eid'], $company_id);
+        	$is_success = true;
+        }
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_add_employee(){
+    	$this->load->model('Users_model');
+    	$this->load->model('Clients_model');
+
+    	$is_success = false;
+    	$err_num    = 0;
+
+    	$post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $client = $this->Clients_model->getById($company_id);
+        $company_total_users = $this->Users_model->countAllCompanyUsers($company_id);        
+        $total_license = $client->number_of_license - $company_total_users;
+        if( $total_license > 0 ){
+        	$isEmailExists = $this->Users_model->getCompanyUserByEmail($company_id, $post['manage_employee_email']);
+        	if( empty($isEmailExists) ){
+        		$data_user = [
+        			'FName' => $post['manage_employee_fname'],
+        			'LName' => $post['manage_employee_lname'],
+        			'email' => $post['manage_employee_email'],
+        			'username' => $post['manage_employee_email'],
+        			'password' => '',
+        			'password_plain' => '',
+        			'role' => '',
+        			'user_type' => '',
+        			'status' => 1,
+        			'company_id' => $company_id
+        		];
+        		$this->Users_model->addNewEmployee($data_user);
+        		$is_success = true;
+        	}else{
+        		$err_num = 2;	
+        	}
+        }else{
+        	$err_num = 1;
+        }
+
+        $json_data = ['is_success' => $is_success, 'err_num' => $err_num];
+
+        echo json_encode($json_data);
+    }
 }
 
 
