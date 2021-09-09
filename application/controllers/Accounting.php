@@ -2482,6 +2482,7 @@ class Accounting extends MY_Controller
             // }
 
             $a          = $this->input->post('itemid');
+            $packageID  = $this->input->post('packageID');
             $quantity   = $this->input->post('quantity');
             $price      = $this->input->post('price');
             $h          = $this->input->post('tax');
@@ -2491,15 +2492,16 @@ class Accounting extends MY_Controller
 
             $i = 0;
             foreach ($a as $row) {
-                $data['items_id'] = str_replace(',', '', $a[$i]);
-                $data['qty'] = str_replace(',', '', $quantity[$i]);
-                $data['cost'] = str_replace(',', '', $price[$i]);
-                $data['tax'] = str_replace(',', '', $h[$i]);
-                $data['discount'] = str_replace(',', '', $discounts[$i]);
-                $data['total'] = ((str_replace(',', '', $price[$i])*str_replace(',', '', $quantity[$i]))+str_replace(',', '', $h[$i]))-str_replace(',', '', $discounts[$i]);
-                $data['invoice_id'] = $addQuery;
-                $data['tax_rate_used'] = $tax_rate;
-                $addQuery2 = $this->invoice_model->add_invoice_items($data);
+                $data['items_id']           = str_replace(',', '', $a[$i]);
+                $data['package_id ']        = $packageID[$i];
+                $data['qty']                = str_replace(',', '', $quantity[$i]);
+                $data['cost']               = str_replace(',', '', $price[$i]);
+                $data['tax']                = str_replace(',', '', $h[$i]);
+                $data['discount']           = str_replace(',', '', $discounts[$i]);
+                $data['total']              = ((str_replace(',', '', $price[$i])*str_replace(',', '', $quantity[$i]))+str_replace(',', '', $h[$i]))-str_replace(',', '', $discounts[$i]);
+                $data['invoice_id']         = $addQuery;
+                $data['tax_rate_used']      = $tax_rate;
+                $addQuery2                  = $this->invoice_model->add_invoice_items($data);
                 $i++;
             }
 
@@ -2533,6 +2535,7 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
+
 
     public function getCustomersAcc()
     {

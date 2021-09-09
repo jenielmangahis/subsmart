@@ -991,6 +991,9 @@ $route['mycrm/_cancel_remove_addon'] = 'Mycrm/company_cancel_remove_addon';
 $route['mycrm/_buy_plan_license'] = 'Mycrm/company_buy_plan_license';
 $route['mycrm/_get_plan_payment_details'] = 'Mycrm/ajax_load_plan_payment_form';
 $route['mycrm/_renew_membership_plan'] = 'Mycrm/ajax_renew_subscription';
+$route['mycrm/_get_employee_list'] = 'Mycrm/ajax_load_employee_list';
+$route['mycrm/_delete_employee'] = 'Mycrm/ajax_delete_employee';
+$route['mycrm/_add_employee'] = 'Mycrm/ajax_add_employee';
 
 //Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';

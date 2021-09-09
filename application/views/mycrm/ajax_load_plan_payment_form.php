@@ -15,10 +15,9 @@
 </div>
 <div class="row margin-bottom-sec">
     <div class="col-md-2">Remaining License</div>
-    <div class="col-md-2"><?= $remaining_license; ?> <?= $remaining_license > 1 ? 'licenses' : 'license'; ?></div>
+    <div class="col-md-2"><span class="company-remaining-license"><?= $remaining_license; ?></span> <?= $remaining_license > 1 ? 'licenses' : 'license'; ?></div>
     <div class="col-md-2 text-right"></div>
 </div>
-
 <div class="row margin-bottom-sec">
     <div class="col-md-2">
         <div class="form-control-text">Employees</div>
@@ -64,6 +63,11 @@
     <div class="col-md-1 text-right">
         <div class="form-control-text plan-item__price-total">$<span id="total-license-price"><?= number_format($license_total_price, 2); ?></span></div>
     </div>
+</div>
+<div class="row margin-bottom-sec">
+    <div class="col-md-2"></div>
+    <div class="col-md-2"><a href="javascript:void(0);" class="btn btn-primary btn-sm btn-manage-employees"><i class="fa fa-user"></i> Manage Employees</a></div>
+    <div class="col-md-2 text-right"></div>
 </div>
 
 <!-- <div class="row margin-bottom-sec">

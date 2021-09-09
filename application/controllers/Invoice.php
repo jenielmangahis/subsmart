@@ -791,6 +791,17 @@ class Invoice extends MY_Controller
         echo json_encode($delete);
     }
 
+    
+    public function getPackageItemsById()
+    {
+        // $packId = $this->input->post('packId');
+
+        $items = $this->invoice_model->getPackageItemsById();
+        $this->page_data['pItems'] = $items;
+
+        echo json_encode($this->page_data);
+    }
+
     public function invoice_edit($id)
     {
         $comp_id = logged('company_id');
@@ -812,6 +823,28 @@ class Invoice extends MY_Controller
         // print_r($this->page_data['invoice']);
 
         $this->load->view('invoice/invoice_edit', $this->page_data);
+    }
+
+    public function getPackageById()
+    {
+        $items = $this->invoice_model->getPackageById();
+        $this->page_data['pName'] = $items;
+
+        echo json_encode($this->page_data);
+    }
+
+    public function addNewPackageToList()
+    {
+        $dataQuery = $this->input->post('packId');
+
+        $details = $this->invoice_model->getPackageDetails($dataQuery);
+        $pName = $this->invoice_model->getPackageName($dataQuery);
+
+        $this->page_data['details'] = $details;
+        $this->page_data['pName'] = $pName;
+
+        // echo json_encode($this->page_data);
+        echo json_encode($this->page_data);
     }
 
     

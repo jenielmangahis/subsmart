@@ -223,7 +223,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     </thead>
                                                     <tbody>
                                                     <?php foreach ($items as $item ) { ?>
-                                                    <tr class="table-items__tr">
+                                                    <!-- <tr class="table-items__tr">
                                                         <td style="width:30px; text-align:center;" valign="top">
                                                             <?php //echo intval($key) + 1 ?>
                                                         </td>
@@ -240,11 +240,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             echo number_format($item->costing, 2); ?>                    
                                                         </td>
                                                         <td style="width: 80px; text-align: right;" valign="top">
-                                                            <!-- $0.00                     -->
                                                             $ <?php echo number_format($item->discount, 2); ?>
                                                         </td>
                                                         <td style="width: 80px; text-align: right;" valign="top">
-                                                            <!-- $<?php //echo number_format($value['tax'], 2, '.', ',') ?> <br> (7.5%)  -->
                                                             <?php //$total_tax += floatval($value['tax']); ?>      
                                                             <?php echo number_format($item->tax, 2); ?>             
                                                         </td>
@@ -252,7 +250,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                             $ <?php //echo number_format($value['total'], 2, '.', ',') ?>   
                                                             <?php echo number_format($item->total, 2); ?>                 
                                                         </td>
-                                                    </tr>
+                                                    </tr> -->
+                                                    <?php if($item->items_id != 0){ ?>
+																		<tr class="table-items__tr">
+																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
+																			<td valign="top"> <?php echo $item->title; ?>   </td>
+																			<td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
+																			<td style="width: 80px; text-align: right;" valign="top">$<?php echo number_format($item->costing,2) ?></td>
+																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																				$ 0<?php //echo $item->discount ?>
+																				</td>
+																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																				$<?php echo number_format($item->tax,2) ?>
+																				</td>
+																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
+																		</tr>
+																	<?php }else{ ?>
+																		<tr class="table-items__tr">
+																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
+																			<td valign="top" colspan="5"> <div id="PaName_<?php echo $item->package_id; ?>"></div> <br>
+																			<div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
+																			<div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
+																			</td>
+																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo number_format($b,2); ?></td>
+																		</tr>
+																	<?php } ?>
                                                     <tr class="table-items__tr-last">
                                                         <td></td>
                                                         <td colspan="6"></td>
@@ -727,4 +749,51 @@ function sucess(information,$id){
                 }
             });
         }
+</script>
+
+<script>
+// $("#packageID").click(function () {
+$(document).ready(function()
+{
+    // $( "#packageID" ).each(function(i) {
+    //     $(this).on("click", function(){
+    //     var packId = $(this).attr('pack-id');
+    //     alert(packId);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>invoice/getPackageItemsById",
+            // data : {packId: packId },
+            dataType: 'json',
+            success: function(response){
+                var inputs = "";
+						markup = "<tr>" +
+                                "<td></td>"+
+								"<td></td>"+
+                                "<td>Item Name</td>"+
+                                "<td>Quantity</td>"+
+                                "<td>Price</td>"+
+                            "</tr>";
+                        tableBody = $("#packageItemsTitle");
+                        tableBody.append(markup);
+
+                $.each(response['pItems'], function (i, v) {
+                    // inputs += v.package_name ;
+                    markup2 = "<tr>" +
+                                "<td></td>"+
+								"<td></td>"+
+                                "<td>"+ v.title +"</td>"+
+                                "<td>"+ v.quantity +"</td>"+
+                                "<td>"+ v.price +"</td>"+
+                            "</tr>";
+                        tableBody2 = $("#packageItems"+v.package_id);
+                        tableBody2.append(markup2);
+                });
+            },
+        // });
+        // });
+    });
+
+	
+	// var changed = $("#view_ssn").text();
+});
 </script>
