@@ -506,28 +506,10 @@ class Accounting extends MY_Controller
 
     public function adjust_starting_value_form($item_id)
     {
-        $accounts = $this->chart_of_accounts_model->select();
-        $accountTypes = $this->account_model->getAccounts();
-
-        $bankAccounts = [];
-        foreach ($accountTypes as $accType) {
-            $accName = strtolower($accType->account_name);
-
-            foreach ($accounts as $account) {
-                if ($account->account_id === $accType->id) {
-                    $bankAccounts[$accType->account_name][] = [
-                        'value' => $accName.'-'.$account->id,
-                        'text' => $account->name,
-                    ];
-                }
-            }
-        }
-
         $item = $this->items_model->getItemById($item_id)[0];
         $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
         $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
 
-        $this->page_data['accounts'] = $bankAccounts;
         $this->page_data['item'] = $item;
         $this->page_data['accountingDetails'] = $itemAccDetails;
         $this->page_data['invAssetAcc'] = $invAssetAcc;
@@ -5980,6 +5962,18 @@ class Accounting extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
+
+        $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+        $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
+
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
 
@@ -8584,6 +8578,16 @@ class Accounting extends MY_Controller
             echo json_encode($data);
         }
     }
+    public function customer_print_invoice_pdf()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $pdf_file_name = $this->input->post("invoice_no")."_portalappinv.pdf";
+        $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name);
+        $data = new stdClass();
+        $data->status = "success";
+        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        echo json_encode($data);
+    }
     public function get_load_customer_type_table()
     {
         $tbody_html="";
@@ -8699,6 +8703,174 @@ class Accounting extends MY_Controller
         $data->company_details = $this->accounting_customers_model->get_customer_by_id($customer_id);
         echo json_encode($data);
     }
+
+    public function filter_date_qualified($filter_date, $date)
+    {
+        if ($filter_date == "All dates") {
+            return true;
+        } elseif ($filter_date == "Today") {
+            if (date("Y-m-d", strtotime($date)) == date("Y-m-d")) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "Yesterday") {
+            if (date("Y-m-d", strtotime($date)) == date("Y-m-d", strtotime("-1 days"))) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "This week") {
+            $firstday = date("Y-m-d", strtotime('monday this week'));
+            $lastday = date("Y-m-d", strtotime('sunday this week'));
+            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "This month") {
+            if (date("Y-m", strtotime($date)) == date("Y-m")) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "This quarter") {
+            $currentdate = date('Y-m-d');
+            $month = date("n", strtotime($currentdate));
+            $currentQuarter = ceil($month / 3);
+
+            $date=date("Y-m", strtotime($date));
+            $month = date("n", strtotime($currentdate));
+            $customerQuarter = ceil($month / 3);
+
+            if ($currentQuarter == $customerQuarter) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "This year") {
+            if (date("Y", strtotime($date)) == date("Y")) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "Last week") {
+            $firstday = date("Y-m-d", strtotime('monday last week'));
+            $lastday = date("Y-m-d", strtotime('sunday last week'));
+            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "Last month") {
+            $firstday = date("Y-m-d", strtotime('first day of previous month'));
+            $lastday = date("Y-m-d", strtotime('last day of previous month'));
+            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "Last quarter") {
+            $currentdate = date('Y-m-d');
+            $month = date("n", strtotime($currentdate));
+            $currentQuarter = ceil($month / 3)-1;
+
+            $date=date("Y-m", strtotime($date));
+            $month = date("n", strtotime($currentdate));
+            $customerQuarter = ceil($month / 3);
+
+            if ($currentQuarter == $customerQuarter) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "Last quarter") {
+            if (date("Y", strtotime($date)) == date("Y")-1) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_date == "Last 365 days") {
+            $firstday = date("Y-m-d", strtotime("-365 days"));
+            $lastday = date("Y-m-d");
+            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    public function filter_type_qualified($filter_type, $data)
+    {
+        if ($filter_type == "All transactions") {
+            return true;
+        } elseif ($filter_type == "All plus deposits") {
+            return true;
+        } elseif ($filter_type == "All invoices") {
+            if ($data["type"]=="Invoice") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Open invoices") {
+            if ($data["status"] == "Open") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Overdue invoices") {
+            if ($data["status"] == "Overdue") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Open estimates") {
+            if ($data["type"] == "Estimate" && $data["status"]=="Open") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Credit memos") {
+            if ($data["type"] == "Credit memo") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Unbilled income") {
+            if ($data["type"] == "Estimate" && $data["status"]=="Unbilled") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Recently paid") {
+            $firstday = date("Y-m-d", strtotime('monday last week'));
+            $lastday = date("Y-m-d", strtotime('sunday this week'));
+            if ($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Money received") {
+            if ($data["type"] == "Payment") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Recurring templates") {
+            if ($data["type"] == "Recurring template") {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif ($filter_type == "Statements") {
+            if ($data["type"] == "Statements") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     public function single_customer_get_transaction_lists()
     {
         $tbody_html="";
@@ -8982,180 +9154,6 @@ class Accounting extends MY_Controller
         $data->tbody_html = $tbody_html;
         echo json_encode($data);
     }
-
-    public function filter_date_qualified($filter_date, $date)
-    {
-        if ($filter_date == "All dates") {
-            return true;
-        } elseif ($filter_date == "Today") {
-            if (date("Y-m-d", strtotime($date)) == date("Y-m-d")) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "Yesterday") {
-            if (date("Y-m-d", strtotime($date)) == date("Y-m-d", strtotime("-1 days"))) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "This week") {
-            $firstday = date("Y-m-d", strtotime('monday this week'));
-            $lastday = date("Y-m-d", strtotime('sunday this week'));
-            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "This month") {
-            if (date("Y-m", strtotime($date)) == date("Y-m")) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "This quarter") {
-            $currentdate = date('Y-m-d');
-            $month = date("n", strtotime($currentdate));
-            $currentQuarter = ceil($month / 3);
-
-            $date=date("Y-m", strtotime($date));
-            $month = date("n", strtotime($currentdate));
-            $customerQuarter = ceil($month / 3);
-
-            if ($currentQuarter == $customerQuarter) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "This year") {
-            if (date("Y", strtotime($date)) == date("Y")) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "Last week") {
-            $firstday = date("Y-m-d", strtotime('monday last week'));
-            $lastday = date("Y-m-d", strtotime('sunday last week'));
-            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "Last month") {
-            $firstday = date("Y-m-d", strtotime('first day of previous month'));
-            $lastday = date("Y-m-d", strtotime('last day of previous month'));
-            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "Last quarter") {
-            $currentdate = date('Y-m-d');
-            $month = date("n", strtotime($currentdate));
-            $currentQuarter = ceil($month / 3)-1;
-
-            $date=date("Y-m", strtotime($date));
-            $month = date("n", strtotime($currentdate));
-            $customerQuarter = ceil($month / 3);
-
-            if ($currentQuarter == $customerQuarter) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "Last quarter") {
-            if (date("Y", strtotime($date)) == date("Y")-1) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_date == "Last 365 days") {
-            $firstday = date("Y-m-d", strtotime("-365 days"));
-            $lastday = date("Y-m-d");
-            if (date("Y-m-d", strtotime($date)) >= $firstday && date("Y-m-d", strtotime($date)) <= $lastday) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-    public function filter_type_qualified($filter_type, $data)
-    {
-        if ($filter_type == "All transactions") {
-            return true;
-        } elseif ($filter_type == "All plus deposits") {
-            return true;
-        } elseif ($filter_type == "All invoices") {
-            if ($data["type"]=="Invoice") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Open invoices") {
-            if ($data["status"] == "Open") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Overdue invoices") {
-            if ($data["status"] == "Overdue") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Open estimates") {
-            if ($data["type"] == "Estimate" && $data["status"]=="Open") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Credit memos") {
-            if ($data["type"] == "Credit memo") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Unbilled income") {
-            if ($data["type"] == "Estimate" && $data["status"]=="Unbilled") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Recently paid") {
-            $firstday = date("Y-m-d", strtotime('monday last week'));
-            $lastday = date("Y-m-d", strtotime('sunday this week'));
-            if ($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Money received") {
-            if ($data["type"] == "Payment") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Recurring templates") {
-            if ($data["type"] == "Recurring template") {
-                return true;
-            } else {
-                return false;
-            }
-        } elseif ($filter_type == "Statements") {
-            if ($data["type"] == "Statements") {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-    public function get_date_difference_indays($date_from = "", $date_to="")
-    {
-        $date_1 = strtotime($date_to); // or your date as well
-        $date_2 = strtotime($date_from);
-        $datediff = $date_1 - $date_2;
-        return round($datediff / (60 * 60 * 24));
-    }
     public function update_customer_notes()
     {
         $customer_id = $this->input->post("customer_id");
@@ -9321,6 +9319,13 @@ class Accounting extends MY_Controller
         echo json_encode($addQuery);
     }
 
+    public function get_date_difference_indays($date_from = "", $date_to="")
+    {
+        $date_1 = strtotime($date_to); // or your date as well
+        $date_2 = strtotime($date_from);
+        $datediff = $date_1 - $date_2;
+        return round($datediff / (60 * 60 * 24));
+    }
     
     public function generate_share_invoice_link()
     {
@@ -9422,16 +9427,6 @@ class Accounting extends MY_Controller
             $orientation = "P";
         }
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
-    }
-    public function customer_print_invoice_pdf()
-    {
-        $invoice_id = $this->input->post("invoice_id");
-        $pdf_file_name = $this->input->post("invoice_no")."_portalappinv.pdf";
-        $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name);
-        $data = new stdClass();
-        $data->status = "success";
-        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
-        echo json_encode($data);
     }
     public function print_invoice_packaging_slip()
     {
@@ -9733,7 +9728,4 @@ class Accounting extends MY_Controller
         $this->page_data['page_title'] = "Cash Flow";
         $this->load->view('accounting/cashflowplanner', $this->page_data);
     }
-
-
-
 }

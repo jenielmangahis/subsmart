@@ -15,6 +15,7 @@ function col(el)
 function applybtn()
 {
 	$('#products-services-table').DataTable().ajax.reload();
+	$('#products-services-table thead th input[type="checkbox"]').prop('checked', false).trigger('change');
 }
 
 function resetbtn()
@@ -266,7 +267,7 @@ $(document).on('change', '#products-services-table td:first-child input[type="ch
 		$($('.action-bar')[0]).removeClass('d-none');
 
 		if(checkedType.length === 1) {
-			if(checkedType[0] === 'inventory') {
+			if(checkedType[0] === 'inventory' || checkedType[0] === 'product') {
 				$('.batch-reoder, .batch-adjust-qty').removeClass('disabled');
 				$('.batch-change-type').addClass('disabled');
 			} else if(checkedType[0] === 'non-inventory') {
@@ -453,12 +454,52 @@ $(document).on('click', '#products-services-table .adjust-starting-value', funct
 				</div>
 			`);
 		}
-		$('#adjust-starting-value-modal').modal('show');
 
-		$('#adjust-starting-value-modal select').select2();
+		$('#adjust-starting-value-modal select').each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+			}
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'adjust-starting-value-modal'
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1
+					});
+				}
+			}
+		});
+
 		$('#adjust-starting-value-modal #asOfDate').datepicker({
 			uiLibrary: 'bootstrap'
 		});
+
+		$('#adjust-starting-value-modal').modal('show');
 	});
 });
 
@@ -576,19 +617,63 @@ function adjustInvQtyModal() {
 			`);
 		}
 
-		$('#inventoryModal #inventory-adjustments-table select[name="product[]"]').val(rowData.id).trigger('change');
-		$(`#inventoryModal #inventory-adjustments-table select[name="product[]"] option:not([value="${rowData.id}"],:disabled)`).remove();
+		$('#inventoryModal #inventory-adjustments-table select[name="product[]"]').append(`<option value="${rowData.id}" selected>${rowData.name}</option>`);
+		$('#inventoryModal #inventory-adjustments-table select[name="product[]"]').trigger('change');
 
 		rowCount = $('div#modal-container table tbody tr').length;
 		rowInputs = $('div#modal-container table tbody tr:first-child()').html();
 		blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
 
-		$('#inventoryModal select').select2();
+		$('#inventoryModal select').each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+			}
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'inventoryModal'
+							}
+
+							if(type === 'product') {
+								var itemIds = [];
+								itemIds.push(rowData.id);
+								query.selected = JSON.stringify(itemIds);
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1
+					});
+				}
+			}
+		});
 		$('#inventoryModal').modal('show');
 	});
 }
 
-$(document).on('click', '#inventory-form-modal .adjust-quantity', function(e) {
+$(document).on('click', '#item-modal .adjust-quantity', function(e) {
 	e.preventDefault();
 
 	adjustInvQtyModal();
@@ -598,9 +683,13 @@ $('.dropdown-item.batch-adjust-qty').on('click', function(e) {
 	e.preventDefault();
 
 	var items = [];
+	var itemIds = [];
 	$('#products-services-table td:first-child input[type="checkbox"]').each(function() {
 		if($(this).prop('checked')) {
-			items.push($(this).val());
+			var row = $(this).parent().parent();
+			var data = $('#products-services-table').DataTable().row(row).data();
+			items.push(data);
+			itemIds.push($(this).val());
 		}
 	});
 
@@ -636,10 +725,53 @@ $('.dropdown-item.batch-adjust-qty').on('click', function(e) {
 				$($('#inventory-adjustments-table tbody tr')[i]).children(':nth-child(2)').html(parseInt(i) + 1);
 			}
 
-			$($('#inventory-adjustments-table tbody tr')[i]).find('[name="product[]"]').val(items[i]).trigger('change');
+			$($('#inventory-adjustments-table tbody tr')[i]).find('[name="product[]"]').append(`<option value="${items[i].id}" selected>${items[i].name}</>`);
+			$($('#inventory-adjustments-table tbody tr')[i]).find('[name="product[]"]').trigger('change');
 		}
 
-		$('#inventoryModal select').select2();
+		$('#inventoryModal select').each(function() {
+			var type = $(this).attr('id');
+			if (type === undefined) {
+				type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+			} else {
+				type = type.replaceAll('_', '-');
+			}
+
+			if (dropdownFields.includes(type)) {
+				$(this).select2({
+					ajax: {
+						url: '/accounting/get-dropdown-choices',
+						dataType: 'json',
+						data: function(params) {
+							var query = {
+								search: params.term,
+								type: 'public',
+								field: type,
+								modal: 'inventoryModal'
+							}
+
+							if(type === 'product') {
+								query.selected = JSON.stringify(itemIds);
+							}
+
+							// Query parameters will be ?search=[term]&type=public&field=[type]
+							return query;
+						}
+					},
+					templateResult: formatResult,
+					templateSelection: optionSelect
+				});
+			} else {
+				var options = $(this).find('option');
+				if (options.length > 10) {
+					$(this).select2();
+				} else {
+					$(this).select2({
+						minimumResultsForSearch: -1
+					});
+				}
+			}
+		});
 		$('#inventoryModal').modal('show');
 	});
 });

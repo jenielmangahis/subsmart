@@ -1147,8 +1147,10 @@ $(function(){
 
     $(".btn-use-offer-code").click(function(){
     	var url = base_url + 'registration/_use_offer_code';
+    	var aut_msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'assets/img/spinner.gif" /> Verifiying code...</div>';
 
     	$("#modalVerifyOfferCode").modal("show");
+    	$("#modalVerifyOfferCode .modal-body").html(aut_msg);
 
     	setTimeout(function () {
 	        $.ajax({

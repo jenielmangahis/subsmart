@@ -29,7 +29,7 @@
                                         <div class="col-md-2">
                                             <label for="location">Location</label>
                                             <select name="location" id="location" class="form-control">
-                                                <option disabled selected></option>
+                                                <option disabled selected>&nbsp;</option>
                                                 <?php foreach($locations as $location) : ?>
                                                     <option value="<?=$location['id']?>" data-initial_qty="<?=$location['initial_qty']?>"><?=$location['name']?></option>
                                                 <?php endforeach; ?>
@@ -77,15 +77,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="invAdjustmentAcc">Inventory adjustment account</label>
-                                                <select name="inv_adj_acc" id="invAdjustmentAcc" class="form-control">
-                                                    <?php foreach($accounts as $key => $value) : ?>
-                                                        <optgroup label="<?= $key ?>">
-                                                            <?php foreach($value as $account) : ?>
-                                                                <option value="<?= $account['value'] ?>" <?= $account['selected'] === true ? 'selected' : '' ?>><?= $account['text'] ?></option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control"></select>
                                             </div>
                                         </div>
                                     </div>
