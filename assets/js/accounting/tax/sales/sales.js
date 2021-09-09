@@ -41,10 +41,14 @@ class Accounting__TaxItem {
     const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
     const $addAdjustmentLink = this.$modal.find("#addAdjustmentLink");
     const $addAdjustmentBtn = $sidebar.find("#addAdjustmentBtn");
+    const $openRecordPaymentBtn = this.$modal.find("#openRecordPaymentBtn");
+    const $recordPaymentModal = $("#recordPaymentModal");
 
     $addAdjustmentLink.off();
     $sidebarCloseBtn.off();
     $sidebar.off();
+    $addAdjustmentBtn.off();
+    $openRecordPaymentBtn.off();
 
     data.date_issued = this.formatDate(data.date_issued);
     data.due_date = this.formatDate(data.due_date);
@@ -127,7 +131,7 @@ class Accounting__TaxItem {
     $addAdjustmentLink.on("click", (event) => {
       event.preventDefault();
       $sidebar.addClass("addAdjustment--show");
-      $sidebar.find("[data-type=tax]").text(tableData.tax);
+      $sidebar.find("[data-type=tax_adjusted]").text(tableData.tax_adjusted);
     });
 
     $sidebarCloseBtn.on("click", () => {
@@ -187,6 +191,18 @@ class Accounting__TaxItem {
 
       const json = await response.json();
       window.location.reload();
+    });
+
+    $openRecordPaymentBtn.on("click", () => {
+      $recordPaymentModal.modal("show");
+      $recordPaymentModal
+        .find("[data-type=tax_adjusted]")
+        .text(tableData.tax_adjusted);
+      this.$modal.modal("hide");
+    });
+
+    $recordPaymentModal.on("hide.bs.modal", () => {
+      this.$modal.modal("show");
     });
   }
 
