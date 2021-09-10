@@ -743,7 +743,8 @@ class Mycrm extends MY_Controller {
         }else{
             $plan_type = 'yearly';
             $membership_price = $plan->discount * 12;
-            $license_total_price = $plan->price_per_license * 12;
+            //$license_total_price = $plan->price_per_license * 12;
+            $license_total_price = $plan->price_per_license;
             $billing_start = date("d-M-Y");
             $billing_end   = date("d-M-Y", strtotime("+1 year"));
         }
