@@ -668,6 +668,25 @@ class Invoice_model extends MY_Model
         return $query2->result();
     }
 
+    public function getPackageItemsById()
+    {
+        $this->db->select('*');
+		$this->db->from('item_package');
+        // $this->db->join('package_details', 'item_package.package_id  = package_details.id');
+        $this->db->join('items', 'item_package.item_id  = items.id');
+        // $this->db->where('package_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+        // $this->db->select('*');
+		// $this->db->from('package_details');
+        // $this->db->join('item_package', 'package_details.id  = item_package.package_id');
+        // $this->db->join('items', 'item_package.item_id  = items.id');
+        // $this->db->where('package_details.company_id', $cid);
+        // // $this->db->group_by('package_details.id');
+        // $query2 = $this->db->get();
+        // return $query2->result();
+    }
+
     public function duplicateRecord($primary_key, $comp_id)
     {
         $this->db->where('id', $primary_key);
