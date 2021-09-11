@@ -1514,7 +1514,7 @@ $(`#products-services-table`).DataTable({
 			name: 'taxable',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
 				$(td).addClass('taxable');
-				if(cellData !== "0") {
+				if(cellData !== "0" && cellData !== null && cellData !== "") {
 					$(td).html('<input type="checkbox" disabled class="m-auto" checked>');
 				} else {
 					$(td).html('');
@@ -1650,4 +1650,46 @@ $(`#products-services-table`).DataTable({
 			}
 		}
 	]
+});
+
+$('#print-items').on('click', function(e) {
+	e.preventDefault();
+
+	var data = new FormData();
+
+	data.set('status', $('#status').val());
+	data.set('type', $('#type').val());
+	data.set('category', $('#category').val());
+	data.set('stock_status', $('#stock_status').val());
+	data.set('search', $('#search').val());
+	data.set('income_account', $('#chk_income_account').prop('checked') ? 1 : 0);
+	data.set('expense_account', $('#chk_expense_account').prop('checked') ? 1 : 0);
+	data.set('inventory_account', $('#chk_inventory_account').prop('checked') ? 1 : 0);
+	data.set('purchase_desc', $('#chk_purch_desc').prop('checked') ? 1 : 0);
+	data.set('qty_po', $('#chk_qty_po').prop('checked') ? 1 : 0);
+	data.set('sku', $('#chk_sku').prop('checked') ? 1 : 0);
+	data.set('type', $('#chk_type').prop('checked') ? 1 : 0);
+	data.set('sales_desc', $('#chk_sales_desc').prop('checked') ? 1 : 0);
+	data.set('sales_price', $('#chk_sales_price').prop('checked') ? 1 : 0);
+	data.set('cost', $('#chk_cost').prop('checked') ? 1 : 0);
+	data.set('taxable', $('#chk_taxable').prop('checked') ? 1 : 0);
+	data.set('qty_on_hand', $('#chk_qty_on_hand').prop('checked') ? 1 : 0);
+	data.set('reorder_point', $('#chk_reorder_point').prop('checked') ? 1 : 0);
+
+	$.ajax({
+		url: '/accounting/products-and-services/print-table',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+			let pdfWindow = window.open("");
+			pdfWindow.document.write(`<h3>Products and Services</h3>`);
+			pdfWindow.document.write(result);
+			$(pdfWindow.document).find('body').css('padding', '0');
+			$(pdfWindow.document).find('body').css('margin', '0');
+			$(pdfWindow.document).find('iframe').css('border', '0');
+			pdfWindow.print();
+		}
+	});
 });

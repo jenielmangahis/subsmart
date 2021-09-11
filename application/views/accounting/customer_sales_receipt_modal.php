@@ -825,7 +825,7 @@ Alarm Direct, Inc</textarea>
                                             <!-- <span id="span_tax_0">0.0</span> -->
                                             <input type="text" class="tax-hide" value="0" type="hidden">
                                         </td>
-                                        <td width="150px"><input type="hidden" class="form-control total_per_input"
+                                        <td width="150px" align="right"><input type="hidden" class="form-control total_per_input"
                                                 name="total[]" data-counter="0" id="item_total_sr_0" min="0" value="0">
                                             $<span class="total_per_item" id="span_total_sr_0">0.00</span></td>
                                     </tr>
@@ -900,7 +900,7 @@ Alarm Direct, Inc</textarea>
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$ <span id="span_sub_total_sr">0.00</span>
+                                            <td align="right">$ <span id="span_sub_total_sr">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total_sr">
                                             </td>
                                         </tr>
@@ -931,7 +931,7 @@ Alarm Direct, Inc</textarea>
                                                 </div>
                                             </td>
                                             <td></td>
-                                            <td>$ <span id="total_tax_sr_">0.00</span><input type="hidden" name="taxes"
+                                            <td align="right">$ <span id="total_tax_sr_">0.00</span><input type="hidden" name="taxes"
                                                     id="total_tax_input_sr"></td>
                                         </tr>
                                         <tr>
@@ -949,7 +949,7 @@ Alarm Direct, Inc</textarea>
                                                     data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
                                                     data-original-title="" title=""></span>
                                             </td>
-                                            <td>$<span id="adjustment_area_sr">0.00</span></td>
+                                            <td align="right">$<span id="adjustment_area_sr">0.00</span></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -966,7 +966,7 @@ Alarm Direct, Inc</textarea>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total_sr">0.00</span>
+                                            <td align="right"><b><span id="grand_total_sr">0.00</span>
                                                     <input type="hidden" name="grand_total" id="grand_total_sr_g"
                                                         value='0'></b></td>
                                         </tr>

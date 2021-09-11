@@ -391,6 +391,7 @@ $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting_c
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting_controllers/products_and_services/update/$1/$2';
 $route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting_controllers/products_and_services/assign_category/$1';
 $route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting_controllers/products_and_services/batch_action/$1';
+$route['accounting/products-and-services/print-table']['post'] = 'accounting_controllers/products_and_services/print_table';
 
 $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';

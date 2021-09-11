@@ -395,18 +395,18 @@ include viewPath('includes/header');
                             <form>
                                 <div class="recordModal__formGroup">
                                     <div class="form-group">
-                                        <label for="tax_amount">Tax amount</label>
-                                        <input data-type="tax_amount" class="form-control" id="tax_amount">
+                                        <label for="amount">Tax amount</label>
+                                        <input data-type="amount" type="number" class="form-control" id="amount">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="Payment_date">Payment date</label>
-                                        <input data-type="Payment_date" type="date" class="form-control" id="Payment_date">
+                                        <label for="payment_date">Payment date</label>
+                                        <input data-type="date_payment" type="date" class="form-control" id="payment_date">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="bank_acount">Bank acount</label>
-                                        <input data-type="bank_acount" class="form-control" id="bank_acount">
+                                        <label for="bank_account">Bank acount</label>
+                                        <input data-type="bank_account" class="form-control" id="bank_account">
                                     </div>
                                 </div>
 
@@ -424,7 +424,7 @@ include viewPath('includes/header');
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Record Payment</button>
+                    <button type="button" class="btn btn-primary" id="savePayment">Record Payment</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
