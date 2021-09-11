@@ -36,6 +36,7 @@ class Accounting__TaxItem {
   }
 
   onShowModal(data) {
+    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
     const $dataTypes = this.$modal.find("[data-type]");
     const $sidebar = $("#addAdjustment");
     const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
@@ -43,12 +44,14 @@ class Accounting__TaxItem {
     const $addAdjustmentBtn = $sidebar.find("#addAdjustmentBtn");
     const $openRecordPaymentBtn = this.$modal.find("#openRecordPaymentBtn");
     const $recordPaymentModal = $("#recordPaymentModal");
+    const $savePaymentBtn = $recordPaymentModal.find("#savePayment");
 
     $addAdjustmentLink.off();
     $sidebarCloseBtn.off();
     $sidebar.off();
     $addAdjustmentBtn.off();
     $openRecordPaymentBtn.off();
+    $savePaymentBtn.off();
 
     data.date_issued = this.formatDate(data.date_issued);
     data.due_date = this.formatDate(data.due_date);
@@ -176,7 +179,6 @@ class Accounting__TaxItem {
 
       $(this).attr("disabled", true);
 
-      const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
       const response = await fetch(
         `${prefixURL}/AccountingSales/apiSaveAdjustment`,
         {
@@ -203,6 +205,49 @@ class Accounting__TaxItem {
 
     $recordPaymentModal.on("hide.bs.modal", () => {
       this.$modal.modal("show");
+    });
+
+    $savePaymentBtn.on("click", async function () {
+      const $form = $recordPaymentModal.find("form");
+      const $inputs = $form.find("[data-type]");
+
+      const payload = { invoice_id: data.id };
+      for (let index = 0; index < $inputs.length; index++) {
+        const input = $inputs[index];
+        const key = input.dataset.type;
+
+        let isRequired = true;
+        let value = input.value;
+
+        const $input = $(input);
+        const $formGroup = $input.closest(".form-group");
+
+        $formGroup.removeClass("form-group--error");
+        if (isRequired && !value) {
+          $formGroup.addClass("form-group--error");
+          $input.focus();
+          return;
+        }
+
+        payload[key] = value;
+      }
+
+      $(this).attr("disabled", true);
+
+      const response = await fetch(
+        `${prefixURL}/AccountingSales/apiSavePayment`,
+        {
+          method: "post",
+          body: JSON.stringify(payload),
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+        }
+      );
+
+      const json = await response.json();
+      window.location.reload();
     });
   }
 

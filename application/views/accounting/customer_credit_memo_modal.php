@@ -138,9 +138,9 @@
                             Message on statement<br>
                             <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
                         </div>
-                        <div class="col-md-4">
-                        </div>
                         <div class="col-md-5">
+                        </div>
+                        <div class="col-md-4">
                             <!-- Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless">
                                 <tr>
@@ -173,13 +173,13 @@
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$ <span id="span_sub_total_cm">0.00</span>
+                                            <td align="right">$ <span id="span_sub_total_cm">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <td align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -187,7 +187,7 @@
                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td>$<span id="adjustment_area">0.00</span></td>
+                                            <td align="right">$<span id="adjustment_area">0.00</span></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -202,7 +202,7 @@
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total_cm">0.00</span>
+                                            <td align="right"><b><span id="grand_total_cm">0.00</span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
@@ -322,6 +322,7 @@
             </div>
 
         </div>
+      </div>
     </div>
     <!--end of modal-->
     <script>

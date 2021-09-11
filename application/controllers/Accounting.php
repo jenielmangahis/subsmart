@@ -2488,7 +2488,7 @@ class Accounting extends MY_Controller
             $h          = $this->input->post('tax');
             $discounts  = $this->input->post('discount');
             $gtotal     = $this->input->post('total');
-            $tax_rate   = $this->input->post('tax_rate');
+            $tax_rate   = $this->input->post('agency_id');
 
             $i = 0;
             foreach ($a as $row) {

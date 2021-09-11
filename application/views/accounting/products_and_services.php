@@ -343,7 +343,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</div>
 										<div class="action-bar h-100 d-flex align-items-center">
 											<ul class="ml-auto">
-												<li><a href="#" onclick="window.print()"><i class="fa fa-print"></i></a>
+												<li><a href="#" id="print-items"><i class="fa fa-print"></i></a>
 												</li>
 												<li><a href="#"><i class="fa fa-download"></i></a></li>
 												<li>

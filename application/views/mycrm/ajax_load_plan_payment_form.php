@@ -24,7 +24,8 @@
     </div>
     <div class="col-md-1">
         <select name="num_license" id="num-license"  class="form-control">
-            <option value="1" selected="selected">1</option>
+            <option value="0">Not needed</option>
+            <option value="1" selected="">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -58,7 +59,7 @@
     </div>
     <div class="col-md-2">
         <div class="form-control-text">
-            <span class="text-ter">x</span>&nbsp;$<?= number_format($plan->price_per_license, 2); ?>/mo <?= $plan_type == 'yearly' ? ' x 12 months' : ''; ?></div>
+            <span class="text-ter">x</span>&nbsp;$<?= number_format($plan->price_per_license, 2); ?></div>
     </div>
     <div class="col-md-1 text-right">
         <div class="form-control-text plan-item__price-total">$<span id="total-license-price"><?= number_format($license_total_price, 2); ?></span></div>
@@ -145,12 +146,12 @@ $(function(){
 
     function load_default_values(){
         var num_selected = 1;
-        if( plan_type == 'monthly' ){
+        /*if( plan_type == 'monthly' ){
             var total_license_price = parseFloat(price_per_license * num_selected);
         }else{
             var total_license_price = parseFloat((price_per_license * num_selected) * 12);
-        }
-
+        }*/
+        var total_license_price = parseFloat(price_per_license * num_selected);
         var grand_total = parseFloat(total_license_price) + parseFloat(membership_price);
 
         $("#m-license-amount").val(total_license_price.toFixed(2));
@@ -160,12 +161,12 @@ $(function(){
 
     $("#num-license").change(function(){
         var num_selected = $(this).val();
-        if( plan_type == 'monthly' ){
+        /*if( plan_type == 'monthly' ){
             var total_license_price = parseFloat(price_per_license * num_selected);
         }else{
             var total_license_price = parseFloat((price_per_license * num_selected) * 12);
-        }
-
+        }*/
+        var total_license_price = parseFloat(price_per_license * num_selected);
         var grand_total = parseFloat(total_license_price) + parseFloat(membership_price);
 
         $("#total-amount").text(grand_total.toFixed(2));

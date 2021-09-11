@@ -221,7 +221,7 @@ class Products_and_services extends MY_Controller {
                         'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                         'sales_price' => $item->price,
                         'cost' => $item->cost,
-                        'taxable' => $item->tax_rate_id,
+                        'taxable' => $accountingDetails->tax_rate_id,
                         'qty_on_hand' => $qty,
                         'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                         'reorder_point' => $item->re_order_points,
@@ -255,7 +255,7 @@ class Products_and_services extends MY_Controller {
                     'purch_desc' => !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
                     'sales_price' => $item->price,
                     'cost' => $item->cost,
-                    'taxable' => $item->tax_rate_id,
+                    'taxable' => $accountingDetails->tax_rate_id,
                     'qty_on_hand' => $qty,
                     'qty_po' => !is_null($accountingDetails) ? $accountingDetails->qty_po : '',
                     'reorder_point' => $item->re_order_points,
@@ -787,5 +787,141 @@ class Products_and_services extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
+    }
+
+    public function print_table()
+    {
+        $post = $this->input->post();
+
+        $filters = [];
+        $search = $post['search'];
+        $category = explode(',', $post['category']);
+
+        if(in_array('0', $category)) {
+            array_unshift($category, '');
+            array_unshift($category, null);
+        }
+
+        $filters['category'] = $category;
+
+        switch($post['status']) {
+            case 'active' :
+                $filters['status'] = [1];
+            break;
+            case 'inactive' :
+                $filters['status'] = [0];
+            break;
+            default :
+                $filters['status'] = [0, 1];
+            break;
+        }
+
+        switch($post['type']) {
+            case 'inventory' :
+                $filters['type'] = [
+                    'product',
+                    'Product',
+                    'inventory',
+                    'Inventory'
+                ];
+            break;
+            case 'non-inventory' :
+                $filters['type'] = [
+                    'material',
+                    'Material',
+                    'non-inventory',
+                    'Non-inventory'
+                ];
+            break;
+            case 'service' :
+                $filters['type'] = [
+                    'service',
+                    'Service'
+                ];
+            break;
+            case 'bundle' :
+                $filters['type'] = [
+                    'bundle',
+                    'Bundle'
+                ];
+            break;
+        }
+
+        $items = $this->items_model->getItemsWithFilter($filters);
+
+        $tableHtml = "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Name</th>";
+        $tableHtml .= $post['sku'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>SKU</th>" : "";
+        $tableHtml .= $post['type'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>" : "";
+        $tableHtml .= $post['sales_desc'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Sales description</th>" : "";
+        $tableHtml .= $post['income_account'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Income account</th>" : "";
+        $tableHtml .= $post['expense_account'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Expense account</th>" : "";
+        $tableHtml .= $post['inventory_account'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Inventory account</th>" : "";
+        $tableHtml .= $post['purchase_desc'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Purchase description</th>" : "";
+        $tableHtml .= $post['sales_price'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Sales price</th>" : "";
+        $tableHtml .= $post['cost'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Cost</th>" : "";
+        $tableHtml .= $post['taxable'] === '1' ?  "<th style='border-bottom: 2px solid #BFBFBF'>Taxable</th>" : "";
+        $tableHtml .= $post['qty_on_hand'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Qty on hand</th>" : "";
+        $tableHtml .= $post['qty_po'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Qty on PO</th>" : "";
+        $tableHtml .= $post['reorder_point'] === '1' ? "<th style='border-bottom: 2px solid #BFBFBF'>Reorder point</th>" : "";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+        foreach($items as $item) {
+            $qty = $this->items_model->countQty($item->id);
+            $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+            $type = ucfirst($item->type);
+            $sku = !is_null($accountingDetails) ? $accountingDetails->sku : '';
+            $incomeAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '';
+            $expenseAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '';
+            $inventoryAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '';
+            $purchDesc = !is_null($accountingDetails) ? $accountingDetails->purchase_description : '';
+            $taxable = $accountingDetails->tax_rate_id ? "<i class='fa fa-check'></i>" : "";
+            $qtyOnPO = !is_null($accountingDetails) ? $accountingDetails->qty_po : '';
+
+            if($search !== "") {
+                if(stripos($item->title, $search) !== false) {
+                    $tableHtml .= "<tr>";
+                    $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$item->title</td>";
+                    $tableHtml .= $post['sku'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$sku</td>" : "";
+                    $tableHtml .= $post['type'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$type</td>" : "";
+                    $tableHtml .= $post['sales_desc'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->description</td>" : "";
+                    $tableHtml .= $post['income_account'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$incomeAccName</td>" : "";
+                    $tableHtml .= $post['expense_account'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$expenseAccName</td>" : "";
+                    $tableHtml .= $post['inventory_account'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$inventoryAccName</td>" : "";
+                    $tableHtml .= $post['purchase_desc'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$purchDesc</td>" : "";
+                    $tableHtml .= $post['sales_price'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->price</td>" : "";
+                    $tableHtml .= $post['cost'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->cost</td>" : "";
+                    $tableHtml .= $post['taxable'] === '1' ?  "<td style='border-bottom: 1px dotted #D5CDB5'>$taxable</td>" : "";
+                    $tableHtml .= $post['qty_on_hand'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$qty</td>" : "";
+                    $tableHtml .= $post['qty_po'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$qtyOnPO</td>" : "";
+                    $tableHtml .= $post['reorder_point'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->re_order_points</td>" : "";
+                    $tableHtml .= "</tr>";
+                }
+            } else {
+                $tableHtml .= "<tr>";
+                $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$item->title</td>";
+                $tableHtml .= $post['sku'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$sku</td>" : "";
+                $tableHtml .= $post['type'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$type</td>" : "";
+                $tableHtml .= $post['sales_desc'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->description</td>" : "";
+                $tableHtml .= $post['income_account'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$incomeAccName</td>" : "";
+                $tableHtml .= $post['expense_account'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$expenseAccName</td>" : "";
+                $tableHtml .= $post['inventory_account'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$inventoryAccName</td>" : "";
+                $tableHtml .= $post['purchase_desc'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$purchDesc</td>" : "";
+                $tableHtml .= $post['sales_price'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->price</td>" : "";
+                $tableHtml .= $post['cost'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->cost</td>" : "";
+                $tableHtml .= $post['taxable'] === '1' ?  "<td style='border-bottom: 1px dotted #D5CDB5'>$taxable</td>" : "";
+                $tableHtml .= $post['qty_on_hand'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$qty</td>" : "";
+                $tableHtml .= $post['qty_po'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$qtyOnPO</td>" : "";
+                $tableHtml .= $post['reorder_point'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$item->re_order_points</td>" : "";
+                $tableHtml .= "</tr>";
+            }
+        }
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
     }
 }
