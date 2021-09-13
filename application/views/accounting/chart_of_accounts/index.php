@@ -101,19 +101,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-3">
                                                 <input type="text" name="search" id="search" class="form-control" placeholder="Filter by name">
                                             </div>
-                                            <div class="col-3">
+                                            <!-- <div class="col-3">
                                                 <select name="" id="type" class="form-control">
                                                     <option value="all">All</option>
                                                     <option value="ctl">Counts toward limits</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#" class="editbtn"><i class="fa fa-edit"></i></a></li>
-                                                <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
+                                                <li><a href="#" id="edit-accounts"><i class="fa fa-edit"></i></a></li>
+                                                <li><a href="#" id="print-accounts"><i class="fa fa-print"></i></a></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>
@@ -133,8 +133,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <label for="chk_nsmart_balance">nSmarTrac Balance</label>
                                                         </div>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance">
-                                                            <label for="chk_balance">Balance</label>
+                                                            <input type="checkbox" checked="checked" onchange="col_bank_balance()" name="chk_bank_balance" id="chk_bank_balance">
+                                                            <label for="chk_bank_balance">Balance</label>
                                                         </div>
 											            <p class="m-0">Other</p>
                                                         <div class="checkbox checkbox-sec d-block my-2">
@@ -165,7 +165,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="type">TYPE</th>
                                             <th class="detailtype">DETAIL TYPE</th>
                                             <th class="nbalance">NSMARTRAC BALANCE</th>
-                                            <th class="balance">BANK BALANCE</th>
+                                            <th class="bank_balance">BANK BALANCE</th>
                                             <th class="text-right" width="10%">ACTION</th>
                                         </tr>
 									</thead>

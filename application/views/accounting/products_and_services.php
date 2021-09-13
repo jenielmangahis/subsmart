@@ -235,82 +235,84 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							<div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
 								<div class="row my-3">
 									<div class="col-md-6">
-										<div class="form-row">
-											<div class="col-4">
-												<input type="text" name="search" id="search" class="form-control"
-													placeholder="Find products and services">
-											</div>
-											<div class="col">
-												<div class="dropdown d-inline-block d-flex align-items-center h-100">
-													<a href="javascript:void(0);" class="dropdown-toggle hide-toggle"
-														id="filterDropdown" data-toggle="dropdown" aria-haspopup="true"
-														aria-expanded="false"><i class="fa fa-filter"></i></a>
+										<form action="/accounting/products-and-services/export-table" method="post" id="export-table-form">
+											<div class="form-row">
+												<div class="col-4">
+													<input type="text" name="search" id="search" class="form-control"
+														placeholder="Find products and services">
+												</div>
+												<div class="col">
+													<div class="dropdown d-inline-block d-flex align-items-center h-100">
+														<a href="javascript:void(0);" class="dropdown-toggle hide-toggle"
+															id="filterDropdown" data-toggle="dropdown" aria-haspopup="true"
+															aria-expanded="false"><i class="fa fa-filter"></i></a>
 
-													<div class="dropdown-menu p-3 w-auto"
-														aria-labelledby="filterDropdown">
-														<div class="inner-filter-list">
-															<div class="row">
-																<div class="col-sm-6">
-																	<div class="form-group">
-																		<label for="status">Status</label>
-																		<select name="status" id="status"
-																			class="form-control">
-																			<option value="active" selected>Active
-																			</option>
-																			<option value="inactive">Inactive</option>
-																			<option value="all">All</option>
-																		</select>
-																	</div>
-																	<div class="form-group">
-																		<label for="type">Type</label>
-																		<select name="type" id="type"
-																			class="form-control">
-																			<option value="all" selected>All</option>
-																			<option value="inventory">Inventory</option>
-																			<option value="non-inventory">Non-inventory
-																			</option>
-																			<option value="service">Service</option>
-																			<option value="bundle">Bundle</option>
-																		</select>
-																	</div>
-																	<div class="form-group">
-																		<label for="category">Category</label>
-																		<select name="category[]" id="category"
-																			class="form-control" multiple="multiple">
-																			<?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-																			<option
-																				value="<?=$category->item_categories_id?>"
-																				selected><?=$category->name?>
-																			</option>
-																			<?php endforeach; ?>
-																			<option value="0" selected>Uncategorized
-																			</option>
-																		</select>
-																	</div>
-																	<div class="form-group">
-																		<label for="stock_status">Stock status</label>
-																		<select name="stock_status" id="stock_status"
-																			class="form-control">
-																			<option value="all">All</option>
-																			<option value="low stock">Low stock</option>
-																			<option value="out of stock">Out of stock
-																			</option>
-																		</select>
+														<div class="dropdown-menu p-3 w-auto"
+															aria-labelledby="filterDropdown">
+															<div class="inner-filter-list">
+																<div class="row">
+																	<div class="col-sm-6">
+																		<div class="form-group">
+																			<label for="status">Status</label>
+																			<select name="status" id="status"
+																				class="form-control">
+																				<option value="active" selected>Active
+																				</option>
+																				<option value="inactive">Inactive</option>
+																				<option value="all">All</option>
+																			</select>
+																		</div>
+																		<div class="form-group">
+																			<label for="type">Type</label>
+																			<select name="type" id="type"
+																				class="form-control">
+																				<option value="all" selected>All</option>
+																				<option value="inventory">Inventory</option>
+																				<option value="non-inventory">Non-inventory
+																				</option>
+																				<option value="service">Service</option>
+																				<option value="bundle">Bundle</option>
+																			</select>
+																		</div>
+																		<div class="form-group">
+																			<label for="category">Category</label>
+																			<select name="category[]" id="category"
+																				class="form-control" multiple="multiple">
+																				<?php foreach ($this->items_model->getItemCategories() as $category) : ?>
+																				<option
+																					value="<?=$category->item_categories_id?>"
+																					selected><?=$category->name?>
+																				</option>
+																				<?php endforeach; ?>
+																				<option value="0" selected>Uncategorized
+																				</option>
+																			</select>
+																		</div>
+																		<div class="form-group">
+																			<label for="stock_status">Stock status</label>
+																			<select name="stock_status" id="stock_status"
+																				class="form-control">
+																				<option value="all">All</option>
+																				<option value="low stock">Low stock</option>
+																				<option value="out of stock">Out of stock
+																				</option>
+																			</select>
+																		</div>
 																	</div>
 																</div>
-															</div>
 
-															<div class="btn-group">
-																<a href="#" class="btn-main"
-																	onclick="resetbtn()">Reset</a>
-																<a href="#" id="apply-btn" class="btn-main apply-btn"
-																	onclick="applybtn()">Apply</a>
+																<div class="btn-group">
+																	<a href="#" class="btn-main"
+																		onclick="resetbtn()">Reset</a>
+																	<a href="#" id="apply-btn" class="btn-main apply-btn"
+																		onclick="applybtn()">Apply</a>
+																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
+										</form>
 									</div>
 									<div class="col-md-6">
 										<div class="action-bar h-100 d-none align-items-center">
@@ -345,7 +347,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 											<ul class="ml-auto">
 												<li><a href="#" id="print-items"><i class="fa fa-print"></i></a>
 												</li>
-												<li><a href="#"><i class="fa fa-download"></i></a></li>
+												<li><a href="#" id="download-items"><i class="fa fa-download"></i></a></li>
 												<li>
 													<a class="hide-toggle dropdown-toggle" type="button"
 														id="dropdownMenuButton" data-toggle="dropdown"
@@ -438,7 +440,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									style="width:100%">
 									<thead>
 										<tr>
-											<th><input type="checkbox" value="all"></th>
+											<th>
+												<div class="d-flex justify-content-center">
+													<div class="checkbox checkbox-sec m-0">
+														<input type="checkbox" value="all" id="select-all-items">
+														<label for="select-all-items" class="p-0" style="width: 24px; height: 24px"></label>
+													</div>
+												</div>
+											</th>
 											<th>NAME</th>
 											<th class="sku">SKU</th>
 											<th class="type">TYPE</th>

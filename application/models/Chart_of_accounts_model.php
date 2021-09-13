@@ -108,10 +108,10 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getChildAccounts($parentAccId, $exemptedID = null)
+	public function getChildAccounts($parentAccId, $status = [1], $exemptedID = null)
 	{
 		$this->db->where('company_id', logged('company_id'));
-		$this->db->where('active', 1);
+		$this->db->where_in('active', $status);
 		$this->db->where('parent_acc_id', $parentAccId);
 		if($exemptedID) {
 			$this->db->where('id !=', $exemptedID);
@@ -120,7 +120,7 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getFilteredAccounts($status, $order, $orderColumn)
+	public function getFilteredAccounts($status, $order = 'asc', $orderColumn = 'name')
 	{
 		$company_id = logged('company_id');
 		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);

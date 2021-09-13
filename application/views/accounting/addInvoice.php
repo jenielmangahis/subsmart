@@ -289,7 +289,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                             placeholder="Select customer">
                                     </select> -->
-                                    <select name="customer_id" id="sel-customer" class="form-control" required>
+                                    <select name="customer_id" id="sel-customer" class="form-control m_select" required>
                                         <option>Select a customer</option>
                                         <?php foreach ($customers as $customer): ?>
                                         <option
@@ -400,7 +400,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="row" style="background-color:white;">
-                                <div class="col-md-3 form-group">
+                                <!-- <div class="col-md-3 form-group">
                                     <label for="estimate_date">Invoice Type <span style="color:red;">*</span></label>
                                     <select name="invoice_type" class="form-control">
                                         <option value="Deposit">Deposit</option>
@@ -408,6 +408,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <option value="Final Payment">Final Payment</option>
                                         <option value="Total Due" selected="selected">Total Due</option>
                                     </select>
+                                </div> -->
+                                <div class="col-md-3 form-group">
+                                    <label for="invoice_number">Invoice#</label>
+                                    <!-- <input type="text" class="form-control" name="invoice_number"
+                                           id="invoice_number" value="<?php echo "INV-" . date("YmdHis"); ?>"
+                                    required placeholder="Enter Invoice#"
+                                    autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
+                                    <input type="text" class="form-control" name="invoice_number" id="invoice_number"
+                                        value="<?php echo "INV-";
+                                        foreach ($number as $num):
+                                            $next = $num->invoice_number;
+                                            $arr = explode("-", $next);
+                                            $date_start = $arr[0];
+                                            $nextNum = $arr[1];
+                                            //    echo $number;
+                                        endforeach;
+                                        $val = $nextNum + 1;
+                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
+                                        ?>" required placeholder="Enter Invoice#" readonly/>
                                 </div>
 
 
@@ -443,25 +462,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <!-- <div class="col-md-3 form-group">
                                 </div> -->
 
-                                <div class="col-md-3 form-group">
-                                    <label for="invoice_number">Invoice#</label>
-                                    <!-- <input type="text" class="form-control" name="invoice_number"
-                                           id="invoice_number" value="<?php echo "INV-" . date("YmdHis"); ?>"
-                                    required placeholder="Enter Invoice#"
-                                    autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
-                                    <input type="text" class="form-control" name="invoice_number" id="invoice_number"
-                                        value="<?php echo "INV-";
-                                        foreach ($number as $num):
-                                            $next = $num->invoice_number;
-                                            $arr = explode("-", $next);
-                                            $date_start = $arr[0];
-                                            $nextNum = $arr[1];
-                                            //    echo $number;
-                                        endforeach;
-                                        $val = $nextNum + 1;
-                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                        ?>" required placeholder="Enter Invoice#" readonly/>
-                                </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="date_issued">Date Issued <span style="color:red;">*</span></label>
@@ -475,11 +475,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
 
                                 <div class="col-md-3 form-group">
-                                    <label for="status">Status</label><br />
+                                    <label for="status">Status <span style="color:red;">*</span></label><br />
                                     <!-- <input type="text" name="status" class="form-control"> -->
                                     <select name="status" class="form-control">
                                         <option value="Draft" selected>Draft</option>
                                         <option value="Submitted">Submitted</option>
+                                        <option value="Partially Paid">Partially Paid</option>
+                                        <option value="Paid">Paid</option>
+                                        <option value="Due">Due</option>
+                                        <option value="Overdue">Overdue</option>
                                         <option value="Approved">Approved</option>
                                         <option value="Declined">Declined</option>
                                         <option value="Schedule">Schedule</option>
@@ -1595,33 +1599,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <?php include viewPath('accounting/add_new_term');?>
 <?php include viewPath('includes/footer_accounting');?>
-<script>
-    // document.getElementById('contact_mobile').addEventListener('input', function (e) {
-    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    // });
-    // document.getElementById('contact_phone').addEventListener('input', function (e) {
-    //     var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-    //     e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    // });
 
-    // function validatecard() {
-    //     var inputtxt = $('.card-number').val();
-
-    //     if (inputtxt == 4242424242424242) {
-    //         $('.require-validation').submit();
-    //     } else {
-    //         alert("Not a valid card number!");
-    //         return false;
-    //     }
-    // }
-
-    $(document).ready(function() {
-        $('#datepickerinv222').datepicker({
-            uiLibrary: 'bootstrap'
-        });
-    });
-</script>
 <script>
     function validatecard() {
         var inputtxt = $('.card-number').val();
@@ -1651,71 +1629,71 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <script>
 
-$(document).ready(function(){
+// $(document).ready(function(){
  
-    $('#sel-customer').change(function(){
-    var id  = $(this).val();
-    // alert(id);
+//     $('#sel-customer').change(function(){
+//     var id  = $(this).val();
+//     // alert(id);
 
-        $.ajax({
-            type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/addLocationajax",
-            data: {id : id },
-            dataType: 'json',
-            success: function(response){
-                // alert('success');
-                // console.log(response['customer']);
-            // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+//         $.ajax({
+//             type: 'POST',
+//             url:"<?php echo base_url(); ?>accounting/addLocationajax",
+//             data: {id : id },
+//             dataType: 'json',
+//             success: function(response){
+//                 // alert('success');
+//                 // console.log(response['customer']);
+//             // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
 
-            // var phone = response['customer'].phone_h;
-            // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
-            var phone = response['customer'].phone_h;
-                // phone = normalize(phone);
+//             // var phone = response['customer'].phone_h;
+//             // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
+//             var phone = response['customer'].phone_h;
+//                 // phone = normalize(phone);
             
-            var mobile = response['customer'].phone_m;
-                // mobile = normalize(mobile);
+//             var mobile = response['customer'].phone_m;
+//                 // mobile = normalize(mobile);
 
-            var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-            var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+//             var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+//             var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
             
-            $("#job_location").val(response['customer'].mail_add);
-            $("#email").val(response['customer'].email);
-            $("#date_of_birth").val(response['customer'].date_of_birth);
-            $("#phone_no").val(test_p);
-            $("#mobile_no").val(test_m);
-            $("#city").val(response['customer'].city);
-            $("#state").val(response['customer'].state);
-            $("#zip").val(response['customer'].zip_code);
-            $("#cross_street").val(response['customer'].cross_street);
-            $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+//             $("#job_location").val(response['customer'].mail_add);
+//             $("#email").val(response['customer'].email);
+//             $("#date_of_birth").val(response['customer'].date_of_birth);
+//             $("#phone_no").val(test_p);
+//             $("#mobile_no").val(test_m);
+//             $("#city").val(response['customer'].city);
+//             $("#state").val(response['customer'].state);
+//             $("#zip").val(response['customer'].zip_code);
+//             $("#cross_street").val(response['customer'].cross_street);
+//             $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
 
-            $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+//             $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
 
-            $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+//             $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
         
-            },
-                error: function(response){
-                alert('Error'+response);
+//             },
+//                 error: function(response){
+//                 alert('Error'+response);
        
-                }
-        });
+//                 }
+//         });
 
-        function normalize(phone) {
-            //normalize string and remove all unnecessary characters
-            phone = phone.replace(/[^\d]/g, "");
+//         function normalize(phone) {
+//             //normalize string and remove all unnecessary characters
+//             phone = phone.replace(/[^\d]/g, "");
 
-            //check if number length equals to 10
-            if (phone.length == 10) {
-                //reformat and return phone number
-                return phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-            }
+//             //check if number length equals to 10
+//             if (phone.length == 10) {
+//                 //reformat and return phone number
+//                 return phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+//             }
 
-            return null;
-        }
+//             return null;
+//         }
 
-    });
+//     });
 
-});
+// });
 
 </script>
 <!-- <script type="text/javascript"
@@ -2157,4 +2135,85 @@ $(document).ready(function()
         // });
     });
 });
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#sel-customer').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+
+            // var phone = response['customer'].phone_h;
+            // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
+            var phone = response['customer'].phone_h;
+                // phone = normalize(phone);
+            
+            var mobile = response['customer'].phone_m;
+                // mobile = normalize(mobile);
+
+            var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            
+            $("#job_location").val(response['customer'].mail_add);
+            $("#email").val(response['customer'].email);
+            $("#date_of_birth").val(response['customer'].date_of_birth);
+            $("#phone_no").val(test_p);
+            $("#mobile_no").val(test_m);
+            $("#city").val(response['customer'].city);
+            $("#state").val(response['customer'].state);
+            $("#zip").val(response['customer'].zip_code);
+            $("#cross_street").val(response['customer'].cross_street);
+            $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+
+            $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+
+            $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+
+        function normalize(phone) {
+            //normalize string and remove all unnecessary characters
+            phone = phone.replace(/[^\d]/g, "");
+
+            //check if number length equals to 10
+            if (phone.length == 10) {
+                //reformat and return phone number
+                return phone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+            }
+
+            return null;
+        }
+
+    });
+
+
+    $(document).on('click','.setmarkup',function(){
+       // alert('yeah');
+        var markup_amount = $('#markup_input').val();
+
+        $("#markup_input_form").val(markup_amount);
+        $("#span_markup_input_form").text(markup_amount);
+        $("#span_markup").text(markup_amount);
+
+        $('#modalSetMarkup').modal('toggle');
+    });
+});
+
 </script>

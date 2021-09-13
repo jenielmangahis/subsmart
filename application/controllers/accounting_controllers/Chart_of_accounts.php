@@ -143,7 +143,7 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($accounts as $account)
         {
-            $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id);
+            $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $status);
 
             if($search !== "") {
                 if(stripos($account->name, $search) !== false) {
@@ -173,18 +173,43 @@ class Chart_of_accounts extends MY_Controller {
 
             if(end($data)['id'] == $account->id && !empty($childAccounts)) {
                 foreach($childAccounts as $subAcc) {
-                    $data[] = [
-                        'id' => $subAcc->id,
-                        'name' => $subAcc->name,
-                        'type' => $this->account_model->getName($subAcc->account_id),
-                        'detail_type' => $this->account_detail_model->getName($subAcc->acc_detail_id),
-                        'nsmartrac_balance' => $subAcc->balance,
-                        'bank_balance' => '',
-                        'status' => $subAcc->active,
-                        'is_sub_acc' => true
-                    ];
+                    if($search !== "") {
+                        if(stripos($subAcc->name, $search) !== false) {
+                            $data[] = [
+                                'id' => $subAcc->id,
+                                'name' => $subAcc->name,
+                                'type' => $this->account_model->getName($subAcc->account_id),
+                                'detail_type' => $this->account_detail_model->getName($subAcc->acc_detail_id),
+                                'nsmartrac_balance' => $subAcc->balance,
+                                'bank_balance' => '',
+                                'status' => $subAcc->active,
+                                'is_sub_acc' => true
+                            ];
+                        }
+                    } else {
+                        $data[] = [
+                            'id' => $subAcc->id,
+                            'name' => $subAcc->name,
+                            'type' => $this->account_model->getName($subAcc->account_id),
+                            'detail_type' => $this->account_detail_model->getName($subAcc->acc_detail_id),
+                            'nsmartrac_balance' => $subAcc->balance,
+                            'bank_balance' => '',
+                            'status' => $subAcc->active,
+                            'is_sub_acc' => true
+                        ];
+                    }
                 }
             }
+        }
+
+        if($columnName === 'nsmartrac_balance') {
+            usort($data, function($a, $b) use ($order) {
+                if($order === 'asc') {
+                    return floatval($a['nsmartrac_balance']) > floatval($b['nsmartrac_balance']);
+                } else {
+                    return floatval($a['nsmartrac_balance']) < floatval($b['nsmartrac_balance']);
+                }
+            });
         }
 
         $result = [
@@ -365,5 +390,98 @@ class Chart_of_accounts extends MY_Controller {
     public function get_all_account_types()
     {
         echo json_encode($this->account_model->getAccounts());
+    }
+
+    public function print_table()
+    {
+        $post = $this->input->post();
+        $search = $post['search'];
+
+        $status = [
+            1
+        ];
+
+        if($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status);
+
+        if($search !== "") {
+            $accounts = array_filter($accounts, function($account, $key) use ($search) {
+                return stripos($account->name, $search) !== false;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        $tableHtml = "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Name</th>";
+        $tableHtml .= $post['type'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>" : "";
+        $tableHtml .= $post['detail_type'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Detail Type</th>" : "";
+        $tableHtml .= $post['nsmart_balance'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Balance</th>" : "";
+        $tableHtml .= $post['balance'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Bank Balance</th>" : "";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+
+        foreach($accounts as $account) {
+            $type = $this->account_model->getName($account->account_id);
+            $detailType = $this->account_detail_model->getName($account->acc_detail_id);
+            $balance = number_format(floatval($account->balance), 2, '.', ',');
+
+            if ($account->active === "0") {
+                $name = "$account->name (deleted)";
+            } else {
+                $name = $account->name;
+            }
+
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$name</td>";
+            $tableHtml .= $post['type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$type</td>" : "";
+            $tableHtml .= $post['detail_type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$detailType</td>" : "";
+            $tableHtml .= $post['nsmart_balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5; text-align: right;'>$balance</td>" : "";
+            $tableHtml .= $post['balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5; text-align: right;'></td>" : "";
+            $tableHtml .= "</tr>";
+
+            $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $status);
+
+            foreach($childAccounts as $subAcc) {
+                $subAccType = $this->account_model->getName($subAcc->account_id);
+                $subAccDetailType = $this->account_detail_model->getName($subAcc->acc_detail_id);
+                $subAccBalance = number_format(floatval($subAcc->balance), 2, '.', ',');
+
+                if ($subAcc->active === "0") {
+                    $subAccName = "$subAcc->name (deleted)";
+                } else {
+                    $subAccName = $subAcc->name;
+                }
+
+                if($search !== "") {
+                    if(stripos($subAcc->name, $search) !== false) {
+                        $tableHtml .= "<tr>";
+                        $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$subAccName</td>";
+                        $tableHtml .= $post['type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$subAccType</td>" : "";
+                        $tableHtml .= $post['detail_type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$subAccDetailType</td>" : "";
+                        $tableHtml .= $post['nsmart_balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5; text-align: right;'>$subAccBalance</td>" : "";
+                        $tableHtml .= $post['balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5; text-align: right;'></td>" : "";
+                        $tableHtml .= "</tr>";
+                    }
+                } else {
+                    $tableHtml .= "<tr>";
+                    $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$subAccName</td>";
+                    $tableHtml .= $post['type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$subAccType</td>" : "";
+                    $tableHtml .= $post['detail_type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$subAccDetailType</td>" : "";
+                    $tableHtml .= $post['nsmart_balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5; text-align: right;'>$subAccBalance</td>" : "";
+                    $tableHtml .= $post['balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5; text-align: right;'></td>" : "";
+                    $tableHtml .= "</tr>";
+                }
+            }
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
     }
 }

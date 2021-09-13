@@ -64,18 +64,18 @@ function col_nbalance()
         $('.nbalance').css('display','');
     }
 }
-function col_balance()
+function col_bank_balance()
 {
-    if($('#chk_balance').attr('checked'))
+    if($('#chk_bank_balance').attr('checked'))
     {
-        $('#chk_balance').removeAttr('checked');
-        $('.balance').css('display','none');
+        $('#chk_bank_balance').removeAttr('checked');
+        $('.bank_balance').css('display','none');
 
     }
     else
     {
-        $('#chk_balance').attr('checked',"checked");
-        $('.balance').css('display','');
+        $('#chk_bank_balance').attr('checked',"checked");
+        $('.bank_balance').css('display','');
     }
 }
 
@@ -216,7 +216,7 @@ $(document).ready(function () {
                 data: 'bank_balance',
                 name: 'bank_balance',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).addClass('balance');
+                    $(td).addClass('bank_balance');
                 }
             },
             {
@@ -362,4 +362,34 @@ $('#time_date, #edit_time_date').on('change', function() {
             $('#edit_balance').parent().removeClass('hide');
         }
     }
+});
+
+$('#print-accounts').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+	data.set('inactive', $('#inc_inactive').prop('checked') ? 1 : 0);
+    data.set('type', $('#chk_type').prop('checked') ? 1 : 0);
+    data.set('detail_type', $('#chk_detail_type').prop('checked') ? 1 : 0);
+    data.set('nsmart_balance', $('#chk_nsmart_balance').prop('checked') ? 1 : 0);
+    data.set('balance', $('#chk_bank_balance').prop('checked') ? 1 : 0);
+	data.set('search', $('#search').val());
+
+    $.ajax({
+		url: '/accounting/chart-of-accounts/print-table',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+			let pdfWindow = window.open("");
+			pdfWindow.document.write(`<h3>Chart of Accounts</h3>`);
+			pdfWindow.document.write(result);
+			$(pdfWindow.document).find('body').css('padding', '0');
+			$(pdfWindow.document).find('body').css('margin', '0');
+			$(pdfWindow.document).find('iframe').css('border', '0');
+			pdfWindow.print();
+		}
+	});
 });

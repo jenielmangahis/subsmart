@@ -191,6 +191,22 @@ class Invoice_model extends MY_Model
         return $query2->result();
     }
 
+    public function getPaidInv($company_id)
+    {
+        $where = array(
+            'invoices.company_id'    => $company_id,
+            'invoices.status'        => 'Paid',
+          );
+
+        // $this->db->select('*');
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
+        $this->db->from('invoices');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function getPayments($inv)
     {
         $where = array(
