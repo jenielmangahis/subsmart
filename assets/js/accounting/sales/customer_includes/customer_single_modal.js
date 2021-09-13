@@ -251,6 +251,7 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
 
 function single_customer_get_transaction_lists(customer_id) {
     var filter_type = $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'><center><img src='" + baseURL + "assets/img/accounting/customers/loader.gif' style='width:50px;' /></center></td></tr>");
     $.ajax({
         url: baseURL + "/accounting/single_customer_get_transaction_lists",
         type: "POST",
@@ -296,6 +297,22 @@ function table_viewing_affected(filter_type) {
     $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-expiration-date']").parent().parent().hide();
     $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-expiration-date']").prop("checked", true);
     $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-expiration-date']").trigger("click");
+
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-txn-type']").parent().parent().hide();
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-txn-type']").prop("checked", true);
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-txn-type']").trigger("click");
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-interval']").parent().parent().hide();
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-interval']").prop("checked", true);
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-interval']").trigger("click");
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-prev-date']").parent().parent().hide();
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-prev-date']").prop("checked", true);
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-prev-date']").trigger("click");
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-next-date']").parent().parent().hide();
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-next-date']").prop("checked", true);
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-next-date']").trigger("click");
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-amount']").parent().parent().hide();
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-amount']").prop("checked", true);
+    $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-amount']").trigger("click");
 
     $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-no']").parent().parent().show();
     $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-type']").parent().parent().show();
@@ -343,6 +360,8 @@ function table_viewing_affected(filter_type) {
     $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-sales-rep']").trigger("click");
     $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='total']").show();
     $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='total']").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='date']").show();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='date']").show();
 
     if (filter_type == "Statements") {
         //customer_id,  P.O number, Sales Rep, No., Start Date, End date, Stement type, Action
@@ -606,6 +625,68 @@ function table_viewing_affected(filter_type) {
         $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-email']").prop("checked", true);
         $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-email']").trigger("click");
         $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-attachment']").prop("checked", false); //
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-attachment']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-status']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-status']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-ponumber']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-ponumber']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-sales-rep']").prop("checked", false); //
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-sales-rep']").trigger("click");
+    } else if (filter_type == "Recurring templates") {
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='date']").hide();
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='date']").hide();
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th[data-column='total']").hide();
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td[data-column='total']").hide();
+
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-txn-type']").parent().parent().show();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-txn-type']").prop("checked", false);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-txn-type']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-interval']").parent().parent().show();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-interval']").prop("checked", false);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-interval']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-prev-date']").parent().parent().show();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-prev-date']").prop("checked", false);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-prev-date']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-next-date']").parent().parent().show();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-next-date']").prop("checked", false);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-next-date']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-amount']").parent().parent().show();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-amount']").prop("checked", false);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-amount']").trigger("click");
+
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-no']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-method']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-source']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-duedate']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-aging']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-balance']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-last-delivered']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-memo']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-email']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-attachment']").parent().parent().hide();
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-status']").parent().parent().hide();
+
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-type']").prop("checked", false);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-type']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-no']").prop("checked", true); //
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-no']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-method']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-method']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-source']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-source']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-memo']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-memo']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-duedate']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-duedate']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-aging']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-aging']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-balance']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-balance']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-last-delivered']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-last-delivered']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-email']").prop("checked", true);
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-email']").trigger("click");
+        $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-attachment']").prop("checked", true);
         $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-attachment']").trigger("click");
         $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-status']").prop("checked", true);
         $("#customer-single-modal .setting-btn-section .settings-options input[name='tbl-colum-status']").trigger("click");

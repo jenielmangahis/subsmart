@@ -3,18 +3,18 @@
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
                 <input type="checkbox" name="single_customer_transaction_check_box[]"
-                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_"
+                    id="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
                     class="customer_checkbox"
                     data-row-type="<?=$type?>"
                     data-invoice-id="<?=$invoice_id?>"
                     data-row-status="<?=$status?>"
                     data-invoice-number="<?=$no?>">
                 <label
-                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_"><span></span></label>
+                    for="transaction_<?=$customer_id?>_<?=$invoice_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
             </div>
         </div>
     </td>
-    <td>
+    <td data-column="date">
         <?=date("m/d/Y", strtotime($date))?>
     </td>
     <td data-column="type">
@@ -96,6 +96,39 @@
     <td data-column="ponumber">
         <?=$ponumber?>
     </td>
+    <?php
+    if ($filtered_type == "Recurring templates") {
+        ?>
+    <td data-column="txn-type">
+        <?=$txn_type?>
+    </td>
+    <td data-column="interval">
+        <?=$interval?>
+    </td>
+    <td data-column="prev-date">
+    <?php
+        if ($prev_date!="") {
+            echo date("m/d/Y", strtotime($prev_date));
+        }
+    ?>
+    </td>
+    <td data-column="next-date">
+        <?php
+        if($next_date!=""){
+            echo date("m/d/Y", strtotime($next_date));
+        }
+        ?>
+    </td>
+    <td data-column="amount">
+        <?php 
+        if ($amount!="") {
+            echo "$ ".number_format(($amount), 2);
+        }
+        ?>
+    </td>
+    <?php
+    }
+    ?>
     <td data-column="sales-rep">
         <?=$sales_rep?>
     </td>

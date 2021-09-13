@@ -326,9 +326,12 @@ class Accounting extends MY_Controller
     }
     public function deposits()
     {
+        $company_id     = getLoggedCompanyID();
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Deposits";
-        $this->page_data['invoices'] = $this->accounting_invoices_model->getDataInvoices();
+        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
+        $this->page_data['invoices'] = $this->invoice_model->getPaidInv($company_id);
         $this->load->view('accounting/deposits', $this->page_data);
     }
 
@@ -2385,7 +2388,7 @@ class Accounting extends MY_Controller
             'job_name'                          => $this->input->post('job_name'),//
 
             'tags'                              => $this->input->post('tags'),//
-            'invoice_type'                      => $this->input->post('invoice_type'),//
+            // 'invoice_type'                      => $this->input->post('invoice_type'),//
             'work_order_number'                 => $this->input->post('work_order_number'),//
             'purchase_order'                    => $this->input->post('purchase_order'),//
             'invoice_number'                    => $this->input->post('invoice_number'),//
@@ -3977,6 +3980,8 @@ class Accounting extends MY_Controller
                     'template_name' => $this->input->post("recurring-template-name"),
                     'recurring_type' => $this->input->post("recurring-type"),
                     'days_in_advance' => $days_in_advance,
+                    'txn_type' => $days_in_advance,
+                    'txn_id' => $days_in_advance,
                     'recurring_interval' => $this->input->post("recurring-interval"),
                     'recurring_month' => $recurring_month,
                     'recurring_week' => $recurring_week,
@@ -4031,7 +4036,12 @@ class Accounting extends MY_Controller
             );
 
             $addQuery = $this->accounting_sales_receipt_model->createSalesReceipts($new_data);
-
+            $new_recurring_data=array(
+                'txn_type'=>"Sales Receipt",
+                'txn_id'=>$addQuery,
+                'customer_id'=>$customer_id
+            );
+            $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurringId, $new_recurring_data);
             if ($this->input->post('payment_method') == 'Cash') {
                 $payment_data = array(
             
@@ -4319,9 +4329,11 @@ class Accounting extends MY_Controller
                 'max_occurences' => $this->input->post("after-occurrences"),
                 'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
                 'status' => 1,
-                'updated_at' => date('Y-m-d h:i:s')
+                'updated_at' => date('Y-m-d h:i:s'),
+                'txn_type'=>"Sales Receipt",
+                'txn_id'=>$sales_receipt_id,
+                'customer_id' => $this->input->post('customer_id')
             );
-            
             if ($recurring_already->recurring_id != null) {
                 $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurring_already->recurring_id, $recurring_data);
             } else {
@@ -4935,7 +4947,13 @@ class Accounting extends MY_Controller
             );
 
             $delayed_charge_id = $this->accounting_delayed_charge_model->createDelayedCharge($new_data);
-
+            $new_recurring_data=array(
+                'txn_type'=>"Delayed Charge",
+                'txn_id'=>$delayed_charge_id,
+                'customer_id' => $customer_id,
+            );
+            $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurringId, $new_recurring_data);
+           
             // if($addQuery > 0){
             //     redirect('accounting/banking');
             //     // echo json_encode($addQuery);
@@ -5023,7 +5041,10 @@ class Accounting extends MY_Controller
                     'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
                     'max_occurences' => $this->input->post("after-occurrences"),
                     'status' => 1,
-                    'updated_at'=>date("Y-m-d H:i:s")
+                    'updated_at'=>date("Y-m-d H:i:s"),
+                    'txn_type' => "Delayed Charge",
+                    'txn_id' =>$delayed_charge_id,
+                    'customer_id' =>$customer_id
                 );
             if ($dayed_charge_info->recurring_id != null) {
                 $this->accounting_recurring_transactions_model->updateRecurringTransaction(
@@ -7195,20 +7216,24 @@ class Accounting extends MY_Controller
     public function get_customer_info_for_receive_payment()
     {
         $customer_id = $this->input->post("customer_id");
+        if ($customer_id=="") {
+            $customer_id=0;
+        }
         $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
         $receivable_payment = 0;
         $html='';
         $counter =0;
-        foreach ($invoices as $inv) {
-            $customer_id = $inv->customer_id;
-            $total_amount_received =0;
+        if ($invoices != null) {
+            foreach ($invoices as $inv) {
+                $customer_id = $inv->customer_id;
+                $total_amount_received =0;
 
-            $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
-            foreach ($payment_received as $received) {
-                $total_amount_received+=$received->payment_amount;
-            }
-            if (($inv->grand_total-$total_amount_received) > 0) {
-                $html.='<tr>
+                $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                foreach ($payment_received as $received) {
+                    $total_amount_received+=$received->payment_amount;
+                }
+                if (($inv->grand_total-$total_amount_received) > 0) {
+                    $html.='<tr>
                     <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
                     </td>
                     <td>
@@ -7228,8 +7253,9 @@ class Accounting extends MY_Controller
                         </div>
                     </td>
                 </tr>';
-                $counter++;
-                $receivable_payment +=$inv->grand_total-$total_amount_received;
+                    $counter++;
+                    $receivable_payment +=$inv->grand_total-$total_amount_received;
+                }
             }
         }
         $data = new stdClass();
@@ -9151,11 +9177,78 @@ class Accounting extends MY_Controller
                     $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
+        } elseif ($filter_type == "Recurring templates") {
+            // $all_statements = $this->accounting_customers_model->get_customer_statement($customer_id);
+            $all_recurring_templates = $this->accounting_recurring_transactions_model->getAllByCompany_id($customer_id);
+            foreach ($all_recurring_templates as $recurring_template) {
+                $this->page_data['date']="";
+                $this->page_data['filtered_type']="Recurring templates";
+                $this->page_data['type']=$recurring_template->recurring_type;
+                $this->page_data['no']="";
+                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+                $this->page_data['method']="";
+                $this->page_data['source']="";
+                $this->page_data['memo']="";
+                $this->page_data['duedate']="";
+                $this->page_data['aging']="";
+                $this->page_data['balance']="";
+                $this->page_data['total']="";
+                $this->page_data['last_delivered']="";
+                $this->page_data['email']="";
+                $this->page_data['attatchement']="";
+                $this->page_data['status']="";
+                $this->page_data['ponumber']="";
+                $this->page_data['sales_rep']="";
+                $this->page_data['start_date']="";
+                $this->page_data['end_date']="";
+                $this->page_data['customer_id']="";
+                $this->page_data['invoice_payment_id']="";
+                $this->page_data['invoice_id']="";
+                $this->page_data['sales_receipt_id']="";
+                $this->page_data['deposit_id']="";
+                $this->page_data['estimate_id']="";
+                $this->page_data['credit_memo_id']="";
+                $this->page_data['statement_id']="";
+                $this->page_data['recurring_id']=$recurring_template->id;
+                $this->page_data['txn_type']=$recurring_template->txn_type;
+                $this->page_data['interval']=$recurring_template->recurring_interval;
+                $recurring_id=$recurring_template->id;
+                if ($recurring_template->txn_type == "Sales Receipt") {
+                    $sales_receipts = $this->accounting_sales_receipt_model->get_recuring_sales_receipt($recurring_id);
+                    foreach($sales_receipts as $s_receipt){
+                        $this->page_data['amount']=$s_receipt->grand_total;
+                            $this->page_data['prev_date']=$s_receipt->sales_receipt_date;
+                            if($recurring_template->recurring_interval == "Daily"){
+                                $this->page_data['next_date']= date('Y-m-d', strtotime($s_receipt->sales_receipt_date. ' + '.$recurring_template->recurr_every.' days'));
+                            }elseif($recurring_template->recurring_interval == "Weekly"){
+                                $next_week= date('Y-m-d',strtotime($s_receipt->sales_receipt_date." + ".$recurring_template->recurr_every." weeks"));
+                                $next_date = date('Y-m-d',strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
+                                $this->page_data['next_date']=$next_date;
+                            }elseif($recurring_template->recurring_interval == "Monthly"){}
+                            else{
+                                $this->page_data['next_date']= "";
+                            }
+                            
+                    }
+                }
+
+                if ($this->filter_date_qualified($filter_date, $this->page_data['date'])) {
+                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                }
+            }
         }
 
         $data = new stdClass();
         $data->tbody_html = $tbody_html;
         echo json_encode($data);
+    }
+    public function tester()
+    {
+        echo strtolower("SASDFDF")  ;
+        $d="2021-9-11";
+       $in2w= date('Y-m-d',strtotime($d." + 2 weeks"));
+       $monday=  date('Y-m-d',strtotime('monday this week', strtotime($in2w)));
+       echo $monday;
     }
     public function update_customer_notes()
     {

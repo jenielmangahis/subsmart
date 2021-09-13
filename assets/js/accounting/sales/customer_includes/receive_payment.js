@@ -194,6 +194,7 @@ function get_customer_info_for_receive_payment_modal(customer_id) {
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content input[name='ref_no']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='deposite_to']").val("");
             $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").hide();
+
             $("#loader-modal").hide();
         },
     });

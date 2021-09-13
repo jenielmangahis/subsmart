@@ -520,6 +520,46 @@
                                                                         Number</span></label>
                                                             </div>
                                                         </div>
+
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-txn-type"
+                                                                    id="tbl-colum-txn-type" data-column="txn-type">
+                                                                <label for="tbl-colum-txn-type"><span>Txn Type</span></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-interval"
+                                                                    id="tbl-colum-interval" data-column="interval">
+                                                                <label for="tbl-colum-interval"><span>Interval</span></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-prev-date"
+                                                                    id="tbl-colum-prev-date" data-column="prev-date">
+                                                                <label for="tbl-colum-prev-date"><span>Previous Date</span></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-next-date"
+                                                                    id="tbl-colum-next-date" data-column="next-date">
+                                                                <label for="tbl-colum-next-date"><span>Next date</span></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="tbl-colum-amount"
+                                                                    id="tbl-colum-amount" data-column="amount">
+                                                                <label for="tbl-colum-amount"><span>Amount</span></label>
+                                                            </div>
+                                                        </div>
+
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="tbl-colum-sales-rep"
@@ -553,7 +593,7 @@
                                                     </div>
                                                 </div>
                                             </th>
-                                            <th>Date</th>
+                                            <th data-column="date">Date</th>
                                             <th data-column="type">Type</th>
                                             <th data-column="no">No.</th>
                                             <th data-column="customer">Customer</th>
@@ -578,6 +618,11 @@
                                             </th>
                                             <th data-column="status">Status</th>
                                             <th data-column="ponumber">P.O. Number</th>
+                                            <th data-column="txn-type">Txn Type</th>
+                                            <th data-column="interval">Interval</th>
+                                            <th data-column="prev-date">Previous Date</th>
+                                            <th data-column="next-date">Next date</th>
+                                            <th data-column="amount">Amount</th>
                                             <th data-column="sales-rep">SALES REP</th>
                                             <th data-column="action">ACTION</th>
                                         </tr>

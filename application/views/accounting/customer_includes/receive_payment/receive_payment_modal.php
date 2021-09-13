@@ -651,7 +651,7 @@
         </form>
     </div>
 </div>
-<div id="loader-modal" class="d-none">
+<div id="loader-modal" style="display: none;">
     <div class="loader-modal-content">
         <img src="<?=base_url("assets/img/accounting/customers/loader.gif")?>"
             alt="">

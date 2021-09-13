@@ -48,55 +48,72 @@
 <nav id="sidebar" class="navbar-side d-none d-md-block">
     <ul class="nav sidebar-accounting">
         <span class="nav-close">
-            <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%">
+            <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg"
+                transform="scale(1, -1)" width="20px" height="100%">
                 <path
-                        d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z">
+                    d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z">
                 </path>
             </svg>
         </span>
-        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;"><img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo" /></li>
+        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;"><img
+                src="<?= getCompanyBusinessProfileImage(); ?>"
+                class="company-logo" /></li>
         <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">ACCOUNTING</li>
 
         <li class="" style="margin-top:20px;margin-bottom: 20px;">
-            <button class="btn btn-tranparent acct-btn-add mx-auto" type="button" data-toggle="modal" data-target="#new-popup"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
+            <button class="btn btn-tranparent acct-btn-add mx-auto" type="button" data-toggle="modal"
+                data-target="#new-popup"><i class="fa fa-plus" style="margin-right: 20px;"></i>New</button>
         </li>
 
 
-        <li class="submenus <?= $this->uri->segment(2) == 'banking' ? "active" : "";  ?>">
-            <a href="<?= base_url('accounting/banking') ?>"><span class="fa fa-tachometer"></span>Dashboard</a>
+        <li
+            class="submenus <?= $this->uri->segment(2) == 'banking' ? "active" : "";  ?>">
+            <a
+                href="<?= base_url('accounting/banking') ?>"><span
+                    class="fa fa-tachometer"></span>Dashboard</a>
         </li>
-        <li class="submenus dropright <?= $this->uri->segment(2) == 'link_bank' ? "active" : "";  ?>">
-            <a href="#menu11111" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i class="fa fa-university pr-3"></i>Banking</a>
+        <li
+            class="submenus dropright <?= $this->uri->segment(2) == 'link_bank' ? "active" : "";  ?>">
+            <a href="#menu11111" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i
+                    class="fa fa-university pr-3"></i>Banking</a>
             <ul class="collapse list-unstyled" id="menu11111">
-                <li> <a href="<?= base_url('accounting/link_bank') ?>">Link Bank</a></li>
-                <li> <a href="<?= base_url('accounting/rules') ?>">Rules</a></li>
-                <li> <a href="<?= base_url('accounting/receipts') ?>">Receipts</a></li>
-                <li> <a href="<?= base_url('accounting/rules') ?>">Tags</a></li>
+                <li> <a
+                        href="<?= base_url('accounting/link_bank') ?>">Link
+                        Bank</a></li>
+                <li> <a
+                        href="<?= base_url('accounting/rules') ?>">Rules</a>
+                </li>
+                <li> <a
+                        href="<?= base_url('accounting/receipts') ?>">Receipts</a>
+                </li>
+                <li> <a
+                        href="<?= base_url('accounting/rules') ?>">Tags</a>
+                </li>
             </ul>
         </li>
 
         <?php  for ($x=0;$x<count($menu_name);$x++) { ?>
-            <?php  if (count($menu_name[$x][1]) > 0) { ?>
-                <li class="submenus dropright">
-                    <a href="#menu<?php echo $x; ?>"
-                       onclick="dropdownAccounting(this)" class="dropdown-toggle"><i
-                                class="fa <?php echo $menu_icon[$x]; ?> pr-3"></i><?php echo $menu_name[$x][0]; ?></a>
-                    <ul class="collapse list-unstyled"
-                        id="menu<?php echo $x; ?>">
-                        <?php  for ($y=0;$y<count($menu_name[$x][1]);$y++) { ?>
-                            <li>
-                                <a
-                                        href="<?php echo url($menu_link[$x][1][$y]); ?>"><?php echo $menu_name[$x][1][$y]; ?></a>
-                            </li>
-                        <?php  } ?>
-                    </ul>
+        <?php  if (count($menu_name[$x][1]) > 0) { ?>
+        <li class="submenus dropright">
+            <a href="#menu<?php echo $x; ?>"
+                onclick="dropdownAccounting(this)" class="dropdown-toggle"><i
+                    class="fa <?php echo $menu_icon[$x]; ?> pr-3"></i><?php echo $menu_name[$x][0]; ?></a>
+            <ul class="collapse list-unstyled"
+                id="menu<?php echo $x; ?>">
+                <?php  for ($y=0;$y<count($menu_name[$x][1]);$y++) { ?>
+                <li>
+                    <a
+                        href="<?php echo url($menu_link[$x][1][$y]); ?>"><?php echo $menu_name[$x][1][$y]; ?></a>
                 </li>
-            <?php  } else { ?>
-                <li class="submenus">
-                    <a href="<?php echo url($menu_link[$x][0]); ?>"><i
-                                class="fa <?php echo $menu_icon[$x]; ?> pr-3"></i><?php echo $menu_name[$x][0]; ?></a>
-                </li>
-            <?php  } ?>
+                <?php  } ?>
+            </ul>
+        </li>
+        <?php  } else { ?>
+        <li class="submenus">
+            <a href="<?php echo url($menu_link[$x][0]); ?>"><i
+                    class="fa <?php echo $menu_icon[$x]; ?> pr-3"></i><?php echo $menu_name[$x][0]; ?></a>
+        </li>
+        <?php  } ?>
         <?php  } ?>
     </ul>
 </nav>
@@ -113,10 +130,10 @@
                         <ul>
                             <!-- <li><a href="#" class="ajax-modal_invoice" data-toggle="modal" data-target="#addinvoiceModal">Invoice</a></li> -->
                             <li><a
-                                        href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
+                                    href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
                             </li>
                             <li><a href="#" class="customer_receive_payment_btn" data-toggle="modal"
-                                   data-target="">Receive payment</a></li>
+                                    data-target="">Receive payment</a></li>
                             <!-- <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li> -->
                             <li><a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">Estimate</a>
                             </li>
@@ -125,9 +142,9 @@
                             <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addsalesreceiptModal">Sales
                                     receipt</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal"
-                                   data-target="#addrefundreceiptModal">Refund receipt</a></li>
+                                    data-target="#addrefundreceiptModal">Refund receipt</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal"
-                                   data-target="#adddelayedcreditModal">Delayed credit</a></li>
+                                    data-target="#adddelayedcreditModal">Delayed credit</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal" data-target="#create_charge_modal">Delayed
                                     charge</a></li>
                         </ul>
@@ -139,21 +156,21 @@
 
                         <ul id="accounting_vendors">
                             <li><a href="#" class="ajax-expense_modal" data-view="expense_modal" data-toggle="modal"
-                                   data-target="#expenseModal">Expense</a></li>
+                                    data-target="#expenseModal">Expense</a></li>
                             <li><a href="#" class="ajax-check_modal" data-view="check_modal" data-toggle="modal"
-                                   data-target="#checkModal">Check</a></li>
+                                    data-target="#checkModal">Check</a></li>
                             <li><a href="#" class="ajax-bill_modal" data-view="bill_modal" data-toggle="modal"
-                                   data-target="#billModal">Bill</a></li>
+                                    data-target="#billModal">Bill</a></li>
                             <li><a href="#" class="ajax-pay_bills_modal" data-view="pay_bills_modal" data-toggle="modal"
-                                   data-target="#payBillsModal">Pay bills</a></li>
+                                    data-target="#payBillsModal">Pay bills</a></li>
                             <li><a href="#" class="ajax-purchase_order_modal" data-view="purchase_order_modal"
-                                   data-toggle="modal" data-target="#purchaseOrderModal">Purchase order</a></li>
+                                    data-toggle="modal" data-target="#purchaseOrderModal">Purchase order</a></li>
                             <li><a href="#" class="ajax-vendor_credit_modal" data-view="vendor_credit_modal"
-                                   data-toggle="modal" data-target="#vendorCreditModal">Vendor credit</a></li>
+                                    data-toggle="modal" data-target="#vendorCreditModal">Vendor credit</a></li>
                             <li><a href="#" class="ajax-credit_card_credit_modal" data-view="credit_card_credit_modal"
-                                   data-toggle="modal" data-target="#creditCardCreditModal">Credit card credit</a></li>
+                                    data-toggle="modal" data-target="#creditCardCreditModal">Credit card credit</a></li>
                             <li><a href="#" class="ajax-print_checks_modal" data-view="print_checks_modal"
-                                   data-toggle="modal" data-target="#printChecksModal">Print checks</a></li>
+                                    data-toggle="modal" data-target="#printChecksModal">Print checks</a></li>
                         </ul>
                     </div>
                 </div>
@@ -163,16 +180,16 @@
 
                         <ul id="accounting_employees">
                             <li><a href="#" class="ajax-payroll_modal" data-view="payroll_modal" data-toggle="modal"
-                                   data-target="#payrollModal">Payroll</a></li>
+                                    data-target="#payrollModal">Payroll</a></li>
                             <li><a href="#" class="ajax-single_time_activity_modal"
-                                   data-view="single_time_activity_modal" data-toggle="modal"
-                                   data-target="#singleTimeModal">Single time activity</a></li>
+                                    data-view="single_time_activity_modal" data-toggle="modal"
+                                    data-target="#singleTimeModal">Single time activity</a></li>
                             <!-- <li><a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal"
                                     data-target="#time_activity_modal">
                                     Single time activity
                                 </a></li> -->
                             <li><a href="#" class="ajax-weekly_timesheet_modal" data-view="weekly_timesheet_modal"
-                                   data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
+                                    data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
                         </ul>
                     </div>
                 </div>
@@ -182,20 +199,20 @@
 
                         <ul id="accounting_order">
                             <li><a href="#" class="ajax-bank_deposit_modal" data-view="bank_deposit_modal"
-                                   data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
+                                    data-toggle="modal" data-target="#depositModal">Bank deposit</a></li>
                             <li><a href="#" class="ajax-transfer_modal" data-view="transfer_modal" data-toggle="modal"
-                                   data-target="#transferModal">Transfer</a></li>
+                                    data-target="#transferModal">Transfer</a></li>
                             <li><a href="#" class="ajax-journal_entry_modal" data-view="journal_entry_modal"
-                                   data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
+                                    data-toggle="modal" data-target="#journalEntryModal">Journal entry</a></li>
                             <li><a href="#" class="ajax-statement_modal" data-view="statement_modal" data-toggle="modal"
-                                   data-target="#statementModal">Statement</a></li>
+                                    data-target="#statementModal">Statement</a></li>
                             <li><a href="#" class="ajax-inventory_qty_modal" data-view="inventory_qty_modal"
-                                   data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
+                                    data-toggle="modal" data-target="#inventoryModal">Inventory qty adjustment</a></li>
                             <li><a href="#" class="ajax-pay_down_credit_card_modal"
-                                   data-view="pay_down_credit_card_modal" data-toggle="modal"
-                                   data-target="#payDownCreditModal">Pay down credit card</a></li>
+                                    data-view="pay_down_credit_card_modal" data-toggle="modal"
+                                    data-target="#payDownCreditModal">Pay down credit card</a></li>
                             <li><a
-                                        href="<?php echo base_url('accounting/apply-for-capital') ?>">Apply
+                                    href="<?php echo base_url('accounting/apply-for-capital') ?>">Apply
                                     for Capital</a></li>
                         </ul>
                     </div>
@@ -211,7 +228,7 @@
 
 <?php include viewPath('accounting/estimate_one_modal'); ?>
 <?php include viewPath('accounting/customer_invoice_modal'); ?>
-<?php // include viewPath('accounting/customer_receive_payment_modal');?>
+<?php include viewPath('accounting/customer_receive_payment_modal');?>
 <?php include viewPath('accounting/customer_estimate_modal'); ?>
 <?php include viewPath('accounting/customer_credit_memo_modal');?>
 <?php include viewPath('accounting/customer_sales_receipt_modal'); ?>

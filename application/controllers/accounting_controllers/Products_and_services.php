@@ -709,7 +709,7 @@ class Products_and_services extends MY_Controller {
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                         'sku' => $input['sku'],
                         'income_account_id' => isset($input['selling']) ? $input['income_account'] : null,
-                        'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_category'] : 0,
+                        'tax_rate_id' => isset($input['selling']) ? $input['sales_tax_category'] : null,
                         'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
                         'expense_account_id' => isset($input['purchasing']) ? $input['item_expense_account'] : null,
                     ];
@@ -878,7 +878,7 @@ class Products_and_services extends MY_Controller {
             $expenseAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '';
             $inventoryAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '';
             $purchDesc = !is_null($accountingDetails) ? $accountingDetails->purchase_description : '';
-            $taxable = $accountingDetails->tax_rate_id ? "<i class='fa fa-check'></i>" : "";
+            $taxable = !is_null($accountingDetails) && $accountingDetails->tax_rate_id ? "<i class='fa fa-check'></i>" : "";
             $qtyOnPO = !is_null($accountingDetails) ? $accountingDetails->qty_po : '';
 
             if($search !== "") {
@@ -923,5 +923,135 @@ class Products_and_services extends MY_Controller {
         $tableHtml .= "</table>";
 
         echo $tableHtml;
+    }
+
+    public function export_table()
+    {
+        $post = $this->input->post();
+
+        $filters = [];
+        $search = $post['search'];
+
+        if(in_array('0', $post['category'])) {
+            array_unshift($post['category'], '');
+            array_unshift($post['category'], null);
+        }
+
+        $filters['category'] = $post['category'];
+
+        switch($post['status']) {
+            case 'active' :
+                $filters['status'] = [1];
+            break;
+            case 'inactive' :
+                $filters['status'] = [0];
+            break;
+            default :
+                $filters['status'] = [0, 1];
+            break;
+        }
+
+        switch($post['type']) {
+            case 'inventory' :
+                $filters['type'] = [
+                    'product',
+                    'Product',
+                    'inventory',
+                    'Inventory'
+                ];
+            break;
+            case 'non-inventory' :
+                $filters['type'] = [
+                    'material',
+                    'Material',
+                    'non-inventory',
+                    'Non-inventory'
+                ];
+            break;
+            case 'service' :
+                $filters['type'] = [
+                    'service',
+                    'Service'
+                ];
+            break;
+            case 'bundle' :
+                $filters['type'] = [
+                    'bundle',
+                    'Bundle'
+                ];
+            break;
+        }
+
+        $items = $this->items_model->getItemsWithFilter($filters);
+
+        if($search !== "") {
+            $items = array_filter($items, function($item, $key) use ($search) {
+                return stripos($item->title, $search) !== false;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        $this->load->helper('string');
+
+        $randString = random_string('numeric');
+        $filename = 'ProductsServicesList__'.$randString.'_'.date('m').'_'.date('d').'_'.date('Y').'.csv';
+        header("Content-Description: File Transfer"); 
+        header("Content-Disposition: attachment; filename=$filename"); 
+        header("Content-Type: application/csv;");
+
+        // file creation 
+        $file = fopen('php://output', 'w');
+        $header = [
+            "Product/Service Name",
+            "Sales Description",
+            "SKU",
+            "Type",
+            "Sales Price",
+            "Taxable",
+            "Income Account",
+            "Purchase Description",
+            "Purchase Cost",
+            "Expense Account",
+            "Quantity On Hand",
+            "Reorder Point",
+            "Inventory Asset Account",
+            "Quantity as-of Date"
+        ];
+        fputcsv($file, $header);
+
+        $qtyAsOfDate = date("m/d/Y");
+        foreach($items as $item) {
+            $qty = $this->items_model->countQty($item->id);
+            $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+            $taxable = "no";
+
+            if(!is_null($accountingDetails) && $accountingDetails->tax_rate_id !== "0" &&
+                !is_null($accountingDetails->tax_rate_id) && $accountingDetails->tax_rate_id !== ""
+            ) {
+                $taxable = "yes";
+            }
+
+            $data = [
+                $item->title,
+                $item->description,
+                !is_null($accountingDetails) ? $accountingDetails->sku : '',
+                ucfirst($item->type),
+                $item->price,
+                $taxable,
+                !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->income_account_id) : '',
+                !is_null($accountingDetails) ? $accountingDetails->purchase_description : '',
+                $item->cost,
+                !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '',
+                $qty,
+                $item->re_order_points,
+                !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '',
+                $qtyAsOfDate
+            ];
+
+            fputcsv($file, $data);
+        }
+
+        fclose($file); 
+        exit; 
     }
 }

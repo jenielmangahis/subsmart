@@ -137,4 +137,14 @@ class Accounting_sales_receipt_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_recuring_sales_receipt($recurring_id="0",$sales_receipt_id="0")
+    {
+        $this->db->select('*');
+        $this->db->from('accounting_sales_receipt');
+        $this->db->where('recurring_id', $recurring_id);
+        $this->db->order_by('sales_receipt_date', 'ASC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

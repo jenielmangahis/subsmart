@@ -229,11 +229,12 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    public function get_invoices_by_customer_id($customer_id)
+    public function get_invoices_by_customer_id($customer_id="")
     {
-        $query = $this->db->query("SELECT * FROM invoices where customer_id = ".$customer_id." AND view_flag != 1 AND voided != 1 AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid')");
-        
-        return $query->result();
+        if ($customer_id!="") {
+            $query = $this->db->query("SELECT * FROM invoices where customer_id = ".$customer_id." AND view_flag != 1 AND voided != 1 AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid')");
+            return $query->result();
+        }
     }
     public function get_payements_by_invoice($invoice_id)
     {

@@ -1,97 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<link href="<?php echo $url->assets ?>dashboard/css/accounting.css"
+        rel="stylesheet" type="text/css">
 <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css"> -->
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<style>
-.accordion {
-  max-width: 100%;
-  margin: 0 auto;
-}
-.accordion__title {
-  font-family: 'industry', sans-serif;
-  font-weight: 300;
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 1.125em;
-}
-.accordion__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.accordion__item {
-  /* border-bottom: 1px solid #000; */
-  visibility: hidden;
-}
-.accordion__item:last-child {
-  border-bottom: 0;
-}
-.accordion__item.is-active .accordion__itemTitleWrap::after {
-  -webkit-transform: translateX(-20%);
-          transform: translateX(-20%);
-}
-.accordion__item.is-active .accordion__itemIconWrap {
-  -webkit-transform: rotate(180deg);
-          transform: rotate(180deg);
-}
-.accordion__itemTitleWrap {
-  display: flex;
-  height: 6.6em;
-  align-items: center;
-  padding: 0 1em;
-  color: #fff;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.accordion__itemTitleWrap::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200%;
-  height: 100%;
-  background: white;
-  /* background: linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%); */
-  z-index: 1;
-  transition: -webkit-transform .4s ease;
-  transition: transform .4s ease;
-  transition: transform .4s ease, -webkit-transform .4s ease;
-}
-.accordion__itemTitleWrap.is-active::after, .accordion__itemTitleWrap:hover::after {
-  -webkit-transform: translateX(-20%);
-          transform: translateX(-20%);
-}
-.accordion__itemIconWrap {
-  width: 1.25em;
-  height: 1.25em;
-  margin-left: auto;
-  position: relative;
-  z-index: 10;
-}
-.accordion__itemTitle {
-  margin: 0;
-  font-family: 'industry', sans-serif;
-  font-weight: 300;
-  font-size: 1em;
-  position: relative;
-  z-index: 10;
-  color: #595959;
-  width: 98%;
-}
-.accordion__itemContent {
-  font-size: 0.875em;
-  height: 0;
-  overflow: hidden;
-  background-color: #fff;
-  padding: 0 1.25em;
-  width: 98%;
-}
-.accordion__itemContent p {
-  margin: 2em 0;
-}
-</style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -106,22 +19,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 from your company’s payment record or un-deposited funds.
             </div>
             <div class="page-title-box mx-4">
-                <!-- <div class="row pb-2"> -->
-                <!-- <div class="col-md-12 banking-tab-container">
-						<a href="<?php echo url('/accounting/sales-overview')?>"
-                class="banking-tab">Overview</a>
-                <a href="<?php echo url('/accounting/all-sales')?>"
-                    class="banking-tab">All Sales</a>
-                <a href="<?php echo url('/accounting/invoices')?>"
-                    class="banking-tab">Invoices</a>
-                <a href="<?php echo url('/accounting/customers')?>"
-                    class="banking-tab">Customers</a>
-                <a href="<?php echo url('/accounting/deposits')?>"
-                    class="banking-tab-active text-decoration-none">Deposits</a>
-                <a href="<?php echo url('/accounting/products-and-services')?>"
-                    class="banking-tab">Products and Services</a>
-            </div> -->
-            <!-- </div> -->
 
             <div class="col-md-12 banking-tab-container" style="background-color:white;">
 
@@ -152,7 +49,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="row">
                     <div class="col-lg-12 px-0">
                     <br>
-                    <p><h2>Deposits from nSmarTrac Payments</h2></p> <br>
+                    <p><h2>Deposits from <?php echo $clients->business_name; ?> Payments</h2></p> <br>
                         
                     <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
                     <div class="accordion"> 
@@ -197,11 +94,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                             </div>
                             </li>
+                            <?php foreach($invoices as $inv){ ?>
                             <li class="accordion__item">
                             <div class="accordion__itemTitleWrap">
                                 <h3 class="accordion__itemTitle">Deposit yesterday <br>
                                     <small class="help help-sm">3 transactions</small>
-                                    <small class="help help-sm" style="float:right;text-align:right;">$49.91 <br> Fees: $1.82 </small>
+                                    <small class="help help-sm" style="float:right;text-align:right;">$<?php echo $inv->deposit_request; ?> <br> Fees: $1.82 </small>
                                 </h3>
                                 <div class="accordion__itemIconWrap"><svg viewBox="0 0 24 24"><polyline fill="none" points="21,8.5 12,17.5 3,8.5 " stroke="#000" stroke-miterlimit="10" stroke-width="2"/></svg></div>
                             </div>
@@ -226,94 +124,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <th>Amount</th>
                                     </thead>
                                     <tr>
-                                        <td>John Doe</td>
+                                        <td><?php echo $inv->first_name .' '. $inv->last_name; ?></td>
                                         <td>Visa (...1234)</td>
                                         <td>MU001234567890</td>
-                                        <td><a target="_blank" href="/app/invoice?txnId=40023" class="">Invoice</a></td>
+                                        <td><a target="_blank" href="<?php echo base_url('invoice/genview/' . $inv->id) ?>" style="color:blue;">Invoice</a></td>
                                         <td>Fees: $1.82</td>
                                         <td>$49.91</td>
                                     </tr>
                                 </table>
                             </div>
                             </li>
-                            <li class="accordion__item">
-                            <div class="accordion__itemTitleWrap">
-                                <h3 class="accordion__itemTitle">Deposited 09/08/2021 <br>
-                                    <small class="help help-sm">6 transactions</small>
-                                    <small class="help help-sm" style="float:right;text-align:right;">$49.91 <br> Fees: $1.82 </small>
-                                </h3>
-                                <div class="accordion__itemIconWrap"><svg viewBox="0 0 24 24"><polyline fill="none" points="21,8.5 12,17.5 3,8.5 " stroke="#000" stroke-miterlimit="10" stroke-width="2"/></svg></div>
-                            </div>
-                            <div class="accordion__itemContent">
-                                <br>
-                                <small class="help help-sm">Batch created: yesterday</small>
-                                <small class="help help-sm" style="float:right;text-align:right;">Net amount: $48.09 </small>
-                                <br>
-                                <small class="help help-sm">Deposit ID: 6095509905</small>
-                                <small class="help help-sm" style="float:right;text-align:right;">REGIONS BANK (...1234) </small>
-                                <br>
 
-                                <p>Your money is on the way.</p>
-
-                                <table class="table">
-                                    <thead>
-                                        <th>Customer</th>
-                                        <th>Payment Method</th>
-                                        <th>Transaction ID</th>
-                                        <th>nSmarTrac Record</th>
-                                        <th>Fees</th>
-                                        <th>Amount</th>
-                                    </thead>
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Visa (...1234)</td>
-                                        <td>MU001234567890</td>
-                                        <td><a target="_blank" href="/app/invoice?txnId=40023" class="">Invoice</a></td>
-                                        <td>Fees: $1.82</td>
-                                        <td>$49.91</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            </li>
-                            <li class="accordion__item">
-                            <div class="accordion__itemTitleWrap">
-                                <h3 class="accordion__itemTitle">Deposited 09/06/2021 <br>
-                                    <small class="help help-sm">20 transactions</small>
-                                    <small class="help help-sm" style="float:right;text-align:right;">$49.91 <br> Fees: $1.82 </small>
-                                </h3>
-                                <div class="accordion__itemIconWrap"><svg viewBox="0 0 24 24"><polyline fill="none" points="21,8.5 12,17.5 3,8.5 " stroke="#000" stroke-miterlimit="10" stroke-width="2"/></svg></div>
-                            </div>
-                            <div class="accordion__itemContent">
-                                <br>
-                                <small class="help help-sm">Batch created: yesterday</small>
-                                <small class="help help-sm" style="float:right;text-align:right;">Net amount: $48.09 </small>
-                                <br>
-                                <small class="help help-sm">Deposit ID: 6095509905</small>
-                                <small class="help help-sm" style="float:right;text-align:right;">REGIONS BANK (...1234) </small>
-                                <br>
-
-                                <p>Your money is on the way.</p>
-
-                                <table class="table">
-                                    <thead>
-                                        <th>Customer</th>
-                                        <th>Payment Method</th>
-                                        <th>Transaction ID</th>
-                                        <th>nSmarTrac Record</th>
-                                        <th>Fees</th>
-                                        <th>Amount</th>
-                                    </thead>
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Visa (...1234)</td>
-                                        <td>MU001234567890</td>
-                                        <td><a target="_blank" href="/app/invoice?txnId=40023" class="">Invoice</a></td>
-                                        <td>Fees: $1.82</td>
-                                        <td>$49.91</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            </li>
+                            <?php } ?>
+                            
                         </ul>
                     </div>
 

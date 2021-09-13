@@ -248,7 +248,7 @@ $(document).on('change', '#products-services-table td:first-child input[type="ch
 	var checkedType = [];
 
 	$('#products-services-table tbody td:first-child input[type="checkbox"]').each(function() {
-		var row = $(this).parent().parent();
+		var row = $(this).parent().parent().parent().parent();
 		rowData = $('#products-services-table').DataTable().row(row).data();
 
 		if($(this).prop('checked')) {
@@ -1351,7 +1351,14 @@ $(`#products-services-table`).DataTable({
 			name: 'checkbox',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
 				if(!rowData.hasOwnProperty('is_category') && rowData.type !== "Bundle") {
-					$(td).html(`<input type="checkbox" value="${rowData.id}">`);
+					$(td).html(`
+					<div class="d-flex justify-content-center">
+						<div class="checkbox checkbox-sec m-0">
+							<input type="checkbox" value="${rowData.id}" id="select-item-${rowData.id}">
+							<label for="select-item-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+						</div>
+					</div>
+					`);
 				} else {
 					$(td).html('');
 				}
@@ -1692,4 +1699,10 @@ $('#print-items').on('click', function(e) {
 			pdfWindow.print();
 		}
 	});
+});
+
+$('#download-items').on('click', function(e) {
+	e.preventDefault();
+
+	$('#export-table-form').submit();
 });

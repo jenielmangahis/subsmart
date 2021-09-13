@@ -392,6 +392,7 @@ $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accou
 $route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting_controllers/products_and_services/assign_category/$1';
 $route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting_controllers/products_and_services/batch_action/$1';
 $route['accounting/products-and-services/print-table']['post'] = 'accounting_controllers/products_and_services/print_table';
+$route['accounting/products-and-services/export-table']['post'] = 'accounting_controllers/products_and_services/export_table';
 
 $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
@@ -422,6 +423,7 @@ $route['accounting/chart-of-accounts/import'] = 'accounting_controllers/chart_of
 $route['accounting/chart-of-accounts/get-detail-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_detail_type/$1';
 $route['accounting/chart-of-accounts/get-account-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_account_type/$1';
 $route['accounting/chart-of-accounts/get-all-account-types'] = 'accounting_controllers/chart_of_accounts/get_all_account_types';
+$route['accounting/chart-of-accounts/print-table']['post'] = 'accounting_controllers/chart_of_accounts/print_table';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';
