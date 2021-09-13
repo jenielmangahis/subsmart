@@ -446,6 +446,30 @@
             $return = ['is_success' => $is_success, 'msg' => $msg];
             return $return;
         }
+
+        public function testSendMail(){
+            $subject = 'This is a sample email';
+            $to   = 'bryann.revina03@gmail.com';
+            $body = 'This is a sample content';
+
+            $data = [
+                'to' => $to, 
+                'subject' => $subject, 
+                'body' => $body,
+                'cc' => 'test@gmail.com',
+                'bcc' => '',
+                'attachment' => ''
+            ];
+
+            $isSent = sendEmail($data);
+            if( $isSent['is_valid'] ){
+                echo "Email sent";
+            }else{
+                echo $isSent['err_msg'];
+            }
+
+            exit;
+        }
     }
     /* End of file Debug.php */
 

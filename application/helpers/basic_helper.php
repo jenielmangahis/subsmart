@@ -3561,32 +3561,57 @@ if (!function_exists('is_admin_logged')) {
 
         if( $data['subject'] == '' ){            
             $is_valid = false;
+            $err_msg  = 'Please specify email subject';
         }
 
         if( $data['to'] == '' && $data['bcc'] == '' && $data['cc'] == '' ){
-            $is_valid = false;            
+            $is_valid = false; 
+            $err_msg = 'Please specify recipient';           
         }
 
         if( $data['body'] == '' ){
             $is_valid == false;
+            $err_msg = 'Please specify email body';
+        }
+
+        $to = '';
+        if( isset($data['to']) && $data['to'] != '' ){
+            $to = $data['to'];
+        }
+
+        $bcc = '';
+        if( isset($data['bcc']) && $data['bcc'] != '' ){
+            $bcc = $data['bcc'];
+        }
+
+        $cc = '';
+        if( isset($data['cc']) && $data['cc'] != '' ){
+            $cc = $data['cc'];
+        }
+
+        $attachment = '';
+        if( isset($data['attachment']) && $data['attachment'] != '' ){
+            $attachment = $data['attachment'];
         }
 
         if( $is_valid ){
             $data_mail_send = [
                 'email_subject' => $data['subject'],
-                'email_to' => $data['to'],
-                'email_bcc' => $data['cc'],
+                'email_to' => $to,
+                'email_bcc' => $bcc,          
+                'email_cc' => $cc,
                 'email_body' => $data['body'],
                 'is_sent' => 0,
                 'is_with_error' => 0,
                 'note' => '',
-                'email_attachment' => $data['attachment'],
+                'email_attachment' => $attachment,
                 'created' => date('Y-m-d H:i:s'),
             ];
 
             $CI->MailSendTo_model->create($data_mail_send);
-        }
+        } 
 
-        return $is_valid;
+        $return = ['is_valid' => $is_valid, 'err_msg' => $err_msg];
+        return $return;
     }
 }
