@@ -484,4 +484,24 @@ class Chart_of_accounts extends MY_Controller {
 
         echo $tableHtml;
     }
+
+    public function update_account_names()
+    {
+        $post = $this->input->post();
+
+        $flag = true;
+        foreach($post['account_name'] as $id => $name) {
+            $data = [
+                'id' => $id,
+                'company_id' => logged('company_id'),
+                'name' => $name,
+            ];
+    
+            $accountUpdate = $this->chart_of_accounts_model->updaterecords($data);
+
+            if(!$accountUpdate) {
+                $flag = false;
+            }
+        }
+    }
 }

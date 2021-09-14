@@ -27,13 +27,13 @@ function col_type()
     if($('#chk_type').attr('checked'))
     {
         $('#chk_type').removeAttr('checked');
-        $('.type').css('display','none');
+        $('.type').hide();
 
     }
     else
     {
         $('#chk_type').attr('checked',"checked");
-        $('.type').css('display','');
+        $('.type').show();
     }
 }
 function col_detailtype()
@@ -41,13 +41,13 @@ function col_detailtype()
     if($('#chk_detail_type').attr('checked'))
     {
         $('#chk_detail_type').removeAttr('checked');
-        $('.detailtype').css('display','none');
+        $('.detailtype').hide();
 
     }
     else
     {
         $('#chk_detail_type').attr('checked',"checked");
-        $('.detailtype').css('display','');
+        $('.detailtype').show();
     }
 }
 function col_nbalance()
@@ -55,13 +55,13 @@ function col_nbalance()
     if($('#chk_nsmart_balance').attr('checked'))
     {
         $('#chk_nsmart_balance').removeAttr('checked');
-        $('.nbalance').css('display','none');
+        $('.nbalance').hide();
 
     }
     else
     {
         $('#chk_nsmart_balance').attr('checked',"checked");
-        $('.nbalance').css('display','');
+        $('.nbalance').show();
     }
 }
 function col_bank_balance()
@@ -69,13 +69,13 @@ function col_bank_balance()
     if($('#chk_bank_balance').attr('checked'))
     {
         $('#chk_bank_balance').removeAttr('checked');
-        $('.bank_balance').css('display','none');
+        $('.bank_balance').hide();
 
     }
     else
     {
         $('#chk_bank_balance').attr('checked',"checked");
-        $('.bank_balance').css('display','');
+        $('.bank_balance').show();
     }
 }
 
@@ -390,6 +390,81 @@ $('#print-accounts').on('click', function(e) {
 			$(pdfWindow.document).find('body').css('margin', '0');
 			$(pdfWindow.document).find('iframe').css('border', '0');
 			pdfWindow.print();
+		}
+	});
+});
+
+
+$('#edit-accounts').on('click', function(e) {
+    e.preventDefault();
+
+    $('#chart-of-accounts-table tbody tr').each(function() {
+        var data = $('#chart-of-accounts-table').DataTable().row($(this)).data();
+        $(this).find('td:first-child()').html(`<input type="text" value="${data.name}" name="account_name[]" class="form-control">`);
+        $(this).find('td:last-child()').hide();
+    });
+
+    $('#chart-of-accounts-table thead tr th:last-child()').hide();
+
+    $('#edit-accounts-buttons').removeClass('d-none');
+    $('#edit-accounts-buttons').next().removeClass('d-flex');
+    $('#edit-accounts-buttons').next().addClass('d-none');
+});
+
+$('#cancel-edit-btn').on('click', function(e) {
+    e.preventDefault();
+
+    $('#chart-of-accounts-table thead tr th:last-child()').show();
+
+    $('#chart-of-accounts-table tbody tr').each(function() {
+        var data = $('#chart-of-accounts-table').DataTable().row($(this)).data();
+
+        if(data.is_sub_acc) {
+            $(this).find('td:first-child()').html(`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${data.name}`);
+        } else {
+            $(this).find('td:first-child()').html(data.name);
+        }
+        $(this).find('td:last-child()').show();
+    });
+
+    $('#edit-accounts-buttons').addClass('d-none');
+    $('#edit-accounts-buttons').next().addClass('d-flex');
+    $('#edit-accounts-buttons').next().removeClass('d-none');
+});
+
+$('#save-table-btn').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    $('#chart-of-accounts-table tbody tr').each(function() {
+        var rowData = $('#chart-of-accounts-table').DataTable().row($(this)).data();
+        var newName = $(this).find('td:first-child()').children('input').val();
+
+        data.set(`account_name[${rowData.id}]`, newName);
+    });
+
+    $.ajax({
+		url: '/accounting/chart-of-accounts/update-accounts-name',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+			$('#chart-of-accounts-table').DataTable().ajax.reload(null, true);
+            $('#chart-of-accounts-table thead tr th:last-child()').show();
+
+            $('#edit-accounts-buttons').addClass('d-none');
+            $('#edit-accounts-buttons').next().addClass('d-flex');
+            $('#edit-accounts-buttons').next().removeClass('d-none');
+
+            Swal.fire({
+                html: `Chart of accounts saved.`,
+                icon: 'success',
+                showConfirmButton: false,
+                showCancelButton: false,
+                timer: 1500
+            });
 		}
 	});
 });

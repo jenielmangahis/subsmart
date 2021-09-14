@@ -405,8 +405,8 @@ include viewPath('includes/header');
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="bank_account">Bank acount</label>
-                                        <input data-type="bank_account" class="form-control" id="bank_account">
+                                        <label for="bank_account">Bank account</label>
+                                        <select data-type="bank_account_id" name="bank_account" id="bank_account" class="form-control"></select>
                                     </div>
                                 </div>
 
@@ -494,6 +494,19 @@ include viewPath('includes/header');
         </div>
     </div>
 
+    <div id="modal-container">
+        <div class="full-screen-modal"></div>
+    </div>
+
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
 <?php include viewPath('includes/footer_accounting');?>
+<script>
+    $.ajaxSetup({
+        beforeSend: function (xhr,settings) {
+            if (settings.url.startsWith("/accounting/")) {
+                settings.url = settings.url.replace("/accounting/", "/nsmartrac/accounting/")
+            }
+        }
+    });
+</script>

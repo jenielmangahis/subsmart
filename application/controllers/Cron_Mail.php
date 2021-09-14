@@ -4,8 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_Mail extends MY_Controller {
 
-
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -29,13 +27,13 @@ class Cron_Mail extends MY_Controller {
                     $from     = MAIL_FROM;
                     $subject  = $m->email_subject;
                     $body     = $m->email_body;
-                    $to       = $m->email_to
 
                     $mail = new PHPMailer(true);
                     $mail->isSMTP();
                     $mail->getSMTPInstance()->Timelimit = 5;
                     $mail->Host = $server;
-                    $mail->SMTPAuth = true;
+                    $mail->SMTPDebug = 0;
+                    $mail->SMTPAuth = true;                    
                     $mail->Username = $username;
                     $mail->Password = $password;
                     $mail->SMTPSecure = 'ssl';
@@ -53,32 +51,36 @@ class Cron_Mail extends MY_Controller {
                         $mail->bcc($m->email_bcc);       
                     }
 
+                    if( $m->email_bcc != '' ){
+                        $mail->cc($m->email_cc);       
+                    }
+
                     if( $m->email_attachment != '' ){
                         $mail->addAttachment($m->email_attachment);
                     }
-                    
-                    if (!$mail->Send()) {                
+
+                    try {
+                        $mail->Send();
+                        $total_sent++;
+                        $update_send_to_data = ['is_sent' => 1];
+                        $mail_setting_data   = ['total_sent' => $total_sent];
+                        $this->MailSendTo_model->updateSendTo($mail->id, $update_send_to_data);
+                        $this->MailSettings_model->updateSentCount($mail_setting_data);
+                    }catch(Exception $e) {
                         $error = 'Mailer Error: ' . $mail->ErrorInfo;
                         $update_send_to_data = [
                             'is_with_error' => 1,
                             'note' => $error
-                        ];
-                    }else{
-                        $total_sent++;
-                        $update_send_to_data = ['is_sent' => 1];
-                        $mail_setting_data   = ['total_sent' => $total_sent];
-
-                        $this->MailSettings_model->updateSentCount($mail_setting_data);
+                        ];                        
+                        $this->MailSendTo_model->updateSendTo($m->id, $update_send_to_data);
                     }
 
-                    $this->MailSendTo_model->updateSendTo($mail->id, $update_send_to_data);
+                    
                 }else{
                     break;
                 }           
             }
         }
-        
-
         echo "Done";
     }
 }

@@ -20,7 +20,7 @@
 </div>
 <div class="row margin-bottom-sec">
     <div class="col-md-2">
-        <div class="form-control-text">Employees</div>
+        <div class="form-control-text">Buy License</div>
     </div>
     <div class="col-md-1">
         <select name="num_license" id="num-license"  class="form-control">
