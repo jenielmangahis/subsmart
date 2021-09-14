@@ -23,6 +23,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent .action-bar ul li {
         margin-right: 5px;
     }
+    #myTabContent .action-bar ul li #cancel-edit-btn {
+        color: #6B6C72;
+        border: 0;
+    }
+    #myTabContent .action-bar ul li #cancel-edit-btn:hover {
+        background: transparent;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -95,6 +102,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php endif; ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <div class="row my-3 d-none" id="edit-accounts-buttons">
+                                    <div class="col">
+                                        <div class="action-bar h-100 align-items-center">
+											<ul class="ml-auto" style="min-width: 50%">
+												<li>
+													<button class="btn btn-transparent" id="cancel-edit-btn">Cancel</button>
+												</li>
+                                                <li>
+                                                    <button class="btn btn-success" id="save-table-btn">Save</button>
+                                                </li>
+											</ul>
+										</div>
+                                    </div>
+                                </div>
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="form-row">

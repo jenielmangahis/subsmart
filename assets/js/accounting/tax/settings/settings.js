@@ -120,7 +120,7 @@
   const $addRateBtn = $("#addRateBtn");
   $addRateBtn.on("click", async function () {
     const $sidebar = $(this).closest(".sidebarForm");
-    const $inputs = $sidebar.find("[data-type]");
+    const $inputs = $sidebar.find("#rateSingleWrapper [data-type]");
 
     const payload = {};
 
@@ -167,6 +167,49 @@
 
     const json = await response.json();
     window.location.reload();
+  });
+
+  const $rateTypes = $("input[type=radio][name=rateType]");
+  const $addRateSidebar = $("#addRate");
+  const $rateCombinedWrapper = $addRateSidebar.find("#rateCombinedWrapper");
+  const $rateCombinedItems = $rateCombinedWrapper.find("#rateCombinedItems");
+  const $template = $rateCombinedWrapper.find("template");
+  const $addCombineItem = $rateCombinedWrapper.find("#addCombinedItemBtn");
+
+  let combinedRates = [{}];
+  const template = $template.get(0).content;
+  const renderCombinedRates = () => {
+    const htmls = combinedRates.map((_, index) => {
+      const copy = document.importNode(template, true);
+      const $copy = $(copy);
+
+      $copy.find(".rateCombined__title").text(`Rate ${index + 1}`);
+      new Accounting__DropdownWithSearch(
+        $copy.find(".dropdownWithSearch"),
+        allAgencies
+      );
+
+      return $copy;
+    });
+
+    $rateCombinedItems.empty();
+    $rateCombinedItems.append(htmls);
+  };
+
+  $rateTypes.change(function () {
+    if (this.value === "combined") {
+      $addRateSidebar.addClass("customRate--combined");
+      renderCombinedRates();
+      return;
+    }
+
+    $addRateSidebar.removeClass("customRate--combined");
+    combinedRates = [{}];
+  });
+
+  $addCombineItem.on("click", function () {
+    combinedRates.push({});
+    renderCombinedRates();
   });
 })();
 

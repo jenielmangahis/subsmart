@@ -196,15 +196,22 @@ class Accounting__TaxItem {
     });
 
     $openRecordPaymentBtn.on("click", () => {
+      const $taxAdjusted = $recordPaymentModal.find("[data-type=tax_adjusted]");
+      const $bankAccount = $recordPaymentModal.find("#bank_account");
+
       $recordPaymentModal.modal("show");
-      $recordPaymentModal
-        .find("[data-type=tax_adjusted]")
-        .text(tableData.tax_adjusted);
+      $taxAdjusted.text(tableData.tax_adjusted);
+
+      this.initBankAccountSelect($bankAccount);
       this.$modal.modal("hide");
     });
 
     $recordPaymentModal.on("hide.bs.modal", () => {
       this.$modal.modal("show");
+    });
+
+    $recordPaymentModal.on("shown.bs.modal", function () {
+      $(document).off("focusin.modal");
     });
 
     $savePaymentBtn.on("click", async function () {
@@ -260,6 +267,63 @@ class Accounting__TaxItem {
     const dateObject = new Date(date);
     const options = { month: "long", day: "2-digit", year: "numeric" };
     return new Intl.DateTimeFormat("en", options).format(dateObject);
+  }
+
+  initBankAccountSelect($select) {
+    const formatResult = (optionElement) => {
+      var searchField = $(".select2-search__field");
+      var text = optionElement.text;
+      var searchVal = $(searchField[searchField.length - 1]).val();
+      if (searchVal === "") {
+        return text;
+      }
+
+      return $(`<span>${text}</span>`);
+    };
+
+    const optionSelect = (data) => {
+      var text = data.text;
+      text = text.replaceAll("<strong>", "");
+      text = text.replaceAll("</strong>", "");
+      text = $.trim(text);
+      return text;
+    };
+
+    $select.select2({
+      templateResult: formatResult,
+      templateSelection: optionSelect,
+      ajax: {
+        url: "/accounting/get-dropdown-choices",
+        dataType: "json",
+        data: (params) => ({
+          search: params.term,
+          type: "public",
+          field: "bank-account",
+          modal: "checkModal",
+        }),
+      },
+    });
+
+    const $modalContainer = $("#modal-container div.full-screen-modal");
+    $select.on("change", function () {
+      if ($(this).val() !== "add-new") {
+        return;
+      }
+
+      $.get(
+        "/accounting/get-dropdown-modal/account_modal?modal=check&field=bank-account",
+        (result) => {
+          $modalContainer.html(result);
+          initAccountModal(); // global function
+
+          $("#account-modal").on("hide.bs.modal", function () {
+            // Assign value to nonexisting option, this is the only
+            // way I was able to successfully empty the value.
+            $select.select2("val", "_");
+          });
+        }
+      );
+    });
   }
 }
 

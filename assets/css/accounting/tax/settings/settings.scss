@@ -297,3 +297,99 @@ table.dataTable thead {
     }
   }
 }
+
+.customRate {
+  &:not(.customRate--combined) {
+    #rateSingleWrapper {
+      display: block;
+    }
+
+    #rateCombinedWrapper {
+      display: none;
+    }
+  }
+}
+
+.customRate--combined {
+  #rateSingleWrapper {
+    display: none;
+  }
+
+  #rateCombinedWrapper {
+    display: block;
+  }
+
+  .sidebarForm {
+    &__inner {
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    &__header {
+      padding: 16px;
+      padding-bottom: 0;
+    }
+
+    &__form {
+      padding: 0 16px;
+    }
+
+    &__footer {
+      position: static;
+      margin-top: auto;
+    }
+  }
+}
+
+.rateCombined {
+  font-family: Sarabun, sans-serif;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f4f5f8;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-weight: 700;
+  }
+
+  &__btn {
+    border: 0;
+    outline: 0;
+    color: #0077c5;
+    font-weight: 700;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    height: 35px;
+    padding: 0 12px;
+    border-radius: 5px;
+    background-color: transparent;
+
+    .fa {
+      margin-right: 5px;
+    }
+
+    &:hover {
+      background-color: rgba(0, 119, 197, 0.25);
+    }
+  }
+
+  &__groupForm {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  &__label {
+    color: #6b6c72;
+    font-size: 15px;
+  }
+}

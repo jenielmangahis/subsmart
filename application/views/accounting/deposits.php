@@ -54,52 +54,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
                     <div class="accordion"> 
                         <ul class="accordion__list">
-                            <li class="accordion__item is-active">
-                            <div class="accordion__itemTitleWrap">
-                                <h3 class="accordion__itemTitle">Deposit expected today <br>
-                                    <small class="help help-sm">1 transaction</small>
-                                    <small class="help help-sm" style="float:right;text-align:right;">$49.91 <br> Fees: $1.82 </small>
-                                </h3>
-                                <div class="accordion__itemIconWrap" style="color:black;"><svg viewBox="0 0 24 24"><polyline fill="none" points="21,8.5 12,17.5 3,8.5 " stroke="#000" stroke-miterlimit="10" stroke-width="2"/></svg></div>
-                            </div>
-                            <div class="accordion__itemContent" style="height: auto;">
-                                <br>
-                                <small class="help help-sm">Batch created: yesterday</small>
-                                <small class="help help-sm" style="float:right;text-align:right;">Net amount: $48.09 </small>
-                                <br>
-                                <small class="help help-sm">Deposit ID: 6095509905</small>
-                                <small class="help help-sm" style="float:right;text-align:right;">REGIONS BANK (...1234) </small>
-                                <br>
-
-                                <p>Your money is on the way.</p>
-
-                                <table class="table">
-                                    <thead>
-                                        <th>Customer</th>
-                                        <th>Payment Method</th>
-                                        <th>Transaction ID</th>
-                                        <th>nSmarTrac Record</th>
-                                        <th>Fees</th>
-                                        <th>Amount</th>
-                                    </thead>
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Visa (...1234)</td>
-                                        <td>MU001234567890</td>
-                                        <td><a target="_blank" href="/app/invoice?txnId=40023" class="">Invoice</a></td>
-                                        <td>Fees: $1.82</td>
-                                        <td>$49.91</td>
-                                    </tr>
-                                </table>
-
-                            </div>
-                            </li>
                             <?php foreach($invoices as $inv){ ?>
                             <li class="accordion__item">
                             <div class="accordion__itemTitleWrap">
                                 <h3 class="accordion__itemTitle">Deposit yesterday <br>
                                     <small class="help help-sm">3 transactions</small>
-                                    <small class="help help-sm" style="float:right;text-align:right;">$<?php echo $inv->deposit_request; ?> <br> Fees: $1.82 </small>
+                                    <small class="help help-sm" style="float:right;text-align:right;">$<?php echo number_format($inv->groupAmount,2); ?> <br> Fees: $1.82 </small>
                                 </h3>
                                 <div class="accordion__itemIconWrap"><svg viewBox="0 0 24 24"><polyline fill="none" points="21,8.5 12,17.5 3,8.5 " stroke="#000" stroke-miterlimit="10" stroke-width="2"/></svg></div>
                             </div>
@@ -118,18 +78,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <thead>
                                         <th>Customer</th>
                                         <th>Payment Method</th>
-                                        <th>Transaction ID</th>
+                                        <th>Reference No.</th>
                                         <th>nSmarTrac Record</th>
                                         <th>Fees</th>
                                         <th>Amount</th>
                                     </thead>
                                     <tr>
                                         <td><?php echo $inv->first_name .' '. $inv->last_name; ?></td>
-                                        <td>Visa (...1234)</td>
-                                        <td>MU001234567890</td>
+                                        <td><?php echo $inv->payment_method; ?></td>
+                                        <td><?php echo $inv->reference_number; ?></td>
                                         <td><a target="_blank" href="<?php echo base_url('invoice/genview/' . $inv->id) ?>" style="color:blue;">Invoice</a></td>
-                                        <td>Fees: $1.82</td>
-                                        <td>$49.91</td>
+                                        <td>Tip: $<?php echo number_format($inv->invoice_tip,2); ?></td>
+                                        <td>$<?php echo number_format($inv->invoice_amount,2); ?></td>
                                     </tr>
                                 </table>
                             </div>
