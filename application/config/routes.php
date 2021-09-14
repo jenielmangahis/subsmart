@@ -1009,6 +1009,7 @@ $route['portal/appinv/(:any)/view'] = 'public_view_controller/view_invoice/$1';
 
 
 // Time Sheet
-
-
 $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
+
+//Cron Send Email
+$route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
