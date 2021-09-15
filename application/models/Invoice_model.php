@@ -199,11 +199,12 @@ class Invoice_model extends MY_Model
           );
 
         // $this->db->select('*');
-        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, SUM(payment_records.invoice_amount) AS groupAmount');
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, SUM(payment_records.invoice_amount) AS groupAmount, COUNT(invoices.id) AS invCount');
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
         $this->db->join('payment_records', 'invoices.invoice_number = payment_records.invoice_number');
         $this->db->group_by('DATE(payment_records.payment_date)');
         $this->db->from('invoices');
+        $this->db->order_by('payment_records.id', "DESC");
         $this->db->where($where);
         $query2 = $this->db->get();
         return $query2->result();

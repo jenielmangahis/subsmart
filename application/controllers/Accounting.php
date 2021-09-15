@@ -8991,33 +8991,33 @@ class Accounting extends MY_Controller
 
         //Code for Sales Receipt
         
-        $sales_receipts = $this->accounting_sales_receipt_model->getAllByCustomerId($customer_id);
-        foreach ($sales_receipts as $receipt) {
-            $this->page_data['date']=$receipt->sales_receipt_date;
-            $this->page_data['type']="Sales Receipt";
-            $this->page_data['no']=$receipt->ref_number;
-            $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-            $this->page_data['method']=$receipt->payment_method;
-            $this->page_data['source']="";
-            $this->page_data['memo']=$receipt->message;
-            $this->page_data['duedate']=$receipt->sales_receipt_date;
-            $this->page_data['aging']=$this->get_date_difference_indays($receipt->sales_receipt_date, date("Y-m-d"));
-            $this->page_data['balance']="0.00";
-            $this->page_data['total']=$receipt->grand_total;
-            $this->page_data['last_delivered']=$receipt->shipping_date;
-            $this->page_data['email']=$customer_info->customer_email;
-            $this->page_data['attatchement']="";
-            $this->page_data['status']="Paid";
-            $this->page_data['ponumber']="";
-            $this->page_data['sales_rep']="";
-            $this->page_data['customer_id']=$customer_id;
-            $this->page_data['invoice_payment_id']="";
-            $this->page_data['invoice_id']="";
-            $this->page_data['sales_receipt_id']=$receipt->id;
-            if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
-            }
-        }
+        // $sales_receipts = $this->accounting_sales_receipt_model->getAllByCustomerId($customer_id);
+        // foreach ($sales_receipts as $receipt) {
+        //     $this->page_data['date']=$receipt->sales_receipt_date;
+        //     $this->page_data['type']="Sales Receipt";
+        //     $this->page_data['no']=$receipt->ref_number;
+        //     $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
+        //     $this->page_data['method']=$receipt->payment_method;
+        //     $this->page_data['source']="";
+        //     $this->page_data['memo']=$receipt->message;
+        //     $this->page_data['duedate']=$receipt->sales_receipt_date;
+        //     $this->page_data['aging']=$this->get_date_difference_indays($receipt->sales_receipt_date, date("Y-m-d"));
+        //     $this->page_data['balance']="0.00";
+        //     $this->page_data['total']=$receipt->grand_total;
+        //     $this->page_data['last_delivered']=$receipt->shipping_date;
+        //     $this->page_data['email']=$customer_info->customer_email;
+        //     $this->page_data['attatchement']="";
+        //     $this->page_data['status']="Paid";
+        //     $this->page_data['ponumber']="";
+        //     $this->page_data['sales_rep']="";
+        //     $this->page_data['customer_id']=$customer_id;
+        //     $this->page_data['invoice_payment_id']="";
+        //     $this->page_data['invoice_id']="";
+        //     $this->page_data['sales_receipt_id']=$receipt->id;
+        //     if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
+        //         $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+        //     }
+        // }
         if ($filter_type == "All plus deposits") {
             $all_deposits = $this->accounting_customers_model->get_customer_deposits($customer_id);
             foreach ($all_deposits as $deposit) {
@@ -9212,23 +9212,107 @@ class Accounting extends MY_Controller
                 $this->page_data['recurring_id']=$recurring_template->id;
                 $this->page_data['txn_type']=$recurring_template->txn_type;
                 $this->page_data['interval']=$recurring_template->recurring_interval;
+                $this->page_data['amount']="";
+                $this->page_data['prev_date']="";
+                $this->page_data['next_date']="";
                 $recurring_id=$recurring_template->id;
                 if ($recurring_template->txn_type == "Sales Receipt") {
                     $sales_receipts = $this->accounting_sales_receipt_model->get_recuring_sales_receipt($recurring_id);
-                    foreach($sales_receipts as $s_receipt){
+                    foreach ($sales_receipts as $s_receipt) {
                         $this->page_data['amount']=$s_receipt->grand_total;
-                            $this->page_data['prev_date']=$s_receipt->sales_receipt_date;
-                            if($recurring_template->recurring_interval == "Daily"){
-                                $this->page_data['next_date']= date('Y-m-d', strtotime($s_receipt->sales_receipt_date. ' + '.$recurring_template->recurr_every.' days'));
-                            }elseif($recurring_template->recurring_interval == "Weekly"){
-                                $next_week= date('Y-m-d',strtotime($s_receipt->sales_receipt_date." + ".$recurring_template->recurr_every." weeks"));
-                                $next_date = date('Y-m-d',strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
+                        $this->page_data['prev_date']=$s_receipt->sales_receipt_date;
+                        if ($recurring_template->recurring_type != "Unschedule") {
+                            if ($recurring_template->recurring_interval == "Daily") {
+                                if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $this->page_data['next_date']= date('Y-m-d', strtotime($recurring_template->start_date. ' + '.$recurring_template->recurr_every.' days'));
+                                } else {
+                                    $this->page_data['next_date']= date('Y-m-d', strtotime($s_receipt->sales_receipt_date. ' + '.$recurring_template->recurr_every.' days'));
+                                }
+                            } elseif ($recurring_template->recurring_interval == "Weekly") {
+                                if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $next_week= date('Y-m-d', strtotime($recurring_template->start_date." + ".$recurring_template->recurr_every." weeks"));
+                                } else {
+                                    $next_week= date('Y-m-d', strtotime($s_receipt->sales_receipt_date." + ".$recurring_template->recurr_every." weeks"));
+                                }
+                                $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
                                 $this->page_data['next_date']=$next_date;
-                            }elseif($recurring_template->recurring_interval == "Monthly"){}
-                            else{
-                                $this->page_data['next_date']= "";
+                            } elseif ($recurring_template->recurring_interval == "Monthly") {
+                                
+                                if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($recurring_template->start_date)));
+                                }else{
+                                    $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($s_receipt->sales_receipt_date)));
+                                }
+                                $next_month= date('Y-m-d', strtotime($month_start." + ".$recurring_template->recurr_every." months"));
+                                if (date("l", strtotime($next_month))==$recurring_template->recurring_day) {
+                                    if ($recurring_template->recurring_week=="First") {
+                                        $next_date=$next_month;
+                                    } else {
+                                        $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
+                                        $next_date=date("Y-m-d", strtotime($next_date." - 7 days"));
+                                    }
+                                } else {
+                                    $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
+                                }
+                                $this->page_data['next_date']=$next_date;
+                            } elseif ($recurring_template->recurring_interval == "Yearly")  {
+                                if(date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))){
+                                    $next_year = date("Y",strtotime("+ 1 year",strtotime($recurring_template->start_date)));
+                                }else{
+
+                                }
+                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year; 
                             }
-                            
+                        }
+                    }
+                }elseif($recurring_template->txn_type == "Delayed Charge"){
+                    $delayed_charges = $this->accounting_recurring_transactions_model->get_recuring_delayed_charges($recurring_id);
+                    foreach ($delayed_charges as $charge) {
+                        $this->page_data['amount']=$charge->total_amount;
+                        $this->page_data['prev_date']=$charge->delayed_credit_date;
+                        if ($recurring_template->recurring_type != "Unschedule") {
+                            if ($recurring_template->recurring_interval == "Daily") {
+                                if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $this->page_data['next_date']= date('Y-m-d', strtotime($recurring_template->start_date. ' + '.$recurring_template->recurr_every.' days'));
+                                } else {
+                                    $this->page_data['next_date']= date('Y-m-d', strtotime($charge->delayed_credit_date. ' + '.$recurring_template->recurr_every.' days'));
+                                }
+                            } elseif ($recurring_template->recurring_interval == "Weekly") {
+                                if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $next_week= date('Y-m-d', strtotime($recurring_template->start_date." + ".$recurring_template->recurr_every." weeks"));
+                                } else {
+                                    $next_week= date('Y-m-d', strtotime($charge->delayed_credit_date." + ".$recurring_template->recurr_every." weeks"));
+                                }
+                                $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
+                                $this->page_data['next_date']=$next_date;
+                            } elseif ($recurring_template->recurring_interval == "Monthly") {
+                                
+                                if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($recurring_template->start_date)));
+                                }else{
+                                    $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($charge->delayed_credit_date)));
+                                }
+                                $next_month= date('Y-m-d', strtotime($month_start." + ".$recurring_template->recurr_every." months"));
+                                if (date("l", strtotime($next_month))==$recurring_template->recurring_day) {
+                                    if ($recurring_template->recurring_week=="First") {
+                                        $next_date=$next_month;
+                                    } else {
+                                        $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
+                                        $next_date=date("Y-m-d", strtotime($next_date." - 7 days"));
+                                    }
+                                } else {
+                                    $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
+                                }
+                                $this->page_data['next_date']=$next_date;
+                            } elseif ($recurring_template->recurring_interval == "Yearly")  {
+                                if(date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))){
+                                    $next_year = date("Y",strtotime("+ 1 year",strtotime($recurring_template->start_date)));
+                                }else{
+
+                                }
+                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year; 
+                            }
+                        }
                     }
                 }
 
@@ -9244,11 +9328,9 @@ class Accounting extends MY_Controller
     }
     public function tester()
     {
-        echo strtolower("SASDFDF")  ;
-        $d="2021-9-11";
-       $in2w= date('Y-m-d',strtotime($d." + 2 weeks"));
-       $monday=  date('Y-m-d',strtotime('monday this week', strtotime($in2w)));
-       echo $monday;
+        $string = 'Sarah has 4 dolls and 6 bunnies.';
+        $outputString = preg_replace('/[^0-9]/', '', $string);  
+        echo("The extracted numbers are: $outputString \n"); 
     }
     public function update_customer_notes()
     {

@@ -503,5 +503,17 @@ class Chart_of_accounts extends MY_Controller {
                 $flag = false;
             }
         }
+
+        echo json_encode($flag);
+    }
+
+    public function view_register($id)
+    {
+        add_footer_js(array(
+            "assets/js/accounting/accounting/view-register.js?v=".rand()
+        ));
+
+        $this->page_data['account'] = $this->chart_of_accounts_model->getById($id);
+        $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
     }
 }

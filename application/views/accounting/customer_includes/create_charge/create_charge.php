@@ -207,9 +207,8 @@
                                                     <div class="label-1">on</div>
                                                     <div class="monthly-day-of-week">
                                                         <select class="form-control" name="monthly-week-order">
-                                                            <option>Day</option>
+                                                            <option disabled selected>Day</option>
                                                             <option>First</option>
-                                                            <option>Second</option>
                                                             <option>Second</option>
                                                             <option>Third</option>
                                                             <option>Forth</option>

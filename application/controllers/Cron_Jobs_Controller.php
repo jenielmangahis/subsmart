@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo");
+// define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo"); // New firebase API key
+
+define("FIREBASE_API_KEY", "AAAAiHsFn_g:APA91bHXjuIQDyf_yEGQbqN8H2JofS5Mn38i1-5smTWRqVqkb33lUYNM5VGV__cXCPHqnf-HQxaFtim5fR6mpU3LWhOHxtyM_bzTvZk72ttxkZHxktLzAQpe5AmZBYVlJ_5LzqiOAYOn"); // Old firebase API key
 
 class Cron_Jobs_Controller extends MY_Controller
 {

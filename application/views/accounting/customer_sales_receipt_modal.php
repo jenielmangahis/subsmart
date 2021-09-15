@@ -338,7 +338,6 @@ Alarm Direct, Inc</textarea>
                                                             <option disabled selected>Day</option>
                                                             <option>First</option>
                                                             <option>Second</option>
-                                                            <option>Second</option>
                                                             <option>Third</option>
                                                             <option>Forth</option>
                                                             <option>Last</option>

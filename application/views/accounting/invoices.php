@@ -499,7 +499,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td>
                             <div class="table-nowrap">
-                                <label for="">$<?php echo($invoice->grand_total); ?>
+                                <label for="">$<?php echo number_format($invoice->grand_total,2); ?>
                                 </label>
                             </div>
                         </td>

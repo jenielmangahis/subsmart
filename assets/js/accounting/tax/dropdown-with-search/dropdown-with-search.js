@@ -145,6 +145,9 @@ export class Accounting__DropdownWithSearch {
     this.$element.removeClass("dropdownWithSearch--optionsShown");
     const $options = this.$element.find(".dropdownWithSearch__optionsItem");
     $options.css({ display: "flex" });
+
+    // Manually trigger input value change.
+    this.$element.find("input").change();
   }
 
   // https://stackoverflow.com/a/494348/8062659

@@ -449,14 +449,14 @@
 
         public function testSendMail(){
             $subject = 'This is a sample email';
-            $to   = 'bryann.revina03@gmail.com';
+            $to   = 'webtestcustomer@nsmartrac.com';
             $body = 'This is a sample content';
 
             $data = [
                 'to' => $to, 
                 'subject' => $subject, 
                 'body' => $body,
-                'cc' => 'test@gmail.com',
+                'cc' => '',
                 'bcc' => '',
                 'attachment' => ''
             ];

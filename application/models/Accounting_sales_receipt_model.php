@@ -142,7 +142,7 @@ class Accounting_sales_receipt_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_sales_receipt');
         $this->db->where('recurring_id', $recurring_id);
-        $this->db->order_by('sales_receipt_date', 'ASC');
+        $this->db->order_by('sales_receipt_date', 'DESC');
         $this->db->limit(1);
         $query = $this->db->get();
         return $query->result();
