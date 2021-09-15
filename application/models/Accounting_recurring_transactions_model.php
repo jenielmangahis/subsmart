@@ -54,4 +54,15 @@ class Accounting_recurring_transactions_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+    public function get_recuring_delayed_charges($recurring_id)
+    {
+        $this->db->select('*');
+        $this->db->from('accounting_delayed_charge');
+        $this->db->where('recurring_id', $recurring_id);
+        $this->db->order_by('delayed_credit_date', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

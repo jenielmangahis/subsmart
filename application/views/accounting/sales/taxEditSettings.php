@@ -229,13 +229,13 @@ include viewPath('includes/header');
                         <div class="rateCombined">
                             <div class="rateCombined__header">
                                 <div class="rateCombined__title"></div>
-                                <button class="rateCombined__btn" type="button">
+                                <button class="rateCombined__btn rateCombined__btn--delete" type="button">
                                     <i class="fa fa-trash"></i>Remove
                                 </button>
                             </div>
 
                             <div class="form-group">
-                                <label class="rateCombined__label">Name</label>
+                                <label class="rateCombined__label">Nickname</label>
                                 <input required data-type="name" type="text" class="form-control">
                             </div>
 
@@ -260,6 +260,51 @@ include viewPath('includes/header');
                             </div>
                         </div>
                     </template>
+
+                    <div class="rateCombined__exampleToggle">
+                        <button type="button">Show example</button>
+                    </div>
+
+                    <div class="rateCombined__example">
+                        <table class="rateCombined__table">
+                            <tr>
+                                <th>NAME</th>
+                                <th class="text-right">CUSTOM RATE TOTAL</th>
+                            </tr>
+                            <tr>
+                                <td>Your custom rate</td>
+                                <td class="text-right">8.31%</td>
+                            </tr>
+                        </table>
+
+                        <table class="rateCombined__table">
+                            <tr>
+                                <th>NICKNAME</th>
+                                <th>AGENCY</th>
+                                <th>RATE</th>
+                            </tr>
+                            <tr>
+                                <td>State</td>
+                                <td>nSmarTrac Department of Revenue</td>
+                                <td>2.90%</td>
+                            </tr>
+                            <tr>
+                                <td>County</td>
+                                <td>Intuit Treasury Division</td>
+                                <td>4.31%</td>
+                            </tr>
+                            <tr>
+                                <td>City</td>
+                                <td>nSmarTrac Department of Revenue</td>
+                                <td>1.10%</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="rateCombined__label">Name</label>
+                        <input required data-type="name" type="text" class="form-control">
+                    </div>
 
                     <div id="rateCombinedItems"></div>
 

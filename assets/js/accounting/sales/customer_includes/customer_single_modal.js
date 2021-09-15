@@ -250,6 +250,7 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
 });
 
 function single_customer_get_transaction_lists(customer_id) {
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", false);
     var filter_type = $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val();
     $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'><center><img src='" + baseURL + "assets/img/accounting/customers/loader.gif' style='width:50px;' /></center></td></tr>");
     $.ajax({
@@ -273,6 +274,7 @@ function single_customer_get_transaction_lists(customer_id) {
             $("#loader-modal").hide();
         },
     });
+
 }
 
 function table_viewing_affected(filter_type) {

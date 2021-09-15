@@ -16,12 +16,12 @@
     padding: 0;
   }
   .accordion__item {
-    /* border-bottom: 1px solid #000; */
+    border: 2px solid rgb(255, 255, 255);
     visibility: hidden;
   }
-  .accordion__item:last-child {
+  /* .accordion__item:last-child {
     border-bottom: 0;
-  }
+  } */
   .accordion__item.is-active .accordion__itemTitleWrap::after {
     -webkit-transform: translateX(-20%);
             transform: translateX(-20%);
@@ -85,4 +85,8 @@
   }
   .accordion__itemContent p {
     margin: 2em 0;
+  }
+
+  .accordion__item_hover:hover{
+    border-color: rgb(23, 182, 49);
   }

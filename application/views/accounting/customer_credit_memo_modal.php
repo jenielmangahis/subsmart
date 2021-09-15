@@ -859,9 +859,9 @@ $("#total_tax_").text(over_tax);
         });
 </script>
 <script>
-// $('#addcreditmemoModal').modal({
-//     backdrop: 'static',
-//     keyboard: false
-// });
+$('#addcreditmemoModal').modal({
+    backdrop: 'static',
+    keyboard: false
+});
 </script>
 </div>

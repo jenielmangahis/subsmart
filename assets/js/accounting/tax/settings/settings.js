@@ -120,14 +120,61 @@
   const $addRateBtn = $("#addRateBtn");
   $addRateBtn.on("click", async function () {
     const $sidebar = $(this).closest(".sidebarForm");
-    const $inputs = $sidebar.find("#rateSingleWrapper [data-type]");
 
-    const payload = {};
+    if (!$sidebar.hasClass("customRate--combined")) {
+      const $inputs = $sidebar.find("#rateSingleWrapper [data-type]");
+      const payload = {};
 
+      for (let index = 0; index < $inputs.length; index++) {
+        const input = $inputs[index];
+        const value = input.value;
+        const key = input.dataset.type;
+
+        const $input = $(input);
+        const $formGroup = $input.closest(".form-group");
+
+        $formGroup.removeClass("form-group--error");
+        if (!value) {
+          $formGroup.addClass("form-group--error");
+          $input.focus();
+          return;
+        }
+
+        if (key === "agency") {
+          const match = savedAgencies.find(({ agency }) => agency === value);
+          if (match) {
+            payload["agency_id"] = match.id;
+          }
+        }
+
+        if ($(input).is(":radio") && !input.checked) {
+          continue;
+        }
+
+        payload[key] = value;
+      }
+
+      $(this).attr("disabled", true);
+      $(this).text("Saving...");
+
+      const response = await fetch(`${prefixURL}/AccountingSales/apiSaveRate`, {
+        method: "post",
+        body: JSON.stringify(payload),
+        headers: {
+          accept: "application/json",
+          "content-type": "application/json",
+        },
+      });
+
+      const json = await response.json();
+      window.location.reload();
+      return;
+    }
+
+    const $inputs = $sidebar.find("#rateCombinedWrapper [data-type]");
     for (let index = 0; index < $inputs.length; index++) {
       const input = $inputs[index];
       const value = input.value;
-      const key = input.dataset.type;
 
       const $input = $(input);
       const $formGroup = $input.closest(".form-group");
@@ -138,27 +185,40 @@
         $input.focus();
         return;
       }
-
-      if (key === "agency") {
-        const match = savedAgencies.find(({ agency }) => agency === value);
-        if (match) {
-          payload["agency_id"] = match.id;
-        }
-      }
-
-      if ($(input).is(":radio") && !input.checked) {
-        continue;
-      }
-
-      payload[key] = value;
     }
+
+    const $items = $("#rateCombinedItems .rateCombined");
+    const items = [];
+    const name = $("#rateCombinedWrapper [data-type=name]").val();
+    $items.each((_, itemEl) => {
+      const item = {};
+      const $inputs = $(itemEl).find("[data-type]");
+
+      for (let index = 0; index < $inputs.length; index++) {
+        const input = $inputs[index];
+        const { value } = input;
+        const { type: key } = input.dataset;
+
+        if (key === "agency") {
+          const match = savedAgencies.find(({ agency }) => agency === value);
+          if (match) {
+            item["agency_id"] = match.id;
+            continue;
+          }
+        }
+
+        item[key] = value;
+      }
+
+      items.push(item);
+    });
 
     $(this).attr("disabled", true);
     $(this).text("Saving...");
 
     const response = await fetch(`${prefixURL}/AccountingSales/apiSaveRate`, {
       method: "post",
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ rates: items, name }),
       headers: {
         accept: "application/json",
         "content-type": "application/json",
@@ -179,15 +239,36 @@
   let combinedRates = [{}];
   const template = $template.get(0).content;
   const renderCombinedRates = () => {
-    const htmls = combinedRates.map((_, index) => {
+    const htmls = combinedRates.map((data, index, array) => {
       const copy = document.importNode(template, true);
       const $copy = $(copy);
+      const $inputs = $copy.find("input");
 
       $copy.find(".rateCombined__title").text(`Rate ${index + 1}`);
       new Accounting__DropdownWithSearch(
         $copy.find(".dropdownWithSearch"),
         allAgencies
       );
+
+      $copy.find(".rateCombined__btn--delete").on("click", function () {
+        combinedRates = combinedRates.filter((_, i) => i !== index);
+        renderCombinedRates();
+      });
+
+      $inputs.each((_, element) => {
+        element.value = data[element.dataset.type] || "";
+      });
+
+      $inputs.on("change", function (event) {
+        combinedRates = combinedRates.map((d, i) => {
+          if (i !== index) return d;
+          return { ...d, [event.target.dataset.type]: event.target.value };
+        });
+      });
+
+      if (array.length <= 2) {
+        $copy.find(".rateCombined").addClass("rateCombined--noDelete");
+      }
 
       return $copy;
     });
@@ -210,6 +291,18 @@
   $addCombineItem.on("click", function () {
     combinedRates.push({});
     renderCombinedRates();
+  });
+
+  const $rateCombinedExampleToggle = $(".rateCombined__exampleToggle button");
+  const $rateCombinedExample = $(".rateCombined__example");
+  $rateCombinedExampleToggle.on("click", function () {
+    if ($rateCombinedExample.hasClass("rateCombined__example--show")) {
+      $rateCombinedExample.removeClass("rateCombined__example--show");
+      $(this).text("Show example");
+    } else {
+      $rateCombinedExample.addClass("rateCombined__example--show");
+      $(this).text("Hide example");
+    }
   });
 })();
 

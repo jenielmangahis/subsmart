@@ -240,7 +240,7 @@ $(document).ready(function () {
                     } else {
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
+                            <a href="/accounting/chart-of-accounts/view-register/${rowData.id}" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
 
                             <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="sr-only">Toggle Dropdown</span>

@@ -64,8 +64,36 @@ class AccountingSales extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
-        $payload['user_id'] = logged('id');
+        $data = null;
 
+        if (!array_key_exists('rates', $payload)) {
+            $payload['user_id'] = logged('id');
+            $data = $this->saveRate($payload);
+
+        } else {
+            $this->db->insert('accounting_tax_rates_combined', [
+                'user_id' => logged('id'),
+                'name' => $payload['name'],
+            ]);
+
+            $this->db->where('id', $this->db->insert_id());
+            $combined = $this->db->get('accounting_tax_rates_combined')->row();
+
+            $data = [];
+            foreach ($payload['rates'] as $rate) {
+                $rate['user_id'] = logged('id');
+                $rate['combined_id'] = $combined->id;
+                $record = $this->saveRate($rate);
+                array_push($data, $record);
+            }
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $data]);
+    }
+
+    private function saveRate(array $payload)
+    {
         if (!array_key_exists('agency_id', $payload)) {
             $this->db->select('id');
             $this->db->where('user_id', $payload['user_id']);
@@ -90,10 +118,7 @@ class AccountingSales extends MY_Controller
         $this->db->insert('accounting_tax_rates', $payload);
 
         $this->db->where('id', $this->db->insert_id());
-        $record = $this->db->get('accounting_tax_rates')->row();
-
-        header('content-type: application/json');
-        echo json_encode(['data' => $record]);
+        return $this->db->get('accounting_tax_rates')->row();
     }
 
     public function apiGetRates()

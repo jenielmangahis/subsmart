@@ -55,24 +55,60 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="accordion"> 
                         <ul class="accordion__list">
                             <?php foreach($invoices as $inv){ ?>
-                            <li class="accordion__item">
+                            <li class="accordion__item accordion__item_hover">
                             <div class="accordion__itemTitleWrap">
-                                <h3 class="accordion__itemTitle">Deposit yesterday <br>
-                                    <small class="help help-sm">3 transactions</small>
+                                <h3 class="accordion__itemTitle">Deposited 
+                                <?php 
+                                    $now = date("Y-m-d");
+                                    $yesterday = date('Y-m-d',strtotime("-1 days"));
+
+                                    if ($inv->payment_date == $now)
+                                    {
+                                        echo "Today";
+                                    } 
+                                    elseif ($inv->payment_date == $yesterday)
+                                    {
+                                        echo "Yesterday";
+                                    }
+                                    else
+                                    {
+                                        echo date('Y/m/d', strtotime($inv->payment_date));
+                                    }
+                                
+                                ?><br>
+                                    <small class="help help-sm"><?php echo $inv->invCount; ?> transactions</small>
                                     <small class="help help-sm" style="float:right;text-align:right;">$<?php echo number_format($inv->groupAmount,2); ?> <br> Fees: $1.82 </small>
                                 </h3>
                                 <div class="accordion__itemIconWrap"><svg viewBox="0 0 24 24"><polyline fill="none" points="21,8.5 12,17.5 3,8.5 " stroke="#000" stroke-miterlimit="10" stroke-width="2"/></svg></div>
                             </div>
                             <div class="accordion__itemContent">
                                 <br>
-                                <small class="help help-sm">Batch created: yesterday</small>
+                                <small class="help help-sm">Batch created: 
+                                <?php 
+                                    $now = date("Y-m-d");
+                                    $yesterday = date('Y-m-d',strtotime("-1 days"));
+                                    
+                                    if ($inv->payment_date == $now)
+                                    {
+                                        echo "Today";
+                                    } 
+                                    elseif ($inv->payment_date == $yesterday)
+                                    {
+                                        echo "Yesterday";
+                                    }
+                                    else
+                                    {
+                                        echo date('Y/m/d', strtotime($inv->payment_date));
+                                    }
+                                
+                                ?></small>
                                 <small class="help help-sm" style="float:right;text-align:right;">Net amount: $48.09 </small>
                                 <br>
                                 <small class="help help-sm">Deposit ID: 6095509905</small>
                                 <small class="help help-sm" style="float:right;text-align:right;">REGIONS BANK (...1234) </small>
                                 <br>
 
-                                <p>Your money is on the way.</p>
+                                <!-- <p>Your money is on the way.</p> -->
 
                                 <table class="table">
                                     <thead>
@@ -95,9 +131,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             </li>
 
-                            <?php } ?>
+                            <?php //print_r($invoices); 
+                        
+                        } ?>
                             
                         </ul>
+                        <br>
                     </div>
 
 
