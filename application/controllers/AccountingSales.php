@@ -134,13 +134,21 @@ class AccountingSales extends MY_Controller
         $rates = $this->db->get('accounting_tax_rates')->result();
 
         $agencyIdMap = [];
+        $combinedIdMap = [];
+
         foreach ($rates as $rate) {
             if (!array_key_exists($rate->agency_id, $agencyIdMap)) {
                 $this->db->where('id', $rate->agency_id);
                 $agencyIdMap[$rate->agency_id] = $this->db->get('accounting_tax_agencies')->row();
             }
 
+            if (!is_null($rate->combined_id) && !array_key_exists($rate->combined_id, $combinedIdMap)) {
+                $this->db->where('id', $rate->combined_id);
+                $combinedIdMap[$rate->combined_id] = $this->db->get('accounting_tax_rates_combined')->row();
+            }
+
             $rate->agency = $agencyIdMap[$rate->agency_id];
+            $rate->combined = $combinedIdMap[$rate->combined_id];
         }
 
         header('content-type: application/json');

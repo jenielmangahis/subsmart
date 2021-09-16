@@ -516,4 +516,65 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['account'] = $this->chart_of_accounts_model->getById($id);
         $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
     }
+
+    public function load_registers($accountId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $column = $post['order'][0]['column'];
+        $order = $post['order'][0]['dir'];
+        $columnName = $post['columns'][$column]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
+        $search = $post['columns'][0]['search']['value'];
+
+        $data = [];
+
+        switch($post['transaction_type']) {
+            default : 
+                $checks = $this->chart_of_accounts_model->get_checks_registers($accountId);
+            break;
+        }
+
+        foreach($checks as $check) {
+            switch($check->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($check->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($check->payment_date)),
+                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no,
+                'type' => 'Check',
+                'payee' => $payeeName,
+                'account' => '',
+                'memo' => $check->memo,
+                'payment' => '$'.number_format(floatval($check->total_amount), 2, ',', '.'),
+                'deposit' => '',
+                'reconcile_status' => '',
+                'banking_status' => '',
+                'attachments' => '',
+                'tax' => '',
+                'balance' => ''
+            ];
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($data),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
 }

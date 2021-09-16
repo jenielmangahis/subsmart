@@ -310,6 +310,75 @@ table.dataTable thead {
   }
 }
 
+.editCustomRate {
+  &:not(.editCustomRate--combined) {
+    #editSingleWrapper {
+      display: block;
+    }
+
+    #editCombinedWrapper {
+      display: none;
+    }
+  }
+}
+.editCustomRate--combined {
+  #editSingleWrapper {
+    display: none;
+  }
+
+  #editCombinedWrapper {
+    display: block;
+  }
+
+  .sidebarForm {
+    &__inner {
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    &__header {
+      padding: 16px;
+      padding-bottom: 0;
+    }
+
+    &__form {
+      padding: 0 16px;
+    }
+
+    &__footer {
+      position: static;
+      margin-top: auto;
+    }
+
+    &__messageWrapper {
+      padding: 16px;
+    }
+  }
+}
+.rateCombinedItem {
+  font-family: Sarabun, sans-serif;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f4f5f8;
+
+  &__title {
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  &__label {
+    font-weight: 700;
+  }
+
+  &__value {
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+}
+
 .customRate--combined {
   #rateSingleWrapper {
     display: none;
@@ -429,5 +498,13 @@ table.dataTable thead {
     .rateCombined__btn--delete {
       display: none;
     }
+  }
+}
+
+.rate {
+  &__subItem {
+    height: 36px;
+    display: flex;
+    align-items: center;
   }
 }

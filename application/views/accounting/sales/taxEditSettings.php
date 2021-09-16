@@ -320,7 +320,7 @@ include viewPath('includes/header');
         </div>
     </div>
 
-    <div class="sidebarForm" id="editRate">
+    <div class="sidebarForm editCustomRate" id="editRate">
         <div class="sidebarForm__inner">
             <div class="sidebarForm__header">
                 <div class="sidebarForm__title">Edit custom sales tax rate</div>
@@ -329,28 +329,62 @@ include viewPath('includes/header');
                 </button>
             </div>
 
-            <div class="sidebarForm__message">
-                <div><i class="fa fa-info-circle text-info sidebarForm__messageIcon"></i></div>
-                <div class="sidebarForm__messageText">Changes you make will update the rates everywhere except for any in past returns.</div>
+            <div class="sidebarForm__messageWrapper">
+                <div class="sidebarForm__message">
+                    <div><i class="fa fa-info-circle text-info sidebarForm__messageIcon"></i></div>
+                    <div class="sidebarForm__messageText">Changes you make will update the rates everywhere except for any in past returns.</div>
+                </div>
             </div>
 
-            <form>
-                <div class="form-group">
-                    <label for="editRate__name">Name</label>
-                    <input data-type="name" required type="text" class="form-control" id="editRate__name">
-                </div>
+            <form class="sidebarForm__form">
+                <div id="editSingleWrapper">
+                    <div class="form-group">
+                        <label for="editRate__name">Name</label>
+                        <input data-type="name" required type="text" class="form-control" id="editRate__name">
+                    </div>
 
-                <div class="form-group">
-                    <label for="editRate__rate">Rate</label>
-                    <div class="d-flex align-items-center">
-                        <input required data-type="rate" type="number" class="form-control" id="editRate__rate">
-                        <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                    <div class="form-group">
+                        <label for="editRate__rate">Rate</label>
+                        <div class="d-flex align-items-center">
+                            <input required data-type="rate" type="number" class="form-control" id="editRate__rate">
+                            <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editRate__agency">Agency</label>
+                        <input readonly data-type="agency" class="form-control" id="editRate__agency">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="editRate__agency">Agency</label>
-                    <input readonly data-type="agency" class="form-control" id="editRate__agency">
+                <div id="editCombinedWrapper">
+                    <template>
+                        <div class="rateCombinedItem">
+                            <div class="rateCombinedItem__title" data-type="title"></div>
+
+                            <div class="rateCombinedItem__label">Name</div>
+                            <div class="rateCombinedItem__value">
+                                <span data-type="name"></span>
+                            </div>
+
+                            <div class="rateCombinedItem__label">Rate</div>
+                            <div class="rateCombinedItem__value">
+                                <span data-type="rate"></span>%
+                            </div>
+
+                            <div class="rateCombinedItem__label">Agency</div>
+                            <div class="rateCombinedItem__value">
+                                <span data-type="agency"></span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="form-group">
+                        <label for="editRate__name">Name</label>
+                        <input data-type="name" required type="text" class="form-control" id="editRate__name">
+                    </div>
+
+                    <div id="editRateCombinedItems"></div>
                 </div>
             </form>
 

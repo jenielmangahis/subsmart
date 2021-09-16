@@ -1157,7 +1157,7 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
             $("#create_invoice_modal .items-section table tbody").html(items_html);
             for (var i = 0; i < data.invoice_items.length; i++) {
                 $("#create_invoice_modal .items-section table tbody input[name='items[]']").eq(i).val(data.invoice_items[i]["title"]);
-                $("#create_invoice_modal .items-section table tbody input[name='itemid[]']").eq(i).val(data.itemid[i]["items_id"]);
+                $("#create_invoice_modal .items-section table tbody input[name='itemid[]']").eq(i).val(data.invoice_items[i]["items_id"]);
                 $("#create_invoice_modal .items-section table tbody input[name='item_type[]']").eq(i).val(data.invoice_items[i]["item_type"]);
                 $("#create_invoice_modal .items-section table tbody input[name='quantity[]']").eq(i).val(data.invoice_items[i]["qty"]);
                 var cost = 0;
@@ -1289,83 +1289,90 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
 });
 
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn", function(event) {
-    print_by_batch("packaging_slip");
+    if (!$(this).hasClass("disabled")) {
+        print_by_batch("packaging_slip");
+    }
 });
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-transaction-btn", function(event) {
-    print_by_batch("transactions");
+    if (!$(this).hasClass("disabled")) {
+        print_by_batch("transactions");
+    }
 });
 
 
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-transaction-btn", function(event) {
-    event.preventDefault();
-    $("body").css({ 'cursor': 'wait' });
-    var invoice_ids = new Array();
-    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
-    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
-        if ($(this).is(":checked")) {
-            if ($(this).attr("data-row-type") == "Invoice") {
-                invoice_ids.push($(this).attr("data-invoice-id"));
+    if (!$(this).hasClass("disabled")) {
+        event.preventDefault();
+        $("body").css({ 'cursor': 'wait' });
+        var invoice_ids = new Array();
+        var customer_id = $("#customer-single-modal input[name='customer_id']").val();
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+            if ($(this).is(":checked")) {
+                if ($(this).attr("data-row-type") == "Invoice") {
+                    invoice_ids.push($(this).attr("data-invoice-id"));
+                }
             }
-        }
-    });
+        });
 
-    $.ajax({
-        url: baseURL + "accounting/send_transaction_by_batch",
-        type: "POST",
-        dataType: "json",
-        data: {
-            customer_id: customer_id,
-            invoice_ids: invoice_ids,
-        },
-        success: function(data) {
-            $("body").css({ 'cursor': 'default' });
-            if (data.status == "success") {
+        $.ajax({
+            url: baseURL + "accounting/send_transaction_by_batch",
+            type: "POST",
+            dataType: "json",
+            data: {
+                customer_id: customer_id,
+                invoice_ids: invoice_ids,
+            },
+            success: function(data) {
+                $("body").css({ 'cursor': 'default' });
+                if (data.status == "success") {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: "Success",
+                        html: "Transactions has been sent!",
+                        icon: "success",
+                    });
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+                $("body").css({ 'cursor': 'default' });
                 Swal.fire({
                     showConfirmButton: false,
                     timer: 2000,
-                    title: "Success",
-                    html: "Transactions has been sent!",
-                    icon: "success",
+                    title: "Error",
+                    html: "Something went wrong.",
+                    icon: "error",
                 });
             }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-
-            $("body").css({ 'cursor': 'default' });
-            Swal.fire({
-                showConfirmButton: false,
-                timer: 2000,
-                title: "Error",
-                html: "Something went wrong.",
-                icon: "error",
-            });
-        }
-    });
+        });
+    }
 });
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.send-reminder-btn", function(event) {
-    var invoice_numbers = "";
-    var customer_id = $("#customer-single-modal input[name='customer_id']").val();
-    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
-        if ($(this).is(":checked")) {
-            if ($(this).attr("data-row-status") == "Overdue" || $(this).attr("data-row-status") == "Open") {
-                invoice_numbers += ($(this).attr("data-invoice-number")) + ", ";
+    if (!$(this).hasClass("disabled")) {
+        var invoice_numbers = "";
+        var customer_id = $("#customer-single-modal input[name='customer_id']").val();
+        $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td input[type='checkbox']").each(function() {
+            if ($(this).is(":checked")) {
+                if ($(this).attr("data-row-status") == "Overdue" || $(this).attr("data-row-status") == "Open") {
+                    invoice_numbers += ($(this).attr("data-invoice-number")) + ", ";
+                }
             }
-        }
-    });
+        });
 
-    $("body").css({ 'cursor': 'wait' });
-    $.ajax({
-        url: baseURL + "accounting/get_customer_info",
-        type: "POST",
-        dataType: "json",
-        data: {
-            customer_id: customer_id,
-        },
-        success: function(data) {
-            $("body").css({ 'cursor': 'default' });
-            $("#send-reminder-modal .form-group input[name='subject']").val(`Reminder: Invoices from ` + data.business_name);
+        $("body").css({ 'cursor': 'wait' });
+        $.ajax({
+            url: baseURL + "accounting/get_customer_info",
+            type: "POST",
+            dataType: "json",
+            data: {
+                customer_id: customer_id,
+            },
+            success: function(data) {
+                $("body").css({ 'cursor': 'default' });
+                $("#send-reminder-modal .form-group input[name='subject']").val(`Reminder: Invoices from ` + data.business_name);
 
-            var message = `Dear ` + data.customer_name + `,
+                var message = `Dear ` + data.customer_name + `,
 
 Just a reminder that we have not received a payment for the following invoices. 
 
@@ -1376,20 +1383,21 @@ Let us know if you have questions.
 Thanks for your business!
 ` + data.business_name;
 
-            $("#send-reminder-modal .form-group textarea").html(message);
-            $("#send-reminder-modal").addClass("show");
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            $("body").css({ 'cursor': 'default' });
-            Swal.fire({
-                showConfirmButton: false,
-                timer: 2000,
-                title: "Error",
-                html: "Something went wrong.",
-                icon: "error",
-            });
-        }
-    });
+                $("#send-reminder-modal .form-group textarea").html(message);
+                $("#send-reminder-modal").addClass("show");
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                $("body").css({ 'cursor': 'default' });
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: "Error",
+                    html: "Something went wrong.",
+                    icon: "error",
+                });
+            }
+        });
+    }
 });
 $(document).on("click", "#customer-single-modal #single_customer_table .print-statement-btn ", function(event) {
     window.open(baseURL + "assets/pdf/" + $(this).attr("type") + "_" + $(this).attr("data-statement-id") + ".pdf");

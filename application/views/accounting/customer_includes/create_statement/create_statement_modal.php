@@ -24,7 +24,8 @@
                             <div class="send_statement_form_part">
                                 <div class="form-group">
                                     <div class="label" for="subject">Email</div>
-                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com" readonly>
+                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com"
+                                        readonly>
                                 </div>
                                 <div class="form-group">
                                     <div class="label" for="subject">Subject</div>
@@ -247,7 +248,7 @@
                                     <button type="submit" data-submit-type="save-send" class="btn btn-success"
                                         id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                        style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        style="border-radius: 0 20px 20px 0;margin-left: -5px;padding:8px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                                         <li>

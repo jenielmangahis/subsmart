@@ -5333,6 +5333,20 @@ class Accounting_modals extends MY_Controller
             case 'sales-tax-category' :
                 $return = $this->get_tax_rates_choices($return, $search);
             break;
+            case 'register-account' :
+                $accountTypes = [
+                    'Bank',
+                    'Accounts receivable (A/R)',
+                    'Other Current Assets',
+                    'Fixed Assets',
+                    'Accounts payable (A/P)',
+                    'Other Current Liabilities',
+                    'Long Term Liabilities',
+                    'Equity'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -5409,7 +5423,7 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if ($field === 'pay-bills-vendor') {
+        if ($field === 'pay-bills-vendor' || $field === 'payee' && is_null($this->input->get('modal'))) {
             array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
         } else {
             if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) && $this->input->get('modal') !== 'printChecksModal' && $field !== 'sales-tax-category') {
@@ -5417,7 +5431,7 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if($field === 'product' && count($selected) > 0) {
+        if($field === 'product' && count($selected) > 0 || $field === 'register-account') {
             array_shift($return['results']);
         }
 
