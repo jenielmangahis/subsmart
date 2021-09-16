@@ -86,7 +86,7 @@ class Accounting extends MY_Controller
                 array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
                 array("Reports",    array()),
                 array("Taxes",      array("Sales Tax","Payroll Tax")),
-                array("Mileage",    array()),
+                // array("Mileage",    array()),
                 array("Accounting", array("Chart of Accounts","Reconcile"))
             );
         $this->page_data['menu_link'] =
@@ -99,7 +99,7 @@ class Accounting extends MY_Controller
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
                 array("",   array('/accounting/salesTax','/accounting/payrollTax')),
-                array('#',  array()),
+                // array('#',  array()),
                 array("",   array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
 

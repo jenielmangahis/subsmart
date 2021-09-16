@@ -5837,7 +5837,7 @@ table.dataTable tbody td {
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0px;
+    /* bottom: 0px; */
     overflow-x: hidden;
     overflow-y: auto;
 }

@@ -916,6 +916,7 @@ class Register extends MYF_Controller {
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
+        $this->load->model('CardsFile_model');
 
         $is_success = true;
         $is_valid   = false;
@@ -950,7 +951,6 @@ class Register extends MYF_Controller {
                 $num_months_discounted = REGISTRATION_MONTHS_DISCOUNTED - 1;
                 $plan_amount = $post['plan_price_discounted'];
             }
-
             $plan = $this->NsmartPlan_model->getById($post['plan_id']);
             $next_billing_date = date("Y-m-d", strtotime("+1 month"));
             $today = strtotime(date("Y-m-d"));
@@ -959,7 +959,7 @@ class Register extends MYF_Controller {
                 'last_name'  => $post['lastname'],
                 'email_address' => $post['email'],
                 'phone_number'  => $post['phone'],
-                'business_name' => $post['business_name'],
+                'business_name' => $post['business_name'],                
                 'business_address' => $post['business_address'],
                 'zip_code' => $post['zip_code'],
                 'number_of_employee' => $post['number_of_employee'],
@@ -994,6 +994,14 @@ class Register extends MYF_Controller {
                 'password_plain' =>  $post['password'],
                 'password' => hash( "sha256", $post['password'] ),
             ]); 
+
+            //Update cards file                        
+            if( $this->session->has_userdata('cfid') ) {
+                $cfid = $this->session->userdata('cfid');
+                $data = ['company_id' => $cid];
+                $this->CardsFile_model->updateCardsFile($cfid, $data);
+                $this->session->unset_userdata('cfid');
+            }
 
             if( $is_trial == 0 ){
                 //Record payment
@@ -1134,10 +1142,13 @@ class Register extends MYF_Controller {
                 'expiration_year' => $post['expyear'],
                 'card_cvv' => $post['cvc'],
                 'cc_type' => check_cc_type($post['ccnumber']),
-                'is_primary' => 1
+                'is_primary' => 1,
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s"),
             ];
 
-            $cardsFile  = $this->CardsFile_model->create($data_cc);
+            $card_file_id  = $this->CardsFile_model->create($data_cc);
+            $this->session->set_userdata('cfid', $card_file_id);
             $is_success = 1;
 
         }else{

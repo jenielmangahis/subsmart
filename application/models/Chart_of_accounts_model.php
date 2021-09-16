@@ -309,4 +309,11 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get('accounting_chart_of_accounts');
 		return $query->result();
 	}
+
+	public function get_checks_registers($accountId)
+	{
+		$this->db->where('bank_account_id', $accountId);
+		$query = $this->db->get('accounting_check');
+		return $query->result();
+	}
 }

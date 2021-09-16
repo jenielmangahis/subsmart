@@ -156,7 +156,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <div class="form-group col-md-4">
                                                                     <label for="payee">Payee</label>
                                                                     <select name="payee" id="payee"class="form-control">
-                                                                        
+                                                                        <option value="all" selected>All</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -210,27 +210,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked name="chk_memo" id="chk_memo">
+                                                            <input type="checkbox" name="chk_memo" id="chk_memo" onchange="col(this)">
                                                             <label for="chk_memo">Memo</label>
                                                         </div>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked name="chk_reconcile_status" id="chk_reconcile_status">
+                                                            <input type="checkbox" name="chk_reconcile_status" id="chk_reconcile_status" onchange="col(this)">
                                                             <label for="chk_reconcile_status">Reconcile Status</label>
                                                         </div>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked name="chk_banking_balance" id="chk_banking_balance"> 
-                                                            <label for="chk_banking_balance">Banking Balance</label>
+                                                            <input type="checkbox" name="chk_banking_status" id="chk_banking_status" onchange="col(this)"> 
+                                                            <label for="chk_banking_status">Banking Status</label>
                                                         </div>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked name="chk_attachments" id="chk_attachments">
+                                                            <input type="checkbox" name="chk_attachments" id="chk_attachments" onchange="col(this)">
                                                             <label for="chk_attachments">Attachments</label>
                                                         </div>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked name="chk_tax" id="chk_tax">
+                                                            <input type="checkbox" name="chk_tax" id="chk_tax" onchange="col(this)">
                                                             <label for="chk_tax">Tax</label>
                                                         </div>
                                                         <div class="checkbox checkbox-sec d-block my-2">
-                                                            <input type="checkbox" checked name="chk_running_balance" id="chk_running_balance">
+                                                            <input type="checkbox" checked name="chk_running_balance" id="chk_running_balance" onchange="col(this)">
                                                             <label for="chk_running_balance">Running Balance</label>
                                                         </div>
 											            <p class="m-0">Other</p>
@@ -271,25 +271,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>TYPE</th>
                                             <th>PAYEE</th>
                                             <th>ACCOUNT</th>
-                                            <th class="memo">MEMO</th>
-                                            <th class="payment">PAYMENT</th>
-                                            <th class="deposit">DEPOSIT</th>
-                                            <th class="reconcile_status">
+                                            <th class="memo d-none">MEMO</th>
+                                            <th>PAYMENT</th>
+                                            <th>DEPOSIT</th>
+                                            <th class="reconcile_status d-none">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     <i class="fa fa-check"></i>
                                                 </div>
                                             </th>
-                                            <th class="banking_status">
+                                            <th class="banking_status d-none">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     <i class="fa fa-copy"></i>
                                                 </div>
                                             </th>
-                                            <th class="attachments">
+                                            <th class="attachments d-none">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     <i class="fa fa-paperclip"></i>
                                                 </div>
                                             </th>
-                                            <th class="tax">TAX</th>
+                                            <th class="tax d-none">TAX</th>
                                             <th class="text-right running_balance" width="10%">BALANCE</th>
                                         </tr>
 									</thead>

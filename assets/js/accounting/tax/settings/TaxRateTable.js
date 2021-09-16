@@ -8,23 +8,64 @@ export class TaxRateTable {
     const columns = {
       name: (_, __, row) => {
         const isActive = row.is_active === "1";
-        return `<span>${row.name} ${!isActive ? "(inactive)" : ""}</span>`;
+
+        if (!row.items) {
+          return `<span>${row.name} ${!isActive ? "(inactive)" : ""}</span>`;
+        }
+
+        const items = row.items.map((item) => {
+          return `<div class="rate__subItem pl-3 pr-3">${item.name}</div>`;
+        });
+
+        return `
+          <div class="rate__subItem">
+            ${row.name} ${!isActive ? "(inactive)" : ""}
+          </div>
+          ${items.join("")}
+        `;
       },
       agency: (_, __, row) => {
         const agency = row.agency.replaceAll(":", ", ");
-        return `<span>${agency}</span>`;
+
+        if (!row.items) {
+          return `<span>${agency}</span>`;
+        }
+
+        const items = row.items.map((item) => {
+          const itemAgency = item.agency.replaceAll(":", ", ");
+          return `<div class="rate__subItem">${itemAgency}</div>`;
+        });
+
+        return `
+          <div class="rate__subItem"></div>
+          ${items.join("")}
+        `;
       },
       rate: (_, __, row) => {
-        return `<span>${row.rate}%</span>`;
+        if (!row.items) {
+          return `<span>${row.rate}%</span>`;
+        }
+
+        const items = row.items.map((item) => {
+          return `<div class="rate__subItem">${item.rate}%</div>`;
+        });
+
+        return `
+          <div class="rate__subItem">${row.rate}%</div>
+          ${items.join("")}
+        `;
       },
       actions: (_, __, row) => {
         if (row.is_active !== "1") {
           return `
-            <button data-action="makeActive" type="button" class="btn btn-sm btnGroup__main action">Make active</button>
+            <button data-action="makeActive" type="button" class="btn btn-sm btnGroup__main action">
+              Make active
+            </button>
           `;
         }
 
-        return `
+        if (!row.items) {
+          return `
             <div class="btn-group btnGroup">
                 <button data-action="edit" type="button" class="btn btn-sm btnGroup__main action">Edit</button>
                 <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -34,6 +75,37 @@ export class TaxRateTable {
                     <a data-action="makeInactive" class="dropdown-item action" href="#">Make inactive</a>
                 </div>
             </div>
+          `;
+        }
+
+        const items = row.items.map((item) => {
+          return `
+            <div class="btn-group btnGroup rate__subItem">
+                <button
+                  data-action="edit"
+                  type="button"
+                  class="btn btn-sm btnGroup__main action"
+                  style="flex: 0;"
+                  data-itemid="${item.id}"
+                >
+                  Edit
+                </button>
+            </div>
+          `;
+        });
+
+        return `
+          <div class="btn-group btnGroup">
+              <button data-action="edit" type="button" class="btn btn-sm btnGroup__main action">Edit</button>
+              <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <div class="dropdown-menu">
+                  <a data-action="makeInactive" class="dropdown-item action" href="#">Make inactive</a>
+              </div>
+          </div>
+
+          ${items.join("")}
         `;
       },
     };
@@ -42,10 +114,41 @@ export class TaxRateTable {
     const includeInactive = this.shouldIncludeInactive();
 
     const actions = {
-      edit: (row) => {
+      edit: (row, _, event) => {
         const $sidebar = $("#editRate");
         const $sidebarCloseBtn = $sidebar.find("[data-action=close]");
         const $sidebarSaveBtn = $sidebar.find("#editRateBtn");
+
+        const { itemid } = event.target.dataset;
+        $sidebar.removeClass("editCustomRate--combined");
+
+        if (row.items) {
+          if (itemid) {
+            row = row.items.find((i) => i.id == itemid);
+          } else {
+            $sidebar.addClass("editCustomRate--combined");
+            const $parent = $sidebar.find("#editCombinedWrapper");
+            const $wrapper = $sidebar.find("#editRateCombinedItems");
+            const template = $parent.find("template").get(0).content;
+
+            const htmls = row.items.map((item, index) => {
+              item.title = `Rate ${index + 1}`;
+
+              const copy = document.importNode(template, true);
+              const $copy = $(copy);
+
+              const $dataTypes = $copy.find("[data-type]");
+              $dataTypes.each((_, element) => {
+                element.textContent = item[element.dataset.type];
+              });
+
+              return $copy;
+            });
+
+            $wrapper.empty();
+            $wrapper.append(htmls);
+          }
+        }
 
         const closeSidebar = () => {
           $sidebar.removeClass("sidebarForm--show");
@@ -72,7 +175,11 @@ export class TaxRateTable {
         });
 
         $sidebarSaveBtn.on("click", async function () {
-          const $inputs = $sidebar.find("[data-type]");
+          let $inputs = $sidebar.find("#editSingleWrapper input[data-type]");
+          if ($sidebar.hasClass("editCustomRate--combined")) {
+            $inputs = $sidebar.find("#editCombinedWrapper input[data-type]");
+          }
+
           const payload = {};
           for (let index = 0; index < $inputs.length; index++) {
             const input = $inputs[index];
@@ -89,12 +196,10 @@ export class TaxRateTable {
               return;
             }
 
-            if ($(input).is(":checkbox") && !input.checked) {
-              continue;
-            }
-
             payload[key] = value;
           }
+
+          delete payload.agency; // we use agency_id instead
 
           $(this).attr("disabled", true);
           $(this).text("Saving...");
@@ -157,10 +262,37 @@ export class TaxRateTable {
         type: "GET",
         url: `${prefixURL}/AccountingSales/apiGetRates?include_inactive=${includeInactive}`,
         dataSrc: (json) => {
-          return json.data.map((rate) => {
+          const data = json.data.map((rate) => {
             rate.agency = rate.agency.agency;
             return rate;
           });
+
+          // group rates by combined_id
+          return data.reduce((carry, rate) => {
+            if (!rate.combined) return [...carry, rate];
+
+            if (!carry.some((i) => i.id === rate.combined.id)) {
+              return [
+                ...carry,
+                {
+                  ...rate.combined,
+                  agency: "",
+                  is_active: "1",
+                  items: [rate],
+                  rate: Number(rate.rate),
+                  name: `${rate.combined.name} (combined)`,
+                },
+              ];
+            }
+
+            return carry.map((currItem) => {
+              if (!currItem.items) return currItem;
+              if (currItem.id !== rate.combined.id) return currItem;
+              currItem.items.push(rate);
+              currItem.rate += Number(rate.rate);
+              return currItem;
+            });
+          }, []);
         },
       },
       columns: [
