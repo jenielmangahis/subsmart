@@ -90,7 +90,7 @@ error_reporting(0);
                         <br/>
                         <label>Suite/Unit</label> <span class="help">(optional)</span>
                         <div class="help help-sm help-block">Suite #</div>
-                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->unit_nbr : '' ?>" placeholder="e.g. Ap #12" required="">
+                        <input type="text" name="unit_nbr" class="form-control" autocomplete="off" value="<?php echo ($profiledata) ? $profiledata->unit_nbr : '' ?>" placeholder="e.g. Ap #12">
                         <span class="validation-error-field" data-formerrors-for-name="unit_nbr" data-formerrors-message="true" style="display: none;"></span>
                      </div>
                   </div>

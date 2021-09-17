@@ -148,6 +148,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
                                                   <li role="presentation">
                                                       <a role="menuitem" class="delete-card" data-id="<?= $c->id; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                      <a role="menuitem" href="<?php echo url('cards_file/edit/'.$c->id) ?>"><span class="fa fa-pencil icon"></span> Edit</a>
                                                   </li>  
                                               </ul>
                                           </div>

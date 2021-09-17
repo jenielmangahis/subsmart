@@ -889,6 +889,7 @@ $route['cards_file/create_new_card'] = 'CardsFile/create_new_card';
 $route['cards_file/_update_primary_card'] = 'CardsFile/update_primary_card';
 $route['cards_file/delete_card'] = 'CardsFile/delete_card';
 $route['cards_file/test_card'] = 'CardsFile/test_card';
+$route['cards_file/edit/(:any)'] = 'CardsFile/edit_card/$1';
 
 //Tools
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
