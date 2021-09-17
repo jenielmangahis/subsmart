@@ -52,7 +52,7 @@ const dropdownFields = [
     'cash-back-account',
     'funds-account',
     'transfer-account',
-    'journal-entry-account',
+    'journal-entry-accounts',
     'inventory-adj-account',
     'credit-card-account',
     'service',

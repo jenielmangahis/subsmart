@@ -12,6 +12,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_receive_payment_model');
+        $this->load->model('accounting_journal_entries_model');
         $this->load->model('vendors_model');
         $this->load->model('expenses_model');
         $this->load->model('categories_model');
@@ -532,40 +533,251 @@ class Chart_of_accounts extends MY_Controller {
         switch($post['transaction_type']) {
             default : 
                 $checks = $this->chart_of_accounts_model->get_checks_registers($accountId);
+                $journalEntries = $this->chart_of_accounts_model->get_journal_entry_registers($accountId);
+                $billItems = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Bill');
+                $ccCredits = $this->chart_of_accounts_model->get_credit_card_credit_registers($accountId);
+                $vendorCredits = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Vendor Credit');
+                $transfers = $this->chart_of_accounts_model->get_transfer_registers($accountId);
             break;
         }
 
-        foreach($checks as $check) {
-            switch($check->payee_type) {
-                case 'vendor':
-                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
-                    $payeeName = $payee->display_name;
-                break;
-                case 'customer':
-                    $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
-                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
-                break;
-                case 'employee':
-                    $payee = $this->users_model->getUser($check->payee_id);
-                    $payeeName = $payee->FName . ' ' . $payee->LName;
-                break;
+        if(isset($checks) && count($checks) > 0) {
+            foreach($checks as $check) {
+                switch($check->payee_type) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($check->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+    
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no,
+                    'type' => 'Check',
+                    'payee' => $payeeName,
+                    'account' => $this->account_col($check->id, 'Check'),
+                    'memo' => $check->memo,
+                    'payment' => '$'.number_format(floatval($check->total_amount), 2, ',', '.'),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
             }
 
-            $data[] = [
-                'date' => date("m/d/Y", strtotime($check->payment_date)),
-                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no,
-                'type' => 'Check',
-                'payee' => $payeeName,
-                'account' => '',
-                'memo' => $check->memo,
-                'payment' => '$'.number_format(floatval($check->total_amount), 2, ',', '.'),
-                'deposit' => '',
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => '',
-                'tax' => '',
-                'balance' => ''
-            ];
+            $checkCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Check');
+
+            foreach($checkCategories as $checkCategory) {
+                $check = $this->vendors_model->get_check_by_id($checkCategory->transaction_id);
+
+                switch($check->payee_type) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($check->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no,
+                    'type' => 'Check',
+                    'payee' => $payeeName,
+                    'account' => $this->account_col($check->id, 'Check'),
+                    'memo' => $check->memo,
+                    'payment' => '',
+                    'deposit' => '$'.number_format(floatval($checkCategory->amount), 2, ',', '.'),
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+        }
+
+        if(isset($journalEntries) && count($journalEntries) > 0) {
+            foreach($journalEntries as $journalEntryItem) {
+                $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id);
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
+                    'ref_no' => $journalEntry->journal_no,
+                    'type' => 'Journal',
+                    'payee' => '',
+                    'account' => '-Split-',
+                    'memo' => $journalEntry->memo,
+                    'payment' => $journalEntryItem->credit !== "0" ? '$'.number_format(floatval($journalEntryItem->credit), 2, ',', '.') : "",
+                    'deposit' => $journalEntryItem->debit !== "0" ? '$'.number_format(floatval($journalEntryItem->debit), 2, ',', '.') : "",
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+        }
+
+        if(isset($billItems) && count($billItems) > 0) {
+            foreach($billItems as $billItem) {
+                $bill = $this->vendors_model->get_bill_by_id($billItem->transaction_id);
+                $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                $payeeName = $payee->display_name;
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'ref_no' => $bill->bill_no,
+                    'type' => 'Bill',
+                    'payee' => $payeeName,
+                    'account' => 'Accounts Payable',
+                    'memo' => $bill->memo,
+                    'payment' => "",
+                    'deposit' => '$'.number_format(floatval($billItem->amount), 2, ',', '.'),
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+        }
+
+        if(isset($ccCredits) && count($ccCredits) > 0) {
+            foreach($ccCredits as $ccCredit) {
+                switch($ccCredit->payee_type) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($ccCredit->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                    'ref_no' => $ccCredit->ref_no,
+                    'type' => 'CC-Credit',
+                    'payee' => $payeeName,
+                    'account' => $this->account_col($ccCredit->id, 'Credit Card Credit'),
+                    'memo' => $ccCredit->memo,
+                    'payment' => '$'.number_format(floatval($ccCredit->total_amount), 2, ',', '.'),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+
+            $ccCreditCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Credit Card Credit');
+
+            foreach($ccCreditCategories as $ccCreditCategory) {
+                $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditCategory->transaction_id);
+
+                switch($ccCredit->payee_type) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($ccCredit->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                    'ref_no' => $ccCredit->ref_no,
+                    'type' => 'CC-Credit',
+                    'payee' => $payeeName,
+                    'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
+                    'memo' => $ccCredit->memo,
+                    'payment' => '$'.number_format(floatval($ccCreditCategory->amount), 2, ',', '.'),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+        }
+
+        if(isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach($vendorCredits as $vendorCredit) {
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCredit->transaction_id);
+                $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
+                $payeeName = $payee->display_name;
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                    'ref_no' => $vCredit->ref_no,
+                    'type' => 'Vendor Credit',
+                    'payee' => $payeeName,
+                    'account' => 'Accounts Payable',
+                    'memo' => $vCredit->memo,
+                    'payment' => '$'.number_format(floatval($vendorCredit->amount), 2, ',', '.'),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+        }
+
+        if(isset($transfers) && count($transfers) > 0) {
+            foreach($transfers as $transfer) {
+                if($transfer->transfer_from_account_id === $accountId) {
+                    $account = $this->chart_of_accounts_model->getName($transfer->transfer_to_account_id);
+                } else {
+                    $account = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
+                }
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
+                    'ref_no' => '',
+                    'type' => 'Transfer',
+                    'payee' => '',
+                    'account' => $account,
+                    'memo' => $transfer->transfer_memo,
+                    'payment' => $transfer->transfer_from_account_id === $accountId ? '$'.number_format(floatval($transfer->transfer_amount), 2, ',', '.') : '',
+                    'deposit' => $transfer->transfer_to_account_id === $accountId ? '$'.number_format(floatval($transfer->transfer_amount), 2, ',', '.') : '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
         }
 
         $result = [
@@ -576,5 +788,31 @@ class Chart_of_accounts extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    private function account_col($transactionId, $transactionType)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        $totalCount = count($categories) + count($items);
+
+        if ($totalCount > 1) {
+            $category = '-Split-';
+        } else {
+            if ($totalCount === 1) {
+                if (count($categories) === 1 && count($items) === 0) {
+                    $expenseAcc = $categories[0]->expense_account_id;
+                } else {
+                    $itemId = $items[0]->item_id;
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+                    $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                }
+
+                $category = $this->chart_of_accounts_model->getName($expenseAcc);
+            }
+        }
+
+        return $category;
     }
 }

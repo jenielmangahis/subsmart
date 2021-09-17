@@ -1534,12 +1534,10 @@ class Accounting_modals extends MY_Controller
                 $entryItems = [];
                 foreach ($data['journal_entry_accounts'] as $key => $value) {
                     $name = explode('-', $data['names'][$key]);
-                    $account = explode('-', $value);
     
                     $entryItems[] = [
                         'journal_entry_id' => $entryId,
-                        'account_key' => $account[0],
-                        'account_id' => $account[1],
+                        'account_id' => $value,
                         'debit' => $data['debits'][$key],
                         'credit' => $data['credits'][$key],
                         'description' => $data['descriptions'][$key],
@@ -3575,8 +3573,8 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if (isset($data['expense_name'])) {
-            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
         }
 
         if (isset($data['item'])) {
@@ -3591,7 +3589,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -3641,9 +3639,9 @@ class Accounting_modals extends MY_Controller
 
                 $this->vendors_model->updateVendor($vendor->id, $vendorData);
 
-                if (isset($data['expense_name'])) {
+                if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    foreach ($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Vendor Credit',
                             'transaction_id' => $vendorCreditId,
@@ -3959,8 +3957,8 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if (isset($data['expense_name'])) {
-            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        if (isset($data['expense_account'])) {
+            $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
         }
 
         if (isset($data['item'])) {
@@ -3974,7 +3972,7 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
-        } elseif (!isset($data['expense_name']) && !isset($data['item'])) {
+        } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
@@ -4019,9 +4017,9 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                if (isset($data['expense_name'])) {
+                if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    foreach ($data['expense_name'] as $index => $value) {
+                    foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Credit Card Credit',
                             'transaction_id' => $creditId,
@@ -5216,7 +5214,7 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
-            case 'journal-entry-account' :
+            case 'journal-entry-accounts' :
                 $types = $this->account_model->getAccounts();
                 usort($types, function($a, $b) {
                     return strcmp($a->account_name, $b->account_name);
@@ -5397,27 +5395,29 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                foreach($childrens as $child) {
-                    if(count($accountTypes) > 1) {
-                        $lastResultKey = array_key_last($return['results'][array_key_last($return['results'])]['children']);
-                        if($return['results'][array_key_last($return['results'])]['children'][$lastResultKey]['id'] !== null || $return['results'][array_key_last($return['results'])]['children'][$lastResultKey]['text'] !== $child['parent']) {
-                            $return['results'][array_key_last($return['results'])]['children'][]['text'] = 'Sub-account of '.$child['parent'];
-                        }
+                if(!is_null($childrens)) {
+                    foreach($childrens as $child) {
+                        if(count($accountTypes) > 1) {
+                            $lastResultKey = array_key_last($return['results'][array_key_last($return['results'])]['children']);
+                            if($return['results'][array_key_last($return['results'])]['children'][$lastResultKey]['id'] !== null || $return['results'][array_key_last($return['results'])]['children'][$lastResultKey]['text'] !== $child['parent']) {
+                                $return['results'][array_key_last($return['results'])]['children'][]['text'] = 'Sub-account of '.$child['parent'];
+                            }
+        
+                            $lastKey = array_key_last($return['results'][array_key_last($return['results'])]['children']);
+                            $return['results'][array_key_last($return['results'])]['children'][$lastKey]['children'][] = [
+                                'id' => $child['id'],
+                                'text' => $child['text']
+                            ];
+                        } else {
+                            if($return['results'][array_key_last($return['results'])]['id'] !== null || $return['results'][array_key_last($return['results'])]['text'] !== $child['parent']) {
+                                $return['results'][]['text'] = 'Sub-account of '.$child['parent'];
+                            }
     
-                        $lastKey = array_key_last($return['results'][array_key_last($return['results'])]['children']);
-                        $return['results'][array_key_last($return['results'])]['children'][$lastKey]['children'][] = [
-                            'id' => $child['id'],
-                            'text' => $child['text']
-                        ];
-                    } else {
-                        if($return['results'][array_key_last($return['results'])]['id'] !== null || $return['results'][array_key_last($return['results'])]['text'] !== $child['parent']) {
-                            $return['results'][]['text'] = 'Sub-account of '.$child['parent'];
+                            $return['results'][array_key_last($return['results'])]['children'][] = [
+                                'id' => $child['id'],
+                                'text' => $child['text']
+                            ];
                         }
-
-                        $return['results'][array_key_last($return['results'])]['children'][] = [
-                            'id' => $child['id'],
-                            'text' => $child['text']
-                        ];
                     }
                 }
             }
@@ -5721,7 +5721,7 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if($search !== null && $search !== '') {
+        if($search !== null && $search !== '' && !is_null($choices['childrens'])) {
             usort($choices['childrens'], function ($a, $b) use ($search) {
                 $indexA = stripos($a->name, "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($a->name, "<strong>$search</strong>");
                 $indexB = stripos($b->name, "<strong>$search</strong>") === false ? PHP_INT_MAX : stripos($b->name, "<strong>$search</strong>");

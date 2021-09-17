@@ -1189,3 +1189,275 @@ sls = parseFloat(sls).toFixed(2);
 $("#sales_tax").val(sls);
 cal_total_due();
 });
+
+function getItemReceipt_k(obj) {
+  var sk = jQuery(obj).val();
+  var site_url = jQuery("#siteurl").val();
+  jQuery.ajax({
+    url: site_url + "items/getitem_Receipt",
+    data: { sk: sk },
+    type: "GET",
+    success: function (data) {
+      /* alert(data); */
+      jQuery(obj).parent().find(".suggestions").empty().html(data);
+    },
+    error: function () {
+      alert("An error has occurred");
+    },
+  });
+}
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+function setitemReceipt(obj, title, price, discount, itemid) {
+  // alert( 'yeah');
+// alert('setitemCM');
+  jQuery(obj).parent().parent().find(".getItemReceipt").val(title);
+  jQuery(obj).parent().parent().parent().find(".pricerr").val(price);
+  jQuery(obj).parent().parent().parent().find(".discountrr").val(discount);
+  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+  var counter = jQuery(obj)
+    .parent()
+    .parent()
+    .parent()
+    .find(".pricerr")
+    .data("counter");
+  jQuery(obj).parent().empty();
+  calculationReceipt(counter);
+}
+
+$(document).on("focusout", ".pricerr", function () {
+  var counter = $(this).data("counter");
+  calculationReceipt(counter);
+});
+
+// $(document).on("focusout", ".quantitycm", function () {
+//   var counter = $(this).data("counter");
+//   calculationcm(counter);
+// });
+$(document).on("focusout", ".discountrr", function () {
+  var counter = $(this).data("counter");
+  calculationReceipt(counter);
+});
+
+
+$(document).on("focusout", ".quantityrr2", function () {
+  // var counter = $(this).data("counter");
+//   calculationcm(counter);
+// var idd = this.id;
+var idd = $(this).attr('data-itemid');
+var in_id = idd;
+  var price = $("#price_rr_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_rr_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+//   alert( 'yeah' + total);
+
+  $("#span_total_receipt_" + in_id).text(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax1_rr_" + in_id).val(tax1);
+  $("#discount_rr_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_rr_'+ in_id).length ){
+    $('#item_total_rr_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_rr_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_rr_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotalrr = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_receipt_"]').each(function(){
+    subtotalrr += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotalcm);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_rr").text(subtotal.toFixed(2));
+  $("#item_total_rr").val(subtotal.toFixed(2));
+
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_rr").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_rr_").text(subtotaltax.toFixed(2));
+  $("#total_tax_rr_").val(subtotaltax.toFixed(2));
+
+
+  $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2)); 
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+function calculationReceipt(counter) {
+  // alert( 'yeah');
+  var price = $("#price_rr_" + counter).val();
+  var quantity = $("#quantity_" + counter).val();
+  var discount = $("#discount_rr_" + counter).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // console.log( 'yeah' + total);
+
+  $("#span_total_receipt_" + counter).text(total);
+  $("#tax_1_" + counter).text(tax1);
+  $("#tax_111_" + counter).text(tax1);
+  $("#tax_1_" + counter).val(tax1);
+  $("#discount_rr_" + counter).val(discount);
+  $("#tax1_rr_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax_1_'+ counter).length ){
+    $('#tax_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_rr_'+ counter).length ){
+    $('#item_total_rr_'+counter).val(total);
+  }
+
+  // alert('dri');
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_rr_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_rr_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_receipt_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+//   alert(subtotal);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_rr").text(subtotal.toFixed(2));
+  $("#item_total_rr").val(subtotal.toFixed(2));
+
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_rr").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_rr_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input_rr").val(subtotaltax.toFixed(2));
+
+
+  $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+  // alert(grand_total_w);
+
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    // alert('none');
+  }else{
+    $("#grand_total_rr").text(grand_total_w.toFixed(2));
+    $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+    $("#supergrandtotal").text(super_grand.toFixed(2));
+    $("#supergrandtotal_input").val(super_grand.toFixed(2));
+  }
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+}
