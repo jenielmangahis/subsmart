@@ -4661,6 +4661,34 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         }
 
+        $path = './assets/files/'.$company_id;
+        $companypath = $path . '/company';
+        if(!is_dir($path)){
+        if(is_writeable('./assets/files/')){
+            if(mkdir($path,0755,TRUE)){
+            echo "Created $path";
+            if(mkdir($companypath,0755,TRUE)){
+                echo "Created $companypath";
+            } else {
+                echo "Failed to create $companypath";
+            }
+            } else {
+            echo "Failed to create $path";
+            }
+
+        } else {
+            echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
+            $stat = stat($path);
+            print_r(posix_getpwuid($stat['uid']));
+
+            chmod($path, 0755); // trying to change permissions
+            //chown($path, $stat['uid']);
+        }
+
+        } else {
+        echo 'directory already exists.';
+        }
+
         if ($addQuery > 0) {
             $a = $this->input->post('items');
             $b = $this->input->post('item_type');
@@ -4799,6 +4827,34 @@ class Accounting extends MY_Controller
         //     redirect('accounting/banking');
         //     // echo json_encode($addQuery);
         // }
+
+        $path = './assets/files/'.$company_id;
+        $companypath = $path . '/company';
+        if(!is_dir($path)){
+        if(is_writeable('./assets/files/')){
+            if(mkdir($path,0755,TRUE)){
+            echo "Created $path";
+            if(mkdir($companypath,0755,TRUE)){
+                echo "Created $companypath";
+            } else {
+                echo "Failed to create $companypath";
+            }
+            } else {
+            echo "Failed to create $path";
+            }
+
+        } else {
+            echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
+            $stat = stat($path);
+            print_r(posix_getpwuid($stat['uid']));
+
+            chmod($path, 0755); // trying to change permissions
+            //chown($path, $stat['uid']);
+        }
+
+        } else {
+        echo 'directory already exists.';
+        }
 
         if ($addQuery > 0) {
             $a = $this->input->post('items');
@@ -7034,47 +7090,74 @@ class Accounting extends MY_Controller
         $subject = $this->input->post("subject");
         $message = $this->input->post("message");
 
-        $server = MAIL_SERVER;
-        $port = MAIL_PORT;
-        $username = MAIL_USERNAME;
-        $password = MAIL_PASSWORD;
-        $from = MAIL_FROM;
+        // include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        // $server = MAIL_SERVER;
+        // $port = MAIL_PORT;
+        // $username = MAIL_USERNAME;
+        // $password = MAIL_PASSWORD;
+        // $from = MAIL_FROM;
 
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $username;
-        $mail->Password = $password;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout = 10; // seconds
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'nSmarTrac';
-        $mail->Subject = $subject;
+        // $mail = new PHPMailer(true);
+        // $mail->isSMTP();
+        // $mail->getSMTPInstance()->Timelimit = 5;
+        // $mail->Host = $server;
+        // $mail->SMTPAuth = true;
+        // $mail->Username = $username;
+        // $mail->Password = $password;
+        // $mail->SMTPSecure = 'ssl';
+        // $mail->Timeout = 10; // seconds
+        // $mail->Port = $port;
+        // $mail->From = $from;
+        // $mail->FromName = 'nSmarTrac';
+        // $mail->Subject = $subject;
 
-        //get job data
+        // //get job data
 
-        $this->page_data['customer_name'] = $customer_name;
-        $this->page_data['message'] = $message;
-        $this->page_data['subject'] = $subject;
+        // $this->page_data['customer_name'] = $customer_name;
+        // $this->page_data['message'] = $message;
+        // $this->page_data['subject'] = $subject;
         
-        $mail->IsHTML(true);
-        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $mail->IsHTML(true);
+        // $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
 
-        $mail->Body =  'Send Reminders';
-        $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
-        $mail->MsgHTML($content);
-        $mail->addAddress($customer_email);
+        // $mail->Body =  'Send Reminders';
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        // $mail->MsgHTML($content);
+        // $mail->addAddress($customer_email);
+        
         $data = new stdClass();
-        $data->status = "success";
         
-        if (!$mail->Send()) {
-            $data->status = "error";
-            $data->status = "Mailer Error: ".$mail->ErrorInfo;
-            exit;
+        $this->load->library('email');
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'ssl://smtp.gmail.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'nsmartrac@gmail.com',
+            'smtp_pass' => 'nSmarTrac2020',
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8'
+        );
+        $this->email->initialize($config);
+        $this->email->set_newline("\r\n");
+
+        $this->email->from("websender@nsmartrac.com", "Lou Test");
+        $this->email->to($customer_email);
+        $this->email->subject('Test email Sending Reminder');
+        $message = "this is just a test.";
+        $this->email->message($message);
+        //Send mail
+
+        if ($this->email->send()) {
+            $data->status = "success";
+        } else {
+            $data->status = $this->email->send();
         }
+        // if (!$mail->Send()) {
+        //     $data->status = "error";
+        //     $data->status = "Mailer Error: ".$mail->ErrorInfo;
+        //     exit;
+        // }
+        // $mail->ClearAllRecipients();
 
         //=======>>>>> willberts code for email
         // $this->load->library('email');
@@ -9237,10 +9320,9 @@ class Accounting extends MY_Controller
                                 $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
                                 $this->page_data['next_date']=$next_date;
                             } elseif ($recurring_template->recurring_interval == "Monthly") {
-                                
                                 if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($recurring_template->start_date)));
-                                }else{
+                                } else {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($s_receipt->sales_receipt_date)));
                                 }
                                 $next_month= date('Y-m-d', strtotime($month_start." + ".$recurring_template->recurr_every." months"));
@@ -9255,17 +9337,16 @@ class Accounting extends MY_Controller
                                     $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
                                 }
                                 $this->page_data['next_date']=$next_date;
-                            } elseif ($recurring_template->recurring_interval == "Yearly")  {
-                                if(date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))){
-                                    $next_year = date("Y",strtotime("+ 1 year",strtotime($recurring_template->start_date)));
-                                }else{
-
+                            } elseif ($recurring_template->recurring_interval == "Yearly") {
+                                if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $next_year = date("Y", strtotime("+ 1 year", strtotime($recurring_template->start_date)));
+                                } else {
                                 }
-                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year; 
+                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year;
                             }
                         }
                     }
-                }elseif($recurring_template->txn_type == "Delayed Charge"){
+                } elseif ($recurring_template->txn_type == "Delayed Charge") {
                     $delayed_charges = $this->accounting_recurring_transactions_model->get_recuring_delayed_charges($recurring_id);
                     foreach ($delayed_charges as $charge) {
                         $this->page_data['amount']=$charge->total_amount;
@@ -9286,10 +9367,9 @@ class Accounting extends MY_Controller
                                 $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
                                 $this->page_data['next_date']=$next_date;
                             } elseif ($recurring_template->recurring_interval == "Monthly") {
-                                
                                 if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($recurring_template->start_date)));
-                                }else{
+                                } else {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($charge->delayed_credit_date)));
                                 }
                                 $next_month= date('Y-m-d', strtotime($month_start." + ".$recurring_template->recurr_every." months"));
@@ -9304,13 +9384,12 @@ class Accounting extends MY_Controller
                                     $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
                                 }
                                 $this->page_data['next_date']=$next_date;
-                            } elseif ($recurring_template->recurring_interval == "Yearly")  {
-                                if(date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))){
-                                    $next_year = date("Y",strtotime("+ 1 year",strtotime($recurring_template->start_date)));
-                                }else{
-
+                            } elseif ($recurring_template->recurring_interval == "Yearly") {
+                                if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
+                                    $next_year = date("Y", strtotime("+ 1 year", strtotime($recurring_template->start_date)));
+                                } else {
                                 }
-                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year; 
+                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year;
                             }
                         }
                     }
@@ -9329,8 +9408,8 @@ class Accounting extends MY_Controller
     public function tester()
     {
         $string = 'Sarah has 4 dolls and 6 bunnies.';
-        $outputString = preg_replace('/[^0-9]/', '', $string);  
-        echo("The extracted numbers are: $outputString \n"); 
+        $outputString = preg_replace('/[^0-9]/', '', $string);
+        echo("The extracted numbers are: $outputString \n");
     }
     public function update_customer_notes()
     {

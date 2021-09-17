@@ -151,8 +151,53 @@ class AccountingSales extends MY_Controller
             $rate->combined = $combinedIdMap[$rate->combined_id];
         }
 
+        // group rates by combined_id
+        $retval = array_reduce($rates, function ($carry, $rate) {
+            $rate->agency = $rate->agency->agency;
+
+            if (!$rate->combined) {
+                array_push($carry, $rate);
+                return $carry;
+            }
+
+            $hasMatch = false;
+            foreach ($carry as $currRate) {
+                if ($currRate->id === $rate->combined->id) {
+                    $hasMatch = true;
+                    break;
+                }
+            }
+
+            if (!$hasMatch) {
+                $item = new stdClass;
+                $item->agency = "";
+                $item->items = [$rate];
+                $item->rate = (float) $rate->rate;
+                $item->name = $rate->combined->name;
+                $item->id = $rate->combined->id;
+                $item->is_active = $rate->combined->is_active;
+                array_push($carry, $item);
+                return $carry;
+            }
+
+            return array_map(function ($currRate) use ($rate) {
+                if (!$currRate->items) {
+                    return $currRate;
+                }
+
+                if ($currRate->id !== $rate->combined->id) {
+                    return $currRate;
+                }
+
+                array_push($currRate->items, $rate);
+                $currRate->rate += (float) $rate->rate;
+                return $currRate;
+            }, $carry);
+
+        }, []);
+
         header('content-type: application/json');
-        echo json_encode(['data' => $rates]);
+        echo json_encode(['data' => $retval]);
     }
 
     public function apiEditRate($rateId)
@@ -334,6 +379,28 @@ SQL;
 
         $this->db->where('id', $this->db->insert_id());
         $record = $this->db->get('accounting_invoice_tax_payments')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
+    }
+
+    public function apiEditRateCombinedParent($rateParentId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('id', $rateParentId);
+        $this->db->update('accounting_tax_rates_combined', $payload);
+
+        $this->db->where('id', $rateParentId);
+        $record = $this->db->get('accounting_tax_rates_combined')->row();
+
+        $this->db->where('combined_id', $rateParentId);
+        $this->db->update('accounting_tax_rates', ['is_active' => $record->is_active]);
 
         header('content-type: application/json');
         echo json_encode(['data' => $record]);

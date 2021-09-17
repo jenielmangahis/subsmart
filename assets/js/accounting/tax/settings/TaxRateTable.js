@@ -19,7 +19,7 @@ export class TaxRateTable {
 
         return `
           <div class="rate__subItem">
-            ${row.name} ${!isActive ? "(inactive)" : ""}
+            ${row.name} (combined) ${!isActive ? "(inactive)" : ""}
           </div>
           ${items.join("")}
         `;
@@ -175,8 +175,11 @@ export class TaxRateTable {
         });
 
         $sidebarSaveBtn.on("click", async function () {
+          let singleRate = true;
           let $inputs = $sidebar.find("#editSingleWrapper input[data-type]");
+
           if ($sidebar.hasClass("editCustomRate--combined")) {
+            singleRate = false;
             $inputs = $sidebar.find("#editCombinedWrapper input[data-type]");
           }
 
@@ -204,52 +207,59 @@ export class TaxRateTable {
           $(this).attr("disabled", true);
           $(this).text("Saving...");
 
-          const response = await fetch(
-            `${prefixURL}/AccountingSales/apiEditRate/${row.id}`,
-            {
-              method: "post",
-              body: JSON.stringify(payload),
-              headers: {
-                accept: "application/json",
-                "content-type": "application/json",
-              },
-            }
-          );
+          let endpoint = `${prefixURL}/AccountingSales/apiEditRate/${row.id}`;
+          if (!singleRate) {
+            endpoint = `${prefixURL}/AccountingSales/apiEditRateCombinedParent/${row.id}`;
+          }
+
+          const response = await fetch(endpoint, {
+            method: "post",
+            body: JSON.stringify(payload),
+            headers: {
+              accept: "application/json",
+              "content-type": "application/json",
+            },
+          });
 
           const json = await response.json();
           window.location.reload();
         });
       },
       makeInactive: async ({ agency, ...rest }) => {
-        const payload = { ...rest, is_active: 0 };
-        const response = await fetch(
-          `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`,
-          {
-            method: "post",
-            body: JSON.stringify(payload),
-            headers: {
-              accept: "application/json",
-              "content-type": "application/json",
-            },
-          }
-        );
+        const payload = { is_active: 0 };
+
+        let endpoint = `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`;
+        if (rest.hasOwnProperty("items")) {
+          endpoint = `${prefixURL}/AccountingSales/apiEditRateCombinedParent/${rest.id}`;
+        }
+        const response = await fetch(endpoint, {
+          method: "post",
+          body: JSON.stringify(payload),
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+        });
 
         const json = await response.json();
         window.location.reload();
       },
       makeActive: async ({ agency, ...rest }) => {
-        const payload = { ...rest, is_active: 1 };
-        const response = await fetch(
-          `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`,
-          {
-            method: "post",
-            body: JSON.stringify(payload),
-            headers: {
-              accept: "application/json",
-              "content-type": "application/json",
-            },
-          }
-        );
+        const payload = { is_active: 1 };
+
+        let endpoint = `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`;
+        if (rest.hasOwnProperty("items")) {
+          endpoint = `${prefixURL}/AccountingSales/apiEditRateCombinedParent/${rest.id}`;
+        }
+
+        const response = await fetch(endpoint, {
+          method: "post",
+          body: JSON.stringify(payload),
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+          },
+        });
 
         const json = await response.json();
         window.location.reload();
@@ -261,39 +271,6 @@ export class TaxRateTable {
       ajax: {
         type: "GET",
         url: `${prefixURL}/AccountingSales/apiGetRates?include_inactive=${includeInactive}`,
-        dataSrc: (json) => {
-          const data = json.data.map((rate) => {
-            rate.agency = rate.agency.agency;
-            return rate;
-          });
-
-          // group rates by combined_id
-          return data.reduce((carry, rate) => {
-            if (!rate.combined) return [...carry, rate];
-
-            if (!carry.some((i) => i.id === rate.combined.id)) {
-              return [
-                ...carry,
-                {
-                  ...rate.combined,
-                  agency: "",
-                  is_active: "1",
-                  items: [rate],
-                  rate: Number(rate.rate),
-                  name: `${rate.combined.name} (combined)`,
-                },
-              ];
-            }
-
-            return carry.map((currItem) => {
-              if (!currItem.items) return currItem;
-              if (currItem.id !== rate.combined.id) return currItem;
-              currItem.items.push(rate);
-              currItem.rate += Number(rate.rate);
-              return currItem;
-            });
-          }, []);
-        },
       },
       columns: [
         {

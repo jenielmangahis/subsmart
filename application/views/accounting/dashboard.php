@@ -25,42 +25,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="tab-content" id="nav-tabContent">
                                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                             <br>
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                 <p>Some QuickBooks Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <a href="#"  style="color:#0077C5;">Take Action </a> </p>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true" style="font-size:20px;">X</span>
                                                 </button>
                                             </div>
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                 <p>Your customer made a payment more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a> </p>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true" style="font-size:20px;">X</span>
                                                 </button>
                                             </div>
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                 <p>A bank transfer from your customer received as payment for Invoice 13053 has been canceled due to a problem with their account. To keep your books accurate, you should follow the steps to <a href="#"  style="color:#0077C5;">handle a canceled bank transfer.</a></p>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true" style="font-size:20px;">X</span>
                                                 </button>
                                             </div>
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                 <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true" style="font-size:20px;">X</span>
                                                 </button>
                                             </div>
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                 <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                     <span aria-hidden="true" style="font-size:20px;">X</span>
                                                 </button>
                                             </div>
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                 <i class="fa fa-exclamation-circle" style="font-size:24px;color: #0098cd;"></i> Alert <br>
                                                 <p>We just updated the info we share on commercial card transactions. We're now sharing line item details, also known as Level 3 data, with the card companies. This has benefits for both you and your customers. <a href="#"  style="color:#0077C5;">Tell me more</a></p>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -318,42 +318,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                             <br>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                     <p>Some QuickBooks Payments deposits weren't automatically recorded. After you receive the funds in your account, record them manually as a Bank Deposit. <a href="#"  style="color:#0077C5;">Take Action </a> </p>
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true" style="font-size:20px;">X</span>
                                                     </button>
                                                 </div>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                     <p>Your customer made a payment more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a> </p>
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true" style="font-size:20px;">X</span>
                                                     </button>
                                                 </div>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                     <p>A bank transfer from your customer received as payment for Invoice 13053 has been canceled due to a problem with their account. To keep your books accurate, you should follow the steps to <a href="#"  style="color:#0077C5;">handle a canceled bank transfer.</a></p>
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true" style="font-size:20px;">X</span>
                                                     </button>
                                                 </div>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                     <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true" style="font-size:20px;">X</span>
                                                     </button>
                                                 </div>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #f2b835;"></i> Alert <br>
                                                     <p>Your customer made a <a href="#"  style="color:#0077C5;">payment</a> more than the invoice balance, which created a credit. <a href="#"  style="color:#0077C5;">How to apply a credit from an overpayment.</a></p>
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true" style="font-size:20px;">X</span>
                                                     </button>
                                                 </div>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 16px;">
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white !important;border: solid #D0D0D0 1px;padding:16px;color: #4c4c4c;width:80%;font-family: Avenir Next forINTUIT, Arial, -apple-system, Helvetica Neue, sans-serif;font-size: 14px;">
                                                     <i class="fa fa-exclamation-circle" style="font-size:24px;color: #0098cd;"></i> Alert <br>
                                                     <p>We just updated the info we share on commercial card transactions. We're now sharing line item details, also known as Level 3 data, with the card companies. This has benefits for both you and your customers. <a href="#"  style="color:#0077C5;">Tell me more</a></p>
                                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">

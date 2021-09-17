@@ -316,4 +316,34 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get('accounting_check');
 		return $query->result();
 	}
+
+	public function get_journal_entry_registers($accountId)
+	{
+		$this->db->where('account_id', $accountId);
+		$query = $this->db->get('accounting_journal_entry_items');
+		return $query->result();
+	}
+
+	public function get_vendor_transaction_registers($accountId, $transactionType)
+	{
+		$this->db->where('expense_account_id', $accountId);
+		$this->db->where('transaction_type', $transactionType);
+		$query = $this->db->get('accounting_vendor_transaction_categories');
+		return $query->result();
+	}
+
+	public function get_credit_card_credit_registers($accountId)
+	{
+		$this->db->where('bank_credit_account_id', $accountId);
+		$query = $this->db->get('accounting_credit_card_credits');
+		return $query->result();
+	}
+
+	public function get_transfer_registers($accountId)
+	{
+		$this->db->where('transfer_from_account_id', $accountId);
+		$this->db->or_where('transfer_to_account_id', $accountId);
+		$query = $this->db->get('accounting_transfer_funds_transaction');
+		return $query->result();
+	}
 }
