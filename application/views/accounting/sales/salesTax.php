@@ -258,10 +258,20 @@ include viewPath('includes/header');
                 </button>
             </div>
             <div class="modal-body">
+                <div class="taxModal__paid">
+                    <div class="taxModal__paidTitle">
+                        <i class="fa fa-check-circle"></i>
+                        Return paid
+                    </div>
+                    <div class="taxModal__paidText">
+                        It's marked as paid and saved in your History
+                    </div>
+                </div>
+
                 <div class="taxModal__section row mb-3">
                     <div class="col">
                         <div>
-                            <div class="taxModal__title" data-type="agency_name">Florida Department of Revenue</div>
+                            <div class="taxModal__title" data-type="agency.name"></div>
                             <div>Tax Period: <span data-type="date_issued"></span></div>
                             <div>Due date:  <span data-type="due_date"></span></div>
                         </div>
@@ -276,13 +286,38 @@ include viewPath('includes/header');
                         </div>
                     </div>
                     <div class="col">
-                        <div class="taxModal__title">File your sales tax now</div>
-                        <ol class="taxModal__list">
-                            <li>Print the tax form from your state's website and fill it out.</li>
-                            <li>Write a check to your agency or print one.</li>
-                            <li>Mail the form and check to your agency.</li>
-                            <li>When you're done, come back to record the payment in QuickBooks.</li>
-                        </ol>
+                        <div id="taxModalInstructions">
+                            <div class="taxModal__title">File your sales tax now</div>
+                            <ol class="taxModal__list">
+                                <li>Print the tax form from your state's website and fill it out.</li>
+                                <li>Write a check to your agency or print one.</li>
+                                <li>Mail the form and check to your agency.</li>
+                                <li>When you're done, come back to record the payment in QuickBooks.</li>
+                            </ol>
+                        </div>
+                        <div class="taxModal__payments">
+                            <div class="mb-3">
+                                <div class="taxModal__paymentsTitle">Payment details</div>
+                                <div>Number of payments: 1</div>
+                            </div>
+
+                            <div class="taxModal__paymentsGroup">
+                                <div>Payments</div>
+                                <div>Amount paid</div>
+                            </div>
+                            <div class="taxModal__paymentsGroup taxModal__paymentsGroup--hasBorder taxModal__paymentsGroup--bigger">
+                                <div><a class="taxModal__link" href="#">09/18/2021</a></div>
+                                <div>$0.01</div>
+                            </div>
+                            <div class="taxModal__paymentsGroup mb-3">
+                                <div>Total paid:</div>
+                                <div>$0.01</div>
+                            </div>
+                            <div class="taxModal__paymentsGroup">
+                                <div>Total due</div>
+                                <div>-$0.02</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

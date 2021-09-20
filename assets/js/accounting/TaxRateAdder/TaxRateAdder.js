@@ -61,13 +61,13 @@ class TaxRateAdder {
       allAgencies = allAgencies.map((currAgency) => {
         return {
           text: currAgency,
-          disabled: agencies.some(({ agency }) => agency === currAgency),
+          disabled: agencies.some(({ name }) => name === currAgency),
         };
       });
 
       allAgencies = [
         { text: "Saved Agencies", disabled: true },
-        ...agencies.map(({ agency }) => agency),
+        ...agencies.map(({ name }) => name),
         ...allAgencies,
       ];
     }

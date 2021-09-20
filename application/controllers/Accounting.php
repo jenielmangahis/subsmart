@@ -48,7 +48,6 @@ class Accounting extends MY_Controller
         $this->load->model('TaxRates_model');
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('General_model', 'general');
-        $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
         $this->load->library('excel');
         $this->load->library('pdf');
@@ -505,78 +504,6 @@ class Accounting extends MY_Controller
 
 
         $this->load->view('accounting/workers-comp');
-    }
-
-    public function adjust_starting_value_form($item_id)
-    {
-        $item = $this->items_model->getItemById($item_id)[0];
-        $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
-        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-
-        $this->page_data['item'] = $item;
-        $this->page_data['accountingDetails'] = $itemAccDetails;
-        $this->page_data['invAssetAcc'] = $invAssetAcc;
-        $this->page_data['locations'] = $this->items_model->getLocationByItemId($item_id);
-        $this->load->view('accounting/modals/adjust_starting_value', $this->page_data);
-    }
-    public function adjust_starting_value($item_id)
-    {
-        $item = $this->items_model->getItemById($item_id)[0];
-        $startValueAdjData = [
-            'company_id' => logged('company_id'),
-            'item_id' => $item_id,
-            'ref_no' => $this->input->post('ref_no'),
-            'location_id' => $this->input->post('location'),
-            'initial_qty' => $this->input->post('initial_qty_on_hand'),
-            'as_of_date' => date('Y-m-d', strtotime($this->input->post('as_of_date'))),
-            'initial_cost' => $this->input->post('initial_cost'),
-            'inv_adj_account' => $this->input->post('inv_adj_acc'),
-            'memo' => $this->input->post('memo'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ];
-
-        $itemData = [
-            'initial_cost' => $startValueAdjData['initial_cost']
-        ];
-
-        $accDetails = [
-            'as_of_date' => $startValueAdjData['as_of_date']
-        ];
-
-        $locationId = $startValueAdjData['location_id'];
-        $locationAdjustments = $this->items_model->getItemQuantityAdjustments($item_id, $locationId);
-        $locationDetails = [
-            'initial_qty' => $startValueAdjData['initial_qty']
-        ];
-        $quantity = intval($startValueAdjData['initial_qty']);
-        if (!empty($locationAdjustments)) {
-            foreach ($locationAdjustments as $adj) {
-                $quantity = $quantity + intval($adj->change_in_quantity);
-            }
-        }
-        $locationDetails['qty'] = $quantity;
-
-        // Update item initial cost in items
-        $updateItem = $this->items_model->update($itemData, ['id' => $item_id, 'company_id' => logged('company_id')]);
-
-        // Update item as of date in item_accounting_details table
-        $updateAccDetails = $this->items_model->updateItemAccountingDetails($accDetails, $item_id);
-
-        // Update initial quantity and quantity of item in items_has_storage_loc table
-        $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
-        $updateLocation = $this->items_model->updateLocationDetails($locationDetails, $condition);
-
-        // Insert starting value adjustment record
-        $insert = $this->starting_value_model->create($startValueAdjData);
-
-        if ($insert > 0) {
-            $this->session->set_flashdata('success', "Item $item->title starting value successfully adjusted.");
-        } else {
-            $this->session->set_flashdata('error', "Please try again!");
-        }
-
-        redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function audit_log()
@@ -4661,33 +4588,33 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         }
 
-        $path = './assets/files/'.$company_id;
-        $companypath = $path . '/company';
-        if(!is_dir($path)){
-        if(is_writeable('./assets/files/')){
-            if(mkdir($path,0755,TRUE)){
-            echo "Created $path";
-            if(mkdir($companypath,0755,TRUE)){
-                echo "Created $companypath";
-            } else {
-                echo "Failed to create $companypath";
-            }
-            } else {
-            echo "Failed to create $path";
-            }
+        // $path = './assets/files/'.$company_id;
+        // $companypath = $path . '/company';
+        // if(!is_dir($path)){
+        // if(is_writeable('./assets/files/')){
+        //     if(mkdir($path,0755,TRUE)){
+        //     echo "Created $path";
+        //     if(mkdir($companypath,0755,TRUE)){
+        //         echo "Created $companypath";
+        //     } else {
+        //         echo "Failed to create $companypath";
+        //     }
+        //     } else {
+        //     echo "Failed to create $path";
+        //     }
 
-        } else {
-            echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
-            $stat = stat($path);
-            print_r(posix_getpwuid($stat['uid']));
+        // } else {
+        //     echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
+        //     $stat = stat($path);
+        //     print_r(posix_getpwuid($stat['uid']));
 
-            chmod($path, 0755); // trying to change permissions
-            //chown($path, $stat['uid']);
-        }
+        //     chmod($path, 0755); // trying to change permissions
+        //     //chown($path, $stat['uid']);
+        // }
 
-        } else {
-        echo 'directory already exists.';
-        }
+        // } else {
+        // echo 'directory already exists.';
+        // }
 
         if ($addQuery > 0) {
             $a = $this->input->post('items');
@@ -4828,33 +4755,33 @@ class Accounting extends MY_Controller
         //     // echo json_encode($addQuery);
         // }
 
-        $path = './assets/files/'.$company_id;
-        $companypath = $path . '/company';
-        if(!is_dir($path)){
-        if(is_writeable('./assets/files/')){
-            if(mkdir($path,0755,TRUE)){
-            echo "Created $path";
-            if(mkdir($companypath,0755,TRUE)){
-                echo "Created $companypath";
-            } else {
-                echo "Failed to create $companypath";
-            }
-            } else {
-            echo "Failed to create $path";
-            }
+        // $path = './assets/files/'.$company_id;
+        // $companypath = $path . '/company';
+        // if(!is_dir($path)){
+        // if(is_writeable('./assets/files/')){
+        //     if(mkdir($path,0755,TRUE)){
+        //     echo "Created $path";
+        //     if(mkdir($companypath,0755,TRUE)){
+        //         echo "Created $companypath";
+        //     } else {
+        //         echo "Failed to create $companypath";
+        //     }
+        //     } else {
+        //     echo "Failed to create $path";
+        //     }
 
-        } else {
-            echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
-            $stat = stat($path);
-            print_r(posix_getpwuid($stat['uid']));
+        // } else {
+        //     echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
+        //     $stat = stat($path);
+        //     print_r(posix_getpwuid($stat['uid']));
 
-            chmod($path, 0755); // trying to change permissions
-            //chown($path, $stat['uid']);
-        }
+        //     chmod($path, 0755); // trying to change permissions
+        //     //chown($path, $stat['uid']);
+        // }
 
-        } else {
-        echo 'directory already exists.';
-        }
+        // } else {
+        // echo 'directory already exists.';
+        // }
 
         if ($addQuery > 0) {
             $a = $this->input->post('items');
@@ -7082,7 +7009,6 @@ class Accounting extends MY_Controller
         // echo "1";
     }
 
-    
     public function send_customer_reminder()
     {
         $customer_name = $this->input->post("customer_name");
@@ -7090,61 +7016,112 @@ class Accounting extends MY_Controller
         $subject = $this->input->post("subject");
         $message = $this->input->post("message");
 
-        // include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        // $server = MAIL_SERVER;
-        // $port = MAIL_PORT;
-        // $username = MAIL_USERNAME;
-        // $password = MAIL_PASSWORD;
-        // $from = MAIL_FROM;
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
 
-        // $mail = new PHPMailer(true);
-        // $mail->isSMTP();
-        // $mail->getSMTPInstance()->Timelimit = 5;
-        // $mail->Host = $server;
-        // $mail->SMTPAuth = true;
-        // $mail->Username = $username;
-        // $mail->Password = $password;
-        // $mail->SMTPSecure = 'ssl';
-        // $mail->Timeout = 10; // seconds
-        // $mail->Port = $port;
-        // $mail->From = $from;
-        // $mail->FromName = 'nSmarTrac';
-        // $mail->Subject = $subject;
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
 
-        // //get job data
-
-        // $this->page_data['customer_name'] = $customer_name;
-        // $this->page_data['message'] = $message;
-        // $this->page_data['subject'] = $subject;
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
         
-        // $mail->IsHTML(true);
-        // $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        
+        $mail->MsgHTML($content);
+        
+        $data = new stdClass();
+        try {
+            // $mail->addAddress($customer_email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
 
-        // $mail->Body =  'Send Reminders';
-        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
-        // $mail->MsgHTML($content);
-        // $mail->addAddress($customer_email);
+        echo json_encode($data);
+    }
+    public function send_customer_reminder1_unused()
+    {
+        $customer_name = $this->input->post("customer_name");
+        $customer_email = $this->input->post("customer_email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        //get job data
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+
+        $mail->Body =  'Send Reminders';
+        $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        $mail->MsgHTML($content);
+        $mail->addAddress($customer_email);
         
         $data = new stdClass();
         
-        $this->load->library('email');
-        $config = array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'ssl://smtp.gmail.com',
-            'smtp_port' => 465,
-            'smtp_user' => 'nsmartrac@gmail.com',
-            'smtp_pass' => 'nSmarTrac2020',
-            'mailtype'  => 'html',
-            'charset'   => 'utf-8'
-        );
-        $this->email->initialize($config);
-        $this->email->set_newline("\r\n");
+        // $this->load->library('email');
+        // $config = array(
+        //     'protocol' => 'smtp',
+        //     'smtp_host' => 'ssl://smtp.gmail.com',
+        //     'smtp_port' => 465,
+        //     'smtp_user' => 'nsmartrac@gmail.com',
+        //     'smtp_pass' => 'nSmarTrac2020',
+        //     'mailtype'  => 'html',
+        //     'charset'   => 'utf-8'
+        // );
+        // $this->email->initialize($config);
+        // $this->email->set_newline("\r\n");
 
-        $this->email->from("websender@nsmartrac.com", "Lou Test");
-        $this->email->to($customer_email);
-        $this->email->subject('Test email Sending Reminder');
-        $message = "this is just a test.";
-        $this->email->message($message);
+        // $this->email->from("pintonnelfa@gmail.com", "Lou Test");
+        // $this->email->to($customer_email);
+        // $this->email->subject('Test email Sending Reminder');
+        // $message = "this is just a test.";
+        // $this->email->message($message);
         //Send mail
 
         if ($this->email->send()) {
@@ -7152,12 +7129,12 @@ class Accounting extends MY_Controller
         } else {
             $data->status = $this->email->send();
         }
-        // if (!$mail->Send()) {
-        //     $data->status = "error";
-        //     $data->status = "Mailer Error: ".$mail->ErrorInfo;
-        //     exit;
-        // }
-        // $mail->ClearAllRecipients();
+        if (!$mail->Send()) {
+            $data->status = "error";
+            $data->status = "Mailer Error: ".$mail->ErrorInfo;
+            exit;
+        }
+        $mail->ClearAllRecipients();
 
         //=======>>>>> willberts code for email
         // $this->load->library('email');

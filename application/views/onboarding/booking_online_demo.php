@@ -93,10 +93,15 @@ body {
    <div class="wrapper-onboarding">
     <h3 style="background-color: #4A2268;color:#ffffff;padding:11px;">Would you like to learn more about our features, from one of our experts? </h3>
     <div class="card">
-      <div class="col-md-24 col-lg-24 col-xl-18">         
+      <div class="col-md-24 col-lg-24 col-xl-18">     
           <!-- Calendly inline widget begin -->
-          <div class="calendly-inline-widget calendly-container" data-url="https://calendly.com/bryann-revina03?primary_color=9d00ff"></div>
-          <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+          <div class="calendly-inline-widget" data-url="https://calendly.com/support-2405" style="min-width:320px;height:630px;"></div>
+          <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+          <!-- Calendly inline widget end -->
+              
+          <!-- Calendly inline widget begin -->
+          <!-- <div class="calendly-inline-widget calendly-container" data-url="https://calendly.com/bryann-revina03?primary_color=9d00ff"></div> -->
+          <!-- <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script> -->
           <!-- Calendly inline widget end -->
           <div class="msg-container"></div>
       </div>

@@ -1047,6 +1047,8 @@ class Invoice extends MY_Controller
         $invoice = get_invoice_by_id($id);
         $user = get_user_by_id(logged('id'));
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        
+        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {

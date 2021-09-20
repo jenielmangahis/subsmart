@@ -1,12 +1,36 @@
-<div class="<?php echo ($format == 'print') ? 'print': '' ?>">
-    <div class="class="<?php echo ($format == 'print') ? 'invoice-paper print-body': 'invoice-paper' ?>" id="presenter-paper">
+<div class="<?php echo ($format == 'print') ? 'print': '' ?>" style="width:60% !important;">
+    <div class="<?php echo ($format == 'print') ? 'invoice-paper print-body': 'invoice-paper' ?>" id="presenter-paper">
     <?php if($format == 'print') : ?>
     <div style="text-align: right; margin-bottom: 10px;">
     <!-- <a class="btn-print" onclick="window.print();" href="#">Print</a> -->
     <a class="btn-print" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
     </div>
     <?php endif; ?>
-    <div  id="printableArea">
+
+    <div  id="printableArea" style="width:100%">
+    
+    <style>
+        #background{
+            position:absolute;
+            z-index:0;
+            /* background:white; */
+            display:block;
+            /* min-height:80%;  */
+            margin-top: -100px;
+            margin-left: 20%;
+            /* min-width:60%; */
+            color:yellow;
+        }
+
+        #bg-text
+        {
+            color:lightgreen;
+            font-size:150px;
+            transform:rotate(300deg);
+            -webkit-transform:rotate(300deg);
+        }
+    </style>
+
         <div class="presenter-paper-sm" id="presenter-paper-sm"></div>
         <div class="invoice-print" style="background: #ffffff;">
             <table class="table-print" style="width: 100%; margin-bottom: 10px;">
@@ -163,6 +187,10 @@
                     </td>
                 </tr>
             </tbody></table>
+            
+            <div id="background">
+                <p id="bg-text">PAID</p>
+            </div>
 
             <br>
 

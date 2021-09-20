@@ -346,4 +346,67 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get('accounting_transfer_funds_transaction');
 		return $query->result();
 	}
+
+	public function get_deposit_registers($accountId)
+	{
+		$this->db->where('account_id', $accountId);
+		$query = $this->db->get('accounting_bank_deposit');
+		return $query->result();
+	}
+
+	public function get_deposit_payment_registers($accountId)
+	{
+		$this->db->where('received_from_account_id', $account);
+		$query = $this->db->get('accounting_bank_deposit_funds');
+		return $query->result();
+	}
+
+	public function get_qty_adjustments_registers($accountId)
+	{
+		$this->db->where('inventory_adjustment_account_id', $accountId);
+		$query = $this->db->get('accounting_inventory_qty_adjustments');
+		return $query->result();
+	}
+
+	public function get_qty_adjustment_item_registers($accountId)
+	{
+		$this->db->select('*');
+		$this->db->from('accounting_inventory_qty_adjustment_items');
+		$this->db->where('items_accounting_details.inv_asset_acc_id', $accountId);
+		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = accounting_inventory_qty_adjustment_items.product_id');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_expense_registers($accountId)
+	{
+		$this->db->where('payment_account_id', $accountId);
+		$query = $this->db->get('accounting_expense');
+		return $query->result();
+	}
+
+	public function get_item_starting_value_registers($accountId)
+	{
+		$this->db->where('inv_adj_account', $accountId);
+		$query = $this->db->get('accounting_item_starting_value_adjustment');
+		return $query->result();
+	}
+
+	public function get_adjusted_starting_value_registers($accountId)
+	{
+		$this->db->select('*');
+		$this->db->from('accounting_item_starting_value_adjustment');
+		$this->db->where('items_accounting_details.inv_asset_acc_id', $accountId);
+		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = accounting_item_starting_value_adjustment.item_id');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_credit_card_payment_registers($accountId)
+	{
+		$this->db->where('credit_card_id', $accountId);
+		$this->db->or_where('bank_account_id', $accountId);
+		$query = $this->db->get('accounting_pay_down_credit_card');
+		return $query->result();
+	}
 }

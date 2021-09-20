@@ -1862,9 +1862,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $(document).ready(function () {
 
             // phone type change, add the value to hiddend field and show the text
-            $(document.body).on('click', '.taxRateSelect__item', function () {
-                $(this).closest('.taxRateSelect').find('.type-text').text($(this).text());
-                $(this).closest('.taxRateSelect').find('.type-input').val($(this).data('type-value'));
+            $(document.body).on('click', '.taxRateSelect__item:not(.taxRateSelect__item--customWrapper)', function () {
+                // $(this).closest('.taxRateSelect').find('.type-text').text($(this).text());
+                $(this).closest('.taxRateSelect').find('.type-input').val($(this).attr('value'));
             });
         });
 </script>

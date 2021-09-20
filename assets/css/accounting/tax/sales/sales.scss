@@ -168,6 +168,62 @@
   }
 }
 
+.taxModal {
+  &__paid {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+
+  &__payments {
+    display: none;
+
+    &Group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3px;
+
+      &--hasBorder {
+        border-bottom: 2px solid #dee2e6;
+      }
+
+      &--bigger {
+        font-size: 15px;
+        padding: 5px ​0px;
+      }
+    }
+
+    &Title {
+      font-size: 16px;
+    }
+  }
+
+  &__paidTitle {
+    font-size: 2rem;
+  }
+
+  .fa {
+    color: #2ca01c;
+  }
+
+  &--paid {
+    .taxModal__paid {
+      display: flex;
+    }
+
+    #openRecordPaymentBtn,
+    #taxModalInstructions {
+      display: none;
+    }
+
+    .taxModal__payments {
+      display: block;
+    }
+  }
+}
+
 .addAdjustment {
   position: fixed;
   left: 0;

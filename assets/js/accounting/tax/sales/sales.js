@@ -46,6 +46,11 @@ class Accounting__TaxItem {
     const $recordPaymentModal = $("#recordPaymentModal");
     const $savePaymentBtn = $recordPaymentModal.find("#savePayment");
 
+    this.$modal.removeClass("taxModal--paid");
+    if (data.payment) {
+      this.$modal.addClass("taxModal--paid");
+    }
+
     $addAdjustmentLink.off();
     $sidebarCloseBtn.off();
     $sidebar.off();
@@ -195,16 +200,20 @@ class Accounting__TaxItem {
       window.location.reload();
     });
 
-    $openRecordPaymentBtn.on("click", () => {
-      const $taxAdjusted = $recordPaymentModal.find("[data-type=tax_adjusted]");
-      const $bankAccount = $recordPaymentModal.find("#bank_account");
+    if (!data.payment) {
+      $openRecordPaymentBtn.on("click", () => {
+        const $taxAdjusted = $recordPaymentModal.find(
+          "[data-type=tax_adjusted]"
+        );
+        const $bankAccount = $recordPaymentModal.find("#bank_account");
 
-      $recordPaymentModal.modal("show");
-      $taxAdjusted.text(tableData.tax_adjusted);
+        $recordPaymentModal.modal("show");
+        $taxAdjusted.text(tableData.tax_adjusted);
 
-      this.initBankAccountSelect($bankAccount);
-      this.$modal.modal("hide");
-    });
+        this.initBankAccountSelect($bankAccount);
+        this.$modal.modal("hide");
+      });
+    }
 
     $recordPaymentModal.on("hide.bs.modal", () => {
       this.$modal.modal("show");
@@ -1048,6 +1057,10 @@ function isEmptyString(string) {
 }
 
 function getValueByString(object, string) {
+  if (object === null) {
+    return null;
+  }
+
   const parts = string.split(".");
   const newObject = object[parts[0]];
 

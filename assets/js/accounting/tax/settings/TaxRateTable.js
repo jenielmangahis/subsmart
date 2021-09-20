@@ -25,15 +25,12 @@ export class TaxRateTable {
         `;
       },
       agency: (_, __, row) => {
-        const agency = row.agency.replaceAll(":", ", ");
-
         if (!row.items) {
-          return `<span>${agency}</span>`;
+          return `<span>${row.agency}</span>`;
         }
 
         const items = row.items.map((item) => {
-          const itemAgency = item.agency.replaceAll(":", ", ");
-          return `<div class="rate__subItem">${itemAgency}</div>`;
+          return `<div class="rate__subItem">${item.agency}</div>`;
         });
 
         return `
@@ -175,11 +172,9 @@ export class TaxRateTable {
         });
 
         $sidebarSaveBtn.on("click", async function () {
-          let singleRate = true;
           let $inputs = $sidebar.find("#editSingleWrapper input[data-type]");
 
           if ($sidebar.hasClass("editCustomRate--combined")) {
-            singleRate = false;
             $inputs = $sidebar.find("#editCombinedWrapper input[data-type]");
           }
 
@@ -202,14 +197,14 @@ export class TaxRateTable {
             payload[key] = value;
           }
 
-          delete payload.agency; // we use agency_id instead
+          delete payload.agency; // agency must be readonly
 
           $(this).attr("disabled", true);
           $(this).text("Saving...");
 
           let endpoint = `${prefixURL}/AccountingSales/apiEditRate/${row.id}`;
-          if (!singleRate) {
-            endpoint = `${prefixURL}/AccountingSales/apiEditRateCombinedParent/${row.id}`;
+          if (row.sub_item) {
+            endpoint = `${prefixURL}/AccountingSales/apiEditRateItem/${row.id}`;
           }
 
           const response = await fetch(endpoint, {
@@ -229,8 +224,8 @@ export class TaxRateTable {
         const payload = { is_active: 0 };
 
         let endpoint = `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`;
-        if (rest.hasOwnProperty("items")) {
-          endpoint = `${prefixURL}/AccountingSales/apiEditRateCombinedParent/${rest.id}`;
+        if (rest.sub_item) {
+          endpoint = `${prefixURL}/AccountingSales/apiEditRateItem/${rest.id}`;
         }
         const response = await fetch(endpoint, {
           method: "post",
@@ -248,8 +243,8 @@ export class TaxRateTable {
         const payload = { is_active: 1 };
 
         let endpoint = `${prefixURL}/AccountingSales/apiEditRate/${rest.id}`;
-        if (rest.hasOwnProperty("items")) {
-          endpoint = `${prefixURL}/AccountingSales/apiEditRateCombinedParent/${rest.id}`;
+        if (rest.sub_item) {
+          endpoint = `${prefixURL}/AccountingSales/apiEditRateItem/${rest.id}`;
         }
 
         const response = await fetch(endpoint, {
@@ -271,6 +266,21 @@ export class TaxRateTable {
       ajax: {
         type: "GET",
         url: `${prefixURL}/AccountingSales/apiGetRates?include_inactive=${includeInactive}`,
+        dataSrc: ({ data }) => {
+          return data.map((currData) => {
+            currData.agency = currData.agency ? currData.agency.name : "";
+
+            if (currData.items) {
+              currData.items = currData.items.map((currItem) => {
+                currItem.agency = currItem.agency ? currItem.agency.name : "";
+                currItem.sub_item = true;
+                return currItem;
+              });
+            }
+
+            return currData;
+          });
+        },
       },
       columns: [
         {

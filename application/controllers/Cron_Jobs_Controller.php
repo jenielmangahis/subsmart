@@ -47,7 +47,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
-        $subject = $company_name+': Time logs for Week ' . date("M d", strtotime($date_from)).' to '. $subj_date_to;
+        $subject = $company_name.': Time logs for Week ' . date("M d", strtotime($date_from)).' to '. $subj_date_to;
 
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -82,7 +82,8 @@ class Cron_Jobs_Controller extends MY_Controller
         $mail->Body =  'Timesheet Report.';
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
         $mail->MsgHTML($content);
-        $mail->addAddress($receiver);
+        $mail->addAddress('webtestcustomer@nsmartrac.com');
+        // $mail->addAddress($receiver);
         if (!$mail->Send()) {
             echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;
@@ -134,6 +135,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->auto_clockout();
         $this->delete_old_timesheet_reports_and_notifications();
         $admins_for_reports = $this->get_admin_for_reports();
+        var_dump($admins_for_reports);
         $android_tokens = array();
         $ios_tokens = array();
         for ($i = 0; $i < count($admins_for_reports); $i++) {
