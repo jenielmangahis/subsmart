@@ -510,7 +510,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td class="text-right">
                             <div class="dropdown dropdown-btn open">
-                                <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>
+                                <?php if($invoice->INV_status == 'Paid'){ ?>
+                                    <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" style="color:#3a96d2;" target="_blank">Print</a> &emsp;
+                                <?php }else{ ?>
+                                    <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a> &emsp;
+                                <?php } ?>
+
                                 <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
                                     data-toggle="dropdown" aria-expanded="true">
                                     <span class="btn-label"></span>

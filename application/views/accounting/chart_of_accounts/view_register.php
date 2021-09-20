@@ -191,8 +191,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
 
                                                     <div class="btn-group d-flex justify-content-between">
-                                                        <a href="#" class="btn-main">Reset</a>
-                                                        <a href="#" class="btn-main apply-btn">Apply</a>
+                                                        <a href="#" class="btn-main" id="reset-filter">Reset</a>
+                                                        <a href="#" class="btn-main apply-btn" id="apply-filter">Apply</a>
                                                     </div>
                                                 </div>
                                             </div>

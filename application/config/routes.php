@@ -338,6 +338,8 @@ $route['accounting/get-account-details/(:any)'] = 'accounting_modals/get_account
 $route['accounting/get-item-category-details/(:any)'] = 'accounting_modals/get_item_category_details/$1';
 $route['accounting/get-sales-tax-category-details/(:any)'] = 'accounting_modals/get_sales_tax_category_details/$1';
 $route['accounting/ajax-add-item-category']['post'] = 'accounting_modals/ajax_add_item_category';
+$route['accounting/adjust-starting-value-form/(:any)'] = 'accounting_modals/adjust_starting_value_form/$1';
+$route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting_modals/adjust_starting_value/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -393,9 +395,6 @@ $route['accounting/products-and-services/assign-category/(:any)']['post'] = 'acc
 $route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accounting_controllers/products_and_services/batch_action/$1';
 $route['accounting/products-and-services/print-table']['post'] = 'accounting_controllers/products_and_services/print_table';
 $route['accounting/products-and-services/export-table']['post'] = 'accounting_controllers/products_and_services/export_table';
-
-$route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
-$route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
 
 // Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';

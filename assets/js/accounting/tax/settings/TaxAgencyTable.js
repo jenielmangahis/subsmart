@@ -9,7 +9,7 @@ export class TaxAgencyTable {
     const columns = {
       agency: (_, __, row) => {
         const isActive = row.is_active === "1";
-        const agency = row.agency.replaceAll(":", ", ");
+        const agency = row.name.replaceAll(":", ", ");
         return `<span>${agency} ${!isActive ? "(inactive)" : ""}</span>`;
       },
       fillingFrequency: (_, __, row) => {

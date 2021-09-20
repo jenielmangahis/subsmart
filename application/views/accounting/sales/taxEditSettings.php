@@ -99,7 +99,7 @@ include viewPath('includes/header');
             <form>
                 <div class="form-group">
                     <label for="editAgency__agency">Agency</label>
-                    <input readonly data-type="agency" type="text" class="form-control" id="editAgency__agency" placeholder="Select agency">
+                    <input readonly data-type="name" type="text" class="form-control" id="editAgency__agency" placeholder="Select agency">
                 </div>
 
                 <div class="form-group">
@@ -143,7 +143,7 @@ include viewPath('includes/header');
                 <div class="form-group">
                     <label for="addAgency__agency">Agency</label>
                     <div class="dropdownWithSearch" id="agencySelect">
-                        <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" id="addAgency__agency" placeholder="Select agency">
+                        <input required data-type="name" type="text" class="form-control dropdownWithSearch__input" id="addAgency__agency" placeholder="Select agency">
                         <button type="button" class="dropdownWithSearch__btn">
                             <i class="fa fa-chevron-down"></i>
                         </button>

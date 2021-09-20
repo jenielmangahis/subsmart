@@ -775,6 +775,120 @@ class Workorder extends MY_Controller
         $id = $this->input->post('id');
         $wo_id = $this->input->post('wo_id');
 
+        $workData = $this->workorder_model->get_workorder_data($wo_id);
+        // var_dump($workData);
+
+        $source_id = $workData->lead_source_id;
+        // $sourcea = $this->workorder_model->get_source_data($source_id);
+        
+        $workorder = $workData->work_order_number;
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+        // $source = $source->ls_name;
+
+        $cliets = $this->workorder_model->get_cliets_data($c_id);
+        $customerData = $this->workorder_model->get_customerData_data($p_id);
+        $custom = $this->workorder_model->get_custom_data($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
+
+        $data = array(
+            'workorder'             => $workorder,
+            'tags'                  => $workData->tags,
+            'job_type'              => $workData->job_type,
+            'priority'              => $workData->priority,
+            'password'              => $workData->password,
+            'security_number'       => $workData->security_number,
+            'source_name'           => $workData->lead_source_id,
+            'company_representative_signature' => $workData->company_representative_signature,
+            'company'               => $cliets->business_name,
+            'business_address'      => $cliets->business_address,
+            'phone_number'          => $cliets->phone_number,
+            'acs_name'              => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'job_location'          => $workData->job_location,
+            'job_location2'         => $workData->city.', '.$workData->state.', '.$workData->zip_code.', '.$workData->cross_street,
+            'email'                 => $workData->email,
+            'phone'                 => $workData->phone_number,
+            'mobile'                => $workData->mobile_number,
+            'terms_and_conditions'  => $workData->terms_and_conditions,
+            'terms_of_use'          => $workData->terms_of_use,
+            'job_description'       => $workData->job_description,
+            'instructions'          => $workData->instructions,
+            'date_issued'           => $workData->date_issued,
+            'custom'                => $custom,
+            'items'                 => $items,
+
+            'total'                             => $workData->grand_total,
+            'subtotal'                          => $workData->subtotal,
+            'taxes'                             => $workData->taxes,
+            'adjustment_name'                   => $workData->adjustment_name,
+            'adjustment_value'                  => $workData->adjustment_value,
+            'voucher_value'                     => $workData->voucher_value,
+            'otp_setup'                         => $workData->otp_setup,
+            'monthly_monitoring'                => $workData->monthly_monitoring,
+            // 'source' => $source
+        );
+        
+        $message2 = $this->load->view('workorder/send_email_acs', $data, true);
+        $filename = $workData->company_representative_signature;
+
+        $customer_name = $this->input->post("customer_name");
+        $customer_email = $this->input->post("customer_email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        
+        $mail->MsgHTML($message2);
+        
+        $data = new stdClass();
+        try {
+            // $mail->addAddress($workData->email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+        echo json_encode($json_data);
+    }
+
+    public function sendWorkorderToAcs_old()
+    {
+        $id = $this->input->post('id');
+        $wo_id = $this->input->post('wo_id');
+
         // $info = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
         // $to = $info->email;
         // $this->load->library('email');
@@ -966,7 +1080,7 @@ class Workorder extends MY_Controller
         // echo "test";
     }
 
-    public function sendWorkorderToCompany()
+    public function sendWorkorderToCompany_old()
     {
         $id = $this->input->post('id');
         $wo_id = $this->input->post('wo_id');
@@ -1148,6 +1262,121 @@ class Workorder extends MY_Controller
         // return true;
         // echo "test";
     }
+
+    public function sendWorkorderToCompany()
+    {
+        $id = $this->input->post('id');
+        $wo_id = $this->input->post('wo_id');
+
+        $workData = $this->workorder_model->get_workorder_data($wo_id);
+        // var_dump($workData);
+
+        $source_id = $workData->lead_source_id;
+        // $sourcea = $this->workorder_model->get_source_data($source_id);
+        
+        $workorder = $workData->work_order_number;
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+        // $source = $source->ls_name;
+
+        $cliets = $this->workorder_model->get_cliets_data($c_id);
+        $customerData = $this->workorder_model->get_customerData_data($p_id);
+        $custom = $this->workorder_model->get_custom_data($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
+
+        $data = array(
+            'workorder'             => $workorder,
+            'tags'                  => $workData->tags,
+            'job_type'              => $workData->job_type,
+            'priority'              => $workData->priority,
+            'password'              => $workData->password,
+            'security_number'       => $workData->security_number,
+            'source_name'           => $workData->lead_source_id,
+            'company_representative_signature' => $workData->company_representative_signature,
+            'company'               => $cliets->business_name,
+            'business_address'      => $cliets->business_address,
+            'phone_number'          => $cliets->phone_number,
+            'acs_name'              => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'job_location'          => $workData->job_location,
+            'job_location2'         => $workData->city.', '.$workData->state.', '.$workData->zip_code.', '.$workData->cross_street,
+            'email'                 => $workData->email,
+            'phone'                 => $workData->phone_number,
+            'mobile'                => $workData->mobile_number,
+            'terms_and_conditions'  => $workData->terms_and_conditions,
+            'terms_of_use'          => $workData->terms_of_use,
+            'job_description'       => $workData->job_description,
+            'instructions'          => $workData->instructions,
+            'date_issued'           => $workData->date_issued,
+            'custom'                => $custom,
+            'items'                 => $items,
+
+            'total'                             => $workData->grand_total,
+            'subtotal'                          => $workData->subtotal,
+            'taxes'                             => $workData->taxes,
+            'adjustment_name'                   => $workData->adjustment_name,
+            'adjustment_value'                  => $workData->adjustment_value,
+            'voucher_value'                     => $workData->voucher_value,
+            'otp_setup'                         => $workData->otp_setup,
+            'monthly_monitoring'                => $workData->monthly_monitoring,
+            // 'source' => $source
+        );
+        
+        $message2 = $this->load->view('workorder/send_email_acs', $data, true);
+        $filename = $workData->company_representative_signature;
+
+        $customer_name = $this->input->post("customer_name");
+        $customer_email = $this->input->post("customer_email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        
+        $mail->MsgHTML($message2);
+        
+        $data = new stdClass();
+        try {
+            // $mail->addAddress($workData->email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Company.');
+
+        echo json_encode($json_data);
+    }
+
 
     public function sendWorkorderToAcsAlarm()
     {

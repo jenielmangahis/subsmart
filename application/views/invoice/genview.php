@@ -396,12 +396,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </div>
 
                                     <div class="panel-info">
-                                        <div class="weight-medium margin-bottom-sec">Log</div>
+                                        <div class="weight-medium margin-bottom-sec">Logs</div>
                                         <div class="row margin-bottom-sec">
-                                            <div class="col-xl-5">16-Apr-2020 16:56</div>
+                                            <div class="col-xl-5"><?php echo $invoice->date_created; ?></div>
                                             <div class="col-xl-7">
                                                 Invoice draft &nbsp;
-                                                <span class="text-ter">by Alarm Direct</span>
+                                                <span class="text-ter">by <?php echo $clients->business_name; ?></span>
+                                                <div class="text-ter">(created by pro)</div>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-bottom-sec">
+                                            <div class="col-xl-5"><?php echo '2021-09-13 01:22:20'; ?></div>
+                                            <div class="col-xl-7">
+                                                Invoice Submitted &nbsp;
+                                                <span class="text-ter">by <?php echo $clients->business_name; ?></span>
+                                                <div class="text-ter">(created by pro)</div>
+                                            </div>
+                                        </div>
+                                        <div class="row margin-bottom-sec">
+                                            <div class="col-xl-5"><?php echo '2021-09-14 09:06:24'; ?></div>
+                                            <div class="col-xl-7">
+                                                Invoice Approved &nbsp;
+                                                <span class="text-ter">by <?php echo $clients->business_name; ?></span>
                                                 <div class="text-ter">(created by pro)</div>
                                             </div>
                                         </div>

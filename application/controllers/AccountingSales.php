@@ -64,28 +64,48 @@ class AccountingSales extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
+        $userId = logged('id');
         $data = null;
 
         if (!array_key_exists('rates', $payload)) {
-            $payload['user_id'] = logged('id');
+            $payload['user_id'] = $userId;
             $data = $this->saveRate($payload);
 
         } else {
-            $this->db->insert('accounting_tax_rates_combined', [
-                'user_id' => logged('id'),
+            ['rates' => $rates] = $payload;
+            $rateValues = array_map(function ($rate) {
+                return (float) $rate['rate'];
+            }, $rates);
+
+            $totalRate = array_sum($rateValues);
+            $parent = $this->saveRate([
                 'name' => $payload['name'],
+                'rate' => $totalRate,
+                'agency_id' => null,
+                'user_id' => $userId,
             ]);
 
-            $this->db->where('id', $this->db->insert_id());
-            $combined = $this->db->get('accounting_tax_rates_combined')->row();
+            foreach ($rates as $rate) {
+                $agency = new stdClass;
+                $agency->id = $rate['agency_id'] ?? null;
 
-            $data = [];
-            foreach ($payload['rates'] as $rate) {
-                $rate['user_id'] = logged('id');
-                $rate['combined_id'] = $combined->id;
-                $record = $this->saveRate($rate);
-                array_push($data, $record);
+                if (array_key_exists('agency', $rate)) {
+                    $agency = $this->findOrCreateAgency([
+                        'user_id' => $userId,
+                        'name' => $rate['agency'],
+                    ]);
+                }
+
+                $this->db->insert('accounting_tax_rates_combined_items', [
+                    'user_id' => $userId,
+                    'rate_id' => $parent->id,
+                    'agency_id' => $agency->id,
+                    'rate' => $rate['rate'],
+                    'name' => $rate['name'],
+                ]);
             }
+
+            $data = $parent;
         }
 
         header('content-type: application/json');
@@ -94,31 +114,45 @@ class AccountingSales extends MY_Controller
 
     private function saveRate(array $payload)
     {
-        if (!array_key_exists('agency_id', $payload)) {
-            $this->db->select('id');
-            $this->db->where('user_id', $payload['user_id']);
-            $this->db->where('agency', $payload['agency']);
-            $agency = $this->db->get('accounting_tax_agencies')->row();
-            $payload['agency_id'] = $agency ? $agency->id : null;
+        $agency = new stdClass;
+        $agency->id = $payload['agency_id'] ?? null;
 
-            if (is_null($payload['agency_id'])) {
-                $this->db->insert('accounting_tax_agencies', [
-                    'user_id' => $payload['user_id'],
-                    'agency' => $payload['agency'],
-                    'frequency' => 'yearly',
-                    'start_date' => date('Y-m-d'),
-                    'start_period' => date('Y') . '-01-01',
-                ]);
-
-                $payload['agency_id'] = $this->db->insert_id();
-            }
+        if (array_key_exists('agency', $payload)) {
+            $agency = $this->findOrCreateAgency([
+                'user_id' => $payload['user_id'],
+                'name' => $payload['agency'],
+            ]);
         }
 
         unset($payload['agency']);
+        $payload['agency_id'] = $agency->id;
         $this->db->insert('accounting_tax_rates', $payload);
 
         $this->db->where('id', $this->db->insert_id());
         return $this->db->get('accounting_tax_rates')->row();
+    }
+
+    private function findOrCreateAgency(array $attributes, array $values = [])
+    {
+        foreach ($attributes as $key => $attributeValue) {
+            $this->db->where($key, $attributeValue);
+        }
+        $agency = $this->db->get('accounting_tax_agencies')->row();
+
+        if ($agency) {
+            return $agency;
+        }
+
+        $payload = array_merge($attributes, $values, [
+            'frequency' => 'yearly',
+            'start_date' => date('Y-m-d'),
+            'start_period' => date('Y') . '-01-01',
+        ]);
+
+        $this->db->insert('accounting_tax_agencies', $payload);
+
+        $this->db->where('id', $this->db->insert_id());
+        return $this->db->get('accounting_tax_agencies')->row();
     }
 
     public function apiGetRates()
@@ -134,70 +168,36 @@ class AccountingSales extends MY_Controller
         $rates = $this->db->get('accounting_tax_rates')->result();
 
         $agencyIdMap = [];
-        $combinedIdMap = [];
+        $getAgency = function ($rate) use ($agencyIdMap) {
+            if (is_null($rate->agency_id)) {
+                return null;
+            }
 
-        foreach ($rates as $rate) {
             if (!array_key_exists($rate->agency_id, $agencyIdMap)) {
                 $this->db->where('id', $rate->agency_id);
                 $agencyIdMap[$rate->agency_id] = $this->db->get('accounting_tax_agencies')->row();
             }
 
-            if (!is_null($rate->combined_id) && !array_key_exists($rate->combined_id, $combinedIdMap)) {
-                $this->db->where('id', $rate->combined_id);
-                $combinedIdMap[$rate->combined_id] = $this->db->get('accounting_tax_rates_combined')->row();
+            return $agencyIdMap[$rate->agency_id];
+        };
+
+        foreach ($rates as $rate) {
+            $rate->agency = $getAgency($rate);
+
+            if (!is_null($rate->agency_id)) {
+                continue;
             }
 
-            $rate->agency = $agencyIdMap[$rate->agency_id];
-            $rate->combined = $combinedIdMap[$rate->combined_id];
+            $this->db->where('rate_id', $rate->id);
+            $rate->items = $this->db->get('accounting_tax_rates_combined_items')->result();
+
+            foreach ($rate->items as $item) {
+                $item->agency = $getAgency($item);
+            }
         }
 
-        // group rates by combined_id
-        $retval = array_reduce($rates, function ($carry, $rate) {
-            $rate->agency = $rate->agency->agency;
-
-            if (!$rate->combined) {
-                array_push($carry, $rate);
-                return $carry;
-            }
-
-            $hasMatch = false;
-            foreach ($carry as $currRate) {
-                if ($currRate->id === $rate->combined->id) {
-                    $hasMatch = true;
-                    break;
-                }
-            }
-
-            if (!$hasMatch) {
-                $item = new stdClass;
-                $item->agency = "";
-                $item->items = [$rate];
-                $item->rate = (float) $rate->rate;
-                $item->name = $rate->combined->name;
-                $item->id = $rate->combined->id;
-                $item->is_active = $rate->combined->is_active;
-                array_push($carry, $item);
-                return $carry;
-            }
-
-            return array_map(function ($currRate) use ($rate) {
-                if (!$currRate->items) {
-                    return $currRate;
-                }
-
-                if ($currRate->id !== $rate->combined->id) {
-                    return $currRate;
-                }
-
-                array_push($currRate->items, $rate);
-                $currRate->rate += (float) $rate->rate;
-                return $currRate;
-            }, $carry);
-
-        }, []);
-
         header('content-type: application/json');
-        echo json_encode(['data' => $retval]);
+        echo json_encode(['data' => $rates]);
     }
 
     public function apiEditRate($rateId)
@@ -279,6 +279,9 @@ SQL;
 
             $this->db->where('invoice_id', $result->id);
             $result->adjustments = $this->db->get('accounting_tax_adjustments')->result();
+
+            $this->db->where('invoice_id', $result->id);
+            $result->payment = $this->db->get('accounting_invoice_tax_payments')->row();
 
             $dueDateUnix = strtotime($result->due_date);
             $type = null;
@@ -384,7 +387,7 @@ SQL;
         echo json_encode(['data' => $record]);
     }
 
-    public function apiEditRateCombinedParent($rateParentId)
+    public function apiEditRateItem($rateItemId)
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
@@ -393,14 +396,22 @@ SQL;
 
         $payload = json_decode(file_get_contents('php://input'), true);
 
-        $this->db->where('id', $rateParentId);
-        $this->db->update('accounting_tax_rates_combined', $payload);
+        $this->db->where('id', $rateItemId);
+        $this->db->update('accounting_tax_rates_combined_items', $payload);
 
-        $this->db->where('id', $rateParentId);
-        $record = $this->db->get('accounting_tax_rates_combined')->row();
+        $this->db->where('id', $rateItemId);
+        $record = $this->db->get('accounting_tax_rates_combined_items')->row();
 
-        $this->db->where('combined_id', $rateParentId);
-        $this->db->update('accounting_tax_rates', ['is_active' => $record->is_active]);
+        $this->db->where('rate_id', $record->rate_id);
+        $allParentItems = $this->db->get('accounting_tax_rates_combined_items')->result();
+
+        $newParentTotal = 0;
+        foreach ($allParentItems as $item) {
+            $newParentTotal += (float) $item->rate;
+        }
+
+        $this->db->where('id', $record->rate_id);
+        $this->db->update('accounting_tax_rates', ['rate' => $newParentTotal]);
 
         header('content-type: application/json');
         echo json_encode(['data' => $record]);

@@ -61,13 +61,13 @@
     allAgencies = allAgencies.map((currAgency) => {
       return {
         text: currAgency,
-        disabled: savedAgencies.some(({ agency }) => agency === currAgency),
+        disabled: savedAgencies.some(({ name }) => name === currAgency),
       };
     });
 
     allAgencies = [
       { text: "Saved Agencies", disabled: true },
-      ...savedAgencies.map((a) => a.agency),
+      ...savedAgencies.map((a) => a.name),
       ...allAgencies,
     ];
   }
@@ -103,7 +103,7 @@
     $(this).attr("disabled", true);
     $(this).text("Saving...");
 
-    payload.agency = payload.agency.replaceAll(":", ", ");
+    payload.name = payload.name.replaceAll(":", ", ");
     const response = await fetch(`${prefixURL}/AccountingSales/apiSaveAgency`, {
       method: "post",
       body: JSON.stringify(payload),

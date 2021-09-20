@@ -179,6 +179,50 @@ $('#account').on('change', function() {
     location.href = `/accounting/chart-of-accounts/view-register/${$(this).val()}`
 });
 
+$('#date').on('change', function() {
+    switch($(this).val()) {
+        case 'today' :
+            var today = new Date();
+            var todayDate = String(today.getDate()).padStart(2, '0');
+            var todayMonth = String(today.getMonth() + 1).padStart(2, '0');
+            today = todayMonth + '/' + todayDate + '/' + today.getFullYear();
+
+            $('#from, #to').val(today);
+        break;
+        case 'yesterday' :
+            var yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            var yesterdayDate = String(yesterday.getDate()).padStart(2, '0');
+            var yesterdayMonth = String(yesterday.getMonth() + 1).padStart(2, '0');
+            yesterday = yesterdayMonth + '/' + yesterdayDate + '/' + yesterday.getFullYear();
+
+            $('#from, #to').val(yesterday);
+        break;
+        default :
+            $('#from, #to').val('');
+        break;
+    }
+});
+
+$('#reset-filter').on('click', function(e) {
+    e.preventDefault();
+
+    $('#search').val('');
+    $('#reconcile_status').val('all').trigger('change');
+    $('#transaction_type').val('all').trigger('change');
+    $('#payee').val('all').trigger('change');
+    $('#date').val('all').trigger('change');
+    $('#from, #to').val('');
+
+    $('#apply-filter').trigger('click');
+});
+
+$('#apply-filter').on('click', function(e) {
+    e.preventDefault();
+
+    $('#registers-table').DataTable().ajax.reload(null, true);
+});
+
 function col(el) {
     var el = $(el);
     var col = el.attr('id').replace('chk_', '');
