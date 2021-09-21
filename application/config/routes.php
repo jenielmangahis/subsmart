@@ -1015,3 +1015,7 @@ $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
 
 //Cron Send Email
 $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
+
+//Customer
+$route['customer/subscriptions'] = 'Customer/customer_subscriptions';
+$route['customer/_load_active_subscriptions'] = 'Customer/ajax_load_active_subscriptions';

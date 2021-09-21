@@ -57,6 +57,11 @@
                 <span class="fa fa-user-circle"></span>Customer Dashboard
             </a>
         </li>
+        <li class="submenus <?= $this->uri->segment(2) == 'subscriptions' ?  "active" : '';?>">
+            <a href="<?php echo base_url('customer/subscriptions') ?>">
+                <span class="fa fa-list"></span>Customer Subscriptions
+            </a>
+        </li>
         <li class="submenus <?=$this->uri->segment(2) == 'group' || $this->uri->segment(2) == 'group_add' || $this->uri->segment(2) == 'group_edit' ?  "active" : '';?>">
             <a href="<?php echo base_url('customer/group') ?>" title="Services"><span class="fa fa-users"></span>Customer Groups</a>
         </li>

@@ -3248,4 +3248,20 @@ class Customer extends MY_Controller
         echo json_encode($json_data);
     }
 
+    public function customer_subscriptions()
+    {
+        
+        $this->load->view('customer/subscription_list', $this->page_data);
+    }
+
+    public function ajax_load_active_subscriptions()
+    {
+        $this->load->model('Customer_advance_model');
+        
+        $company_id    = logged('company_id');
+        $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);        
+        $this->page_data['activeSubscriptions'] = $activeSubscriptions;
+        $this->load->view('customer/ajax_load_active_subscriptions', $this->page_data);
+    }
+
 }
