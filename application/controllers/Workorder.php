@@ -1377,8 +1377,160 @@ class Workorder extends MY_Controller
         echo json_encode($json_data);
     }
 
-
     public function sendWorkorderToAcsAlarm()
+    {
+        $id = $this->input->post('id');
+        $wo_id = $this->input->post('wo_id');
+
+        $workData = $this->workorder_model->get_workorder_data($wo_id);
+        // var_dump($workData);
+
+        $source_id = $workData->lead_source_id;
+        // $sourcea = $this->workorder_model->get_source_data($source_id);
+        
+        $workorder = $workData->work_order_number;
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+        // $source = $source->ls_name;
+
+        $cliets = $this->workorder_model->get_cliets_data($c_id);
+        $customerData = $this->workorder_model->get_customerData_data($p_id);
+
+        $data = array(
+            'workorder'                         => $workorder,
+            'tags'                              => $workData->tags,
+            'job_type'                          => $workData->job_type,
+            'priority'                          => $workData->priority,
+            'password'                          => $workData->password,
+            'security_number'                   => $workData->security_number,
+            'source_name'                       => $workData->lead_source_id,
+            'company_representative_signature'  => $workData->company_representative_signature,
+            'company'                           => $cliets->business_name,
+            'business_address'                  => $cliets->business_address,
+            'phone_number'                      => $cliets->phone_number,
+            'acs_name'                          => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'job_location'                      => $workData->job_location,
+            'job_location2'                     => $workData->city.', '.$workData->state.', '.$workData->zip_code.', '.$workData->cross_street,
+            'email'                             => $workData->email,
+            'phone'                             => $workData->phone_number,
+            'mobile'                            => $workData->mobile_number,
+            'terms_and_conditions'              => $workData->terms_and_conditions,
+            'terms_of_use'                      => $workData->terms_of_use,
+            'job_description'                   => $workData->job_description,
+            'instructions'                      => $workData->instructions,
+            'first_verification_name'           => $customerData->first_verification_name,
+            'first_number'                      => $customerData->first_number,
+            'first_relation'                    => $customerData->first_relation,
+            'second_verification_name'          => $customerData->second_verification_name,
+            'second_number'                     => $customerData->second_number,
+            'second_relation'                   => $customerData->second_relation,
+            'third_verification_name'           => $customerData->third_verification_name,
+            'third_number'                      => $customerData->third_number,
+            'third_relation'                    => $customerData->third_relation,
+            'date_issued'                       => $workData->date_issued,
+            // 'source' => $source
+        );
+
+        $message = "<p>This workorder agreement (the 'agreement') is made as of 05-07-2021, by and between ADI Smart Home, (the 'Company') and the ('Customer') as the address shown below (the 'Premise/Service') ";
+        $message .= "<table>";
+        $message .= "<tr><td></td><td><h2>WORK ORDER</h2> <br> ".$workData->work_order_number." </td></tr>";
+        $message .= "</table>";
+        $message .= "<hr>";
+        $message .= "<table>";
+        $message .= "<tr><td></td><td>Job Tags: </td><td>".$workData->tags."</td></tr>";
+        $message .= "<tr><td></td><td>Date: </td><td>".date("Y-m-d")."</td></tr>";
+        $message .= "<tr><td></td><td>Type: </td><td>".$workData->job_type."</td></tr>";
+        $message .= "<tr><td></td><td>Priority: </td><td>".$workData->priority."</td></tr>";
+        $message .= "<tr><td></td><td>Password: </td><td>".$workData->password."</td></tr>";
+        $message .= "<tr><td></td><td>Security Number: </td><td>".$workData->security_number."</td></tr>";
+        $message .= "<tr><td></td><td>Custom Field: </td><td></td></tr>";
+        // $message .= "<tr><td></td><td>Source: </td><td>".$source->ls_name."</td></tr>";
+        $message .= "</table>";
+        $message .= "<br><h5>FROM:</h5>";
+        $message .= "<hr>";
+        $message .= "<table>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
+            $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
+            $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
+            $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
+            $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
+            $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
+            $message .= "<tr><td>DBA ADDRESS 2</td><td>".$post['dba_address_2']."</td></tr>";
+            $message .= "<tr><td>CITY</td><td>".$post['city']."</td></tr>";
+            $message .= "<tr><td>STATE</td><td>".$post['state']."</td></tr>";
+            $message .= "<tr><td>ZIP CODE</td><td>".$post['zip_code']."</td></tr>";
+            $message .= "<tr><td>DBA PHONE NO.</td><td>".$post['dba_phone_no']."</td></tr>";
+            $message .= "<tr><td>EMAIL ADDRESS</td><td>".$post['email_address']."</td></tr>";
+            $message .= "<tr><td>MOBILE PHONE NO.</td><td>".$post['mobile_phone_no']."</td></tr>";
+            $message .= "<tr><td>YEAR ESTABLISHED</td><td>".$post['years_established']."</td></tr>";
+            $message .= "<tr><td>LENGTH OF CURRENT OWNERSHIP</td><td>".$post['length_ownership']."</td></tr>";
+            $message .= "<tr><td>YEARS</td><td>".$post['ownership_years']."</td></tr>";
+            $message .= "<tr><td>MONTHS</td><td>".$post['ownership_months']."</td></tr>";
+
+
+        $message .= "</table>";
+        $message .= "<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
+
+        
+        $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
+        $filename = $workData->company_representative_signature;
+
+        $customer_name = $this->input->post("customer_name");
+        $customer_email = $this->input->post("customer_email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        
+        $mail->MsgHTML($message2);
+        
+        $data = new stdClass();
+        try {
+            // $mail->addAddress($workData->email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+        echo json_encode($json_data);
+    }
+
+
+    public function sendWorkorderToAcsAlarm_old()
     {
         $id = $this->input->post('id');
         $wo_id = $this->input->post('wo_id');

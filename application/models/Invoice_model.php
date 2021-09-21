@@ -711,7 +711,16 @@ class Invoice_model extends MY_Model
         $this->db->where('id', $primary_key);
         $query = $this->db->get($this->table);
         $invoice = $this->getLastRow($comp_id);
-        $new_invoice_number = explode("-", $invoice->invoice_number)[0] . '-' . strval(intval(explode("-", $invoice->invoice_number)[1]) + 1);
+        // foreach ($number as $num):
+            $next = $invoice->invoice_number;
+            $arr = explode("-", $next);
+            $date_start = $arr[0];
+            $nextNum = $arr[1];
+            //    echo $number;
+        // endforeach;
+        $val = $nextNum + 1;
+        $new_invoice_number = 'INV-'. str_pad($val, 9, "0", STR_PAD_LEFT);
+        // $new_invoice_number = explode("-", $invoice->invoice_number)[0] . '-' . strval(intval(explode("-", $invoice->invoice_number)[1]) + 1);
 
         foreach ($query->result() as $row) {
             foreach ($row as $key=>$val) {

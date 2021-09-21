@@ -62,11 +62,21 @@ $('#registers-table').DataTable({
         },
         {
             data: 'payment',
-            name: 'payment'
+            name: 'payment',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if(cellData !== '') {
+                    $(td).html(`$${cellData}`);
+                }
+            }
         },
         {
             data: 'deposit',
-            name: 'deposit'
+            name: 'deposit',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if(cellData !== '') {
+                    $(td).html(`$${cellData}`);
+                }
+            }
         },
         {
             data: 'reconcile_status',

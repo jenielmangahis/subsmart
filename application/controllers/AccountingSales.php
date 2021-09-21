@@ -251,6 +251,7 @@ SQL;
 
         $companyIdMap = [];
         $agencyIdMap = [];
+        $bankIdMap = [];
         $records = [
             'due' => [],
             'upcoming' => [],
@@ -281,7 +282,17 @@ SQL;
             $result->adjustments = $this->db->get('accounting_tax_adjustments')->result();
 
             $this->db->where('invoice_id', $result->id);
-            $result->payment = $this->db->get('accounting_invoice_tax_payments')->row();
+            $result->payments = $this->db->get('accounting_invoice_tax_payments')->result();
+
+            // assign payment bank
+            foreach ($result->payments as $payment) {
+                if (!array_key_exists($payment->bank_account_id, $bankIdMap)) {
+                    $this->db->where('id', $payment->bank_account_id);
+                    $bankIdMap[$payment->bank_account_id] = $this->db->get('accounting_chart_of_accounts')->row();
+                }
+
+                $payment->bank = $bankIdMap[$payment->bank_account_id];
+            }
 
             $dueDateUnix = strtotime($result->due_date);
             $type = null;

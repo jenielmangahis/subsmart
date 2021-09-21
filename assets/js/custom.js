@@ -100,7 +100,7 @@ function getItemsOption2(obj) {
 }
 
 function setitem(obj, title, price, discount, itemid) {
-  alert('here');
+  // alert('here');
   // var total = price * 1;
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
@@ -1701,6 +1701,7 @@ $(document).on("focusout", ".qtyest3", function () {
 
 
 function calculation(counter) {
+  // alert('calc 1');
   var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_" + counter).val()
@@ -1960,6 +1961,7 @@ function getItems(obj) {
   });
 }
 function setitem(obj, title, price, discount, itemid) {
+  // alert('here dri');
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
   jQuery(obj).parent().parent().parent().find(".price").val(price);
@@ -2563,6 +2565,7 @@ $(document).on("focusout", ".discount", function () {
 });
 
 function calculation(counter) {
+  // alert('calc 2');
   // alert('test');
   var price = $("#price_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
@@ -3967,4 +3970,23 @@ $(".addCreatePackage").click(function () {
     // });
     // $("#divcreatePackage").load(" #divcreatePackage");
 
+});
+
+$(document).ready(function() {
+  $(".btnAdd").click(function() {
+      alert('test');
+      $.ajax({
+          type: "POST",
+          url: "<?php echo base_url(); ?>accounting/customer_credit_memo_modal",
+          success: function(returndata) {
+              // $('#myModal').modal('show');
+                alert('test');
+              $('.testingNi').html(returndata);
+
+              //  $('#myModal').html(returndata);
+              $('#addcreditmemoModal').modal('show');
+          },
+          dataType: "html"
+      });
+  });
 });

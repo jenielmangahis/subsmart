@@ -296,6 +296,13 @@ include viewPath('includes/header');
                             </ol>
                         </div>
                         <div class="taxModal__payments">
+                            <template id="paymentTemplate">
+                                <div class="taxModal__paymentsGroup taxModal__paymentsGroup--hasBorder taxModal__paymentsGroup--bigger">
+                                    <div><a class="taxModal__link" data-type="date_payment" href="#"></a></div>
+                                    <div>$<span data-type="amount"></span></div>
+                                </div>
+                            </template>
+
                             <div class="mb-3">
                                 <div class="taxModal__paymentsTitle">Payment details</div>
                                 <div>Number of payments: 1</div>
@@ -305,17 +312,16 @@ include viewPath('includes/header');
                                 <div>Payments</div>
                                 <div>Amount paid</div>
                             </div>
-                            <div class="taxModal__paymentsGroup taxModal__paymentsGroup--hasBorder taxModal__paymentsGroup--bigger">
-                                <div><a class="taxModal__link" href="#">09/18/2021</a></div>
-                                <div>$0.01</div>
-                            </div>
+
+                            <div id="paymentsWrapper"></div>
+
                             <div class="taxModal__paymentsGroup mb-3">
                                 <div>Total paid:</div>
-                                <div>$0.01</div>
+                                <div>$<span id="paymentItemsTotalAmount"></span></div>
                             </div>
                             <div class="taxModal__paymentsGroup">
                                 <div>Total due</div>
-                                <div>-$0.02</div>
+                                <div>$<span id="paymentTotalDue"></span></div>
                             </div>
                         </div>
                     </div>
@@ -462,6 +468,48 @@ include viewPath('includes/header');
                     <button type="button" class="btn btn-primary" id="savePayment">Record Payment</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="viewPaymentModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div><strong>Tax agency</strong></div>
+                    <div data-type="agency.name"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div><strong>Payment made</strong></div>
+                    <div>$<span data-type="amount"></span></div>
+                </div>
+
+                <div class="mb-3">
+                    <div><strong>Payment date</strong></div>
+                    <div data-type="date_payment"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div><strong>Bank account</strong></div>
+                    <div data-type="bank.name"></div>
+                </div>
+
+                <div>
+                    <div><strong>Notes</strong></div>
+                    <div data-type="memo"></div>
+                </div>
+            </div>
+            <div class="modal-footer d-none">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
             </div>
         </div>
     </div>

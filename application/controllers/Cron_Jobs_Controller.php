@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 define("FIREBASE_API_KEY", "AAAAiHsFn_g:APA91bHXjuIQDyf_yEGQbqN8H2JofS5Mn38i1-5smTWRqVqkb33lUYNM5VGV__cXCPHqnf-HQxaFtim5fR6mpU3LWhOHxtyM_bzTvZk72ttxkZHxktLzAQpe5AmZBYVlJ_5LzqiOAYOn"); // Old firebase API key
 
-class Cron_Jobs_Controller extends MY_Controller
+class Cron_Jobs_Controller extends CI_Controller
 {
     private $timesheet_report_timezone = "UTC";
     private $timesheet_report_timezone_id = 0;
@@ -83,7 +83,8 @@ class Cron_Jobs_Controller extends MY_Controller
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
         $mail->MsgHTML($content);
         $mail->addAddress('webtestcustomer@nsmartrac.com');
-        // $mail->addAddress($receiver);
+        // echo "pasok";
+        $mail->addAddress($receiver);
         if (!$mail->Send()) {
             echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;
@@ -113,9 +114,10 @@ class Cron_Jobs_Controller extends MY_Controller
         $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
         $date_hour_now_pst = date('Y-m-d')." ".$hour_now;
         $admins_for_reports=array();
+        // var_dump($admins_subject_for_report);
         foreach ($admins_subject_for_report as $admin) {
-            $date_hour_now_pst = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
-            $week_day = date("D", strtotime($date_hour_now_pst));
+            $date_hour_now_selected_tz = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
+            $week_day = date("D", strtotime($date_hour_now_selected_tz));
             $schedules = explode(",", $admin->schedule_day);
             $found= false;
             for ($i = 0; $i<count($schedules); $i++) {
@@ -152,6 +154,8 @@ class Cron_Jobs_Controller extends MY_Controller
                 if ($subscribed) {
                     $this->generate_timelogs_csv($file_info[2], $file_info[0], $est_wage_privacy);
                     $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name, $est_wage_privacy);
+                    // var_dump($admins_for_reports);
+                    echo "<br><br>";
                     $this->timelogs_csv_email_sender(
                         $admin->email_report,
                         $admin->business_name . "",
@@ -236,6 +240,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $obj_pdf->lastPage();
         // $obj_pdf->Output($title, 'I');
         $obj_pdf->Output(dirname(__DIR__, 2) . '/timesheet/timelogs/' . $file_info[3], 'F');
+        $obj_pdf->Close();
     }
     public function generate_timelogs_csv($timehseet_storage, $filename, $est_wage_privacy)
     { // file name

@@ -137,7 +137,7 @@
                             <!-- <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addestimateModal">Estimate</a></li> -->
                             <li><a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">Estimate</a>
                             </li>
-                            <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addcreditmemoModal">Credit
+                            <li><a href="#" class="btnAdd" id="btnAdd">Credit
                                     memo</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addsalesreceiptModal">Sales
                                     receipt</a></li>
@@ -230,7 +230,7 @@
 <?php include viewPath('accounting/customer_invoice_modal'); ?>
 <?php include viewPath('accounting/customer_receive_payment_modal');?>
 <?php include viewPath('accounting/customer_estimate_modal'); ?>
-<?php include viewPath('accounting/customer_credit_memo_modal');?>
+<?php //include viewPath('accounting/customer_credit_memo_modal');?>
 <?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
 <?php include viewPath('accounting/customer_refund_receipt_modal'); ?>
 <?php include viewPath('accounting/customer_delayed_credit_modal'); ?>

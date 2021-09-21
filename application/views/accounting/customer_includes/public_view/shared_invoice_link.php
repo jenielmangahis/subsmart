@@ -19,10 +19,10 @@ $this->page_data['date']=$inv->date_issued;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice nSmartrac</title>
     <link
-        href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css"
+        href="<?=base_url()?>assets/dashboard/css/bootstrap.min.css"
         rel="stylesheet" type="text/css">
     <link rel="stylesheet"
-        href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
+        href="<?=base_url()?>assets/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet"
         href="<?=base_url("assets/css/accounting/accounting_includes/public_view_shared_invoice_link.css")?>">
 </head>
@@ -103,14 +103,19 @@ $this->page_data['date']=$inv->date_issued;
                         <div class="btns">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <button class="btn btn-default view-invoice-btn" type="button" data-file="<?=base_url("assets/pdf/".$pdf_file)?>">View Invoice</button>
+                                    <button class="btn btn-default view-invoice-btn" type="button"
+                                        data-file="<?=base_url("assets/pdf/".$pdf_file)?>">View
+                                        Invoice</button>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="pull-right">
-                                        <button type="button" class="non-styled download-btn" data-inv="<?=$no?>" data-file="<?=base_url("assets/pdf/".$pdf_file)?>"><i class="fa fa-download"
-                                                aria-hidden="true"></i></button>
-                                        <button type="button" class="non-styled print-btn" data-file="<?=base_url("assets/pdf/".$pdf_file)?>"><i class="fa fa-print"
-                                                aria-hidden="true"></i></button>
+                                        <button type="button" class="non-styled download-btn"
+                                            data-inv="<?=$no?>"
+                                            data-file="<?=base_url("assets/pdf/".$pdf_file)?>"><i
+                                                class="fa fa-download" aria-hidden="true"></i></button>
+                                        <button type="button" class="non-styled print-btn"
+                                            data-file="<?=base_url("assets/pdf/".$pdf_file)?>"><i
+                                                class="fa fa-print" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -153,13 +158,15 @@ $this->page_data['date']=$inv->date_issued;
             </div>
         </div>
     </div>
-    <div id="pdf-viewer-modal" >
+    <div id="pdf-viewer-modal">
         <div class="container">
             <div class="close-btn">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </div>
             <div class="the-body">
-                <iframe id="pdf-iframe" src="<?=base_url("assets/pdf/".$pdf_file)?>" frameborder="0"></iframe>
+                <iframe id="pdf-iframe"
+                    src="<?=base_url("assets/pdf/".$pdf_file)?>"
+                    frameborder="0"></iframe>
             </div>
         </div>
     </div>

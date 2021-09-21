@@ -18,7 +18,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
-                                                <label for="transferFrom">Transfer Funds From</label>
+                                                <label for="transfer_from_account">Transfer Funds From</label>
                                                 <select name="transfer_from_account" id="transfer_from_account" class="form-control" required></select>
                                             </div>
                                         </div>
@@ -34,8 +34,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
-                                                <label for="transferTo">Transfer Funds To</label>
-                                                <select name="transfer_from_account" id="transfer_to_account" class="form-control" required></select>
+                                                <label for="transfer_to_account">Transfer Funds To</label>
+                                                <select name="transfer_to_account" id="transfer_to_account" class="form-control" required></select>
                                             </div>
                                         </div>
 

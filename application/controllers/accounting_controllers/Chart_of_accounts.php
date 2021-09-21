@@ -579,7 +579,7 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         // Filter
-        $data = array_filter($data, function($reg, $key) use ($post) {
+        $data = array_filter($data, function($reg, $key) use ($post, $search) {
             $flag = true;
 
             if($post['from_date'] !== "" && strtotime($reg['date']) < strtotime($post['from_date'])) {
@@ -598,8 +598,68 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
+            if($search !== "") {
+                if(str_contains($search, '<') || str_contains($search, '>')) {
+                    $searchString = str_replace('<', '', $search);
+                    $searchString = str_replace('>', '', $search);
+
+                    $searchFloat = floatval($searchString);
+
+                    if(str_contains($search, '<')) {
+                        $flag = floatval($reg['payment']) < $searchFloat || floatval($reg['deposit']) < $searchFloat;
+                    } else {
+                        $flag = floatval($reg['payment']) > $searchFloat || floatval($reg['deposit']) > $searchFloat;
+                    }
+                } else {
+                    if(stripos($reg['ref_no'], $search) === false && stripos($reg['memo'], $search) === false && 
+                    stripos(strval($reg['payment']), $search) === false && stripos(strval($reg['deposit']), $search) === false) {
+                        $flag = false;
+                    }
+                }
+            }
+
             return $flag;
         }, ARRAY_FILTER_USE_BOTH);
+
+        usort($data, function($a, $b) use ($columnName, $order) {
+            switch($columnName) {
+                case 'date' :
+                    if($order === 'asc') {
+                        return strtotime($a['date']) > strtotime($b['date']);
+                    } else {
+                        return strtotime($a['date']) < strtotime($b['date']);
+                    }
+                break;
+                case 'payment' :
+                    if($order === 'asc') {
+                        return $a['payment'] > $b['payment'];
+                    } else {
+                        return $a['payment'] < $b['payment'];
+                    }
+                break;
+                case 'deposit' :
+                    if($order === 'asc') {
+                        return $a['deposit'] > $b['deposit'];
+                    } else {
+                        return $a['deposit'] < $b['deposit'];
+                    }
+                break;
+                case 'ref_no' :
+                    if($order === 'asc') {
+                        return strcmp($a['ref_no'], $b['ref_no']);
+                    } else {
+                        return strcmp($b['ref_no'], $a['ref_no']);
+                    }
+                break;
+                default :
+                    if($order === 'asc') {
+                        return strcmp($a['type'], $b['type']);
+                    } else {
+                        return strcmp($b['type'], $a['type']);
+                    }
+                break;
+            }
+        });
 
         $result = [
             'draw' => $post['draw'],
@@ -640,7 +700,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->account_col($check->id, 'Check'),
                 'memo' => $check->memo,
-                'payment' => '$'.number_format(floatval($check->total_amount), 2, ',', '.'),
+                'payment' => number_format(floatval($check->total_amount), 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -677,10 +737,10 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
                 'payee' => $payeeName,
-                'account' => $this->account_col($check->id, 'Check'),
+                'account' => $this->chart_of_accounts_model->getName($check->bank_account_id),
                 'memo' => $check->memo,
                 'payment' => '',
-                'deposit' => '$'.number_format(floatval($checkCategory->amount), 2, ',', '.'),
+                'deposit' => number_format(floatval($checkCategory->amount), 2, ',', '.'),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -709,8 +769,8 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => '-Split-',
                 'memo' => $journalEntry->memo,
-                'payment' => $journalEntryItem->credit !== "0" ? '$'.number_format(floatval($journalEntryItem->credit), 2, ',', '.') : "",
-                'deposit' => $journalEntryItem->debit !== "0" ? '$'.number_format(floatval($journalEntryItem->debit), 2, ',', '.') : "",
+                'payment' => $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, ',', '.') : "",
+                'deposit' => $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, ',', '.') : "",
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -741,7 +801,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account' => 'Accounts Payable',
                 'memo' => $bill->memo,
                 'payment' => "",
-                'deposit' => '$'.number_format(floatval($billItem->amount), 2, ',', '.'),
+                'deposit' => number_format(floatval($billItem->amount), 2, ',', '.'),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -782,7 +842,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->account_col($ccCredit->id, 'Credit Card Credit'),
                 'memo' => $ccCredit->memo,
-                'payment' => '$'.number_format(floatval($ccCredit->total_amount), 2, ',', '.'),
+                'payment' => number_format(floatval($ccCredit->total_amount), 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -821,7 +881,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
                 'memo' => $ccCredit->memo,
-                'payment' => '$'.number_format(floatval($ccCreditCategory->amount), 2, ',', '.'),
+                'payment' => number_format(floatval($ccCreditCategory->amount), 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -852,7 +912,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => 'Accounts Payable',
                 'memo' => $vCredit->memo,
-                'payment' => '$'.number_format(floatval($vendorCredit->amount), 2, ',', '.'),
+                'payment' => number_format(floatval($vendorCredit->amount), 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -884,8 +944,8 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $account,
                 'memo' => $transfer->transfer_memo,
-                'payment' => $transfer->transfer_from_account_id === $accountId ? '$'.number_format(floatval($transfer->transfer_amount), 2, ',', '.') : '',
-                'deposit' => $transfer->transfer_to_account_id === $accountId ? '$'.number_format(floatval($transfer->transfer_amount), 2, ',', '.') : '',
+                'payment' => $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, ',', '.') : '',
+                'deposit' => $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, ',', '.') : '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -903,6 +963,13 @@ class Chart_of_accounts extends MY_Controller {
         $deposits = $this->chart_of_accounts_model->get_deposit_registers($accountId);
 
         foreach($deposits as $deposit) {
+            $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+            if(count($funds) > 1) { 
+                $account = '-Split-';
+            } else {
+                $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+            }
             $data[] = [
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'ref_no' => '',
@@ -910,10 +977,10 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
-                'account' => '',
+                'account' => $account,
                 'memo' => $deposit->memo,
                 'payment' => '',
-                'deposit' => '$'.number_format(floatval($deposit->total_amount), 2, ',', '.'),
+                'deposit' => number_format(floatval($deposit->total_amount), 2, ',', '.'),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -936,7 +1003,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($dep->account_id),
                 'memo' => $dep->memo,
-                'payment' => '$'.number_format(floatval($depFund->amount), 2, ',', '.'),
+                'payment' => number_format(floatval($depFund->amount), 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -952,9 +1019,24 @@ class Chart_of_accounts extends MY_Controller {
     private function quantity_adjustment_registers($accountId, $data = [])
     {
         $this->load->model('accounting_inventory_qty_adjustments_model');
+        $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $invQtyAdjs = $this->chart_of_accounts_model->get_qty_adjustments_registers($accountId);
 
         foreach($invQtyAdjs as $invQtyAdj) {
+            $adjustedItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($invQtyAdj);
+
+            $payment = 0.00;
+            foreach($adjustedItems as $adjustedItem) {
+                $startingValAdj = $this->starting_value_model->get_by_item_id($adjustedItem->product_id);
+
+                if(!is_null($startingValAdj)) {
+                    $payment += floatval($adjustedItem->change_in_quantity) * floatval($startingValAdj->initial_cost);
+                } else {
+                    $item = $this->items_model->getItemById($adjustedItem->product_id)[0];
+                    $payment += floatval($adjustedItem->change_in_quantity) *  floatval($item->cost);
+                }
+            }
+
             $data[] = [
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no,
@@ -964,7 +1046,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
                 'memo' => $invQtyAdj->memo,
-                'payment' => '$'.number_format(0.00, 2, ',', '.'),
+                'payment' => number_format($payment, 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -979,6 +1061,15 @@ class Chart_of_accounts extends MY_Controller {
         foreach($invQtyAdjItems as $invQtyAdjItem) {
             $invQtyAdj = $this->accounting_inventory_qty_adjustments_model->get_by_id($invQtyAdjItem->adjustment_id);
 
+            $startingValAdj = $this->starting_value_model->get_by_item_id($invQtyAdjItem->product_id);
+
+            if(!is_null($startingValAdj)) {
+                $payment = floatval($invQtyAdjItem->change_in_quantity) * floatval($startingValAdj->initial_cost);
+            } else {
+                $item = $this->items_model->getItemById($invQtyAdjItem->product_id)[0];
+                $payment = floatval($invQtyAdjItem->change_in_quantity) *  floatval($item->cost);
+            }
+
             $data[] = [
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no,
@@ -988,7 +1079,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
                 'memo' => $invQtyAdj->memo,
-                'payment' => '$'.number_format(0.00, 2, ',', '.'),
+                'payment' => number_format($payment, 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1030,7 +1121,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->account_col($expense->id, 'Expense'),
                 'memo' => $expense->memo,
-                'payment' => '$'.number_format(floatval($expense->total_amount), 2, ',', '.'),
+                'payment' => number_format(floatval($expense->total_amount), 2, ',', '.'),
                 'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1040,7 +1131,7 @@ class Chart_of_accounts extends MY_Controller {
             ];
         }
 
-        $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Check');
+        $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Expense');
 
         foreach($expenseCategories as $expenseCategory) {
             $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
@@ -1070,7 +1161,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account' => $this->account_col($expense->id, 'Expense'),
                 'memo' => $expense->memo,
                 'payment' => '',
-                'deposit' => '$'.number_format(floatval($expenseCategory->amount), 2, ',', '.'),
+                'deposit' => number_format(floatval($expenseCategory->amount), 2, ',', '.'),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1102,7 +1193,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
                 'memo' => $adjustment->memo,
                 'payment' => '',
-                'deposit' => '$'.number_format(floatval($deposit), 2, ',', '.'),
+                'deposit' => number_format(floatval($deposit), 2, ',', '.'),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1129,7 +1220,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
                 'memo' => $adjusted->memo,
                 'payment' => '',
-                'deposit' => '$'.number_format(floatval($deposit), 2, ',', '.'),
+                'deposit' => number_format(floatval($deposit), 2, ',', '.'),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1160,8 +1251,8 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $account,
                 'memo' => $ccPayment->memo,
-                'payment' => $ccPayment->bank_account_id === $accountId ? '$'.number_format(floatval($ccPayment->amount), 2, ',', '.') : '',
-                'deposit' => $ccPayment->credit_card_id === $accountId ? '$'.number_format(floatval($ccPayment->amount), 2, ',', '.') : '',
+                'payment' => $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, ',', '.') : '',
+                'deposit' => $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, ',', '.') : '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',

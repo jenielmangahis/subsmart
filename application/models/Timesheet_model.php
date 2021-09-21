@@ -1589,6 +1589,7 @@ class Timesheet_model extends MY_Model
         JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
         JOIN users ON timesheet_timezone_admin_report.user_id = users.id
         where timesheet_timezone_admin_report.schedule_time = '".$hour_now."'");
+        // var_dump($qry->result());
         return $qry->result();
     }
     public function get_user_and_company_details($user_id)
