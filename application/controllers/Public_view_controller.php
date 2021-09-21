@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Public_view_controller extends MY_Controller
+class Public_view_controller extends CI_Controller
 {
     public function __construct()
     {

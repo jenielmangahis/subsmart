@@ -356,7 +356,7 @@ class Chart_of_accounts_model extends MY_Model {
 
 	public function get_deposit_payment_registers($accountId)
 	{
-		$this->db->where('received_from_account_id', $account);
+		$this->db->where('received_from_account_id', $accountId);
 		$query = $this->db->get('accounting_bank_deposit_funds');
 		return $query->result();
 	}

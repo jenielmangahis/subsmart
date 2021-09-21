@@ -1714,72 +1714,72 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </script>
 
 <script>
-    $(document).ready(function() {
+    // $(document).ready(function() {
 
-        $('#sel-customer').change(function() {
-            var id = $(this).val();
-            // alert(id);
+    //     $('#sel-customer').change(function() {
+    //         var id = $(this).val();
+    //         // alert(id);
 
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url(); ?>accounting/addLocationajax",
-                data: {
-                    id: id
-                },
-                dataType: 'json',
-                success: function(response) {
-                    // alert('success');
-                    // console.log(response['customer']);
+    //         $.ajax({
+    //             type: 'POST',
+    //             url: "<?php echo base_url(); ?>accounting/addLocationajax",
+    //             data: {
+    //                 id: id
+    //             },
+    //             dataType: 'json',
+    //             success: function(response) {
+    //                 // alert('success');
+    //                 // console.log(response['customer']);
 
-                    if (response['customer'].cross_street.trim().length == 0) {
-                        var cross = '';
-                    } else {
-                        var cross = response['customer'].cross_street;
-                    }
+    //                 if (response['customer'].cross_street.trim().length == 0) {
+    //                     var cross = '';
+    //                 } else {
+    //                     var cross = response['customer'].cross_street;
+    //                 }
 
-                    if (response['customer'].city.trim().length == 0) {
-                        var city = '';
-                    } else {
-                        var city = response['customer'].city;
-                    }
+    //                 if (response['customer'].city.trim().length == 0) {
+    //                     var city = '';
+    //                 } else {
+    //                     var city = response['customer'].city;
+    //                 }
 
-                    if (response['customer'].state.trim().length == 0) {
-                        var state = '';
-                    } else {
-                        var state = response['customer'].state;
-                    }
+    //                 if (response['customer'].state.trim().length == 0) {
+    //                     var state = '';
+    //                 } else {
+    //                     var state = response['customer'].state;
+    //                 }
 
-                    if (response['customer'].country.trim().length == 0) {
-                        var country = '';
-                    } else {
-                        var country = response['customer'].country;
-                    }
+    //                 if (response['customer'].country.trim().length == 0) {
+    //                     var country = '';
+    //                 } else {
+    //                     var country = response['customer'].country;
+    //                 }
 
 
-                    $("#job_location").val(cross + ' ' + city + ' ' + state + ' ' +
-                        country);
-                    $("#customer_email").val(response['customer'].email);
-                    $("#shipping_address").val(response['customer'].mail_add);
-                    $("#billing_address").val(response['customer'].mail_add);
+    //                 $("#job_location").val(cross + ' ' + city + ' ' + state + ' ' +
+    //                     country);
+    //                 $("#customer_email").val(response['customer'].email);
+    //                 $("#shipping_address").val(response['customer'].mail_add);
+    //                 $("#billing_address").val(response['customer'].mail_add);
 
-                },
-                error: function(response) {
-                    alert('Error' + response);
+    //             },
+    //             error: function(response) {
+    //                 alert('Error' + response);
 
-                }
-            });
-        });
-        $(document).on('click', '.setmarkup', function() {
-            // alert('yeah');
-            var markup_amount = $('#markup_input').val();
+    //             }
+    //         });
+    //     });
+    //     $(document).on('click', '.setmarkup', function() {
+    //         // alert('yeah');
+    //         var markup_amount = $('#markup_input').val();
 
-            $("#markup_input_form").val(markup_amount);
-            $("#span_markup_input_form").text(markup_amount);
-            $("#span_markup").text(markup_amount);
+    //         $("#markup_input_form").val(markup_amount);
+    //         $("#span_markup_input_form").text(markup_amount);
+    //         $("#span_markup").text(markup_amount);
 
-            $('#modalSetMarkup').modal('toggle');
-        });
-    });
+    //         $('#modalSetMarkup').modal('toggle');
+    //     });
+    // });
 </script>
 
 <script>
@@ -2151,7 +2151,7 @@ $(document).ready(function(){
             data: {id : id },
             dataType: 'json',
             success: function(response){
-                // alert('success');
+                alert('success');
                 // console.log(response['customer']);
             // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
 

@@ -45,12 +45,9 @@ class Accounting__TaxItem {
     const $openRecordPaymentBtn = this.$modal.find("#openRecordPaymentBtn");
     const $recordPaymentModal = $("#recordPaymentModal");
     const $savePaymentBtn = $recordPaymentModal.find("#savePayment");
+    const hasPayment = Array.isArray(data.payments) && data.payments.length;
 
     this.$modal.removeClass("taxModal--paid");
-    if (data.payment) {
-      this.$modal.addClass("taxModal--paid");
-    }
-
     $addAdjustmentLink.off();
     $sidebarCloseBtn.off();
     $sidebar.off();
@@ -120,9 +117,8 @@ class Accounting__TaxItem {
     }
 
     const totalAdjustments = this.getSumAdjustments(adjustments);
-    tableData.tax_adjusted = formatCurrency(
-      Number(tableData.tax) - Number(totalAdjustments)
-    );
+    const taxAdjusted = Number(tableData.tax) - Number(totalAdjustments);
+    tableData.tax_adjusted = formatCurrency(taxAdjusted);
 
     const $dataTableTypes = this.$modal.find("[data-table-type]");
     $dataTableTypes.each(function (_, element) {
@@ -131,6 +127,50 @@ class Accounting__TaxItem {
         element.dataset.tableType
       );
     });
+
+    if (hasPayment) {
+      this.$modal.addClass("taxModal--paid");
+
+      const template = this.$modal.find("#paymentTemplate").get(0).content;
+      const $wrapper = this.$modal.find("#paymentsWrapper");
+      const $total = this.$modal.find("#paymentItemsTotalAmount");
+      const $totalDue = this.$modal.find("#paymentTotalDue");
+      const $viewPaymentModal = $("#viewPaymentModal");
+      const $viewPaymentModalDatatypes = $viewPaymentModal.find("[data-type]");
+      let totalPaid = 0;
+
+      const items = data.payments.map((payment) => {
+        totalPaid += Number(payment.amount);
+        payment.agency = data.agency;
+        payment.amount = formatCurrency(payment.amount);
+        payment.date_payment = this.formatDate(payment.date_payment, {
+          month: "2-digit",
+        });
+
+        const $copy = $(document.importNode(template, true));
+        const $link = $copy.find(".taxModal__link");
+        const $dataTypes = $copy.find("[data-type]");
+
+        $dataTypes.each((_, element) => {
+          $(element).text(payment[element.dataset.type]);
+        });
+
+        $link.on("click", function (event) {
+          event.preventDefault();
+          $viewPaymentModalDatatypes.each((_, element) => {
+            $(element).text(getValueByString(payment, element.dataset.type));
+          });
+
+          $viewPaymentModal.modal("show");
+        });
+
+        return $copy;
+      });
+
+      $wrapper.append(items);
+      $total.text(formatCurrency(totalPaid));
+      $totalDue.text(formatCurrency(taxAdjusted - totalPaid));
+    }
 
     $dataTypes.each(function (_, element) {
       element.textContent = getValueByString(data, element.dataset.type);
@@ -200,7 +240,7 @@ class Accounting__TaxItem {
       window.location.reload();
     });
 
-    if (!data.payment) {
+    if (!hasPayment) {
       $openRecordPaymentBtn.on("click", () => {
         const $taxAdjusted = $recordPaymentModal.find(
           "[data-type=tax_adjusted]"
@@ -272,10 +312,16 @@ class Accounting__TaxItem {
     return adjustments.reduce((p, c) => p + Number(c.amount), 0);
   }
 
-  formatDate(date) {
+  formatDate(date, options = {}) {
     const dateObject = new Date(date);
-    const options = { month: "long", day: "2-digit", year: "numeric" };
-    return new Intl.DateTimeFormat("en", options).format(dateObject);
+    const _options = {
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+      ...options,
+    };
+
+    return new Intl.DateTimeFormat("en", _options).format(dateObject);
   }
 
   initBankAccountSelect($select) {

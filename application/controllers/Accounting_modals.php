@@ -1204,7 +1204,7 @@ class Accounting_modals extends MY_Controller
         } else {
             $insertData = [
                 'company_id' => logged('company_id'),
-                'transfer_from_account_id' => $data['transfer_from_acocunt'],
+                'transfer_from_account_id' => $data['transfer_from_account'],
                 'transfer_to_account_id' => $data['transfer_to_account'],
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
@@ -1216,7 +1216,7 @@ class Accounting_modals extends MY_Controller
                 'created_at' => date('Y-m-d h:i:s'),
                 'updated_at' => date('Y-m-d h:i:s')
             ];
-    
+
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
 
             if ($transferId) {
