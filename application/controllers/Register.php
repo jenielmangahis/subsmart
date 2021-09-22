@@ -1004,18 +1004,30 @@ class Register extends MYF_Controller {
             }
 
             if( $is_trial == 0 ){
-                //Record payment
-                $data_payment = [
-                    'company_id' => $cid,
-                    'description' => 'Paid Membership, Monthly',
-                    'payment_date' => date("Y-m-d"),
-                    'total_amount' => $plan_amount,
-                    'date_created' => date("Y-m-d H:i:s")
-                ];
-
-                $this->CompanySubscriptionPayments_model->create($data_payment);
-
+                $or_amount = $plan_amount;
+                $or_description = 'Paid Membership, Monthly';
+            }else{
+                $or_amount = 0;
+                $or_description = 'Trial Membership';
             }
+
+            //Record payment
+            $data_payment = [
+                'company_id' => $cid,
+                'description' => $or_description,
+                'payment_date' => date("Y-m-d"),
+                'total_amount' => $or_amount,
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $sid = $this->CompanySubscriptionPayments_model->create($data_payment);                
+            $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($sid);
+
+            $or_data = ['order_number' => $order_number];
+            $this->CompanySubscriptionPayments_model->update($sid, $or_data);
+
+            //Send invoice
+            $this->send_invoice_email($cid, $payment_id);
 
             //Create customer
             $customer_data = array(
@@ -1042,6 +1054,79 @@ class Register extends MYF_Controller {
         $json_data = ['is_success' => $is_success];
 
         echo json_encode($json_data);
+    }
+
+    public function send_invoice_email($cid, $payment_id){
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        $this->load->model('Clients_model');
+
+        $company_id = $cid;        
+        $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $client     = $this->Clients_model->getById($cid);
+
+        $this->page_data['payment'] = $payment;     
+        $this->page_data['client']  = $client; 
+        $body    = $this->load->view('mycrm/email_template/registration_invoice', $this->page_data, true);
+        $attachment = $this->create_attachment_invoice($payment_id);
+
+        $subject = 'nSmarTrac: Registration';
+        $to   = 'webtestcustomer@nsmartrac.com';
+
+        $data = [
+            'to' => 'webtestcustomer@nsmartrac.com', 
+            'subject' => $subject, 
+            'body' => $body,
+            'cc' => '',
+            'bcc' => '',
+            'attachment' => $attachment
+        ];
+
+        $isSent = sendEmail($data);
+        return true;
+    }
+
+    public function create_attachment_invoice($payment_id){
+
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        
+        $company_id = logged('company_id');
+        $payment    = $this->CompanySubscriptionPayments_model->getById($id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $this->page_data['payment']   = $payment;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('mycrm/subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
+
+        $this->load->library('Reportpdf');
+        $title = 'subscription_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetMargins(10, 5, 10, 0, true);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        //$obj_pdf->SetFont('courierI', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $obj_pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        ob_clean();
+        $obj_pdf->lastPage();
+        // $obj_pdf->Output($title, 'I');
+        $filename = strtolower($payment->order_number) . ".pdf";
+        $file     = dirname(__DIR__, 2) . '/uploads/subscription_invoice/' . $filename;
+        $obj_pdf->Output($file, 'F');
+        //$obj_pdf->Output($file, 'F');
+        return $file;
     }
 
     public function ajax_converge_token_request(){

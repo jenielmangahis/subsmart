@@ -25,6 +25,10 @@ $this->page_data['date']=$inv->date_issued;
         href="<?=base_url()?>assets/plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet"
         href="<?=base_url("assets/css/accounting/accounting_includes/public_view_shared_invoice_link.css")?>">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .w3-border-red,.w3-hover-border-red:hover{border-color: #00a300!important;}
+    </style>
 </head>
 
 <body>
@@ -55,6 +59,7 @@ $this->page_data['date']=$inv->date_issued;
             <div class="col-md-7">
                 <div class="widget main">
                     <div class="body">
+                        <?php if($status == 'Paid'){ ?>
                         <h1><?=$customer_info->business_name?>
                         </h1>
                         <h3 class="status <?=$status?>"><?=$status?>
@@ -63,9 +68,124 @@ $this->page_data['date']=$inv->date_issued;
                         <h3>$<?=number_format($balance, 2, '.', ',')?>
                         </h3>
                         <p>We sent you and your merchant a confirmation email</p>
+                        <?php }else{ ?>
+                            
+                            <div style="text-align:left;">
+                                <small class="help help-sm"><b>PAYMENT AMOUNT</b></small><br>
+                                <input type="text" value="<?=number_format($invoice_amount, 2, '.', ',')?>" class="" style="outline: 0;border-width: 0 0 2px;border-color: gray;font-size: 1.4rem;width:100%;">
+                                <br><br>
+                            </div>
+
+                            <div class="w3-row">
+                                <a href="javascript:void(0)" onclick="openCity(event, 'Debit');">
+                                <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding w3-border-red">Debit card</div>
+                                </a>
+                                <a href="javascript:void(0)" onclick="openCity(event, 'Transfer');">
+                                <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Bank transfer</div>
+                                </a>
+                                <a href="javascript:void(0)" onclick="openCity(event, 'Credit');">
+                                <div class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Credit card</div>
+                                </a>
+                            </div>
+
+                            <div id="Debit" class="w3-container city" style="display:block;text-align:left;">
+                                <br>
+                                <small class="help help-sm"><b>Name on card</b></small>
+                                <input type="text" class="form-control" placeholder="First name Last name">
+                                <br>
+                                <small class="help help-sm"><b>Card number</b></small>
+                                <input type="text" class="form-control" placeholder="1234 5678 9000 0000">
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <small class="help help-sm"><b>Exp date</b></small>
+                                        <input type="text" class="form-control" placeholder="MM/YY">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <small class="help help-sm"><b>CVV code</b></small>
+                                        <input type="text" class="form-control" placeholder="123">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <small class="help help-sm"><b>ZIP code</b></small>
+                                        <input type="text" class="form-control" placeholder="12345">
+                                    </div>
+                                </div>
+                                <br>
+                                    <p style="font-size:11px;">Save a payment method for faster future payments. <a href="#">Sign in</a> <a href="#">or create account</a>. </p>
+                                <br>
+                                <center><button class="btn btn-success" style="width:100%">Pay <?=number_format($invoice_amount, 2, '.', ',')?></button>
+                                <br><br>
+                                <span style="font-size:11px;">By selecting <b>Pay</b>, I accept the <a class="termsOfServiceFooter" href="/payor-terms-of-service" target="_blank">Terms of Service</a> and have read and acknowledge the <a href="https://security.intuit.com/index.php/privacy" target="_blank">Privacy Statement</a>. I also allow Intuit to charge $1,199.85 to my card on September 21, 2021.</span></center>
+                            </div>
+
+                            <div id="Transfer" class="w3-container city" style="text-align:left;display:none">
+                                <br>
+                                <small class="help help-sm"><b>Name on card</b></small>
+                                    <select name="accountType" class="form-control">
+                                        <option value="PERSONAL_CHECKING" class="jsx-3044598077">Personal checking</option>
+                                        <option value="PERSONAL_SAVINGS" class="jsx-3044598077">Personal savings</option>
+                                        <option value="BUSINESS_CHECKING" class="jsx-3044598077">Business checking</option>
+                                        <option value="BUSINESS_SAVINGS" class="jsx-3044598077">Business savings</option>
+                                    </select>
+                                <br>
+                                <small class="help help-sm"><b>Routing number</b></small>
+                                <input type="text" class="form-control" placeholder="Routing number">
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small class="help help-sm"><b>Account number</b></small>
+                                        <input type="text" class="form-control" placeholder=" Account number">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="help help-sm"><b>Confirm account number</b></small>
+                                        <input type="text" class="form-control" placeholder="Confirm account number">
+                                    </div>
+                                </div>
+                                <br>
+                                <small class="help help-sm"><b>Account holder's name</b></small>
+                                <input type="text" class="form-control">
+                                <br>
+                                    <p style="font-size:11px;">Save a payment method for faster future payments. <a href="#">Sign in</a> <a href="#">or create account</a>. </p>
+                                <br>
+                                <center><button class="btn btn-success" style="width:100%">Pay <?=number_format($invoice_amount, 2, '.', ',')?></button>
+                                <br><br>
+                                <span style="font-size:11px;">By selecting <b>Pay</b>, I accept the <a class="termsOfServiceFooter" href="/payor-terms-of-service" target="_blank">Terms of Service</a> and have read and acknowledge the <a href="https://security.intuit.com/index.php/privacy" target="_blank">Privacy Statement</a>. I also allow Intuit to charge $1,199.85 to my card on September 21, 2021.</span></center>
+                            </div>
+
+                            <div id="Credit" class="w3-container city" style="text-align:left;display:none">
+                                <br>
+                                <small class="help help-sm"><b>Name on card</b></small>
+                                <input type="text" class="form-control" placeholder="First name Last name">
+                                <br>
+                                <small class="help help-sm"><b>Card number</b></small>
+                                <input type="text" class="form-control" placeholder="1234 5678 9000 0000">
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <small class="help help-sm"><b>Exp date</b></small>
+                                        <input type="text" class="form-control" placeholder="MM/YY">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <small class="help help-sm"><b>CVV code</b></small>
+                                        <input type="text" class="form-control" placeholder="123">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <small class="help help-sm"><b>ZIP code</b></small>
+                                        <input type="text" class="form-control" placeholder="12345">
+                                    </div>
+                                </div>
+                                <br>
+                                    <p style="font-size:11px;">Save a payment method for faster future payments. <a href="#">Sign in</a> <a href="#">or create account</a>. </p>
+                                <br>
+                                <center><button class="btn btn-success" style="width:100%">Pay <?=number_format($invoice_amount, 2, '.', ',')?></button>
+                                <br><br>
+                                <span style="font-size:11px;">By selecting <b>Pay</b>, I accept the <a class="termsOfServiceFooter" href="/payor-terms-of-service" target="_blank">Terms of Service</a> and have read and acknowledge the <a href="https://security.intuit.com/index.php/privacy" target="_blank">Privacy Statement</a>. I also allow Intuit to charge $1,199.85 to my card on September 21, 2021.</span></center>
+                            </div>
+
+                        <?php } ?>
                     </div>
                     <div class="footer">
-                        <div class="copyright"> © 2021 Intuit Inc. All rights reserved. <a href="">Privacy</a> | <a
+                        <div class="copyright"> © 2021 nSmarTrac. All rights reserved. <a href="">Privacy</a> | <a
                                 href="">Terms of service</a></div>
                     </div>
                 </div>

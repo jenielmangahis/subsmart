@@ -350,11 +350,14 @@ class Mycrm extends MY_Controller {
                     'date_created' => date("Y-m-d H:i:s")
                 ];
 
-                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
-                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                $payment_id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($payment_id);
                         
                 $data = ['order_number' => $order_number];
-                $this->CompanySubscriptionPayments_model->update($id, $data);
+                $this->CompanySubscriptionPayments_model->update($payment_id, $data);
+
+                //Send mail
+                $this->send_invoice_email($payment_id);
 
                 $is_success = 1;
             }else {
@@ -835,15 +838,16 @@ class Mycrm extends MY_Controller {
                     'date_created' => date("Y-m-d H:i:s")
                 ];
 
-                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
-                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                $payment_id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($payment_id);
                         
                 $data = ['order_number' => $order_number];
-                $this->CompanySubscriptionPayments_model->update($id, $data);
+                $this->CompanySubscriptionPayments_model->update($payment_id, $data);
 
                 $this->session->set_userdata('is_plan_active', 1);
+
                 //Send mail
-                //$this->send_invoice($payment_id);
+                $this->send_invoice_email($payment_id);
 
                 $is_success = 1;
             }else{
@@ -855,7 +859,7 @@ class Mycrm extends MY_Controller {
         }
     }
 
-    public function send_invoice($payment_id)
+    public function send_invoice_email($payment_id)
     {
     	$this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('Business_model');
@@ -865,35 +869,22 @@ class Mycrm extends MY_Controller {
         $company    = $this->Business_model->getByCompanyId($payment->company_id);
         $this->page_data['payment'] = $payment;
         $this->page_data['company'] = $company;
-        $content    = $this->load->view('mycrm/email_template/invoice', $this->page_data, true);
+        $body       = $this->load->view('mycrm/email_template/invoice', $this->page_data, true);
         $attachment = $this->create_attachment_invoice($payment_id);
 
-        $server = MAIL_SERVER;
-        $port = MAIL_PORT;
-        $username = MAIL_USERNAME;
-        $password = MAIL_PASSWORD;
-        $from = MAIL_FROM;
         $subject = 'nSmarTrac: Order# ' . $payment->order_number;
+        $to      = 'webtestcustomer@nsmartrac.com';
 
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $mail = new PHPMailer;
-        $mail->isSMTP();
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $username;
-        $mail->Password = $password;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout = 10; // seconds
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'nSmarTrac';
-        $mail->Subject = $subject;
-        $mail->addAttachment($attachment);
-        $mail->MsgHTML($content);
-        $mail->addAddress('bryann.revina@gmail.com');
-        $mail->send();
-        
+        $data = [
+            'to' => 'webtestcustomer@nsmartrac.com', 
+            'subject' => $subject, 
+            'body' => $body,
+            'cc' => '',
+            'bcc' => '',
+            'attachment' => $attachment
+        ];
+
+        $isSent = sendEmail($data);
         return true;
     }
 

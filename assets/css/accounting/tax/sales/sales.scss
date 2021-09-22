@@ -208,6 +208,16 @@
     color: #2ca01c;
   }
 
+  &--hasPayment {
+    #taxModalInstructions {
+      display: none;
+    }
+
+    .taxModal__payments {
+      display: block;
+    }
+  }
+
   &--paid {
     .taxModal__paid {
       display: flex;

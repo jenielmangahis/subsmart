@@ -52,7 +52,7 @@ class Chart_of_accounts extends MY_Controller {
                 array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
                 array("Reports",    array()),
                 array("Taxes",      array("Sales Tax","Payroll Tax")),
-                array("Mileage",    array()),
+                // array("Mileage",    array()),
                 array("Accounting", array("Chart of Accounts","Reconcile"))
             );
         $this->page_data['menu_link'] =
@@ -65,7 +65,7 @@ class Chart_of_accounts extends MY_Controller {
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
                 array("",   array('/accounting/salesTax','/accounting/payrollTax')),
-                array('#',  array()),
+                // array('#',  array()),
                 array("",   array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
@@ -646,16 +646,40 @@ class Chart_of_accounts extends MY_Controller {
                 break;
                 case 'ref_no' :
                     if($order === 'asc') {
-                        return strcmp($a['ref_no'], $b['ref_no']);
+                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
+                            return false;
+                        }
+    
+                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
+                            return true;
+                        }
+
+                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
+                            return strcmp($a['ref_no'], $b['ref_no']);
+                        }
+
+                        return intval($a['ref_no']) > intval($b['ref_no']);
                     } else {
-                        return strcmp($b['ref_no'], $a['ref_no']);
+                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
+                            return true;
+                        }
+    
+                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
+                            return false;
+                        }
+
+                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
+                            return strcmp($b['ref_no'], $a['ref_no']);
+                        }
+
+                        return intval($a['ref_no']) < intval($b['ref_no']);
                     }
                 break;
                 default :
                     if($order === 'asc') {
-                        return strcmp($a['type'], $b['type']);
+                        return strcmp($a[$columnName], $b[$columnName]);
                     } else {
-                        return strcmp($b['type'], $a['type']);
+                        return strcmp($b[$columnName], $a[$columnName]);
                     }
                 break;
             }
@@ -693,7 +717,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
-                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no,
+                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
@@ -732,7 +756,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
-                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no,
+                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
@@ -762,7 +786,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
-                'ref_no' => $journalEntry->journal_no,
+                'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
                 'type' => 'Journal',
                 'payee_type' => '',
                 'payee_id' => '',
@@ -793,7 +817,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
-                'ref_no' => $bill->bill_no,
+                'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
                 'type' => 'Bill',
                 'payee_type' => 'vendor',
                 'payee_id' => $bill->vendor_id,
@@ -835,7 +859,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
-                'ref_no' => $ccCredit->ref_no,
+                'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                 'type' => 'CC-Credit',
                 'payee_type' => $ccCredit->payee_type,
                 'payee_id' => $ccCredit->payee_id,
@@ -874,7 +898,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
-                'ref_no' => $ccCredit->ref_no,
+                'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                 'type' => 'CC-Credit',
                 'payee_type' => $ccCredit->payee_type,
                 'payee_id' => $ccCredit->payee_id,
@@ -905,7 +929,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
-                'ref_no' => $vCredit->ref_no,
+                'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
                 'type' => 'Vendor Credit',
                 'payee_type' => 'vendor',
                 'payee_id' => $vendorCredit->payee_id,
@@ -1023,7 +1047,7 @@ class Chart_of_accounts extends MY_Controller {
         $invQtyAdjs = $this->chart_of_accounts_model->get_qty_adjustments_registers($accountId);
 
         foreach($invQtyAdjs as $invQtyAdj) {
-            $adjustedItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($invQtyAdj);
+            $adjustedItems = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($invQtyAdj->id);
 
             $payment = 0.00;
             foreach($adjustedItems as $adjustedItem) {
@@ -1039,7 +1063,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
-                'ref_no' => $invQtyAdj->adjustment_no,
+                'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
                 'payee_type' => '',
                 'payee_id' => '',
@@ -1072,7 +1096,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
-                'ref_no' => $invQtyAdj->adjustment_no,
+                'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
                 'payee_type' => '',
                 'payee_id' => '',
@@ -1114,7 +1138,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                'ref_no' => $expense->ref_no,
+                'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                 'type' => 'Expense',
                 'payee_type' => $expense->payee_type,
                 'payee_id' => $expense->payee_id,
@@ -1153,7 +1177,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                'ref_no' => $expense->ref_no,
+                'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                 'type' => 'Expense',
                 'payee_type' => $expense->payee_type,
                 'payee_id' => $expense->payee_id,
@@ -1185,7 +1209,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
-                'ref_no' => $adjustment->ref_no,
+                'ref_no' => $adjustment->ref_no === null ? '' : $adjustment->ref_no,
                 'type' => 'Inventory Starting Value',
                 'payee_type' => '',
                 'payee_id' => '',
@@ -1212,7 +1236,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $data[] = [
                 'date' => date("m/d/Y", strtotime($adjusted->as_of_date)),
-                'ref_no' => $adjusted->ref_no,
+                'ref_no' => $adjusted->ref_no === null ? '' : $adjusted->ref_no,
                 'type' => 'Inventory Starting Value',
                 'payee_type' => '',
                 'payee_id' => '',

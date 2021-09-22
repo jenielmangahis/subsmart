@@ -334,8 +334,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 </a>
                                                             </li>
                                                             <li role="separator" class="divider"></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>"><span class="fa fa-file-pdf-o icon"></span> Invoice PDF</a></li>
-                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"><span class="fa fa-print icon"></span> Print Invoice</a></li>
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>"  target="_blank"><span class="fa fa-file-pdf-o icon"></span> Invoice PDF</a></li>
+                                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"  target="_blank"><span class="fa fa-print icon"></span> Print Invoice</a></li>
                                                             <li role="presentation">
                                                                 <a role="menuitem" tabindex="-1" href="<?= base_url('job/invoice_job/'. $invoice->id); ?>">
                                                                     <span class="fa fa-briefcase icon"></span> Convert To Job

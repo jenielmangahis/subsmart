@@ -10,12 +10,15 @@ class Accounting__TaxItem {
     data.date = this.formatDate(data.date_issued);
     data.due_date = this.formatDate(data.due_date);
     data.address = data.billing_address || data.job_location;
-    data.agency_name = data.agency ? data.agency.agency : "";
+    data.agency_name = data.agency ? data.agency.name : "";
 
     // should display adjusted price/tax
     const totalAdjustments = this.getSumAdjustments(data.adjustments);
-    data.price = formatCurrency(Number(data.taxes) - Number(totalAdjustments));
-    data.price = `$${data.price}`;
+    data.price = formatCurrencyWithSign(
+      Number(data.taxes) - Number(totalAdjustments)
+    );
+
+    console.log(data.price);
 
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
@@ -47,7 +50,6 @@ class Accounting__TaxItem {
     const $savePaymentBtn = $recordPaymentModal.find("#savePayment");
     const hasPayment = Array.isArray(data.payments) && data.payments.length;
 
-    this.$modal.removeClass("taxModal--paid");
     $addAdjustmentLink.off();
     $sidebarCloseBtn.off();
     $sidebar.off();
@@ -118,7 +120,7 @@ class Accounting__TaxItem {
 
     const totalAdjustments = this.getSumAdjustments(adjustments);
     const taxAdjusted = Number(tableData.tax) - Number(totalAdjustments);
-    tableData.tax_adjusted = formatCurrency(taxAdjusted);
+    tableData.tax_adjusted = formatCurrencyWithSign(taxAdjusted);
 
     const $dataTableTypes = this.$modal.find("[data-table-type]");
     $dataTableTypes.each(function (_, element) {
@@ -128,19 +130,27 @@ class Accounting__TaxItem {
       );
     });
 
+    let totalPaid = 0;
+    let isTaxPaid = false;
+    this.$modal.removeClass("taxModal--hasPayment");
     if (hasPayment) {
-      this.$modal.addClass("taxModal--paid");
+      this.$modal.addClass("taxModal--hasPayment");
+      data.payments.forEach((payment) => {
+        totalPaid += Number(payment.amount);
+      });
+
+      const totalDue = taxAdjusted - totalPaid;
+      isTaxPaid = totalDue <= 0;
 
       const template = this.$modal.find("#paymentTemplate").get(0).content;
       const $wrapper = this.$modal.find("#paymentsWrapper");
-      const $total = this.$modal.find("#paymentItemsTotalAmount");
+      const $totalPaid = this.$modal.find("#paymentItemsTotalAmount");
       const $totalDue = this.$modal.find("#paymentTotalDue");
+      const $totalPaymentItems = this.$modal.find("#paymentTotalItems");
       const $viewPaymentModal = $("#viewPaymentModal");
       const $viewPaymentModalDatatypes = $viewPaymentModal.find("[data-type]");
-      let totalPaid = 0;
 
       const items = data.payments.map((payment) => {
-        totalPaid += Number(payment.amount);
         payment.agency = data.agency;
         payment.amount = formatCurrency(payment.amount);
         payment.date_payment = this.formatDate(payment.date_payment, {
@@ -167,9 +177,16 @@ class Accounting__TaxItem {
         return $copy;
       });
 
+      $wrapper.empty();
       $wrapper.append(items);
-      $total.text(formatCurrency(totalPaid));
-      $totalDue.text(formatCurrency(taxAdjusted - totalPaid));
+      $totalPaid.text(formatCurrency(totalPaid));
+      $totalDue.text(formatCurrencyWithSign(totalDue));
+      $totalPaymentItems.text(items.length);
+    }
+
+    this.$modal.removeClass("taxModal--paid");
+    if (isTaxPaid) {
+      this.$modal.addClass("taxModal--paid");
     }
 
     $dataTypes.each(function (_, element) {
@@ -1117,4 +1134,14 @@ function getValueByString(object, string) {
   parts.splice(0, 1);
   var newString = parts.join(".");
   return getValueByString(newObject, newString);
+}
+
+function formatCurrencyWithSign(number, currency = "$") {
+  const _number = Number(number);
+
+  if (_number < 0) {
+    return `-${currency}${formatCurrency(Math.abs(_number))}`;
+  }
+
+  return `${currency}${formatCurrency(_number)}`;
 }

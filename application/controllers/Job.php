@@ -470,7 +470,7 @@ class Job extends MY_Controller
                 'select' => '*'
             );
 
-            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query,FALSE);
+            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query, false);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_estimate_items($id);
         }
         add_css([
@@ -1026,7 +1026,7 @@ class Job extends MY_Controller
 
     public function job_types()
     {
-        $this->hasAccessModule(26); 
+        $this->hasAccessModule(26);
 
         $get_job_types = array(
             'where' => array(
@@ -1268,7 +1268,7 @@ class Job extends MY_Controller
         );
         $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
 
-        if(isset($input['wo_id'])){
+        if (isset($input['wo_id'])) {
             $get_work_order_data = array(
                 'where' => array(
                     'id' => $input['wo_id']
@@ -1288,16 +1288,14 @@ class Job extends MY_Controller
             $customer_data['passcode'] = $workorder_data->password;
             $customer_data['panel_type'] = $workorder_data->panel_type;
             $customer_data['system_type'] = $workorder_data->plan_type;
-            if(empty($is_exist)){
+            if (empty($is_exist)) {
                 $customer_data['fk_prof_id'] = $input['customer_id'];
                 $this->general->add_($customer_data, 'acs_alarm');
-            }else{
-                $this->general->update_with_key_field($customer_data, $input['customer_id'], 'acs_alarm','fk_prof_id');
+            } else {
+                $this->general->update_with_key_field($customer_data, $input['customer_id'], 'acs_alarm', 'fk_prof_id');
             }
 
             $customer_data_office = array();
-
-
         }
 
         echo $jobs_id;
@@ -1614,7 +1612,7 @@ class Job extends MY_Controller
         $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
 
         $jobs_total_amount = array();
-        foreach($upcomingJobs as $j){
+        foreach ($upcomingJobs as $j) {
             $jobItems = $this->jobs_model->get_specific_job_items($j->id);
             $total_price = 0;
             foreach ($jobItems as $item) {

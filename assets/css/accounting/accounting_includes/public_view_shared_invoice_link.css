@@ -206,3 +206,12 @@ div.widget .body.marchant-details .see-more-btn {
     color: #ffffff;
     font-size: 40px;
 }
+
+/* .w3-border-red, .w3-hover-border-red:hover {
+    border-color: #00a300!important;
+} */
+
+.pay_button
+{
+    width:100% !important;
+}

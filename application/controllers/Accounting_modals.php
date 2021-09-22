@@ -1779,6 +1779,18 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = 'Please enter at least one inventory item.';
         } else {
+            $total = 0.00;
+            foreach ($data['product'] as $key => $value) {
+                $item = $this->items_model->getItemById($value)[0];
+                $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+
+                if(!is_null($startingValAdj)) {
+                    $total += floatval($data['change_in_qty'][$key]) * floatval($startingValAdj->initial_cost);
+                } else {
+                    $total += floatval($data['change_in_qty'][$key]) *  floatval($item->cost);
+                }
+            }
+
             if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
                 $adjustmentData = [
                     'adjustment_no' => $data['reference_no'],
@@ -1786,6 +1798,7 @@ class Accounting_modals extends MY_Controller
                     'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
                     'inventory_adjustment_account_id' => $data['inventory_adj_account'],
                     'memo' => $data['memo'],
+                    'total_amount' => $total,
                     'created_by' => logged('id'),
                     'status' => 1,
                     'created_at' => date('Y-m-d h:i:s'),
@@ -1805,6 +1818,7 @@ class Accounting_modals extends MY_Controller
                         'inventory_adjustment_account_id' => $adjustmentAcc[1],
                         'inventory_adjustment_account_key' => $adjustmentAcc[0],
                         'memo' => $data['memo'],
+                        'total_amount' => $total,
                         'created_by' => logged('id'),
                         'status' => 1,
                         'updated_at' => date('Y-m-d h:i:s')
@@ -1836,10 +1850,44 @@ class Accounting_modals extends MY_Controller
                         'id' => $data['location'][$key],
                         'qty' => $data['new_qty'][$key]
                     ];
+
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                    $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+                    $item = $this->items_model->getItemById($value)[0];
+
+                    if(!is_null($startingValAdj)) {
+                        $amount = floatval($data['change_in_qty'][$key]) * floatval($startingValAdj->initial_cost);
+                    } else {
+                        $amount = floatval($data['change_in_qty'][$key]) *  floatval($item->cost);
+                    }
+
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) + $amount;
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
 
                 $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
                 $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
+
+                $adjustmentAcc = $this->chart_of_accounts_model->getById($data['inventory_adj_account']);
+                $newBalance = floatval($adjustmentAcc->balance) - $total;
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $adjustmentAccData = [
+                    'id' => $adjustmentAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
             }
 
             $return['data'] = $adjustmentId;
@@ -6591,6 +6639,7 @@ class Accounting_modals extends MY_Controller
             'initial_cost' => $this->input->post('initial_cost'),
             'inv_adj_account' => $this->input->post('inv_adj_acc'),
             'memo' => $this->input->post('memo'),
+            'total_amount' => floatval($this->input->post('initial_qty_on_hand')) * floatval($this->input->post('initial_cost')),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -6625,6 +6674,31 @@ class Accounting_modals extends MY_Controller
         // Update initial quantity and quantity of item in items_has_storage_loc table
         $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
         $updateLocation = $this->items_model->updateLocationDetails($locationDetails, $condition);
+
+        $adjustmentAcc = $this->chart_of_accounts_model->getById($startValueAdjData['inv_adj_account']);
+        $newBalance = floatval($adjustmentAcc->balance) - $startValueAdjData['total_amount'];
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $adjustmentAccData = [
+            'id' => $adjustmentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+        $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
+        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+        $newBalance = floatval($invAssetAcc->balance) + $startValueAdjData['total_amount'];
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $invAssetAccData = [
+            'id' => $invAssetAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
 
         // Insert starting value adjustment record
         $insert = $this->starting_value_model->create($startValueAdjData);

@@ -1,4 +1,4 @@
-<div class="<?php echo ($format == 'print') ? 'print': '' ?>" style="width:60% !important;">
+<div class="<?php echo ($format == 'print') ? 'print': '' ?>" style="width:100% !important;">
     <div class="<?php echo ($format == 'print') ? 'invoice-paper print-body': 'invoice-paper' ?>" id="presenter-paper">
     <?php if($format == 'print') : ?>
     <div style="text-align: right; margin-bottom: 10px;">
@@ -28,6 +28,7 @@
             font-size:150px;
             transform:rotate(300deg);
             -webkit-transform:rotate(300deg);
+            opacity: 0.5;
         }
     </style>
 
@@ -192,12 +193,12 @@
                 <p id="bg-text">PAID</p>
             </div>
 
-            <br>
+            <br><br><br>
 
             <b>JOB:</b>
             <br>
                 <?php echo $invoice->job_name ?><br>
-            <br>
+            <br><br>
             <div class="table-items-container">
                 <?php $total_tax = 0; ?>
                 <?php //if (false) : ?>
