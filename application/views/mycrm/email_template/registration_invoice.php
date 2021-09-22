@@ -60,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="col-md-3"></div>
                         <div class="col-md-5">
                             <div class="card" style="padding:21px;">
-                                <p>Hi, <= $client->first_name; ?></p><br />
+                                <p>Hi <?= $client->first_name; ?>,</p><br />
                                 <p style="font-size: 18px;margin-bottom: 10px;">Thank you for subscribing to nSmarTrac. Below are your payment details.</p>
                                 <div class="card-body">
                                     <div class="row">
@@ -110,6 +110,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
 
                         </div>
+                        <br /><Br />
                         <div class="col-md-3">
                             <p>Thank you and have a great day!</p>
                             <p>nSmarTrac Team</p>
