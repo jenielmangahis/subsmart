@@ -87,14 +87,14 @@ table.dataTable tbody tr td {
                         <section class="content">
                             <div class="tabs mt-2">
                                 <ul class="clearfix ul-mobile" id="myTab" role="tablist">
-                                        <li class="nav-item nav-all active">
-                                            <a class="nav-link" id="c-active-tab" data-toggle="tab" href="#all-campaigns" role="tab" aria-controls="One" aria-selected="true">Active <span class="sms-total-all sms-tab-counter"></span></a>
+                                        <li class="nav-item active">
+                                            <a class="nav-link" id="c-active-tab" data-toggle="tab" href="#active" role="tab" aria-controls="One" aria-selected="true">Active <span class="sms-total-all sms-tab-counter"></span></a>
                                         </li>
-                                        <li class="nav-item nav-active">
-                                            <a class="nav-link" id="c-completed-tab" data-toggle="tab" href="#active-campaigns" role="tab" aria-controls="One" aria-selected="true">Completed <span class="sms-total-active sms-tab-counter"></span></a>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="c-completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="One" aria-selected="true">Completed <span class="sms-total-active sms-tab-counter"></span></a>
                                         </li>
-                                        <li class="nav-item nav-scheduled">
-                                            <a class="nav-link" id="c-scheduled-tab" data-toggle="tab" href="#scheduled-campaigns" role="tab" aria-controls="Two" aria-selected="false">With Billing Errors <span class="sms-total-scheduled sms-tab-counter"></span></a>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="c-error-tab" data-toggle="tab" href="#errors" role="tab" aria-controls="Two" aria-selected="false">Billing Errors <span class="sms-total-scheduled sms-tab-counter"></span></a>
                                         </li>
                                 </ul>
                             </div>
@@ -124,49 +124,22 @@ $(function(){
         load_active_subscriptions();
     });
 
-    $("#c-scheduled-tab").click(function(){
-        active_tab = 'scheduled';
+    $("#c-completed-tab").click(function(){
+        active_tab = 'completed';
         $(".nav-item").removeClass('active');
-        $(".nav-scheduled").addClass('active');
-        load_scheduled_campaigns();
+        $(this).closest(".nav-item").addClass('active');        
+        load_completed_subscriptions();
     });
 
-    $("#c-closed-tab").click(function(){
-        active_tab = 'closed';
+    $("#c-error-tab").click(function(){
+        active_tab = 'error';
         $(".nav-item").removeClass('active');
-        $(".nav-closed").addClass('active');
-        load_closed_campaigns();
+        $(this).closest(".nav-item").addClass('active');        
+        load_billing_errors();
     });
 
-    $("#c-draft-tab").click(function(){
-        active_tab = 'draft';
-        $(".nav-item").removeClass('active');
-        $(".nav-draft").addClass('active');
-        load_draft_campaigns();
-    });
-
-    load_all_campaigns();
+    load_active_subscriptions();
     //load_campaign_tab_counter();
-
-    function load_all_campaigns(){
-        load_campaigns('all', 'all-campaigns');
-    }
-
-    function load_active_campaigns(){
-        load_campaigns('<?= $status_active; ?>');
-    }
-
-    function load_scheduled_campaigns(){
-        load_campaigns('<?= $status_scheduled; ?>');
-    }
-
-    function load_closed_campaigns(){
-        load_campaigns('<?= $status_closed; ?>');
-    }
-
-    function load_draft_campaigns(){
-        load_campaigns('<?= $status_draft; ?>');
-    }
 
     function load_active_subscriptions(){
         var url = base_url + 'customer/_load_active_subscriptions';
@@ -196,9 +169,9 @@ $(function(){
         }, 1000);
     }
 
-    function load_campaigns(status){
-        var url = base_url + 'sms_campaigns/_load_campaigns/'+status;
-        $(".campaign-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    function load_completed_subscriptions(){
+        var url = base_url + 'customer/_load_billing_error_subscriptions';
+        $(".subscriptions-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -206,9 +179,9 @@ $(function(){
              //data: ,
              success: function(o)
              {
-                $(".campaign-list-container").html(o);
+                $(".subscriptions-list-container").html(o);
                 //table.destroy();
-                var table = $('#dataTableCampaign').DataTable({
+                var table = $('#dt-completed-subscriptions').DataTable({
                     "searching" : false,
                     "pageLength": 10,
                     "order": [],
@@ -217,29 +190,35 @@ $(function(){
                       { "sWidth": "20%", "aTargets": [ 1 ] },
                       { "sWidth": "20%", "aTargets": [ 2 ] },
                       { "sWidth": "20%", "aTargets": [ 3 ] },
-                      { "sWidth": "10%", "aTargets": [ 4 ] }
                     ]
                 });
+             }
+          });
+        }, 1000);
+    }
 
-                $(".clone-sms-campaign").click(function(){                  
-                  var campaign_name = $(this).attr("data-name");
-                  var campaign_id = $(this).attr("data-id");
-
-                  $("#clone-smsid").val(campaign_id);
-                  $(".clone-modal-footer").show();
-                  $(".clone-body-container").html('<p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>');
-                  $(".clone-campaign-name").html(campaign_name);
-                  $("#modalCloneCampaign").modal('show');
-                });
-
-                $(".close-sms-campaign").click(function(){
-                  var campaign_name = $(this).attr("data-name");
-                  var campaign_id = $(this).attr("data-id");
-                  $("#smsid").val(campaign_id);
-                  $(".close-modal-footer").show();
-                  $(".close-body-container").html('<p>Are you sure you want close the campaign <b><span class="close-campaign-name"></span></b>?</p>');
-                  $(".close-campaign-name").html(campaign_name);
-                  $("#modalCloseCampaign").modal('show');
+    function load_billing_errors(){
+        var url = base_url + 'customer/_load_completed_subscriptions';
+        $(".subscriptions-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             //data: ,
+             success: function(o)
+             {
+                $(".subscriptions-list-container").html(o);
+                //table.destroy();
+                var table = $('#dt-completed-subscriptions').DataTable({
+                    "searching" : false,
+                    "pageLength": 10,
+                    "order": [],
+                     "aoColumnDefs": [
+                      { "sWidth": "40%", "aTargets": [ 0 ] },
+                      { "sWidth": "20%", "aTargets": [ 1 ] },
+                      { "sWidth": "20%", "aTargets": [ 2 ] },
+                      { "sWidth": "20%", "aTargets": [ 3 ] },
+                    ]
                 });
              }
           });

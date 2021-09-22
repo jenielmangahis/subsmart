@@ -66,15 +66,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <label for=""><b>Expiration</b><span class="required_field">*</span></label>
                                   <select name="expiration_month" class="form-control" required="">
                                     <option>- month -</option>
-                                    <option value="1">01 - Jan</option>
-                                    <option value="2">02 - Feb</option>
-                                    <option value="3">03 - Mar</option>
-                                    <option value="4">04 - Apr</option>
-                                    <option value="5">05 - May</option>
-                                    <option value="6">06 - Jun</option>
-                                    <option value="7">07 - Jul</option>
-                                    <option value="8">08 - Aug</option>
-                                    <option value="9">09 - Sep</option>
+                                    <option value="01">01 - Jan</option>
+                                    <option value="02">02 - Feb</option>
+                                    <option value="03">03 - Mar</option>
+                                    <option value="04">04 - Apr</option>
+                                    <option value="05">05 - May</option>
+                                    <option value="06">06 - Jun</option>
+                                    <option value="07">07 - Jul</option>
+                                    <option value="08">08 - Aug</option>
+                                    <option value="09">09 - Sep</option>
                                     <option value="10">10 - Oct</option>
                                     <option value="11">11 - Nov</option>
                                     <option value="12">12  -Dec</option>
@@ -87,8 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <select name="expiration_year" class="form-control" required="">
                                     <option>- year-</option>
                                     <?php for($x = date("Y"); $x <= date("Y",strtotime("+10 years")); $x++){ ?>
-                                      <?php $year = substr($x, -2); ?>
-                                      <option value="<?= $year; ?>"><?= $x; ?></option>  
+                                      <option value="<?= $x; ?>"><?= $x; ?></option>  
                                     <?php } ?>
                                   </select>
                               </div>

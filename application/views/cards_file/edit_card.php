@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <div class="alert alert-warning mt-1 mb-4" role="alert">
-                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Updated card details.
+                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Update card details.
                 </span>
             </div>
             <!-- end row -->
@@ -43,7 +43,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('cards_file/create_new_card', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                        <?php echo form_open_multipart('cards_file/update_card', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                        <input type="hidden" value="<?= $cardFile->id; ?>" name="cid" id="cid">
                         <div class="row">
                           <div class="col-md-10">
                             <label for=""><b>Your Name (as it appears on your card)</b><span class="required_field">*</span></label><br />
@@ -66,15 +67,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <label for=""><b>Expiration</b><span class="required_field">*</span></label>
                                   <select name="expiration_month" class="form-control" required="">
                                     <option>- month -</option>
-                                    <option value="1" <?= $cardFile->expiration_month == 1 ? 'selected="selected"' : ''; ?>>01 - Jan</option>
-                                    <option value="2" <?= $cardFile->expiration_month == 2 ? 'selected="selected"' : ''; ?>>02 - Feb</option>
-                                    <option value="3" <?= $cardFile->expiration_month == 3 ? 'selected="selected"' : ''; ?>>03 - Mar</option>
-                                    <option value="4" <?= $cardFile->expiration_month == 4 ? 'selected="selected"' : ''; ?>>04 - Apr</option>
-                                    <option value="5" <?= $cardFile->expiration_month == 5 ? 'selected="selected"' : ''; ?>>05 - May</option>
-                                    <option value="6" <?= $cardFile->expiration_month == 6 ? 'selected="selected"' : ''; ?>>06 - Jun</option>
-                                    <option value="7" <?= $cardFile->expiration_month == 7 ? 'selected="selected"' : ''; ?>>07 - Jul</option>
-                                    <option value="8" <?= $cardFile->expiration_month == 8 ? 'selected="selected"' : ''; ?>>08 - Aug</option>
-                                    <option value="9" <?= $cardFile->expiration_month == 9 ? 'selected="selected"' : ''; ?>>09 - Sep</option>
+                                    <option value="01" <?= $cardFile->expiration_month == 1 ? 'selected="selected"' : ''; ?>>01 - Jan</option>
+                                    <option value="02" <?= $cardFile->expiration_month == 2 ? 'selected="selected"' : ''; ?>>02 - Feb</option>
+                                    <option value="03" <?= $cardFile->expiration_month == 3 ? 'selected="selected"' : ''; ?>>03 - Mar</option>
+                                    <option value="04" <?= $cardFile->expiration_month == 4 ? 'selected="selected"' : ''; ?>>04 - Apr</option>
+                                    <option value="05" <?= $cardFile->expiration_month == 5 ? 'selected="selected"' : ''; ?>>05 - May</option>
+                                    <option value="06" <?= $cardFile->expiration_month == 6 ? 'selected="selected"' : ''; ?>>06 - Jun</option>
+                                    <option value="07" <?= $cardFile->expiration_month == 7 ? 'selected="selected"' : ''; ?>>07 - Jul</option>
+                                    <option value="08" <?= $cardFile->expiration_month == 8 ? 'selected="selected"' : ''; ?>>08 - Aug</option>
+                                    <option value="09" <?= $cardFile->expiration_month == 9 ? 'selected="selected"' : ''; ?>>09 - Sep</option>
                                     <option value="10" <?= $cardFile->expiration_month == 10 ? 'selected="selected"' : ''; ?>>10 - Oct</option>
                                     <option value="11" <?= $cardFile->expiration_month == 11 ? 'selected="selected"' : ''; ?>>11 - Nov</option>
                                     <option value="12" <?= $cardFile->expiration_month == 12 ? 'selected="selected"' : ''; ?>>12  -Dec</option>
@@ -85,10 +86,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <div class="form-group" id="customer_type_group">
                                   <label for=""><br /></label>
                                   <select name="expiration_year" class="form-control" required="">
-                                    <option>- year-</option>
+                                    <option value="">- year-</option>
                                     <?php for($x = date("Y"); $x <= date("Y",strtotime("+10 years")); $x++){ ?>
-                                      <?php $year = substr($x, -2); ?>
-                                      <option value="<?= $year; ?>"><?= $x; ?></option>  
+                                      <option <?= $cardFile->expiration_year == $x ? 'selected="selected"' : ''; ?> value="<?= $x; ?>"><?= $x; ?></option>  
                                     <?php } ?>
                                   </select>
                               </div>
@@ -96,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <div class="col-md-2">
                               <div class="form-group" id="customer_type_group">
                                   <label for=""><b>Card CVV</b><span class="required_field">*</span></label>
-                                  <input type="text" required="" value="" class="form-control" name="card_cvv" id="card_cvv" required="">
+                                  <input type="text" required="" class="form-control" value="<?= $cardFile->card_cvv; ?>" name="card_cvv" id="card_cvv" required="">
                               </div>
                           </div>
                           <div class="col-md-2">
