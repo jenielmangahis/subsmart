@@ -305,7 +305,7 @@ include viewPath('includes/header');
 
                             <div class="mb-3">
                                 <div class="taxModal__paymentsTitle">Payment details</div>
-                                <div>Number of payments: 1</div>
+                                <div>Number of payments: <span id="paymentTotalItems"></span></div>
                             </div>
 
                             <div class="taxModal__paymentsGroup">
@@ -321,7 +321,7 @@ include viewPath('includes/header');
                             </div>
                             <div class="taxModal__paymentsGroup">
                                 <div>Total due</div>
-                                <div>$<span id="paymentTotalDue"></span></div>
+                                <div><span id="paymentTotalDue"></span></div>
                             </div>
                         </div>
                     </div>
@@ -373,7 +373,7 @@ include viewPath('includes/header');
                     <div class="taxModal__total taxModal__total--big">
                         <div class="taxModal__title taxModal__title--secondary">Total after adjustments</div>
                         <div class="taxModal__title taxModal__title--secondary">
-                            $<span data-table-type="tax_adjusted"></span>
+                            <span data-table-type="tax_adjusted"></span>
                         </div>
                     </div>
 

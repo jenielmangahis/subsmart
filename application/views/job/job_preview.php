@@ -16,42 +16,51 @@ add_css(array(
     div[wrapper__section] {
         padding: 60px 10px !important;
     }
-    .card_plus_sign{
+
+    .card_plus_sign {
         float: right;
         padding-right: 40px;
         font-size: 20px;
         display: block;
         margin-top: -38px;
     }
-    .box_footer_icon{
+
+    .box_footer_icon {
         font-size: 20px;
     }
-    .box_right{
+
+    .box_right {
         border-color: #e0e0e0 !important;
         border: 1px solid;
     }
-    .card{
+
+    .card {
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+
     .card-body {
         padding: 0 !important;
     }
-    .right-text{
+
+    .right-text {
         position: relative;
-        float:right;
+        float: right;
         right: 0;
         bottom: 10px;
     }
-    #map{
+
+    #map {
         height: 190px;
     }
-    .title-border{
-        border-bottom: 2px solid rgba(0,0,0,.1);
+
+    .title-border {
+        border-bottom: 2px solid rgba(0, 0, 0, .1);
         padding-bottom: 5px;
     }
-    .icon_preview{
+
+    .icon_preview {
         font-size: 16px;
-        color : #45a73c;
+        color: #45a73c;
     }
 </style>
 
@@ -69,34 +78,36 @@ add_css(array(
                             <div class="card">
                                 <div class="card-header">
                                     <div class="right-text">
-                                     <p class="page-title " style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->job_number;  ?> </p>
+                                        <p class="page-title " style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->job_number;  ?>
+                                        </p>
                                     </div>
                                     <hr>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-5">
-                                            <?php if($company_info->business_image != "" ): ?>
-                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
+                                            <?php if ($company_info->business_image != ""): ?>
+                                            <img style="width: 100px" id="attachment-image" alt="Attachment"
+                                                src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
                                             <?php endif; ?>
                                         </div>
                                         <div class="col-md-3">
                                             <table class="right-text">
                                                 <tbody>
-                                                <tr>
-                                                    <td align="right" width="45%">Job Type :</td>
-                                                </tr>
                                                     <tr>
-                                                        <td align="right" >Job Tags:</td>
+                                                        <td align="right" width="45%">Job Type :</td>
                                                     </tr>
                                                     <tr>
-                                                        <td align="right" >Date :</td>
+                                                        <td align="right">Job Tags:</td>
                                                     </tr>
                                                     <tr>
-                                                        <td align="right" >Priority :</td>
+                                                        <td align="right">Date :</td>
                                                     </tr>
                                                     <tr>
-                                                        <td align="right" >Status :</td>
+                                                        <td align="right">Priority :</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right">Status :</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -104,21 +115,26 @@ add_css(array(
                                         <div class="col-md-4">
                                             <table class="right-text">
                                                 <tbody>
-                                                <tr>
-                                                    <td align="right" width="65%"><?= $jobs_data->job_type;  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right" ><?= $jobs_data->name;  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?></td>
-                                                </tr>
+                                                    <tr>
+                                                        <td align="right" width="65%"><?= $jobs_data->job_type;  ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right"><?= $jobs_data->name;  ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -136,22 +152,26 @@ add_css(array(
                                                 <div class="col-md-5">
                                                     <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                                                     <span><?= $jobs_data->mail_add; ?></span><br>
-                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
-                                                    <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a><br>
-                                                    <span>Phone:  </span>
-                                                    <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
-                                                        <?= $jobs_data->phone_h;  ?>
-                                                        <span class="fa fa-phone icon_preview"></span>
-                                                        <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span>
+                                                    <span class="fa fa-copy icon_preview"></span><br>
+                                                    <span>Email: <?= $jobs_data->cust_email ; ?></span>
+                                                    <a
+                                                        href="mailto:<?= $jobs_data->cust_email ; ?>"><span
+                                                            class="fa fa-envelope icon_preview"></span></a><br>
+                                                    <span>Phone: </span>
+                                                    <?php if ($jobs_data->phone_h!="" || $jobs_data->phone_h!=null): ?>
+                                                    <?= $jobs_data->phone_h;  ?>
+                                                    <span class="fa fa-phone icon_preview"></span>
+                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <?php else : echo 'N/A';?>
                                                     <?php endif; ?>
                                                     <br>
                                                     <span>Mobile: </span>
-                                                    <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
+                                                    <?php if ($jobs_data->phone_m!="" || $jobs_data->phone_m!=null): ?>
                                                     <?= $jobs_data->phone_h;  ?>
-                                                        <?= $jobs_data->phone_m;  ?>
-                                                        <span class="fa fa-phone icon_preview"></span>
-                                                        <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                    <?= $jobs_data->phone_m;  ?>
+                                                    <span class="fa fa-phone icon_preview"></span>
+                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <?php else : echo 'N/A';?>
                                                     <?php endif; ?>
                                                     <br>
@@ -177,13 +197,17 @@ add_css(array(
                                                         foreach ($jobs_data_items as $item):
                                                         $total = $item->price * $item->qty;
                                                     ?>
-                                                        <tr>
-                                                            <td><?= $item->title; ?></td>
-                                                            <td><?= $item->qty; ?></td>
-                                                            <td>$<?= $item->price; ?></td>
-                                                            <td>$<?= number_format((float)$total,2,'.',','); ?></td>
-                                                        </tr>
-                                                <?php
+                                                    <tr>
+                                                        <td><?= $item->title; ?>
+                                                        </td>
+                                                        <td><?= $item->qty; ?>
+                                                        </td>
+                                                        <td>$<?= $item->price; ?>
+                                                        </td>
+                                                        <td>$<?= number_format((float)$total, 2, '.', ','); ?>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
                                                     $subtotal = $subtotal + $total;
                                                     endforeach;
                                                 ?>
@@ -191,23 +215,26 @@ add_css(array(
                                             </table>
                                             <hr>
                                             <b>Sub Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
-                                            <br><hr>
+                                            <b class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></b>
+                                            <br>
+                                            <hr>
 
-                                            <?php if($jobs_data->tax != NULL): ?>
-                                                <b>Tax </b>
-                                                <i class="right-text">$0.00</i>
-                                                <br><hr>
+                                            <?php if ($jobs_data->tax != null): ?>
+                                            <b>Tax </b>
+                                            <i class="right-text">$0.00</i>
+                                            <br>
+                                            <hr>
                                             <?php endif; ?>
 
-                                            <?php if($jobs_data->discount != NULL): ?>
-                                                <b>Discount </b>
-                                                <i class="right-text">$0.00</i>
-                                                <br><hr>
+                                            <?php if ($jobs_data->discount != null): ?>
+                                            <b>Discount </b>
+                                            <i class="right-text">$0.00</i>
+                                            <br>
+                                            <hr>
                                             <?php endif; ?>
 
                                             <b>Grand Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                            <b class="right-text">$<?= number_format((float)$subtotal, 2, '.', ','); ?></b>
                                         </div>
                                         <div class="col-md-12">
                                             <br><br>
@@ -224,22 +251,27 @@ add_css(array(
                                                 $shared2 = get_employee_name($jobs_data->employee3_id);
                                                 $shared3 = get_employee_name($jobs_data->employee4_id);
                                             ?>
-                                            <span><?= $employee_date->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
-                                            <?php if(isset($shared1) && !empty($shared1) && $shared1!=NULL ): ?>
-                                                <span><?= $shared1->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <span><?= $employee_date->FName; ?></span>
+                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php if (isset($shared1) && !empty($shared1) && $shared1!=null): ?>
+                                            <span><?= $shared1->FName; ?></span>
+                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
                                             <?php endif; ?>
-                                            <?php if(isset($shared2) && !empty($shared2) && $shared2!=NULL ): ?>
-                                                <span><?= $shared2->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php if (isset($shared2) && !empty($shared2) && $shared2!=null): ?>
+                                            <span><?= $shared2->FName; ?></span>
+                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
                                             <?php endif; ?>
-                                            <?php if(isset($shared3) && !empty($shared3) && $shared3!=NULL ): ?>
-                                                <span><?= $shared3->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php if (isset($shared3) && !empty($shared3) && $shared3!=null): ?>
+                                            <span><?= $shared3->FName; ?></span>
+                                            <span class="fa fa-envelope-open-text icon_preview"></span><br>
                                             <?php endif; ?>
                                         </div>
 
                                         <div class="col-md-12">
                                             <br>
                                             <h6 class="title-border">URL LINK :</h6>
-                                            <span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
+                                            <span><a style="color: darkred;" target="_blank"
+                                                    href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
                                         </div>
 
                                         <div class="col-md-12">
@@ -249,13 +281,17 @@ add_css(array(
                                                 <tbody>
                                                     <tr>
                                                         <td width="35%">From</td>
-                                                        <td width="40%"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
-                                                        <td width="40%"><?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?></td>
+                                                        <td width="40%"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?>
+                                                        </td>
+                                                        <td width="40%"><?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?>
+                                                        </td>
                                                     </tr>
                                                     <tr>
-                                                        <td >To</td>
-                                                        <td ><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->end_date)) : '';  ?></td>
-                                                        <td ><?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?></td>
+                                                        <td>To</td>
+                                                        <td><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->end_date)) : '';  ?>
+                                                        </td>
+                                                        <td><?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -263,7 +299,10 @@ add_css(array(
                                         <div class="col-sm-12">
                                             <center>
                                                 <strong>Our Team will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong><br>
-                                            <small style="text-align: center;">Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.</small>
+                                                <small style="text-align: center;">Thank you for your business, Please
+                                                    call <?= $company_info->business_name; ?>
+                                                    at <?= $company_info->business_phone; ?>
+                                                    for quality customer service.</small>
                                             </center>
                                         </div>
                                     </div>
@@ -277,7 +316,13 @@ add_css(array(
         </div>
     </div>
 </div>
-
+<div id="modal-for-start-job-confirmation">
+    <div class="the-modal-body">
+        <div class="map"></div>
+        <div class="info"></div>
+        <div class="confirm"></div>
+    </div>
+</div>
 <?php
 add_footer_js(array(
     'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
@@ -292,19 +337,25 @@ include viewPath('includes/footer');
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly"></script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly">
+</script>
 
 
 <script>
     var geocoder;
-    function initMap(address=null) {
-        if(address == null){
+
+    function initMap(address = null) {
+        if (address == null) {
             address = '6866 Pine Forest Rd Pensacola FL 32526';
         }
-        const myLatLng = { lat: -25.363, lng: 131.044 };
+        const myLatLng = {
+            lat: -25.363,
+            lng: 131.044
+        };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 12,
-            height:220,
+            height: 220,
             center: myLatLng,
         });
         new google.maps.Marker({
@@ -313,11 +364,13 @@ include viewPath('includes/footer');
             title: "Hello World!",
         });
         geocoder = new google.maps.Geocoder();
-        codeAddress(geocoder, map,address);
+        codeAddress(geocoder, map, address);
     }
 
-    function codeAddress(geocoder, map,address) {
-        geocoder.geocode({'address': address}, function(results, status) {
+    function codeAddress(geocoder, map, address) {
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
             if (status === 'OK') {
                 map.setCenter(results[0].geometry.location);
                 var marker = new google.maps.Marker({
@@ -330,5 +383,15 @@ include viewPath('includes/footer');
             }
         });
     }
-</script>
 
+    <?php
+    if (date('m/d/Y H:i:s', strtotime($jobs_data->start_date . " ".$jobs_data->start_time)) <= date("m/d/Y H:i:s")) {
+        echo "start_confirmation();";
+    }
+    
+    ?>
+
+    function start_confirmation() {
+
+    }
+</script>
