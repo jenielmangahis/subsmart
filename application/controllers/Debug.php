@@ -525,17 +525,18 @@
             return true;
         }
 
-        public function create_attachment_invoice($payment_id){
+        public function create_attachment_invoice(){
 
             $this->load->model('CompanySubscriptionPayments_model');
             $this->load->model('Business_model');
-            
-            $company_id = logged('company_id');
-            $payment    = $this->CompanySubscriptionPayments_model->getById($id);
-            $company    = $this->Business_model->getByCompanyId($payment->company_id);
+            $this->load->model('Clients_model');
+            $payment_id = 17;
+            $payment    = $this->CompanySubscriptionPayments_model->getById($payment_id);
+            $company    = $this->Clients_model->getById($payment->company_id);            
             $this->page_data['payment']   = $payment;
             $this->page_data['company'] = $company;
-            $content = $this->load->view('mycrm/subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
+            $content = $this->load->view('mycrm/registration_subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
+            echo $content;exit;
 
             $this->load->library('Reportpdf');
             $title = 'subscription_invoice';

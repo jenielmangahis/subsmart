@@ -59,7 +59,8 @@ $this->page_data['date']=$inv->date_issued;
             <div class="col-md-7">
                 <div class="widget main">
                     <div class="body">
-                        <?php if($status == 'Paid'){ ?>
+                        <?php echo $status;
+                         if($status == 'Paid'){ ?>
                         <h1><?=$customer_info->business_name?>
                         </h1>
                         <h3 class="status <?=$status?>"><?=$status?>

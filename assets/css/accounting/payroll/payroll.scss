@@ -220,3 +220,45 @@
     border-bottom: 5px solid grey;
   }
 }
+
+.payrollTax__resources {
+  font-family: var(--font-family-sans-serif);
+  font-weight: 400;
+
+  .payrollTax__spacer {
+    height: 20px;
+  }
+
+  &Title {
+    font-size: 16px;
+  }
+
+  &Item {
+  }
+
+  &Link {
+    color: #055393;
+    font-weight: 500;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: #055393;
+      text-decoration: underline;
+    }
+  }
+
+  &Body {
+    color: #6b6c72;
+  }
+
+  &New {
+    background-color: #c9007a;
+    color: #fff;
+    display: inline-block;
+    text-transform: uppercase;
+    padding: 0px 2px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+}

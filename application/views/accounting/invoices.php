@@ -511,9 +511,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <td class="text-right">
                             <div class="dropdown dropdown-btn open">
                                 <?php if($invoice->INV_status == 'Paid'){ ?>
-                                    <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" style="color:#3a96d2;" target="_blank">Print</a> &emsp;
+                                    <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
                                 <?php }else{ ?>
-                                    <a href="#" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a> &emsp;
+                                    <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; 
+                                    <!-- <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>  -->
+                                    <a href="" style="color:#3a96d2;font-weight:bold;" class="first-option customer_receive_payment_btn" data-customer-id="<?=$invoice->customer_id?>">Receive payment </a>
+                                    &emsp;
                                 <?php } ?>
 
                                 <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
@@ -574,6 +577,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             data-invoice-number="<?php echo $invoice->invoice_number ?>"
                                             data-id="<?php echo $invoice->id ?>">
                                             <span class="fa fa-files-o icon"></span> Clone Invoice
+                                        </a>
+                                    </li>
+                                    <li class="share-invoice-link-btn"
+                                        data-invoice-id="<?=$invoice->id?>">
+                                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                                        <span class="fa fa-share icon" aria-hidden="true"></span>
+                                            Share invoice link
                                         </a>
                                     </li>
                                     <li role="presentation">
@@ -897,7 +907,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							<!--    end of modal-->
 						</div>
 
-                        <!-- Modal for add account-->
+    <div id="share-link-modal">
+        <div class="the-modal-body">
+            <div class="title">Share invoice link</div>
+            <div class="the-content">
+                <p> Enable your customers to pay, print and download this invoice</p>
+                <div class="form-group">
+                    <div class="label">
+                        Copy and share link through email or SMS
+                    </div>
+                    <input type="text" class="form-control " name="shared_invoice_link">
+                </div>
+            </div>
+            <div class="btns">
+                <button class="btn btn-default float-left cancel-btn" type="button">
+                    Cancel
+                </button>
+                <button class="btn btn-success float-right copy-btn" type="button">
+                    Copy link and close
+                </button>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal for add account-->
 <div class="full-screen-modal">
     <div id="addreceivepaymentModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
@@ -1059,6 +1092,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!--end of modal-->
 </div>
 
+<script src="<?php echo $url->assets ?>js/accounting/sales/customer_includes/customer_single_modal.js"></script>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
 <?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
@@ -1188,4 +1224,22 @@ function sucess(information,$id){
                 }
             });
         }
+</script>
+
+<script>
+    $(document).on("click", ".share-invoice-link-btn", function(event) {
+        // alert('test');
+    $.ajax({
+        url: baseURL + "/accounting/generate_share_invoice_link",
+        type: "POST",
+        dataType: "json",
+        data: {
+            invoice_id: $(this).attr("data-invoice-id")
+        },
+        success: function(data) {
+            $("div#share-link-modal").fadeIn();
+            $('div#share-link-modal .the-modal-body .form-group input[name="shared_invoice_link"]').val(data.shared_link);
+        },
+    });
+});
 </script>

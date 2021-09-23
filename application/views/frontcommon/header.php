@@ -29,9 +29,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/style.css"/>
 	<link rel="stylesheet" href="<?php echo $url->assets ?>frontend/fonts/stylesheet.css"/>
 	<link rel="stylesheet" href="https://allfont.net/css/lane-narrow.css" type="text/css" />
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script>
+	<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU&libraries=places,geometry"></script> -->
     <script>
-        function initialize() {
+        /*function initialize() {
           var input = document.getElementById('google_search_place');
           var autocomplete = new google.maps.places.Autocomplete(input);
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 //console.log(place);
             });
         }
-        google.maps.event.addDomListener(window, 'load', initialize);
+        google.maps.event.addDomListener(window, 'load', initialize);*/
     </script>
 
 	<!--[if lt IE 9]>

@@ -92,6 +92,60 @@ class CardsFile extends MY_Controller {
         }
 	}
 
+	public function update_card(){
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+		$cardFile = $this->CardsFile_model->getById($post['cid']);
+		if( $cardFile->company_id == $company_id ){			
+			$isValid = $this->check_cc($post['card_number']);
+	        if( $isValid ){
+	        	$cc_exp_date = $post['expiration_month'] . date("y",strtotime($post['expiration_year'] . "-01-01"));
+	        	$data_cc = [
+		            'card_number' => $post['card_number'],
+		            'exp_date' => $cc_exp_date,
+		            'cvc' => $post['card_cvv'],
+		            'ssl_amount' => 0,
+		            'ssl_first_name' => $post['card_owner_first_name'],
+		            'ssl_last_name' => $post['card_owner_last_name']
+		        ];
+		        $is_valid = $this->converge_check_cc_details_valid($data_cc);
+		        if( $is_valid['is_success'] > 0 ){
+		        	$data = [
+				        'card_owner_first_name' => $post['card_owner_first_name'],
+				        'card_owner_last_name' => $post['card_owner_last_name'],
+						'card_number' => $post['card_number'],
+						'expiration_month' => $post['expiration_month'],
+						'expiration_year' => $post['expiration_year'],
+						'card_cvv' => $post['card_cvv'],
+						'cc_type' => $isValid,
+						'modified' => date("Y-m-d H:i:s")
+					];
+
+					$this->CardsFile_model->updateCardsFile($post['cid'], $data);
+					$this->session->set_flashdata('message', 'Card details was successfully updated');
+					$this->session->set_flashdata('alert_class', 'alert-success');
+
+					redirect('cards_file/list');
+		        }else{		        	
+		        	$this->session->set_flashdata('message', 'Invalid credit card details');
+					$this->session->set_flashdata('alert_class', 'alert-danger');
+					redirect('cards_file/edit/' . $post['cid']);
+		        }
+
+	        	
+	        }else{
+	        	$this->session->set_flashdata('message', $is_valid['msg']);
+				$this->session->set_flashdata('alert_class', 'alert-danger');
+				redirect('cards_file/edit/' . $post['cid']);
+	        }	
+		}else{
+			$this->session->set_flashdata('message', 'Cannot find record.');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
+			redirect('cards_file/list');
+		}
+	}
+
 	public function check_cc($cc, $extra_check = false){
 	    $cards = array(
 	        "visa" => "(4\d{12}(?:\d{3})?)",
@@ -215,6 +269,42 @@ class CardsFile extends MY_Controller {
 
 		echo json_encode($json_data);
 	}
+
+	public function converge_check_cc_details_valid($data){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $msg = '';
+        $is_success = 0;
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $verify = $converge->request('ccverify', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $data['exp_date'],
+            'ssl_cvv2cvc2' => $data['cvc'],
+            'ssl_first_name' => $data['ssl_first_name'],
+            'ssl_last_name' => $data['ssl_last_name'],
+            'ssl_amount' => $data['ssl_amount']
+        ]);
+        if( $verify['success'] == 1 ){
+            if( $verify['ssl_result_message'] == 'DECLINED' ){
+                $is_success = 0;
+            }else{
+                $is_success = 1;    
+            }
+            
+        }else{
+            $msg = $verify['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
+    }
 }
 
 
