@@ -139,6 +139,54 @@ div.disabled
                         </tr>
                     </tbody>
                 </table>
+
+                <div class="payrollTax__spacer"></div>
+
+                <div class="payrollTax__resources">
+                    <div class="payrollTax__title payrollTax__resourcesTitle">Payment resources</div>
+
+                    <div class="payrollTax__spacer"></div>
+
+                    <div class="payrollTax__resourcesItem">
+                        <div><a class="payrollTax__resourcesLink" href="#">Tax payment history</a></div>
+                        <div class="payrollTax__resourcesBody">Run reports to view your tax payments history.</div>
+                    </div>
+
+                    <div class="payrollTax__spacer"></div>
+
+                    <div class="payrollTax__resourcesItem">
+                        <div><a class="payrollTax__resourcesLink" href="#">Tax setup</a></div>
+                        <div class="payrollTax__resourcesBody">Edit your federal and state tax info in Payroll Settings.</div>
+                    </div>
+
+                    <div class="payrollTax__spacer"></div>
+
+                    <div class="payrollTax__resourcesItem">
+                        <div><a class="payrollTax__resourcesLink" href="#">Tax liability report</a></div>
+                        <div class="payrollTax__resourcesBody">Run reports to view your tax liabilities.</div>
+                    </div>
+
+                    <div class="payrollTax__spacer"></div>
+
+                    <div class="payrollTax__resourcesItem">
+                        <div><a class="payrollTax__resourcesLink" href="#">Prior tax history</a></div>
+                        <div class="payrollTax__resourcesBody">Add payments to your prior tax history.</div>
+                    </div>
+
+                    <div class="payrollTax__spacer"></div>
+
+                    <div class="payrollTax__resourcesItem">
+                        <div><a class="payrollTax__resourcesLink" href="#">Compliance resources</a></div>
+                        <div class="payrollTax__resourcesBody">Year-end info and resources to help stay in compliance.</div>
+                    </div>
+
+                    <div class="payrollTax__spacer"></div>
+
+                    <div class="payrollTax__resourcesItem">
+                        <div><a class="payrollTax__resourcesLink" href="#">COBRA premium assistance <div class="payrollTax__resourcesNew">NEW</div></a></div>
+                        <div class="payrollTax__resourcesBody">Claim a tax credit as part of the American Rescue Plan Act of 2021 (eligibility applies).</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

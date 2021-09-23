@@ -407,12 +407,12 @@ include viewPath('includes/header');
 
                         <div class="recordModal__taxPayment">
                             <span>Total tax payment</span>
-                            <span>-$<span data-type="tax_adjusted"></span></span>
+                            <span><span data-type="total_paid"></span></span>
                         </div>
 
                         <div class="recordModal__taxDue">
                             <span>Tax due</span>
-                            <span>-$<span data-type="tax_adjusted"></span></span>
+                            <span><span data-type="total_due"></span></span>
                         </div>
 
                         <ol class="recordModal__steps">
@@ -457,7 +457,7 @@ include viewPath('includes/header');
                                 </div>
 
                                 <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="print_check">
+                                    <input disabled type="checkbox" class="form-check-input" id="print_check">
                                     <label class="form-check-label" for="print_check">Print check</label>
                                 </div>
                             </form>

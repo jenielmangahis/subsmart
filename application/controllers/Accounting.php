@@ -247,6 +247,28 @@ class Accounting extends MY_Controller
     }
     public function invoices()
     {
+        add_css(array(
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+            "assets/css/accounting/customers.css",
+            // "assets/css/accounting/accounting_includes/create_statement_modal.css",
+            // "assets/css/accounting/accounting_includes/time_activity.css",
+            // "assets/css/accounting/accounting_includes/create_invoice.css",
+            // "assets/css/accounting/accounting_includes/customer_types.css",
+            // "assets/css/accounting/accounting_includes/customer_single_modal.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/customers.js",
+            // "assets/js/accounting/sales/customer_includes/send_reminder.js",
+            // "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
+            // "assets/js/accounting/sales/customer_includes/create_estimate.js",
+            // "assets/js/accounting/sales/customer_includes/time_activity.js",
+            // "assets/js/accounting/sales/customer_includes/create_invoice.js",
+            // "assets/js/accounting/sales/customer_includes/customer_types.js",
+            // "assets/js/accounting/sales/customer_includes/export_table.js",
+            // "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
+            'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
+        ));
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $company_id = getLoggedCompanyID();
         $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);

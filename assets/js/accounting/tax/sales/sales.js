@@ -18,8 +18,6 @@ class Accounting__TaxItem {
       Number(data.taxes) - Number(totalAdjustments)
     );
 
-    console.log(data.price);
-
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
     });
@@ -130,8 +128,9 @@ class Accounting__TaxItem {
       );
     });
 
-    let totalPaid = 0;
     let isTaxPaid = false;
+    let totalPaid = 0;
+    let totalDue = taxAdjusted;
     this.$modal.removeClass("taxModal--hasPayment");
     if (hasPayment) {
       this.$modal.addClass("taxModal--hasPayment");
@@ -139,7 +138,7 @@ class Accounting__TaxItem {
         totalPaid += Number(payment.amount);
       });
 
-      const totalDue = taxAdjusted - totalPaid;
+      totalDue = taxAdjusted - totalPaid;
       isTaxPaid = totalDue <= 0;
 
       const template = this.$modal.find("#paymentTemplate").get(0).content;
@@ -257,15 +256,20 @@ class Accounting__TaxItem {
       window.location.reload();
     });
 
-    if (!hasPayment) {
+    if (!isTaxPaid) {
       $openRecordPaymentBtn.on("click", () => {
-        const $taxAdjusted = $recordPaymentModal.find(
-          "[data-type=tax_adjusted]"
-        );
+        const $dataTypes = $recordPaymentModal.find("[data-type]");
         const $bankAccount = $recordPaymentModal.find("#bank_account");
 
+        const data = {
+          total_paid: formatCurrencyWithSign(totalPaid),
+          total_due: formatCurrencyWithSign(totalDue),
+        };
+        $dataTypes.each(function (_, element) {
+          element.textContent = getValueByString(data, element.dataset.type);
+        });
+
         $recordPaymentModal.modal("show");
-        $taxAdjusted.text(tableData.tax_adjusted);
 
         this.initBankAccountSelect($bankAccount);
         this.$modal.modal("hide");

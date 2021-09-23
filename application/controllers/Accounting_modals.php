@@ -1220,6 +1220,29 @@ class Accounting_modals extends MY_Controller
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
 
             if ($transferId) {
+                $transferFromAcc = $this->chart_of_accounts_model->getById($data['transfer_from_account']);
+                $transferToAcc = $this->chart_of_accounts_model->getById($data['transfer_to_account']);
+
+                $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($data['transfer_amount']) : floatval($transferFromAcc->balance) + floatval($data['transfer_amount']);
+                $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($data['transfer_amount']) : floatval($transferToAcc->balance) - floatval($data['transfer_amount']);
+
+                $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+                $transferToBal = number_format($transferToBal, 2, '.', ',');
+
+                $transferFromAccData = [
+                    'id' => $transferFromAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $transferFromBal
+                ];
+                $transferToAccData = [
+                    'id' => $transferToAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $transferToBal
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+                $this->chart_of_accounts_model->updateBalance($transferToAccData);
+
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     foreach ($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
@@ -1545,6 +1568,19 @@ class Accounting_modals extends MY_Controller
                         'name_key' => $name[0],
                         'name_id' => $name[1]
                     ];
+
+                    $account = $this->chart_of_accounts_model->getById($value);
+                    $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
+                    $newBalance = floatval($account->balance) + floatval($data['debits'][$key]);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accountData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($accountData);
                 }
 
                 $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
@@ -1692,11 +1728,14 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     if (!isset($data['template_name'])) {
-                        $accountBalance = $this->chart_of_accounts_model->getBalance($account[1]);
+                        $account = $this->chart_of_accounts_model->getById($value);
+
+                        $accountBalance = $account->account_id !== "7" ? floatval($account->balance) - floatval($data['amount'][$key]) : floatval($account->balance) + floatval($data['amount'][$key]);
+                        $accountBalance = number_format($accountBalance, 2, '.', ',');
                         $accountData = [
                             'id' => $account[1],
                             'company_id' => logged('company_id'),
-                            'balance' => floatval($accountBalance) - floatval($data['amount'][$key])
+                            'balance' => $accountBalance
                         ];
                         $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
                     }
@@ -1718,7 +1757,7 @@ class Accounting_modals extends MY_Controller
                         $cashBackData = [
                             'id' => $cashBackAccount->id,
                             'company_id' => logged('company_id'),
-                            'balance' => floatval($cashBackAccount->balance) + floatval($data['cash_back_amount'])
+                            'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($data['cash_back_amount']) : floatval($cashBackAccount->balance) - floatval($data['cash_back_amount'])
                         ];
 
                         $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
@@ -5224,7 +5263,10 @@ class Accounting_modals extends MY_Controller
             case 'cash-back-account':
                 $accountTypes = [
                     'Bank',
-                    'Other Current Assets'
+                    'Credit Card',
+                    'Equity',
+                    'Other Current Assets',
+                    'Other Current Liabilities'
                 ];
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
@@ -5844,8 +5886,15 @@ class Accounting_modals extends MY_Controller
                 }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'cash-back-account' :
-                $typeNames = array_filter($types, function($type, $key) {
-                    return $type->account_name === 'Bank' || $type->account_name === 'Other Current Assets';
+                $accTypes = [
+                    'Bank',
+                    'Credit Card',
+                    'Equity',
+                    'Other Current Assets',
+                    'Other Current Liabilities'
+                ];
+                $typeNames = array_filter($types, function($type, $key) use ($accTypes) {
+                    return in_array($type->account_name, $accTypes);
                 }, ARRAY_FILTER_USE_BOTH);
             break;
             case 'inv-asset-account' :
