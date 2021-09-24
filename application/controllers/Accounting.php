@@ -159,6 +159,7 @@ class Accounting extends MY_Controller
 
     public function bank_connect()
     {
+        $this->load->library('paypal_lib');
         $this->page_data['title'] = 'Bank Connect';
         $this->load->view('accounting/banking/link_bank', $this->page_data);
     }
@@ -168,6 +169,7 @@ class Accounting extends MY_Controller
         $this->load->view('includes/header', $this->page_data);
         $this->load->view('accounting/apply_for_capital', $this->page_data);
     }
+
 
     // public function expenses()
     // {

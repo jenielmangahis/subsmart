@@ -11,12 +11,7 @@ class Accounting__TaxItem {
     data.due_date = this.formatDate(data.due_date);
     data.address = data.billing_address || data.job_location;
     data.agency_name = data.agency ? data.agency.name : "";
-
-    // should display adjusted price/tax
-    const totalAdjustments = this.getSumAdjustments(data.adjustments);
-    data.price = formatCurrencyWithSign(
-      Number(data.taxes) - Number(totalAdjustments)
-    );
+    data.price = formatCurrencyWithSign(this.getTotalDue(data));
 
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
@@ -95,6 +90,18 @@ class Accounting__TaxItem {
       $dataRow.addClass("d-none");
     }
 
+    const totalAdjustments = this.getTotalAdjustments(data);
+    const taxAdjusted = Number(tableData.tax) - Number(totalAdjustments);
+    tableData.tax_adjusted = formatCurrencyWithSign(taxAdjusted);
+
+    const $dataTableTypes = this.$modal.find("[data-table-type]");
+    $dataTableTypes.each(function (_, element) {
+      element.textContent = getValueByString(
+        tableData,
+        element.dataset.tableType
+      );
+    });
+
     // display tax adjustments
     const { adjustments } = data;
     const $adjustmentsWrapper = this.$modal.find("#adjustmentsWrapper");
@@ -116,30 +123,13 @@ class Accounting__TaxItem {
       $adjustmentsWrapper.append($adjustments);
     }
 
-    const totalAdjustments = this.getSumAdjustments(adjustments);
-    const taxAdjusted = Number(tableData.tax) - Number(totalAdjustments);
-    tableData.tax_adjusted = formatCurrencyWithSign(taxAdjusted);
+    const totalPaid = this.getTotalPayments(data);
+    const totalDue = this.getTotalDue(data);
+    const isTaxPaid = totalDue <= 0;
 
-    const $dataTableTypes = this.$modal.find("[data-table-type]");
-    $dataTableTypes.each(function (_, element) {
-      element.textContent = getValueByString(
-        tableData,
-        element.dataset.tableType
-      );
-    });
-
-    let isTaxPaid = false;
-    let totalPaid = 0;
-    let totalDue = taxAdjusted;
     this.$modal.removeClass("taxModal--hasPayment");
     if (hasPayment) {
       this.$modal.addClass("taxModal--hasPayment");
-      data.payments.forEach((payment) => {
-        totalPaid += Number(payment.amount);
-      });
-
-      totalDue = taxAdjusted - totalPaid;
-      isTaxPaid = totalDue <= 0;
 
       const template = this.$modal.find("#paymentTemplate").get(0).content;
       const $wrapper = this.$modal.find("#paymentsWrapper");
@@ -328,9 +318,22 @@ class Accounting__TaxItem {
     });
   }
 
-  getSumAdjustments(adjustments) {
-    if (!adjustments) return 0;
-    return adjustments.reduce((p, c) => p + Number(c.amount), 0);
+  getTotalDue(data) {
+    return (
+      Number(data.taxes) -
+      Number(this.getTotalAdjustments(data)) -
+      this.getTotalPayments(data)
+    );
+  }
+
+  getTotalPayments(data) {
+    if (!data.adjustments) return 0;
+    return data.payments.reduce((c, p) => c + Number(p.amount), 0);
+  }
+
+  getTotalAdjustments(data) {
+    if (!data.adjustments) return 0;
+    return data.adjustments.reduce((c, a) => c + Number(a.amount), 0);
   }
 
   formatDate(date, options = {}) {
@@ -453,10 +456,10 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
 
     const $totalTax = $("#totalTax");
     const total = data.overdue.reduce((carry, curr) => {
-      return carry + Number(curr.taxes);
+      return carry + Number(overdueItem.getTotalDue(curr));
     }, 0);
 
-    $totalTax.text(accounting.formatMoney(total, { symbol: "" }));
+    $totalTax.text(formatCurrencyWithSign(total));
   };
 
   const { data: taxedInvoice } = await fetchGetTaxedInvoices();

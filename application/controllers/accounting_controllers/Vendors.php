@@ -1591,38 +1591,15 @@ class Vendors extends MY_Controller
     public function view_expense($expenseId)
     {
         $expense = $this->vendors_model->get_expense_by_id($expenseId);
-        $paymentAccs = [];
-        $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
 
-        foreach ($paymentAccsType as $accType) {
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
 
-            if (count($accounts) > 0) {
-                foreach ($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $paymentAccs[$accType->account_name][] = $account;
-
-                    if ($account->id === $expense->payment_account_id) {
-                        $selectedBalance = $account->balance;
-                    }
-
-                    foreach ($childAccs as $childAcc) {
-                        if ($childAcc->id === $expense->payment_account_id) {
-                            $selectedBalance = $childAcc->balance;
-                        }
-                    }
-                }
-            }
-        }
-
+        $selectedBalance = $paymentAcc->balance;
         if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
-            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
         } else {
-            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
         }
 
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
@@ -1631,14 +1608,8 @@ class Vendors extends MY_Controller
         $this->page_data['expense'] = $expense;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
         $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
 
         $this->load->view('accounting/vendors/view_expense', $this->page_data);
     }
@@ -1687,35 +1658,15 @@ class Vendors extends MY_Controller
     public function view_check($checkId)
     {
         $check = $this->vendors_model->get_check_by_id($checkId);
-        $bankAccsType = $this->account_model->getAccTypeByName('Bank');
 
-        $bankAccs = [];
-        $accounts = $this->chart_of_accounts_model->getByAccountType($bankAccsType->id, null, logged('company_id'));
-        if (count($accounts) > 0) {
-            foreach ($accounts as $account) {
-                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+        $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
 
-                $account->childAccs = $childAccs;
-
-                $bankAccs[] = $account;
-
-                if ($account->id === $check->bank_account_id) {
-                    $selectedBalance = $account->balance;
-                }
-
-                foreach ($childAccs as $childAcc) {
-                    if ($childAcc->id === $check->bank_account_id) {
-                        $selectedBalance = $childAcc->balance;
-                    }
-                }
-            }
-        }
-
+        $selectedBalance = $bankAcc->balance;
         if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
-            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
         } else {
-            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
         }
 
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
@@ -1724,15 +1675,7 @@ class Vendors extends MY_Controller
         $this->page_data['check'] = $check;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
 
         $this->load->view('accounting/vendors/view_check', $this->page_data);
     }
@@ -1740,9 +1683,7 @@ class Vendors extends MY_Controller
     public function view_bill($billId)
     {
         $bill = $this->vendors_model->get_bill_by_id($billId);
-        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
-
-        $selectedTerm = $terms[0];
+        $term = $this->accounting_terms_model->getById($bill->term_id);
 
         $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
 
@@ -1766,12 +1707,7 @@ class Vendors extends MY_Controller
         $this->page_data['bill'] = $bill;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['terms'] = $terms;
+        $this->page_data['term'] = $term;
 
         $this->load->view('accounting/vendors/view_bill', $this->page_data);
     }
@@ -3129,7 +3065,6 @@ class Vendors extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
         $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();

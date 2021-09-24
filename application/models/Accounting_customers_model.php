@@ -71,6 +71,14 @@ class Accounting_customers_model extends MY_Model
         return $query->result();
     }
 
+    public function get_by_id($id)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('prof_id', $id);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
+
     public function get_customer_by_id($id)
     {
         $this->db->reset_query();
