@@ -332,6 +332,13 @@ if ($this->session->userdata('usertimezone') == null) {
             /* (RADIO CHECKED) IMAGE STYLES */
             border: 2px solid #f00;
         }
+
+        #sidebar
+        {
+            height:100% !important;
+            bottom: auto;
+            margin-bottom: 0px;
+        }
     </style>
 </head>
 <script>
@@ -339,7 +346,7 @@ if ($this->session->userdata('usertimezone') == null) {
 </script>
 
 
-<body style="background:white !important;">
+<body style="background:white !important;zoom: 98%;">
     <!-- Navigation Bar-->
     <header id="topnav">
         <input type="hidden" id="siteurl"

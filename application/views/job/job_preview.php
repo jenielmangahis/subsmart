@@ -62,6 +62,146 @@ add_css(array(
         font-size: 16px;
         color: #45a73c;
     }
+
+    /* track360 css */
+
+    div#modal-for-start-job-confirmation {
+        position: fixed;
+        background: #00000073;
+        width: 100%;
+        height: 100vh;
+        z-index: 1;
+        top: 0;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body {
+        background: #ffffff;
+        width: 500px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .close-modal {
+        position: absolute;
+        right: -15px;
+        background: #000;
+        color: #fff;
+        border-radius: 50%;
+        padding: 10px 16px 11px 16px;
+        top: -15px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .info,
+    div#modal-for-start-job-confirmation .the-modal-body .confirm {
+        padding: 10px;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .confirm .text-confirmation {
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button {
+        padding: 10px;
+        margin: 10px;
+        border: 0;
+        border-radius: .25em;
+        color: #fff;
+        font-size: 15px;
+        width: 130px;
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button.arrival {
+        background-color: rgb(44, 160, 28);
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button.cancel {
+        background-color: rgb(221, 51, 51);
+    }
+
+    div#modal-for-start-job-confirmation .the-modal-body .map {
+        background-color: #E7EAED;
+        height: 300px;
+        width: 100%;
+        background-image: url("<?=base_url('assets/img/trac360/world-map.png')?>");
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    table.route-details-table {
+        width: 100%;
+    }
+
+    #route-details-setion .route-details-table>tbody>tr>td.connected-icon,
+    .route-details-setion .route-details-table>tbody>tr>td.connected-icon {
+        width: 50px;
+        text-align: center;
+    }
+
+    #route-details-setion .route-details-table>tbody>tr>td,
+    .route-details-setion .route-details-table>tbody>tr>td {
+        padding-left: 20px;
+        height: 70px;
+    }
+
+    #route-details-setion .route-details-table .connected-icon>div,
+    .route-details-setion .route-details-table .connected-icon>div {
+        color: #ffffff;
+        background-color: #2096F3;
+        border-radius: 50%;
+        padding: 5px;
+        position: relative;
+    }
+
+    #route-details-setion .route-details-table .first-info .connected-icon>div:after,
+    #route-details-setion .route-details-table .middle-info .connected-icon>div:after,
+    .route-details-setion .route-details-table .first-info .connected-icon>div:after,
+    .route-details-setion .route-details-table .middle-info .connected-icon>div:after {
+        content: ' ';
+        width: 3px;
+        height: 45px;
+        background-color: #2096F3;
+        position: absolute;
+        z-index: 1;
+        bottom: -45px;
+        left: 45%;
+    }
+
+    .route-details-table .address {
+        font-size: 12px;
+        font-weight: 600;
+        color: #565656;
+    }
+
+    .route-details-table .date-time {
+        font-size: 9px;
+        color: #565656;
+    }
+
+    .route-details-table tr:hover {
+        cursor: pointer;
+    }
+
+    .route-details-table tr:hover div.address {
+        font-weight: 700;
+        cursor: pointer;
+        color: #000;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -132,7 +272,8 @@ add_css(array(
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?>
+                                                        <td align="right" style="font-weight: 600;" class="job-status">
+                                                            <?=  $jobs_data->status;  ?>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -316,11 +457,64 @@ add_css(array(
         </div>
     </div>
 </div>
-<div id="modal-for-start-job-confirmation">
+<div id="modal-for-start-job-confirmation" style="display: none;">
     <div class="the-modal-body">
+        <div class="close-modal">x</div>
         <div class="map"></div>
-        <div class="info"></div>
-        <div class="confirm"></div>
+        <div class="info">
+            <div id="route-details-setion">
+                <table class="route-details-table">
+                    <tbody class="tbody">
+                        <tr class="last-coords-details first-info" data-i="0">
+                            <td class="connected-icon">
+                                <div><i class="fa fa-car" aria-hidden="true"></i></div>
+                            </td>
+                            <td>
+                                <div class="address">
+                                    <?=$company_info->street?>
+                                    <?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ?>
+                                </div>
+                                <div class="date-time"><?= isset($jobs_data) ?  date('F d, Y', strtotime($jobs_data->start_date)) : '';  ?>
+                                    <?= isset($jobs_data) ?  $jobs_data->start_time : '';  ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="last-coords-details last-info" data-i="3">
+                            <td class="connected-icon">
+                                <div><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                            </td>
+                            <td>
+                                <div class="address">
+                                    <?=$jobs_data->mail_add;?>
+                                    <?=$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code?>
+                                </div>
+                                <div class="date-time">
+                                    <?= isset($jobs_data) ?  date('F d, Y', strtotime($jobs_data->end_date)) : '';  ?>
+                                    <?= isset($jobs_data) ?  $jobs_data->end_time : '';  ?>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="confirm">
+            <div class="text-confirmation">
+                <?php
+             if (logged('id') == $jobs_data->employee_id) {
+                 echo "Are you now heading to the job distination?";
+             } else {
+                 echo "Is $employee_date->FName heading now to the job distination?";
+             }
+             ?>
+
+            </div>
+            <div class="confirm-buttons">
+                <button type="button" class="cancel">Not yet</button>
+                <button type="button" class="arrival"
+                    data-job="<?=$jobs_data->id?>">Start Now</button>
+            </div>
+        </div>
     </div>
 </div>
 <?php
@@ -383,15 +577,51 @@ include viewPath('includes/footer');
             }
         });
     }
-
+    $(document).on("click", "div#modal-for-start-job-confirmation .the-modal-body .close-modal", function(event) {
+        $("div#modal-for-start-job-confirmation").fadeOut();
+    });
+    $(document).on("click",
+        "div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button.cancel",
+        function(event) {
+            $("div#modal-for-start-job-confirmation").fadeOut();
+        });
     <?php
-    if (date('m/d/Y H:i:s', strtotime($jobs_data->start_date . " ".$jobs_data->start_time)) <= date("m/d/Y H:i:s")) {
-        echo "start_confirmation();";
+    if (date('m/d/Y H:i:s', strtotime($jobs_data->start_date . " ".$jobs_data->start_time)) <= date("m/d/Y H:i:s") && $jobs_data->status == "Scheduled" && (logged('id') == $jobs_data->employee_id || logged("role") < 5)) {
+        echo " $('div#modal-for-start-job-confirmation').fadeIn();";
     }
-    
     ?>
 
-    function start_confirmation() {
-
-    }
+    $(document).on("click",
+        "div#modal-for-start-job-confirmation .the-modal-body .confirm .confirm-buttons button.arrival",
+        function(event) {
+            $.ajax({
+                type: 'POST',
+                url: baseURL + "on-my-way-to-job",
+                data: {
+                    id: $(this).attr("data-job"),
+                    status: "Arrival"
+                },
+                success: function(data) {
+                    if (data == "Success") {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Take care!",
+                            html: "Job status has been updated to arrival.",
+                            icon: "success",
+                        });
+                        $("div#modal-for-start-job-confirmation").fadeOut();
+                        $('.card-body table td.job-status').html("Arrival");
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Ooops",
+                            html: "Please try again later!",
+                            icon: "Error",
+                        });
+                    }
+                }
+            })
+        });
 </script>

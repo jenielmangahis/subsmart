@@ -886,7 +886,10 @@ class Job extends MY_Controller
             $id = $input['id'];
             unset($input['id']);
             $input['company_id'] = logged('company_id');
-            ;
+            if ($input['status'] == "Arrival") {
+                $input['omw_date'] = date("Y-m-d");
+                $input['omw_time'] = date("H:i A");
+            }
             if ($this->general->update_with_key($input, $id, "jobs")) {
                 echo "Success";
             } else {

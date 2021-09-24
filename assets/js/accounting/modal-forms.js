@@ -5739,7 +5739,53 @@ const initModalFields = (modalName, data = {}) => {
     }
 
     if($(`#${modalName} select`).length > 0) {
-        $(`#${modalName} select`).select2();
+        $(`#${modalName} select`).each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if(type === 'category-customer') {
+                type = 'customer';
+            }
+
+            if (dropdownFields.includes(type)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: modalName
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect
+                });
+            } else {
+                var options = $(this).find('option');
+                if (options.length > 10) {
+                    $(this).select2();
+                } else {
+                    $(this).select2({
+                        minimumResultsForSearch: -1
+                    });
+                }
+            }
+        });
     }
 
     if($(`div#${modalName} select#tags`).length > 0) {
