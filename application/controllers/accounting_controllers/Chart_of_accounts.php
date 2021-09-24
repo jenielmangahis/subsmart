@@ -800,7 +800,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at) + 3)
+                'date_created' => date("m/d/Y H:i:s", strtotime($checkCategory->created_at))
             ];
         }
 
@@ -863,7 +863,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
+                'date_created' => date("m/d/Y H:i:s", strtotime($billItem->created_at))
             ];
         }
 
@@ -946,7 +946,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($ccCredit->created_at) + 3)
+                'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditCategory->created_at))
             ];
         }
 
@@ -978,7 +978,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($vCredit->created_at))
+                'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
             ];
         }
 
@@ -1072,7 +1072,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($dep->created_at) + 3)
+                'date_created' => date("m/d/Y H:i:s", strtotime($depFund->created_at))
             ];
         }
 
@@ -1150,7 +1150,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($invQtyAdj->created_at) + 3)
+                'date_created' => date("m/d/Y H:i:s", strtotime($invQtyAdjItem->created_at))
             ];
         }
 
@@ -1233,7 +1233,7 @@ class Chart_of_accounts extends MY_Controller {
                 'attachments' => '',
                 'tax' => '',
                 'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at) + 3)
+                'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
             ];
         }
 

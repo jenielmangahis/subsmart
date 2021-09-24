@@ -1023,3 +1023,6 @@ $route['customer/_load_active_subscriptions'] = 'Customer/ajax_load_active_subsc
 $route['customer/_load_completed_subscriptions'] = 'Customer/ajax_load_completed_subscriptions';
 $route['customer/_load_billing_error_subscriptions'] = 'Customer/ajax_load_billing_error_subscriptions';
 $route['customer/_load_subscription_list_counter'] = 'Customer/ajax_load_subscription_list_counter';
+
+//Trac360
+$route['on-my-way-to-job'] = 'Job/update_jobs_status';

@@ -2295,7 +2295,7 @@ class Timesheet extends MY_Controller
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
             if ($entry_type == "Auto") {
-                $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has been Outo clocked out at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+                $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has been Auto clocked out at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
             } else {
                 $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
             }

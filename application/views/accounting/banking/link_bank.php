@@ -238,7 +238,7 @@
                                                <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
-                                                            <a href="#">
+                                                            <a href="https://www.sandbox.paypal.com/connect?flowEntry=static&client_id=AQxD9RzngFo48GkmU9jX2iOo-rcM7xK-dacDXigsFurFpLbsRFPf0pH3Cr8zzdO8hMRNVEe6FGsklZp5&scope=openid profile email&redirect_uri=http://nsmartrac.org/api/paypal_response&fullPage=true&response_type=code">
                                                                 <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
                                                                     <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                         <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
@@ -433,7 +433,19 @@
 
 <script>
     $('#open_stripe').click(function () {
-        window.open('https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_KBQqImsoRKsn8QTIvr9DdP0dH37hPQ3Y&scope=read_write','Ratting','width=550,height=650,left=450,top=200,toolbar=0,status=0');
+        const openWin = window.open('https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_KBQqImsoRKsn8QTIvr9DdP0dH37hPQ3Y&scope=read_write','Ratting','width=550,height=650,left=450,top=200,toolbar=0,status=0');
+        var timer = setInterval(function() {
+            if(openWin.closed) {
+                clearInterval(timer);
+                fetch('<?=base_url()?>api/check_stripe_api_connected').then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    console.log(data);
+                }).catch(function() {
+                    console.log("Booo");
+                });
+            }
+        }, 1000);
     });
     $('.click-stripe').click(function () {
         $('.accounts-list').hide();

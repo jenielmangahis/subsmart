@@ -2918,9 +2918,7 @@ class Accounting_modals extends MY_Controller
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'status' => 1
             ];
     
             $checkId = $this->expenses_model->addCheck($checkData);
