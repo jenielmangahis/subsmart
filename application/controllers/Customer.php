@@ -3284,4 +3284,32 @@ class Customer extends MY_Controller
         $this->load->view('customer/ajax_load_billing_error_subscriptions', $this->page_data);
     }
 
+    public function ajax_load_subscription_list_counter(){
+        $company_id = logged('company_id');
+
+        $smsAll = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), array());
+
+        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusScheduled()];
+        $smsScheduled = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusActive()];
+        $smsActive = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusClosed()];
+        $smsClosed = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusDraft()];
+        $smsDraft = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $json_data = [
+            'total_sms' => count($smsAll),
+            'total_scheduled' => count($smsScheduled),
+            'total_active' => count($smsActive),
+            'total_closed' => count($smsClosed),
+            'total_draft' => count($smsDraft)
+        ];
+
+        echo json_encode($json_data);
+    }
+
 }
