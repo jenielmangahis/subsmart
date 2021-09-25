@@ -3285,31 +3285,31 @@ class Customer extends MY_Controller
     }
 
     public function ajax_load_subscription_list_counter(){
+        $this->load->model('Customer_advance_model');
+
         $company_id = logged('company_id');
-
-        $smsAll = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), array());
-
-        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusScheduled()];
-        $smsScheduled = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
-
-        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusActive()];
-        $smsActive = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
-
-        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusClosed()];
-        $smsClosed = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
-
-        $conditions[0] = ['field' => 'sms_blast.status','value' => $this->SmsBlast_model->statusDraft()];
-        $smsDraft = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+        $activeSubscriptions    = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);    
+        $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);
+        $errorSubscriptions     = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);    
 
         $json_data = [
-            'total_sms' => count($smsAll),
-            'total_scheduled' => count($smsScheduled),
-            'total_active' => count($smsActive),
-            'total_closed' => count($smsClosed),
-            'total_draft' => count($smsDraft)
+            'total_active' => count($activeSubscriptions),
+            'total_completed' => count($completedSubscriptions),
+            'total_billing_errors' => count($errorSubscriptions)
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_load_subscription_payment_history()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $post = $this->input->post();
+        
+        $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);        
+        $this->page_data['paymentHistory'] = $paymentHistory;
+        $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
     }
 
 }
