@@ -138,6 +138,9 @@ class Expenses extends MY_Controller
 
         usort($data, function ($a, $b) use ($order, $columnName) {
             if ($columnName !== 'date') {
+                if($a[$columnName] === $b[$columnName]) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
                 if ($order === 'asc') {
                     return strcmp($a[$columnName], $b[$columnName]);
                 } else {
@@ -145,8 +148,14 @@ class Expenses extends MY_Controller
                 }
             } else {
                 if ($order === 'asc') {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) > strtotime($b['date_created']);
+                    }
                     return strtotime($a[$columnName]) > strtotime($b[$columnName]);
                 } else {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) < strtotime($b['date_created']);
+                    }
                     return strtotime($a[$columnName]) < strtotime($b[$columnName]);
                 }
             }
@@ -228,7 +237,8 @@ class Expenses extends MY_Controller
                     'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
                 ];
             }
         }
@@ -262,7 +272,8 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
                     'status' => 'Applied',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
                 ];
             }
         }
@@ -305,7 +316,8 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === "1" ? "Paid" : "Voided",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
                 ];
             }
         }
@@ -348,7 +360,8 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
                 ];
             }
         }
@@ -378,7 +391,8 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
                 ];
             }
         }
@@ -423,7 +437,8 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
                     'status' => $expense->status === "1" ? 'Paid' : 'Voided',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
             }
         }
@@ -453,7 +468,8 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($purchOrder->total_amount), 2, '.', ','),
                     'status' => $purchOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($purchOrder->created_at))
                 ];
             }
         }
@@ -483,7 +499,8 @@ class Expenses extends MY_Controller
                     'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
                     'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
                 ];
             }
         }
@@ -1308,47 +1325,20 @@ class Expenses extends MY_Controller
 
     public function view_bill_payment($billPaymentId)
     {
-        $paymentAccs = [];
-        $accountTypes = [
-            'Bank',
-            'Credit Card'
-        ];
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
 
-        foreach ($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            $count = 0;
-            if (count($accounts) > 0) {
-                foreach ($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $paymentAccs[$typeName][] = $account;
-
-                    if ($count === 1) {
-                        $selectedBalance = $account->balance;
-                    }
-
-                    $count++;
-                }
-            }
-        }
-
+        $selectedBalance = $paymentAcc->balance;
         if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
-            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
         } else {
-            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
         }
 
-        $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
-        $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($vendorId);
-        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+        $this->page_data['billPayment'] = $billPayment;
+        $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
 
         $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
     }
@@ -1368,7 +1358,15 @@ class Expenses extends MY_Controller
             'overdue' => $post['overdue']
         ];
 
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $bills = $this->vendors_model->get_bill_payment_items($billPaymentId, $filters);
+
+        $filters = [
+            'start-date' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'end-date' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'overdue' => $post['overdue']
+        ];
+        $openBills = $this->vendors_model->get_vendor_open_bills($billPayment->payee_id, $filters);
 
         $data = [];
         foreach ($bills as $bill) {
@@ -1376,9 +1374,10 @@ class Expenses extends MY_Controller
 
             $openBalance = floatval($billData->remaining_balance) + floatval($billData->total_amount);
 
-            $description = 'Bill ';
-            $description .= $billData->bill_no !== "" && !is_null($billData->bill_no) ? '# '.$billData->bill_no.' ' : '';
-            $description .= '('.date("m/d/Y", strtotime($billData->bill_date)).')';
+            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description .= '</a>';
+            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
             if ($search !== "") {
                 if (stripos($billData->bill_no, $search) !== false) {
@@ -1388,7 +1387,8 @@ class Expenses extends MY_Controller
                         'due_date' => date("m/d/Y", strtotime($billData->due_date)),
                         'original_amount' => number_format(floatval($billData->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
-                        'payment' => number_format(floatval($billData->total_amount), 2, '.', ',')
+                        'payment' => number_format(floatval($billData->total_amount), 2, '.', ','),
+                        'selected' => true
                     ];
                 }
             } else {
@@ -1398,8 +1398,42 @@ class Expenses extends MY_Controller
                     'due_date' => date("m/d/Y", strtotime($billData->due_date)),
                     'original_amount' => number_format(floatval($billData->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
-                    'payment' => number_format(floatval($billData->total_amount), 2, '.', ',')
+                    'payment' => number_format(floatval($billData->total_amount), 2, '.', ','),
+                    'selected' => true
                 ];
+            }
+        }
+
+        if (count($openBills) > 0) {
+            foreach ($openBills as $bill) {
+                $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+                $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+                $description .= '</a>';
+                $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+
+                if ($search !== "") {
+                    if (stripos($bill->bill_no, $search) !== false) {
+                        $data[] = [
+                            'id' => $bill->id,
+                            'description' => $description,
+                            'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                            'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                            'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                            'payment' => '',
+                            'selected' => false
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $bill->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                        'payment' => '',
+                        'selected' => false
+                    ];
+                }
             }
         }
 

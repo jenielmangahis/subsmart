@@ -3284,4 +3284,32 @@ class Customer extends MY_Controller
         $this->load->view('customer/ajax_load_billing_error_subscriptions', $this->page_data);
     }
 
+    public function ajax_load_subscription_list_counter(){
+        $this->load->model('Customer_advance_model');
+
+        $company_id = logged('company_id');
+        $activeSubscriptions    = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);    
+        $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);
+        $errorSubscriptions     = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);    
+
+        $json_data = [
+            'total_active' => count($activeSubscriptions),
+            'total_completed' => count($completedSubscriptions),
+            'total_billing_errors' => count($errorSubscriptions)
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_load_subscription_payment_history()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $post = $this->input->post();
+        
+        $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);        
+        $this->page_data['paymentHistory'] = $paymentHistory;
+        $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
+    }
+
 }

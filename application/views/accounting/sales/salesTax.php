@@ -84,7 +84,7 @@ include viewPath('includes/header');
 
             <div class="row">
                 <div class="col-md-8">
-                    <h3>$<span id="totalTax">0.00</span></h3>
+                    <h3><span id="totalTax">0.00</span></h3>
                     <h5>SALES TAX DUE</h5>
 
                     <br>
@@ -380,7 +380,7 @@ include viewPath('includes/header');
                     <div class="taxModal__spacer"></div>
 
                     <div class="text-center">
-                        <a class="taxModal__link" href="#">View tax liability report</a>
+                        <a class="taxModal__link taxModal__link--disabled" href="#">View tax liability report</a>
                     </div>
                 </div>
             </div>
@@ -585,11 +585,16 @@ include viewPath('includes/header');
 </div>
 <?php include viewPath('includes/footer_accounting');?>
 <script>
-    $.ajaxSetup({
-        beforeSend: function (xhr,settings) {
-            if (settings.url.startsWith("/accounting/")) {
-                settings.url = settings.url.replace("/accounting/", "/nsmartrac/accounting/")
+    document.addEventListener('DOMContentLoaded', function () {
+        const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+        if (!isLocalhost) return;
+
+        $.ajaxSetup({
+            beforeSend: function (xhr,settings) {
+                if (settings.url.startsWith("/accounting/")) {
+                    settings.url = settings.url.replace("/accounting/", "/nsmartrac/accounting/")
+                }
             }
-        }
+        });
     });
 </script>

@@ -73,7 +73,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <h3 class="page-title" style="margin: 0 !important">
-                                        <?=$vendorDetails->display_name?>
+                                        <span id="vendor-display-name"><?=$vendorDetails->display_name?></span>
                                         <?php if($vendorDetails->email !== "" && $vendorDetails->email !== null) : ?>
                                             <small><a href="mailto: <?=$vendorDetails->email?>"><i class="fa fa-envelope-o"></i></a></small>
                                         <?php endif; ?>
@@ -83,15 +83,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
                                         <span style="color:black;">See how easy paying and tracking contractors can be. This accounting features makes it easy to pay contractors today & W-2 employees tomorrow.  Get started by adding a Contractor.</span>
                                     </div>
-                                </div> -->
-                            </div>
-                            <div class="row pb-3">
-                                <!-- <div class="col-md-12 banking-tab-container">
-									<a href="<?php //echo url('/accounting/payroll-overview')?>" class="banking-tab ">Overview</a>
-									<a href="<?php //echo url('/accounting/employees')?>" class="banking-tab">Employees</a>
-									<a href="<?php //echo url('/accounting/contractors')?>" class="banking-tab-active text-decoration-none">Contractors</a>
-									<a href="<?php //echo url('/accounting/workers-comp')?>" class="banking-tab">Worker's Comp</a>
-									<a href="#" class="banking-tab">Benefits</a>
                                 </div> -->
                             </div>
                             <div class="row align-items-center">

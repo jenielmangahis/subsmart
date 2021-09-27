@@ -1,4 +1,5 @@
 const vendorId = $('#vendor-id[type="hidden"]').val();
+const vendorName = $('.page-title span#vendor-display-name').html();
 
 $('.banking-tab-container a').on('click', function() {
     var activeTab = $(this).parent().find('.banking-tab-active');
@@ -766,7 +767,73 @@ function applybtn() {
 $('#new-time-activity').on('click', function(e) {
     e.preventDefault();
 
-    $('#new-popup #accounting_employees .ajax-single_time_activity_modal').trigger('click');
+    $.get('/accounting/get-other-modals/single_time_activity_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#singleTimeModal #person_tracking').html(`<option value="vendor-${vendorId}">${vendorName}</option>`);
+
+        $('#singleTimeModal select').each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if (dropdownFields.includes(type)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: modal_element.replaceAll('#', '')
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect
+                });
+            } else {
+                var options = $(this).find('option');
+                if (options.length > 10) {
+                    $(this).select2();
+                } else {
+                    $(this).select2({
+                        minimumResultsForSearch: -1
+                    });
+                }
+            }
+        });
+
+        if ($(`#singleTimeModal .date`).length > 0) {
+            $(`#singleTimeModal .date`).each(function() {
+                $(this).datepicker({
+                    uiLibrary: 'bootstrap'
+                });
+            });
+        }
+
+        $('#singleTimeModal').modal('show');
+    });
 });
 
 $('a#new-bill-transaction').on('click', function(e) {
@@ -783,66 +850,9 @@ $('a#new-bill-transaction').on('click', function(e) {
             `);
         }
 
-        $('#billModal #vendor').val(vendorId).trigger('change');
+        $('#billModal #vendor').append(`<option value="${vendorId}">${vendorName}</option>`);
 
-        rowCount = 2;
-        catDetailsInputs = $(`#billModal table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#billModal table#category-details-table tbody tr:nth-child(2)`).html();
-        $(`#billModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#billModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-
-        $(`#billModal select`).select2();
-
-        $('div#billModal select#tags').select2({
-            placeholder: 'Start typing to add a tag',
-            allowClear: true,
-            ajax: {
-                url: '/accounting/get-job-tags',
-                dataType: 'json'
-            }
-        });
-
-        $(`#billModal .date`).each(function(){
-            $(this).datepicker({
-                uiLibrary: 'bootstrap'
-            });
-        });
-
-        var attachmentContId = $(`#billModal .attachments .dropzone`).attr('id');
-        var billAttachments = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
-            maxFilesize: 20,
-            uploadMultiple: true,
-            // maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var ids = JSON.parse(response)['attachment_ids'];
-                    var modal = $(`#billModal`);
-
-                    for(i in ids) {
-                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                        }
-
-                        modalAttachmentId.push(ids[i]);
-                    }
-                    modalAttachedFiles.push(file);
-                });
-            },
-            removedfile: function(file) {
-                var ids = modalAttachmentId;
-                var index = modalAttachedFiles.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-
-                $(`#billModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        initModalFields('billModal');
 
         $('#billModal').modal('show');
     });
@@ -862,7 +872,7 @@ $('a#new-expense-transaction').on('click', function(e) {
             `);
         }
 
-        $('#expenseModal #payee').val('vendor-'+vendorId).trigger('change');
+        $('#expenseModal #payee').append(`<option value="vendor-${vendorId}">${vendorName}</option>`);
 
         initModalFields('expenseModal');
 
@@ -884,7 +894,7 @@ $('a#new-check-transaction').on('click', function(e) {
             `);
         }
 
-        $('#checkModal #payee').val('vendor-'+vendorId).trigger('change');
+        $('#checkModal #payee').append(`<option value="vendor-${vendorId}">${vendorName}</option>`);
 
         initModalFields('checkModal');
 
@@ -906,66 +916,9 @@ $('a#new-purchase-order-transaction').on('click', function(e) {
             `);
         }
 
-        $('#purchaseOrderModal #vendor').val(vendorId).trigger('change');
+        $('#purchaseOrderModal #vendor').append(`<option value="${vendorId}">${vendorName}</option>`);
 
-        rowCount = 2;
-        catDetailsInputs = $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#purchaseOrderModal table#category-details-table tbody tr:nth-child(2)`).html();
-        $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#purchaseOrderModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-
-        $(`#purchaseOrderModal select`).select2();
-
-        $('div#purchaseOrderModal select#tags').select2({
-            placeholder: 'Start typing to add a tag',
-            allowClear: true,
-            ajax: {
-                url: '/accounting/get-job-tags',
-                dataType: 'json'
-            }
-        });
-
-        $(`#purchaseOrderModal .date`).each(function(){
-            $(this).datepicker({
-                uiLibrary: 'bootstrap'
-            });
-        });
-
-        var attachmentContId = $(`#purchaseOrderModal .attachments .dropzone`).attr('id');
-        var poAttachments = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
-            maxFilesize: 20,
-            uploadMultiple: true,
-            // maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var ids = JSON.parse(response)['attachment_ids'];
-                    var modal = $(`#purchaseOrderModal`);
-
-                    for(i in ids) {
-                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                        }
-
-                        modalAttachmentId.push(ids[i]);
-                    }
-                    modalAttachedFiles.push(file);
-                });
-            },
-            removedfile: function(file) {
-                var ids = modalAttachmentId;
-                var index = modalAttachedFiles.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-
-                $(`#purchaseOrderModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        initModalFields('purchaseOrderModal');
 
         $('#purchaseOrderModal').modal('show');
     });
@@ -985,66 +938,9 @@ $('a#new-vendor-credit-transaction').on('click', function(e) {
             `);
         }
 
-        $('#vendorCreditModal #vendor').val(vendorId).trigger('change');
+        $('#vendorCreditModal #vendor').append(`<option value="${vendorId}">${vendorName}</option>`);
 
-        rowCount = 2;
-        catDetailsInputs = $(`#vendorCreditModal table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#vendorCreditModal table#category-details-table tbody tr:nth-child(2)`).html();
-        $(`#vendorCreditModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#vendorCreditModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-
-        $(`#vendorCreditModal select`).select2();
-
-        $('div#vendorCreditModal select#tags').select2({
-            placeholder: 'Start typing to add a tag',
-            allowClear: true,
-            ajax: {
-                url: '/accounting/get-job-tags',
-                dataType: 'json'
-            }
-        });
-
-        $(`#vendorCreditModal .date`).each(function(){
-            $(this).datepicker({
-                uiLibrary: 'bootstrap'
-            });
-        });
-
-        var attachmentContId = $(`#vendorCreditModal .attachments .dropzone`).attr('id');
-        var vcAttachments = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
-            maxFilesize: 20,
-            uploadMultiple: true,
-            // maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var ids = JSON.parse(response)['attachment_ids'];
-                    var modal = $(`#vendorCreditModal`);
-
-                    for(i in ids) {
-                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                        }
-
-                        modalAttachmentId.push(ids[i]);
-                    }
-                    modalAttachedFiles.push(file);
-                });
-            },
-            removedfile: function(file) {
-                var ids = modalAttachmentId;
-                var index = modalAttachedFiles.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-
-                $(`#vendorCreditModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        initModalFields('vendorCreditModal');
 
         $('#vendorCreditModal').modal('show');
     });
@@ -1064,9 +960,51 @@ $('a#new-credit-card-pmt').on('click', function(e) {
             `);
         }
 
-        $('#payDownCreditModal #payee').val(vendorId);
+        $('#payDownCreditModal #vendor').append(`<option value="${vendorId}">${vendorName}</option>`);
 
-        $(`#payDownCreditModal select`).select2();
+        $(`#payDownCreditModal select`).each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if (dropdownFields.includes(type)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: 'payDownCreditModal'
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect
+                });
+            } else {
+                var options = $(this).find('option');
+                if (options.length > 10) {
+                    $(this).select2();
+                } else {
+                    $(this).select2({
+                        minimumResultsForSearch: -1
+                    });
+                }
+            }
+        });
 
         $(`#payDownCreditModal .date`).each(function(){
             $(this).datepicker({

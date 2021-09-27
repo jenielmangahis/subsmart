@@ -21,11 +21,11 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="creditCard">Which credit card did you pay?</label>
+                                                <label for="credit_card_account">Which credit card did you pay?</label>
                                                 <select name="credit_card_account" id="credit_card_account" class="form-control" required></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="payee">Payee (optional)</label>
+                                                <label for="vendor">Payee (optional)</label>
                                                 <select name="payee" id="vendor" class="form-control" required></select>
                                             </div>
                                             <div class="row">
@@ -43,7 +43,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="bankAccount">What did you use to make this payment?</label>
+                                                <label for="bank_account">What did you use to make this payment?</label>
                                                 <select name="bank_account" id="bank_account" class="form-control" required></select>
                                             </div>
                                         </div>

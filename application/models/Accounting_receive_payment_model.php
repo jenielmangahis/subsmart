@@ -15,6 +15,24 @@ class Accounting_receive_payment_model extends MY_Model
         $vendor = $this->db->get('accounting_receive_payment');
         return $vendor->result();
     }
+
+    public function getReceivePaymentsByComp($company_id)
+    {
+        // $vendor = $this->db->get('accounting_receive_payment');
+        // return $vendor->result();
+        $where = array(
+            'company_id'    => $company_id
+          );
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where($where);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function createReceivePayment($data)
     {
         $vendor = $this->db->insert('accounting_receive_payment', $data);

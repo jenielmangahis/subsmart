@@ -104,6 +104,7 @@ class Chart_of_accounts_model extends MY_Model {
 			$this->db->where('account_id', $accTypeId);
 			$this->db->where('parent_acc_id', '');
 		}
+		$this->db->order_by('name', 'asc');
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}

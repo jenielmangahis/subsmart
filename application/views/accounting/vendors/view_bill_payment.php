@@ -19,12 +19,9 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <div class="form-group">
-                                                        <label for="payee">Payee</label>
-                                                        <select name="payee_id" id="payee" class="form-control" required>
-                                                            <option value="" disabled selected>&nbsp;</option>
-                                                            <?php foreach($dropdown['payees'] as $payee) : ?>
-                                                                <option value="<?=$payee->id?>" <?=$payee->id === $vendor->id ? 'selected' : ''?>><?=$payee->display_name?></option>
-                                                            <?php endforeach; ?>
+                                                        <label for="vendor">Payee</label>
+                                                        <select name="payee_id" id="vendor" class="form-control" required>
+                                                            <option value="<?=$vendor->id?>"><?=$vendor->display_name?></option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -32,21 +29,7 @@
                                                     <div class="form-group">
                                                         <label for="payment_account">Payment account</label>
                                                         <select name="payment_account" id="payment_account" class="form-control" required>
-                                                            <?php foreach($dropdown['payment_accounts'] as $accType => $accounts) : ?>
-                                                                <optgroup label="<?=$accType?>">
-                                                                    <?php foreach($accounts as $account) : ?>
-                                                                        <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                        <?php if(count($account->childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                    <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                </optgroup>
-                                                            <?php endforeach; ?>
+                                                            <option value="<?=$billPayment->payment_account_id?>"><?=$this->chart_of_accounts_model->getName($billPayment->payment_account_id)?></option>
                                                         </select>
                                                     </div>
                                                 </div>

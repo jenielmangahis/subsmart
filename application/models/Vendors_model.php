@@ -572,6 +572,13 @@ class Vendors_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function get_check_by_comp($company_id)
+	{
+		$this->db->where('company_id', $company_id);
+		$query = $this->db->get('accounting_check');
+		return $query->row();
+	}
+
 	public function update_check($checkId, $data)
 	{
 		$this->db->where('company_id', logged('company_id'));

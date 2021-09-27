@@ -25,9 +25,12 @@
                                         <select class="form-control required" name="customer_id" required>
                                             <option></option>
                                             <?php $customers= $this->accounting_customers_model->getAllByCompany();
-                                            foreach ($customers as $cus) {
-                                                echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
-                                            } ?>
+                                            if ($customers != null) {
+                                                foreach ($customers as $cus) {
+                                                    echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
+                                                }
+                                            }
+                                             ?>
                                         </select>
                                     </div>
                                 </div>
@@ -567,28 +570,17 @@
                                     </div>
                                     <div class="row no-margin">
                                         <div class="col-md-12 no-padding">
-                                            <div class="file-upload">
-                                                <button class="" type="button"
-                                                    onclick="$('#customer_receive_payment_modal .file-upload-input').trigger( 'click' )">
-                                                    <i class="fa fa-paperclip" aria-hidden="true"></i> Attachments
-                                                </button> <label class="button-label" for="">Maximum size:
-                                                    20MB</label>
-
-                                                <div class="image-upload-wrap">
-                                                    <input class="file-upload-input" type='file'
-                                                        onchange="readURL(this);" accept="image/*" name="attachments" />
-                                                    <div class="drag-text">
-                                                        <i>Drag and drop files here or click the icon</i>
+                                            <div class="attachement-file-section">
+                                                    <div class="label">
+                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
                                                     </div>
-                                                </div>
-                                                <div class="file-upload-content">
-                                                    <img class="file-upload-image" src="#" alt="your image" />
-                                                    <div class="image-title-wrap">
-                                                        <button type="button" onclick="removeUpload()"
-                                                            class="remove-image">Remove <span
-                                                                class="image-title">Uploaded File</span></button>
+                                                    <button type="button" class="attachment-btn">
+                                                        <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                                    </button>
+                                                    <input type="file" class="form-control" name="attachment-file" multiple>
+                                                    <div class="attachement-viewer">
                                                     </div>
-                                                </div>
+                                                    <input type="text" name="attachement-filenames" style="display: none;">
                                             </div>
                                         </div>
                                     </div>

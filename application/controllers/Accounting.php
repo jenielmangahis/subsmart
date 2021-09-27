@@ -49,6 +49,7 @@ class Accounting extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('General_model', 'general');
         $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
+        $this->load->model('Accounting_statements_model', 'accounting_statements_model');
         $this->load->library('excel');
         $this->load->library('pdf');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -113,10 +114,13 @@ class Accounting extends MY_Controller
         $this->page_data['getAllInvPaid'] = $this->invoice_model->getAllInvPaid(logged('company_id'));
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->workorder_model->getPackagelist(logged('company_id'));
-        $this->page_data['estimates'] = $this->estimate_model->getAllByCompany(logged('company_id'));
+        $this->page_data['estimates'] = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
         $this->page_data['sales_receipts'] = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
         $this->page_data['credit_memo'] = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
         $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['statements'] = $this->accounting_statements_model->getAllComp(logged('company_id'));
+        $this->page_data['rpayments'] = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
+        $this->page_data['checks'] = $this->vendors_model->get_check_by_comp(logged('company_id'));
     }
 
     public function index()
@@ -542,19 +546,6 @@ class Accounting extends MY_Controller
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/payroll_overview', $this->page_data);
     }
-    // public function employees()
-    // {
-    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-    //     $this->page_data['page_title'] = "Sales Overview";
-    //     $this->page_data['employees'] = $this->users_model->getAll();
-    //     $this->load->view('accounting/employees', $this->page_data);
-    // }
-    // public function contractors()
-    // {
-    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-    //     $this->page_data['page_title'] = "Sales Overview";
-    //     $this->load->view('accounting/contractors', $this->page_data);
-    // }
     public function workerscomp()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -639,89 +630,6 @@ class Accounting extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/employeeinfoReport', $this->page_data);
     }
-
-
-    /*** Vendors ***/
-    // public function addVendor()
-    // {
-    //     $id = logged('id');
-    //     $filePath = "./uploads/accounting/vendors/".$id;
-    //     $file_name = "";
-
-    //     if (!file_exists($filePath)) {
-    //         mkdir($filePath);
-    //     }
-
-    // 	$config['upload_path']  =  $filePath;
-    //  $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
-    //  $config['max_size']        = '20000';
-    // 	$config['upload_path']  =  $filePath;
-    //     $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
-    //     $config['max_size']        = '20000';
-
-    //     $this->load->library('upload', $config);
-
-    //     if ($this->upload->do_upload('attachFiles'))
-    //     {
-    //         $image = $this->upload->data();
-    //         $file_name = $image['file_name'];
-    //     }
-
-    //     $config = $this->uploadlib->initialize($config);
-    //     $this->load->library('upload',$config);
-
-    //     $new_data = array(
-    //         'title' => $this->input->post('title'),
-    //         'f_name' => $this->input->post('f_name'),
-    //         'm_name' => $this->input->post('m_name'),
-    //         'l_name' => $this->input->post('l_name'),
-    //         'suffix' => $this->input->post('suffix'),
-    //         'email' => $this->input->post('email'),
-    //         'company' => $this->input->post('company'),
-    //         'display_name' => $this->input->post('display_name'),
-    //         'to_display' => $this->input->post('to_display'),
-    //         'street' => $this->input->post('street'),
-    //         'city' => $this->input->post('city'),
-    //         'state' => $this->input->post('state'),
-    //         'zip' => $this->input->post('zip'),
-    //         'country' => $this->input->post('country'),
-    //         'phone' => $this->input->post('phone'),
-    //         'mobile' => $this->input->post('mobile'),
-    //         'fax' => $this->input->post('fax'),
-    //         'website' => $this->input->post('website'),
-    //         'billing_rate' => $this->input->post('billing_rate'),
-    //         'terms' => $this->input->post('terms'),
-    //         'opening_balance' => $this->input->post('opening_balance'),
-    //         'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
-    //         'account_number' => $this->input->post('account_number'),
-    //         'tax_id' => $this->input->post('business_number'),
-    //         'default_expense_account' => $this->input->post('default_expense_amount'),
-    //         'notes' => $this->input->post('notes'),
-    //         'attachments' => $file_name,
-    //         'status' => 1,
-    //         'created_by' => logged('id'),
-    //         'date_created' => date("Y-m-d H:i:s"),
-    //         'date_modified' => date("Y-m-d H:i:s")
-    //     );
-
-    //     $addQuery = $this->vendors_model->createVendor($new_data);
-
-    //     if($addQuery > 0){
-
-    //         $new_id = $addQuery;
-    //         $comp = mb_substr($this->input->post('company'), 0, 3);
-    //         $vendor_id = strtolower($comp) . $new_id;
-
-    //         $updateQuery = $this->vendors_model->updateVendor($new_id, array("vendor_id" => $vendor_id));
-
-    //         if($updateQuery){
-    //             echo json_encode($updateQuery);
-    //         }
-    //     }
-    //     else{
-    //         echo json_encode(0);
-    //     }
-    // }
 
     public function deleteVendor()
     {
@@ -7446,7 +7354,7 @@ class Accounting extends MY_Controller
                 "deposit_to" => $this->input->post("deposite_to"),
                 "amount" => $this->input->post("amount_received"),
                 "memo" => $this->input->post("memo"),
-                "attachments" => "",
+                "attachments" => $this->input->post("attachement-filenames"),
                 "status" => "1",
                 "user_id" =>  logged('id'),
                 "company_id" => $customer_info->company_id,
@@ -7669,7 +7577,13 @@ class Accounting extends MY_Controller
             $this->update_receive_payment_from_modal();
             $count_save++;
         }
-        
+        $config['upload_path'] = base_url("uploads/sample/upload");
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload($this->input->post('attachment-file'))) {
+            $uplaod_result = array('error' => $this->upload->display_errors());
+        } else {
+            $uplaod_result =$this->upload->data();
+        }
         
         $data = new stdClass();
         $data->file_location = base_url("assets/pdf/".$file_name);
@@ -7677,6 +7591,7 @@ class Accounting extends MY_Controller
         $data->customer_email=$customer_info->email;
         $data->business_name=$customer_info->business_name;
         $data->count_save = $count_save;
+        $data->uplaod_result=$this->input->post();
         if ($action == "") {
             echo json_encode($data);
         } elseif ($action=="print-saver") {
@@ -7778,7 +7693,7 @@ class Accounting extends MY_Controller
             "deposit_to" => $this->input->post("deposite_to"),
             "amount" => $this->input->post("amount_received"),
             "memo" => $this->input->post("memo"),
-            "attachments" => "",
+            "attachments" => $this->input->post("attachement-filenames"),
             "status" => "1",
             "user_id" =>  logged('id'),
             "company_id" => $customer_info->company_id,
@@ -9985,5 +9900,42 @@ class Accounting extends MY_Controller
 
         $this->page_data['page_title'] = "Cash Flow";
         $this->load->view('accounting/cashflowplanner', $this->page_data);
+    }
+    public function add_attachement()
+    {
+        $data = new stdClass();
+        if (0 < $_FILES['file']['error']) {
+            $data->error ='Error: ' . $_FILES['file']['error'] . '<br>';
+        } else {
+            $uniquesavename=time().uniqid(rand());
+            $path = $_FILES['file']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $destination = 'uploads/accounting/attachments/forms/' .$uniquesavename.'.'.$ext;
+            move_uploaded_file($_FILES['file']['tmp_name'], $destination);
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
+            //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
+            
+            $data->destination = $destination;
+            $data->ext=$ext;
+            $data->uniquesavename=$uniquesavename;
+        }
+        echo json_encode($data);
+    }
+    public function delete_file_attachement()
+    {
+        $filenames=$this->input->post("filenames");
+        $files = explode(",", $filenames);
+        $status ="";
+        for ($i=0;$i<count($files);$i++) {
+            $destination ="uploads/accounting/attachments/forms/".$files[$i];
+            if (!unlink($destination)) {
+                $status .= "///// $destination cannot be deleted due to an error";
+            } else {
+                $status .="///// $destination has been deleted";
+            }
+        }
+        $data = new stdClass();
+        $data->status = $status;
+        echo json_encode($data);
     }
 }

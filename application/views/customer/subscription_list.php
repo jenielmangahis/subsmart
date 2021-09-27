@@ -62,6 +62,10 @@ table.dataTable tbody tr td {
   width: 50px;
   border: 1px solid #dee2e6;
 }
+#modal-view-payment-history .modal-dialog {
+    max-width: 1002px; 
+}
+
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
@@ -88,13 +92,13 @@ table.dataTable tbody tr td {
                             <div class="tabs mt-2">
                                 <ul class="clearfix ul-mobile" id="myTab" role="tablist">
                                         <li class="nav-item active">
-                                            <a class="nav-link" id="c-active-tab" data-toggle="tab" href="#active" role="tab" aria-controls="One" aria-selected="true">Active <span class="sms-total-all sms-tab-counter"></span></a>
+                                            <a class="nav-link" id="c-active-tab" data-toggle="tab" href="#active" role="tab" aria-controls="One" aria-selected="true">Active <span class="total-active tab-counter"></span></a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="c-completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="One" aria-selected="true">Completed <span class="sms-total-active sms-tab-counter"></span></a>
+                                            <a class="nav-link" id="c-completed-tab" data-toggle="tab" href="#completed" role="tab" aria-controls="One" aria-selected="true">Completed <span class="total-completed tab-counter"></span></a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="c-error-tab" data-toggle="tab" href="#errors" role="tab" aria-controls="Two" aria-selected="false">Billing Errors <span class="sms-total-scheduled sms-tab-counter"></span></a>
+                                            <a class="nav-link" id="c-error-tab" data-toggle="tab" href="#errors" role="tab" aria-controls="Two" aria-selected="false">Billing Errors <span class="total-billing-errors tab-counter"></span></a>
                                         </li>
                                 </ul>
                             </div>
@@ -107,8 +111,51 @@ table.dataTable tbody tr td {
             </div>
             <!-- end row -->
 
+            <div class="modal fade" id="modal-edit-cc-details" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="">Update Credit Card Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <form id="frm-update-credit-card-details" method="post">
+                  <input type="hidden" name="bid" id="bid" value="">
+                  <div class="modal-body">
+                      <div class="row">
+                          <div class="col-md-12">                          
+                              <div class="card-body body-card-details" style="padding: 10px;"></div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                      <button class="btn btn-primary btn-update-cc-details" type="submit">Update</button>
+                  </div>
+                  </form>
+                </div>
+              </div>
+            </div>
         </div>
         <!-- end container-fluid -->
+        <div class="modal fade" id="modal-view-payment-history" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="">Payment History</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body payment-history-container"></div>
+                    <div class="modal-footer">
+                          <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    </div>  
+                </div>
+            </div>
+        </div>  
+
     </div>
     <!-- page wrapper end -->
 </div>
@@ -116,6 +163,40 @@ table.dataTable tbody tr td {
 <script>
 $(function(){
     var active_tab = 'active';
+
+    $(document).on('click', '.btn-view-payment-history', function(){
+        var customer_id = $(this).attr("data-customer-id");
+        var billing_id  = $(this).attr("data-billing-id");
+        var url = base_url + 'customer/_load_subscription_payment_history';
+
+        $(".payment-history-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {customer_id:customer_id, billing_id:billing_id},
+               success: function(o)
+               {
+                  $(".payment-history-container").html(o);
+                  var table = $('#dt-payment-history').DataTable({
+                        "searching" : false,
+                        "pageLength": 10,
+                        "autoWidth" : false,
+                        "order": [],
+                         "aoColumnDefs": [
+                          { "sWidth": "45%", "aTargets": [ 0 ] },
+                          { "sWidth": "10%", "aTargets": [ 1 ] },
+                          { "sWidth": "10%", "aTargets": [ 2 ] },
+                          { "sWidth": "20%", "aTargets": [ 3 ] },
+                        ]
+                    });
+               }
+            });
+        }, 1000);
+        
+        $("#modal-view-payment-history").modal('show');
+    });
 
     $("#c-active-tab").click(function(){
         active_tab = 'active';
@@ -138,8 +219,74 @@ $(function(){
         load_billing_errors();
     });
 
+    $(document).on('click', '.btn-fix-cc-error', function(){
+        var billing_id = $(this).attr("data-id");
+        var url = base_url + 'customer/_load_billing_credit_card_details';
+
+        $("#bid").val(billing_id);
+        $(".body-card-details").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {billing_id:billing_id},
+               success: function(o)
+               {
+                  $(".body-card-details").html(o);
+               }
+            });
+        }, 1000);
+
+        $("#modal-edit-cc-details").modal('show');
+    });
+
+    $("#frm-update-credit-card-details").submit(function(e){
+        e.preventDefault();
+        var url = base_url + 'customer/_update_billing_credit_card_details';
+        $(".btn-update-cc-details").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#frm-update-credit-card-details").serialize(),
+               success: function(o)
+               {                    
+                    if( o.is_success == 1 ){
+                      $("#modal-edit-cc-details").modal('hide'); 
+                      
+                      Swal.fire({
+                          title: 'Update Successful!',
+                          text: "Your billing credit card info was successfully updated.",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                              load_billing_errors();
+                          }
+                      });
+
+                    }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot update billing',
+                        text: o.msg
+                      });
+                    }
+
+                    $(".btn-update-cc-details").html('Update');
+                }
+            });
+        }, 1000);
+    });
+
     load_active_subscriptions();
-    //load_campaign_tab_counter();
+    load_subscription_list_counter();
 
     function load_active_subscriptions(){
         var url = base_url + 'customer/_load_active_subscriptions';
@@ -156,11 +303,12 @@ $(function(){
                 var table = $('#dt-active-subscriptions').DataTable({
                     "searching" : false,
                     "pageLength": 10,
+                    "autoWidth" : false,
                     "order": [],
                      "aoColumnDefs": [
-                      { "sWidth": "40%", "aTargets": [ 0 ] },
-                      { "sWidth": "20%", "aTargets": [ 1 ] },
-                      { "sWidth": "20%", "aTargets": [ 2 ] },
+                      { "sWidth": "45%", "aTargets": [ 0 ] },
+                      { "sWidth": "10%", "aTargets": [ 1 ] },
+                      { "sWidth": "10%", "aTargets": [ 2 ] },
                       { "sWidth": "20%", "aTargets": [ 3 ] },
                     ]
                 });
@@ -170,34 +318,6 @@ $(function(){
     }
 
     function load_completed_subscriptions(){
-        var url = base_url + 'customer/_load_billing_error_subscriptions';
-        $(".subscriptions-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             //data: ,
-             success: function(o)
-             {
-                $(".subscriptions-list-container").html(o);
-                //table.destroy();
-                var table = $('#dt-completed-subscriptions').DataTable({
-                    "searching" : false,
-                    "pageLength": 10,
-                    "order": [],
-                     "aoColumnDefs": [
-                      { "sWidth": "40%", "aTargets": [ 0 ] },
-                      { "sWidth": "20%", "aTargets": [ 1 ] },
-                      { "sWidth": "20%", "aTargets": [ 2 ] },
-                      { "sWidth": "20%", "aTargets": [ 3 ] },
-                    ]
-                });
-             }
-          });
-        }, 1000);
-    }
-
-    function load_billing_errors(){
         var url = base_url + 'customer/_load_completed_subscriptions';
         $(".subscriptions-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
@@ -212,12 +332,13 @@ $(function(){
                 var table = $('#dt-completed-subscriptions').DataTable({
                     "searching" : false,
                     "pageLength": 10,
+                    "autoWidth" : false,
                     "order": [],
                      "aoColumnDefs": [
-                      { "sWidth": "40%", "aTargets": [ 0 ] },
+                      { "sWidth": "45%", "aTargets": [ 0 ] },
                       { "sWidth": "20%", "aTargets": [ 1 ] },
                       { "sWidth": "20%", "aTargets": [ 2 ] },
-                      { "sWidth": "20%", "aTargets": [ 3 ] },
+                      { "sWidth": "10%", "aTargets": [ 3 ] },
                     ]
                 });
              }
@@ -225,9 +346,38 @@ $(function(){
         }, 1000);
     }
 
-    function load_campaign_tab_counter(){
-        var url = base_url + 'sms_campaigns/_load_sms_campaign_counter';
-        $(".sms-tab-counter").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    function load_billing_errors(){
+        var url = base_url + 'customer/_load_billing_error_subscriptions';
+        $(".subscriptions-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             //data: ,
+             success: function(o)
+             {
+                $(".subscriptions-list-container").html(o);
+                //table.destroy();
+                var table = $('#dt-error-subscriptions').DataTable({
+                    "searching" : false,
+                    "pageLength": 10,
+                    "autoWidth": false,
+                    "order": [],
+                     "aoColumnDefs": [
+                      { "sWidth": "30%", "aTargets": [ 0 ] },
+                      { "sWidth": "20%", "aTargets": [ 1 ] },
+                      { "sWidth": "30%", "aTargets": [ 2 ] },
+                      { "sWidth": "15%", "aTargets": [ 3 ] },
+                    ]
+                });
+             }
+          });
+        }, 1000);
+    }
+
+    function load_subscription_list_counter(){
+        var url = base_url + 'customer/_load_subscription_list_counter';
+        $(".tab-counter").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -235,79 +385,13 @@ $(function(){
              dataType:"json",
              success: function(o)
              {
-               $(".sms-total-all").html("("+o.total_sms+")");
-               $(".sms-total-scheduled").html("("+o.total_scheduled+")");
-               $(".sms-total-active").html("("+o.total_active+")");
-               $(".sms-total-closed").html("("+o.total_closed+")");
-               $(".sms-total-draft").html("("+o.total_draft+")");
+               $(".total-active").html("("+o.total_active+")");
+               $(".total-completed").html("("+o.total_completed+")");
+               $(".total-billing-errors").html("("+o.total_billing_errors+")");
              }
           });
         }, 800);
     }
-
-    $("#form-clone-campaign").submit(function(e){
-      e.preventDefault();
-      var url = base_url + 'sms_campaigns/_clone_campaign';
-      $(".btn-clone-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-      setTimeout(function () {
-        $.ajax({
-           type: "POST",
-           url: url,
-           data : $("#form-clone-campaign").serialize(),
-           dataType:"json",
-           success: function(o)
-           {
-             $(".btn-clone-campaign").html('Yes');
-             $(".clone-modal-footer").hide();
-             if( o.sms_id > 1 ){
-              location.href = base_url + "sms_campaigns/edit_campaign/" + o.sms_id;
-             }else{
-              $(".clone-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-             }
-
-           }
-        });                    
-      }, 800);
-    });
-
-    $("#form-close-campaign").submit(function(e){
-      e.preventDefault();
-      var url = base_url + 'sms_campaigns/_close_campaign';
-      $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-      setTimeout(function () {
-        $.ajax({
-           type: "POST",
-           url: url,
-           data : $("#form-close-campaign").serialize(),
-           dataType:"json",
-           success: function(o)
-           {
-             $(".btn-close-campaign").html('Yes');
-             $(".close-modal-footer").hide();
-             if( o.is_success == 1 ){
-              $(".close-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");
-              if( active_tab == 'all' ){
-                load_all_campaigns();
-              }else if( active_tab == 'closed' ){
-                load_closed_campaigns();
-              }else if( active_tab == 'active' ){
-                load_active_campaigns();
-              }else if( active_tab == 'draft' ){
-                load_draft_campaigns();
-              }else if( active_tab == 'scheduled' ){
-                load_scheduled_campaigns();
-              }
-              load_campaign_tab_counter();
-             }else{
-              $(".close-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-             }
-
-           }
-        });                    
-      }, 800);
-    });
-
-
 });
 
 </script>
