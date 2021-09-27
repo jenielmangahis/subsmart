@@ -22,6 +22,26 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanynDraft($company_id)
+    {
+        $where = array(
+            'view_flag'     => '0',
+            'company_id'    => $company_id,
+            'status'        => 'Submitted',
+            'status'        => 'Accepted',
+            'status'        => 'Invoiced',
+            'status'        => 'Lost',
+          );
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where($where);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getlastInsert(){
 
         $this->db->select('*');

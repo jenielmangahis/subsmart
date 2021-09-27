@@ -157,6 +157,12 @@
       color: #055393;
       text-decoration: underline;
     }
+
+    &--disabled {
+      pointer-events: none;
+      cursor: default;
+      color: #6c757d;
+    }
   }
 
   &__adjustmentItem {
@@ -224,7 +230,8 @@
     }
 
     #openRecordPaymentBtn,
-    #taxModalInstructions {
+    #taxModalInstructions,
+    #addAdjustmentLink {
       display: none;
     }
 

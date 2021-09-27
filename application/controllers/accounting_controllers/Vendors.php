@@ -602,6 +602,9 @@ class Vendors extends MY_Controller
 
         usort($data, function ($a, $b) use ($order, $columnName) {
             if ($columnName !== 'date') {
+                if($a[$columnName] === $b[$columnName]) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
                 if ($order === 'asc') {
                     return strcmp($a[$columnName], $b[$columnName]);
                 } else {
@@ -609,8 +612,14 @@ class Vendors extends MY_Controller
                 }
             } else {
                 if ($order === 'asc') {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) > strtotime($b['date_created']);
+                    }
                     return strtotime($a[$columnName]) > strtotime($b[$columnName]);
                 } else {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) < strtotime($b['date_created']);
+                    }
                     return strtotime($a[$columnName]) < strtotime($b[$columnName]);
                 }
             }
@@ -696,7 +705,8 @@ class Vendors extends MY_Controller
                     'balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
                 ];
             }
         }
@@ -728,7 +738,8 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval($payment->total_amount), 2, '.', ','),
                     'status' => $payment->status === "4" ? 'Voided' : 'Applied',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at))
                 ];
             }
         }
@@ -756,7 +767,8 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
                 ];
             }
         }
@@ -784,7 +796,8 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
                 ];
             }
         }
@@ -812,7 +825,8 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => number_format(floatval($cardPayment->amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($cardPayment->created_at))
                 ];
             }
         }
@@ -842,7 +856,8 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => number_format(floatval($expense->total_amount), 2, '.', ','),
                     'status' => $expense->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
             }
         }
@@ -870,7 +885,8 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
                     'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($purchaseOrder->created_at))
                 ];
             }
         }
@@ -898,7 +914,8 @@ class Vendors extends MY_Controller
                     'balance' => number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
                     'total' => '-'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
-                    'attachments' => $attachments
+                    'attachments' => $attachments,
+                    'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
                 ];
             }
         }
@@ -1722,9 +1739,6 @@ class Vendors extends MY_Controller
         $this->page_data['purchaseOrder'] = $purchaseOrder;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
 
         $this->load->view('accounting/vendors/view_purchase_order', $this->page_data);
     }
@@ -1739,10 +1753,6 @@ class Vendors extends MY_Controller
         $this->page_data['vendorCredit'] = $vendorCredit;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
 
         $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
     }
@@ -1751,24 +1761,7 @@ class Vendors extends MY_Controller
     {
         $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
 
-        $detailTypes = $this->account_detail_model->getDetailTypesById(3);
-        $accounts = $this->chart_of_accounts_model->select();
-
-        $bankAccounts = [];
-        foreach ($detailTypes as $detailType) {
-            $detailTypeAccs = array_filter($accounts, function ($v, $k) use ($detailType) {
-                return $v->acc_detail_id === $detailType->acc_detail_id;
-            }, ARRAY_FILTER_USE_BOTH);
-
-            if (!empty($detailTypeAccs)) {
-                $bankAccounts[$detailType->acc_detail_name] = $detailTypeAccs;
-            }
-        }
-        
         $this->page_data['ccPayment'] = $ccPayment;
-        $this->page_data['dropdown']['accounts'] = $bankAccounts;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['creditCards'] = $this->chart_of_accounts_model->get_credit_card_accounts();
 
         $this->load->view('accounting/vendors/view_credit_card_payment', $this->page_data);
     }
@@ -1777,36 +1770,14 @@ class Vendors extends MY_Controller
     {
         $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
 
-        $creditCardAccs = [];
-        $accType = $this->account_model->getAccTypeByName('Credit Card');
+        $creditCard = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
 
-        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-        if (count($accounts) > 0) {
-            foreach ($accounts as $account) {
-                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                $account->childAccs = $childAccs;
-
-                $creditCardAccs[] = $account;
-
-                if ($account->id === $ccCredit->bank_credit_account_id) {
-                    $selectedBalance = $account->balance;
-                }
-
-                foreach ($childAccs as $childAcc) {
-                    if ($childAcc->id === $ccCredit->bank_credit_account_id) {
-                        $selectedBalance = $childAcc->balance;
-                    }
-                }
-            }
-        }
-
+        $selectedBalance = $creditCard->balance;
         if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
-            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
         } else {
-            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
         }
 
         $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
@@ -1815,59 +1786,27 @@ class Vendors extends MY_Controller
         $this->page_data['ccCredit'] = $ccCredit;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
 
         $this->load->view('accounting/vendors/view_credit_card_credit', $this->page_data);
     }
 
     public function view_bill_payment($billPaymentId, $vendorId)
     {
-        $paymentAccs = [];
-        $accountTypes = [
-            'Bank',
-            'Credit Card'
-        ];
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
 
-        foreach ($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            $count = 0;
-            if (count($accounts) > 0) {
-                foreach ($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $paymentAccs[$typeName][] = $account;
-
-                    if ($count === 1) {
-                        $selectedBalance = $account->balance;
-                    }
-
-                    $count++;
-                }
-            }
-        }
-
+        $selectedBalance = $paymentAcc->balance;
         if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
-            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
         } else {
-            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
         }
 
         $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($vendorId);
-        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
 
         $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
     }
@@ -2108,7 +2047,7 @@ class Vendors extends MY_Controller
         $expenseData = [
             'payee_type' => $payee[0],
             'payee_id' => $payee[1],
-            'payment_account_id' => $data['payment_account'],
+            'payment_account_id' => $data['expense_payment_account'],
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'payment_method_id' => $data['payment_method'],
             'ref_no' => $data['ref_no'],
@@ -2653,8 +2592,8 @@ class Vendors extends MY_Controller
     {
         $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
 
-        if ($data['expense_name'] !== null) {
-            foreach ($data['expense_name'] as $index => $value) {
+        if ($data['expense_account'] !== null) {
+            foreach ($data['expense_account'] as $index => $value) {
                 $categoryDetails = [
                     'expense_account_id' => $value,
                     'category' => $data['category'][$index],
@@ -2763,7 +2702,7 @@ class Vendors extends MY_Controller
 
         if (count($categories) > 0) {
             foreach ($categories as $index => $category) {
-                if ($data['expense_name'] === null || $data['expense_name'][$index] === null) {
+                if ($data['expense_account'] === null || $data['expense_account'][$index] === null) {
                     $catAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
                     switch ($transactionType) {
                         case 'Expense':

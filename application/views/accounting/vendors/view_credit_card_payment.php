@@ -21,21 +21,15 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="creditCard">Which credit card did you pay?</label>
-                                                <select name="credit_card" id="creditCard" class="form-control" required>
-                                                    <option value="" disabled selected>&nbsp;</option>
-                                                    <?php foreach($dropdown['creditCards'] as $creditCard) : ?>
-                                                        <option value="<?=$creditCard->id?>" <?=$creditCard->id === $ccPayment->credit_card_id ? 'selected' : ''?>><?=$creditCard->name?></option>
-                                                    <?php endforeach; ?>
+                                                <label for="credit_card_account">Which credit card did you pay?</label>
+                                                <select name="credit_card" id="credit_card_account" class="form-control" required>
+                                                    <option value="<?=$ccPayment->credit_card_id?>"><?=$this->chart_of_accounts_model->getName($ccPayment->credit_card_id)?></option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="payee">Payee (optional)</label>
-                                                <select name="payee" id="payee" class="form-control" required>
-                                                    <option value="" disabled selected>&nbsp;</option>
-                                                    <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                        <option value="<?=$vendor->id?>" <?=$vendor->id === $ccPayment->payee_id ? 'selected' : ''?>><?=$vendor->display_name?></option>
-                                                    <?php endforeach; ?>
+                                                <label for="vendor">Payee (optional)</label>
+                                                <select name="payee" id="vendor" class="form-control" required>
+                                                    <option value="<?=$ccPayment->payee_id?>"><?=$this->vendors_model->get_vendor_by_id($ccPayment->payee_id)->display_name?></option>
                                                 </select>
                                             </div>
                                             <div class="row">
@@ -53,16 +47,9 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label for="bankAccount">What did you use to make this payment?</label>
-                                                <select name="bank_account" id="bankAccount" class="form-control" required>
-                                                    <option disabled selected>&nbsp;</option>
-                                                    <?php foreach($dropdown['accounts'] as $key => $accounts) : ?>
-                                                        <optgroup label="<?=$key?>">
-                                                            <?php foreach($accounts as $account) :?>
-                                                                <option value="<?=$account->id?>" <?=$account->id === $ccPayment->bank_account_id ? 'selected' : ''?>><?=$account->name?></option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                    <?php endforeach; ?>
+                                                <label for="bank_account">What did you use to make this payment?</label>
+                                                <select name="bank_account" id="bank_account" class="form-control" required>
+                                                    <option value="<?=$ccPayment->bank_account_id?>"><?=$this->chart_of_accounts_model->getName($ccPayment->bank_account_id)?></option>
                                                 </select>
                                             </div>
                                         </div>

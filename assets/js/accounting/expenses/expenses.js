@@ -1116,7 +1116,7 @@ function initBillsTable(data)
                 data: null,
                 name: 'checkbox',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="checkbox" value="${rowData.id}">`);
+                    $(td).html(`<input type="checkbox" value="${rowData.id}" ${rowData.selected ? 'checked' : ''}>`);
                     $(td).css('padding', '10px 18px');
                 }
             },

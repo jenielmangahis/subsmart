@@ -55,14 +55,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="customer">Ship to</label>
-                                                <select name="customer" id="customer" class="form-control">
-                                                    <option value="" selected disabled>&nbsp;</option>
-                                                    <?php if(count($dropdown['customers']) > 0) : ?>
-                                                        <?php foreach($dropdown['customers'] as $customer) :?>
-                                                            <option value="<?=$customer->prof_id?>"><?=$customer->business_name === "" ? $customer->first_name . ' ' . $customer->last_name : $customer->business_name?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
+                                                <select name="customer" id="customer" class="form-control"></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="shipping_address">Shipping address</label>

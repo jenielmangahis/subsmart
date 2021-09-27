@@ -21,10 +21,10 @@
                                                     <div class="form-group">
                                                         <label for="vendor">Vendor</label>
                                                         <select name="vendor_id" id="vendor" class="form-control" required>
-                                                            <option value="" disabled selected>&nbsp;</option>
-                                                            <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                                <option value="<?=$vendor->id?>" <?=$vendor->id === $vendorCredit->vendor_id ? 'selected' : ''?>><?=$vendor->display_name?></option>
-                                                            <?php endforeach; ?>
+                                                            <option value="<?=$vendorCredit->vendor_id?>">
+                                                                <?php $vendor = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id); ?>
+                                                                <?=$vendor->display_name?>
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -115,28 +115,11 @@
                                                                     <th></th>
                                                                 </thead>
                                                                 <tbody class="cursor-pointer">
-                                                                <tr>
+                                                                    <tr>
                                                                         <td></td>
                                                                         <td>1</td>
                                                                         <td>
-                                                                            <select name="expense_name[]" class="form-control" required>
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
-                                                                                    <optgroup label="<?=$accType?>">
-                                                                                        <?php foreach($accounts as $account) : ?>
-                                                                                            <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                                            <?php if(count($account->childAccs) > 0) : ?>
-                                                                                                <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                                    <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                                        <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                                    <?php endforeach; ?>
-                                                                                                </optgroup>
-                                                                                            <?php endif; ?>
-                                                                                        <?php endforeach; ?>
-                                                                                    </optgroup>
-                                                                                <?php endforeach; ?>
-                                                                            </select>
+                                                                            <select name="expense_account[]" class="form-control" required></select>
                                                                         </td>
                                                                         <td>
                                                                             <select name="category[]" class="form-control">
@@ -160,14 +143,7 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            <select name="category_customer[]" class="form-control">
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php if(count($dropdown['customers']) > 0) : ?>
-                                                                                    <?php foreach($dropdown['customers'] as $customer) :?>
-                                                                                        <option value="<?=$customer->prof_id?>"><?=$customer->first_name . ' ' . $customer->last_name?></option>
-                                                                                    <?php endforeach; ?>
-                                                                                <?php endif; ?>
-                                                                            </select>
+                                                                            <select name="category_customer[]" class="form-control"></select>
                                                                         </td>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
@@ -178,23 +154,8 @@
                                                                         <td></td>
                                                                         <td><?=$count?></td>
                                                                         <td>
-                                                                            <select name="expense_name[]" class="form-control" required>
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
-                                                                                    <optgroup label="<?=$accType?>">
-                                                                                        <?php foreach($accounts as $account) : ?>
-                                                                                            <option value="<?=$account->id?>" <?=$category->expense_account_id === $account->id ? 'selected' : ''?>><?=$account->name?></option>
-
-                                                                                            <?php if(count($account->childAccs) > 0) : ?>
-                                                                                                <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                                    <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                                        <option value="<?=$childAcc->id?>" <?=$category->expense_account_id === $childAcc->id ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                                    <?php endforeach; ?>
-                                                                                                </optgroup>
-                                                                                            <?php endif; ?>
-                                                                                        <?php endforeach; ?>
-                                                                                    </optgroup>
-                                                                                <?php endforeach; ?>
+                                                                            <select name="expense_account[]" class="form-control" required>
+                                                                                <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
                                                                             </select>
                                                                         </td>
                                                                         <td>
@@ -220,11 +181,11 @@
                                                                         </td>
                                                                         <td>
                                                                             <select name="category_customer[]" class="form-control">
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php if(count($dropdown['customers']) > 0) : ?>
-                                                                                    <?php foreach($dropdown['customers'] as $customer) :?>
-                                                                                        <option value="<?=$customer->prof_id?>" <?=$category->customer_id === $customer->prof_id ? 'selected' : ''?>><?=$customer->first_name . ' ' . $customer->last_name?></option>
-                                                                                    <?php endforeach; ?>
+                                                                                <?php if($category->customer_id !== null && $category->customer_id !== "") : ?>
+                                                                                <option value="<?=$category->customer_id?>">
+                                                                                    <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                                    <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                                </option>
                                                                                 <?php endif; ?>
                                                                             </select>
                                                                         </td>

@@ -240,7 +240,7 @@
 <?php include viewPath('accounting/vendor_vendor_credit_modal'); ?>
 <?php include viewPath('accounting/vendor_credit_card_modal'); ?>
 <?php include viewPath('accounting/vendor_print_checks_modal'); ?>
-<?php include viewPath('accounting/customer_includes/receive_payment/receive_payment_modal'); ?>
+<?php //include viewPath('accounting/customer_includes/receive_payment/receive_payment_modal');?>
 <?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
 <?php include viewPath('accounting/customer_includes/create_invoice/create_invoice_modal'); ?>
 <?php include viewPath('accounting/add_new_term'); ?>

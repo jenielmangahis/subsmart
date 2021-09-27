@@ -125,7 +125,7 @@ class Accounting__TaxItem {
 
     const totalPaid = this.getTotalPayments(data);
     const totalDue = this.getTotalDue(data);
-    const isTaxPaid = totalDue <= 0;
+    const isTaxPaid = hasPayment && totalDue <= 0;
 
     this.$modal.removeClass("taxModal--hasPayment");
     if (hasPayment) {

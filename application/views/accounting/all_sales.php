@@ -707,6 +707,272 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </td>
                                         </tr>
                                     <?php } //print_r($sales_receipts); ?>
+
+                                    <?php foreach ($credit_memo as $credit) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php echo 'Credit Memo'; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $credit->id; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="<?php echo base_url('customer/view/' . $credit->customer_id) ?>">
+                                                    <?php echo get_customer_by_id($credit->customer_id)->first_name .' '. get_customer_by_id($credit->customer_id)->last_name ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td><?php echo $credit->grand_total; ?></td>
+                                            <td>
+                                            <?php
+                                                //echo "Paid";
+                                            ?>
+                                            </td>
+                                            <td class="text-right" style="padding-right:20px;">
+                                                <div class="dropdown dropdown-btn">
+                                                    <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+
+                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                                        data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label"></span>
+                                                        <span class="caret-holder">
+                                                            <span class="caret"></span>
+                                                        </span>
+                                                    </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $credit->id) ?>" class="">
+                                                                <span class="fa fa-print icon"></span>  Print packing slip</a></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  View/Edit</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Copy</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Delete</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Void</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                        </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } //print_r($sales_receipts); ?>
+
+                                    <?php foreach ($statements as $statement) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php echo 'Statements'; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $statement->id; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="<?php echo base_url('customer/view/' . $statement->customer_id) ?>">
+                                                    <?php echo get_customer_by_id($statement->customer_id)->first_name .' '. get_customer_by_id($statement->customer_id)->last_name ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td><?php echo $statement->balance; ?></td>
+                                            <td>
+                                            <?php
+                                                //echo "Paid";
+                                            ?>
+                                            </td>
+                                            <td class="text-right" style="padding-right:20px;">
+                                                <div class="dropdown dropdown-btn">
+                                                    <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+
+                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                                        data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label"></span>
+                                                        <span class="caret-holder">
+                                                            <span class="caret"></span>
+                                                        </span>
+                                                    </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $statement->id; ?>">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                        </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } //print_r($sales_receipts); ?>
+
+                                    <?php foreach ($rpayments as $rpayment) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($rpayment->payment_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php echo 'Payment'; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $rpayment->id; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="<?php echo base_url('customer/view/' . $rpayment->customer_id) ?>">
+                                                    <?php echo get_customer_by_id($rpayment->customer_id)->first_name .' '. get_customer_by_id($rpayment->customer_id)->last_name ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td><?php echo $rpayment->amount; ?></td>
+                                            <td>
+                                            <?php
+                                                //echo "Paid";
+                                            ?>
+                                            </td>
+                                            <td class="text-right" style="padding-right:20px;">
+                                                <!-- <div class="dropdown dropdown-btn">
+                                                    <a href="<?php //echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+
+                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                                        data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label"></span>
+                                                        <span class="caret-holder">
+                                                            <span class="caret"></span>
+                                                        </span>
+                                                    </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                        </ul>
+                                                </div> -->
+                                            </td>
+                                        </tr>
+                                    <?php } //print_r($sales_receipts); ?>
+
+                                    <?php foreach ($checks as $check) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php echo 'Check'; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $check->id; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id) ?>"> -->
+                                                    <?php 
+                                                        // if($check->payee_id == 'customer'){
+                                                        //     echo get_customer_by_id($check->payee_id)->first_name .' '. get_customer_by_id($check->payee_id)->last_name;
+                                                        // }
+                                                        // elseif($check->payee_id == 'vendor')
+                                                        // {
+
+                                                        // }
+                                                        // else{
+
+                                                        // }
+
+                                                        switch($check->payee_type) {
+                                                            case 'vendor' :
+                                                                $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                                                echo $vendor->display_name;
+                                                            break;
+                                                            case 'customer' :
+                                                                $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                                                echo $customer->first_name . ' ' . $customer->last_name;
+                                                            break;
+                                                            case 'employee' :
+                                                                $employee = $this->users_model->getUser($check->payee_id);
+                                                                echo $employee->FName . ' ' . $employee->LName;
+                                                            break;
+                                                        }
+                                                        
+                                                        ?>
+                                                <!-- </a> -->
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td>
+                                                <!-- na -->
+                                            </td>
+                                            <td><?php echo $rpayment->amount; ?></td>
+                                            <td>
+                                            <?php
+                                                //echo "Paid";
+                                            ?>
+                                            </td>
+                                            <td class="text-right" style="padding-right:20px;">
+                                                <!-- <div class="dropdown dropdown-btn">
+                                                    <a href="<?php //echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+
+                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                                        data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label"></span>
+                                                        <span class="caret-holder">
+                                                            <span class="caret"></span>
+                                                        </span>
+                                                    </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="">
+                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
+                                                            <li><div class="dropdown-divider"></div></li>
+                                                        </ul>
+                                                </div> -->
+                                            </td>
+                                        </tr>
+                                    <?php } //print_r($sales_receipts); ?>
                         </tbody>
                     </table>
                 </div>
@@ -4237,6 +4503,8 @@ $("#total_tax_dch_").text(over_tax);
 
 <script>
     jQuery(document).ready(function() {
-        $('#all_sales_table').DataTable();
+        $('#all_sales_table').DataTable({
+            order: [[ 1, 'desc' ]],
+        });
     });
 </script>

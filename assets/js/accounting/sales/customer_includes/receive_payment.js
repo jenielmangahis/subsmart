@@ -37,6 +37,7 @@ $('#receive_payment_form .form-group .filter-panel .date-filter .date-to .datepi
 
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .close-btn", function(event) {
     $("#customer_receive_payment_modal").fadeOut();
+    get_customer_info_for_receive_payment_modal('');
     event.preventDefault();
 });
 
@@ -114,7 +115,6 @@ $(document).on("click", ".customer_receive_payment_btn", function(event) {
     $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
     get_customer_info_for_receive_payment_modal(customer_id);
     $('#new-popup').modal('hide');
-    console.log("pasok");
 });
 
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel .buttons .apply-btn", function(event) {
@@ -163,6 +163,13 @@ var invoice_count = 0;
 
 function get_customer_info_for_receive_payment_modal(customer_id) {
     $("#loader-modal").show();
+    $("#customer_receive_payment_modal form input[name='attachment-file']").val('');
+    if ($("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val() != "") {
+        $("#customer_receive_payment_modal form .attachement-file-section input[name='attachement-filenames']").val("");
+        $("#customer_receive_payment_modal form .attachement-file-section input[name='attachment-file']").val("");
+    }
+    upload_attachment("#customer_receive_payment_modal form");
+
     $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val("");
     $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
     $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
@@ -193,6 +200,9 @@ function get_customer_info_for_receive_payment_modal(customer_id) {
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='payment_method']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content input[name='ref_no']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='deposite_to']").val("");
+
+            $('#customer_receive_payment_modal form .attachement-file-section div.attachement-viewer').html("");
+            $("#customer_receive_payment_modal form .attachement-file-section input[name='attachement-filenames']").val("");
             $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").hide();
 
             $("#loader-modal").hide();
@@ -235,7 +245,9 @@ $("#customer_receive_payment_modal #receive_payment_form .filter input[name='inv
 
 
 
-$('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
+$('#customer_receive_payment_modal').on('hidden', function() {
+
+    console.log("closed");
     $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
     $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
     $('#customer_receive_payment_modal form').trigger("reset");
@@ -292,6 +304,7 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
     var empty_flds = 0;
     $("#customer_receive_payment_modal #receive_payment_form  .required").each(function() {
         if (!$.trim($(this).val())) {
+            console.log($(this).attr("name"));
             empty_flds++;
         }
     });
@@ -317,10 +330,10 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
                     dataType: "json",
                     data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
                     success: function(data) {
+                        console.log(data.uplaod_result);
                         if (data.count_save > 0) {
                             $("div#customer_receive_payment_modal .customer_receive_payment_modal .customer_receive_payment_modal_footer .btn-more").show();
                             $("#customer_receive_payment_modal form input[name='receive_payment_id']").val(data.receive_payment_id);
-                            $("#customer_receive_payment_modal form input[name='receive_payment_id']").val();
                             $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").attr("disabled", "true");
                             $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").attr("disabled", "true");
                             get_load_customers_table();
@@ -715,3 +728,63 @@ $(document).on("change", "div#customer_receive_payment_modal form select[name='p
         $('#other_payment_area').show();
     }
 });
+
+$(document).on("click", "#customer_receive_payment_modal form .attachement-file-section button.attachment-btn", function(event) {
+    // $(this).preventDefault();
+    $("div#customer_receive_payment_modal form#receive_payment_form input[name='attachment-file']").trigger('click');
+});
+$(document).on("change", "div#customer_receive_payment_modal form#receive_payment_form input[name='attachment-file']", function(event) {
+    upload_attachment("div#customer_receive_payment_modal form#receive_payment_form");
+});
+
+function upload_attachment(target_form) {
+    var files = $(target_form + " .attachement-file-section input[name='attachement-filenames']").val();
+    console.log(files);
+    $.ajax({
+        url: baseURL + "/accounting/delete_file_attachement",
+        type: "POST",
+        dataType: "json",
+        data: {
+            filenames: files,
+        },
+        success: function(data) {
+            console.log(data);
+        },
+    });
+
+    var formDatas = new FormData();
+    $(target_form + ' .attachement-file-section div.attachement-viewer').html("");
+    $(target_form + " .attachement-file-section input[name='attachement-filenames']").val("");
+    for (var i = 0; i < $(target_form + " input[name='attachment-file']").get(0).files.length; ++i) {
+        formDatas.append('file', $(target_form + " input[name='attachment-file']").get(0).files[i]);
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: baseURL + "/accounting/add_attachement",
+            dataType: "json",
+            data: formDatas,
+            processData: false,
+            contentType: false,
+            cache: false,
+            beforeSend: function() {},
+            success: function(data) {
+                var filenmae_val = $(target_form + " .attachement-file-section input[name='attachement-filenames']").val();
+                if (filenmae_val == "") {
+                    $(target_form + " .attachement-file-section input[name='attachement-filenames']").val(data.uniquesavename + "." + data.ext);
+                } else {
+                    $(target_form + " .attachement-file-section input[name='attachement-filenames']").val(data.uniquesavename + "." + data.ext + "," + filenmae_val);
+                }
+                var viewer_images = $(target_form + ' .attachement-file-section div.attachement-viewer').html();
+                if (data.ext != "jpg" && data.ext != "jpeg" && data.ext != "png") {
+                    viewer_images += '<img src="' + baseURL + 'uploads/accounting/attachments/forms/folder.png" alt="">';
+                } else {
+                    viewer_images += '<img src="' + baseURL + data.destination + '" alt="">';
+                }
+                $(target_form + ' .attachement-file-section div.attachement-viewer').html(viewer_images);
+            },
+            error: function(e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+}
