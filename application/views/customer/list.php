@@ -137,6 +137,16 @@ add_css(array(
         font-size: 11px !important;
         line-height: 150%;
     }
+    table.dataTable {
+        border-collapse: collapse;
+        margin-top: 5px;
+    }
+    table.dataTable thead tr th {
+        border: 1px solid black !important;
+    }
+    table.dataTable tbody tr td {
+        border: 1px solid black !important;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -542,7 +552,7 @@ add_css(array(
                                         <thead>
                                             <tr>
                                                 <?php if( in_array('name', $enabled_table_headers) ){ ?>
-                                                    <th width="100px">Name</th>
+                                                    <th width="300px">Name</th>
                                                 <?php } ?>
 
                                                 <?php if( in_array('city', $enabled_table_headers) ){ ?>
@@ -588,7 +598,7 @@ add_css(array(
                                                 <?php if( in_array('status', $enabled_table_headers) ){ ?>
                                                     <th>Status</th>
                                                 <?php } ?>
-                                                <th>Actions</th>
+                                                <th width="80px">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>

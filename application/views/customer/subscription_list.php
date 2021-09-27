@@ -65,6 +65,10 @@ table.dataTable tbody tr td {
 #modal-view-payment-history .modal-dialog {
     max-width: 1002px; 
 }
+.modal-backdrop {
+    width: 103vw;
+    height: 103vh;
+}
 
 </style>
 <div class="wrapper" role="wrapper">
@@ -137,25 +141,25 @@ table.dataTable tbody tr td {
                 </div>
               </div>
             </div>
+
+            <div class="modal fade" id="modal-view-payment-history" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="">Payment History</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body payment-history-container"></div>
+                        <div class="modal-footer">
+                              <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                        </div>  
+                    </div>
+                </div>
+            </div>  
         </div>
         <!-- end container-fluid -->
-        <div class="modal fade" id="modal-view-payment-history" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="">Payment History</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body payment-history-container"></div>
-                    <div class="modal-footer">
-                          <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    </div>  
-                </div>
-            </div>
-        </div>  
-
     </div>
     <!-- page wrapper end -->
 </div>
@@ -185,9 +189,9 @@ $(function(){
                         "autoWidth" : false,
                         "order": [],
                          "aoColumnDefs": [
-                          { "sWidth": "45%", "aTargets": [ 0 ] },
-                          { "sWidth": "10%", "aTargets": [ 1 ] },
-                          { "sWidth": "10%", "aTargets": [ 2 ] },
+                          { "sWidth": "30%", "aTargets": [ 0 ] },
+                          { "sWidth": "20%", "aTargets": [ 1 ] },
+                          { "sWidth": "20%", "aTargets": [ 2 ] },
                           { "sWidth": "20%", "aTargets": [ 3 ] },
                         ]
                     });

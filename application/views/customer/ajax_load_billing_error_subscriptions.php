@@ -1,27 +1,21 @@
 <div class="row">
     <div class="col-xl-12 col-md-12">
-        <table id="dt-completed-subscriptions">
+        <table id="dt-error-subscriptions">
             <thead>
                 <tr>
                     <th>Customer Name</th>
-                    <th>Recurring Start Date</th>
-                    <th>Recurring End Date</th>
-                    <th>Total Amount</th>
+                    <th>Date</th>
+                    <th>Error Message</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($completedSubscriptions as $as){ ?>
+                <?php foreach($errorSubscriptions as $as){ ?>
                     <td><?= $as->first_name . ' ' . $as->last_name; ?></td>
-                    <td><?= date("d-M-Y", strtotime($as->recurring_start_date)); ?></td>
-                    <td><?= date("d-M-Y", strtotime($as->recurring_end_date)); ?></td>
+                    <td><?= date("d-M-Y", strtotime($as->error_date)); ?></td>
+                    <td><?= $as->error_message; ?></td>
                     <td>
-                        <?php 
-                            $total_amount = $as->transaction_amount + $as->finance_amount;
-                            echo number_format($total_amount, 2);
-                        ?>
-                    </td>
-                    <td>
+                        <a class="btn btn-sm btn-primary btn-fix-cc-error" data-id="<?= $as->bill_id; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i> Fix</a>
                         <a class="btn btn-sm btn-primary" href="<?= base_url("customer/subscription/" . $as->fk_prof_id); ?>"><i class="fa fa-eye"></i> View</a>
                         <a class="btn btn-sm btn-primary" href="<?= base_url("customer/view_payment_history/" . $as->fk_prof_id); ?>"><i class="fa fa-eye"></i> Payment History</a>
                     </td>
