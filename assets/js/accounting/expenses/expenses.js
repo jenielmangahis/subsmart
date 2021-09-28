@@ -1073,6 +1073,8 @@ function viewBillPayment(data) {
             `);
         }
 
+        $('#billPaymentModal #vendor').trigger('change');
+
         initModalFields('billPaymentModal', data);
 
         initBillsTable(data);

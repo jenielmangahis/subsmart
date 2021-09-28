@@ -1360,7 +1360,6 @@ class Expenses extends MY_Controller
 
         $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $bills = $this->vendors_model->get_bill_payment_items($billPaymentId, $filters);
-
         $filters = [
             'start-date' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
             'end-date' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
@@ -1374,10 +1373,10 @@ class Expenses extends MY_Controller
 
             $openBalance = floatval($billData->remaining_balance) + floatval($billData->total_amount);
 
-            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
-            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description = '<a href="#" class="text-info" data-id="'.$billData->id.'">Bill ';
+            $description .= $billData->bill_no !== "" && !is_null($billData->bill_no) ? '# '.$billData->bill_no.' ' : '';
             $description .= '</a>';
-            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+            $description .= '('.date("m/d/Y", strtotime($billData->bill_date)).')';
 
             if ($search !== "") {
                 if (stripos($billData->bill_no, $search) !== false) {

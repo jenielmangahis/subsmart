@@ -546,6 +546,12 @@ class Chart_of_accounts extends MY_Controller {
             case 'vendor-credit' :
                 $data = $this->vendor_credit_registers($accountId, $data);
             break;
+            case 'bill-payment' :
+                $data = $this->bill_payment_registers($accountId, $data);
+            break;
+            case 'cc-bill-payment' :
+                $data = $this->bill_payment_registers($accountId, $data, true);
+            break;
             case 'transfer' :
                 $data = $this->transfer_registers($accountId, $data);
             break;
@@ -570,6 +576,7 @@ class Chart_of_accounts extends MY_Controller {
                 $data = $this->bill_registers($accountId, $data);
                 $data = $this->cc_credit_registers($accountId, $data);
                 $data = $this->vendor_credit_registers($accountId, $data);
+                $data = $this->bill_payment_registers($accountId, $data);
                 $data = $this->transfer_registers($accountId, $data);
                 $data = $this->deposit_registers($accountId, $data);
                 $data = $this->quantity_adjustment_registers($accountId, $data);
@@ -1329,6 +1336,40 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
             ];
+        }
+
+        return $data;
+    }
+
+    private function bill_payment_registers($accountId, $data = [], $creditCard = false)
+    {
+        $billPayments = $this->chart_of_accounts_model->get_bill_payment_registers($accountId);
+
+        foreach($billPayments as $billPayment) {
+            $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+            $account = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+
+            if($creditCard === true && $accountType->account_name === 'Credit Card' || $creditCard === false) {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                    'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : $billPayment->check_no === null ? '' : $billPayment->check_no,
+                    'type' => 'Bill Payment',
+                    'payee_type' => 'vendor',
+                    'payee_id' => $billPayment->payee_id,
+                    'payee' => $payee->display_name,
+                    'account' => 'Accounts Payable',
+                    'memo' => $billPayment->memo,
+                    'payment' => number_format(floatval($billPayment->total_amount), 2, '.', ','),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
+                ];
+            }
         }
 
         return $data;
