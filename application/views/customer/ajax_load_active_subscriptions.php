@@ -22,7 +22,7 @@
                         ?>
                     </td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="<?= base_url("customer/preview_/" . $as->fk_prof_id); ?>"><i class="fa fa-eye"></i> View</a>
+                        <a class="btn btn-sm btn-primary" href="<?= base_url("customer/subscription/" . $as->fk_prof_id); ?>"><i class="fa fa-eye"></i> View</a>
                         <a class="btn btn-sm btn-primary btn-view-payment-history" href="javascript:void(0);" data-customer-id="<?= $as->fk_prof_id; ?>" data-billing-id="<?= $as->id; ?>"><i class="fa fa-eye"></i> Payment History</a>
                     </td>
                 <?php } ?>

@@ -925,7 +925,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         switch($check->payee_type) {
                                                             case 'vendor' :
                                                                 $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
-                                                                echo $vendor->display_name;
+                                                                // echo $vendor->display_name;
+                                                                print_r('test'.$vendor);
                                                             break;
                                                             case 'customer' :
                                                                 $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
@@ -946,7 +947,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <td>
                                                 <!-- na -->
                                             </td>
-                                            <td><?php echo $rpayment->amount; ?></td>
+                                            <td><?php echo $check->total_amount; ?></td>
                                             <td>
                                             <?php
                                                 //echo "Paid";
@@ -2810,254 +2811,322 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div id="credit-memo" class="all_sales_modal modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Credit Memo<span id="checkNUmberHeader"></span>
+            <div class="modal-content">
+                <div class="modal-header">
+                <div class="modal-title">
+                    <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                    Credit Memo
+                </div>
+                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <form action="<?php echo site_url()?>accounting/addCreditMemo" method="post">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Customer
+                                        <select class="form-control" name="customer_id" id="sel-customer">
+                                            <option></option>
+                                            <?php foreach($customers as $customer) : ?>
+                                                <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
+                                                <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        Email
+                                        <input type="email" class="form-control" name="email"  id="email">
+                                        <input type="checkbox"> Send later
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        Billing address
+                                        <textarea style="height:100px;width:100%;" name="billing_address" id="billing_address"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        Credit Memo Date<br>
+                                        <input type="text" class="form-control" id="datepickerinv7" name="credit_memo_date">
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6" align="right">
+                                AMOUNT<h2><span id="grand_total_cm_t">0.00</span></h2><br>
+                                Location of sale<br>
+                                <input type="text" class="form-control" style="width:200px;" name="location_scale">
+                            </div>
                         </div>
-                        <button type="button" class="close" id="closeCreditMemoModal"><i
-                                class="fa fa-times fa-lg"></i></button>
-                    </div>
-                    <form action="" method="post" id="addEditCheckmodal">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">Customer</label>
-                                    <input type="hidden" name="check_id" id="checkID" value="">
-                                    <input type="hidden" name="transaction_id" class="transaction_id" id="checktransID">
-                                    <input type="hidden" id="checkType" class="expenseType" value="Check">
-                                    <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
-                                        <option>Select a customer</option>
-                                        <?php foreach ($vendors as $vendor):?>
-                                        <option
-                                            value="<?php echo $vendor->vendor_id?>">
-                                            <?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">Customer Email</label>
-                                    <input type="text" class="form-control" placeholder="Separate emails with a comma">
-
-                                    <div class="form-group mt-2">
-                                        <input type="checkbox" name="send_later" id="send_later" value="1">
-                                        <label for="">Send later</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-3" style="text-align: right">
-                                    <div>AMOUNT</div>
-                                    <div>
-                                        <h1 id="h1_amount-check">$0.00</h1>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 20px">
-                                <div class="col-md-3">
-                                    <label for="">Billing address</label>
-                                    <textarea name="billing_address" id="billing_address" cols="30" rows="4"
-                                        placeholder="" style="resize: none;"></textarea>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="">Credit Memo Date</label>
-                                    <input type="date" name="credit_memo_date" id="credit_memo_date"
-                                        class="form-control">
-                                </div>
-                                <div class="col-md-5">
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="">Location of sale</label>
-                                        <input type="text" name="location_sale" id="location_sale" class="form-control"
-                                            value="1">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-container mt-5">
-                                <div class="table-loader">
-                                    <p class="loading-text">Loading records</p>
-                                </div>
-                                <!--                        DataTables-->
-                                <table id="expensesCheckTable" class="table table-striped table-bordered"
-                                    style="width:100%;margin-top: 20px;">
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered" id="reportstable">
                                     <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>#</th>
-                                            <th>PRODUCT/SERVICE</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>QTY</th>
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
-                                            <th>TAX</th>
-                                            <th></th>
-                                        </tr>
+                                        <!-- <th></th>
+                                        <th>#</th>
+                                        <th>PRODUCT/SERVICE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>QTY</th>
+                                        <th>RATE</th>
+                                        <th>AMOUNT</th>
+                                        <th>TAX</th>
+                                        <th></th> -->
+                                        <th>Name</th>
+                                                <th>Type</th>
+                                                <!-- <th>Description</th> -->
+                                                <th width="150px">Quantity</th>
+                                                <!-- <th>Location</th> -->
+                                                <th width="150px">Price</th>
+                                                <th width="150px">Discount</th>
+                                                <th width="150px">Tax (Change in %)</th>
+                                                <th>Total</th>
                                     </thead>
-                                    <tbody id="line-container-check">
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">1</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
-                                                </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">2</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
-                                                </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
+                                    <tbody id="items_table_body_credit_memo">
+                                    <tr>
+                                                <td>
+                                                    <input type="text" class="form-control getItemsCM"
+                                                        onKeyup="getItemscm(this)" name="items[]">
+                                                    <ul class="suggestions"></ul>
+                                                </td>
+                                                <td><select name="item_type[]" class="form-control">
+                                                        <option value="product">Product</option>
+                                                        <option value="material">Material</option>
+                                                        <option value="service">Service</option>
+                                                        <option value="fee">Fee</option>
+                                                    </select></td>
+                                                <td width="150px"><input type="number" class="form-control quantitycm" name="quantity[]"
+                                                        data-counter="0" id="quantity_0" value="1"></td>
+                                                <td width="150px"><input type="number" class="form-control pricecm" name="price[]"
+                                                        data-counter="0" id="price_0" min="0" value="0"></td>
+                                                <td width="150px"><input type="number" class="form-control discountcm" name="discount[]"
+                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                                <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                        data-counter="0" id="tax1_0" min="0" value="0">
+                                                        <!-- <span id="span_tax_0">0.0</span> -->
+                                                        </td>
+                                                <td width="150px"><input type="hidden" class="form-control " name="total[]"
+                                                        data-counter="0" id="item_total_0" min="0" value="0">
+                                                        $<span id="span_total_0">0.00</span></td>
+                                            </tr>
+                                    </tr>
                                     </tbody>
                                 </table>
+                            <div>
+                        </div>
+                        <hr>
+                    
+                        <div class="row">
+                            <div class="col-md-1">
+                            <!-- <button class="btn1">Add lines</button> -->
+                            <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                             </div>
-                            <div class="addAndRemoveRow">
-                                <div class="total-amount-container">
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Subtotal</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Taxable subtotal $0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Total</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Balance due</span>
-                                        $ 0.00
-                                    </p>
-                                </div>
-                                <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
-                                <button type="button" class="add-remove-line" id="clear-all-line">Clear all
-                                    lines</button>
+                            <!-- <div class="col-md-1">
+                            <button class="btn1">Clear all lines</button>
                             </div>
-                            <div class="form-group">
-                                <label for="">Message displayed on credit memo</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3"
-                                    placeholder="This will show up on the invoice"
-                                    style="width: 350px;resize: none;"></textarea>
+                            <div class="col-md-1">
+                            <button class="btn1">Add subtotal</button>
                             </div>
-                            <div class="form-group">
-                                <label for="">Message displated on statement</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3"
-                                    placeholder="If you convert an estimate into an invoice and send a statement, this will show up as the description for the invoice."
-                                    style="width: 350px;resize: none;"></textarea>
+                            <div class="col-md-7">
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                                        <span>Maximum size: 20MB</span>
-                                        <div id="checkAttachment" class="dropzone"
-                                            style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
-                                            <div class="dz-message" style="margin: 20px;">
-                                                <span
-                                                    style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag
-                                                    and drop files here or</span>
-                                                <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
-                                            </div>
+                            <div class="col-md-1">
+                                <b>Subtotal</b>
+                            </div>
+                            <div class="col-md-1">
+                                <b>$0.00</b>
+                            </div> -->
+                        </div>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                Message on invoice<br>
+                                <textarea style="height:100px;width:100%;" name="message_displayed_on_credit_memo"></textarea><br>
+                                Message on statement<br>
+                                <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
+                            </div>
+                            <div class="col-md-5">
+                            </div>
+                            <div class="col-md-4">
+                                <!-- Taxable subtotal <b>$0.00</b><br>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td>
+                                            <select class="form-control" name="tax_rate">
+                                                <option value="1">Based on location</option>
+                                            </select>
+                                        </td>
+                                        <td><b>$0.00</b><br><a href="">See the math</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shipping</td>
+                                        <td><input type="text" class="form-control"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tax on shipping</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Balance due</td>
+                                        <td>$0.00</td>
+                                    </tr>
+                                </table> -->
+
+                                <table class="table" style="text-align:left;">
+                                            <tr>
+                                                <td>Subtotal</td>
+                                                <td></td>
+                                                <td align="right">$ <span id="span_sub_total_cm">0.00</span>
+                                                    <input type="hidden" name="subtotal" id="item_total"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Taxes</td>
+                                                <td></td>
+                                                <td align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                                <td style="width:150px;">
+                                                <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
+                                                    <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                </td>
+                                                <td align="right">$<span id="adjustment_area">0.00</span></td>
+                                            </tr>
+                                            <!-- <tr>
+                                                <td>Markup $<span id="span_markup"></td> -->
+                                                <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                                <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                            <!-- </tr> -->
+                                            <tr id="saved" style="color:green;font-weight:bold;display:none;">
+                                                <td>Amount Saved</td>
+                                                <td></td>
+                                                <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                            </tr>
+                                            <tr style="color:blue;font-weight:bold;font-size:18px;">
+                                                <td><b>Grand Total ($)</b></td>
+                                                <td></td>
+                                                <td align="right"><b><span id="grand_total_cm">0.00</span>
+                                                    <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                            </tr>
+                                        </table>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="file-upload">
+                                    <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+
+                                    <div class="image-upload-wrap">
+                                        <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                                        <div class="drag-text">
+                                        <i>Drag and drop files here or click the icon</i>
                                         </div>
                                     </div>
-                                    <div class="col-md-8" style="padding-top: 30px;">
-                                        <div class="file-container-list" id="file-list-check"></div>
+                                    <div class="file-upload-content">
+                                        <img class="file-upload-image" src="#" alt="your image" />
+                                        <div class="image-title-wrap">
+                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="show-existing-file">
-                                    <a href="#" id="showExistingFile">Show existing file</a>
-                                </div>
-                            </div>
-                            <div class="privacy">
-                                <a href="#">Privacy</a>
+                            <div class="col-md-8">
                             </div>
                         </div>
-                        <div class="modal-footer-check">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal"
-                                        type="button">Cancel</button>
+                    </div>
+                            <hr>
+                            <div class="modal-footer-check">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
+                                        
+                                    </div>
+                                    <div class="col-md-5" align="center">
+                                        <div class="middle-links">
+                                            <a href="">Print or Preview</a>
+                                        </div>
+                                        <div class="middle-links end">
+                                            <a href="">Make recurring</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="dropdown" style="float: right">
+                                            <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
+                                            <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                            <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                                <span class="fa fa-caret-down"></span></button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="middle-links">
-                                        <a href="">Print or Preview</a>
-                                    </div>
-                                    <div class="middle-links end">
-                                        <a href="">Make recurring</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                        <button type="button" class="btn btn-success" data-dismiss="modal"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a></li>
-                                        </ul>
+
+                </form>
+
+                <!-- Modal -->
+                <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="items_table_credit_memo" class="table table-hover" style="width: 100%;">
+                                            <thead>
+                                            <tr>
+                                                <td> Name</td>
+                                                <td> Qty</td>
+                                                <td> Price</td>
+                                                <td> Action</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($items as $item){ // print_r($item); ?>
+                                                <tr>
+                                                    <td><?php echo $item->title; ?></td>
+                                                    <td></td>
+                                                    <td><?php echo $item->price; ?></td>
+                                                    <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_itemcm">
+                                                    <span class="fa fa-plus"></span>
+
+                                                </button></td>
+                                                </tr>
+                                                
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
+                            <div class="modal-footer modal-footer-detail">
+                                <div class="button-modal-list">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                </div>
+                    
+                    <div style="margin: auto;">
+                        <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                    </div>
+                    <div style="margin: auto">
+                        <a href="" style="text-align: center">Privacy</a>
+                    </div>
                 </div>
 
             </div>
@@ -4507,4 +4576,495 @@ $("#total_tax_dch_").text(over_tax);
             order: [[ 1, 'desc' ]],
         });
     });
+</script>
+
+<script>
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .btn-success.apply-btn", function(event) {
+    single_customer_get_transaction_lists($("#customer-single-modal input[name='customer_id']").val());
+});
+
+function single_customer_get_transaction_lists(customer_id) {
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", false);
+    var filter_type = $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val();
+    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'><center><img src='" + baseURL + "assets/img/accounting/customers/loader.gif' style='width:50px;' /></center></td></tr>");
+    $.ajax({
+        url: baseURL + "/accounting/single_customer_get_transaction_lists",
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: customer_id,
+            filter_type: filter_type,
+            filter_date: $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_date']").val(),
+        },
+        success: function(data) {
+            if (data.tbody_html == "") {
+                $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'>No transaction list found.</td></tr>");
+            } else {
+                $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html(data.tbody_html);
+            }
+            single_customer_table_columns_changed();
+            single_customer_sortTable();
+            table_viewing_affected(filter_type);
+            $("#loader-modal").hide();
+        },
+    });
+
+}
+</script>
+
+<script>
+
+function getItemscm(obj) {
+  var sk = jQuery(obj).val();
+  var site_url = jQuery("#siteurl").val();
+  jQuery.ajax({
+    url: site_url + "items/getitems_cm",
+    data: { sk: sk },
+    type: "GET",
+    success: function (data) {
+      /* alert(data); */
+      jQuery(obj).parent().find(".suggestions").empty().html(data);
+    },
+    error: function () {
+      alert("An error has occurred");
+    },
+  });
+}
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+function setitemCM(obj, title, price, discount, itemid) {
+
+// alert('setitemCM');
+  jQuery(obj).parent().parent().find(".getItemsCM").val(title);
+  jQuery(obj).parent().parent().parent().find(".pricecm").val(price);
+  jQuery(obj).parent().parent().parent().find(".discountcm").val(discount);
+  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+  var counter = jQuery(obj)
+    .parent()
+    .parent()
+    .parent()
+    .find(".pricecm")
+    .data("counter");
+  jQuery(obj).parent().empty();
+  calculationcm(counter);
+}
+
+$(document).on("focusout", ".pricecm", function () {
+  var counter = $(this).data("counter");
+  calculationcm(counter);
+});
+
+// $(document).on("focusout", ".quantitycm", function () {
+//   var counter = $(this).data("counter");
+//   calculationcm(counter);
+// });
+$(document).on("focusout", ".discountcm", function () {
+  var counter = $(this).data("counter");
+  calculationcm(counter);
+});
+
+
+$(document).on("focusout", ".quantitycm2", function () {
+  // var counter = $(this).data("counter");
+//   calculationcm(counter);
+// var idd = this.id;
+var idd = $(this).attr('data-itemid');
+var in_id = idd;
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+//   alert( 'yeah' + total);
+
+  $("#span_total_" + in_id).text(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax1_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotalcm = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotalcm += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotalcm);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_cm").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_cm").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_").val(subtotaltax.toFixed(2));
+
+
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+function calculationcm(counter) {
+  var price = $("#price_" + counter).val();
+  var quantity = $("#quantity_" + counter).val();
+  var discount = $("#discount_" + counter).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total_" + counter).text(total);
+  $("#tax_1_" + counter).text(tax1);
+  $("#tax_111_" + counter).text(tax1);
+  $("#tax_1_" + counter).val(tax1);
+  $("#discount_" + counter).val(discount);
+  $("#tax1_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax_1_'+ counter).length ){
+    $('#tax_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
+  }
+
+  // alert('dri');
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+//   alert(subtotal);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_cm").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_cm").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
+
+
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    // alert('none');
+  }else{
+    $("#grand_total_cm").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+    $("#supergrandtotal").text(super_grand.toFixed(2));
+    $("#supergrandtotal_input").val(super_grand.toFixed(2));
+  }
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+}
+
+</script>
+<script>
+
+
+$(".select_itemcm").click(function () {
+            var idd = this.id;
+            console.log(idd);
+            console.log($(this).data('itemname'));
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            
+            if(!$(this).data('quantity')){
+              // alert($(this).data('quantity'));
+              var qty = 0;
+            }else{
+              // alert('0');
+              var qty = $(this).data('quantity');
+            }
+
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
+            var taxes_t = parseFloat(tax_).toFixed(2);
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            // console.log(total);
+            // alert(total);
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
+                "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest\"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
+                "</tr>";
+            tableBody = $("#items_table_body_credit_memo");
+            tableBody.append(markup);
+            markup2 = "<tr id=\"sss\">" +
+                "<td >"+title+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td ></td>\n" +
+                "<td >"+qty+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >0</td>\n" +
+                "<td ></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "</tr>";
+            tableBody2 = $("#device_audit_datas");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
+            // var counter = $(this).data("counter");
+            // calculation(idd);
+
+  var in_id = idd;
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total_" + in_id).text(total);
+  $("#sub_total_text" + in_id).val(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax1_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  // var total_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    // total_cost += parseFloat(prc);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+var total_cost = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="price_"]').each(function(){
+      total_cost += parseFloat($(this).val());
+  });
+
+var tax_tot = 0;
+$('*[id^="tax1_"]').each(function(){
+  tax_tot += parseFloat($(this).val());
+});
+
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+$("#sales_taxs").val(over_tax);
+$("#total_tax_input").val(over_tax);
+$("#total_tax_").text(over_tax);
+
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  // $("#item_total").val(subtotal.toFixed(2));
+  $("#item_total").val(stotal_cost);
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_cm").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  // $("#total_tax_").text(subtotaltax.toFixed(2));
+  // $("#total_tax_").val(subtotaltax.toFixed(2));
+  
+  
+  
+  $("#item_total").val(grand_total_w.toFixed(2));
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#span_sub_total_cm").text(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+        });
 </script>

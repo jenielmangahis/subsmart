@@ -2212,7 +2212,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#billPaymentModal #payee', function() {
+    $(document).on('change', '#billPaymentModal #vendor', function() {
         if ($(this).val() !== '' && $(this).val() !== null) {
             unlinkTransaction();
 

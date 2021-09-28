@@ -410,4 +410,11 @@ class Chart_of_accounts_model extends MY_Model {
 		$query = $this->db->get('accounting_pay_down_credit_card');
 		return $query->result();
 	}
+
+	public function get_bill_payment_registers($accountId)
+	{
+		$this->db->where('payment_account_id', $accountId);
+		$query = $this->db->get('accounting_bill_payments');
+		return $query->result();
+	}
 }

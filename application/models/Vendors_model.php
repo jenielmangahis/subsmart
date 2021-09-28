@@ -576,7 +576,7 @@ class Vendors_model extends MY_Model {
 	{
 		$this->db->where('company_id', $company_id);
 		$query = $this->db->get('accounting_check');
-		return $query->row();
+		return $query->result();
 	}
 
 	public function update_check($checkId, $data)
