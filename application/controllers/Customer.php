@@ -45,7 +45,7 @@ class Customer extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         $this->hasAccessModule(9);
 
         $this->load->library('wizardlib');        
@@ -1930,14 +1930,14 @@ class Customer extends MY_Controller
 
     public function customer_export()
     {
-
         $user_id = logged('id');
         //$items = $this->customer_model->getByCompanyId(logged('company_id'));
         //$items =  $this->customer_ad_model->get_customer_data('fk_user_id',$user_id,"acs_profile");
-        $items =  $this->customer_ad_model->get_customer_data($user_id);
+        $items =  $this->customer_ad_model->get_customer_data();
 
         $delimiter = ",";
-        $filename = getLoggedName()."_customers.csv";
+        $time      = time();
+        $filename  = "customers_list_".$time.".csv";
 
         $f = fopen('php://memory', 'w');
 
