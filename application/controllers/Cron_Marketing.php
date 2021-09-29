@@ -257,46 +257,22 @@ class Cron_Marketing extends MY_Controller
 
     public function sendEmail($to, $subject, $message, $company)
     {
-        //Email Sending
-        $server    = MAIL_SERVER;
-        $port      = MAIL_PORT ;
-        $username  = MAIL_USERNAME;
-        $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;
-        $recipient = $to;
-        $err_msg   = '';
-        //$recipient = 'bryann.revina03@gmail.com';
-        
-        /*$this->page_data['company']    = $company;
+
+        $this->page_data['company']    = $company;
         $this->page_data['email_body'] = replaceSmartTags($message);
         $msg = $this->load->view('cron_marketing/email_campaign_template', $this->page_data, true);
 
-        $mail = new PHPMailer;
-        $mail->SMTPDebug = 4;
-        $mail->isSMTP();
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username   = $username;
-        $mail->Password   = $password;
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout    =   10; // set the timeout (seconds)
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'NsmarTrac';
-        $mail->addAddress($recipient, $recipient);
-        $mail->isHTML(true);
-        $mail->Subject = $subject;
-        $mail->Body    = $msg;
+        $data = [
+            'to' => $to, 
+            'subject' => $subject, 
+            'body' => $msg,
+            'cc' => '',
+            'bcc' => '',
+            'attachment' => ''
+        ];
 
-        if (!$mail->Send()) {
-            $is_sent = 0;
-            $err_msg = $mail->ErrorInfo;
-        } else {
-            $is_sent = 1;
-        }*/
-
-        $return = ['is_sent' => $is_sent, 'err_msg' => $err_msg];
+        $isSent = sendEmail($data);
+        $return = ['is_sent' => 1, 'err_msg' => ''];
 
         return $return;
     }

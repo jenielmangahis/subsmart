@@ -284,29 +284,31 @@ class Workcalender extends MY_Controller
                 $google_secrect = $google_credentials['client_secret'];
             }
 
-            //Set Client
-            $client = new Google_Client();
-            $client->setClientId($google_client_id);
-            $client->setClientSecret($google_secrect);
-            $client->setAccessToken($access_token);
-            $client->refreshToken($refresh_token);
-            $client->setScopes(array(
-                'email',
-                'profile',
-                'https://www.googleapis.com/auth/calendar',
-            ));
-            $client->setApprovalPrompt('force');
-            $client->setAccessType('offline');
+            if( $refresh_token ){
+                //Set Client
+                $client = new Google_Client();
+                $client->setClientId($google_client_id);
+                $client->setClientSecret($google_secrect);
+                $client->setAccessToken($access_token);
+                $client->refreshToken($refresh_token);
+                $client->setScopes(array(
+                    'email',
+                    'profile',
+                    'https://www.googleapis.com/auth/calendar',
+                ));
+                $client->setApprovalPrompt('force');
+                $client->setAccessType('offline');
 
-            //Request
-            $access_token = $client->getAccessToken();
-            $calendar     = new Google_Service_Calendar($client);
-            $data = $calendar->calendarList->listCalendarList();
+                //Request
+                $access_token = $client->getAccessToken();
+                $calendar     = new Google_Service_Calendar($client);
+                $data = $calendar->calendarList->listCalendarList();
 
-            $calendar_list = $data->getItems();
-            $email = $google_user_api->google_email;
-            $enabled_calendar = unserialize($google_user_api->enabled_calendars);
-            $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);
+                $calendar_list = $data->getItems();
+                $email = $google_user_api->google_email;
+                $enabled_calendar = unserialize($google_user_api->enabled_calendars);
+                $enabled_mini_calendar = unserialize($google_user_api->enabled_mini_calendars);
+            }
         }
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
