@@ -8,12 +8,9 @@
                         <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                         Invoice <span class="invoice_number"></span>
                     </div>
-                    <button type="button" class="close" id="closeModalExpense" data-dismiss="modal"
-                        aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form
-                    action="<?php echo site_url()?>accounting/addSalesReceipt"
-                    method="post">
+                <form action="<?php echo site_url() ?>accounting/addSalesReceipt" method="post">
                     <input type="text" style="display: none;" value="" name="recurring_selected">
                     <input type="text" style="display: none;" value="" name="current_sales_recept_number">
                     <input type="text" style="display: none;" value="" name="submit_type">
@@ -32,15 +29,12 @@
                                                 <div class="label">
                                                     Customer
                                                 </div>
-                                                <select class="form-control required" required name="customer_id"
-                                                    id="sel-customer2">
+                                                <select class="form-control required" required name="customer_id" id="sel-customer2">
                                                     <option></option>
                                                     <?php foreach ($customers as $customer) : ?>
-                                                    <option
-                                                        value="<?php echo $customer->prof_id; ?>"
-                                                        data-text="<?php echo $customer->first_name . ' ' . $customer->last_name; ?>">
-                                                        <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
-                                                    </option>
+                                                        <option value="<?php echo $customer->prof_id; ?>" data-text="<?php echo $customer->first_name . ' ' . $customer->last_name; ?>">
+                                                            <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
+                                                        </option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
@@ -51,8 +45,7 @@
                                                     Job Location <span class="faded-info">(optional, select or add new
                                                         one)</span>
                                                 </div>
-                                                <input type="text" class="form-control " name="invoice_job_location"
-                                                    id="create_invoice_modal_job_location">
+                                                <input type="text" class="form-control " name="invoice_job_location" id="create_invoice_modal_job_location">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -86,10 +79,9 @@
                                                 <option></option>
                                                 <option value="1">Add new</option>
                                                 <?php foreach ($terms as $term) : ?>
-                                                <option
-                                                    value="<?php echo $term->id; ?>">
-                                                    <?php echo $term->name . ' ' . $term->net_due_days; ?>
-                                                </option>
+                                                    <option value="<?php echo $term->id; ?>">
+                                                        <?php echo $term->name . ' ' . $term->net_due_days; ?>
+                                                    </option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -97,23 +89,20 @@
                                     <div class="col-md-3">
                                         <div class="form-group" style="margin-bottom: 0!important;">
                                             <div class="label">Email</div>
-                                            <input type="email" class="form-control required" required=""
-                                                name="customer_email">
+                                            <input type="email" class="form-control required" required="" name="customer_email">
                                             <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Location of sale</div>
-                                            <input type="text" class="form-control required" required
-                                                name="location_scale">
+                                            <input type="text" class="form-control required" required name="location_scale">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Tracking no.</div>
-                                            <input type="text" class="form-control required" required
-                                                name="tracking_number">
+                                            <input type="text" class="form-control required" required name="tracking_number">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -125,8 +114,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Shipping date</div>
-                                            <input type="date" class="form-control required" required
-                                                name="shipping_date">
+                                            <input type="date" class="form-control required" required name="shipping_date">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -139,8 +127,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group" style="margin-bottom: 5px!important;">
                                             <div class="label">Billing address</div>
-                                            <textarea style="height: 50px;width: 100%;resize: auto;"
-                                                name="billing_address" class="required" required=""></textarea>
+                                            <textarea style="height: 50px;width: 100%;resize: auto;" name="billing_address" class="required" required=""></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -169,39 +156,36 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <div class="label">Purchase Order# <span
-                                                    class="faded-info">(optional)</span> </div>
+                                            <div class="label">Purchase Order# <span class="faded-info">(optional)</span> </div>
                                             <input type="text" class="form-control " name="purchase_order">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group" style="margin-bottom: 5px!important;">
                                             <div class="label">Shipping to</div>
-                                            <textarea style="height: 50px;width: 100%;resize: auto;"
-                                                name="shipping_to_address" class="required" required=""></textarea>
+                                            <textarea style="height: 50px;width: 100%;resize: auto;" name="shipping_to_address" class="required" required=""></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Invoice# </div>
                                             <input type="text" class="form-control required" required="" value="<?php echo "INV-";
-                                           foreach ($number as $num):
-                                                $next = $num->invoice_number;
-                                                $arr = explode("-", $next);
-                                                $date_start = $arr[0];
-                                                $nextNum = $arr[1];
-                                            //    echo $number;
-                                           endforeach;
-                                           $val = $nextNum + 1;
-                                           echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                           ?>" name="invoice_number">
+                                                                                                                foreach ($number as $num) :
+                                                                                                                    $next = $num->invoice_number;
+                                                                                                                    $arr = explode("-", $next);
+                                                                                                                    $date_start = $arr[0];
+                                                                                                                    $nextNum = $arr[1];
+                                                                                                                //    echo $number;
+                                                                                                                endforeach;
+                                                                                                                $val = $nextNum + 1;
+                                                                                                                echo str_pad($val, 9, "0", STR_PAD_LEFT);
+                                                                                                                ?>" name="invoice_number">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Date Issued </div>
-                                            <input type="date" class="form-control required" required=""
-                                                name="date_issued">
+                                            <input type="date" class="form-control required" required="" name="date_issued">
                                         </div>
                                     </div>
 
@@ -249,8 +233,7 @@
                                             <tr class="item">
                                                 <td>
                                                     <input type="text" style="display: none;" name="itemid[]">
-                                                    <input type="text" class="form-control required" required=""
-                                                        name="items[]" autocomplete="off">
+                                                    <input type="text" class="form-control required" required="" name="items[]" autocomplete="off">
                                                     <ul class="suggestions"></ul>
                                                 </td>
                                                 <td><select name="item_type[]" class="form-control">
@@ -259,27 +242,16 @@
                                                         <option value="service">Service</option>
                                                         <option value="fee">Fee</option>
                                                     </select></td>
-                                                <td width="150px"><input type="number"
-                                                        class="form-control required item-field-monitary" required=""
-                                                        name="quantity[]" data-counter="0" value="">
+                                                <td width="150px"><input type="number" class="form-control required item-field-monitary" required="" name="quantity[]" data-counter="0" value="">
                                                 </td>
-                                                <td width="150px"><input type="number"
-                                                        class="form-control required item-field-monitary" required=""
-                                                        name="price[]" data-counter="0" min="0" value="">
+                                                <td width="150px"><input type="number" class="form-control required item-field-monitary" required="" name="price[]" data-counter="0" min="0" value="">
                                                 </td>
-                                                <td width="150px"><input type="number"
-                                                        class="form-control required item-field-monitary" required=""
-                                                        name="discount[]" data-counter="0" min="0" value="">
+                                                <td width="150px"><input type="number" class="form-control required item-field-monitary" required="" name="discount[]" data-counter="0" min="0" value="">
                                                 </td>
-                                                <td width="150px"><input type="text" class="form-control"
-                                                        data-itemfieldtype="tax" required="" name="tax[]"
-                                                        data-type="tax" data-counter="0" min="0" value="">
-                                                    <input type="text" class="tax-hide" name="tax_percent[]"
-                                                        value="7.5">
+                                                <td width="150px"><input type="text" class="form-control" data-itemfieldtype="tax" required="" name="tax[]" data-type="tax" data-counter="0" min="0" value="">
+                                                    <input type="text" class="tax-hide" name="tax_percent[]" value="7.5">
                                                 </td>
-                                                <td width="150px" style="text-align: right;"><input type="hidden"
-                                                        class="form-control total_per_input" name="total[]"
-                                                        data-counter="0" min="0" value="0">
+                                                <td width="150px" style="text-align: right;"><input type="hidden" class="form-control total_per_input" name="total[]" data-counter="0" min="0" value="0">
                                                     $<span class="total_per_item">0.00</span>
                                                     <input type="text" value="0" name="total[]" style="display: none;">
                                                 </td>
@@ -314,10 +286,7 @@
                                         <div for="">Taxes</div>
                                         <div style="position:relative;">
                                             <input type="text" name="adjustment_name" placeholder="Adjustment name">
-                                            <span class="fa fa-question-circle clarification" data-toggle="popover"
-                                                data-placement="top" data-trigger="hover"
-                                                data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
-                                                data-original-title="" title=""></span>
+                                            <span class="fa fa-question-circle clarification" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                         </div>
                                         <div style="padding-top:20px;">Grand total</div>
                                     </div>
@@ -354,8 +323,7 @@
                                             payment on accept
                                             estimate.</label>
                                     </h5>
-                                    <input type="text" name="deposit_amount" value="0" class="form-control"
-                                        autocomplete="off">
+                                    <input type="text" name="deposit_amount" value="0" class="form-control" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -367,8 +335,7 @@
                                         <label class="faded-info">Split the balance into multiple payment
                                             milestones.</label>
                                     </h5>
-                                    <div><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus-square"
-                                                aria-hidden="true"></i> Manage payment schedule </a></div>
+                                    <div><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Manage payment schedule </a></div>
                                 </div>
                             </div>
                         </div>
@@ -384,8 +351,7 @@
                                 </div>
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="credit_card_payments" value="1"
-                                            id="credit_card_payments" checked>
+                                        <input type="checkbox" name="credit_card_payments" value="1" id="credit_card_payments" checked>
                                         <label for="credit_card_payments"><span>Credit Card Payments ()</span></label>
                                     </div>
                                     <div class="faded-info">Your client can pay your invoice using credit card or bank
@@ -393,8 +359,7 @@
                                         money will be transferred to your bank account automatically.
                                     </div>
                                     <div class="payment-methods-img">
-                                        <img src="<?=base_url("/assets/frontend/images/credit_cards.png")?>"
-                                            alt="">
+                                        <img src="<?= base_url("/assets/frontend/images/credit_cards.png") ?>" alt="">
                                     </div>
                                     <div class="faded-info">Your payment processor is not set up <a href="#">setup
                                             payment</a>
@@ -403,8 +368,7 @@
 
                                 <div class="form-check">
                                     <div class="checkbox checkbox-sec margin-right">
-                                        <input type="checkbox" name="bank_transfer" value="1" id="bank_transfer"
-                                            checked>
+                                        <input type="checkbox" name="bank_transfer" value="1" id="bank_transfer" checked>
                                         <label for="bank_transfer"><span>Bank Transfer</span></label>
                                     </div>
                                 </div>
@@ -439,22 +403,20 @@
                                 <div class="form-group">
                                     <h5>Message to Customer</h5>
                                     <div class="faded-info">Add a message that will be displayed on the invoice.</div>
-                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control"
-                                        spellcheck="false">Thank you for your business.</textarea>
+                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control" spellcheck="false">Thank you for your business.</textarea>
                                 </div>
                                 <div class="form-group">
                                     <h5>Terms & Conditions</h5>
                                     <div class="faded-info">
                                         Mention your company's T&C that will appear on the invoice.
                                     </div>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"
-                                        spellcheck="false"></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control" spellcheck="false"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="file-upload">
+                                <!-- <div class="file-upload">
                                     <button class="file-upload-btn" type="button"
                                         onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 
@@ -473,6 +435,18 @@
                                                     File</span></button>
                                         </div>
                                     </div>
+                                </div> -->
+                                <div class="attachement-file-section">
+                                    <div class="label">
+                                        <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                    </div>
+                                    <button type="button" class="attachment-btn">
+                                        <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                    </button>
+                                    <input type="file" class="form-control" name="attachment-file" multiple>
+                                    <div class="attachement-viewer">
+                                    </div>
+                                    <input type="text" name="attachement-filenames" style="display: none;">
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -482,28 +456,23 @@
                     <div class="modal-footer-check">
                         <div class="row">
                             <div class="col-md-4" style="padding-left: 30px;">
-                                <button class="btn btn-dark cancel-button" data-action="close-modal"
-                                    type="button">Cancel</button>
-                                <button class="btn btn-dark cancel-button" data-action="clear-modal-form"
-                                    type="button">Clear</button>
+                                <button class="btn btn-dark cancel-button" data-action="close-modal" type="button">Cancel</button>
+                                <button class="btn btn-dark cancel-button" data-action="clear-modal-form" type="button">Clear</button>
 
                             </div>
                             <div class="col-md-5" align="center">
                             </div>
                             <div class="col-md-3" style="padding-right: 30px;">
                                 <div class="dropdown" style="float: right">
-                                    <button class="btn btn-dark cancel-button px-4" data-submit-type="save"
-                                        data-action="save" type="submit">Save as draft</button>
-                                    <button type="submit" data-submit-type="save-preview" data-action="save"
-                                        class="btn btn-success" id="checkSaved">Save and Preview</button>
+                                    <button class="btn btn-dark cancel-button px-4" data-submit-type="save" data-action="save" type="submit">Save as draft</button>
+                                    <button type="submit" data-submit-type="save-preview" data-action="save" class="btn btn-success" id="checkSaved">Save and Preview</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
                 <div style="margin: auto;">
-                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg"
-                            style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and
                         security of your information are top priorities.</span>
                 </div>
                 <div style="margin: auto">
@@ -515,8 +484,7 @@
     </div>
     <!--end of modal-->
 </div>
-<script type="text/javascript"
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>
     function initialize() {
         var input = document.getElementById('create_invoice_modal_job_location');

@@ -496,3 +496,10 @@ $(document).on("click", "#create_charge_modal form button[data-action='save']", 
 
     }
 });
+$(document).on("click", "#create_charge_modal form .attachement-file-section button.attachment-btn", function(event) {
+    // $(this).preventDefault();
+    $("#create_charge_modal form input[name='attachment-file']").trigger('click');
+});
+$(document).on("change", "#create_charge_modal form input[name='attachment-file']", function(event) {
+    upload_attachment("#create_charge_modal form");
+});

@@ -1,10 +1,10 @@
 <!-- add tax rate sidebar -->
-<script src="<?=$url->assets?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
-<script src="<?=$url->assets?>js/accounting/TaxRateAdder/accounting.min.js"></script>
+<script src="<?= $url->assets ?>js/accounting/TaxRateAdder/TaxRateAdder.js"></script>
+<script src="<?= $url->assets ?>js/accounting/TaxRateAdder/accounting.min.js"></script>
 <style>
-    @import url("<?=$url->assets?>css/accounting/tax/settings/settings.css");
-    @import url("<?=$url->assets?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
-    @import url("<?=$url->assets?>css/accounting/tax/taxrate-select/taxrate-select.css");
+    @import url("<?= $url->assets ?>css/accounting/tax/settings/settings.css");
+    @import url("<?= $url->assets ?>css/accounting/tax/dropdown-with-search/dropdown-with-search.css");
+    @import url("<?= $url->assets ?>css/accounting/tax/taxrate-select/taxrate-select.css");
 </style>
 <script>
     $(document).ready(function() {
@@ -56,18 +56,15 @@
                                 <input type="text" name="receive_payment_id" class="" style="display: none;">
                                 <div class="form-group">
                                     <div class="label" for="subject">Email</div>
-                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com"
-                                        disabled>
+                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com" disabled>
                                 </div>
                                 <div class="form-group">
                                     <div class="label" for="subject">Subject</div>
-                                    <input type="type" name="subject" class="required"
-                                        value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" required>
+                                    <input type="type" name="subject" class="required" value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" required>
                                 </div>
                                 <div class="form-group">
                                     <div class="label" for="subject">Body</div>
-                                    <textarea name="body" class="required" rows="8" maxlength="4000" spellcheck="false"
-                                        required>Dear Anita Campbell,
+                                    <textarea name="body" class="required" rows="8" maxlength="4000" spellcheck="false" required>Dear Anita Campbell,
 
 Please review the sales receipt below.
 We appreciate it very much.
@@ -91,10 +88,8 @@ Alarm Direct, Inc</textarea>
                     <div class="send_sales_receipt_section">
                         <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
                         <a type="button" class="download-button" target="_blank">Print</a>
-                        <button type="submit" data-submit-type="send-new" class="btn btn-success" id="checkSaved"
-                            style="border-radius: 20px 0 0 20px">Send and new</button>
-                        <button class="btn btn-success" type="button" data-toggle="dropdown"
-                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                        <button type="submit" data-submit-type="send-new" class="btn btn-success" id="checkSaved" style="border-radius: 20px 0 0 20px">Send and new</button>
+                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                             <span class="fa fa-caret-down"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                             <li>
@@ -118,12 +113,9 @@ Alarm Direct, Inc</textarea>
                         <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
                         Sales Receipt <span class="sales_receipt_number"></span>
                     </div>
-                    <button type="button" class="close" id="closeModalExpense" data-dismiss="modal"
-                        aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form
-                    action="<?php echo site_url()?>accounting/addSalesReceipt"
-                    method="post">
+                <form action="<?php echo site_url() ?>accounting/addSalesReceipt" method="post">
                     <input type="text" style="display: none;" value="" name="recurring_selected">
                     <input type="text" style="display: none;" value="" name="current_sales_recept_number">
                     <input type="text" style="display: none;" value="" name="submit_type">
@@ -137,8 +129,7 @@ Alarm Direct, Inc</textarea>
                                             <div class="row no-margin">
                                                 <div class="col-md-3  no-padding">
                                                     Template name
-                                                    <input type="text" class="form-control"
-                                                        name="recurring-template-name">
+                                                    <input type="text" class="form-control" name="recurring-template-name">
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div>Type</div>
@@ -154,8 +145,7 @@ Alarm Direct, Inc</textarea>
                                                             Create
                                                         </div>
                                                         <div class="recurring-days-in-advance">
-                                                            <input type="number" class="form-control"
-                                                                name="recurring-days-in-advance">
+                                                            <input type="number" class="form-control" name="recurring-days-in-advance">
                                                         </div>
                                                         <div class="recuring-label-recurring-days-in-advance">
                                                             days in advance
@@ -166,8 +156,7 @@ Alarm Direct, Inc</textarea>
                                                             Remind
                                                         </div>
                                                         <div class="remind-days-before">
-                                                            <input type="number" class="form-control"
-                                                                name="remind-days-before">
+                                                            <input type="number" class="form-control" name="remind-days-before">
                                                         </div>
                                                         <div class="label-2">
                                                             days before the transaction date
@@ -194,33 +183,27 @@ Alarm Direct, Inc</textarea>
                                     <div class="row">
                                         <div class="col-md-3 divided">
                                             Customer
-                                            <select class="form-control required" required name="customer_id"
-                                                id="sel-customer2">
+                                            <select class="form-control required" required name="customer_id" id="sel-customer2">
                                                 <option></option>
                                                 <?php foreach ($customers as $customer) : ?>
-                                                <option
-                                                    value="<?php echo $customer->prof_id; ?>"
-                                                    data-text="<?php echo $customer->first_name . ' ' . $customer->last_name; ?>">
-                                                    <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
-                                                </option>
+                                                    <option value="<?php echo $customer->prof_id; ?>" data-text="<?php echo $customer->first_name . ' ' . $customer->last_name; ?>">
+                                                        <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
+                                                    </option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="col-md-6 divided">
                                             Email
-                                            <input type="email" class="form-control required" required name="email"
-                                                id="email2">
+                                            <input type="email" class="form-control required" required name="email" id="email2">
                                             <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
                                         </div>
 
                                         <div class="col-md-3 option-part">
                                             <div class="recurring-form-part">
                                                 <div class="label-1">Options</div>
-                                                <div style="margin-top:5px;"><input type="checkbox"
-                                                        name="recurring_option_1">
+                                                <div style="margin-top:5px;"><input type="checkbox" name="recurring_option_1">
                                                     Automatically send emails</div>
-                                                <div style="margin-top:5px;"><input type="checkbox"
-                                                        name="recurring_option_2">
+                                                <div style="margin-top:5px;"><input type="checkbox" name="recurring_option_2">
                                                     Print later</div>
                                             </div>
                                         </div>
@@ -248,8 +231,7 @@ Alarm Direct, Inc</textarea>
                                                     </div>
                                                     <div class="label-1">every</div>
                                                     <div class="daily-days">
-                                                        <input type="number" class="form-control" name="daily-days"
-                                                            min="0">
+                                                        <input type="number" class="form-control" name="daily-days" min="0">
                                                     </div>
                                                     <div class="label-2">day(s)</div>
                                                 </div>
@@ -258,8 +240,7 @@ Alarm Direct, Inc</textarea>
                                                     </div>
                                                     <div class="label-1">every</div>
                                                     <div class="weekly-every">
-                                                        <input type="number" class="form-control" name="weekly-every"
-                                                            min="0">
+                                                        <input type="number" class="form-control" name="weekly-every" min="0">
                                                     </div>
                                                     <div class="label-2">week(s) on</div>
                                                     <div class="weekly-weeks-on">
@@ -356,8 +337,7 @@ Alarm Direct, Inc</textarea>
                                                     </div>
                                                     <div class="label-2">of every</div>
                                                     <div class="monthly-months">
-                                                        <input type="number" class="form-control" name="monthly-months"
-                                                            min="0">
+                                                        <input type="number" class="form-control" name="monthly-months" min="0">
                                                     </div>
                                                     <div class="label-3">
                                                         months
@@ -410,21 +390,18 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="col-md-3">
                                         Billing address
-                                        <textarea style="height:100px;width:100%;" name="billing_address"
-                                            id="billing_address2" class="required" required></textarea>
+                                        <textarea style="height:100px;width:100%;" name="billing_address" id="billing_address2" class="required" required></textarea>
                                     </div>
                                     <div class="col-md-3">
                                         Sales Receipt date<br>
-                                        <input type="text" class="form-control" name="sales_receipt_date"
-                                            id="datepickerinv8"><br>
+                                        <input type="text" class="form-control" name="sales_receipt_date" id="datepickerinv8"><br>
                                         Ship via<br>
                                         <input type="text" class="form-control" name="ship_via">
                                     </div>
                                     <div class="col-md-3">
                                         <br><br><br><br>
                                         Shipping date<br>
-                                        <input type="text" class="form-control" name="shipping_date"
-                                            id="datepickerinv9">
+                                        <input type="text" class="form-control" name="shipping_date" id="datepickerinv9">
                                     </div>
                                     <div class="col-md-3">
                                         <br><br><br><br>
@@ -447,13 +424,12 @@ Alarm Direct, Inc</textarea>
                                         <option value="0">Add New</option>
                                         <?php foreach ($paymethods as $paymethod) { ?>
                                         <option
-                                            value="<?php echo $paymethod->payment_method_id ; ?>">
+                                            value="<?php echo $paymethod->payment_method_id; ?>">
                                             <?php echo $paymethod->quick_name; ?>
                                         </option>
                                         <?php } ?>
                                         </select> -->
-                                        <select name="payment_method" id="payment_method"
-                                            class="form-control custom-select">
+                                        <select name="payment_method" id="payment_method" class="form-control custom-select">
                                             <option value="">Choose method</option>
                                             <option value="Cash">Cash</option>
                                             <option value="Check">Check</option>
@@ -493,8 +469,7 @@ Alarm Direct, Inc</textarea>
                                 <div class="label-grand_total_sr_t">AMOUNT</div>
                                 <h2><span id="grand_total_sr_t">0.00</span></h2><br>
                                 Location of sale<br>
-                                <input type="text" class="form-control required" required style="width:200px;"
-                                    name="location_scale">
+                                <input type="text" class="form-control required" required style="width:200px;" name="location_scale">
                             </div>
                         </div>
 
@@ -508,15 +483,13 @@ Alarm Direct, Inc</textarea>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="routing_number"
-                                            id="routing_number" />
+                                        <input type="text" class="form-control" name="routing_number" id="routing_number" />
                                     </div>
                                     <!-- </div>
                                         <div class="row"> -->
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="account_number"
-                                            id="account_number" />
+                                        <input type="text" class="form-control" name="account_number" id="account_number" />
                                     </div>
                                 </div>
                             </div>
@@ -525,24 +498,19 @@ Alarm Direct, Inc</textarea>
                                     <div class="col-md-12">
                                         Credit Card Type:<br>
                                         <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
-                                            id="radio_credit_card">
+                                            <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?> id="radio_credit_card">
                                             <label for="radio_credit_card"><span>Visa</span></label>
                                         </div>
                                         <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
-                                            id="radio_credit_cardAmex">
+                                            <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?> id="radio_credit_cardAmex">
                                             <label for="radio_credit_cardAmex"><span>Amex</span></label>
                                         </div>
                                         <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Mastercard"
-                                                <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
-                                            id="radio_credit_cardMastercard">
+                                            <input type="radio" name="card[radio_credit_card]" value="Mastercard" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?> id="radio_credit_cardMastercard">
                                             <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
                                         </div>
                                         <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Discover" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
-                                            id="radio_credit_cardMasterDiscover">
+                                            <input type="radio" name="card[radio_credit_card]" value="Discover" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?> id="radio_credit_cardMasterDiscover">
                                             <label for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
                                         </div>
                                     </div>
@@ -553,18 +521,15 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number"
-                                            placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry"
-                                            placeholder="MM/YYYY" />
+                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc"
-                                            placeholder="CVC" />
+                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC" />
                                     </div>
                                 </div>
                             </div>
@@ -575,31 +540,26 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <label for="monitored_location">Mail Address</label>
-                                        <input type="text" class="form-control" name="mail-address" id="mail-address"
-                                            placeholder="Monitored Location" />
+                                        <input type="text" class="form-control" name="mail-address" id="mail-address" placeholder="Monitored Location" />
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="city">City</label>
-                                        <input type="text" class="form-control" name="mail_locality" id="mail_locality"
-                                            placeholder="Enter Name" />
+                                        <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <label for="state">State</label>
-                                        <input type="text" class="form-control" name="mail_state" id="mail_state"
-                                            placeholder="Enter State" />
+                                        <input type="text" class="form-control" name="mail_state" id="mail_state" placeholder="Enter State" />
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <label for="zip">ZIP</label>
-                                        <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"
-                                            placeholder="Enter Zip" />
+                                        <input type="text" id="mail_postcode" name="mail_postcode" class="form-control" placeholder="Enter Zip" />
                                     </div>
 
                                     <div class="col-md-4 form-group">
                                         <label for="cross_street">Cross Street</label>
-                                        <input type="text" class="form-control" name="mail_cross_street"
-                                            id="mail_cross_street" placeholder="Cross Street" />
+                                        <input type="text" class="form-control" name="mail_cross_street" id="mail_cross_street" placeholder="Cross Street" />
                                     </div>
                                 </div>
                             </div>
@@ -607,18 +567,15 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="debit_credit_number"
-                                            id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="debit_credit_expiry"
-                                            id="credit_expiry" placeholder="MM/YYYY" />
+                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc"
-                                            placeholder="CVC" />
+                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC" />
                                     </div>
                                 </div>
                             </div>
@@ -626,13 +583,11 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="ach_routing_number"
-                                            id="ach_routing_number" />
+                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="ach_account_number"
-                                            id="ach_account_number" />
+                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
                                     </div>
                                 </div>
                             </div>
@@ -640,8 +595,7 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="account_credentials"
-                                            id="account_credentials" />
+                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
@@ -657,18 +611,15 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="paypal_account_credentials"
-                                            id="paypal_account_credentials" />
+                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="paypal_account_note"
-                                            id="paypal_account_note" />
+                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="paypal_confirmation"
-                                            id="paypal_confirmation" />
+                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation" />
                                     </div>
                                 </div>
                             </div>
@@ -676,18 +627,15 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="square_account_credentials"
-                                            id="square_account_credentials" />
+                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="square_account_note"
-                                            id="square_account_note" />
+                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="square_confirmation"
-                                            id="square_confirmation" />
+                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation" />
                                     </div>
                                 </div>
                             </div>
@@ -695,13 +643,11 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="warranty_account_credentials"
-                                            id="warranty_account_credentials" />
+                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="warranty_account_note"
-                                            id="warranty_account_note" />
+                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note" />
                                     </div>
                                 </div>
                             </div>
@@ -709,13 +655,11 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="home_account_credentials"
-                                            id="home_account_credentials" />
+                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="home_account_note"
-                                            id="home_account_note" />
+                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note" />
                                     </div>
                                 </div>
                             </div>
@@ -723,13 +667,11 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="e_account_credentials"
-                                            id="e_account_credentials" />
+                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="e_account_note"
-                                            id="e_account_note" />
+                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note" />
                                     </div>
                                 </div>
                             </div>
@@ -737,18 +679,15 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="other_credit_number"
-                                            id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="other_credit_expiry"
-                                            id="other_credit_expiry" placeholder="MM/YYYY" />
+                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="other_credit_cvc"
-                                            id="other_credit_cvc" placeholder="CVC" />
+                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC" />
                                     </div>
                                 </div>
                             </div>
@@ -756,13 +695,11 @@ Alarm Direct, Inc</textarea>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="other_payment_account_credentials"
-                                            id="other_payment_account_credentials" />
+                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="other_payment_account_note"
-                                            id="other_payment_account_note" />
+                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note" />
                                     </div>
                                 </div>
                             </div>
@@ -796,8 +733,7 @@ Alarm Direct, Inc</textarea>
                                 <tbody id="items_table_body_sales_receipt">
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control getItemssr required" required
-                                                onKeyup="getItemssr(this)" name="items[]">
+                                            <input type="text" class="form-control getItemssr required" required onKeyup="getItemssr(this)" name="items[]">
                                             <ul class="suggestions"></ul>
                                         </td>
                                         <td><select name="item_type[]" class="form-control">
@@ -806,26 +742,16 @@ Alarm Direct, Inc</textarea>
                                                 <option value="service">Service</option>
                                                 <option value="fee">Fee</option>
                                             </select></td>
-                                        <td width="150px"><input type="number"
-                                                class="form-control quantitysr required item-field-monitary" required
-                                                name="quantity[]" data-counter="0" id="quantity_0" value="1">
+                                        <td width="150px"><input type="number" class="form-control quantitysr required item-field-monitary" required name="quantity[]" data-counter="0" id="quantity_0" value="1">
                                         </td>
-                                        <td width="150px"><input type="number"
-                                                class="form-control pricesr required item-field-monitary" required
-                                                name="price[]" data-counter="0" id="price_sr_0" min="0" value="0"></td>
-                                        <td width="150px"><input type="number"
-                                                class="form-control discountsr required item-field-monitary" required
-                                                name="discount[]" data-counter="0" id="discount_sr_0" min="0" value="0">
+                                        <td width="150px"><input type="number" class="form-control pricesr required item-field-monitary" required name="price[]" data-counter="0" id="price_sr_0" min="0" value="0"></td>
+                                        <td width="150px"><input type="number" class="form-control discountsr required item-field-monitary" required name="discount[]" data-counter="0" id="discount_sr_0" min="0" value="0">
                                         </td>
-                                        <td width="150px"><input type="text"
-                                                class="form-control tax_change required item-field-monitary"
-                                                data-itemfieldtype="tax" required name="tax[]" data-counter="0"
-                                                id="tax1_sr_0" min="0" value="0">
+                                        <td width="150px"><input type="text" class="form-control tax_change required item-field-monitary" data-itemfieldtype="tax" required name="tax[]" data-counter="0" id="tax1_sr_0" min="0" value="0">
                                             <!-- <span id="span_tax_0">0.0</span> -->
                                             <input type="text" class="tax-hide" value="0" type="hidden">
                                         </td>
-                                        <td width="150px" align="right"><input type="hidden" class="form-control total_per_input"
-                                                name="total[]" data-counter="0" id="item_total_sr_0" min="0" value="0">
+                                        <td width="150px" align="right"><input type="hidden" class="form-control total_per_input" name="total[]" data-counter="0" id="item_total_sr_0" min="0" value="0">
                                             $<span class="total_per_item" id="span_total_sr_0">0.00</span></td>
                                     </tr>
                                     </tr>
@@ -838,9 +764,7 @@ Alarm Direct, Inc</textarea>
                             <div class="row">
                                 <div class="col-md-3">
                                     <!-- <button class="btn1">Add lines</button> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal"
-                                        data-target="#item_list2"><span
-                                            class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                 </div>
                                 <!-- <div class="col-md-1">
                                     <button class="btn1">Clear all lines</button>
@@ -930,44 +854,32 @@ Alarm Direct, Inc</textarea>
                                                 </div>
                                             </td>
                                             <td></td>
-                                            <td align="right">$ <span id="total_tax_sr_">0.00</span><input type="hidden" name="taxes"
-                                                    id="total_tax_input_sr"></td>
+                                            <td align="right">$ <span id="total_tax_sr_">0.00</span><input type="hidden" name="taxes" id="total_tax_input_sr"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name"
-                                                    id="adjustment_name" placeholder="Adjustment Name"
-                                                    class="form-control"
-                                                    style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
                                             </td>
                                             <td style="width:150px;">
-                                                <input type="number" name="adjustment_value" id="adjustment_input_sr"
-                                                    value="0" class="form-control adjustment_input_sr"
-                                                    style="width:100px; display:inline-block">
-                                                <span class="fa fa-question-circle" data-toggle="popover"
-                                                    data-placement="top" data-trigger="hover"
-                                                    data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
-                                                    data-original-title="" title=""></span>
+                                                <input type="number" name="adjustment_value" id="adjustment_input_sr" value="0" class="form-control adjustment_input_sr" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
                                             <td align="right">$<span id="adjustment_area_sr">0.00</span></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
                                         <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form"
-                                            class="markup_input" value="0">
+                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <!-- </tr> -->
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
                                             <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden"
-                                                    name="voucher_value" id="offer_cost_input"></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
                                             <td align="right"><b><span id="grand_total_sr">0.00</span>
-                                                    <input type="hidden" name="grand_total" id="grand_total_sr_g"
-                                                        value='0'></b></td>
+                                                    <input type="hidden" name="grand_total" id="grand_total_sr_g" value='0'></b></td>
                                         </tr>
                                     </table>
 
@@ -976,7 +888,7 @@ Alarm Direct, Inc</textarea>
                             <hr>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="file-upload">
+                                    <!-- <div class="file-upload">
                                         <button class="file-upload-btn" type="button"
                                             onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 
@@ -995,27 +907,33 @@ Alarm Direct, Inc</textarea>
                                                         File</span></button>
                                             </div>
                                         </div>
+                                    </div> -->
+                                    <div class="attachement-file-section">
+                                        <div class="label">
+                                            <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                        </div>
+                                        <button type="button" class="attachment-btn">
+                                            <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                        </button>
+                                        <input type="file" class="form-control" name="attachment-file" multiple>
+                                        <div class="attachement-viewer">
+                                        </div>
+                                        <input type="text" name="attachement-filenames" style="display: none;">
                                     </div>
                                 </div>
                                 <div class="col-md-8">
                                 </div>
                             </div>
                             <hr>
-
-
-
                         </div>
 
                         <hr>
                         <div class="modal-footer-check">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal"
-                                        type="button">Cancel</button>
-                                    <button class="btn btn-dark cancel-button" id="cancel_recurring" type="button"
-                                        style="display: none;">Cancel</button>
-                                    <button class="btn btn-dark cancel-button" id="clearsalereceipt"
-                                        type="button">Clear</button>
+                                    <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
+                                    <button class="btn btn-dark cancel-button" id="cancel_recurring" type="button" style="display: none;">Cancel</button>
+                                    <button class="btn btn-dark cancel-button" id="clearsalereceipt" type="button">Clear</button>
 
                                 </div>
                                 <div class="col-md-5" align="center">
@@ -1030,8 +948,7 @@ Alarm Direct, Inc</textarea>
                                                 </li>
                                             </ul>
                                             <div class="anchor-holder">
-                                                <img src="<?=base_url('assets/img/accounting/customers/anchor_down.png')?>"
-                                                    alt="">
+                                                <img src="<?= base_url('assets/img/accounting/customers/anchor_down.png') ?>" alt="">
                                             </div>
                                         </div>
                                         <a href="" class="print-preview-option">Print or Preview</a>
@@ -1042,17 +959,13 @@ Alarm Direct, Inc</textarea>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" data-submit-type="save"
-                                            type="submit">Save</button>
-                                        <button type="submit" data-submit-type="save-send" class="btn btn-success"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                        <button class="btn btn-dark cancel-button px-4" data-submit-type="save" type="submit">Save</button>
+                                        <button type="submit" data-submit-type="save-send" class="btn btn-success" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
+                                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                             <span class="fa fa-caret-down"></span>&nbsp;</button>
                                         <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                                             <li>
-                                                <button type="submit" data-submit-type="save-close" id="checkSaved"
-                                                    style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
+                                                <button type="submit" data-submit-type="save-close" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
                                                 ">Save and close</button>
                                             </li>
                                             <li>
@@ -1066,8 +979,7 @@ Alarm Direct, Inc</textarea>
                         </div>
                 </form>
                 <div style="margin: auto;">
-                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg"
-                            style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and
                         security of your information are top priorities.</span>
                 </div>
                 <div style="margin: auto">
@@ -1082,10 +994,8 @@ Alarm Direct, Inc</textarea>
 
 
 <!-- Modal -->
-<div class="modal fade" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document"
-        style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+<div class="modal fade" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -1106,24 +1016,19 @@ Alarm Direct, Inc</textarea>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($items as $item) { // print_r($item);?>
-                                <tr>
-                                    <td><?php echo $item->title; ?>
-                                    </td>
-                                    <td><?= $item->units; ?>
-                                    </td>
-                                    <td><?php echo $item->price; ?>
-                                    </td>
-                                    <td><button
-                                            id="<?= $item->id; ?>"
-                                            data-quantity="<?= $item->units; ?>"
-                                            data-itemname="<?= $item->title; ?>"
-                                            data-price="<?= $item->price; ?>"
-                                            type="button" data-dismiss="modal"
-                                            class="btn btn-sm btn-default select_item_sr">
-                                            <span class="fa fa-plus"></span>
-                                        </button></td>
-                                </tr>
+                                <?php foreach ($items as $item) { // print_r($item);
+                                ?>
+                                    <tr>
+                                        <td><?php echo $item->title; ?>
+                                        </td>
+                                        <td><?= $item->units; ?>
+                                        </td>
+                                        <td><?php echo $item->price; ?>
+                                        </td>
+                                        <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item_sr">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                    </tr>
 
                                 <?php } ?>
                             </tbody>
@@ -1133,8 +1038,7 @@ Alarm Direct, Inc</textarea>
             </div>
             <div class="modal-footer modal-footer-detail">
                 <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span
-                            class="fa fa-remove"></span> Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
                 </div>
             </div>
         </div>

@@ -2553,7 +2553,7 @@ class Accounting_modals extends MY_Controller
                     $expenseData = [
                         'payee_type' => $payee[0],
                         'payee_id' => $payee[1],
-                        'payment_account_id' => $data['payment_account'],
+                        'payment_account_id' => $data['expense_payment_account'],
                         'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                         'payment_method_id' => $data['payment_method'],
                         'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
@@ -2616,7 +2616,7 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+                $paymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
                 if ($paymentAccType->account_name === 'Credit Card') {
@@ -5502,6 +5502,7 @@ class Accounting_modals extends MY_Controller
                     'Other Current Assets',
                     'Fixed Assets',
                     'Accounts payable (A/P)',
+                    'Credit Card',
                     'Other Current Liabilities',
                     'Long Term Liabilities',
                     'Equity'

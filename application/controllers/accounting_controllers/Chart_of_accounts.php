@@ -509,11 +509,27 @@ class Chart_of_accounts extends MY_Controller {
 
     public function view_register($id)
     {
+        $account = $this->chart_of_accounts_model->getById($id);
+        $accountType = $this->account_model->getById($account->account_id);
+        $type = $accountType->account_name;
+        if(stripos($type, 'Assets')) {
+            $type = 'Asset';
+        } else if(stripos($type, 'A/R')) {
+            $type = 'A/R';
+        } else if(stripos($type, 'A/P')) {
+            $type = 'A/P';
+        } else if(stripos($type, 'Liabilities')) {
+            $type = 'Liability';
+        } else if(stripos($type, 'Equity')) {
+            $type = 'Equity';
+        }
+
         add_footer_js(array(
             "assets/js/accounting/accounting/view-register.js?v=".rand()
         ));
 
-        $this->page_data['account'] = $this->chart_of_accounts_model->getById($id);
+        $this->page_data['account'] = $account;
+        $this->page_data['type'] = $type;
         $this->load->view('accounting/chart_of_accounts/view_register', $this->page_data);
     }
 
@@ -531,6 +547,9 @@ class Chart_of_accounts extends MY_Controller {
         $data = [];
 
         switch($post['transaction_type']) {
+            case 'cc-expense' :
+                $data = $this->cc_expense_registers($accountId, $data);
+            break;
             case 'check' :
                 $data = $this->check_registers($accountId, $data);
             break;
@@ -558,6 +577,9 @@ class Chart_of_accounts extends MY_Controller {
             case 'deposit' :
                 $data = $this->deposit_registers($accountId, $data);
             break;
+            case 'cash-expense' :
+                $data = $this->cash_expense_registers($accountId, $data);
+            break;
             case 'inv-qty-adjustment' :
                 $data = $this->quantity_adjustment_registers($accountId, $data);
             break;
@@ -571,6 +593,7 @@ class Chart_of_accounts extends MY_Controller {
                 $data = $this->credit_card_payment_registers($accountId, $data);
             break;
             default : 
+                $data = $this->cc_expense_registers($accountId, $data);
                 $data = $this->check_registers($accountId, $data);
                 $data = $this->journal_registers($accountId, $data);
                 $data = $this->bill_registers($accountId, $data);
@@ -638,14 +661,17 @@ class Chart_of_accounts extends MY_Controller {
             $registers = $data;
 
             usort($registers, function($a, $b) {
+                if(strtotime($a['date']) === strtotime($b['date'])) {
+                    return strtotime($a['date_created']) < strtotime($b['date_created']);
+                }
                 return strtotime($a['date']) < strtotime($b['date']);
             });
+
             $accBalance = floatval($account->balance);
             foreach($registers as $key => $reg) {
-                $accBalance += floatval($reg['deposit']);
-                $accBalance -= floatval($reg['payment']);
-
-                $registers[$key]['balance'] = number_format($accBalance, 2, '.', ',');
+                $registers[$key]['balance'] = '$'.number_format($accBalance, 2, '.', ',');
+                $accBalance -= floatval($reg['deposit']);
+                $accBalance += floatval($reg['payment']);
             }
 
             $data = $registers;
@@ -729,6 +755,98 @@ class Chart_of_accounts extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    private function cc_expense_registers($accountId, $data = [])
+    {
+        $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
+
+        foreach($expenses as $expense) {
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+
+            if($accountType->account_name === 'Credit Card') {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'type' => 'CC Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'account' => $this->account_col($expense->id, 'Expense'),
+                    'memo' => $expense->memo,
+                    'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
+                ];
+            }
+        }
+
+        $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Expense');
+
+        foreach($expenseCategories as $expenseCategory) {
+            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            if($accountType->account_name === 'Credit Card') {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'type' => 'CC Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'account' => $account->name,
+                    'memo' => $expense->memo,
+                    'payment' => '',
+                    'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
+                ];
+            }
+        }
+
+        return $data;
     }
 
     private function check_registers($accountId, $data = [])
@@ -1086,6 +1204,100 @@ class Chart_of_accounts extends MY_Controller {
         return $data;
     }
 
+    private function cash_expense_registers($accountId, $data = [])
+    {
+        $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
+
+        foreach($expenses as $expense) {
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+            $detailType = $this->account_detail_model->getById($account->acc_detail_id);
+
+            if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'type' => 'Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'account' => $this->account_col($expense->id, 'Expense'),
+                    'memo' => $expense->memo,
+                    'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
+                ];
+            }
+        }
+
+        $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Expense');
+
+        foreach($expenseCategories as $expenseCategory) {
+            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+            $detailType = $this->account_detail_model->getById($account->acc_detail_id);
+
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'type' => 'Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'account' => $account->name,
+                    'memo' => $expense->memo,
+                    'payment' => '',
+                    'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
+                ];
+            }
+        }
+
+        return $data;
+    }
+
     private function quantity_adjustment_registers($accountId, $data = [])
     {
         $this->load->model('accounting_inventory_qty_adjustments_model');
@@ -1184,30 +1396,37 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $data[] = [
-                'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
-                'type' => 'Expense',
-                'payee_type' => $expense->payee_type,
-                'payee_id' => $expense->payee_id,
-                'payee' => $payeeName,
-                'account' => $this->account_col($expense->id, 'Expense'),
-                'memo' => $expense->memo,
-                'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
-                'deposit' => '',
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
-            ];
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+
+            if($accountType->account_name !== 'Credit Card') {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'type' => 'Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'account' => $this->account_col($expense->id, 'Expense'),
+                    'memo' => $expense->memo,
+                    'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
+                    'deposit' => '',
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
+                ];
+            }
         }
 
         $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Expense');
 
         foreach($expenseCategories as $expenseCategory) {
             $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
 
             switch($expense->payee_type) {
                 case 'vendor':
@@ -1224,24 +1443,26 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $data[] = [
-                'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
-                'type' => 'Expense',
-                'payee_type' => $expense->payee_type,
-                'payee_id' => $expense->payee_id,
-                'payee' => $payeeName,
-                'account' => $this->account_col($expense->id, 'Expense'),
-                'memo' => $expense->memo,
-                'payment' => '',
-                'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
-                'reconcile_status' => '',
-                'banking_status' => '',
-                'attachments' => '',
-                'tax' => '',
-                'balance' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
-            ];
+            if($accountType->account_name !== 'Credit Card') {
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'type' => 'Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'account' => $account->name,
+                    'memo' => $expense->memo,
+                    'payment' => '',
+                    'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
+                ];
+            }
         }
 
         return $data;

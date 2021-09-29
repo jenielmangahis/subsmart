@@ -547,3 +547,54 @@ div#saved-notification-modal-section {
 .tax-hide {
     display: none;
 }
+
+
+#addsalesreceiptModal form .attachement-file-section {
+    border: dashed 4px #EAF3EE;
+    padding: 10px;
+    margin: 20px 0;
+    background-color: #fff;
+}
+
+#addsalesreceiptModal form .attachement-file-section .label {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    background: #fff;
+    position: absolute;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+#addsalesreceiptModal form .attachement-file-section button.attachment-btn {
+    background: #2CA01C;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 36px;
+    height: auto;
+    border: none;
+    margin: 10px;
+    margin-top: 30px;
+}
+
+#addsalesreceiptModal form .attachement-file-section input[name='attachment-file'] {
+    display: none;
+}
+
+#addsalesreceiptModal form .attachement-viewer {
+    display: flow-root;
+}
+
+#addsalesreceiptModal form .attachement-file-section .attachement-viewer img {
+    float: left;
+    width: 109px;
+    padding: 3px;
+    border: solid 1px #EAF3EE;
+    margin: 3px;
+}
+
+#addsalesreceiptModal form .attachement-file-section button.attachment-btn:hover {
+    background: #238a15;
+}

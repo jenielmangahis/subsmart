@@ -775,8 +775,8 @@ function upload_attachment(target_form) {
                     $(target_form + " .attachement-file-section input[name='attachement-filenames']").val(data.uniquesavename + "." + data.ext + "," + filenmae_val);
                 }
                 var viewer_images = $(target_form + ' .attachement-file-section div.attachement-viewer').html();
-                if (data.ext != "jpg" && data.ext != "jpeg" && data.ext != "png") {
-                    viewer_images += '<img src="' + baseURL + 'uploads/accounting/attachments/forms/folder.png" alt="">';
+                if (data.ext != "jpg" && data.ext != "jpeg" && data.ext != "png" && data.ext != "JPG" && data.ext != "JPEG" && data.ext != "PNG") {
+                    viewer_images += '<img src="' + baseURL + 'assets/img/accounting/customers/document.png" alt="">';
                 } else {
                     viewer_images += '<img src="' + baseURL + data.destination + '" alt="">';
                 }
