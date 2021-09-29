@@ -1049,6 +1049,17 @@ class Register extends MYF_Controller {
                 'phone_m'         => $post['phone']
             );
             $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
+
+            //Create leads
+            $leads_input = array(
+                'company_id'    => 1,
+                'firstname'     => $post['firstname'],
+                'lastname'      => $post['lastname'],
+                'phone_cell'    => $post['phone'],
+                'email_add'     => $post['email'],
+                'address'       => $post['business_address'],
+            );
+            $this->Customer_advance_model->add($leads_input, "ac_leads");
         }
 
         $json_data = ['is_success' => $is_success];

@@ -282,7 +282,7 @@
                                 <div class="delayed_charge_date">
                                     <div class="form-group">
                                         <label for="job_type">Delayed Charge date</label>
-                                        <input type="date" class="form-control" name="delayed_charge_date" required/>
+                                        <input type="date" class="form-control" name="delayed_charge_date" required />
                                     </div>
                                 </div>
                             </div>
@@ -393,7 +393,7 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="file-upload">
+                                    <!-- <div class="file-upload">
                                         <button class="file-upload-btn" type="button"
                                             onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 
@@ -412,6 +412,18 @@
                                                         File</span></button>
                                             </div>
                                         </div>
+                                    </div> -->
+                                    <div class="attachement-file-section">
+                                        <div class="label">
+                                            <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                        </div>
+                                        <button type="button" class="attachment-btn">
+                                            <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                        </button>
+                                        <input type="file" class="form-control" name="attachment-file" multiple>
+                                        <div class="attachement-viewer">
+                                        </div>
+                                        <input type="text" name="attachement-filenames" style="display: none;">
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -442,17 +454,18 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" data-action="save" data-submit-type="save"
-                                            type="submit">Save</button>
-                                        <button type="submit" data-submit-type="save-new"  data-action="save" class="btn btn-success"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                        <button class="btn btn-dark cancel-button px-4" data-action="save"
+                                            data-submit-type="save" type="submit">Save</button>
+                                        <button type="submit" data-submit-type="save-new" data-action="save"
+                                            class="btn btn-success" id="checkSaved"
+                                            style="border-radius: 20px 0 0 20px">Save and new</button>
                                         <button class="btn btn-success" type="button" data-toggle="dropdown"
                                             style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                             <span class="fa fa-caret-down"></span>&nbsp;</button>
                                         <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                                             <li>
-                                                <button type="submit" data-submit-type="save-close"  data-action="save" id="checkSaved"
-                                                    style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
+                                                <button type="submit" data-submit-type="save-close" data-action="save"
+                                                    id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
                                                 ">Save and close</button>
                                             </li>
                                         </ul>

@@ -40,10 +40,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 ">
                                     <div class="row">
-                                        <div class="col-sm-3">
-                                            <h3 class="page-title" style="margin: 0 !important">Bank Register</h3>
+                                        <div class="col-sm-4">
+                                            <h3 class="page-title" style="margin: 0 !important"><?=$type?> Register</h3>
                                         </div>
                                         <div class="col-sm-4">
                                             <select name="account" id="account" class="form-control">

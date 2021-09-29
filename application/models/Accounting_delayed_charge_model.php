@@ -40,7 +40,7 @@ class Accounting_delayed_charge_model extends MY_Model {
     }
 	public function getDelayedChargeDetails($id){
 	    $query = $this->db->get_where('accounting_delayed_charge', array('id' => $id));
-	    return $query->result();
+	    return $query->row();
     }
 	public function delete_delayed_charge_items($delayed_charge_id)
 	{

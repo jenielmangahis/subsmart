@@ -276,10 +276,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addsalesreceiptModal">Sales
                             Receipt</a>
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#credit-memo">Credit Memo</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delayed-charge">Delayed
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#adddelayedchargeModal">Delayed
                             Charge</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#sales-time-activity">Time
-                            Activity</a>
+                        <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#sales-time-activity">Time
+                            Activity</a> -->
+                        <a href="#" class="dropdown-item ajax-single_time_activity_modal" data-view="single_time_activity_modal" data-toggle="modal" data-target="#singleTimeModal">Single time activity</a>
                     </div>
                 </div>
 
@@ -2884,7 +2885,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <th>Total</th>
                                     </thead>
                                     <tbody id="items_table_body_credit_memo">
-                                    <tr>
+                                        <tr>
                                                 <td>
                                                     <input type="text" class="form-control getItemsCM"
                                                         onKeyup="getItemscm(this)" name="items[]">
@@ -2910,7 +2911,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         data-counter="0" id="item_total_0" min="0" value="0">
                                                         $<span id="span_total_0">0.00</span></td>
                                             </tr>
-                                    </tr>
+                                        </tr>
                                     </tbody>
                                 </table>
                             <div>
@@ -2978,42 +2979,42 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </table> -->
 
                                 <table class="table" style="text-align:left;">
-                                            <tr>
-                                                <td>Subtotal</td>
-                                                <td></td>
-                                                <td align="right">$ <span id="span_sub_total_cm">0.00</span>
-                                                    <input type="hidden" name="subtotal" id="item_total"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Taxes</td>
-                                                <td></td>
-                                                <td align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                <td style="width:150px;">
-                                                <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
-                                                    <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                                </td>
-                                                <td align="right">$<span id="adjustment_area">0.00</span></td>
-                                            </tr>
-                                            <!-- <tr>
-                                                <td>Markup $<span id="span_markup"></td> -->
-                                                <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                                <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                            <!-- </tr> -->
-                                            <tr id="saved" style="color:green;font-weight:bold;display:none;">
-                                                <td>Amount Saved</td>
-                                                <td></td>
-                                                <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
-                                            </tr>
-                                            <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                                <td><b>Grand Total ($)</b></td>
-                                                <td></td>
-                                                <td align="right"><b><span id="grand_total_cm">0.00</span>
-                                                    <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                            </tr>
-                                        </table>
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td></td>
+                                            <td align="right">$ <span id="span_sub_total_cm">0.00</span>
+                                                <input type="hidden" name="subtotal" id="item_total"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td></td>
+                                            <td align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
+                                            <td align="right">$<span id="adjustment_area">0.00</span></td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td>Markup $<span id="span_markup"></td> -->
+                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                            <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <!-- </tr> -->
+                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
+                                            <td>Amount Saved</td>
+                                            <td></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                        </tr>
+                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
+                                            <td><b>Grand Total ($)</b></td>
+                                            <td></td>
+                                            <td align="right"><b><span id="grand_total_cm">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                        </tr>
+                                    </table>
                             </div>
                         </div>
                         <hr>
@@ -3557,8 +3558,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/footer_accounting'); ?>
 <?php include viewPath('accounting/estimate_one_modal'); ?>
-<div><?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
-</div>
+<?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
+<?php //include viewPath('accounting/customer_credit_memo_modal'); ?>
+<?php include viewPath('accounting/customer_delayed_charge_modal'); ?>
+<div></div>
 
 <script>
     function setitem(obj, title, price, discount, itemid) {
@@ -4614,6 +4617,70 @@ function single_customer_get_transaction_lists(customer_id) {
 
 <script>
 
+$(document).on("focusout", ".adjustment_input_cm_c", function () {
+  // var counter = $(this).data("counter");
+  // alert('yeah');
+  // calculationcm(counter);
+  var grand_total = $("#grand_total_input").val();
+  var adjustment = $("#adjustment_input_cm").val();
+
+  grand_total = parseFloat(grand_total) + parseFloat(adjustment);
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+  
+  var s_total = subtotal.toFixed(2);
+  var grand_total_w = s_total - parseFloat(adjustment);
+  // var markup = $("#markup_input_form").val();
+  // var grand_total_w = s_total + parseFloat(adjustment);
+
+  // $("#total_tax_").text(subtotaltax.toFixed(2));
+  // $("#total_tax_").val(subtotaltax.toFixed(2));
+
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#adjustment_area").text(adjustment);
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
+  // alert(adjustment);
+});
+
+</script>
+
+<script>
+$(document).ready(function(){
+ 
+ $('#sel-customer').change(function(){
+ var id  = $(this).val();
+//  alert(id);
+
+     $.ajax({
+         type: 'POST',
+         url:"<?php echo base_url(); ?>accounting/addLocationajax",
+         data: {id : id },
+         dataType: 'json',
+         success: function(response){
+            //  alert('success');
+             console.log(response);
+         $("#email").val(response['customer'].email);
+         $("#billing_address").html(response['customer'].billing_address);
+     
+         },
+             error: function(response){
+             alert('Error'+response);
+    
+             }
+     });
+ });
+    });
+</script>
+
+<script>
+
 function getItemscm(obj) {
   var sk = jQuery(obj).val();
   var site_url = jQuery("#siteurl").val();
@@ -5067,4 +5134,10 @@ $("#total_tax_").text(over_tax);
   $("#sales_tax").val(sls);
   cal_total_due();
         });
+</script>
+<script>
+$('#addcreditmemoModal').modal({
+    backdrop: 'static',
+    keyboard: false
+});
 </script>

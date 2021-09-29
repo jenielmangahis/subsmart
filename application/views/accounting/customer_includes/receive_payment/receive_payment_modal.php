@@ -571,16 +571,16 @@
                                     <div class="row no-margin">
                                         <div class="col-md-12 no-padding">
                                             <div class="attachement-file-section">
-                                                    <div class="label">
-                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
-                                                    </div>
-                                                    <button type="button" class="attachment-btn">
-                                                        <i class="fa fa-upload" aria-hidden="true"></i> Upload
-                                                    </button>
-                                                    <input type="file" class="form-control" name="attachment-file" multiple>
-                                                    <div class="attachement-viewer">
-                                                    </div>
-                                                    <input type="text" name="attachement-filenames" style="display: none;">
+                                                <div class="label">
+                                                    <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                                </div>
+                                                <button type="button" class="attachment-btn">
+                                                    <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                                </button>
+                                                <input type="file" class="form-control" name="attachment-file" multiple>
+                                                <div class="attachement-viewer">
+                                                </div>
+                                                <input type="text" name="attachement-filenames" style="display: none;">
                                             </div>
                                         </div>
                                     </div>

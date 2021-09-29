@@ -757,3 +757,51 @@ div#create_invoice_modal form .white-section .form-check label {
     max-height: 300px;
     overflow: auto;
 }
+
+#create_invoice_modal form .attachement-file-section {
+    border: dashed 4px #EAF3EE;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+#create_invoice_modal form .attachement-file-section .label {
+    margin-top: -24px;
+    margin-bottom: 10px;
+    background: #fff;
+    position: absolute;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+#create_invoice_modal form .attachement-file-section button.attachment-btn {
+    background: #2CA01C;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 36px;
+    height: auto;
+    border: none;
+    margin: 10px;
+}
+
+#create_invoice_modal form .attachement-file-section input[name='attachment-file'] {
+    display: none;
+}
+
+#create_invoice_modal form .attachement-viewer {
+    display: flow-root;
+}
+
+#create_invoice_modal form .attachement-file-section .attachement-viewer img {
+    float: left;
+    width: 109px;
+    padding: 3px;
+    border: solid 1px #EAF3EE;
+    margin: 3px;
+}
+
+#create_invoice_modal form .attachement-file-section button.attachment-btn:hover {
+    background: #238a15;
+}

@@ -228,8 +228,11 @@ $(document).on("click", "#create_invoice_modal form button[data-action='save']",
                                 if (submit_type == "save-preview") {
                                     window.location.href = baseURL + "invoice/genview/" + data.invoice_id;
                                 } else if (submit_type == "save") {
-                                    $('#create_invoice_modal').modal('hide');
+                                    $("#create_invoice_modal form .attachement-file-section input[name='attachment-file']").val("");
+                                    $("#create_invoice_modal form .attachement-file-section input[name='attachement-filenames']").val("");
+                                    upload_attachment("#create_invoice_modal form");
                                     reset_create_invoice_modal_form();
+                                    $('#create_invoice_modal').modal('hide');
                                 }
                             });
 
@@ -283,9 +286,19 @@ $(document).on("click", "#create_invoice_modal .item-buttons .clear-all-lines", 
 });
 
 function reset_create_invoice_modal_form() {
+    $("#create_invoice_modal form .attachement-file-section input[name='attachment-file']").val("");
+    upload_attachment("#create_invoice_modal form");
     var customer_id = $("#create_invoice_modal form select[name='customer_id']").val();
     $('#create_invoice_modal form').trigger("reset");
     $("#create_invoice_modal form select[name='customer_id']").val(customer_id);
     create_invoice_modal_customer_changed(customer_id);
     create_invoice_modal_clear_all_lines();
 }
+
+$(document).on("click", "#create_invoice_modal form .attachement-file-section button.attachment-btn", function(event) {
+    // $(this).preventDefault();
+    $("#create_invoice_modal form input[name='attachment-file']").trigger('click');
+});
+$(document).on("change", "div#create_invoice_modal form input[name='attachment-file']", function(event) {
+    upload_attachment("#create_invoice_modal form");
+});
