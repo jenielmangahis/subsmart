@@ -547,7 +547,7 @@ div#customer_receive_payment_modal .customer_receive_payment_modal_content #cust
     display: none;
 }
 
-.attachement-viewer {
+#customer_receive_payment_modal form .attachement-viewer {
     display: flow-root;
 }
 

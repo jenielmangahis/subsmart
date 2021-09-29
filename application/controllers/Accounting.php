@@ -52,7 +52,7 @@ class Accounting extends MY_Controller
         $this->load->model('Accounting_statements_model', 'accounting_statements_model');
         $this->load->library('excel');
         $this->load->library('pdf');
-//        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
+        //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css",
@@ -81,30 +81,30 @@ class Accounting extends MY_Controller
                 // array("Dashboard",	array()),
                 // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
                 array("Cash Flow",   array()),
-                array("Expenses",   array('Expenses','Vendors')),
-                array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
-                array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
+                array("Expenses",   array('Expenses', 'Vendors')),
+                array("Sales",      array('Overview', 'All Sales', 'Estimates', 'Customers', 'Deposits', 'Work Order', 'Invoice', 'Jobs')),
+                array("Payroll",    array('Overview', 'Employees', 'Contractors', "Workers' Comp", 'Benifits')),
                 array("Reports",    array()),
-                array("Taxes",      array("Sales Tax","Payroll Tax")),
+                array("Taxes",      array("Sales Tax", "Payroll Tax")),
                 // array("Mileage",    array()),
-                array("Accounting", array("Chart of Accounts","Reconcile"))
+                array("Accounting", array("Chart of Accounts", "Reconcile"))
             );
         $this->page_data['menu_link'] =
             array(
                 // array('/accounting/banking',array()),
                 // array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
-                array('/accounting/cashflowplanner',array()),
-                array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
-                array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
-                array('/accounting/reports',array()),
-                array("",   array('/accounting/salesTax','/accounting/payrollTax')),
+                array('/accounting/cashflowplanner', array()),
+                array("",    array('/accounting/expenses', '/accounting/vendors')),
+                array("",    array('/accounting/sales-overview', '/accounting/all-sales', '/accounting/newEstimateList', '/accounting/customers', '/accounting/deposits', '/accounting/listworkOrder', '/accounting/invoices', '/accounting/jobs')),
+                array("",    array('/accounting/payroll-overview', '/accounting/employees', '/accounting/contractors', '/accounting/workers-comp', '#')),
+                array('/accounting/reports', array()),
+                array("",   array('/accounting/salesTax', '/accounting/payrollTax')),
                 // array('#',  array()),
-                array("",   array('/accounting/chart-of-accounts','/accounting/reconcile')),
+                array("",   array('/accounting/chart-of-accounts', '/accounting/reconcile')),
             );
 
 
-        $this->page_data['menu_icon'] = array("fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+        $this->page_data['menu_icon'] = array("fa-credit-card", "fa-money", "fa-dollar", "fa-bar-chart", "fa-minus-circle", "fa-file", "fa-calculator");
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
         $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
@@ -330,10 +330,10 @@ class Accounting extends MY_Controller
         ));
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        
+
         $this->page_data['page_title'] = "Customers";
         $this->page_data['accounting_timesheet_settings'] = $this->accounting_customers_model->get_accounting_timesheet_settings(logged("company_id"));
-        
+
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         $terms = $this->accounting_terms_model->getCompanyTerms_a(logged('company_id'));
@@ -348,7 +348,7 @@ class Accounting extends MY_Controller
             $this->page_data['setting'] = $setting;
             $this->page_data['terms'] = $terms;
         }
-        
+
         $this->load->view('accounting/customers', $this->page_data);
     }
     public function deposits()
@@ -527,7 +527,7 @@ class Accounting extends MY_Controller
             'date_created'                      => date("Y-m-d H:i:s"),
             'date_modified'                     => date("Y-m-d H:i:s")
         );
-    
+
         $addQuery3 = $this->account_model->createQuoteContacts($new_data);
 
 
@@ -566,7 +566,7 @@ class Accounting extends MY_Controller
         $this->page_data['page_title'] = "A/R Aging Summary Report";
         $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
     }
-    
+
     public function balance_sheet()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -717,7 +717,7 @@ class Accounting extends MY_Controller
     public function createBill()
     {
         $id = logged('id');
-        $filePath = "uploads/accounting/vendors/bill/".$id;
+        $filePath = "uploads/accounting/vendors/bill/" . $id;
         $file_name = "";
 
         if (!file_exists($filePath)) {
@@ -791,7 +791,7 @@ class Accounting extends MY_Controller
         if ($addQuery > 0) {
             $new_id = $addQuery;
             $term_id = mb_substr($this->input->post('term_name'), 0, 3) . $new_id;
-            $updateQuery = $this->terms_model->update($new_id, array("term_id" =>$term_id));
+            $updateQuery = $this->terms_model->update($new_id, array("term_id" => $term_id));
 
             if ($updateQuery > 0) {
                 echo json_encode($updateQuery);
@@ -948,12 +948,12 @@ class Accounting extends MY_Controller
         $query = $this->expenses_model->addBill($new_data);
 
         $new_data2[] = array(
-           'category' => 'testing 2',
-           'description' => 1,
-           'amount' => $user_id,
-       );
+            'category' => 'testing 2',
+            'description' => 1,
+            'amount' => $user_id,
+        );
 
-        foreach ($new_data2 as $datas=>$data) {
+        foreach ($new_data2 as $datas => $data) {
             $category = $data['username'];
             $description = $data['description'];
             $amount = $data['amount'];
@@ -977,14 +977,14 @@ class Accounting extends MY_Controller
     {
         $id = $this->input->get('id');
         $transaction_id = $this->input->get('transaction_id');
-        $bills = $this->db->get_where('accounting_bill', array('id'=> $id));
+        $bills = $this->db->get_where('accounting_bill', array('id' => $id));
         $vendors = $this->db->get_where('accounting_vendors', array('vendor_id' => $bills->row()->vendor_id));
-        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id'=>$id,'transaction_id' => $transaction_id));
+        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id' => $id, 'transaction_id' => $transaction_id));
 
         $data = new stdClass();
         $data->vendor_id = $vendors->row()->vendor_id;
         $data->bill_id = $bills->row()->id;
-        $data->vendor_name = $vendors->row()->f_name.'&nbsp;'.$vendors->row()->l_name;
+        $data->vendor_name = $vendors->row()->f_name . '&nbsp;' . $vendors->row()->l_name;
         $data->address = $bills->row()->mailing_address;
         $data->terms = $bills->row()->terms;
         $data->bill_date = $bills->row()->bill_date;
@@ -992,7 +992,7 @@ class Accounting extends MY_Controller
         $data->bill_number = $bills->row()->bill_number;
         $data->permit_number = $bills->row()->permit_number;
         $data->memo = $bills->row()->memo;
-        $data->check_category = ($check_category->num_rows() > 0)?true:false;
+        $data->check_category = ($check_category->num_rows() > 0) ? true : false;
         echo json_encode($data);
     }
 
@@ -1035,7 +1035,7 @@ class Accounting extends MY_Controller
     /*** Attachment for Expense Transaction***/
     public function expensesTransactionAttachment()
     {
-        if (! empty($_FILES)) {
+        if (!empty($_FILES)) {
             $config = array(
                 'upload_path' => './uploads/accounting/expenses/',
                 'allowed_types' => '*',
@@ -1049,7 +1049,7 @@ class Accounting extends MY_Controller
             $this->load->library('upload', $config);
             if ($this->upload->do_upload("file")) {
                 $uploadData = $this->upload->data();
-                $data = array('attachment'=> $uploadData['file_name']);
+                $data = array('attachment' => $uploadData['file_name']);
                 $this->db->insert('accounting_expense_attachment', $data);
                 echo json_encode($uploadData['file_name']);
             }
@@ -1060,8 +1060,8 @@ class Accounting extends MY_Controller
     {
         $file = $this->input->post('name');
         $index = $this->input->post('index');
-        if ($file && file_exists($this->expenses_path. $file[$index])) {
-            unlink($this->expenses_path. $file[$index]);
+        if ($file && file_exists($this->expenses_path . $file[$index])) {
+            unlink($this->expenses_path . $file[$index]);
             $this->db->where('attachment', $file[$index]);
             $this->db->delete('accounting_expense_attachment');
         }
@@ -1074,10 +1074,10 @@ class Accounting extends MY_Controller
         $attachments = $this->expenses_model->getAttachment();
         $display = '';
         foreach ($attachments as $attachment) {
-            $tooltip = ($attachment->status == 0)?"tooltip":"";
-            $cross_out = ($attachment->status == 0)?"cross-out":"";
-            $exclamation = ($attachment->status == 0)?"fa-times fa-exclamation-triangle":"fa-times";
-            $tipbox = ($attachment->status == 0)?"tooltiptext":"tooltiptext hide";
+            $tooltip = ($attachment->status == 0) ? "tooltip" : "";
+            $cross_out = ($attachment->status == 0) ? "cross-out" : "";
+            $exclamation = ($attachment->status == 0) ? "fa-times fa-exclamation-triangle" : "fa-times";
+            $tipbox = ($attachment->status == 0) ? "tooltiptext" : "tooltiptext hide";
             $file = $attachment->attachment;
             $extension = pathinfo($file, PATHINFO_EXTENSION);
             switch ($extension) {
@@ -1111,11 +1111,11 @@ class Accounting extends MY_Controller
             }
             if ($attachment->expenses_id == $id && $attachment->type == $type) {
                 $display .= '<div class="file-name-section">';
-                $display .= '<span class="previewAttachment '.$cross_out.'">'.$attachment->original_filename.'</span>';
-                $display .= '<span class="previewAttachmentImage"><img src="/uploads/accounting/expenses/'.$file.'">.'.$extension.'</span>';
-                $display .= '<a href="#" class="'.$tooltip.'" id="removeAttachment" data-id="'.$attachment->id.'" data-status="'.$attachment->status.'"><i class="fa '.$exclamation.'"></i></a>';
-                $display .= '<span class="'.$tipbox.'">This file is temporarily removed.</br> You can retrieve it by clicking the </br>exclamation icon "<i class="fa fa-exclamation-triangle"></i>". </span>';
-                $display .= '<input type="hidden" name="attachment_id" id="attachmentId" value="'.$attachment->id.'">';
+                $display .= '<span class="previewAttachment ' . $cross_out . '">' . $attachment->original_filename . '</span>';
+                $display .= '<span class="previewAttachmentImage"><img src="/uploads/accounting/expenses/' . $file . '">.' . $extension . '</span>';
+                $display .= '<a href="#" class="' . $tooltip . '" id="removeAttachment" data-id="' . $attachment->id . '" data-status="' . $attachment->status . '"><i class="fa ' . $exclamation . '"></i></a>';
+                $display .= '<span class="' . $tipbox . '">This file is temporarily removed.</br> You can retrieve it by clicking the </br>exclamation icon "<i class="fa fa-exclamation-triangle"></i>". </span>';
+                $display .= '<input type="hidden" name="attachment_id" id="attachmentId" value="' . $attachment->id . '">';
                 $display .= '</div>';
             }
         }
@@ -1127,7 +1127,7 @@ class Accounting extends MY_Controller
         $id = $this->input->post('attach_id');
         $status = $this->input->post('status');
 
-        $query = $this->db->get_where('accounting_expense_attachment', array('id'=>$id));
+        $query = $this->db->get_where('accounting_expense_attachment', array('id' => $id));
         if ($query->num_rows() == 1 && $status == 1) {
             $status = array(
                 'status' => 0
@@ -1147,9 +1147,9 @@ class Accounting extends MY_Controller
     public function removePermanentlyAttachment()
     {
         $attachment_id = $this->input->post('attachment_id');
-        for ($x = 0; $x < count($attachment_id);$x++) {
-            $get_filename = $this->db->get_where('accounting_expense_attachment', array('id'=>$attachment_id[$x]));
-            unlink($this->expenses_path. $get_filename->row()->attachment);
+        for ($x = 0; $x < count($attachment_id); $x++) {
+            $get_filename = $this->db->get_where('accounting_expense_attachment', array('id' => $attachment_id[$x]));
+            unlink($this->expenses_path . $get_filename->row()->attachment);
             $this->db->where('id', $attachment_id[$x]);
             $this->db->delete('accounting_expense_attachment');
         }
@@ -1162,12 +1162,12 @@ class Accounting extends MY_Controller
         $file_id = $this->input->post('file_id');
         $id = $this->input->post('expenses_id');
         $type = $this->input->post('type');
-        $get_attachment_id = $this->db->get_where('accounting_expense_attachment', array('id'=>$file_id));
+        $get_attachment_id = $this->db->get_where('accounting_expense_attachment', array('id' => $file_id));
         $file_name = $get_attachment_id->row()->attachment;
         $original_fname = $this->input->post('original_fname');
         $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-        $encryption = md5(time()).'.'.$extension;
-        copy('./uploads/accounting/expenses/'.$file_name, './uploads/accounting/expenses/'.$encryption);
+        $encryption = md5(time()) . '.' . $extension;
+        copy('./uploads/accounting/expenses/' . $file_name, './uploads/accounting/expenses/' . $encryption);
         $data = array(
             'transaction_id' => $transaction_id,
             'expenses_id' => $id,
@@ -1198,7 +1198,7 @@ class Accounting extends MY_Controller
         $result = null;
         foreach ($attachments as $attachment) {
             if ($attachment->transaction_id == 0) {
-                unlink($this->expenses_path.$attachment->attachment);
+                unlink($this->expenses_path . $attachment->attachment);
             }
         }
         $this->db->where('transaction_id', 0);
@@ -1238,43 +1238,43 @@ class Accounting extends MY_Controller
             $file = $attachment->attachment;
             $extension = pathinfo($file, PATHINFO_EXTENSION);
             switch ($extension) {
-                    case "txt":
-                        $file = "default-txt.png";
-                        break;
-                    case "pdf":
-                        $file = "default-pdf.png";
-                        break;
-                    case "xls":
-                        $file = "default-excel.png";
-                        break;
-                    case "xlsb":
-                        $file = "default-excel.png";
-                        break;
-                    case "xlsm":
-                        $file = "default-excel.png";
-                        break;
-                    case "xlsx":
-                        $file = "default-excel.png";
-                        break;
-                    case "docx":
-                        $file = "default-word.png";
-                        break;
-                    case "doc":
-                        $file = "default-word.png";
-                        break;
-                    default:
-                        $file = $attachment->attachment;
-                        break;
-                }
+                case "txt":
+                    $file = "default-txt.png";
+                    break;
+                case "pdf":
+                    $file = "default-pdf.png";
+                    break;
+                case "xls":
+                    $file = "default-excel.png";
+                    break;
+                case "xlsb":
+                    $file = "default-excel.png";
+                    break;
+                case "xlsm":
+                    $file = "default-excel.png";
+                    break;
+                case "xlsx":
+                    $file = "default-excel.png";
+                    break;
+                case "docx":
+                    $file = "default-word.png";
+                    break;
+                case "doc":
+                    $file = "default-word.png";
+                    break;
+                default:
+                    $file = $attachment->attachment;
+                    break;
+            }
             $display .= '<div class="modal-existing-file-section">';
-            $display .= '<span>'.$attachment->original_filename.'</span>';
-            $display .= '<img src="/uploads/accounting/expenses/'.$file.'" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">';
-            $display .= '<input type="hidden" id="attachmentType" value="'.$type.'">';
-            $display .= '<input type="hidden" id="attachmentTypePreview" value="'.$preview.'">';
-            $display .= '<input type="hidden" id="attachmentTransId" value="'.$transaction_id.'">';
-            $display .= '<input type="hidden" id="attachTransFromId" value="'.$attachment->transaction_id.'">';
-            $display .= '<input type="hidden" id="attachmentExpensesId" value="'.$expense_id.'">';
-            $display .= '<a href="#" class="'.$disabled.'" id="addingFileAttachment" data-id="'.$attachment->id.'" data-fname="'.$attachment->original_filename.'" >'.$status.'</a>';
+            $display .= '<span>' . $attachment->original_filename . '</span>';
+            $display .= '<img src="/uploads/accounting/expenses/' . $file . '" alt="Existing File" style="width: 250px;height: 150px;margin-bottom: 10px">';
+            $display .= '<input type="hidden" id="attachmentType" value="' . $type . '">';
+            $display .= '<input type="hidden" id="attachmentTypePreview" value="' . $preview . '">';
+            $display .= '<input type="hidden" id="attachmentTransId" value="' . $transaction_id . '">';
+            $display .= '<input type="hidden" id="attachTransFromId" value="' . $attachment->transaction_id . '">';
+            $display .= '<input type="hidden" id="attachmentExpensesId" value="' . $expense_id . '">';
+            $display .= '<a href="#" class="' . $disabled . '" id="addingFileAttachment" data-id="' . $attachment->id . '" data-fname="' . $attachment->original_filename . '" >' . $status . '</a>';
             $display .= '</div>';
             $display .= '<hr>';
         }
@@ -1299,115 +1299,115 @@ class Accounting extends MY_Controller
         $category_list = $this->categories_model->getCategories();
         if ($get_categories->num_rows() >= 2) {
             foreach ($result as $cnt => $data) {
-                $category = ($data->category_id != null)?$data->category_id:"";
-                $description = ($data->description != null)?$data->description:"";
-                $amount = ($data->amount!=null)?$data->amount:0;
+                $category = ($data->category_id != null) ? $data->category_id : "";
+                $description = ($data->description != null) ? $data->description : "";
+                $amount = ($data->amount != null) ? $data->amount : 0;
                 $cnt += 1;
-                $categories .= '<tr id="'.$row.'">';
+                $categories .= '<tr id="' . $row . '">';
                 $categories .= '<td></td>';
-                $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
+                $categories .= '<td><span id="' . $counter . '">' . $cnt . '</span></td>';
                 $categories .= '<td>';
                 foreach ($category_list as $list) {
                     if ($list->id == $category) {
-                        $categories .= '<input type="hidden" name="categories_id[]" class="categories_id" value="'.$data->id.'">';
-                        $categories .= '<span id="category-preview'.$preview.'">'.$list->category_name.'</span>';
+                        $categories .= '<input type="hidden" name="categories_id[]" class="categories_id" value="' . $data->id . '">';
+                        $categories .= '<span id="category-preview' . $preview . '">' . $list->category_name . '</span>';
                     }
                 }
                 $categories .= '<div id="" style="display:none;">';
                 $categories .= '<input type="hidden" id="prevent_process" value="true">';
-                $categories .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
+                $categories .= '<select name="category[]" id="category-id' . $preview . '" class="form-control ' . $cat_class . ' ' . $select . '">';
                 $categories .= '<option></option>';
                 $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
                 foreach ($category_list as $list) {
                     if ($list->id == $category) {
-                        $categories .= '<option value="'.$list->id.'" selected>'.$list->category_name.'</option>';
+                        $categories .= '<option value="' . $list->id . '" selected>' . $list->category_name . '</option>';
                     }
                 }
-//                foreach ($category_list as $list){
-//                    if($list->id != $category){
-//                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-//                    }
-//                }
+                //                foreach ($category_list as $list){
+                //                    if($list->id != $category){
+                //                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+                //                    }
+                //                }
                 $categories .= '</select>';
                 $categories .= ' </div>';
                 $categories .= '</td>';
-                $categories .= '<td><span id="description-preview'.$preview.'">'.$description.'</span>';
-                $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value="'.$description.'"  ></div>';
+                $categories .= '<td><span id="description-preview' . $preview . '">' . $description . '</span>';
+                $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id' . $preview . '" class="form-control ' . $des_class . '" value="' . $description . '"  ></div>';
                 $categories .= '</td>';
-                $categories .= '<td><span id="amount-preview'.$preview.'">'.$amount.'</span>';
-                $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="'.$amount.'" ></div>';
+                $categories .= '<td><span id="amount-preview' . $preview . '">' . $amount . '</span>';
+                $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id' . $preview . '" class="form-control ' . $amount_class . '" value="' . $amount . '" ></div>';
                 $categories .= '</td>';
-                $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+                $categories .= '<td style="text-align: center"><a href="#" id="' . $remove . '"><i class="fa fa-trash"></i></a></td>';
                 $categories .= '</tr>';
             }
         } else {
             foreach ($result as $cnt => $data) {
-                $category = ($data->category_id != null)?$data->category_id:"";
-                $description = ($data->description != null)?$data->description:"";
-                $amount = ($data->amount!=null)?$data->amount:0;
+                $category = ($data->category_id != null) ? $data->category_id : "";
+                $description = ($data->description != null) ? $data->description : "";
+                $amount = ($data->amount != null) ? $data->amount : 0;
                 $cnt += 1;
-                $categories .= '<tr id="'.$row.'">';
+                $categories .= '<tr id="' . $row . '">';
                 $categories .= '<td></td>';
-                $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
+                $categories .= '<td><span id="' . $counter . '">' . $cnt . '</span></td>';
                 $categories .= '<td>';
                 foreach ($category_list as $list) {
                     if ($list->id == $category) {
-                        $categories .= '<input type="hidden" name="categories_id[]" class="categories_id" value="'.$data->id.'">';
-                        $categories .= '<span id="category-preview'.$preview.'">'.$list->category_name.'</span>';
+                        $categories .= '<input type="hidden" name="categories_id[]" class="categories_id" value="' . $data->id . '">';
+                        $categories .= '<span id="category-preview' . $preview . '">' . $list->category_name . '</span>';
                     }
                 }
                 $categories .= '<div id="" style="display:none;">';
                 $categories .= '<input type="hidden" id="prevent_process" value="true">';
-                $categories .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
+                $categories .= '<select name="category[]" id="category-id' . $preview . '" class="form-control ' . $cat_class . ' ' . $select . '">';
                 $categories .= '<option></option>';
                 $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
                 foreach ($category_list as $list) {
                     if ($list->id == $category) {
-                        $categories .= '<option value="'.$list->id.'" selected>'.$list->category_name.'</option>';
+                        $categories .= '<option value="' . $list->id . '" selected>' . $list->category_name . '</option>';
                     }
                 }
-//                foreach ($category_list as $list){
-//                    if($list->id != $category){
-//                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-//                    }
-//                }
+                //                foreach ($category_list as $list){
+                //                    if($list->id != $category){
+                //                        $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+                //                    }
+                //                }
                 $categories .= '</select>';
                 $categories .= ' </div>';
                 $categories .= '</td>';
-                $categories .= '<td><span id="description-preview'.$preview.'">'.$description.'</span>';
-                $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value="'.$description.'"  ></div>';
+                $categories .= '<td><span id="description-preview' . $preview . '">' . $description . '</span>';
+                $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id' . $preview . '" class="form-control ' . $des_class . '" value="' . $description . '"  ></div>';
                 $categories .= '</td>';
-                $categories .= '<td><span id="amount-preview'.$preview.'">'.$amount.'</span>';
-                $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="'.$amount.'" ></div>';
+                $categories .= '<td><span id="amount-preview' . $preview . '">' . $amount . '</span>';
+                $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id' . $preview . '" class="form-control ' . $amount_class . '" value="' . $amount . '" ></div>';
                 $categories .= '</td>';
-                $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+                $categories .= '<td style="text-align: center"><a href="#" id="' . $remove . '"><i class="fa fa-trash"></i></a></td>';
                 $categories .= '</tr>';
             }
             $description = "";
             $amount = 0;
             $cnt = 2;
-            $categories .= '<tr id="'.$row.'">';
+            $categories .= '<tr id="' . $row . '">';
             $categories .= '<td></td>';
-            $categories .= '<td><span id="'.$counter.'">'. $cnt .'</span></td>';
+            $categories .= '<td><span id="' . $counter . '">' . $cnt . '</span></td>';
             $categories .= '<td>';
             $categories .= '<div id="" style="display:none;">';
             $categories .= '<input type="hidden" id="prevent_process" value="true">';
-            $categories .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
+            $categories .= '<select name="category[]" id="category-id' . $preview . '" class="form-control ' . $cat_class . ' ' . $select . '">';
             $categories .= '<option></option>';
-//            $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
-//            foreach ($category_list as $list){
-//                $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-//            }
+            //            $categories .= '<option value="0" id="add-expense-categories" disabled>&plus; Add Category</option>';
+            //            foreach ($category_list as $list){
+            //                $categories .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+            //            }
             $categories .= '</select>';
             $categories .= ' </div>';
             $categories .= '</td>';
-            $categories .= '<td><span id="description-preview'.$preview.'">'.$description.'</span>';
-            $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value="'.$description.'"  ></div>';
+            $categories .= '<td><span id="description-preview' . $preview . '">' . $description . '</span>';
+            $categories .= '<div style="display: none"><input type="text" name="description[]" id="description-id' . $preview . '" class="form-control ' . $des_class . '" value="' . $description . '"  ></div>';
             $categories .= '</td>';
-            $categories .= '<td><span id="amount-preview'.$preview.'"></span>';
-            $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="'.$amount.'" ></div>';
+            $categories .= '<td><span id="amount-preview' . $preview . '"></span>';
+            $categories .= '<div style="display: none"><input type="text" name="amount[]" id="amount-id' . $preview . '" class="form-control ' . $amount_class . '" value="' . $amount . '" ></div>';
             $categories .= '</td>';
-            $categories .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+            $categories .= '<td style="text-align: center"><a href="#" id="' . $remove . '"><i class="fa fa-trash"></i></a></td>';
             $categories .= '</tr>';
         }
 
@@ -1426,30 +1426,30 @@ class Accounting extends MY_Controller
         $preview = $this->input->get('preview');
         $category_list = $this->categories_model->getCategories();
         $default = '';
-        for ($x = 1;$x <= 2;$x++) {
-            $default .= '<tr id="'.$row.'">';
+        for ($x = 1; $x <= 2; $x++) {
+            $default .= '<tr id="' . $row . '">';
             $default .= '<td></td>';
-            $default .= '<td><span id="'.$counter.'">'.$x.'</span></td>';
+            $default .= '<td><span id="' . $counter . '">' . $x . '</span></td>';
             $default .= '<td>';
-            $default .= '<span id="category-preview'.$preview.'"></span>';
+            $default .= '<span id="category-preview' . $preview . '"></span>';
             $default .= '<div id="" style="display:none;">';
             $default .= '<input type="hidden" id="prevent_process" value="true">';
-            $default .= '<select name="category[]" id="category-id'.$preview.'" class="form-control '.$cat_class.' '.$select.'">';
+            $default .= '<select name="category[]" id="category-id' . $preview . '" class="form-control ' . $cat_class . ' ' . $select . '">';
             $default .= '<option></option>';
-//            $default .= '<option value="0" disabled id="add-expense-categories">&plus; Add Category</option>';
-//            foreach ($category_list as $list){
-//                $default .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
-//            }
+            //            $default .= '<option value="0" disabled id="add-expense-categories">&plus; Add Category</option>';
+            //            foreach ($category_list as $list){
+            //                $default .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+            //            }
             $default .= '</select>';
             $default .= '</div>';
             $default .= '</td>';
-            $default .= '<td><span id="description-preview'.$preview.'"></span>';
-            $default .= '<div style="display: none;"><input type="text" name="description[]" id="description-id'.$preview.'" class="form-control '.$des_class.'" value=""></div>';
+            $default .= '<td><span id="description-preview' . $preview . '"></span>';
+            $default .= '<div style="display: none;"><input type="text" name="description[]" id="description-id' . $preview . '" class="form-control ' . $des_class . '" value=""></div>';
             $default .= '</td>';
-            $default .= '<td><span id="amount-preview'.$preview.'"></span>';
-            $default .= '<div style="display: none;"><input type="text" name="amount[]" id="amount-id'.$preview.'" class="form-control '.$amount_class.'" value="0" ></div>';
+            $default .= '<td><span id="amount-preview' . $preview . '"></span>';
+            $default .= '<div style="display: none;"><input type="text" name="amount[]" id="amount-id' . $preview . '" class="form-control ' . $amount_class . '" value="0" ></div>';
             $default .= '</td>';
-            $default .= '<td style="text-align: center"><a href="#" id="'.$remove.'"><i class="fa fa-trash"></i></a></td>';
+            $default .= '<td style="text-align: center"><a href="#" id="' . $remove . '"><i class="fa fa-trash"></i></a></td>';
             $default .= '</tr>';
         }
         echo json_encode($default);
@@ -1462,8 +1462,8 @@ class Accounting extends MY_Controller
         $query = $this->db->get_where('accounting_check', array(
             'id' => $id
         ));
-        $vendors_detail = $this->db->get_where('accounting_vendors', array('vendor_id'=>$query->row()->vendor_id));
-        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id'=>$id,'transaction_id'=>$transaction_id));
+        $vendors_detail = $this->db->get_where('accounting_vendors', array('vendor_id' => $query->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id' => $id, 'transaction_id' => $transaction_id));
         if ($query->row()->print_later == 1) {
             $print = true;
         } else {
@@ -1472,7 +1472,7 @@ class Accounting extends MY_Controller
         $std = new stdClass();
         $std->check_id = $id;
         $std->vendor_id = $query->row()->vendor_id;
-        $std->vendor_name = $vendors_detail->row()->f_name.'&nbsp;'.$vendors_detail->row()->l_name;
+        $std->vendor_name = $vendors_detail->row()->f_name . '&nbsp;' . $vendors_detail->row()->l_name;
         $std->bank_account = $query->row()->bank_id;
         $std->mailing = $query->row()->mailing_address;
         $std->payment_date = $query->row()->payment_date;
@@ -1480,7 +1480,7 @@ class Accounting extends MY_Controller
         $std->print_later = $print;
         $std->permit_number = $query->row()->permit_number;
         $std->memo = $query->row()->memo;
-        $std->check_category = ($check_category->num_rows() > 0)?true:false;
+        $std->check_category = ($check_category->num_rows() > 0) ? true : false;
 
         echo json_encode($std);
     }
@@ -1571,14 +1571,14 @@ class Accounting extends MY_Controller
     {
         $id = $this->input->get('id');
         $transaction_id = $this->input->get('transaction_id');
-        $get_expense = $this->db->get_where('accounting_expense', array('id'=>$id));
-        $vendors = $this->db->get_where('accounting_vendors', array('vendor_id'=> $get_expense->row()->vendor_id));
-        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id'=>$id,'transaction_id' => $transaction_id));
+        $get_expense = $this->db->get_where('accounting_expense', array('id' => $id));
+        $vendors = $this->db->get_where('accounting_vendors', array('vendor_id' => $get_expense->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id' => $id, 'transaction_id' => $transaction_id));
 
 
         $data = new stdClass();
         $data->vendor_id = $get_expense->row()->vendor_id;
-        $data->vendor_name = $vendors->row()->f_name.'&nbsp;'.$vendors->row()->l_name;
+        $data->vendor_name = $vendors->row()->f_name . '&nbsp;' . $vendors->row()->l_name;
         $data->expense_id = $id;
         $data->payment_account = $get_expense->row()->payment_account;
         $data->payment_date = $get_expense->row()->payment_date;
@@ -1586,7 +1586,7 @@ class Accounting extends MY_Controller
         $data->ref_number = $get_expense->row()->ref_number;
         $data->permit_number = $get_expense->row()->permit_number;
         $data->memo = $get_expense->row()->memo;
-        $data->check_category = ($check_category->num_rows() > 0)?true:false;
+        $data->check_category = ($check_category->num_rows() > 0) ? true : false;
 
         echo json_encode($data);
     }
@@ -1652,9 +1652,9 @@ class Accounting extends MY_Controller
     {
         $id = $this->input->get('id');
         $transaction_id = $this->input->get('transaction_id');
-        $get_vc = $this->db->get_where('accounting_vendor_credit', array('id'=>$id));
-        $vendors = $this->db->get_where('accounting_vendors', array('vendor_id'=> $get_vc->row()->vendor_id));
-        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id'=>$id,'transaction_id'=>$transaction_id));
+        $get_vc = $this->db->get_where('accounting_vendor_credit', array('id' => $id));
+        $vendors = $this->db->get_where('accounting_vendors', array('vendor_id' => $get_vc->row()->vendor_id));
+        $check_category = $this->db->get_where('accounting_expense_category', array('expenses_id' => $id, 'transaction_id' => $transaction_id));
 
         $data = new stdClass();
         $data->vc_id = $id;
@@ -1665,7 +1665,7 @@ class Accounting extends MY_Controller
         $data->ref_number = $get_vc->row()->ref_number;
         $data->permit_number = $get_vc->row()->permit_number;
         $data->memo = $get_vc->row()->memo;
-        $data->check_category = ($check_category->num_rows() > 0)?true:false;
+        $data->check_category = ($check_category->num_rows() > 0) ? true : false;
 
         echo json_encode($data);
     }
@@ -1726,7 +1726,7 @@ class Accounting extends MY_Controller
         $category_list_id = null;
         $transaction_id = null;
         $show = '';
-        foreach ($transactions as $transaction):
+        foreach ($transactions as $transaction) :
             if ($transaction->type == 'Check') {
                 // Check
                 foreach ($checks as $check) {
@@ -1739,12 +1739,12 @@ class Accounting extends MY_Controller
                         $transaction_id = $check->transaction_id;
                         foreach ($vendors as $vendor) {
                             if ($vendor->vendor_id == $check->vendor_id) {
-                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $vendors_name = $vendor->f_name . " " . $vendor->l_name;
                                 $delete = 'deleteCheck';
                             }
                         }
                         $get_category = $this->db->get_where('accounting_expense_category', array('transaction_id' => $check->transaction_id));
-                        $check_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        $check_category_id = ($get_category->num_rows() != 0) ? $get_category->row()->category_id : 0;
                         foreach ($list_categories as $list) {
                             if ($list->id == $check_category_id) {
                                 $category_list_id = $list->id;
@@ -1755,7 +1755,7 @@ class Accounting extends MY_Controller
                     }
                 }
             } elseif ($transaction->type == 'Bill') {
-//                                            Bill
+                //                                            Bill
                 foreach ($bills as $bill) {
                     if ($transaction->id == $bill->transaction_id) {
                         $date = date("m/d/y", strtotime($transaction->date_created));
@@ -1765,13 +1765,13 @@ class Accounting extends MY_Controller
                         $transaction_id = $bill->transaction_id;
                         foreach ($vendors as $vendor) {
                             if ($vendor->vendor_id == $bill->vendor_id) {
-                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $vendors_name = $vendor->f_name . " " . $vendor->l_name;
                                 $data_id = $bill->id;
                                 $delete = 'deleteBill';
                             }
                         }
                         $get_category = $this->db->get_where('accounting_expense_category', array('transaction_id' => $bill->transaction_id));
-                        $bill_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        $bill_category_id = ($get_category->num_rows() != 0) ? $get_category->row()->category_id : 0;
                         foreach ($list_categories as $list) {
                             if ($list->id == $bill_category_id) {
                                 $category_list_id = $list->id;
@@ -1782,7 +1782,7 @@ class Accounting extends MY_Controller
                     }
                 }
             } elseif ($transaction->type == 'Expense') {
-//                                            Expense
+                //                                            Expense
                 foreach ($expenses as $expense) {
                     if ($transaction->id == $expense->transaction_id) {
                         $date = date("m/d/y", strtotime($transaction->date_created));
@@ -1792,13 +1792,13 @@ class Accounting extends MY_Controller
                         $transaction_id = $expense->transaction_id;
                         foreach ($vendors as $vendor) {
                             if ($vendor->vendor_id == $expense->vendor_id) {
-                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $vendors_name = $vendor->f_name . " " . $vendor->l_name;
                                 $data_id = $expense->id;
                                 $delete = 'deleteExpense';
                             }
                         }
                         $get_category = $this->db->get_where('accounting_expense_category', array('transaction_id' => $expense->transaction_id));
-                        $expense_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        $expense_category_id = ($get_category->num_rows() != 0) ? $get_category->row()->category_id : 0;
                         foreach ($list_categories as $list) {
                             if ($list->id == $expense_category_id) {
                                 $category_list_id = $list->id;
@@ -1809,7 +1809,7 @@ class Accounting extends MY_Controller
                     }
                 }
             } elseif ($transaction->type == 'Vendor Credit') {
-//                                            Vendor Credit
+                //                                            Vendor Credit
                 foreach ($vendor_credits as $vendor_credit) {
                     if ($transaction->id == $vendor_credit->transaction_id) {
                         $date = date("m/d/y", strtotime($transaction->date_created));
@@ -1820,13 +1820,13 @@ class Accounting extends MY_Controller
                         $transaction_id = $vendor_credit->transaction_id;
                         foreach ($vendors as $vendor) {
                             if ($vendor->vendor_id == $vendor_credit->vendor_id) {
-                                $vendors_name = $vendor->f_name." ".$vendor->l_name;
+                                $vendors_name = $vendor->f_name . " " . $vendor->l_name;
                                 $data_id = $vendor_credit->id;
                                 $delete = 'deleteVendorCredit';
                             }
                         }
                         $get_category = $this->db->get_where('accounting_expense_category', array('transaction_id' => $vendor_credit->transaction_id));
-                        $vc_category_id = ($get_category->num_rows() != 0)?$get_category->row()->category_id:0;
+                        $vc_category_id = ($get_category->num_rows() != 0) ? $get_category->row()->category_id : 0;
                         foreach ($list_categories as $list) {
                             if ($list->id == $vc_category_id) {
                                 $category_list_id = $list->id;
@@ -1839,31 +1839,31 @@ class Accounting extends MY_Controller
             }
         $show .= '<tr style="cursor: pointer;">';
         $show .= '<td><input type="checkbox"></td>';
-        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$date.'</td>';
-        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$type.'</td>';
-        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$number.'</td>';
-        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$vendors_name.'</td>';
-        $show .= '<td data-id="'.$data_id.'" data-transId="'.$transaction_id.'">';
+        $show .= '<td id="' . $modal_id . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '">' . $date . '</td>';
+        $show .= '<td id="' . $modal_id . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '">' . $type . '</td>';
+        $show .= '<td id="' . $modal_id . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '">' . $number . '</td>';
+        $show .= '<td id="' . $modal_id . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '">' . $vendors_name . '</td>';
+        $show .= '<td data-id="' . $data_id . '" data-transId="' . $transaction_id . '">';
         $show .= '<div style="display: inline-block;position: relative;width: 100%">';
-        $show .= '<select name="category" id="expenseTransCategory" data-category="" data-id="'.$category_id.'" class="form-control select2-tbl-category">';
-        $show .= '<option value="'.$category_list_id.'" selected>'.$category.'</option>';
-        foreach ($list_categories as $list):
-                if ($list->category_name == $category):
-                    $show .= '<option value="'.$list->id.'">'.$list->category_name.'</option>';
+        $show .= '<select name="category" id="expenseTransCategory" data-category="" data-id="' . $category_id . '" class="form-control select2-tbl-category">';
+        $show .= '<option value="' . $category_list_id . '" selected>' . $category . '</option>';
+        foreach ($list_categories as $list) :
+                if ($list->category_name == $category) :
+                    $show .= '<option value="' . $list->id . '">' . $list->category_name . '</option>';
         endif;
         endforeach;
         $show .= '</select>';
         $show .= '</div>';
         $show .= '<i class="fa fa-spinner fa-pulse" style="display: none;position: relative;"></i>';
         $show .= '</td>';
-        $show .= '<td id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">'.$transaction->total.'</td>';
+        $show .= '<td id="' . $modal_id . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '">' . $transaction->total . '</td>';
         $show .= '<td style="text-align: right;">';
-        $show .= '<a href="#" id="'.$modal_id.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>';
+        $show .= '<a href="#" id="' . $modal_id . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '" style="margin-right: 10px;color: #0077c5;font-weight: 600;">View/Edit</a>';
         $show .= '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
         $show .= '<span class="fa fa-caret-down" data-toggle="dropdown"></span>';
         $show .= '<ul class="dropdown-menu dropdown-menu-right">';
         $show .= '<li><a href="#" id="copy">Copy</a></li>';
-        $show .= '<li id="'.$delete.'" data-id="'.$data_id.'" data-transId="'.$transaction_id.'">';
+        $show .= '<li id="' . $delete . '" data-id="' . $data_id . '" data-transId="' . $transaction_id . '">';
         $show .= '<a href="#" >Delete</a>';
         $show .= '</li>';
         $show .= '<li><a href="#">Void</a></li>';
@@ -1964,7 +1964,7 @@ class Accounting extends MY_Controller
         $transaction_id = $this->input->post('transaction_id');
         if ($id == null) {
             $new_category = array(
-                'transaction_id'=> $transaction_id,
+                'transaction_id' => $transaction_id,
                 'expenses_id' => $expenses_id,
                 'category_id' => $category
             );
@@ -2081,20 +2081,20 @@ class Accounting extends MY_Controller
         $output = '';
         foreach ($rules as $rule) {
             $output = '<tr>';
-            $output .= '<td><input type="checkbox" value="'.$rule->id.'"></td>';
-            $output .= '<td>'.$rule->rules_name.'</td>';
+            $output .= '<td><input type="checkbox" value="' . $rule->id . '"></td>';
+            $output .= '<td>' . $rule->rules_name . '</td>';
             $output .= '<td></td>';
             $output .= '<td></td>';
             $output .= '<td></td>';
             $output .= '<td></td>';
-            $output .= '<td>'.($rule->auto)?"Auto":"".'</td>';
+            $output .= '<td>' . ($rule->auto) ? "Auto" : "" . '</td>';
             $output .= '<td></td>';
             $output .= '<td>';
-            $output .= '<a href="'.site_url().'accounting/edit_rules?id='.$rule->id.'" style="color: #0b97c4;">View/Edit</a>&nbsp;';
+            $output .= '<a href="' . site_url() . 'accounting/edit_rules?id=' . $rule->id . '" style="color: #0b97c4;">View/Edit</a>&nbsp;';
             $output .= '<div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">';
             $output .= '<span class="fa fa-chevron-down" data-toggle="dropdown"></span>';
             $output .= '<ul class="dropdown-menu dropdown-menu-right">';
-            $output .= '<li><a href="#" id="deleteRules" data-id="'.$rule->id.'">Delete</a></li>';
+            $output .= '<li><a href="#" id="deleteRules" data-id="' . $rule->id . '">Delete</a></li>';
             $output .= '</ul>';
             $output .= '</div>';
             $output .= '</td>';
@@ -2106,7 +2106,7 @@ class Accounting extends MY_Controller
     /*** Receipt ***/
     public function uploadReceiptImage()
     {
-        if (! empty($_FILES)) {
+        if (!empty($_FILES)) {
             $config = array(
                 'upload_path' => './uploads/accounting/',
                 'allowed_types' => 'gif|jpg|png|jpeg',
@@ -2133,8 +2133,8 @@ class Accounting extends MY_Controller
     public function removeReceiptImage()
     {
         $file = $this->input->post('file');
-        if ($file && file_exists($this->upload_path. $file)) {
-            unlink($this->upload_path. $file);
+        if ($file && file_exists($this->upload_path . $file)) {
+            unlink($this->upload_path . $file);
             $this->db->where('receipt_img', $file);
             $this->db->delete('accounting_receipts');
         } else {
@@ -2145,20 +2145,20 @@ class Accounting extends MY_Controller
     public function getReceiptData()
     {
         if (isset($_POST['id'])) {
-            $query = $this->db->get_where('accounting_receipts', array('id'=>$_POST['id']));
+            $query = $this->db->get_where('accounting_receipts', array('id' => $_POST['id']));
 
             $data = new stdClass();
             $data->id = $_POST['id'];
             $data->receipt_img = $query->row()->receipt_img;
-            $data->document_type = (empty($query->row()->document_type))?"null":$query->row()->document_type;
-            $data->payee_id = ($query->row()->payee_id == 0)?"default":$query->row()->payee_id;
-            $data->bank_account = (empty($query->row()->bank_account))?"default":$query->row()->bank_account;
+            $data->document_type = (empty($query->row()->document_type)) ? "null" : $query->row()->document_type;
+            $data->payee_id = ($query->row()->payee_id == 0) ? "default" : $query->row()->payee_id;
+            $data->bank_account = (empty($query->row()->bank_account)) ? "default" : $query->row()->bank_account;
             $data->transaction_date = $query->row()->transaction_date;
-            $data->description = (empty($query->row()->description))?"":$query->row()->description;
-            $data->category = (empty($query->row()->category))?"default":$query->row()->category;
-            $data->total_amount = (empty($query->row()->total_amount))?"":$query->row()->total_amount;
-            $data->memo = (empty($query->row()->memo))?"":$query->row()->memo;
-            $data->ref_number = (empty($query->row()->ref_number))?"":$query->row()->ref_number;
+            $data->description = (empty($query->row()->description)) ? "" : $query->row()->description;
+            $data->category = (empty($query->row()->category)) ? "default" : $query->row()->category;
+            $data->total_amount = (empty($query->row()->total_amount)) ? "" : $query->row()->total_amount;
+            $data->memo = (empty($query->row()->memo)) ? "" : $query->row()->memo;
+            $data->ref_number = (empty($query->row()->ref_number)) ? "" : $query->row()->ref_number;
 
             echo json_encode($data);
         }
@@ -2241,45 +2241,45 @@ class Accounting extends MY_Controller
 
 
         $new_data = array(
-            'customer_id'                       => $this->input->post('customer_id'),//
+            'customer_id'                       => $this->input->post('customer_id'), //
 
-            'job_location'                      => $this->input->post('invoice_job_location'),//
-            'job_name'                          => $this->input->post('job_name'),//
+            'job_location'                      => $this->input->post('invoice_job_location'), //
+            'job_name'                          => $this->input->post('job_name'), //
 
-            'tags'                              => $this->input->post('tags'),//
+            'tags'                              => $this->input->post('tags'), //
             // 'invoice_type'                      => $this->input->post('invoice_type'),//
-            'work_order_number'                 => $this->input->post('work_order_number'),//
-            'purchase_order'                    => $this->input->post('purchase_order'),//
-            'invoice_number'                    => $this->input->post('invoice_number'),//
-            'date_issued'                       => $this->input->post('date_issued'),//
+            'work_order_number'                 => $this->input->post('work_order_number'), //
+            'purchase_order'                    => $this->input->post('purchase_order'), //
+            'invoice_number'                    => $this->input->post('invoice_number'), //
+            'date_issued'                       => $this->input->post('date_issued'), //
 
-            'customer_email'                    => $this->input->post('customer_email'),//
+            'customer_email'                    => $this->input->post('customer_email'), //
             'online_payments'                   => $this->input->post('online_payments'),
-            'billing_address'                   => $this->input->post('billing_address'),//
-            'shipping_to_address'               => $this->input->post('shipping_to_address'),//
-            'ship_via'                          => $this->input->post('ship_via'),//
-            'shipping_date'                     => $this->input->post('shipping_date'),//
-            'tracking_number'                   => $this->input->post('tracking_number'),//
-            'terms'                             => $this->input->post('terms'),//
+            'billing_address'                   => $this->input->post('billing_address'), //
+            'shipping_to_address'               => $this->input->post('shipping_to_address'), //
+            'ship_via'                          => $this->input->post('ship_via'), //
+            'shipping_date'                     => $this->input->post('shipping_date'), //
+            'tracking_number'                   => $this->input->post('tracking_number'), //
+            'terms'                             => $this->input->post('terms'), //
             // 'invoice_date' => $this->input->post('invoice_date'),
-            'due_date'                          => $this->input->post('due_date'),//
-            'location_scale'                    => $this->input->post('location_scale'),//
-            'message_to_customer'               => $this->input->post('message_to_customer'),//
-            'terms_and_conditions'              => $this->input->post('terms_and_conditions'),//
+            'due_date'                          => $this->input->post('due_date'), //
+            'location_scale'                    => $this->input->post('location_scale'), //
+            'message_to_customer'               => $this->input->post('message_to_customer'), //
+            'terms_and_conditions'              => $this->input->post('terms_and_conditions'), //
             // 'attachments' => $this->input->post('file_name'),
-            'attachments'                       => 'test',
-            'status'                            => $this->input->post('status'),//
+            'attachments'                       => $this->input->post("attachement-filenames"),
+            'status'                            => $this->input->post('status'), //
 
-            'deposit_request_type'              => $this->input->post('deposit_request_type'),//
-            'deposit_request'                   => $this->input->post('deposit_amount'),//
+            'deposit_request_type'              => $this->input->post('deposit_request_type'), //
+            'deposit_request'                   => $this->input->post('deposit_amount'), //
             // 'payment_schedule' => $this->input->post('payment_schedule'),
-            'payment_methods'                   => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+            'payment_methods'                   => $credit_card . ',' . $bank_transfer . ',' . $instapay . ',' . $check . ',' . $cash . ',' . $deposit,
 
-            'sub_total'                         => $this->input->post('subtotal'),//
-            'taxes'                             => $this->input->post('taxes'),//
-            'adjustment_name'                   => $this->input->post('adjustment_name'),//
-            'adjustment_value'                  => $this->input->post('adjustment_value'),//
-            'grand_total'                       => $this->input->post('grand_total'),//
+            'sub_total'                         => $this->input->post('subtotal'), //
+            'taxes'                             => $this->input->post('taxes'), //
+            'adjustment_name'                   => $this->input->post('adjustment_name'), //
+            'adjustment_value'                  => $this->input->post('adjustment_value'), //
+            'grand_total'                       => $this->input->post('grand_total'), //
 
 
             'user_id'                           => logged('id'),
@@ -2290,6 +2290,17 @@ class Accounting extends MY_Controller
 
         $addQuery = $this->invoice_model->createInvoice($new_data);
 
+        $file_names=explode(",", $this->input->post("attachement-filenames"));
+        for ($i = 0; $i < count($file_names);$i++) {
+            if ($file_names[$i]!="") {
+                $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                if (file_exists($source)) {
+                    copy($source, $destination);
+                    unlink($source);
+                }
+            }
+        }
         if ($addQuery > 0) {
             if ($this->input->post('agency_id')) {
                 $this->db->insert('accounting_invoice_tax_agencies', [
@@ -2360,7 +2371,7 @@ class Accounting extends MY_Controller
                 $data['cost']               = str_replace(',', '', $price[$i]);
                 $data['tax']                = str_replace(',', '', $h[$i]);
                 $data['discount']           = str_replace(',', '', $discounts[$i]);
-                $data['total']              = ((str_replace(',', '', $price[$i])*str_replace(',', '', $quantity[$i]))+str_replace(',', '', $h[$i]))-str_replace(',', '', $discounts[$i]);
+                $data['total']              = ((str_replace(',', '', $price[$i]) * str_replace(',', '', $quantity[$i])) + str_replace(',', '', $h[$i])) - str_replace(',', '', $discounts[$i]);
                 $data['invoice_id']         = $addQuery;
                 $data['tax_rate_used']      = $tax_rate;
                 $addQuery2                  = $this->invoice_model->add_invoice_items($data);
@@ -2373,7 +2384,7 @@ class Accounting extends MY_Controller
             // $getname = $this->estimate_model->getname($userid);
 
             //     $notif = array(
-        
+
             //         'user_id'               => $userid,
             //         'title'                 => 'New Estimates',
             //         'content'               => $getname->FName. ' has created new Estimates.'. $this->input->post('estimate_number'),
@@ -2410,29 +2421,29 @@ class Accounting extends MY_Controller
         $id = $this->input->post('invoiceDataID');
 
         $update_data = array(
-            'id'                        => $this->input->post('invoiceDataID'),//
-            'customer_id'               => $this->input->post('customer_id'),//
+            'id'                        => $this->input->post('invoiceDataID'), //
+            'customer_id'               => $this->input->post('customer_id'), //
             'job_location'              => $this->input->post('jobs_location'), //
-            'job_name'                  => $this->input->post('job_name'),//
-            'invoice_type'              => $this->input->post('invoice_type'),//
-            'po_number'                 => $this->input->post('purchase_order'),//
-            'date_issued'               => $this->input->post('date_issued'),//
-            'due_date'                  => $this->input->post('due_date'),//
-            'status'                    => $this->input->post('status'),//
-            'customer_email'            => $this->input->post('customer_email'),//
+            'job_name'                  => $this->input->post('job_name'), //
+            'invoice_type'              => $this->input->post('invoice_type'), //
+            'po_number'                 => $this->input->post('purchase_order'), //
+            'date_issued'               => $this->input->post('date_issued'), //
+            'due_date'                  => $this->input->post('due_date'), //
+            'status'                    => $this->input->post('status'), //
+            'customer_email'            => $this->input->post('customer_email'), //
             'online_payments'           => $this->input->post('online_payments'),
-            'billing_address'           => $this->input->post('billing_address'),//
+            'billing_address'           => $this->input->post('billing_address'), //
             'shipping_to_address'       => $this->input->post('shipping_to_address'),
-            'ship_via'                  => $this->input->post('ship_via'),//
+            'ship_via'                  => $this->input->post('ship_via'), //
             'shipping_date'             => $this->input->post('shipping_date'),
-            'tracking_number'           => $this->input->post('tracking_number'),//
-            'terms'                     => $this->input->post('terms'),//
-            'location_scale'            => $this->input->post('location_scale'),//
+            'tracking_number'           => $this->input->post('tracking_number'), //
+            'terms'                     => $this->input->post('terms'), //
+            'location_scale'            => $this->input->post('location_scale'), //
             'message_on_invoice'        => $this->input->post('message_on_invoice'),
             'message_on_statement'      => $this->input->post('message_on_statement'),
             'job_number'                => $this->input->post('job_number'), //to add on database
             // 'attachments'            => $this->input->post('attachments'),
-            'tags'                      => $this->input->post('tags'),//
+            'tags'                      => $this->input->post('tags'), //
             // 'total_due'              => $this->input->post('total_due'),
             // 'balance'                => $this->input->post('balance'),
             'deposit_request_type'      => $this->input->post('deposit_request_type'),
@@ -2490,7 +2501,7 @@ class Accounting extends MY_Controller
         $price      = $this->input->post('price');
         $h          = $this->input->post('tax');
         $total      = $this->input->post('total');
-    
+
         $i = 0;
         foreach ($a as $row) {
             $data['items_id'] = $a[$i];
@@ -2506,7 +2517,7 @@ class Accounting extends MY_Controller
         redirect('accounting/invoices');
     }
 
-    
+
     public function savenewestimateAccounting()
     {
         $company_id  = getLoggedCompanyID();
@@ -2543,17 +2554,17 @@ class Accounting extends MY_Controller
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
 
-            'sub_total' => $this->input->post('subtotal'),//
+            'sub_total' => $this->input->post('subtotal'), //
             // 'deposit_request' => $this->input->post('adjustment_name'),//
             // 'deposit_amount' => $this->input->post('adjustment_input'),//
-            'grand_total' => $this->input->post('grand_total'),//
+            'grand_total' => $this->input->post('grand_total'), //
             'tax1_total' => $this->input->post('taxes'),
 
-            'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_value'),//
+            'adjustment_name' => $this->input->post('adjustment_name'), //
+            'adjustment_value' => $this->input->post('adjustment_value'), //
 
-            'markup_type' => '$',//
-            'markup_amount' => $this->input->post('markup_input_form'),//
+            'markup_type' => '$', //
+            'markup_amount' => $this->input->post('markup_input_form'), //
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -2628,15 +2639,15 @@ class Accounting extends MY_Controller
             $getname = $this->estimate_model->getname($userid);
 
             $notif = array(
-            
-                    'user_id'               => $userid,
-                    'title'                 => 'New Estimates',
-                    'content'               => $getname->FName. ' has created new Estimates.'. $this->input->post('estimate_number'),
-                    'date_created'          => date("Y-m-d H:i:s"),
-                    'status'                => '1',
-                    'company_id'            => getLoggedCompanyID()
-                );
-    
+
+                'user_id'               => $userid,
+                'title'                 => 'New Estimates',
+                'content'               => $getname->FName . ' has created new Estimates.' . $this->input->post('estimate_number'),
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
             $notification = $this->estimate_model->save_notification($notif);
 
             redirect('accounting/newEstimateList');
@@ -2685,22 +2696,22 @@ class Accounting extends MY_Controller
 
             // 'sub_total' => $this->input->post('sub_total'),
             'deposit_request' => '$',
-            'deposit_amount' => $this->input->post('adjustment_input'),//
-            'bundle1_total' => $this->input->post('grand_total'),//
-            'bundle2_total' => $this->input->post('grand_total2'),//
-            'sub_total' => $this->input->post('sub_total'),//
-            'sub_total2' => $this->input->post('sub_total2'),//
+            'deposit_amount' => $this->input->post('adjustment_input'), //
+            'bundle1_total' => $this->input->post('grand_total'), //
+            'bundle2_total' => $this->input->post('grand_total2'), //
+            'sub_total' => $this->input->post('sub_total'), //
+            'sub_total2' => $this->input->post('sub_total2'), //
 
             'tax1_total' => $this->input->post('total_tax_'),
             'tax2_total' => $this->input->post('total_tax2_'),
 
-            'grand_total' => $this->input->post('supergrandtotal'),//
+            'grand_total' => $this->input->post('supergrandtotal'), //
 
-            'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'adjustment_name' => $this->input->post('adjustment_name'), //
+            'adjustment_value' => $this->input->post('adjustment_input'), //
 
-            'markup_type' => '$',//
-            'markup_amount' => $this->input->post('markup_input_form'),//
+            'markup_type' => '$', //
+            'markup_amount' => $this->input->post('markup_input_form'), //
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -2816,7 +2827,7 @@ class Accounting extends MY_Controller
             // $getname = $this->workorder_model->getname($user_id);
 
             // $notif = array(
-        
+
             //     'user_id'               => $user_id,
             //     'title'                 => 'New Work Order',
             //     'content'               => $getname->FName. ' has created new Work Order.'. $this->input->post('workorder_number'),
@@ -2832,24 +2843,24 @@ class Accounting extends MY_Controller
             $getname = $this->estimate_model->getname($userid);
 
             $notif = array(
-            
-                    'user_id'               => $userid,
-                    'title'                 => 'New Estimates',
-                    'content'               => $getname->FName. ' has created new Bundle Estimates.'. $this->input->post('estimate_number'),
-                    'date_created'          => date("Y-m-d H:i:s"),
-                    'status'                => '1',
-                    'company_id'            => getLoggedCompanyID()
-                );
-    
+
+                'user_id'               => $userid,
+                'title'                 => 'New Estimates',
+                'content'               => $getname->FName . ' has created new Bundle Estimates.' . $this->input->post('estimate_number'),
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
             $notification = $this->estimate_model->save_notification($notif);
-                
+
             redirect('accounting/newEstimateList');
         } else {
             echo json_encode(0);
         }
     }
 
-    
+
     public function savenewestimateOptionsAccounting()
     {
         $company_id  = getLoggedCompanyID();
@@ -2873,7 +2884,7 @@ class Accounting extends MY_Controller
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-            
+
             'option_message' => $this->input->post('option1_message'),
             'option2_message' => $this->input->post('option2_message'),
             'option1_total' => $this->input->post('grand_total'),
@@ -2881,18 +2892,18 @@ class Accounting extends MY_Controller
             // 'bundle_discount' => $this->input->post('bundle_discount'),
             'tax1_total' => $this->input->post('total_tax_'),
             'tax2_total' => $this->input->post('total_tax2_'),
-            'sub_total' => $this->input->post('sub_total'),//
-            'sub_total2' => $this->input->post('sub_total2'),//
+            'sub_total' => $this->input->post('sub_total'), //
+            'sub_total2' => $this->input->post('sub_total2'), //
 
             // 'tax1_total' => $this->input->post('total_tax_'),
             // 'tax2_total' => $this->input->post('total_tax2_'),
 
             // 'grand_total' => $this->input->post('supergrandtotal'),
-            
+
 
             'user_id' => $user_id,
             'company_id' => $company_id,
-            
+
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         );
@@ -2955,7 +2966,7 @@ class Accounting extends MY_Controller
         //         $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
         //         $z++;
         //     }
-    
+
         //     redirect('estimate');
         // }
         if ($addQuery > 0) {
@@ -3010,7 +3021,7 @@ class Accounting extends MY_Controller
             // $getname = $this->workorder_model->getname($user_id);
 
             // $notif = array(
-        
+
             //     'user_id'               => $user_id,
             //     'title'                 => 'New Work Order',
             //     'content'               => $getname->FName. ' has created new Work Order.'. $this->input->post('workorder_number'),
@@ -3026,15 +3037,15 @@ class Accounting extends MY_Controller
             $getname = $this->estimate_model->getname($userid);
 
             $notif = array(
-            
-                    'user_id'               => $userid,
-                    'title'                 => 'New Estimates',
-                    'content'               => $getname->FName. ' has created new Options Estimates.'. $this->input->post('estimate_number'),
-                    'date_created'          => date("Y-m-d H:i:s"),
-                    'status'                => '1',
-                    'company_id'            => getLoggedCompanyID()
-                );
-    
+
+                'user_id'               => $userid,
+                'title'                 => 'New Estimates',
+                'content'               => $getname->FName . ' has created new Options Estimates.' . $this->input->post('estimate_number'),
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
             $notification = $this->estimate_model->save_notification($notif);
 
 
@@ -3045,7 +3056,7 @@ class Accounting extends MY_Controller
     }
 
 
-    
+
     public function updateestimateBundleAccounting($id)
     {
         $company_id  = getLoggedCompanyID();
@@ -3084,22 +3095,22 @@ class Accounting extends MY_Controller
 
             // 'sub_total' => $this->input->post('sub_total'),
             // 'deposit_request'           => '$',
-            'deposit_amount'            => $this->input->post('adjustment_input'),//
-            'bundle1_total'             => $this->input->post('grand_total'),//
-            'bundle2_total'             => $this->input->post('grand_total2'),//
-            'sub_total'                 => $this->input->post('sub_total'),//
-            'sub_total2'                => $this->input->post('sub_total2'),//
+            'deposit_amount'            => $this->input->post('adjustment_input'), //
+            'bundle1_total'             => $this->input->post('grand_total'), //
+            'bundle2_total'             => $this->input->post('grand_total2'), //
+            'sub_total'                 => $this->input->post('sub_total'), //
+            'sub_total2'                => $this->input->post('sub_total2'), //
 
             'tax1_total'                => $this->input->post('total_tax_'),
             'tax2_total'                => $this->input->post('total_tax2_'),
 
-            'grand_total'               => $this->input->post('supergrandtotal'),//
+            'grand_total'               => $this->input->post('supergrandtotal'), //
 
-            'adjustment_name'           => $this->input->post('adjustment_name'),//
-            'adjustment_value'          => $this->input->post('adjustment_input'),//
+            'adjustment_name'           => $this->input->post('adjustment_name'), //
+            'adjustment_value'          => $this->input->post('adjustment_input'), //
 
-            'markup_type'               => '$',//
-            'markup_amount'             => $this->input->post('markup_input_form'),//
+            'markup_type'               => '$', //
+            'markup_amount'             => $this->input->post('markup_input_form'), //
 
             'updated_at'                => date("Y-m-d H:i:s")
         );
@@ -3204,10 +3215,10 @@ class Accounting extends MY_Controller
             // 'sub_total'              => $this->input->post('sub_total'),
             // 'deposit_request'        => '$',
             // 'deposit_amount'            => $this->input->post('adjustment_input'),//
-            'option1_total'             => $this->input->post('grand_total'),//
-            'option2_total'             => $this->input->post('grand_total2'),//
-            'sub_total'                 => $this->input->post('sub_total'),//
-            'sub_total2'                => $this->input->post('sub_total2'),//
+            'option1_total'             => $this->input->post('grand_total'), //
+            'option2_total'             => $this->input->post('grand_total2'), //
+            'sub_total'                 => $this->input->post('sub_total'), //
+            'sub_total2'                => $this->input->post('sub_total2'), //
 
             'tax1_total'                => $this->input->post('total_tax_'),
             'tax2_total'                => $this->input->post('total_tax2_'),
@@ -3504,16 +3515,16 @@ class Accounting extends MY_Controller
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
 
-            'sub_total' => $this->input->post('sub_total'),//
-            'deposit_request' => $this->input->post('adjustment_name'),//
-            'deposit_amount' => $this->input->post('adjustment_input'),//
-            'grand_total' => $this->input->post('grand_total'),//
+            'sub_total' => $this->input->post('sub_total'), //
+            'deposit_request' => $this->input->post('adjustment_name'), //
+            'deposit_amount' => $this->input->post('adjustment_input'), //
+            'grand_total' => $this->input->post('grand_total'), //
 
-            'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'adjustment_name' => $this->input->post('adjustment_name'), //
+            'adjustment_value' => $this->input->post('adjustment_input'), //
 
-            'markup_type' => '$',//
-            'markup_amount' => $this->input->post('markup_input_form'),//
+            'markup_type' => '$', //
+            'markup_amount' => $this->input->post('markup_input_form'), //
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -3611,14 +3622,14 @@ class Accounting extends MY_Controller
 
             // 'sub_total' => $this->input->post('sub_total'),
             'deposit_request' => '$',
-            'deposit_amount' => $this->input->post('adjustment_input'),//
-            'grand_total' => $this->input->post('supergrandtotal'),//
+            'deposit_amount' => $this->input->post('adjustment_input'), //
+            'grand_total' => $this->input->post('supergrandtotal'), //
 
-            'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'adjustment_name' => $this->input->post('adjustment_name'), //
+            'adjustment_value' => $this->input->post('adjustment_input'), //
 
-            'markup_type' => '$',//
-            'markup_amount' => $this->input->post('markup_input_form'),//
+            'markup_type' => '$', //
+            'markup_amount' => $this->input->post('markup_input_form'), //
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -3727,14 +3738,14 @@ class Accounting extends MY_Controller
 
             // 'sub_total' => $this->input->post('sub_total'),
             'deposit_request' => '$',
-            'deposit_amount' => $this->input->post('adjustment_input'),//
-            'grand_total' => $this->input->post('supergrandtotal'),//
+            'deposit_amount' => $this->input->post('adjustment_input'), //
+            'grand_total' => $this->input->post('supergrandtotal'), //
 
-            'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'adjustment_name' => $this->input->post('adjustment_name'), //
+            'adjustment_value' => $this->input->post('adjustment_input'), //
 
-            'markup_type' => '$',//
-            'markup_amount' => $this->input->post('markup_input_form'),//
+            'markup_type' => '$', //
+            'markup_amount' => $this->input->post('markup_input_form'), //
 
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
@@ -3805,11 +3816,11 @@ class Accounting extends MY_Controller
     }
     public function addSalesReceipt()
     {
-        if ($this->input->post('current_sales_recept_number')!="") {
+        if ($this->input->post('current_sales_recept_number') != "") {
             $this->updateSalesReceipt();
         } else {
             $recurringId = null;
-            if ($this->input->post("recurring_selected")==1) {
+            if ($this->input->post("recurring_selected") == 1) {
                 $days_in_advance = null;
                 $recurring_month = null;
                 $recurring_week = null;
@@ -3826,15 +3837,15 @@ class Accounting extends MY_Controller
                     $recurr_every = $this->input->post("weekly-every");
                     $recurring_day = $this->input->post("weekly-weeks-on");
                 } elseif ($this->input->post("recurring-interval") == "Monthly") {
-                    $recurring_month = $this->input->post("recurring-interval") ;
-                    $recurring_week = $this->input->post("monthly-week-order") ;
-                    $recurring_day = $this->input->post("monthly-day-of-the-week") ;
-                    $recurr_every = $this->input->post("monthly-months") ;
+                    $recurring_month = $this->input->post("recurring-interval");
+                    $recurring_week = $this->input->post("monthly-week-order");
+                    $recurring_day = $this->input->post("monthly-day-of-the-week");
+                    $recurr_every = $this->input->post("monthly-months");
                 } elseif ($this->input->post("recurring-interval") == "Yearly") {
-                    $recurring_month = $this->input->post("yearly-month") ;
-                    $recurring_day = $this->input->post("yearly-day") ;
+                    $recurring_month = $this->input->post("yearly-month");
+                    $recurring_day = $this->input->post("yearly-day");
                 }
-                $recurring_data=array(
+                $recurring_data = array(
                     'company_id' => logged('company_id'),
                     'template_name' => $this->input->post("recurring-template-name"),
                     'recurring_type' => $this->input->post("recurring-type"),
@@ -3858,7 +3869,7 @@ class Accounting extends MY_Controller
                 $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
             }
 
-            $customer_id=$this->input->post('customer_id');
+            $customer_id = $this->input->post('customer_id');
             $new_data = array(
                 'customer_id' => $this->input->post('customer_id'),
                 'email' => $this->input->post('email'),
@@ -3876,7 +3887,7 @@ class Accounting extends MY_Controller
                 'message' => $this->input->post('message'),
                 'message_on_statement' => $this->input->post('message_on_statement'),
                 // 'attachments' => $this->input->post('file_name'),
-                'attachments' => 'testing',
+                'attachments' => $this->input->post("attachement-filenames"),
 
                 // 'shipping' => $this->input->post('shipping'),
                 'status' => 1,
@@ -3893,203 +3904,215 @@ class Accounting extends MY_Controller
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s")
             );
-
             $addQuery = $this->accounting_sales_receipt_model->createSalesReceipts($new_data);
-            $new_recurring_data=array(
-                'txn_type'=>"Sales Receipt",
-                'txn_id'=>$addQuery,
-                'customer_id'=>$customer_id
+            $file_names=explode(",", $this->input->post("attachement-filenames"));
+            for ($i = 0; $i < count($file_names);$i++) {
+                if ($file_names[$i]!="") {
+                    $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                    $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                    
+                    if (file_exists($source)) {
+                        copy($source, $destination);
+                        unlink($source);
+                    }
+                }
+            }
+
+            $new_recurring_data = array(
+                'txn_type' => "Sales Receipt",
+                'txn_id' => $addQuery,
+                'customer_id' => $customer_id
             );
             $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurringId, $new_recurring_data);
             if ($this->input->post('payment_method') == 'Cash') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'is_collected' => '1',
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'is_collected' => '1',
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Check') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'check_number' => $this->input->post('check_number'),
-                'routing_number' => $this->input->post('routing_number'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'check_number' => $this->input->post('check_number'),
+                    'routing_number' => $this->input->post('routing_number'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Credit Card') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'credit_number' => $this->input->post('credit_number'),
-                'credit_expiry' => $this->input->post('credit_expiry'),
-                'credit_cvc' => $this->input->post('credit_cvc'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'credit_number' => $this->input->post('credit_number'),
+                    'credit_expiry' => $this->input->post('credit_expiry'),
+                    'credit_cvc' => $this->input->post('credit_cvc'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Debit Card') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'credit_number' => $this->input->post('debit_credit_number'),
-                'credit_expiry' => $this->input->post('debit_credit_expiry'),
-                'credit_cvc' => $this->input->post('debit_credit_cvc'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'credit_number' => $this->input->post('debit_credit_number'),
+                    'credit_expiry' => $this->input->post('debit_credit_expiry'),
+                    'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'ACH') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'routing_number' => $this->input->post('ach_routing_number'),
-                'account_number' => $this->input->post('ach_account_number'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'routing_number' => $this->input->post('ach_routing_number'),
+                    'account_number' => $this->input->post('ach_account_number'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Venmo') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('account_credentials'),
-                'account_note' => $this->input->post('account_note'),
-                'confirmation' => $this->input->post('confirmation'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('account_credentials'),
+                    'account_note' => $this->input->post('account_note'),
+                    'confirmation' => $this->input->post('confirmation'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Paypal') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('paypal_account_credentials'),
-                'account_note' => $this->input->post('paypal_account_note'),
-                'confirmation' => $this->input->post('paypal_confirmation'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('paypal_account_credentials'),
+                    'account_note' => $this->input->post('paypal_account_note'),
+                    'confirmation' => $this->input->post('paypal_confirmation'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Square') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('square_account_credentials'),
-                'account_note' => $this->input->post('square_account_note'),
-                'confirmation' => $this->input->post('square_confirmation'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('square_account_credentials'),
+                    'account_note' => $this->input->post('square_account_note'),
+                    'confirmation' => $this->input->post('square_confirmation'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Warranty Work') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('warranty_account_credentials'),
-                'account_note' => $this->input->post('warranty_account_note'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('warranty_account_credentials'),
+                    'account_note' => $this->input->post('warranty_account_note'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Home Owner Financing') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('home_account_credentials'),
-                'account_note' => $this->input->post('home_account_note'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('home_account_credentials'),
+                    'account_note' => $this->input->post('home_account_note'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'e-Transfer') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('e_account_credentials'),
-                'account_note' => $this->input->post('e_account_note'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('e_account_credentials'),
+                    'account_note' => $this->input->post('e_account_note'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Other Credit Card Professor') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'credit_number' => $this->input->post('other_credit_number'),
-                'credit_expiry' => $this->input->post('other_credit_expiry'),
-                'credit_cvc' => $this->input->post('other_credit_cvc'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'credit_number' => $this->input->post('other_credit_number'),
+                    'credit_expiry' => $this->input->post('other_credit_expiry'),
+                    'credit_cvc' => $this->input->post('other_credit_cvc'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Other Payment Type') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('other_payment_account_credentials'),
-                'account_note' => $this->input->post('other_payment_account_note'),
-                'transaction_type' => "Sales Receipt",
-                'transaction_id' => $addQuery,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('other_payment_account_credentials'),
+                    'account_note' => $this->input->post('other_payment_account_note'),
+                    'transaction_type' => "Sales Receipt",
+                    'transaction_id' => $addQuery,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             }
-            
+
             if ($addQuery > 0) {
                 $a = $this->input->post('items');
                 $b = $this->input->post('item_type');
@@ -4107,7 +4130,7 @@ class Accounting extends MY_Controller
                     $data['cost'] = $f[$i];
                     $data['discount'] = $g[$i];
                     $data['tax'] = $h[$i];
-                    $data['total'] = (($d[$i]*$f[$i])+$h[$i])-$g[$i];
+                    $data['total'] = (($d[$i] * $f[$i]) + $h[$i]) - $g[$i];
                     $data['type'] = 'Sales Receipt';
                     $data['type_id'] = $addQuery;
                     // $data['status'] = '1';
@@ -4116,21 +4139,21 @@ class Accounting extends MY_Controller
                     $additem_details_id = $this->accounting_invoices_model->additem_details($data);
                     $i++;
                 }
-                $sales_receipt_file_name = 'sales_receipt_'.$addQuery.".pdf";
-                $packaging_slip_file_name = 'packaging_slip_'.$addQuery.".pdf";
+                $sales_receipt_file_name = 'sales_receipt_' . $addQuery . ".pdf";
+                $packaging_slip_file_name = 'packaging_slip_' . $addQuery . ".pdf";
                 $this->create_pdf_sales_receipt($sales_receipt_file_name, $customer_id, $addQuery, "print_sales_receipt");
                 $this->create_pdf_sales_receipt($packaging_slip_file_name, $customer_id, $addQuery, "print_packaging_slip");
-                
+
                 $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
 
                 $data = new stdClass();
-                if ($this->input->post("submit_type")=="save-send") {
+                if ($this->input->post("submit_type") == "save-send") {
                     $data->email_sending_status = "updated receipt has been sent";
                 }
-                $data->business_name =$customer_info->business_name;
-                $data->customer_email =$customer_info->email;
-                $data->customer_full_name =$customer_info->first_name.' '.$customer_info->last_name;
-                $data->file_location=base_url("assets/pdf/".$sales_receipt_file_name);
+                $data->business_name = $customer_info->business_name;
+                $data->customer_email = $customer_info->email;
+                $data->customer_full_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $data->file_location = base_url("assets/pdf/" . $sales_receipt_file_name);
                 $data->count_save = 1;
                 $data->sales_receipt_id = $addQuery;
                 echo json_encode($data);
@@ -4146,8 +4169,8 @@ class Accounting extends MY_Controller
         $sales_receipt_id = $this->input->post('current_sales_recept_number');
         $recurring_already = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
         $recurringId = $recurring_already->recurring_id;
-        
-        if ($this->input->post("recurring_selected")==1) {
+
+        if ($this->input->post("recurring_selected") == 1) {
             $days_in_advance = null;
             $recurring_month = null;
             $recurring_week = null;
@@ -4164,15 +4187,15 @@ class Accounting extends MY_Controller
                 $recurr_every = $this->input->post("weekly-every");
                 $recurring_day = $this->input->post("weekly-weeks-on");
             } elseif ($this->input->post("recurring-interval") == "Monthly") {
-                $recurring_month = $this->input->post("recurring-interval") ;
-                $recurring_week = $this->input->post("monthly-week-order") ;
-                $recurring_day = $this->input->post("monthly-day-of-the-week") ;
-                $recurr_every = $this->input->post("monthly-months") ;
+                $recurring_month = $this->input->post("recurring-interval");
+                $recurring_week = $this->input->post("monthly-week-order");
+                $recurring_day = $this->input->post("monthly-day-of-the-week");
+                $recurr_every = $this->input->post("monthly-months");
             } elseif ($this->input->post("recurring-interval") == "Yearly") {
-                $recurring_month = $this->input->post("yearly-month") ;
-                $recurring_day = $this->input->post("yearly-day") ;
+                $recurring_month = $this->input->post("yearly-month");
+                $recurring_day = $this->input->post("yearly-day");
             }
-            $recurring_data=array(
+            $recurring_data = array(
                 'company_id' => logged('company_id'),
                 'template_name' => $this->input->post("recurring-template-name"),
                 'recurring_type' => $this->input->post("recurring-type"),
@@ -4189,8 +4212,8 @@ class Accounting extends MY_Controller
                 'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
                 'status' => 1,
                 'updated_at' => date('Y-m-d h:i:s'),
-                'txn_type'=>"Sales Receipt",
-                'txn_id'=>$sales_receipt_id,
+                'txn_type' => "Sales Receipt",
+                'txn_id' => $sales_receipt_id,
                 'customer_id' => $this->input->post('customer_id')
             );
             if ($recurring_already->recurring_id != null) {
@@ -4201,10 +4224,21 @@ class Accounting extends MY_Controller
         } else {
             if ($recurring_already->recurring_id != null) {
                 $this->accounting_recurring_transactions_model->delete($recurring_already->recurring_id);
-                $recurringId=null;
+                $recurringId = null;
             }
         }
-        
+        $sates_receipt_details_old = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
+        if ($sates_receipt_details_old->attachments != $this->input->post("attachement-filenames")) {
+            $old_attachments = explode(",", $sates_receipt_details_old->attachments);
+            for ($i=0;$i<count($old_attachments);$i++) {
+                if ($old_attachments[$i]!="") {
+                    if (file_exists(("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]))) {
+                        unlink("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]);
+                    }
+                }
+            }
+        }
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
@@ -4222,7 +4256,7 @@ class Accounting extends MY_Controller
             'message' => $this->input->post('message'),
             'message_on_statement' => $this->input->post('message_on_statement'),
             // 'attachments' => $this->input->post('file_name'),
-            'attachments' => 'testing',
+            'attachments' => $this->input->post("attachement-filenames"),
 
             // 'shipping' => $this->input->post('shipping'),
             'status' => 1,
@@ -4239,8 +4273,19 @@ class Accounting extends MY_Controller
         );
 
         $updateQuery = $this->accounting_sales_receipt_model->updateSalesReceipt($sales_receipt_id, $new_data);
+        $file_names=explode(",", $this->input->post("attachement-filenames"));
+        for ($i = 0; $i < count($file_names);$i++) {
+            if ($file_names[$i]!="") {
+                $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                
+                if (file_exists($source)) {
+                    copy($source, $destination);
+                    unlink($source);
+                }
+            }
+        }
 
-        
 
         if ($updateQuery > 0) {
             $this->accounting_sales_receipt_model->delete_sales_receipt_items($sales_receipt_id);
@@ -4260,7 +4305,7 @@ class Accounting extends MY_Controller
                 $data['cost'] = $f[$i];
                 $data['discount'] = $g[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = (($d[$i]*$f[$i])+$h[$i])-$g[$i];
+                $data['total'] = (($d[$i] * $f[$i]) + $h[$i]) - $g[$i];
                 $data['type'] = 'Sales Receipt';
                 $data['type_id'] = $sales_receipt_id;
                 // $data['status'] = '1';
@@ -4269,22 +4314,22 @@ class Accounting extends MY_Controller
                 $additem_details_id = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
-            $customer_id=$this->input->post('customer_id');
-            $sales_receipt_file_name = 'sales_receipt_'.$sales_receipt_id.".pdf";
-            $packaging_slip_file_name = 'packaging_slip_'.$sales_receipt_id.".pdf";
+            $customer_id = $this->input->post('customer_id');
+            $sales_receipt_file_name = 'sales_receipt_' . $sales_receipt_id . ".pdf";
+            $packaging_slip_file_name = 'packaging_slip_' . $sales_receipt_id . ".pdf";
             $this->create_pdf_sales_receipt($sales_receipt_file_name, $customer_id, $sales_receipt_id, "print_sales_receipt");
             $this->create_pdf_sales_receipt($packaging_slip_file_name, $customer_id, $sales_receipt_id, "print_packaging_slip");
 
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
 
             $data = new stdClass();
-            if ($this->input->post("submit_type")=="save-send") {
+            if ($this->input->post("submit_type") == "save-send") {
                 $data->email_sending_status = "updated receipt has been sent";
             }
-            $data->business_name =$customer_info->business_name;
-            $data->customer_email =$customer_info->email;
-            $data->customer_full_name =$customer_info->first_name.' '.$customer_info->last_name;
-            $data->file_location=base_url("assets/pdf/".$sales_receipt_file_name);
+            $data->business_name = $customer_info->business_name;
+            $data->customer_email = $customer_info->email;
+            $data->customer_full_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+            $data->file_location = base_url("assets/pdf/" . $sales_receipt_file_name);
             $data->count_save = 1;
             $data->sales_receipt_id = $sales_receipt_id;
             echo json_encode($data);
@@ -4336,7 +4381,7 @@ class Accounting extends MY_Controller
             'adjustment_name' => $this->input->post('adjustment_name'),
             'adjustment_value' => $this->input->post('adjustment_value'),
             'grand_total' => $this->input->post('grand_total'),
-            
+
             'created_by' => logged('id'),
             'date_created' => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")
@@ -4346,7 +4391,7 @@ class Accounting extends MY_Controller
 
         if ($this->input->post('payment_method') == 'Cash') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'is_collected' => '1',
@@ -4358,7 +4403,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Check') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'check_number' => $this->input->post('check_number'),
@@ -4371,7 +4416,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Credit Card') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'credit_number' => $this->input->post('credit_number'),
@@ -4385,7 +4430,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Debit Card') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'credit_number' => $this->input->post('debit_credit_number'),
@@ -4399,7 +4444,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'ACH') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'routing_number' => $this->input->post('ach_routing_number'),
@@ -4412,7 +4457,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Venmo') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('account_credentials'),
@@ -4426,7 +4471,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Paypal') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('paypal_account_credentials'),
@@ -4440,7 +4485,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Square') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('square_account_credentials'),
@@ -4454,7 +4499,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Warranty Work') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('warranty_account_credentials'),
@@ -4467,7 +4512,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Home Owner Financing') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('home_account_credentials'),
@@ -4480,7 +4525,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'e-Transfer') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('e_account_credentials'),
@@ -4493,7 +4538,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Other Credit Card Professor') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'credit_number' => $this->input->post('other_credit_number'),
@@ -4507,7 +4552,7 @@ class Accounting extends MY_Controller
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         } elseif ($this->input->post('payment_method') == 'Other Payment Type') {
             $payment_data = array(
-            
+
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('other_payment_account_credentials'),
@@ -4731,7 +4776,7 @@ class Accounting extends MY_Controller
                 $data['qty'] = $d[$i];
                 $data['cost'] = $f[$i];
                 $data['discount'] = $g[$i];
-                $data['tax'] = (float)$h[$i]*($f[$i]*$d[$i]);
+                $data['tax'] = (float)$h[$i] * ($f[$i] * $d[$i]);
                 $data['total'] = $ii[$i];
                 $data['type'] = 'Credit Memo';
                 $data['type_id'] = $addQuery;
@@ -4796,13 +4841,13 @@ class Accounting extends MY_Controller
     {
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
-        if ($this->input->post('delayed_charge_id')!="") {
+        if ($this->input->post('delayed_charge_id') != "") {
             $this->update_DelayedCharge();
         } else {
-            $customer_id=$this->input->post('customer_id');
+            $customer_id = $this->input->post('customer_id');
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
             $recurringId = null;
-            if ($this->input->post("recurring_selected")==1) {
+            if ($this->input->post("recurring_selected") == 1) {
                 $days_in_advance = null;
                 $recurring_month = null;
                 $recurring_week = null;
@@ -4819,15 +4864,15 @@ class Accounting extends MY_Controller
                     $recurr_every = $this->input->post("weekly-every");
                     $recurring_day = $this->input->post("weekly-weeks-on");
                 } elseif ($this->input->post("recurring-interval") == "Monthly") {
-                    $recurring_month = $this->input->post("recurring-interval") ;
-                    $recurring_week = $this->input->post("monthly-week-order") ;
-                    $recurring_day = $this->input->post("monthly-day-of-the-week") ;
-                    $recurr_every = $this->input->post("monthly-months") ;
+                    $recurring_month = $this->input->post("recurring-interval");
+                    $recurring_week = $this->input->post("monthly-week-order");
+                    $recurring_day = $this->input->post("monthly-day-of-the-week");
+                    $recurr_every = $this->input->post("monthly-months");
                 } elseif ($this->input->post("recurring-interval") == "Yearly") {
-                    $recurring_month = $this->input->post("yearly-month") ;
-                    $recurring_day = $this->input->post("yearly-day") ;
+                    $recurring_month = $this->input->post("yearly-month");
+                    $recurring_day = $this->input->post("yearly-day");
                 }
-                $recurring_data=array(
+                $recurring_data = array(
                     'company_id' => logged('company_id'),
                     'template_name' => $this->input->post("recurring-template-name"),
                     'recurring_type' => $this->input->post("recurring-type"),
@@ -4845,30 +4890,42 @@ class Accounting extends MY_Controller
                 );
                 $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
             }
-        
-        
+
+
             $new_data = array(
                 'customer_id' => $customer_id,
                 'delayed_credit_date' => $this->input->post('delayed_charge_date'),
                 'tags' => $this->input->post('tags'),
                 'total_amount' => $this->input->post('grand_total_amount'),
                 'memo' => $this->input->post('memo'),
-                'attachments' => 'testing',
+                'attachments' => $this->input->post("attachement-filenames"),
                 'status' => 1,
                 'user_id' => $user_id,
                 'company_id' => $company_id,
                 'created_by' => logged('id'),
-                'recurring_id'=>$recurringId
+                'recurring_id' => $recurringId
             );
-
             $delayed_charge_id = $this->accounting_delayed_charge_model->createDelayedCharge($new_data);
-            $new_recurring_data=array(
-                'txn_type'=>"Delayed Charge",
-                'txn_id'=>$delayed_charge_id,
+            $file_names=explode(",", $this->input->post("attachement-filenames"));
+            for ($i = 0; $i < count($file_names);$i++) {
+                if ($file_names[$i]!="") {
+                    $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                    $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                    
+                    if (file_exists($source)) {
+                        copy($source, $destination);
+                        unlink($source);
+                    }
+                }
+            }
+                
+            $new_recurring_data = array(
+                'txn_type' => "Delayed Charge",
+                'txn_id' => $delayed_charge_id,
                 'customer_id' => $customer_id,
             );
             $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurringId, $new_recurring_data);
-           
+
             // if($addQuery > 0){
             //     redirect('accounting/banking');
             //     // echo json_encode($addQuery);
@@ -4890,7 +4947,7 @@ class Accounting extends MY_Controller
                     $data['cost'] = $f[$i];
                     $data['discount'] = $g[$i];
                     $data['tax'] = $h[$i];
-                    $data['total'] = (($d[$i]*$f[$i])+($h[$i]))-$g[$i];
+                    $data['total'] = (($d[$i] * $f[$i]) + ($h[$i])) - $g[$i];
                     $data['type'] = 'Delayed Charge';
                     $data['type_id'] = $delayed_charge_id;
                     $data['status'] = 1;
@@ -4910,13 +4967,13 @@ class Accounting extends MY_Controller
     {
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
-        
-        $delayed_charge_id=$this->input->post("delayed_charge_id");
-        $customer_id=$this->input->post('customer_id');
+
+        $delayed_charge_id = $this->input->post("delayed_charge_id");
+        $customer_id = $this->input->post('customer_id');
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        $dayed_charge_info=$this->accounting_delayed_charge_model->getDelayedChargeDetails($delayed_charge_id);
+        $dayed_charge_info = $this->accounting_delayed_charge_model->getDelayedChargeDetails($delayed_charge_id);
         $recurringId = null;
-        if ($this->input->post("recurring_selected")==1) {
+        if ($this->input->post("recurring_selected") == 1) {
             $days_in_advance = null;
             $recurring_month = null;
             $recurring_week = null;
@@ -4933,34 +4990,34 @@ class Accounting extends MY_Controller
                 $recurr_every = $this->input->post("weekly-every");
                 $recurring_day = $this->input->post("weekly-weeks-on");
             } elseif ($this->input->post("recurring-interval") == "Monthly") {
-                $recurring_month = $this->input->post("recurring-interval") ;
-                $recurring_week = $this->input->post("monthly-week-order") ;
-                $recurring_day = $this->input->post("monthly-day-of-the-week") ;
-                $recurr_every = $this->input->post("monthly-months") ;
+                $recurring_month = $this->input->post("recurring-interval");
+                $recurring_week = $this->input->post("monthly-week-order");
+                $recurring_day = $this->input->post("monthly-day-of-the-week");
+                $recurr_every = $this->input->post("monthly-months");
             } elseif ($this->input->post("recurring-interval") == "Yearly") {
-                $recurring_month = $this->input->post("yearly-month") ;
-                $recurring_day = $this->input->post("yearly-day") ;
+                $recurring_month = $this->input->post("yearly-month");
+                $recurring_day = $this->input->post("yearly-day");
             }
-            $recurring_data=array(
-                    'company_id' => logged('company_id'),
-                    'template_name' => $this->input->post("recurring-template-name"),
-                    'recurring_type' => $this->input->post("recurring-type"),
-                    'days_in_advance' => $days_in_advance,
-                    'recurring_interval' => $this->input->post("recurring-interval"),
-                    'recurring_month' => $recurring_month,
-                    'recurring_week' => $recurring_week,
-                    'recurring_day' => $recurring_day,
-                    'recurr_every' => $recurr_every,
-                    'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
-                    'end_type' => $this->input->post("recurring-end-type"),
-                    'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
-                    'max_occurences' => $this->input->post("after-occurrences"),
-                    'status' => 1,
-                    'updated_at'=>date("Y-m-d H:i:s"),
-                    'txn_type' => "Delayed Charge",
-                    'txn_id' =>$delayed_charge_id,
-                    'customer_id' =>$customer_id
-                );
+            $recurring_data = array(
+                'company_id' => logged('company_id'),
+                'template_name' => $this->input->post("recurring-template-name"),
+                'recurring_type' => $this->input->post("recurring-type"),
+                'days_in_advance' => $days_in_advance,
+                'recurring_interval' => $this->input->post("recurring-interval"),
+                'recurring_month' => $recurring_month,
+                'recurring_week' => $recurring_week,
+                'recurring_day' => $recurring_day,
+                'recurr_every' => $recurr_every,
+                'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                'end_type' => $this->input->post("recurring-end-type"),
+                'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                'max_occurences' => $this->input->post("after-occurrences"),
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s"),
+                'txn_type' => "Delayed Charge",
+                'txn_id' => $delayed_charge_id,
+                'customer_id' => $customer_id
+            );
             if ($dayed_charge_info->recurring_id != null) {
                 $this->accounting_recurring_transactions_model->updateRecurringTransaction(
                     $dayed_charge_info->recurring_id,
@@ -4972,28 +5029,50 @@ class Accounting extends MY_Controller
         } else {
             if ($dayed_charge_info->recurring_id != null) {
                 $this->accounting_recurring_transactions_model->delete($dayed_charge_info->recurring_id);
-                $recurringId=null;
+                $recurringId = null;
             }
         }
-        
-        
+
+        if ($dayed_charge_info->attachments != $this->input->post("attachement-filenames")) {
+            $old_attachments = explode(",", $dayed_charge_info->attachments);
+            for ($i=0;$i<count($old_attachments);$i++) {
+                if ($old_attachments[$i]!="") {
+                    if (file_exists(("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]))) {
+                        unlink("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]);
+                    }
+                }
+            }
+        }
+
+
         $new_data = array(
-                'customer_id' => $customer_id,
-                'delayed_credit_date' => $this->input->post('delayed_charge_date'),
-                'tags' => $this->input->post('tags'),
-                'total_amount' => $this->input->post('grand_total_amount'),
-                'memo' => $this->input->post('memo'),
-                'attachments' => 'testing',
-                'status' => 1,
-                'user_id' => $user_id,
-                'company_id' => $company_id,
-                'created_by' => logged('id'),
-                'recurring_id'=>$recurringId,
-                'date_modified' => date("Y-m-d H:i:s")
-            );
-        
+            'customer_id' => $customer_id,
+            'delayed_credit_date' => $this->input->post('delayed_charge_date'),
+            'tags' => $this->input->post('tags'),
+            'total_amount' => $this->input->post('grand_total_amount'),
+            'memo' => $this->input->post('memo'),
+            'attachments' => $this->input->post("attachement-filenames"),
+            'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'created_by' => logged('id'),
+            'recurring_id' => $recurringId,
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
         $update_query = $this->accounting_delayed_charge_model->updateDelayedCharge($delayed_charge_id, $new_data);
 
+        $file_names=explode(",", $this->input->post("attachement-filenames"));
+        for ($i = 0; $i < count($file_names);$i++) {
+            if ($file_names[$i]!="") {
+                $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                if (file_exists($source)) {
+                    copy($source, $destination);
+                    unlink($source);
+                }
+            }
+        }
         // if($addQuery > 0){
         //     redirect('accounting/banking');
         //     // echo json_encode($addQuery);
@@ -5016,7 +5095,7 @@ class Accounting extends MY_Controller
                 $data['cost'] = $f[$i];
                 $data['discount'] = $g[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = (($d[$i]*$f[$i])+($h[$i]))-$g[$i];
+                $data['total'] = (($d[$i] * $f[$i]) + ($h[$i])) - $g[$i];
                 $data['type'] = 'Delayed Charge';
                 $data['type_id'] = $delayed_charge_id;
                 $data['status'] = 1;
@@ -5686,7 +5765,7 @@ class Accounting extends MY_Controller
 
 
     // New Forms
-    public function addNewEstimate($customer_id=0)
+    public function addNewEstimate($customer_id = 0)
     {
         $this->load->model('AcsProfile_model');
 
@@ -5761,7 +5840,7 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/customer_credit_memo_modal', $this->page_data);
     }
 
-    public function addNewEstimateOptions($customer_id=0)
+    public function addNewEstimateOptions($customer_id = 0)
     {
         $this->load->model('AcsProfile_model');
 
@@ -5806,7 +5885,7 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/addNewEstimateOptions', $this->page_data);
     }
 
-    public function addNewEstimateBundle($customer_id=0)
+    public function addNewEstimateBundle($customer_id = 0)
     {
         $this->load->model('AcsProfile_model');
 
@@ -5895,7 +5974,7 @@ class Accounting extends MY_Controller
         }
 
         $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
-        
+
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
@@ -5903,7 +5982,7 @@ class Accounting extends MY_Controller
 
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-        
+
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -5940,7 +6019,7 @@ class Accounting extends MY_Controller
         $users_data = $this->session->all_userdata();
         // foreach($users_data as $usersD){
         //     $userID = $usersD->id;
-            
+
         // }
 
         // print_r($user_id);
@@ -5989,7 +6068,7 @@ class Accounting extends MY_Controller
 
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
-        
+
 
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -6025,7 +6104,7 @@ class Accounting extends MY_Controller
         $users_data = $this->session->all_userdata();
         // foreach($users_data as $usersD){
         //     $userID = $usersD->id;
-            
+
         // }
 
         // print_r($user_id);
@@ -6082,7 +6161,7 @@ class Accounting extends MY_Controller
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-        
+
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -6320,7 +6399,7 @@ class Accounting extends MY_Controller
 
         $post = $this->input->post();
 
-//        echo '<pre>'; print_r($post); die;
+        //        echo '<pre>'; print_r($post); die;
 
         $user = (object)$this->session->userdata('logged');
 
@@ -6352,7 +6431,7 @@ class Accounting extends MY_Controller
             $additional_services = '';
         }
 
-//        print_r(post('customer')); die;
+        //        print_r(post('customer')); die;
 
         $eqpt_cost = array(
 
@@ -6384,7 +6463,7 @@ class Accounting extends MY_Controller
             'company_id' => $company_id
         ]);
 
-//        print_r(serialize(post('post_service_summary'))); die;
+        //        print_r(serialize(post('post_service_summary'))); die;
 
 
         if ($customer_id) {
@@ -6438,7 +6517,7 @@ class Accounting extends MY_Controller
         $user_id  = getLoggedUserID();
 
         $new_data = array(
-            
+
             'workorder_number' => $this->input->post('workorder_number'),
             'customer_id' => $this->input->post('customer_id'),
             'security_number' => $this->input->post('security_number'),
@@ -6452,7 +6531,7 @@ class Accounting extends MY_Controller
             'zip_code' => $this->input->post('zip_code'),
             'cross_street' => $this->input->post('cross_street'),
             'password' => $this->input->post('password'),
-            'offer_code' => $this->input->post('offer_code'),//
+            'offer_code' => $this->input->post('offer_code'), //
             'job_tag' => $this->input->post('job_tag'),
             'schedule_date_given' => $this->input->post('schedule_date_given'),
             'job_type' => $this->input->post('job_type'),
@@ -6484,7 +6563,7 @@ class Accounting extends MY_Controller
             'primary_account_holder_name' => 'primary_account_holder_name',
             'secondary_account_holder_signature' => 'secondary_account_holder_signature',
             'secondary_account_holder_name' => 'secondary_account_holder_name',
-            
+
 
             //attachment
             // 'attached_photo' => $this->input->post('attached_photo'),
@@ -6507,9 +6586,9 @@ class Accounting extends MY_Controller
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
-        
+
         // $custom_data = array(
-            
+
         //     'custom1_field' => $this->input->post('custom1_field'),
         //     'custom1_value' => $this->input->post('custom1_value'),
         //     'custom2_field' => $this->input->post('custom2_field'),
@@ -6592,7 +6671,7 @@ class Accounting extends MY_Controller
             'status' => 1,
         ];
 
-        $expense= $this->accounting_expense_name_model->getexpensename($data);
+        $expense = $this->accounting_expense_name_model->getexpensename($data);
 
         $return = [
             'data' => $expense,
@@ -6687,7 +6766,7 @@ class Accounting extends MY_Controller
     //     return true;
     // }
 
-    public function sendmerchantEmail($id=null)
+    public function sendmerchantEmail($id = null)
     {
         $this->load->library('email');
 
@@ -6709,10 +6788,10 @@ class Accounting extends MY_Controller
         ';
 
         $email = $this->input->post('email');
-        $header_message = "<html><head><title>".$subject."</title></head><body>";
+        $header_message = "<html><head><title>" . $subject . "</title></head><body>";
         $footer_message = "</body></html>";
         $input_msg = $this->input->post('contact_reply');
-        $msg = $header_message.$footer_message;
+        $msg = $header_message . $footer_message;
 
         $this->email->from('smartrac.noreply@gmail.com', 'NSMARTRAC');
         $this->email->to($email);
@@ -6876,7 +6955,7 @@ class Accounting extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Templates";
         $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
-        
+
         $this->load->view('accounting/work_order_templates', $this->page_data);
     }
 
@@ -6885,17 +6964,17 @@ class Accounting extends MY_Controller
         //print_r($_POST);
         // $folderPath = './uploads/';
         // // $this->input->post('get_val');
-        
+
         // $image_parts = explode(";base64,", $this->input->post('signature_image'));
-        
+
         // $image_type_aux = explode("image/", $image_parts[0]);
-        
+
         // $image_type = $image_type_aux[1];
-        
+
         // $image_base64 = base64_decode($image_parts[1]);
-        
+
         // $file = $folderPath . uniqid() . '.'.$image_type;
-        
+
         // file_put_contents($file, $image_base64);
         // echo "1";
 
@@ -6923,7 +7002,7 @@ class Accounting extends MY_Controller
         $dataURL2 = $this->input->post('dataURL2');
         $dataURL3 = $this->input->post('dataURL3');
 
-        echo $dataURL .'<br>'. $dataURL2 .'<br>'. $dataURL3;
+        echo $dataURL . '<br>' . $dataURL2 . '<br>' . $dataURL3;
 
         // $list = json_decode($pixels, true);
 
@@ -6972,13 +7051,13 @@ class Accounting extends MY_Controller
         $this->page_data['customer_name'] = $customer_name;
         $this->page_data['message'] = $message;
         $this->page_data['subject'] = $subject;
-        
+
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
         $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
-        
+
         $mail->MsgHTML($content);
-        
+
         $data = new stdClass();
         try {
             // $mail->addAddress($customer_email);
@@ -7025,7 +7104,7 @@ class Accounting extends MY_Controller
         $this->page_data['customer_name'] = $customer_name;
         $this->page_data['message'] = $message;
         $this->page_data['subject'] = $subject;
-        
+
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
 
@@ -7033,9 +7112,9 @@ class Accounting extends MY_Controller
         $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
         $mail->MsgHTML($content);
         $mail->addAddress($customer_email);
-        
+
         $data = new stdClass();
-        
+
         // $this->load->library('email');
         // $config = array(
         //     'protocol' => 'smtp',
@@ -7063,7 +7142,7 @@ class Accounting extends MY_Controller
         }
         if (!$mail->Send()) {
             $data->status = "error";
-            $data->status = "Mailer Error: ".$mail->ErrorInfo;
+            $data->status = "Mailer Error: " . $mail->ErrorInfo;
             exit;
         }
         $mail->ClearAllRecipients();
@@ -7084,45 +7163,45 @@ class Accounting extends MY_Controller
     }
     public function get_load_customers_table()
     {
-        $counter =0;
-        $html='';
+        $counter = 0;
+        $html = '';
         $customers = $this->accounting_customers_model->getAllByCompany();
         foreach ($customers as $cus) {
             $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
             $receivable_payment = 0;
-            $total_amount_received =0;
+            $total_amount_received = 0;
             foreach ($invoices as $inv) {
                 if (is_numeric($inv->grand_total)) {
-                    $receivable_payment+=$inv->grand_total;
+                    $receivable_payment += $inv->grand_total;
                 }
-                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
                 foreach ($receive_payment as $payment) {
                     $total_amount_received += $payment->payment_amount;
                 }
             }
-            
-            $first_option ="Create invoice";
-            $first_option_class="customer_craete_invoice_btn";
-            $amount =($receivable_payment - $total_amount_received);
+
+            $first_option = "Create invoice";
+            $first_option_class = "customer_craete_invoice_btn";
+            $amount = ($receivable_payment - $total_amount_received);
             if ($amount > 0) {
                 $first_option = "Receive payment";
-                $first_option_class="customer_receive_payment_btn";
+                $first_option_class = "customer_receive_payment_btn";
             }
             $html .= '<tr>
 								<td class="center"><input type="checkbox"
-										name="checkbox'.$counter.'" data-customer-id="'.$cus->prof_id.'" data-email-add="'.$cus->email.'"> 
+										name="checkbox' . $counter . '" data-customer-id="' . $cus->prof_id . '" data-email-add="' . $cus->email . '"> 
 								</td>
-								<td><a class="customer-full-page-btn" href="javascript:void(0)" data-customer-id="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name .'</a>
+								<td><a class="customer-full-page-btn" href="javascript:void(0)" data-customer-id="' . $cus->prof_id . '">' . $cus->first_name . ' ' .  $cus->middle_name . ' ' . $cus->last_name . '</a>
 								</td>
-								<td>'. $cus->phone_h.'
+								<td>' . $cus->phone_h . '
 								</td>
-								<td class="text-right">'."$".number_format(($receivable_payment - $total_amount_received), 2).'
+								<td class="text-right">' . "$" . number_format(($receivable_payment - $total_amount_received), 2) . '
 								</td>
 								<td>
 									<div class="dropdown dropdown-btn text-right">
 										<a href=""
-											class="first-option '.$first_option_class.'"
-											data-customer-id="'.$cus->prof_id.'">'.$first_option.' </a>
+											class="first-option ' . $first_option_class . '"
+											data-customer-id="' . $cus->prof_id . '">' . $first_option . ' </a>
 										<a type="button" id="dropdown-button-icon" data-toggle="dropdown">
 											<span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span></span>
 										</a>
@@ -7130,36 +7209,36 @@ class Accounting extends MY_Controller
 											aria-labelledby="dropdown-edit">
 											';
             if ($amount > 0) {
-                $html.='<li>
+                $html .= '<li>
 												<a role="menuitem" tabindex="-1" href="javascript:void(0)"
 													class="send-reminder"
-													data-customer-id="'.$cus->prof_id.'"
-													data-customer-name="'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'">
+													data-customer-id="' . $cus->prof_id . '"
+													data-customer-name="' . $cus->first_name . ' ' .  $cus->middle_name . ' ' . $cus->last_name . '">
 													Send reminder
 												</a>
 											</li>
 											<li>
-												<a href="javascript:void(0)" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+												<a href="javascript:void(0)" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create statement
 												</a>
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="customer_craete_invoice_btn" data-toggle="modal" data-target="#create_invoice_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="customer_craete_invoice_btn" data-toggle="modal" data-target="#create_invoice_modal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create invoice
 												</a>
 											</li>';
             }
 
-            $html.='<li>
+            $html .= '<li>
 												<a href="javascript:void(0)"
-													class="created-sales-receipt" data-toggle="modal" data-target="#addsalesreceiptModal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="created-sales-receipt" data-toggle="modal" data-target="#addsalesreceiptModal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create sales receipt
 												</a>
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="create-estimate-btn" data-toggle="modal" data-target="#newJobModal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="create-estimate-btn" data-toggle="modal" data-target="#newJobModal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create estimate
 												</a>
 											</li>
@@ -7170,31 +7249,31 @@ class Accounting extends MY_Controller
 												</a>
 											</li>';
             if ($amount <= 0) {
-                $html.='<li>
+                $html .= '<li>
 												<a href="javascript:void(0)"
-													class="create-charge-btn" data-toggle="modal" data-target="#create_charge_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="create-charge-btn" data-toggle="modal" data-target="#create_charge_modal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create charge
 												</a>
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-                                                class="time-activity-btn" data-toggle="modal" data-target="#time_activity_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+                                                class="time-activity-btn" data-toggle="modal" data-target="#time_activity_modal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create time activity
 												</a>
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="make-customer-inactive" data-customer-id="'.$cus->prof_id.'">
+													class="make-customer-inactive" data-customer-id="' . $cus->prof_id . '">
 													Make inactive
 												</a>
 											</li>
 											<li>
-												<a href="javascript:void(0)" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+												<a href="javascript:void(0)" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create statement
 												</a>
 											</li>';
             }
-            $html.='<li role="separator" class="divider"></li>
+            $html .= '<li role="separator" class="divider"></li>
 										</ul>
 									</div>
 								</td>
@@ -7208,45 +7287,45 @@ class Accounting extends MY_Controller
     public function get_customer_info_for_receive_payment()
     {
         $customer_id = $this->input->post("customer_id");
-        if ($customer_id=="") {
-            $customer_id=0;
+        if ($customer_id == "") {
+            $customer_id = 0;
         }
         $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
         $receivable_payment = 0;
-        $html='';
-        $counter =0;
+        $html = '';
+        $counter = 0;
         if ($invoices != null) {
             foreach ($invoices as $inv) {
                 $customer_id = $inv->customer_id;
-                $total_amount_received =0;
+                $total_amount_received = 0;
 
                 $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
                 foreach ($payment_received as $received) {
-                    $total_amount_received+=$received->payment_amount;
+                    $total_amount_received += $received->payment_amount;
                 }
-                if (($inv->grand_total-$total_amount_received) > 0) {
-                    $html.='<tr>
-                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
+                if (($inv->grand_total - $total_amount_received) > 0) {
+                    $html .= '<tr>
+                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_' . $counter . '" checked>
                     </td>
                     <td>
-                    '.$inv->invoice_number.'
-                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
+                    ' . $inv->invoice_number . '
+                    <input type="text" class="hide" name="inv_number_' . $counter . '" value="' . $inv->invoice_number . '">
                     </td>
                     <td>
-                    '.$inv->due_date.'
+                    ' . $inv->due_date . '
                     </td>
-                    <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
+                    <td class="text-right">' . number_format($inv->grand_total, 2) . '</td>
                     <td class="text-right">
-                    '.number_format($inv->grand_total-$total_amount_received, 2).'
+                    ' . number_format($inv->grand_total - $total_amount_received, 2) . '
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
+                            <input type="text" class="text-right inv_grand_amount" name="inv_' . $counter . '" value="' . number_format($inv->grand_total - $total_amount_received, 2) . '">
                         </div>
                     </td>
                 </tr>';
                     $counter++;
-                    $receivable_payment +=$inv->grand_total-$total_amount_received;
+                    $receivable_payment += $inv->grand_total - $total_amount_received;
                 }
             }
         }
@@ -7260,46 +7339,46 @@ class Accounting extends MY_Controller
     public function get_customer_filtered_info_for_receive_payment_modal()
     {
         $customer_id = $this->input->post("customer_id");
-        $filter_date_from =$this->input->post("filter_date_from");
-        $filter_date_to =$this->input->post("filter_date_to");
-        $filter_overdue =$this->input->post("filter_overdue");
+        $filter_date_from = $this->input->post("filter_date_from");
+        $filter_date_to = $this->input->post("filter_date_to");
+        $filter_overdue = $this->input->post("filter_overdue");
 
         $invoices = $this->accounting_invoices_model->get_filtered_invoices_by_customer_id($filter_date_from, $filter_date_to, $filter_overdue, $customer_id);
 
         $receivable_payment = 0;
-        $html='';
-        $counter =0;
+        $html = '';
+        $counter = 0;
         foreach ($invoices as $inv) {
             $customer_id = $inv->customer_id;
-            $total_amount_received =0;
+            $total_amount_received = 0;
 
             $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
             foreach ($payment_received as $received) {
-                $total_amount_received+=$received->payment_amount;
+                $total_amount_received += $received->payment_amount;
             }
-            if (($inv->grand_total-$total_amount_received) > 0) {
-                $html.='<tr>
-                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
+            if (($inv->grand_total - $total_amount_received) > 0) {
+                $html .= '<tr>
+                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_' . $counter . '" checked>
                     </td>
                     <td>
-                    '.$inv->invoice_number.'
-                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
+                    ' . $inv->invoice_number . '
+                    <input type="text" class="hide" name="inv_number_' . $counter . '" value="' . $inv->invoice_number . '">
                     </td>
                     <td>
-                    '.$inv->due_date.'
+                    ' . $inv->due_date . '
                     </td>
-                    <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
+                    <td class="text-right">' . number_format($inv->grand_total, 2) . '</td>
                     <td class="text-right">
-                    '.number_format($inv->grand_total-$total_amount_received, 2).'
+                    ' . number_format($inv->grand_total - $total_amount_received, 2) . '
                     </td>
                     <td>
                         <div class="form-group">
-                            <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
+                            <input type="text" class="text-right inv_grand_amount" name="inv_' . $counter . '" value="' . number_format($inv->grand_total - $total_amount_received, 2) . '">
                         </div>
                     </td>
                 </tr>';
                 $counter++;
-                $receivable_payment +=$inv->grand_total-$total_amount_received;
+                $receivable_payment += $inv->grand_total - $total_amount_received;
             }
         }
         $data = new stdClass();
@@ -7309,7 +7388,7 @@ class Accounting extends MY_Controller
         $data->inv_count = $counter;
         echo json_encode($data);
     }
-    
+
     public function get_info_customer_reminder()
     {
         $customer_id = $this->input->post("customer_id");
@@ -7317,14 +7396,14 @@ class Accounting extends MY_Controller
         $invoices = $this->accounting_invoices_model->get_payements_by_customer_id($customer_id);
         $data = new stdClass();
         $data->cutsomer_email = $customer_info->email;
-        $data->name = $customer_info->first_name ." ".$customer_info->last_name ."";
+        $data->name = $customer_info->first_name . " " . $customer_info->last_name . "";
         $data->invoice_count = count($invoices);
         $data->business_name = $customer_info->business_name;
         echo json_encode($data);
     }
     public function find_cutsomer_by_invoice_number()
     {
-        $find_inv=$this->input->post("find_inv_no");
+        $find_inv = $this->input->post("find_inv_no");
         $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($find_inv);
         $customer_id = "";
         if ($invoice_info != null) {
@@ -7334,19 +7413,19 @@ class Accounting extends MY_Controller
         $data->customer_id = $customer_id;
         echo json_encode($data);
     }
-    public function save_receive_payment_from_modal($action="")
+    public function save_receive_payment_from_modal($action = "")
     {
-        $inv_count=$this->input->post("invoice_count");
-        $customer_id=$this->input->post("customer_id");
+        $inv_count = $this->input->post("invoice_count");
+        $customer_id = $this->input->post("customer_id");
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
         // var_dump($this->input->post());
-        $count_save =0;
+        $count_save = 0;
 
-        $receive_payment_id=$this->input->post("receive_payment_id");
+        $receive_payment_id = $this->input->post("receive_payment_id");
         $file_name = $this->receive_payment_generate_pdf($customer_info, $receive_payment_id);
-        if ($receive_payment_id=="") {
-            $receive_payment_id=0;
-            $insert=array(
+        if ($receive_payment_id == "") {
+            $receive_payment_id = 0;
+            $insert = array(
                 "customer_id" => $customer_id,
                 "payment_date" => $this->input->post("payment_date"),
                 "payment_method" => $this->input->post("payment_method"),
@@ -7360,216 +7439,229 @@ class Accounting extends MY_Controller
                 "company_id" => $customer_info->company_id,
                 "created_by" => logged('id'),
             );
-            $receive_payment_id=$this->accounting_receive_payment_model->insert_receive_payment($insert);
-            $count_save++;
-            for ($i =0;$i<$inv_count;$i++) {
-                $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($this->input->post("inv_number_".$i));
-                $amount=0;
-                $invoice_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_info->id, $receive_payment_id);
-                $total_amount_received =0;
-                foreach ($invoice_payments as $receive) {
-                    $total_amount_received+=$receive->payment_amount;
+            $file_names=explode(",", $this->input->post("attachement-filenames"));
+            for ($i = 0; $i < count($file_names);$i++) {
+                if ($file_names[$i]!="") {
+                    $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                    $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                    
+                    if (file_exists($source)) {
+                        copy($source, $destination);
+                        unlink($source);
+                    }
                 }
-                if ($this->input->post("inv_cb_".$i) == "on") {
-                    $amount=str_replace(',', '', $this->input->post("inv_".$i));
-                    $insert=array(
+            }
+
+            $receive_payment_id = $this->accounting_receive_payment_model->insert_receive_payment($insert);
+            $count_save++;
+            for ($i = 0; $i < $inv_count; $i++) {
+                $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($this->input->post("inv_number_" . $i));
+                $amount = 0;
+                $invoice_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_info->id, $receive_payment_id);
+                $total_amount_received = 0;
+                foreach ($invoice_payments as $receive) {
+                    $total_amount_received += $receive->payment_amount;
+                }
+                if ($this->input->post("inv_cb_" . $i) == "on") {
+                    $amount = str_replace(',', '', $this->input->post("inv_" . $i));
+                    $insert = array(
                         "receive_payment_id" => $receive_payment_id,
                         "invoice_id" => $invoice_info->id,
                         "invoice_number" => $invoice_info->invoice_number,
-                        "open_balance" => $invoice_info->grand_total-($total_amount_received),
+                        "open_balance" => $invoice_info->grand_total - ($total_amount_received),
                         "payment_amount" => $amount
-                );
+                    );
                     $this->accounting_receive_payment_model->insert_receive_payment_invoices($insert);
 
-                    $this->accounting_invoices_model->updateInvoices($invoice_info->id, array("balance"=>$invoice_info->grand_total-($total_amount_received+$amount)));
+                    $this->accounting_invoices_model->updateInvoices($invoice_info->id, array("balance" => $invoice_info->grand_total - ($total_amount_received + $amount)));
                 }
             }
 
             if ($this->input->post('payment_method') == 'Cash') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'is_collected' => '1',
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'is_collected' => '1',
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Check') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'check_number' => $this->input->post('check_number'),
-                'routing_number' => $this->input->post('routing_number'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'check_number' => $this->input->post('check_number'),
+                    'routing_number' => $this->input->post('routing_number'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Credit Card') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'credit_number' => $this->input->post('credit_number'),
-                'credit_expiry' => $this->input->post('credit_expiry'),
-                'credit_cvc' => $this->input->post('credit_cvc'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'credit_number' => $this->input->post('credit_number'),
+                    'credit_expiry' => $this->input->post('credit_expiry'),
+                    'credit_cvc' => $this->input->post('credit_cvc'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Debit Card') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'credit_number' => $this->input->post('debit_credit_number'),
-                'credit_expiry' => $this->input->post('debit_credit_expiry'),
-                'credit_cvc' => $this->input->post('debit_credit_cvc'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'credit_number' => $this->input->post('debit_credit_number'),
+                    'credit_expiry' => $this->input->post('debit_credit_expiry'),
+                    'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'ACH') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'routing_number' => $this->input->post('ach_routing_number'),
-                'account_number' => $this->input->post('ach_account_number'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'routing_number' => $this->input->post('ach_routing_number'),
+                    'account_number' => $this->input->post('ach_account_number'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Venmo') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('account_credentials'),
-                'account_note' => $this->input->post('account_note'),
-                'confirmation' => $this->input->post('confirmation'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('account_credentials'),
+                    'account_note' => $this->input->post('account_note'),
+                    'confirmation' => $this->input->post('confirmation'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Paypal') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('paypal_account_credentials'),
-                'account_note' => $this->input->post('paypal_account_note'),
-                'confirmation' => $this->input->post('paypal_confirmation'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('paypal_account_credentials'),
+                    'account_note' => $this->input->post('paypal_account_note'),
+                    'confirmation' => $this->input->post('paypal_confirmation'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Square') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('square_account_credentials'),
-                'account_note' => $this->input->post('square_account_note'),
-                'confirmation' => $this->input->post('square_confirmation'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('square_account_credentials'),
+                    'account_note' => $this->input->post('square_account_note'),
+                    'confirmation' => $this->input->post('square_confirmation'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Warranty Work') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('warranty_account_credentials'),
-                'account_note' => $this->input->post('warranty_account_note'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('warranty_account_credentials'),
+                    'account_note' => $this->input->post('warranty_account_note'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Home Owner Financing') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('home_account_credentials'),
-                'account_note' => $this->input->post('home_account_note'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('home_account_credentials'),
+                    'account_note' => $this->input->post('home_account_note'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'e-Transfer') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('e_account_credentials'),
-                'account_note' => $this->input->post('e_account_note'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('e_account_credentials'),
+                    'account_note' => $this->input->post('e_account_note'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Other Credit Card Professor') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'credit_number' => $this->input->post('other_credit_number'),
-                'credit_expiry' => $this->input->post('other_credit_expiry'),
-                'credit_cvc' => $this->input->post('other_credit_cvc'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'credit_number' => $this->input->post('other_credit_number'),
+                    'credit_expiry' => $this->input->post('other_credit_expiry'),
+                    'credit_cvc' => $this->input->post('other_credit_cvc'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             } elseif ($this->input->post('payment_method') == 'Other Payment Type') {
                 $payment_data = array(
-            
-                'payment_method' => $this->input->post('payment_method'),
-                'amount' => $this->input->post('payment_amount'),
-                'account_credentials' => $this->input->post('other_payment_account_credentials'),
-                'account_note' => $this->input->post('other_payment_account_note'),
-                'transaction_type' => "Receive Payment",
-                'transaction_id' => $receive_payment_id,
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_updated' => date("Y-m-d H:i:s")
-            );
+
+                    'payment_method' => $this->input->post('payment_method'),
+                    'amount' => $this->input->post('payment_amount'),
+                    'account_credentials' => $this->input->post('other_payment_account_credentials'),
+                    'account_note' => $this->input->post('other_payment_account_note'),
+                    'transaction_type' => "Receive Payment",
+                    'transaction_id' => $receive_payment_id,
+                    'date_created' => date("Y-m-d H:i:s"),
+                    'date_updated' => date("Y-m-d H:i:s")
+                );
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             }
@@ -7582,19 +7674,19 @@ class Accounting extends MY_Controller
         if (!$this->upload->do_upload($this->input->post('attachment-file'))) {
             $uplaod_result = array('error' => $this->upload->display_errors());
         } else {
-            $uplaod_result =$this->upload->data();
+            $uplaod_result = $this->upload->data();
         }
-        
+
         $data = new stdClass();
-        $data->file_location = base_url("assets/pdf/".$file_name);
-        $data->receive_payment_id=$receive_payment_id;
-        $data->customer_email=$customer_info->email;
-        $data->business_name=$customer_info->business_name;
+        $data->file_location = base_url("assets/pdf/" . $file_name);
+        $data->receive_payment_id = $receive_payment_id;
+        $data->customer_email = $customer_info->email;
+        $data->business_name = $customer_info->business_name;
         $data->count_save = $count_save;
-        $data->uplaod_result=$this->input->post();
+        $data->uplaod_result = $this->input->post();
         if ($action == "") {
             echo json_encode($data);
-        } elseif ($action=="print-saver") {
+        } elseif ($action == "print-saver") {
             return $data;
         }
     }
@@ -7602,11 +7694,11 @@ class Accounting extends MY_Controller
     {
         $value = $this->input->post("value");
         $search_results = $this->accounting_invoices_model->get_customer_search_result($value);
-        $html="";
+        $html = "";
         foreach ($search_results as $customer) {
-            $html.='<li class="customer-full-page-btn" data-customer-id="'.$customer->prof_id.'">
+            $html .= '<li class="customer-full-page-btn" data-customer-id="' . $customer->prof_id . '">
                 <a  href="javascript:void(0)" >
-                    '.$customer->name.'
+                    ' . $customer->name . '
                 </a>
             </li>';
         }
@@ -7617,13 +7709,13 @@ class Accounting extends MY_Controller
     public function send_email_receive_payment($customer_id)
     {
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        
+
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
-        $subject = 'nSmarTrac: Receive Payment || '.$customer_info->first_name ." ".$customer_info->last_name ."";
+        $subject = 'nSmarTrac: Receive Payment || ' . $customer_info->first_name . " " . $customer_info->last_name . "";
 
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -7643,7 +7735,7 @@ class Accounting extends MY_Controller
 
         $this->page_data['company_name'] = $customer_info->business_name;
         $this->page_data['payement_date'] = $this->input->post("payment_date");
-        $this->page_data['customer_name'] = $customer_info->first_name ." ".$customer_info->last_name;
+        $this->page_data['customer_name'] = $customer_info->first_name . " " . $customer_info->last_name;
         $this->page_data['amount_received'] = $this->input->post("amount_received");
         $this->page_data['payment_method'] = $this->input->post("payment_method");
         $this->page_data['ref_no'] = $this->input->post("ref_no");
@@ -7654,9 +7746,9 @@ class Accounting extends MY_Controller
         // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+        $filePath = base_url() . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image;
         if (@getimagesize($filePath)) {
-            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image, 'company_logo', $customer_info->business_image);
             $this->page_data['has_logo'] = true;
         }
 
@@ -7665,28 +7757,41 @@ class Accounting extends MY_Controller
         $mail->MsgHTML($content);
         $mail->addAddress($customer_info->email);
         if (!$mail->Send()) {
-            return  "Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+            return  "Message could not be sent. <br> " . 'Mailer Error: ' . $mail->ErrorInfo;
             exit;
         } else {
             return "success";
         }
     }
-    
+
     public function print_receive_payment()
     {
-        $data=$this->save_receive_payment_from_modal("print-saver");
+        $data = $this->save_receive_payment_from_modal("print-saver");
         echo json_encode($data);
     }
     public function update_receive_payment_from_modal()
     {
         $customer_id = $this->input->post("customer_id");
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        $inv_count=$this->input->post("invoice_count");
+        $inv_count = $this->input->post("invoice_count");
         $receive_payment_id = $this->input->post("receive_payment_id");
+        $receive_payment_details_old = $this->accounting_receive_payment_model->getReceivePaymentDetails($receive_payment_id);
+        
+        if ($receive_payment_details_old->attachments != $this->input->post("attachement-filenames")) {
+            $old_attachments = explode(",", $receive_payment_details_old->attachments);
+            for ($i=0;$i<count($old_attachments);$i++) {
+                if ($old_attachments[$i]!="") {
+                    if (file_exists(("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]))) {
+                        unlink("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]);
+                    }
+                }
+            }
+        }
+        
         $where = array(
             "id" => $receive_payment_id
         );
-        $data=array(
+        $data = array(
             "payment_date" => $this->input->post("payment_date"),
             "payment_method" => $this->input->post("payment_method"),
             "ref_no" => $this->input->post("ref_no"),
@@ -7702,196 +7807,208 @@ class Accounting extends MY_Controller
         );
         $this->accounting_receive_payment_model->update_receive_payment_details($data, $receive_payment_id);
 
+        $file_names=explode(",", $this->input->post("attachement-filenames"));
+        for ($i = 0; $i < count($file_names);$i++) {
+            if ($file_names[$i]!="") {
+                $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
+                if (file_exists($source)) {
+                    $temp1= copy($source, $destination);
+                    $temp1= unlink($source);
+                }
+            }
+        }
+
         if ($this->input->post('payment_method') == 'Cash') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'is_collected' => '1',
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'is_collected' => '1',
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Check') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'check_number' => $this->input->post('check_number'),
-            'routing_number' => $this->input->post('routing_number'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'check_number' => $this->input->post('check_number'),
+                'routing_number' => $this->input->post('routing_number'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Credit Card') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'credit_number' => $this->input->post('credit_number'),
-            'credit_expiry' => $this->input->post('credit_expiry'),
-            'credit_cvc' => $this->input->post('credit_cvc'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('credit_number'),
+                'credit_expiry' => $this->input->post('credit_expiry'),
+                'credit_cvc' => $this->input->post('credit_cvc'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Debit Card') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'credit_number' => $this->input->post('debit_credit_number'),
-            'credit_expiry' => $this->input->post('debit_credit_expiry'),
-            'credit_cvc' => $this->input->post('debit_credit_cvc'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('debit_credit_number'),
+                'credit_expiry' => $this->input->post('debit_credit_expiry'),
+                'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'ACH') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'routing_number' => $this->input->post('ach_routing_number'),
-            'account_number' => $this->input->post('ach_account_number'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'routing_number' => $this->input->post('ach_routing_number'),
+                'account_number' => $this->input->post('ach_account_number'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Venmo') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('account_credentials'),
-            'account_note' => $this->input->post('account_note'),
-            'confirmation' => $this->input->post('confirmation'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('account_credentials'),
+                'account_note' => $this->input->post('account_note'),
+                'confirmation' => $this->input->post('confirmation'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Paypal') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('paypal_account_credentials'),
-            'account_note' => $this->input->post('paypal_account_note'),
-            'confirmation' => $this->input->post('paypal_confirmation'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('paypal_account_credentials'),
+                'account_note' => $this->input->post('paypal_account_note'),
+                'confirmation' => $this->input->post('paypal_confirmation'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Square') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('square_account_credentials'),
-            'account_note' => $this->input->post('square_account_note'),
-            'confirmation' => $this->input->post('square_confirmation'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('square_account_credentials'),
+                'account_note' => $this->input->post('square_account_note'),
+                'confirmation' => $this->input->post('square_confirmation'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Warranty Work') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('warranty_account_credentials'),
-            'account_note' => $this->input->post('warranty_account_note'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('warranty_account_credentials'),
+                'account_note' => $this->input->post('warranty_account_note'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Home Owner Financing') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('home_account_credentials'),
-            'account_note' => $this->input->post('home_account_note'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('home_account_credentials'),
+                'account_note' => $this->input->post('home_account_note'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'e-Transfer') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('e_account_credentials'),
-            'account_note' => $this->input->post('e_account_note'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('e_account_credentials'),
+                'account_note' => $this->input->post('e_account_note'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Other Credit Card Professor') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'credit_number' => $this->input->post('other_credit_number'),
-            'credit_expiry' => $this->input->post('other_credit_expiry'),
-            'credit_cvc' => $this->input->post('other_credit_cvc'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('other_credit_number'),
+                'credit_expiry' => $this->input->post('other_credit_expiry'),
+                'credit_cvc' => $this->input->post('other_credit_cvc'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         } elseif ($this->input->post('payment_method') == 'Other Payment Type') {
             $payment_data = array(
-        
-            'payment_method' => $this->input->post('payment_method'),
-            'amount' => $this->input->post('payment_amount'),
-            'account_credentials' => $this->input->post('other_payment_account_credentials'),
-            'account_note' => $this->input->post('other_payment_account_note'),
-            'transaction_type' => "Receive Payment",
-            'date_updated' => date("Y-m-d H:i:s")
-        );
+
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('other_payment_account_credentials'),
+                'account_note' => $this->input->post('other_payment_account_note'),
+                'transaction_type' => "Receive Payment",
+                'date_updated' => date("Y-m-d H:i:s")
+            );
 
             $pay = $this->accounting_receive_payment_model->update_payment_method($payment_data, $receive_payment_id);
         }
 
-        for ($i =0;$i<$inv_count;$i++) {
-            $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($this->input->post("inv_number_".$i));
-            $amount=0;
+        for ($i = 0; $i < $inv_count; $i++) {
+            $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($this->input->post("inv_number_" . $i));
+            $amount = 0;
             $invoice_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_info->id, $receive_payment_id);
-            $total_amount_received =0;
+            $total_amount_received = 0;
             foreach ($invoice_payments as $receive) {
-                $total_amount_received+=$receive->payment_amount;
+                $total_amount_received += $receive->payment_amount;
             }
-            if ($this->input->post("inv_cb_".$i) == "on") {
-                $amount=str_replace(',', '', $this->input->post("inv_".$i));
+            if ($this->input->post("inv_cb_" . $i) == "on") {
+                $amount = str_replace(',', '', $this->input->post("inv_" . $i));
                 $where = array(
                     "receive_payment_id" => $receive_payment_id,
                     "invoice_id" => $invoice_info->id
                 );
-                $data=array(
+                $data = array(
                     "invoice_number" => $invoice_info->invoice_number,
-                    "open_balance" => $invoice_info->grand_total-($total_amount_received),
+                    "open_balance" => $invoice_info->grand_total - ($total_amount_received),
                     "payment_amount" => $amount,
                     "date_modified" => date("Y-m-d H:i:s"),
                 );
-                $updated=$this->accounting_receive_payment_model->update_receive_payment_invoices($data, $where);
+                $updated = $this->accounting_receive_payment_model->update_receive_payment_invoices($data, $where);
                 if (!$updated) {
-                    $insert=array(
+                    $insert = array(
                         "receive_payment_id" => $receive_payment_id,
                         "invoice_id" => $invoice_info->id,
                         "invoice_number" => $invoice_info->invoice_number,
-                        "open_balance" => $invoice_info->grand_total-($total_amount_received),
+                        "open_balance" => $invoice_info->grand_total - ($total_amount_received),
                         "payment_amount" => $amount
                     );
                     $this->accounting_receive_payment_model->insert_receive_payment_invoices($insert);
@@ -7903,85 +8020,85 @@ class Accounting extends MY_Controller
                 );
                 $this->accounting_receive_payment_model->delete_receive_payment_invoices($where);
             }
-            $this->accounting_invoices_model->updateInvoices($invoice_info->id, array("balance"=>$invoice_info->grand_total-($total_amount_received+$amount)));
+            $this->accounting_invoices_model->updateInvoices($invoice_info->id, array("balance" => $invoice_info->grand_total - ($total_amount_received + $amount)));
         }
     }
     public function receive_payment_generate_pdf($customer_info = null, $receive_payment_id = null)
     {
-        $data=array(
-            'company_name'=>$customer_info->business_name,
-            'payement_date'=>$this->input->post("payment_date"),
-            'customer_name'=>$customer_info->first_name ." ".$customer_info->last_name,
-            'amount_received'=>$this->input->post("amount_received"),
-            'payment_method'=>$this->input->post("payment_method"),
-            'ref_no'=>$this->input->post("ref_no"),
-            'deposite_to'=>$this->input->post("deposite_to"),
-            'memo'=>$this->input->post("memo"),
-            'action_request'=>"print",
-            'business_id'=>$customer_info->business_id,
-            'has_logo'=>$customer_info->business_image,
-            'inv_count'=>$this->input->post("invoice_count"),
-            'business_name'=>$customer_info->business_name,
-            'business_address_street'=>$customer_info->bus_street,
-            'business_address_state'=>$customer_info->bus_city." ".$customer_info->bus_state." ".$customer_info->bus_postal_code." ",
-            'business_contact_number'=>$customer_info->business_phone,
-            'business_email'=>$customer_info->business_email,
-            'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
-            'customer_adress_street'=>$customer_info->acs_mail_add,
-            'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
+        $data = array(
+            'company_name' => $customer_info->business_name,
+            'payement_date' => $this->input->post("payment_date"),
+            'customer_name' => $customer_info->first_name . " " . $customer_info->last_name,
+            'amount_received' => $this->input->post("amount_received"),
+            'payment_method' => $this->input->post("payment_method"),
+            'ref_no' => $this->input->post("ref_no"),
+            'deposite_to' => $this->input->post("deposite_to"),
+            'memo' => $this->input->post("memo"),
+            'action_request' => "print",
+            'business_id' => $customer_info->business_id,
+            'has_logo' => $customer_info->business_image,
+            'inv_count' => $this->input->post("invoice_count"),
+            'business_name' => $customer_info->business_name,
+            'business_address_street' => $customer_info->bus_street,
+            'business_address_state' => $customer_info->bus_city . " " . $customer_info->bus_state . " " . $customer_info->bus_postal_code . " ",
+            'business_contact_number' => $customer_info->business_phone,
+            'business_email' => $customer_info->business_email,
+            'business_logo' => $customer_info->business_id . "/" . $customer_info->business_image,
+            'customer_adress_street' => $customer_info->acs_mail_add,
+            'customer_address_state' => $customer_info->acs_city . " " . $customer_info->acs_state . " " . $customer_info->acs_zip_code . " ",
         );
-        $file_name="receive_payment_pdf_".$receive_payment_id.".pdf";
-        $this->pdf->save_pdf("accounting/customer_includes/html_email_print", $data, "receive_payment_pdf_".$receive_payment_id.".pdf", "P");
+        $file_name = "receive_payment_pdf_" . $receive_payment_id . ".pdf";
+        $this->pdf->save_pdf("accounting/customer_includes/html_email_print", $data, "receive_payment_pdf_" . $receive_payment_id . ".pdf", "P");
         return $file_name;
     }
-    
+
     public function get_customer_info_for_sales_receipt()
     {
         $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
         $data = new stdClass();
-        $data->customer_address=$customer_info->acs_mail_add." ".$customer_info->acs_city.", ".$customer_info->acs_state." ".$customer_info->acs_zip_code;
-        $data->business_address=$customer_info->bus_street." ".$customer_info->bus_city.", ".$customer_info->bus_state." ".$customer_info->bus_postal_code;
-        $data->date_now=date('m/d/Y');
+        $data->customer_address = $customer_info->acs_mail_add . " " . $customer_info->acs_city . ", " . $customer_info->acs_state . " " . $customer_info->acs_zip_code;
+        $data->business_address = $customer_info->bus_street . " " . $customer_info->bus_city . ", " . $customer_info->bus_state . " " . $customer_info->bus_postal_code;
+        $data->date_now = date('m/d/Y');
         echo json_encode($data);
     }
     public function get_customer_info()
     {
         $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
         $data = new stdClass();
-        $data->customer_name = $customer_info->first_name." ".$customer_info->last_name;
+        $data->customer_name = $customer_info->first_name . " " . $customer_info->last_name;
         $data->customer_email = $customer_info->acs_email;
         $data->business_name = $customer_info->business_name;
-        $data->customer_address=$customer_info->acs_mail_add." ".$customer_info->acs_city.", ".$customer_info->acs_state." ".$customer_info->acs_zip_code;
-        $data->business_address=$customer_info->bus_street." ".$customer_info->bus_city.", ".$customer_info->bus_state." ".$customer_info->bus_postal_code;
-        $data->date_now=date('m/d/Y');
+        $data->customer_address = $customer_info->acs_mail_add . " " . $customer_info->acs_city . ", " . $customer_info->acs_state . " " . $customer_info->acs_zip_code;
+        $data->business_address = $customer_info->bus_street . " " . $customer_info->bus_city . ", " . $customer_info->bus_state . " " . $customer_info->bus_postal_code;
+        $data->date_now = date('m/d/Y');
         echo json_encode($data);
     }
-    public function create_pdf_sales_receipt($file_name, $customer_id, $sales_number, $action="")
+    public function create_pdf_sales_receipt($file_name, $customer_id, $sales_number, $action = "")
     {
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        $sales_receipt_info= $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_number);
+        $sales_receipt_info = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_number);
         $sales_receipt_items = $this->accounting_sales_receipt_model->get_sales_receipt_items($sales_number);
-        $data=array(
-            'business_name'=>$customer_info->business_name,
-            'business_address_street'=>$sales_receipt_info->location_scale,
-            'business_address_state'=>"",
-            'business_contact_number'=>$customer_info->business_phone,
-            'business_email'=>$customer_info->business_email,
-            'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
-            'sales_number'=>$sales_receipt_info->id,
-            'adjustment_name'=>$sales_receipt_info->adjustment_name,
-            'adjustment_value'=>$sales_receipt_info->adjustment_value,
-            'receipt_date'=>$sales_receipt_info->date_created,
-            'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
-            'customer_adress_street'=>$sales_receipt_info->billing_address,
-            'customer_address_state'=>'',
-            'items'=>$sales_receipt_items,
+        $data = array(
+            'business_name' => $customer_info->business_name,
+            'business_address_street' => $sales_receipt_info->location_scale,
+            'business_address_state' => "",
+            'business_contact_number' => $customer_info->business_phone,
+            'business_email' => $customer_info->business_email,
+            'business_logo' => $customer_info->business_id . "/" . $customer_info->business_image,
+            'sales_number' => $sales_receipt_info->id,
+            'adjustment_name' => $sales_receipt_info->adjustment_name,
+            'adjustment_value' => $sales_receipt_info->adjustment_value,
+            'receipt_date' => $sales_receipt_info->date_created,
+            'customer_full_name' => $customer_info->first_name . ' ' . $customer_info->last_name,
+            'customer_adress_street' => $sales_receipt_info->billing_address,
+            'customer_address_state' => '',
+            'items' => $sales_receipt_items,
         );
         if ($action == "download_print_sales_receipt") {
             $this->pdf->load_view("accounting/customer_includes/sales_receipt/sales_receipt_to_pdf", $data, $file_name, "P");
         } elseif ($action == "download_print_packaging_slip") {
             $this->pdf->load_view("accounting/customer_includes/sales_receipt/sales_receipt_packaging_slip_pdf", $data, $file_name, "P");
-        } elseif ($action=="print_sales_receipt") {
+        } elseif ($action == "print_sales_receipt") {
             $this->pdf->save_pdf("accounting/customer_includes/sales_receipt/sales_receipt_to_pdf", $data, $file_name, "P");
         } elseif ($action == "print_packaging_slip") {
             $this->pdf->save_pdf("accounting/customer_includes/sales_receipt/sales_receipt_packaging_slip_pdf", $data, $file_name, "P");
@@ -7991,30 +8108,30 @@ class Accounting extends MY_Controller
     {
         $action = $this->input->post("action");
         if ($action == "print_packaging_slip") {
-            $file_name = 'packaging_slip_'.$this->input->post("sales_number").".pdf";
+            $file_name = 'packaging_slip_' . $this->input->post("sales_number") . ".pdf";
         } else {
-            $file_name = 'sales_receipt_'.$this->input->post("sales_number").".pdf";
+            $file_name = 'sales_receipt_' . $this->input->post("sales_number") . ".pdf";
         }
         $customer_id = $this->input->post("customer_id");
-        $sales_number= $this->input->post("sales_number");
-        
+        $sales_number = $this->input->post("sales_number");
+
         $this->create_pdf_sales_receipt($file_name, $customer_id, $sales_number, $action);
-        
+
         $data = new stdClass();
-        $data->file_location=base_url("assets/pdf/".$file_name);
+        $data->file_location = base_url("assets/pdf/" . $file_name);
         echo json_encode($data);
     }
-    public function download_sales_receipt($sales_receipt_id = null, $action="")
+    public function download_sales_receipt($sales_receipt_id = null, $action = "")
     {
         if ($sales_receipt_id != null) {
             if ($action == "download_print_sales_receipt") {
-                $file_name = 'sales_receipt_'.$sales_receipt_id.".pdf";
+                $file_name = 'sales_receipt_' . $sales_receipt_id . ".pdf";
             } elseif ($action == "download_print_packaging_slip") {
-                $file_name = 'packaging_slip_'.$sales_receipt_id.".pdf";
+                $file_name = 'packaging_slip_' . $sales_receipt_id . ".pdf";
             } else {
-                $file_name="";
+                $file_name = "";
             }
-            if ($file_name!="") {
+            if ($file_name != "") {
                 $sales_receipt_details = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
                 if ($sales_receipt_details) {
                     $customer_id = $sales_receipt_details->customer_id;
@@ -8038,11 +8155,11 @@ class Accounting extends MY_Controller
             $sales_receipt_details = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
             if ($sales_receipt_details) {
                 $customer_id = $sales_receipt_details->customer_id;
-                $sales_receipt_file_name = 'sales_receipt_'.$sales_receipt_id.".pdf";
-                $packaging_slip_file_name = 'packaging_slip_'.$sales_receipt_id.".pdf";
-            
+                $sales_receipt_file_name = 'sales_receipt_' . $sales_receipt_id . ".pdf";
+                $packaging_slip_file_name = 'packaging_slip_' . $sales_receipt_id . ".pdf";
+
                 $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        
+
                 $server = MAIL_SERVER;
                 $port = MAIL_PORT;
                 $username = MAIL_USERNAME;
@@ -8067,18 +8184,18 @@ class Accounting extends MY_Controller
                 //get job data
 
                 $this->page_data['company_name'] = $customer_info->business_name;
-                $this->page_data['customer_name'] = $customer_info->first_name ." ".$customer_info->last_name;
-                $this->page_data['sales_receipt_file_name'] = base_url("assets/pdf/".$sales_receipt_file_name);
-                $this->page_data['packaging_slip_file_name'] = base_url("assets/pdf/".$packaging_slip_file_name);
+                $this->page_data['customer_name'] = $customer_info->first_name . " " . $customer_info->last_name;
+                $this->page_data['sales_receipt_file_name'] = base_url("assets/pdf/" . $sales_receipt_file_name);
+                $this->page_data['packaging_slip_file_name'] = base_url("assets/pdf/" . $packaging_slip_file_name);
                 $this->page_data['has_logo'] = false;
                 $this->page_data['email_body'] = $this->input->post("body");
                 $this->page_data['sales_receipt_id'] = $sales_receipt_id;
                 // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
                 $mail->IsHTML(true);
                 $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-                $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+                $filePath = base_url() . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image;
                 if (@getimagesize($filePath)) {
-                    $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+                    $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image, 'company_logo', $customer_info->business_image);
                     $this->page_data['has_logo'] = true;
                 }
 
@@ -8087,14 +8204,14 @@ class Accounting extends MY_Controller
                 $mail->MsgHTML($content);
                 $mail->addAddress($customer_email);
                 if (!$mail->Send()) {
-                    $data->status="Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+                    $data->status = "Message could not be sent. <br> " . 'Mailer Error: ' . $mail->ErrorInfo;
                     exit;
                 } else {
-                    $data->status= "success";
+                    $data->status = "success";
                 }
             }
         } else {
-            $data->status="data invalid";
+            $data->status = "data invalid";
         }
         echo json_encode($data);
     }
@@ -8111,7 +8228,7 @@ class Accounting extends MY_Controller
         We appreciate it very much.
                                     
         Thanks for your business!
-        Sample Company' ;
+        Sample Company';
         $this->page_data['sales_receipt_id'] = "1234";
         $this->load->view('accounting/customer_includes/sales_receipt/sales_receipt_send_email', $this->page_data);
     }
@@ -8121,10 +8238,10 @@ class Accounting extends MY_Controller
         $customer_email = $this->input->post("email");
         $data = new stdClass();
         if ($receive_payment_id != "") {
-            $receive_payment_details=$this->accounting_receive_payment_model->getReceivePaymentDetails($receive_payment_id);
+            $receive_payment_details = $this->accounting_receive_payment_model->getReceivePaymentDetails($receive_payment_id);
             $customer_info = $this->accounting_customers_model->get_customer_by_id($receive_payment_details->customer_id);
-            $file_name = 'receive_payment_pdf_'.$receive_payment_id.".pdf";
-        
+            $file_name = 'receive_payment_pdf_' . $receive_payment_id . ".pdf";
+
             $server = MAIL_SERVER;
             $port = MAIL_PORT;
             $username = MAIL_USERNAME;
@@ -8150,15 +8267,15 @@ class Accounting extends MY_Controller
 
             $this->page_data['subject'] = $subject;
             $this->page_data['company_name'] = $customer_info->business_name;
-            $this->page_data['file_link'] = base_url("assets/pdf/".$file_name);
+            $this->page_data['file_link'] = base_url("assets/pdf/" . $file_name);
             $this->page_data['has_logo'] = false;
             $this->page_data['email_body'] = $this->input->post("body");
             // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
             $mail->IsHTML(true);
             $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-            $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+            $filePath = base_url() . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image;
             if (@getimagesize($filePath)) {
-                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image, 'company_logo', $customer_info->business_image);
                 $this->page_data['has_logo'] = true;
             }
 
@@ -8167,130 +8284,130 @@ class Accounting extends MY_Controller
             $mail->MsgHTML($content);
             $mail->addAddress($customer_email);
             if (!$mail->Send()) {
-                $data->status="Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+                $data->status = "Message could not be sent. <br> " . 'Mailer Error: ' . $mail->ErrorInfo;
                 exit;
             } else {
-                $data->status= "success";
+                $data->status = "success";
             }
         } else {
-            $data->status="data invalid";
+            $data->status = "data invalid";
         }
         echo json_encode($data);
     }
     public function receive_payment_more_option()
     {
         $receive_payment_id = $this->input->post("receive_payment_id");
-        $action=$this->input->post("action");
-        $result="";
+        $action = $this->input->post("action");
+        $result = "";
         if ($action == "void") {
-            $data=array(
+            $data = array(
                 "status" => 0,
                 "date_modified" => date("Y-m-d H:i:s")
             );
             if ($this->accounting_receive_payment_model->update_receive_payment_details($data, $receive_payment_id)) {
-                $result="success";
+                $result = "success";
             } else {
-                $result="failed";
+                $result = "failed";
             }
         } elseif ($action == "delete") {
             if ($this->accounting_receive_payment_model->delete_receive_payment($receive_payment_id)) {
-                $result="success";
+                $result = "success";
             } else {
-                $result="failed";
+                $result = "failed";
             }
         }
         $data = new stdClass();
-        $data->result=$result;
+        $data->result = $result;
         echo json_encode($data);
     }
     public function create_statement_get_result_by_customer()
     {
         $statement_modal_type = $this->input->post("statement-modal-type");
-        $statement_type=$this->input->post("statement_type");
+        $statement_type = $this->input->post("statement_type");
         $state_date = date("Y-m-d", strtotime($this->input->post("start_date")));
         $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
-        $aviable_tbody="";
-        $unavaibale_tbody="";
-        $total_balance=0;
-        $customers_with_balance_ctr=0;
-        $total_number_of_customer=0;
-        $statement_ctr=0;
+        $aviable_tbody = "";
+        $unavaibale_tbody = "";
+        $total_balance = 0;
+        $customers_with_balance_ctr = 0;
+        $total_number_of_customer = 0;
+        $statement_ctr = 0;
         $missing_email_ctr = 0;
         $missing_statements_ctr = 0;
 
         if ($statement_modal_type == "by-batch") {
             $ids_array = $this->input->post("by_batch_ids");
         } else {
-            $ids_array[]=$this->input->post("customer_id");
+            $ids_array[] = $this->input->post("customer_id");
         }
-        $total_number_of_customer=count($ids_array);
-        for ($i=0;$i<count($ids_array);$i++) {
+        $total_number_of_customer = count($ids_array);
+        for ($i = 0; $i < count($ids_array); $i++) {
             $customer_id = $ids_array[$i];
             $total_of_invoices = $this->accounting_invoices_model->get_sum_of_invoices_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
             $total_of_sales_receipt = $this->accounting_sales_receipt_model->get_sum_of_sales_receipt_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-            
-            $balance = ($total_of_invoices['collectibles']->total_collectibles+$total_of_sales_receipt['billed']->total_amount_billed)-($total_of_invoices['received']->total_amount_received+$total_of_sales_receipt['billed']->total_amount_billed);
-            $first_td_html='';
-            
+
+            $balance = ($total_of_invoices['collectibles']->total_collectibles + $total_of_sales_receipt['billed']->total_amount_billed) - ($total_of_invoices['received']->total_amount_received + $total_of_sales_receipt['billed']->total_amount_billed);
+            $first_td_html = '';
+
             if ($total_of_invoices['collectibles']->collectibles_count > 0) {
-                $first_td_html='<div class="form-check">
+                $first_td_html = '<div class="form-check">
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="checkbox" name="customer_checkbox[]" value="'.$customer_id.'" id="customer_checkbox_'.$customer_id.'" class="customer_checkbox" checked>
-                    <label for="customer_checkbox_'.$customer_id.'"><span></span></label>
+                    <input type="checkbox" name="customer_checkbox[]" value="' . $customer_id . '" id="customer_checkbox_' . $customer_id . '" class="customer_checkbox" checked>
+                    <label for="customer_checkbox_' . $customer_id . '"><span></span></label>
                 </div>
             </div>';
             }
-            
-            $missing_email="";
+
+            $missing_email = "";
             if ($customer_info->email == "") {
-                $missing_email="missing-email";
+                $missing_email = "missing-email";
             }
-            $html='<tr class="'.$missing_email.'">
+            $html = '<tr class="' . $missing_email . '">
                 <td class="column-check_box">
-                    '.$first_td_html.'
+                    ' . $first_td_html . '
                 </td>
-                <td>'.$customer_info->first_name." ".$customer_info->last_name.'
+                <td>' . $customer_info->first_name . " " . $customer_info->last_name . '
                     <input type="text" name="customer_ids[]"
                         style="display: none;">
                 </td>
                 <td class="column-email">
                     <div class="form-group">
-                        <input type="email" value="'.$customer_info->email.'" 
+                        <input type="email" value="' . $customer_info->email . '" 
                             name="emails[]">
                     </div>
                 </td>
-                <td> $'.number_format($balance, 2, '.', ',').'</td>
+                <td> $' . number_format($balance, 2, '.', ',') . '</td>
             </tr>';
             if ($total_of_invoices['collectibles']->collectibles_count > 0) {
                 $statement_ctr++;
-                $aviable_tbody.=$html;
+                $aviable_tbody .= $html;
             } else {
                 $missing_statements_ctr++;
-                $unavaibale_tbody.=$html;
+                $unavaibale_tbody .= $html;
             }
             if ($customer_info->email == "") {
                 $missing_email_ctr++;
             }
             if ($balance > 0) {
                 $customers_with_balance_ctr++;
-                $total_balance+=$balance;
+                $total_balance += $balance;
             }
         }
-        
+
         $data = new stdClass();
-        $data->result=true;
-        $data->transaction_count = $total_of_invoices['collectibles']->collectibles_count+$total_of_invoices['received']->received_count+$total_of_sales_receipt['billed']->billed_count;
-        $data->statement_ctr=$statement_ctr;
-        $data->missing_email_ctr=$missing_email_ctr;
-        $data->missing_statements_ctr=$missing_statements_ctr;
-        $data->balance=$total_balance;
-        $data->customers_with_balance_ctr=$customers_with_balance_ctr;
-        $data->total_number_of_customer=$total_number_of_customer;
-        $data->display_balance=number_format($total_balance, 2, '.', ',');
+        $data->result = true;
+        $data->transaction_count = $total_of_invoices['collectibles']->collectibles_count + $total_of_invoices['received']->received_count + $total_of_sales_receipt['billed']->billed_count;
+        $data->statement_ctr = $statement_ctr;
+        $data->missing_email_ctr = $missing_email_ctr;
+        $data->missing_statements_ctr = $missing_statements_ctr;
+        $data->balance = $total_balance;
+        $data->customers_with_balance_ctr = $customers_with_balance_ctr;
+        $data->total_number_of_customer = $total_number_of_customer;
+        $data->display_balance = number_format($total_balance, 2, '.', ',');
         $data->aviable_tbody = $aviable_tbody;
         $data->unavaibale_tbody = $unavaibale_tbody;
-        
+
         echo json_encode($data);
     }
 
@@ -8299,89 +8416,89 @@ class Accounting extends MY_Controller
         $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
         $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
         $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
-        
+
         $statement_modal_type = $this->input->post("statement-modal-type");
-        $statement_ids_holder_html="";
-        $file_name_ids="";
+        $statement_ids_holder_html = "";
+        $file_name_ids = "";
         if ($statement_modal_type == "by-batch") {
             $ids_array = $this->input->post("by_batch_ids");
             $statement_ids = $this->input->post("by_batch_statement_ids");
-            if ($statement_ids==null || $statement_ids=="") {
-                $statement_ids=array();
+            if ($statement_ids == null || $statement_ids == "") {
+                $statement_ids = array();
             }
         } else {
-            $ids_array[]=$this->input->post("customer_id");
+            $ids_array[] = $this->input->post("customer_id");
             if ($this->input->post("current_statement_id") == "") {
-                $statement_ids=array();
+                $statement_ids = array();
             } else {
                 $statement_ids[] = $this->input->post("current_statement_id");
             }
         }
-        for ($i =0; $i < count($ids_array);$i++) {
+        for ($i = 0; $i < count($ids_array); $i++) {
             $customer_id = $ids_array[$i];
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-            if (count($statement_ids)==0) {
-                $insert=array(
-                    "statement_type"=>$this->input->post("statement_type"),
-                    "statement_date"=>$statement_date,
-                    "customer_id"=>$customer_id,
-                    "start_date"=>$start_date,
-                    "end_date"=>$end_date,
-                    "company_id"=>$customer_info->company_id,
-                    "created_by"=>logged('id'),
-                    "status"=>1
+            if (count($statement_ids) == 0) {
+                $insert = array(
+                    "statement_type" => $this->input->post("statement_type"),
+                    "statement_date" => $statement_date,
+                    "customer_id" => $customer_id,
+                    "start_date" => $start_date,
+                    "end_date" => $end_date,
+                    "company_id" => $customer_info->company_id,
+                    "created_by" => logged('id'),
+                    "status" => 1
                 );
                 $statement_id = $this->accounting_invoices_model->save_statement($insert);
                 $statement_ids[] = $statement_id;
             } else {
                 $statement_id = $statement_ids[$i];
-                $data=array(
-                    "statement_type"=>$this->input->post("statement_type"),
-                    "statement_date"=>$statement_date,
-                    "start_date"=>$start_date,
-                    "end_date"=>$end_date,
-                    "company_id"=>$customer_info->company_id,
-                    "created_by"=>logged('id'),
-                    "status"=>1,
-                    "updated_at"=>date("Y-m-d H:i:s")
+                $data = array(
+                    "statement_type" => $this->input->post("statement_type"),
+                    "statement_date" => $statement_date,
+                    "start_date" => $start_date,
+                    "end_date" => $end_date,
+                    "company_id" => $customer_info->company_id,
+                    "created_by" => logged('id'),
+                    "status" => 1,
+                    "updated_at" => date("Y-m-d H:i:s")
                 );
                 $this->accounting_invoices_model->update_statement($data, $statement_id);
             }
-            $statement_ids_holder_html.='<input type="text" name="by_batch_statement_ids[]" value="'.$statement_id.'" style="display: none;">';
-            $file_name_ids.=$statement_id;
+            $statement_ids_holder_html .= '<input type="text" name="by_batch_statement_ids[]" value="' . $statement_id . '" style="display: none;">';
+            $file_name_ids .= $statement_id;
         }
 
         if ($this->input->post("statement_type") == "Transaction Statement") {
-            $file_name="Transaction_Statement_".$file_name_ids.".pdf";
+            $file_name = "Transaction_Statement_" . $file_name_ids . ".pdf";
         } elseif ($this->input->post("statement_type") == "Open Item") {
-            $file_name="Open_Item_Statement_".$file_name_ids.".pdf";
+            $file_name = "Open_Item_Statement_" . $file_name_ids . ".pdf";
         } elseif ($this->input->post("statement_type") == "Balance Forward") {
-            $file_name="Balance_forward_Statement_".$file_name_ids.".pdf";
+            $file_name = "Balance_forward_Statement_" . $file_name_ids . ".pdf";
         }
         $customer_checkboxes = $this->input->post("customer_checkbox");
 
         $this->created_statement_pdf($ids_array, $statement_ids, $this->input->post("statement_type"), $file_name, $customer_checkboxes);
-        
+
         $data = new stdClass();
-        $data->file_location = base_url("assets/pdf/".$file_name);
+        $data->file_location = base_url("assets/pdf/" . $file_name);
         $data->statement_id = $statement_id;
         $data->statement_type = $this->input->post("statement_type");
-        $data->result=true;
-        $data->business_name=$customer_info->business_name;
-        $data->customer_full_name=$customer_info->first_name.' '.$customer_info->last_name;
-        $data->customer_id=$customer_id;
+        $data->result = true;
+        $data->business_name = $customer_info->business_name;
+        $data->customer_full_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+        $data->customer_id = $customer_id;
         $data->statement_ids_holder_html = $statement_ids_holder_html;
-        $data->file_name_ids=$file_name_ids;
+        $data->file_name_ids = $file_name_ids;
         echo json_encode($data);
     }
-    public function created_statement_pdf($customer_ids=array(), $statement_ids=array(), $statement_type="", $file_name="", $customer_checkboxes=array())
+    public function created_statement_pdf($customer_ids = array(), $statement_ids = array(), $statement_type = "", $file_name = "", $customer_checkboxes = array())
     {
-        if (count($customer_ids)>0) {
-            for ($i=0;$i<count($customer_ids);$i++) {
+        if (count($customer_ids) > 0) {
+            for ($i = 0; $i < count($customer_ids); $i++) {
                 $customer_id = $customer_ids[$i];
-                $selected_id_key=array_search($customer_id, $customer_checkboxes);
-                
-                if (is_bool($selected_id_key)!=1) {
+                $selected_id_key = array_search($customer_id, $customer_checkboxes);
+
+                if (is_bool($selected_id_key) != 1) {
                     $statement_id = $statement_ids[$i];
                     $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
                     $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
@@ -8389,35 +8506,35 @@ class Accounting extends MY_Controller
                     $print_invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type, "print");
                     $invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type);
                     $sales_receipts = $this->accounting_sales_receipt_model->get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type, "print");
-                
-                
+
+
                     $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
-                
+
                     $has_logo = false;
                     // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
-                    $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+                    $filePath = base_url() . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image;
                     if (@getimagesize($filePath)) {
                         $has_logo = true;
                     }
-                
-                    $data["pdf_data"][]=array(
-                        'business_name'=>$customer_info->business_name,
-                        'business_address_street'=>$customer_info->bus_street,
-                        'business_address_state'=>$customer_info->bus_city." ".$customer_info->bus_state." ".$customer_info->bus_postal_code." ",
-                        'business_contact_number'=>$customer_info->business_phone,
-                        'business_email'=>$customer_info->business_email,
-                        'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
-                        'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
-                        'customer_adress_street'=>$customer_info->acs_mail_add." ",
-                        'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
-                        'statement_type'=> $statement_type,
-                        'statement_date'=>$statement_date,
+
+                    $data["pdf_data"][] = array(
+                        'business_name' => $customer_info->business_name,
+                        'business_address_street' => $customer_info->bus_street,
+                        'business_address_state' => $customer_info->bus_city . " " . $customer_info->bus_state . " " . $customer_info->bus_postal_code . " ",
+                        'business_contact_number' => $customer_info->business_phone,
+                        'business_email' => $customer_info->business_email,
+                        'business_logo' => $customer_info->business_id . "/" . $customer_info->business_image,
+                        'customer_full_name' => $customer_info->first_name . ' ' . $customer_info->last_name,
+                        'customer_adress_street' => $customer_info->acs_mail_add . " ",
+                        'customer_address_state' => $customer_info->acs_city . " " . $customer_info->acs_state . " " . $customer_info->acs_zip_code . " ",
+                        'statement_type' => $statement_type,
+                        'statement_date' => $statement_date,
                         'invoices' => $invoices,
                         'print_invoices' => $print_invoices,
                         'sales_receipts' => $sales_receipts,
-                        'statement_id'=>$statement_id,
-                        'has_logo'=>$has_logo,
-                        'business_logo' => $customer_info->business_id.'/'.$customer_info->business_image
+                        'statement_id' => $statement_id,
+                        'has_logo' => $has_logo,
+                        'business_logo' => $customer_info->business_id . '/' . $customer_info->business_image
                     );
                 }
             }
@@ -8434,11 +8551,11 @@ class Accounting extends MY_Controller
         if ($file_name_ids != "") {
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
             if ($statement_type == "Transaction Statement") {
-                $file_name="Transaction_Statement_".$file_name_ids.".pdf";
+                $file_name = "Transaction_Statement_" . $file_name_ids . ".pdf";
             } elseif ($statement_type == "Open Item") {
-                $file_name="Open_Item_Statement_".$file_name_ids.".pdf";
-            } elseif ($statement_type== "Balance Forward") {
-                $file_name="Balance_forward_Statement_".$file_name_ids.".pdf";
+                $file_name = "Open_Item_Statement_" . $file_name_ids . ".pdf";
+            } elseif ($statement_type == "Balance Forward") {
+                $file_name = "Balance_forward_Statement_" . $file_name_ids . ".pdf";
             }
             $server = MAIL_SERVER;
             $port = MAIL_PORT;
@@ -8465,42 +8582,42 @@ class Accounting extends MY_Controller
 
             $this->page_data['subject'] = $subject;
             $this->page_data['company_name'] = $customer_info->business_name;
-            $this->page_data['file_link'] = base_url("assets/pdf/".$file_name);
+            $this->page_data['file_link'] = base_url("assets/pdf/" . $file_name);
             $this->page_data['has_logo'] = false;
             $this->page_data['email_body'] = $this->input->post("body");
             // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
             $mail->IsHTML(true);
             $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-            $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+            $filePath = base_url() . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image;
             if (@getimagesize($filePath)) {
-                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image, 'company_logo', $customer_info->business_image);
                 $this->page_data['has_logo'] = true;
             }
 
             $mail->Body =  'Statement.';
             $content = $this->load->view('accounting/customer_includes/create_statement/statement_send_email', $this->page_data, true);
             $mail->MsgHTML($content);
-            $customer_emails=explode(";", $this->input->post("email"));
-            for ($i=0;$i<(count($customer_emails)-1);$i++) {
+            $customer_emails = explode(";", $this->input->post("email"));
+            for ($i = 0; $i < (count($customer_emails) - 1); $i++) {
                 $mail->addAddress($customer_emails[$i]);
             }
             // $mail->addAddress("pintonlou@gmail.com");
-            
+
             if (!$mail->Send()) {
-                $data->status="Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+                $data->status = "Message could not be sent. <br> " . 'Mailer Error: ' . $mail->ErrorInfo;
                 exit;
             } else {
-                $data->status= "success";
+                $data->status = "success";
             }
         } else {
-            $data->status="data invalid";
+            $data->status = "data invalid";
         }
         echo json_encode($data);
     }
     public function get_search_items()
     {
         $keyword = $this->input->post("iteam_search");
-        $html="";
+        $html = "";
         // $res = $this->items_model->getByLike('title',$keyword);
         $company_id = logged('company_id');
         $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
@@ -8511,10 +8628,10 @@ class Accounting extends MY_Controller
                 $discount = $row->discount;
             }
 
-            $html.= '<li data-id="'.$row->id.'" data-discount="'.$discount.'" data-price="'.$row->price.'" data-name="'.$row->title.'">' . $row->title . '</li>';
+            $html .= '<li data-id="' . $row->id . '" data-discount="' . $discount . '" data-price="' . $row->price . '" data-name="' . $row->title . '">' . $row->title . '</li>';
         }
         $data = new stdClass();
-        $data->html =$html;
+        $data->html = $html;
         echo json_encode($data);
     }
     public function save_time_activity()
@@ -8556,12 +8673,12 @@ class Accounting extends MY_Controller
             $new_data['end_time'] = null;
             $new_data['break_duration'] = null;
         }
-            
+
         $return_data = new stdClass();
         $return_data->count_save = 1;
-        if ($this->input->post("time_activity_id")!="") {
+        if ($this->input->post("time_activity_id") != "") {
             $new_data['updated_at'] = date("Y-m-d H:i:s");
-            $res= $this->accounting_customers_model->update_time_activity($new_data, $time_activity_id);
+            $res = $this->accounting_customers_model->update_time_activity($new_data, $time_activity_id);
             if ($res) {
                 $return_data->count_save = 1;
             } else {
@@ -8575,19 +8692,19 @@ class Accounting extends MY_Controller
             "billable" => $this->input->post('make_time_activity_billable')
         );
         $this->accounting_customers_model->update_accounting_timesheet_settings($new_data);
-        
+
         $return_data->show_services = $this->input->post('show_services');
-        $return_data->time_activity_id =$time_activity_id;
+        $return_data->time_activity_id = $time_activity_id;
         echo json_encode($return_data);
     }
     public function make_customer_inactive()
     {
-        $customer_ids=$this->input->post("customer_ids");
-        for ($i=0;$i<count($customer_ids);$i++) {
+        $customer_ids = $this->input->post("customer_ids");
+        for ($i = 0; $i < count($customer_ids); $i++) {
             $this->accounting_customers_model->make_customer_inactive($customer_ids[$i]);
         }
         $data = new stdClass();
-        $data->result="success";
+        $data->result = "success";
         echo json_encode($data);
     }
     public function add_new_customer_type()
@@ -8598,39 +8715,39 @@ class Accounting extends MY_Controller
         );
         $id = $this->accounting_customers_model->add_new_customer_type($insert);
         $data = new stdClass();
-        $data->result="success";
+        $data->result = "success";
         if ($id > 0) {
             echo json_encode($data);
         } else {
-            $data->result="denied";
+            $data->result = "denied";
             echo json_encode($data);
         }
     }
     public function customer_print_invoice_pdf()
     {
         $invoice_id = $this->input->post("invoice_id");
-        $pdf_file_name = $this->input->post("invoice_no")."_portalappinv.pdf";
+        $pdf_file_name = $this->input->post("invoice_no") . "_portalappinv.pdf";
         $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name);
         $data = new stdClass();
         $data->status = "success";
-        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        $data->pdf_link = base_url("assets/pdf/" . $pdf_file_name);
         echo json_encode($data);
     }
     public function get_load_customer_type_table()
     {
-        $tbody_html="";
+        $tbody_html = "";
         $customer_types = $this->accounting_customers_model->get_customer_type_by_company_id(logged("company_id"));
         foreach ($customer_types as $type) {
-            $tbody_html.='<tr>
-                        <td>'.$type->title.'</td>
+            $tbody_html .= '<tr>
+                        <td>' . $type->title . '</td>
                         <td>
-                            <a href="#" class="edit-customer-type-btn" data-id="'.$type->id.'" data-title="'.$type->title.'"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a><span class="separator"></span>
-                            <a href="#" class="delete-customer-type-btn" data-id="'.$type->id.'" data-title="'.$type->title.'"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a href="#" class="edit-customer-type-btn" data-id="' . $type->id . '" data-title="' . $type->title . '"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a><span class="separator"></span>
+                            <a href="#" class="delete-customer-type-btn" data-id="' . $type->id . '" data-title="' . $type->title . '"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </td>
                     </tr>';
         }
         $data = new stdClass();
-        $data->tbody_html=$tbody_html;
+        $data->tbody_html = $tbody_html;
         echo json_encode($data);
     }
     public function delete_customer_type()
@@ -8638,11 +8755,11 @@ class Accounting extends MY_Controller
         $id = $this->input->post('id');
         $affected = $this->accounting_customers_model->delete_customer_type($id);
         $data = new stdClass();
-        $data->result="success";
+        $data->result = "success";
         if ($affected > 0) {
             echo json_encode($data);
         } else {
-            $data->result="denied";
+            $data->result = "denied";
             echo json_encode($data);
         }
     }
@@ -8655,36 +8772,36 @@ class Accounting extends MY_Controller
         );
         $affected = $this->accounting_customers_model->update_customer_type($id, $data);
         $data = new stdClass();
-        $data->result="success";
+        $data->result = "success";
         if ($affected > 0) {
             echo json_encode($data);
         } else {
-            $data->result="denied";
+            $data->result = "denied";
             echo json_encode($data);
         }
     }
     public function single_customer_page_get_all_customers()
     {
-        $counter =0;
-        $html='';
+        $counter = 0;
+        $html = '';
         $customers = $this->accounting_customers_model->getAllByCompany();
         foreach ($customers as $cus) {
             $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
             $receivable_payment = 0;
-            $total_amount_received =0;
+            $total_amount_received = 0;
             foreach ($invoices as $inv) {
                 if (is_numeric($inv->grand_total)) {
-                    $receivable_payment+=$inv->grand_total;
+                    $receivable_payment += $inv->grand_total;
                 }
-                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
                 foreach ($receive_payment as $payment) {
                     $total_amount_received += $payment->payment_amount;
                 }
             }
-            $amount =($receivable_payment - $total_amount_received);
-            $html .= '<li data-customer-id="'.$cus->prof_id.'" data-name="'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'" data-open-balance="'.$amount.'">
-                            <div class="name" >'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</div>
-                            <div class="open-balance">$'.number_format(($amount), 2).'</div>
+            $amount = ($receivable_payment - $total_amount_received);
+            $html .= '<li data-customer-id="' . $cus->prof_id . '" data-name="' . $cus->first_name . ' ' .  $cus->middle_name . ' ' . $cus->last_name . '" data-open-balance="' . $amount . '">
+                            <div class="name" >' . $cus->first_name . ' ' .  $cus->middle_name . ' ' . $cus->last_name . '</div>
+                            <div class="open-balance">$' . number_format(($amount), 2) . '</div>
                         </li>';
             $counter++;
         }
@@ -8694,33 +8811,33 @@ class Accounting extends MY_Controller
     }
     public function single_customer_get_customers_details()
     {
-        $counter =0;
-        $html='';
-        $customer_id=$this->input->post("customer_id");
+        $counter = 0;
+        $html = '';
+        $customer_id = $this->input->post("customer_id");
         $customer = $this->accounting_customers_model->getCustomerDetails($customer_id);
-        $open_balance=0;
-        $overdue=0;
+        $open_balance = 0;
+        $overdue = 0;
         foreach ($customer as $cus) {
             $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
             $receivable_payment = 0;
-            $total_amount_received =0;
+            $total_amount_received = 0;
             foreach ($invoices as $inv) {
                 if (is_numeric($inv->grand_total)) {
-                    $receivable_payment+=$inv->grand_total;
+                    $receivable_payment += $inv->grand_total;
                 }
-                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
-                $amount_received=0;
+                $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                $amount_received = 0;
                 foreach ($receive_payment as $payment) {
                     $total_amount_received += $payment->payment_amount;
-                    $amount_received+=$payment->payment_amount;
+                    $amount_received += $payment->payment_amount;
                 }
                 if (date("Y-m-d", strtotime($inv->due_date)) < date("Y-m-d")) {
                     if (is_numeric($inv->grand_total)) {
-                        $overdue+=($inv->grand_total-$amount_received);
+                        $overdue += ($inv->grand_total - $amount_received);
                     }
                 }
             }
-            $open_balance +=($receivable_payment - $total_amount_received);
+            $open_balance += ($receivable_payment - $total_amount_received);
             $counter++;
         }
         $data = new stdClass();
@@ -8767,7 +8884,7 @@ class Accounting extends MY_Controller
             $month = date("n", strtotime($currentdate));
             $currentQuarter = ceil($month / 3);
 
-            $date=date("Y-m", strtotime($date));
+            $date = date("Y-m", strtotime($date));
             $month = date("n", strtotime($currentdate));
             $customerQuarter = ceil($month / 3);
 
@@ -8801,9 +8918,9 @@ class Accounting extends MY_Controller
         } elseif ($filter_date == "Last quarter") {
             $currentdate = date('Y-m-d');
             $month = date("n", strtotime($currentdate));
-            $currentQuarter = ceil($month / 3)-1;
+            $currentQuarter = ceil($month / 3) - 1;
 
-            $date=date("Y-m", strtotime($date));
+            $date = date("Y-m", strtotime($date));
             $month = date("n", strtotime($currentdate));
             $customerQuarter = ceil($month / 3);
 
@@ -8813,7 +8930,7 @@ class Accounting extends MY_Controller
                 return false;
             }
         } elseif ($filter_date == "Last quarter") {
-            if (date("Y", strtotime($date)) == date("Y")-1) {
+            if (date("Y", strtotime($date)) == date("Y") - 1) {
                 return true;
             } else {
                 return false;
@@ -8835,7 +8952,7 @@ class Accounting extends MY_Controller
         } elseif ($filter_type == "All plus deposits") {
             return true;
         } elseif ($filter_type == "All invoices") {
-            if ($data["type"]=="Invoice") {
+            if ($data["type"] == "Invoice") {
                 return true;
             } else {
                 return false;
@@ -8853,7 +8970,7 @@ class Accounting extends MY_Controller
                 return false;
             }
         } elseif ($filter_type == "Open estimates") {
-            if ($data["type"] == "Estimate" && $data["status"]=="Open") {
+            if ($data["type"] == "Estimate" && $data["status"] == "Open") {
                 return true;
             } else {
                 return false;
@@ -8865,7 +8982,7 @@ class Accounting extends MY_Controller
                 return false;
             }
         } elseif ($filter_type == "Unbilled income") {
-            if ($data["type"] == "Estimate" && $data["status"]=="Unbilled") {
+            if ($data["type"] == "Estimate" && $data["status"] == "Unbilled") {
                 return true;
             } else {
                 return false;
@@ -8873,7 +8990,7 @@ class Accounting extends MY_Controller
         } elseif ($filter_type == "Recently paid") {
             $firstday = date("Y-m-d", strtotime('monday last week'));
             $lastday = date("Y-m-d", strtotime('sunday this week'));
-            if ($data["status"]=="Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
+            if ($data["status"] == "Paid" && $data["date"] >= $firstday && $data["date"] <= $lastday) {
                 return true;
             } else {
                 return false;
@@ -8901,95 +9018,95 @@ class Accounting extends MY_Controller
 
     public function single_customer_get_transaction_lists()
     {
-        $tbody_html="";
-        $counter=0;
-        $customer_id=$this->input->post("customer_id");
+        $tbody_html = "";
+        $counter = 0;
+        $customer_id = $this->input->post("customer_id");
         $filter_type = $this->input->post("filter_type");
         $filter_date = $this->input->post("filter_date");
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
         $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
-        $tr_html="";
+        $tr_html = "";
         foreach ($invoices as $inv) {
             if ($inv->view_flag != 1 && $inv->void != 1) {
                 $receivable_payment = 0;
-                $total_amount_received =0;
-                $tr_html="";
+                $total_amount_received = 0;
+                $tr_html = "";
                 if (is_numeric($inv->grand_total)) {
-                    $receivable_payment=$inv->grand_total;
+                    $receivable_payment = $inv->grand_total;
                 }
-                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+                $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
                 foreach ($receive_payment as $payment) {
                     $total_amount_received += $payment->payment_amount;
                 }
 
-                $balance=$receivable_payment-$total_amount_received;
+                $balance = $receivable_payment - $total_amount_received;
                 foreach ($receive_payment as $payment) {
                     $total_amount_received += $payment->payment_amount;
-                    $amount_received=$payment->payment_amount;
-                    
-                    $this->page_data['date']=$payment->payment_date;
-                    $this->page_data['type']="Payment";
-                    $this->page_data['no']=$payment->ref_no;
-                    $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                    $this->page_data['method']=$payment->payment_method;
-                    $this->page_data['source']="";
-                    $this->page_data['memo']=$payment->memo;
-                    $this->page_data['duedate']=$inv->due_date;
-                    $this->page_data['aging']=$this->get_date_difference_indays($payment->payment_date, date("Y-m-d"));
-                    $this->page_data['balance']=$balance;
-                    $this->page_data['total']=$balance-$payment->payment_amount;
-                    $this->page_data['last_delivered']="";
-                    $this->page_data['email']=$customer_info->acs_email;
-                    $this->page_data['attatchement']="";
-                    $this->page_data['status']="Closed";
-                    $this->page_data['ponumber']="";
-                    $this->page_data['sales_rep']="";
-                    $this->page_data['customer_id']=$customer_id;
-                    $this->page_data['invoice_payment_id']=$payment->id;
-                    $this->page_data['invoice_id']=$inv->id;
+                    $amount_received = $payment->payment_amount;
+
+                    $this->page_data['date'] = $payment->payment_date;
+                    $this->page_data['type'] = "Payment";
+                    $this->page_data['no'] = $payment->ref_no;
+                    $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                    $this->page_data['method'] = $payment->payment_method;
+                    $this->page_data['source'] = "";
+                    $this->page_data['memo'] = $payment->memo;
+                    $this->page_data['duedate'] = $inv->due_date;
+                    $this->page_data['aging'] = $this->get_date_difference_indays($payment->payment_date, date("Y-m-d"));
+                    $this->page_data['balance'] = $balance;
+                    $this->page_data['total'] = $balance - $payment->payment_amount;
+                    $this->page_data['last_delivered'] = "";
+                    $this->page_data['email'] = $customer_info->acs_email;
+                    $this->page_data['attatchement'] = "";
+                    $this->page_data['status'] = "Closed";
+                    $this->page_data['ponumber'] = "";
+                    $this->page_data['sales_rep'] = "";
+                    $this->page_data['customer_id'] = $customer_id;
+                    $this->page_data['invoice_payment_id'] = $payment->id;
+                    $this->page_data['invoice_id'] = $inv->id;
                     if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                        $tr_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                        $tr_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                     }
                 }
                 if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
-                    $status="Overdue";
+                    $status = "Overdue";
                 } else {
                     if ($balance <= 0) {
-                        $status="Paid";
+                        $status = "Paid";
                     } else {
-                        $status="Open";
+                        $status = "Open";
                     }
                 }
-                $this->page_data['date']=$inv->date_issued;
-                $this->page_data['type']="Invoice";
-                $this->page_data['no']=$inv->invoice_number;
-                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']="";
-                $this->page_data['source']="";
-                $this->page_data['memo']="";
-                $this->page_data['duedate']=$inv->due_date;
-                $this->page_data['aging']=$this->get_date_difference_indays($inv->date_issued, date("Y-m-d"));
-                $this->page_data['balance']=$balance;
-                $this->page_data['total']=$receivable_payment;
-                $this->page_data['last_delivered']="";
-                $this->page_data['email']=$inv->customer_email;
-                $this->page_data['attatchement']="";
-                $this->page_data['status']=$status;
-                $this->page_data['invoice_status']=$inv->status;
-                $this->page_data['ponumber']="";
-                $this->page_data['sales_rep']="";
-                $this->page_data['customer_id']=$customer_id;
-                $this->page_data['invoice_payment_id']="";
-                $this->page_data['invoice_id']=$inv->id;
-                $tbody_html.=$tr_html;
+                $this->page_data['date'] = $inv->date_issued;
+                $this->page_data['type'] = "Invoice";
+                $this->page_data['no'] = $inv->invoice_number;
+                $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $this->page_data['method'] = "";
+                $this->page_data['source'] = "";
+                $this->page_data['memo'] = "";
+                $this->page_data['duedate'] = $inv->due_date;
+                $this->page_data['aging'] = $this->get_date_difference_indays($inv->date_issued, date("Y-m-d"));
+                $this->page_data['balance'] = $balance;
+                $this->page_data['total'] = $receivable_payment;
+                $this->page_data['last_delivered'] = "";
+                $this->page_data['email'] = $inv->customer_email;
+                $this->page_data['attatchement'] = "";
+                $this->page_data['status'] = $status;
+                $this->page_data['invoice_status'] = $inv->status;
+                $this->page_data['ponumber'] = "";
+                $this->page_data['sales_rep'] = "";
+                $this->page_data['customer_id'] = $customer_id;
+                $this->page_data['invoice_payment_id'] = "";
+                $this->page_data['invoice_id'] = $inv->id;
+                $tbody_html .= $tr_html;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
         }
 
         //Code for Sales Receipt
-        
+
         // $sales_receipts = $this->accounting_sales_receipt_model->getAllByCustomerId($customer_id);
         // foreach ($sales_receipts as $receipt) {
         //     $this->page_data['date']=$receipt->sales_receipt_date;
@@ -9020,299 +9137,299 @@ class Accounting extends MY_Controller
         if ($filter_type == "All plus deposits") {
             $all_deposits = $this->accounting_customers_model->get_customer_deposits($customer_id);
             foreach ($all_deposits as $deposit) {
-                $this->page_data['date']=$deposit->date;
-                $this->page_data['type']="Deposit";
-                $this->page_data['no']="";
-                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']="";
-                $this->page_data['source']="";
-                $this->page_data['memo']=$deposit->memo;
-                $this->page_data['duedate']="";
-                $this->page_data['aging']=$this->get_date_difference_indays($deposit->date, date("Y-m-d"));
-                $this->page_data['balance']=0;
-                $this->page_data['total']=$deposit->total_amount;
-                $this->page_data['last_delivered']="";
-                $this->page_data['email']=$customer_info->customer_email;
-                $this->page_data['attatchement']="";
-                $this->page_data['status']=$deposit->status;
-                $this->page_data['ponumber']="";
-                $this->page_data['sales_rep']="";
-                $this->page_data['customer_id']=$customer_id;
-                $this->page_data['invoice_payment_id']="";
-                $this->page_data['invoice_id']="";
-                $this->page_data['sales_receipt_id']="";
-                $this->page_data['deposit_id']=$deposit->id;
+                $this->page_data['date'] = $deposit->date;
+                $this->page_data['type'] = "Deposit";
+                $this->page_data['no'] = "";
+                $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $this->page_data['method'] = "";
+                $this->page_data['source'] = "";
+                $this->page_data['memo'] = $deposit->memo;
+                $this->page_data['duedate'] = "";
+                $this->page_data['aging'] = $this->get_date_difference_indays($deposit->date, date("Y-m-d"));
+                $this->page_data['balance'] = 0;
+                $this->page_data['total'] = $deposit->total_amount;
+                $this->page_data['last_delivered'] = "";
+                $this->page_data['email'] = $customer_info->customer_email;
+                $this->page_data['attatchement'] = "";
+                $this->page_data['status'] = $deposit->status;
+                $this->page_data['ponumber'] = "";
+                $this->page_data['sales_rep'] = "";
+                $this->page_data['customer_id'] = $customer_id;
+                $this->page_data['invoice_payment_id'] = "";
+                $this->page_data['invoice_id'] = "";
+                $this->page_data['sales_receipt_id'] = "";
+                $this->page_data['deposit_id'] = $deposit->id;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
         } elseif ($filter_type == "Open estimates") {
             $all_estimates = $this->accounting_customers_model->get_customer_estimates($customer_id, "Submitted");
             foreach ($all_estimates as $estimates) {
-                $this->page_data['date']=$estimates->estimate_date;
-                $this->page_data['type']="Estimate";
-                $this->page_data['no']=$estimates->purchase_order_number;
-                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']="";
-                $this->page_data['source']="";
-                $this->page_data['memo']="";
-                $this->page_data['expiration_date']=$estimates->expiry_date;
-                $this->page_data['accepted_date']=$estimates->accepted_date;
-                $this->page_data['accepted_by']="";//to be ask
-                $this->page_data['aging']=$this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
-                $this->page_data['balance']=0;
-                $this->page_data['total']=$estimates->estimate_value;
-                $this->page_data['last_delivered']="";
-                $this->page_data['email']=$customer_info->customer_email;
-                $this->page_data['attatchement']="";
-                $this->page_data['status']="Open";
-                $this->page_data['ponumber']="";
-                $this->page_data['sales_rep']="";
-                $this->page_data['customer_id']=$customer_id;
-                $this->page_data['invoice_payment_id']="";
-                $this->page_data['invoice_id']="";
-                $this->page_data['sales_receipt_id']="";
-                $this->page_data['deposit_id']="";
-                $this->page_data['estimate_id']=$estimates->id;
+                $this->page_data['date'] = $estimates->estimate_date;
+                $this->page_data['type'] = "Estimate";
+                $this->page_data['no'] = $estimates->purchase_order_number;
+                $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $this->page_data['method'] = "";
+                $this->page_data['source'] = "";
+                $this->page_data['memo'] = "";
+                $this->page_data['expiration_date'] = $estimates->expiry_date;
+                $this->page_data['accepted_date'] = $estimates->accepted_date;
+                $this->page_data['accepted_by'] = ""; //to be ask
+                $this->page_data['aging'] = $this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
+                $this->page_data['balance'] = 0;
+                $this->page_data['total'] = $estimates->estimate_value;
+                $this->page_data['last_delivered'] = "";
+                $this->page_data['email'] = $customer_info->customer_email;
+                $this->page_data['attatchement'] = "";
+                $this->page_data['status'] = "Open";
+                $this->page_data['ponumber'] = "";
+                $this->page_data['sales_rep'] = "";
+                $this->page_data['customer_id'] = $customer_id;
+                $this->page_data['invoice_payment_id'] = "";
+                $this->page_data['invoice_id'] = "";
+                $this->page_data['sales_receipt_id'] = "";
+                $this->page_data['deposit_id'] = "";
+                $this->page_data['estimate_id'] = $estimates->id;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
         } elseif ($filter_type == "Unbilled income") {
             $all_estimates = $this->accounting_customers_model->get_customer_estimates($customer_id, "Accepted");
             foreach ($all_estimates as $estimates) {
                 if ($this->accounting_invoices_model->get_invoice_by_estimate_id($estimates->id) == null) {
-                    $this->page_data['date']=$estimates->estimate_date;
-                    $this->page_data['type']="Estimate";
-                    $this->page_data['no']=$estimates->purchase_order_number;
-                    $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                    $this->page_data['method']="";
-                    $this->page_data['source']="";
-                    $this->page_data['memo']="";
-                    $this->page_data['duedate']=$estimates->expiry_date;
-                    $this->page_data['aging']=$this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
-                    $this->page_data['balance']=0;
-                    $this->page_data['total']=$estimates->estimate_value;
-                    $this->page_data['last_delivered']="";
-                    $this->page_data['email']=$customer_info->customer_email;
-                    $this->page_data['attatchement']="";
-                    $this->page_data['status']="Unbilled";
-                    $this->page_data['ponumber']="";
-                    $this->page_data['sales_rep']="";
-                    $this->page_data['customer_id']=$customer_id;
-                    $this->page_data['invoice_payment_id']="";
-                    $this->page_data['invoice_id']="";
-                    $this->page_data['sales_receipt_id']="";
-                    $this->page_data['deposit_id']="";
-                    $this->page_data['estimate_id']=$estimates->id;
+                    $this->page_data['date'] = $estimates->estimate_date;
+                    $this->page_data['type'] = "Estimate";
+                    $this->page_data['no'] = $estimates->purchase_order_number;
+                    $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                    $this->page_data['method'] = "";
+                    $this->page_data['source'] = "";
+                    $this->page_data['memo'] = "";
+                    $this->page_data['duedate'] = $estimates->expiry_date;
+                    $this->page_data['aging'] = $this->get_date_difference_indays($estimates->estimate_date, date("Y-m-d"));
+                    $this->page_data['balance'] = 0;
+                    $this->page_data['total'] = $estimates->estimate_value;
+                    $this->page_data['last_delivered'] = "";
+                    $this->page_data['email'] = $customer_info->customer_email;
+                    $this->page_data['attatchement'] = "";
+                    $this->page_data['status'] = "Unbilled";
+                    $this->page_data['ponumber'] = "";
+                    $this->page_data['sales_rep'] = "";
+                    $this->page_data['customer_id'] = $customer_id;
+                    $this->page_data['invoice_payment_id'] = "";
+                    $this->page_data['invoice_id'] = "";
+                    $this->page_data['sales_receipt_id'] = "";
+                    $this->page_data['deposit_id'] = "";
+                    $this->page_data['estimate_id'] = $estimates->id;
                     if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                        $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                        $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                     }
                 }
             }
         } elseif ($filter_type == "Credit memos") {
             $all_credit_memos = $this->accounting_customers_model->get_customer_credit_memo($customer_id);
             foreach ($all_credit_memos as $credit_memo) {
-                $this->page_data['date']=$credit_memo->credit_memo_date;
-                $this->page_data['type']="Credit memo";
-                $this->page_data['no']="";
-                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']="";
-                $this->page_data['source']="";
-                $this->page_data['memo']=$credit_memo->message_credit_memo;
-                $this->page_data['duedate']="";
-                $this->page_data['aging']=$this->get_date_difference_indays($credit_memo->credit_memo_date, date("Y-m-d"));
-                $this->page_data['balance']=0;
-                $this->page_data['total']=$credit_memo->grand_total;
-                $this->page_data['last_delivered']="";
-                $this->page_data['email']=$customer_info->customer_email;
-                $this->page_data['attatchement']="";
-                $this->page_data['status']=$credit_memo->status;
-                $this->page_data['ponumber']="";
-                $this->page_data['sales_rep']="";
-                $this->page_data['customer_id']=$customer_id;
-                $this->page_data['invoice_payment_id']="";
-                $this->page_data['invoice_id']="";
-                $this->page_data['sales_receipt_id']="";
-                $this->page_data['deposit_id']="";
-                $this->page_data['estimate_id']="";
-                $this->page_data['credit_memo_id']=$credit_memo->id;
+                $this->page_data['date'] = $credit_memo->credit_memo_date;
+                $this->page_data['type'] = "Credit memo";
+                $this->page_data['no'] = "";
+                $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $this->page_data['method'] = "";
+                $this->page_data['source'] = "";
+                $this->page_data['memo'] = $credit_memo->message_credit_memo;
+                $this->page_data['duedate'] = "";
+                $this->page_data['aging'] = $this->get_date_difference_indays($credit_memo->credit_memo_date, date("Y-m-d"));
+                $this->page_data['balance'] = 0;
+                $this->page_data['total'] = $credit_memo->grand_total;
+                $this->page_data['last_delivered'] = "";
+                $this->page_data['email'] = $customer_info->customer_email;
+                $this->page_data['attatchement'] = "";
+                $this->page_data['status'] = $credit_memo->status;
+                $this->page_data['ponumber'] = "";
+                $this->page_data['sales_rep'] = "";
+                $this->page_data['customer_id'] = $customer_id;
+                $this->page_data['invoice_payment_id'] = "";
+                $this->page_data['invoice_id'] = "";
+                $this->page_data['sales_receipt_id'] = "";
+                $this->page_data['deposit_id'] = "";
+                $this->page_data['estimate_id'] = "";
+                $this->page_data['credit_memo_id'] = $credit_memo->id;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date']) && $this->filter_type_qualified($filter_type, $this->page_data)) {
-                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
         } elseif ($filter_type == "Statements") {
             $all_statements = $this->accounting_customers_model->get_customer_statement($customer_id);
             foreach ($all_statements as $statement) {
-                $this->page_data['date']=$statement->statement_date;
-                $this->page_data['type']=$statement->statement_type;
-                $this->page_data['no']="";
-                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']="";
-                $this->page_data['source']="";
-                $this->page_data['memo']="";
-                $this->page_data['duedate']="";
-                $this->page_data['aging']=$this->get_date_difference_indays($statement->statement_date, date("Y-m-d"));
-                $this->page_data['balance']="";
-                $this->page_data['total']="";
-                $this->page_data['last_delivered']="";
-                $this->page_data['email']=$customer_info->customer_email;
-                $this->page_data['attatchement']="";
-                $this->page_data['status']="";
-                $this->page_data['ponumber']="";
-                $this->page_data['sales_rep']="";
-                $this->page_data['start_date']=$statement->start_date;
-                $this->page_data['end_date']=$statement->end_date;
-                $this->page_data['statement_type']=$statement->statement_type;
-                $this->page_data['customer_id']=$customer_id;
-                $this->page_data['invoice_payment_id']="";
-                $this->page_data['invoice_id']="";
-                $this->page_data['sales_receipt_id']="";
-                $this->page_data['deposit_id']="";
-                $this->page_data['estimate_id']="";
-                $this->page_data['credit_memo_id']="";
-                $this->page_data['statement_id']=$statement->id;
+                $this->page_data['date'] = $statement->statement_date;
+                $this->page_data['type'] = $statement->statement_type;
+                $this->page_data['no'] = "";
+                $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $this->page_data['method'] = "";
+                $this->page_data['source'] = "";
+                $this->page_data['memo'] = "";
+                $this->page_data['duedate'] = "";
+                $this->page_data['aging'] = $this->get_date_difference_indays($statement->statement_date, date("Y-m-d"));
+                $this->page_data['balance'] = "";
+                $this->page_data['total'] = "";
+                $this->page_data['last_delivered'] = "";
+                $this->page_data['email'] = $customer_info->customer_email;
+                $this->page_data['attatchement'] = "";
+                $this->page_data['status'] = "";
+                $this->page_data['ponumber'] = "";
+                $this->page_data['sales_rep'] = "";
+                $this->page_data['start_date'] = $statement->start_date;
+                $this->page_data['end_date'] = $statement->end_date;
+                $this->page_data['statement_type'] = $statement->statement_type;
+                $this->page_data['customer_id'] = $customer_id;
+                $this->page_data['invoice_payment_id'] = "";
+                $this->page_data['invoice_id'] = "";
+                $this->page_data['sales_receipt_id'] = "";
+                $this->page_data['deposit_id'] = "";
+                $this->page_data['estimate_id'] = "";
+                $this->page_data['credit_memo_id'] = "";
+                $this->page_data['statement_id'] = $statement->id;
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date'])) {
-                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
         } elseif ($filter_type == "Recurring templates") {
             // $all_statements = $this->accounting_customers_model->get_customer_statement($customer_id);
             $all_recurring_templates = $this->accounting_recurring_transactions_model->getAllByCompany_id($customer_id);
             foreach ($all_recurring_templates as $recurring_template) {
-                $this->page_data['date']="";
-                $this->page_data['filtered_type']="Recurring templates";
-                $this->page_data['type']=$recurring_template->recurring_type;
-                $this->page_data['no']="";
-                $this->page_data['customer']=$customer_info->first_name.' '.$customer_info->last_name;
-                $this->page_data['method']="";
-                $this->page_data['source']="";
-                $this->page_data['memo']="";
-                $this->page_data['duedate']="";
-                $this->page_data['aging']="";
-                $this->page_data['balance']="";
-                $this->page_data['total']="";
-                $this->page_data['last_delivered']="";
-                $this->page_data['email']="";
-                $this->page_data['attatchement']="";
-                $this->page_data['status']="";
-                $this->page_data['ponumber']="";
-                $this->page_data['sales_rep']="";
-                $this->page_data['start_date']="";
-                $this->page_data['end_date']="";
-                $this->page_data['customer_id']="";
-                $this->page_data['invoice_payment_id']="";
-                $this->page_data['invoice_id']="";
-                $this->page_data['sales_receipt_id']="";
-                $this->page_data['deposit_id']="";
-                $this->page_data['estimate_id']="";
-                $this->page_data['credit_memo_id']="";
-                $this->page_data['statement_id']="";
-                $this->page_data['recurring_id']=$recurring_template->id;
-                $this->page_data['txn_type']=$recurring_template->txn_type;
-                $this->page_data['interval']=$recurring_template->recurring_interval;
-                $this->page_data['amount']="";
-                $this->page_data['prev_date']="";
-                $this->page_data['next_date']="";
-                $recurring_id=$recurring_template->id;
+                $this->page_data['date'] = "";
+                $this->page_data['filtered_type'] = "Recurring templates";
+                $this->page_data['type'] = $recurring_template->recurring_type;
+                $this->page_data['no'] = "";
+                $this->page_data['customer'] = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $this->page_data['method'] = "";
+                $this->page_data['source'] = "";
+                $this->page_data['memo'] = "";
+                $this->page_data['duedate'] = "";
+                $this->page_data['aging'] = "";
+                $this->page_data['balance'] = "";
+                $this->page_data['total'] = "";
+                $this->page_data['last_delivered'] = "";
+                $this->page_data['email'] = "";
+                $this->page_data['attatchement'] = "";
+                $this->page_data['status'] = "";
+                $this->page_data['ponumber'] = "";
+                $this->page_data['sales_rep'] = "";
+                $this->page_data['start_date'] = "";
+                $this->page_data['end_date'] = "";
+                $this->page_data['customer_id'] = "";
+                $this->page_data['invoice_payment_id'] = "";
+                $this->page_data['invoice_id'] = "";
+                $this->page_data['sales_receipt_id'] = "";
+                $this->page_data['deposit_id'] = "";
+                $this->page_data['estimate_id'] = "";
+                $this->page_data['credit_memo_id'] = "";
+                $this->page_data['statement_id'] = "";
+                $this->page_data['recurring_id'] = $recurring_template->id;
+                $this->page_data['txn_type'] = $recurring_template->txn_type;
+                $this->page_data['interval'] = $recurring_template->recurring_interval;
+                $this->page_data['amount'] = "";
+                $this->page_data['prev_date'] = "";
+                $this->page_data['next_date'] = "";
+                $recurring_id = $recurring_template->id;
                 if ($recurring_template->txn_type == "Sales Receipt") {
                     $sales_receipts = $this->accounting_sales_receipt_model->get_recuring_sales_receipt($recurring_id);
                     foreach ($sales_receipts as $s_receipt) {
-                        $this->page_data['amount']=$s_receipt->grand_total;
-                        $this->page_data['prev_date']=$s_receipt->sales_receipt_date;
+                        $this->page_data['amount'] = $s_receipt->grand_total;
+                        $this->page_data['prev_date'] = $s_receipt->sales_receipt_date;
                         if ($recurring_template->recurring_type != "Unschedule") {
                             if ($recurring_template->recurring_interval == "Daily") {
                                 if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
-                                    $this->page_data['next_date']= date('Y-m-d', strtotime($recurring_template->start_date. ' + '.$recurring_template->recurr_every.' days'));
+                                    $this->page_data['next_date'] = date('Y-m-d', strtotime($recurring_template->start_date . ' + ' . $recurring_template->recurr_every . ' days'));
                                 } else {
-                                    $this->page_data['next_date']= date('Y-m-d', strtotime($s_receipt->sales_receipt_date. ' + '.$recurring_template->recurr_every.' days'));
+                                    $this->page_data['next_date'] = date('Y-m-d', strtotime($s_receipt->sales_receipt_date . ' + ' . $recurring_template->recurr_every . ' days'));
                                 }
                             } elseif ($recurring_template->recurring_interval == "Weekly") {
                                 if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
-                                    $next_week= date('Y-m-d', strtotime($recurring_template->start_date." + ".$recurring_template->recurr_every." weeks"));
+                                    $next_week = date('Y-m-d', strtotime($recurring_template->start_date . " + " . $recurring_template->recurr_every . " weeks"));
                                 } else {
-                                    $next_week= date('Y-m-d', strtotime($s_receipt->sales_receipt_date." + ".$recurring_template->recurr_every." weeks"));
+                                    $next_week = date('Y-m-d', strtotime($s_receipt->sales_receipt_date . " + " . $recurring_template->recurr_every . " weeks"));
                                 }
-                                $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
-                                $this->page_data['next_date']=$next_date;
+                                $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day) . ' this week', strtotime($next_week)));
+                                $this->page_data['next_date'] = $next_date;
                             } elseif ($recurring_template->recurring_interval == "Monthly") {
                                 if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($recurring_template->start_date)));
                                 } else {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($s_receipt->sales_receipt_date)));
                                 }
-                                $next_month= date('Y-m-d', strtotime($month_start." + ".$recurring_template->recurr_every." months"));
-                                if (date("l", strtotime($next_month))==$recurring_template->recurring_day) {
-                                    if ($recurring_template->recurring_week=="First") {
-                                        $next_date=$next_month;
+                                $next_month = date('Y-m-d', strtotime($month_start . " + " . $recurring_template->recurr_every . " months"));
+                                if (date("l", strtotime($next_month)) == $recurring_template->recurring_day) {
+                                    if ($recurring_template->recurring_week == "First") {
+                                        $next_date = $next_month;
                                     } else {
-                                        $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
-                                        $next_date=date("Y-m-d", strtotime($next_date." - 7 days"));
+                                        $next_date = date("Y-m-d", strtotime($recurring_template->recurring_week . " " . $recurring_template->recurring_day . " " . date("Y-m-d", strtotime($next_month))));
+                                        $next_date = date("Y-m-d", strtotime($next_date . " - 7 days"));
                                     }
                                 } else {
-                                    $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
+                                    $next_date = date("Y-m-d", strtotime($recurring_template->recurring_week . " " . $recurring_template->recurring_day . " " . date("Y-m-d", strtotime($next_month))));
                                 }
-                                $this->page_data['next_date']=$next_date;
+                                $this->page_data['next_date'] = $next_date;
                             } elseif ($recurring_template->recurring_interval == "Yearly") {
                                 if (date("Y-m-d", strtotime($s_receipt->sales_receipt_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
                                     $next_year = date("Y", strtotime("+ 1 year", strtotime($recurring_template->start_date)));
                                 } else {
                                 }
-                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year;
+                                $this->page_data['next_date'] = $recurring_template->recurring_month . " " . preg_replace('/[^0-9]/', '', $recurring_template->recurring_day) . " " . $next_year;
                             }
                         }
                     }
                 } elseif ($recurring_template->txn_type == "Delayed Charge") {
                     $delayed_charges = $this->accounting_recurring_transactions_model->get_recuring_delayed_charges($recurring_id);
                     foreach ($delayed_charges as $charge) {
-                        $this->page_data['amount']=$charge->total_amount;
-                        $this->page_data['prev_date']=$charge->delayed_credit_date;
+                        $this->page_data['amount'] = $charge->total_amount;
+                        $this->page_data['prev_date'] = $charge->delayed_credit_date;
                         if ($recurring_template->recurring_type != "Unschedule") {
                             if ($recurring_template->recurring_interval == "Daily") {
                                 if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
-                                    $this->page_data['next_date']= date('Y-m-d', strtotime($recurring_template->start_date. ' + '.$recurring_template->recurr_every.' days'));
+                                    $this->page_data['next_date'] = date('Y-m-d', strtotime($recurring_template->start_date . ' + ' . $recurring_template->recurr_every . ' days'));
                                 } else {
-                                    $this->page_data['next_date']= date('Y-m-d', strtotime($charge->delayed_credit_date. ' + '.$recurring_template->recurr_every.' days'));
+                                    $this->page_data['next_date'] = date('Y-m-d', strtotime($charge->delayed_credit_date . ' + ' . $recurring_template->recurr_every . ' days'));
                                 }
                             } elseif ($recurring_template->recurring_interval == "Weekly") {
                                 if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
-                                    $next_week= date('Y-m-d', strtotime($recurring_template->start_date." + ".$recurring_template->recurr_every." weeks"));
+                                    $next_week = date('Y-m-d', strtotime($recurring_template->start_date . " + " . $recurring_template->recurr_every . " weeks"));
                                 } else {
-                                    $next_week= date('Y-m-d', strtotime($charge->delayed_credit_date." + ".$recurring_template->recurr_every." weeks"));
+                                    $next_week = date('Y-m-d', strtotime($charge->delayed_credit_date . " + " . $recurring_template->recurr_every . " weeks"));
                                 }
-                                $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day).' this week', strtotime($next_week)));
-                                $this->page_data['next_date']=$next_date;
+                                $next_date = date('Y-m-d', strtotime(strtolower($recurring_template->recurring_day) . ' this week', strtotime($next_week)));
+                                $this->page_data['next_date'] = $next_date;
                             } elseif ($recurring_template->recurring_interval == "Monthly") {
                                 if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($recurring_template->start_date)));
                                 } else {
                                     $month_start = date("Y-m-d", strtotime('first day of this month', strtotime($charge->delayed_credit_date)));
                                 }
-                                $next_month= date('Y-m-d', strtotime($month_start." + ".$recurring_template->recurr_every." months"));
-                                if (date("l", strtotime($next_month))==$recurring_template->recurring_day) {
-                                    if ($recurring_template->recurring_week=="First") {
-                                        $next_date=$next_month;
+                                $next_month = date('Y-m-d', strtotime($month_start . " + " . $recurring_template->recurr_every . " months"));
+                                if (date("l", strtotime($next_month)) == $recurring_template->recurring_day) {
+                                    if ($recurring_template->recurring_week == "First") {
+                                        $next_date = $next_month;
                                     } else {
-                                        $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
-                                        $next_date=date("Y-m-d", strtotime($next_date." - 7 days"));
+                                        $next_date = date("Y-m-d", strtotime($recurring_template->recurring_week . " " . $recurring_template->recurring_day . " " . date("Y-m-d", strtotime($next_month))));
+                                        $next_date = date("Y-m-d", strtotime($next_date . " - 7 days"));
                                     }
                                 } else {
-                                    $next_date=date("Y-m-d", strtotime($recurring_template->recurring_week." ".$recurring_template->recurring_day." ".date("Y-m-d", strtotime($next_month))));
+                                    $next_date = date("Y-m-d", strtotime($recurring_template->recurring_week . " " . $recurring_template->recurring_day . " " . date("Y-m-d", strtotime($next_month))));
                                 }
-                                $this->page_data['next_date']=$next_date;
+                                $this->page_data['next_date'] = $next_date;
                             } elseif ($recurring_template->recurring_interval == "Yearly") {
                                 if (date("Y-m-d", strtotime($charge->delayed_credit_date)) <= date("Y-m-d", strtotime($recurring_template->start_date))) {
                                     $next_year = date("Y", strtotime("+ 1 year", strtotime($recurring_template->start_date)));
                                 } else {
                                 }
-                                $this->page_data['next_date']=$recurring_template->recurring_month." ".preg_replace('/[^0-9]/', '', $recurring_template->recurring_day)." ".$next_year;
+                                $this->page_data['next_date'] = $recurring_template->recurring_month . " " . preg_replace('/[^0-9]/', '', $recurring_template->recurring_day) . " " . $next_year;
                             }
                         }
                     }
                 }
 
                 if ($this->filter_date_qualified($filter_date, $this->page_data['date'])) {
-                    $tbody_html.=$this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
+                    $tbody_html .= $this->load->view('accounting/customer_includes/customer_single_modal/customer_transactions_tr', $this->page_data, true);
                 }
             }
         }
@@ -9331,7 +9448,7 @@ class Accounting extends MY_Controller
     {
         $customer_id = $this->input->post("customer_id");
         $updated_info = array("notes" => $this->input->post("notes"));
-        $success=$this->accounting_customers_model->updateCustomer($customer_id, $updated_info);
+        $success = $this->accounting_customers_model->updateCustomer($customer_id, $updated_info);
         $data = new stdClass();
         $data->customer_id = $customer_id;
         $data->result = "success";
@@ -9344,7 +9461,7 @@ class Accounting extends MY_Controller
     public function save_sales_form_content()
     {
         $new_data = array(
-            
+
             'sales_pref_inv_terms'       => $this->input->post("sales_pref_inv_terms"),
             'sales_pref_del_method'      => $this->input->post("sales_pref_del_method"),
             'sales_shipping'             => $this->input->post("sales_shipping"),
@@ -9362,12 +9479,12 @@ class Accounting extends MY_Controller
 
         echo json_encode($addQuery);
     }
-    
+
 
     public function save_product_services_content()
     {
         $new_data = array(
-            
+
             'ps_column_sales_form'      => $this->input->post("ps_column_sales_form"),
             'ps_show_sku_column'        => $this->input->post("ps_show_sku_column"),
             'ps_price_rules'            => $this->input->post("ps_price_rules"),
@@ -9384,7 +9501,7 @@ class Accounting extends MY_Controller
     public function save_exp_sales_form_content()
     {
         $new_data = array(
-            
+
             'show_items_exp_pur_forms'          => $this->input->post("show_items_exp_pur_forms"),
             'show_tags_exp_pur_forms'           => $this->input->post("show_tags_exp_pur_forms"),
             'track_exp_items_cust'              => $this->input->post("track_exp_items_cust"),
@@ -9405,7 +9522,7 @@ class Accounting extends MY_Controller
     public function save_adv_accounting()
     {
         $new_data = array(
-            
+
             'acct_first_month_fiscal_year'      => $this->input->post("acct_first_month_fiscal_year"),
             'acct_first_month_income_tax_yr'    => $this->input->post("acct_first_month_income_tax_yr"),
             'acct_accounting_method'            => $this->input->post("acct_accounting_method"),
@@ -9421,7 +9538,7 @@ class Accounting extends MY_Controller
     public function save_progress_invoicing()
     {
         $new_data = array(
-            
+
             'sales_progress_invoicing'      => $this->input->post("sales_progress_invoicing"),
 
         );
@@ -9430,11 +9547,11 @@ class Accounting extends MY_Controller
 
         echo json_encode($addQuery);
     }
-    
+
     public function save_adv_chart_of_accounts()
     {
         $new_data = array(
-            
+
             'adv_enable_account_no'     => $this->input->post("adv_enable_account_no"),
             'adv_tips_account'          => $this->input->post("adv_tips_account"),
             'adv_markup_inc_acct'       => $this->input->post("adv_markup_inc_acct"),
@@ -9449,7 +9566,7 @@ class Accounting extends MY_Controller
     public function sales_messages_save_button()
     {
         $new_data = array(
-            
+
             'salutation'        => $this->input->post("sales_messages_salutation"),
             'messages_name'     => $this->input->post("sales_messages_name"),
             'document_type'     => $this->input->post("sales_messages_document_type"),
@@ -9472,7 +9589,7 @@ class Accounting extends MY_Controller
     public function exp_messages_save_button()
     {
         $new_data = array(
-            
+
             'salutation'        => $this->input->post("exp_messages_salutation"),
             'messages_name'     => $this->input->post("exp_messages_name"),
             'document_type'     => $this->input->post("exp_messages_document_type"),
@@ -9492,17 +9609,17 @@ class Accounting extends MY_Controller
         echo json_encode($addQuery);
     }
 
-    public function get_date_difference_indays($date_from = "", $date_to="")
+    public function get_date_difference_indays($date_from = "", $date_to = "")
     {
         $date_1 = strtotime($date_to); // or your date as well
         $date_2 = strtotime($date_from);
         $datediff = $date_1 - $date_2;
         return round($datediff / (60 * 60 * 24));
     }
-    
+
     public function generate_share_invoice_link()
     {
-        $invoice_id=$this->input->post("invoice_id");
+        $invoice_id = $this->input->post("invoice_id");
         $token = "";
         $token_available = false;
         while (!$token_available) {
@@ -9513,90 +9630,90 @@ class Accounting extends MY_Controller
         }
 
 
-        $pdf_file_name=$token."_portalappinv.pdf";
+        $pdf_file_name = $token . "_portalappinv.pdf";
         $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name);
 
-        
-        $expired_at = date('Y-m-d', strtotime(date("Y-m-d"). ' + 24 days'));
-        $data=array(
+
+        $expired_at = date('Y-m-d', strtotime(date("Y-m-d") . ' + 24 days'));
+        $data = array(
             "invoice_id" => $invoice_id,
             "token" => $token,
             "expired_at" => $expired_at
         );
         $this->accounting_invoices_model->add_shared_invoice_link($data);
 
-        
 
-        $shared_link=base_url("portal/appinv/".$token."/view");
+
+        $shared_link = base_url("portal/appinv/" . $token . "/view");
         $data = new stdClass();
         $data->shared_link = $shared_link;
         echo json_encode($data);
     }
 
-    public function customer_generate_invoice_pdf($invoice_id, $pdf_file_name, $action="")
+    public function customer_generate_invoice_pdf($invoice_id, $pdf_file_name, $action = "")
     {
         $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
         $customer_id = $inv->customer_id;
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-                
-                
+
+
         $receivable_payment = 0;
-        $total_amount_received =0;
+        $total_amount_received = 0;
         if (is_numeric($inv->grand_total)) {
-            $receivable_payment=$inv->grand_total;
+            $receivable_payment = $inv->grand_total;
         }
-        $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+        $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
         foreach ($receive_payment as $payment) {
             $total_amount_received += $payment->payment_amount;
         }
-    
-        $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+        $balance = ($receivable_payment - $total_amount_received) - $inv->deposit_request;
 
         if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
-            $status="Overdue";
+            $status = "Overdue";
         } else {
             if ($balance <= 0) {
-                $status="Paid";
+                $status = "Paid";
             } else {
-                $status="Open";
+                $status = "Open";
             }
         }
 
-        $pdf_data["data_pdf"][]=array(
+        $pdf_data["data_pdf"][] = array(
             "invoice_date" => $inv->date_issued,
-                "invoice_no"=>$inv->invoice_number,
-                "payment"=>$total_amount_received,
-                "balance_due"=>$balance,
-                "inv_location_scale"=>$inv->location_scale,
-                "inv_ship_from"=>$inv->bus_state,
-                "inv_ship_via"=>$inv->ship_via,
-                "inv_taxes"=>$inv->taxes,
-                "inv_grand_total"=>$inv->grand_total,
-                "inv_sub_total"=>$inv->sub_total,
-                "inv_shipping_to_address"=>$inv->shipping_to_address,
-                "due_date"=>$inv->due_date,
-                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
-                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
-                "customer_mail_add" => $customer_info->acs_mail_add,
-                "customer_phone_h" => $customer_info->customer_phone_h,
-                "customer_city" => $customer_info->acs_city,
-                "business_name" => $customer_info->business_name,
-                "customer_id" => $customer_info->prof_id,
-                "business_email" =>  $customer_info->business_email,
-                "business_website" =>  $customer_info->website,
-                "bus_street" =>  $customer_info->bus_street,
-                "bus_city" =>  $customer_info->bus_city,
-                "bus_state" =>  $customer_info->bus_state,
-                "bus_postal_code" =>  $customer_info->bus_postal_code,
-                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
-                "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
-                "status" => $status
+            "invoice_no" => $inv->invoice_number,
+            "payment" => $total_amount_received,
+            "balance_due" => $balance,
+            "inv_location_scale" => $inv->location_scale,
+            "inv_ship_from" => $inv->bus_state,
+            "inv_ship_via" => $inv->ship_via,
+            "inv_taxes" => $inv->taxes,
+            "inv_grand_total" => $inv->grand_total,
+            "inv_sub_total" => $inv->sub_total,
+            "inv_shipping_to_address" => $inv->shipping_to_address,
+            "due_date" => $inv->due_date,
+            "terms" => $this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+            "customer_name" => $customer_info->first_name . ' ' . $customer_info->last_name,
+            "customer_mail_add" => $customer_info->acs_mail_add,
+            "customer_phone_h" => $customer_info->customer_phone_h,
+            "customer_city" => $customer_info->acs_city,
+            "business_name" => $customer_info->business_name,
+            "customer_id" => $customer_info->prof_id,
+            "business_email" =>  $customer_info->business_email,
+            "business_website" =>  $customer_info->website,
+            "bus_street" =>  $customer_info->bus_street,
+            "bus_city" =>  $customer_info->bus_city,
+            "bus_state" =>  $customer_info->bus_state,
+            "bus_postal_code" =>  $customer_info->bus_postal_code,
+            "business_logo" => "uploads/users/business_profile/" . $customer_info->business_id . "/" . $customer_info->business_image,
+            "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+            "status" => $status
         );
-        if ($action=="invoice-packaging-slip") {
-            $html_pdf="accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
+        if ($action == "invoice-packaging-slip") {
+            $html_pdf = "accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
             $orientation = "P";
         } else {
-            $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+            $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
             $orientation = "P";
         }
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
@@ -9604,11 +9721,11 @@ class Accounting extends MY_Controller
     public function print_invoice_packaging_slip()
     {
         $invoice_id = $this->input->post("invoice_id");
-        $pdf_file_name = $this->input->post("invoice_no")."_packaging_slip.pdf";
+        $pdf_file_name = $this->input->post("invoice_no") . "_packaging_slip.pdf";
         $this->customer_generate_invoice_pdf($invoice_id, $pdf_file_name, "invoice-packaging-slip");
         $data = new stdClass();
         $data->status = "success";
-        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
+        $data->pdf_link = base_url("assets/pdf/" . $pdf_file_name);
         echo json_encode($data);
     }
     public function ajax_get_invoice_info()
@@ -9617,7 +9734,7 @@ class Accounting extends MY_Controller
         $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
         $customer_id = $inv->customer_id;
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        $invoice_items=$this->invoice_model->getInvoiceItems($invoice_id);
+        $invoice_items = $this->invoice_model->getInvoiceItems($invoice_id);
         $data = new stdClass();
         $data->customer_info = $customer_info;
         $data->invoice_items = $invoice_items;
@@ -9628,50 +9745,50 @@ class Accounting extends MY_Controller
     {
         $customer_id = $this->input->post("customer_id");
         $invoice_ids = $this->input->post("invoice_ids");
-        for ($ids_i=0; $ids_i<count($invoice_ids);$ids_i++) {
+        for ($ids_i = 0; $ids_i < count($invoice_ids); $ids_i++) {
             $invoice_id = $invoice_ids[$ids_i];
             $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
             $customer_id = $inv->customer_id;
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-                
-                
+
+
             $receivable_payment = 0;
-            $total_amount_received =0;
+            $total_amount_received = 0;
             if (is_numeric($inv->grand_total)) {
-                $receivable_payment=$inv->grand_total;
+                $receivable_payment = $inv->grand_total;
             }
-            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
             foreach ($receive_payment as $payment) {
                 $total_amount_received += $payment->payment_amount;
             }
-    
-            $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+            $balance = ($receivable_payment - $total_amount_received) - $inv->deposit_request;
 
             if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
-                $status="Overdue";
+                $status = "Overdue";
             } else {
                 if ($balance <= 0) {
-                    $status="Paid";
+                    $status = "Paid";
                 } else {
-                    $status="Open";
+                    $status = "Open";
                 }
             }
 
-            $pdf_data["data_pdf"][]=array(
+            $pdf_data["data_pdf"][] = array(
                 "invoice_date" => $inv->date_issued,
-                "invoice_no"=>$inv->invoice_number,
-                "payment"=>$total_amount_received,
-                "balance_due"=>$balance,
-                "inv_location_scale"=>$inv->location_scale,
-                "inv_ship_from"=>$inv->bus_state,
-                "inv_ship_via"=>$inv->ship_via,
-                "inv_taxes"=>$inv->taxes,
-                "inv_grand_total"=>$inv->grand_total,
-                "inv_sub_total"=>$inv->sub_total,
-                "inv_shipping_to_address"=>$inv->shipping_to_address,
-                "due_date"=>$inv->due_date,
-                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
-                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "invoice_no" => $inv->invoice_number,
+                "payment" => $total_amount_received,
+                "balance_due" => $balance,
+                "inv_location_scale" => $inv->location_scale,
+                "inv_ship_from" => $inv->bus_state,
+                "inv_ship_via" => $inv->ship_via,
+                "inv_taxes" => $inv->taxes,
+                "inv_grand_total" => $inv->grand_total,
+                "inv_sub_total" => $inv->sub_total,
+                "inv_shipping_to_address" => $inv->shipping_to_address,
+                "due_date" => $inv->due_date,
+                "terms" => $this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name . ' ' . $customer_info->last_name,
                 "customer_mail_add" => $customer_info->acs_mail_add,
                 "customer_phone_h" => $customer_info->customer_phone_h,
                 "customer_city" => $customer_info->acs_city,
@@ -9683,71 +9800,71 @@ class Accounting extends MY_Controller
                 "bus_city" =>  $customer_info->bus_city,
                 "bus_state" =>  $customer_info->bus_state,
                 "bus_postal_code" =>  $customer_info->bus_postal_code,
-                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "business_logo" => "uploads/users/business_profile/" . $customer_info->business_id . "/" . $customer_info->business_image,
                 "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
                 "status" => $status
             );
         }
-        $pdf_file_name = "batched_inv_".$customer_id."_portalappinv.pdf";
+        $pdf_file_name = "batched_inv_" . $customer_id . "_portalappinv.pdf";
 
-        $html_pdf="accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
+        $html_pdf = "accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
         $orientation = "P";
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
         $data = new stdClass();
         $data->status = "success";
-        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
-        $data->invoice_ids=$invoice_ids;
+        $data->pdf_link = base_url("assets/pdf/" . $pdf_file_name);
+        $data->invoice_ids = $invoice_ids;
         echo json_encode($data);
     }
     public function print_transactions_by_batch()
     {
         $customer_id = $this->input->post("customer_id");
         $invoice_ids = $this->input->post("invoice_ids");
-        for ($ids_i=0; $ids_i<count($invoice_ids);$ids_i++) {
+        for ($ids_i = 0; $ids_i < count($invoice_ids); $ids_i++) {
             $invoice_id = $invoice_ids[$ids_i];
             $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
             $customer_id = $inv->customer_id;
             $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-                
-                
+
+
             $receivable_payment = 0;
-            $total_amount_received =0;
+            $total_amount_received = 0;
             if (is_numeric($inv->grand_total)) {
-                $receivable_payment=$inv->grand_total;
+                $receivable_payment = $inv->grand_total;
             }
-            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
             foreach ($receive_payment as $payment) {
                 $total_amount_received += $payment->payment_amount;
             }
-    
-            $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+            $balance = ($receivable_payment - $total_amount_received) - $inv->deposit_request;
 
             if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
-                $status="Overdue";
+                $status = "Overdue";
             } else {
                 if ($balance <= 0) {
-                    $status="Paid";
+                    $status = "Paid";
                 } else {
-                    $status="Open";
+                    $status = "Open";
                 }
             }
 
-            $pdf_data["data_pdf"][]=array(
+            $pdf_data["data_pdf"][] = array(
                 "invoice_date" => $inv->date_issued,
-                "invoice_no"=>$inv->invoice_number,
-                "payment"=>$total_amount_received,
-                "balance_due"=>$balance,
-                "inv_location_scale"=>$inv->location_scale,
-                "inv_ship_from"=>$inv->bus_state,
-                "inv_ship_via"=>$inv->ship_via,
-                "inv_taxes"=>$inv->taxes,
-                "inv_grand_total"=>$inv->grand_total,
-                "inv_sub_total"=>$inv->sub_total,
-                "inv_shipping_to_address"=>$inv->shipping_to_address,
-                "due_date"=>$inv->due_date,
-                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
-                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "invoice_no" => $inv->invoice_number,
+                "payment" => $total_amount_received,
+                "balance_due" => $balance,
+                "inv_location_scale" => $inv->location_scale,
+                "inv_ship_from" => $inv->bus_state,
+                "inv_ship_via" => $inv->ship_via,
+                "inv_taxes" => $inv->taxes,
+                "inv_grand_total" => $inv->grand_total,
+                "inv_sub_total" => $inv->sub_total,
+                "inv_shipping_to_address" => $inv->shipping_to_address,
+                "due_date" => $inv->due_date,
+                "terms" => $this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name . ' ' . $customer_info->last_name,
                 "customer_mail_add" => $customer_info->acs_mail_add,
                 "customer_phone_h" => $customer_info->customer_phone_h,
                 "customer_city" => $customer_info->acs_city,
@@ -9759,21 +9876,21 @@ class Accounting extends MY_Controller
                 "bus_city" =>  $customer_info->bus_city,
                 "bus_state" =>  $customer_info->bus_state,
                 "bus_postal_code" =>  $customer_info->bus_postal_code,
-                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "business_logo" => "uploads/users/business_profile/" . $customer_info->business_id . "/" . $customer_info->business_image,
                 "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
                 "status" => $status
             );
         }
-        $pdf_file_name = "batched_transactions_".$customer_id."_portalappinv.pdf";
+        $pdf_file_name = "batched_transactions_" . $customer_id . "_portalappinv.pdf";
 
-        $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+        $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
         $orientation = "P";
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
         $data = new stdClass();
         $data->status = "success";
-        $data->pdf_link = base_url("assets/pdf/".$pdf_file_name);
-        $data->invoice_ids=$invoice_ids;
+        $data->pdf_link = base_url("assets/pdf/" . $pdf_file_name);
+        $data->invoice_ids = $invoice_ids;
         echo json_encode($data);
         # code...
     }
@@ -9783,48 +9900,48 @@ class Accounting extends MY_Controller
         $invoice_ids = $this->input->post("invoice_ids");
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
 
-        for ($ids_i=0; $ids_i<count($invoice_ids);$ids_i++) {
+        for ($ids_i = 0; $ids_i < count($invoice_ids); $ids_i++) {
             $invoice_id = $invoice_ids[$ids_i];
             $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
-                
-                
+
+
             $receivable_payment = 0;
-            $total_amount_received =0;
+            $total_amount_received = 0;
             if (is_numeric($inv->grand_total)) {
-                $receivable_payment=$inv->grand_total;
+                $receivable_payment = $inv->grand_total;
             }
-            $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
             foreach ($receive_payment as $payment) {
                 $total_amount_received += $payment->payment_amount;
             }
-    
-            $balance=($receivable_payment-$total_amount_received)-$inv->deposit_request;
+
+            $balance = ($receivable_payment - $total_amount_received) - $inv->deposit_request;
 
             if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
-                $status="Overdue";
+                $status = "Overdue";
             } else {
                 if ($balance <= 0) {
-                    $status="Paid";
+                    $status = "Paid";
                 } else {
-                    $status="Open";
+                    $status = "Open";
                 }
             }
 
-            $pdf_data["data_pdf"][]=array(
+            $pdf_data["data_pdf"][] = array(
                 "invoice_date" => $inv->date_issued,
-                "invoice_no"=>$inv->invoice_number,
-                "payment"=>$total_amount_received,
-                "balance_due"=>$balance,
-                "inv_location_scale"=>$inv->location_scale,
-                "inv_ship_from"=>$inv->bus_state,
-                "inv_ship_via"=>$inv->ship_via,
-                "inv_taxes"=>$inv->taxes,
-                "inv_grand_total"=>$inv->grand_total,
-                "inv_sub_total"=>$inv->sub_total,
-                "inv_shipping_to_address"=>$inv->shipping_to_address,
-                "due_date"=>$inv->due_date,
-                "terms"=>$this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
-                "customer_name" => $customer_info->first_name.' '.$customer_info->last_name,
+                "invoice_no" => $inv->invoice_number,
+                "payment" => $total_amount_received,
+                "balance_due" => $balance,
+                "inv_location_scale" => $inv->location_scale,
+                "inv_ship_from" => $inv->bus_state,
+                "inv_ship_via" => $inv->ship_via,
+                "inv_taxes" => $inv->taxes,
+                "inv_grand_total" => $inv->grand_total,
+                "inv_sub_total" => $inv->sub_total,
+                "inv_shipping_to_address" => $inv->shipping_to_address,
+                "due_date" => $inv->due_date,
+                "terms" => $this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name . ' ' . $customer_info->last_name,
                 "customer_mail_add" => $customer_info->acs_mail_add,
                 "customer_phone_h" => $customer_info->customer_phone_h,
                 "customer_city" => $customer_info->acs_city,
@@ -9836,18 +9953,18 @@ class Accounting extends MY_Controller
                 "bus_city" =>  $customer_info->bus_city,
                 "bus_state" =>  $customer_info->bus_state,
                 "bus_postal_code" =>  $customer_info->bus_postal_code,
-                "business_logo" => "uploads/users/business_profile/".$customer_info->business_id."/".$customer_info->business_image,
+                "business_logo" => "uploads/users/business_profile/" . $customer_info->business_id . "/" . $customer_info->business_image,
                 "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
                 "status" => $status
             );
         }
-        $pdf_file_name = "batched_transactions_".$customer_id."_portalappinv.pdf";
+        $pdf_file_name = "batched_transactions_" . $customer_id . "_portalappinv.pdf";
 
-        $html_pdf="accounting/customer_includes/public_view/shared_invoice_link_pdf";
+        $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
         $orientation = "P";
         $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
 
-        $subject=$customer_info->business_name." || Transactions";
+        $subject = $customer_info->business_name . " || Transactions";
 
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
@@ -9871,12 +9988,12 @@ class Accounting extends MY_Controller
 
         //get job data
 
-        $this->page_data['customer_name'] = $customer_info->first_name.' '.$customer_info->last_name;
+        $this->page_data['customer_name'] = $customer_info->first_name . ' ' . $customer_info->last_name;
         $this->page_data['subject'] = $subject;
-        
+
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/'.$pdf_file_name);
+        $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . $pdf_file_name);
 
         $mail->Body =  'Send Transactions';
         $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
@@ -9887,7 +10004,7 @@ class Accounting extends MY_Controller
         $data->status = "success";
         if (!$mail->Send()) {
             $data->status = "error";
-            $data->status = "Mailer Error: ".$mail->ErrorInfo;
+            $data->status = "Mailer Error: " . $mail->ErrorInfo;
             exit;
         }
         echo json_encode($data);
@@ -9905,33 +10022,35 @@ class Accounting extends MY_Controller
     {
         $data = new stdClass();
         if (0 < $_FILES['file']['error']) {
-            $data->error ='Error: ' . $_FILES['file']['error'] . '<br>';
+            $data->error = 'Error: ' . $_FILES['file']['error'] . '<br>';
         } else {
-            $uniquesavename=time().uniqid(rand());
+            $uniquesavename = time() . uniqid(rand());
             $path = $_FILES['file']['name'];
             $ext = pathinfo($path, PATHINFO_EXTENSION);
-            $destination = 'uploads/accounting/attachments/forms/' .$uniquesavename.'.'.$ext;
+            $destination = 'uploads/accounting/attachments/forms/' . $uniquesavename . '.' . $ext;
             move_uploaded_file($_FILES['file']['tmp_name'], $destination);
-            $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'] . '/' . $destination;
             //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
-            
+
             $data->destination = $destination;
-            $data->ext=$ext;
-            $data->uniquesavename=$uniquesavename;
+            $data->ext = $ext;
+            $data->uniquesavename = $uniquesavename;
         }
         echo json_encode($data);
     }
     public function delete_file_attachement()
     {
-        $filenames=$this->input->post("filenames");
+        $filenames = $this->input->post("filenames");
         $files = explode(",", $filenames);
-        $status ="";
-        for ($i=0;$i<count($files);$i++) {
-            $destination ="uploads/accounting/attachments/forms/".$files[$i];
-            if (!unlink($destination)) {
-                $status .= "///// $destination cannot be deleted due to an error";
-            } else {
-                $status .="///// $destination has been deleted";
+        $status = "";
+        for ($i = 0; $i < count($files); $i++) {
+            $destination = "uploads/accounting/attachments/forms/" . $files[$i];
+            if (file_exists($destination)) {
+                if (!unlink($destination)) {
+                    $status .= "///// $destination cannot be deleted due to an error";
+                } else {
+                    $status .= "///// $destination has been deleted";
+                }
             }
         }
         $data = new stdClass();

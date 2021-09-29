@@ -72,7 +72,9 @@ Thanks for your business!
                                 setTimeout(function() { $("#saved-notification-modal-section").fadeOut(); }, 2000);
                             }
                             $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val(data.sales_receipt_id);
-                            $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("#" + data.sales_receipt_id);
+                            $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("#" + data.sales_receipt_id); 
+                            $("#create_invoice_modal form .attachement-file-section input[name='attachment-file']").val("");
+                            $("#create_invoice_modal form .attachement-file-section input[name='attachement-filenames']").val("");
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
@@ -83,6 +85,9 @@ Thanks for your business!
                             });
                         }
                         if (submit_type == "save-new") {
+                            $("#create_invoice_modal form .attachement-file-section input[name='attachment-file']").val("");
+                            $("#create_invoice_modal form .attachement-file-section input[name='attachement-filenames']").val("");
+                            upload_attachment("#create_invoice_modal form");
                             $('#addsalesreceiptModal form').trigger("reset");
                             $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("");
                         } else if (submit_type == "save-close") {
@@ -156,6 +161,8 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check .middle-links
 });
 $(document).on("click", "#addsalesreceiptModal .modal-footer-check #clearsalereceipt", function(event) {
     event.preventDefault();
+    $("#addsalesreceiptModal form .attachement-file-section input[name='attachment-file']").val("");
+    upload_attachment("#addsalesreceiptModal form");
     var recurring_selected = $("#addsalesreceiptModal form input[name='recurring_selected']").val();
     $('#addsalesreceiptModal form').trigger("reset");
     $("#addsalesreceiptModal form textarea").html("");
@@ -174,6 +181,8 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check #cancel_recur
     $("#addsalesreceiptModal .label-grand_total_sr_t").removeClass("hidden");
 });
 $('#addsalesreceiptModal').on('hidden.bs.modal', function() {
+    $("#addsalesreceiptModal form .attachement-file-section input[name='attachment-file']").val("");
+    upload_attachment("#addsalesreceiptModal form");
     $("#addsalesreceiptModal .modal-footer-check #cancel_recurring").hide();
     $("#addsalesreceiptModal .recurring-form-part").hide();
     $("#addsalesreceiptModal .modal-footer-check .middle-links").show();
@@ -404,4 +413,13 @@ $(document).on("change", "input.item-field-monitary", function(event) {
     $(this).parent().parent().find(".total_per_input").val(monitary_total);
     var counter = $(this).parent().parent().find(".pricesr").data("counter");
     calculationsr(counter);
+});
+
+
+$(document).on("click", "#addsalesreceiptModal form .attachement-file-section button.attachment-btn", function(event) {
+    // $(this).preventDefault();
+    $("#addsalesreceiptModal form input[name='attachment-file']").trigger('click');
+});
+$(document).on("change", "div#addsalesreceiptModal form input[name='attachment-file']", function(event) {
+    upload_attachment("#addsalesreceiptModal form");
 });

@@ -244,23 +244,3 @@
 <?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
 <?php include viewPath('accounting/customer_includes/create_invoice/create_invoice_modal'); ?>
 <?php include viewPath('accounting/add_new_term'); ?>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(".btnAdd").click(function() {
-            alert('test');
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url(); ?>accounting/customer_credit_memo_modal",
-                success: function(returndata) {
-                    // $('#myModal').modal('show');
-                    //   alert('test');
-                    $('.testingNi').html(returndata);
-
-                    //  $('#myModal').html(returndata);
-                    $('#addcreditmemoModal').modal('show');
-                },
-                dataType: "html"
-            });
-        });
-    });
-</script>
