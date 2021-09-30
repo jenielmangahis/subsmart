@@ -238,20 +238,45 @@ $(document).ready(function () {
                         </div>
                         `);
                     } else {
-                        $(td).html(`
-                        <div class="btn-group float-right">
-                            <a href="/accounting/chart-of-accounts/view-register/${rowData.id}" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
+                        var noRegTypes = [
+                            'Income',
+                            'Cost of Goods Sold',
+                            'Expenses',
+                            'Other Income',
+                            'Other Expense'
+                        ];
 
-                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
-                                <a class="dropdown-item make-inactive" href="#">Make Inactive (Reduce usage)</a>
-                                <a class="dropdown-item" href="#">Run Report</a>
+                        if(noRegTypes.includes(rowData.type) === false) {
+                            var inactiveText = rowData.type === 'Bank' ? 'reduces usage' : "won't reduce usage";
+                            $(td).html(`
+                            <div class="btn-group float-right">
+                                <a href="/accounting/chart-of-accounts/view-register/${rowData.id}" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
+
+                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
+                                    <a class="dropdown-item make-inactive" href="#">Make inactive (${inactiveText})</a>
+                                    <a class="dropdown-item" href="#">Run Report</a>
+                                </div>
                             </div>
-                        </div>
-                        `);
+                            `);
+                        } else {
+                            $(td).html(`
+                            <div class="btn-group float-right">
+                                <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">Run report</a>
+
+                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
+                                    <a class="dropdown-item make-inactive" href="#">Make inactive (won't reduce usage)</a>
+                                </div>
+                            </div>
+                            `);
+                        }
                     }
                 }
             }

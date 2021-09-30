@@ -33,6 +33,9 @@ class Onboarding extends MY_Controller {
 
 		$business_name    = $client->business_name;
 		$business_address = $client->business_address;
+		$zip_code         = $client->zip_code;
+		$business_phone   = $client->phone_number;
+		$business_email   = $client->email_address;
 
 		if( $profiledata ){
 			$business_name    = $profiledata->business_name;
@@ -40,7 +43,10 @@ class Onboarding extends MY_Controller {
 		}  
 
 		$this->page_data['business_name'] = $business_name;
+		$this->page_data['zip_code'] = $zip_code;
+		$this->page_data['business_phone'] = $business_phone;
 		$this->page_data['business_address'] = $business_address;
+		$this->page_data['business_email'] = $business_email;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata : null;
 
@@ -178,7 +184,9 @@ class Onboarding extends MY_Controller {
 
 		$num_emp          = $client->number_of_employee;
 		if( $profiledata ){
-			$num_emp          = $profiledata[0]->employee_count;
+			if( $profiledata[0]->employee_count != '' ){
+				$num_emp = $profiledata[0]->employee_count;
+			}			
 		}
 		
 		$this->page_data['num_emp'] = $num_emp;
@@ -400,7 +408,7 @@ class Onboarding extends MY_Controller {
 					$business_image = $this->moveUploadedFile($bid);
 					$this->business_model->update($bid, ['business_image' => $business_image]);
 				}else{
-					copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$user->id.'/default.png');
+					copy(FCPATH.'uploads/users/default.png', 'uploads/users/business_profile/'.$bid.'/default.png');
 				}
 				$this->business_model->update($bid,$pdata);	
 				redirect('onboarding/about');

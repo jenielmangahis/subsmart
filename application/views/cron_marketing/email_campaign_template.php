@@ -15,9 +15,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
-                    <p style="margin-top: 10px;margin-bottom: 50px;"><?= $email_body; ?></p>
                     <p style="margin: 0px;">From</p>
                     <p><?= $company->business_name; ?></p>
+                    <p style="margin-top: 10px;margin-bottom: 50px;"><?= $email_body; ?></p>                    
                     <div style="text-align: center;margin-top: 100px;">
                         <span style="display: block;margin-bottom: 8px;">Powered By</span>
                         <img src="<?= base_url("assets/dashboard/images/logo.png"); ?>" style="width: 20%; margin: 0 auto;">

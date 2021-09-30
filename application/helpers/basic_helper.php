@@ -163,13 +163,12 @@ if (!function_exists('businessProfileImage')) {
     {
 
         $CI = &get_instance();
-        // $url = urlUpload('users/business_profile/' . $id . '.png?' . time());
 
-        // $res= $CI->business_model->getRowByWhere(['user_id'=>$id], ['b_image']);
-        // echo "<pre>fhdfhdfh"; print_r($res); die;
-
-        if ($id != 'default')
-            $url = urlUpload('users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image') . '?' . time());
+        if( !file_exists(FCPATH.'uploads/users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image')) ){
+            $url = base_url('assets/img/onboarding/profile-avatar.png');
+        }else{
+            $url = base_url('uploads/users/business_profile/' . $id . '/' . $CI->business_model->getRowByWhere(['id' => $id], 'business_image') . '?' . time());
+        }
 
         return $url;
     }

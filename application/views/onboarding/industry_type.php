@@ -173,7 +173,7 @@ span.text-ter {
                 <div class="card st-vl">
 
 <h3>What type of services does your business offer?</h3>
-<div class="row">
+<div class="row">  
     <div class="col-md-12"><form id="form-business-services" method="post" action="#">
       <?php include viewPath('flash'); ?>
     <div class="card">
@@ -306,10 +306,17 @@ $(function(){
           $("."+servicetype2).toggle();
         }
     });
+
+   $(".section-header").click(function(){    
+    $(this).find("div").closest(".plus-icon").click();
+   });
+
    $(".checkbox").click();
+
    service = 1;
 
    $(".plus-icon").click(function(){
+    alert(5);
     if( $(this).hasClass('collapse-group') ){
       $(this).removeClass('collapse-group');
       $(this).addClass('uncollapse-group');
