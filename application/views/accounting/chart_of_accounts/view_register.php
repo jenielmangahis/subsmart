@@ -110,6 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-sm-12">
+                                                            <?php if($type !== 'A/R') : ?>
                                                             <div class="form-row">
                                                                 <div class="form-group col-md-4">
                                                                     <label for="reconcile_status">Reconcile Status</label>
@@ -160,6 +161,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                            <?php endif; ?>
                                                             <div class="form-row">
                                                                 <div class="form-group col-md-4">
                                                                     <label for="date">Date</label>
@@ -209,6 +211,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
+                                                        <?php if($type !== 'A/R' && $type !== 'A/P') : ?>
                                                         <div class="checkbox checkbox-sec d-block my-2">
                                                             <input type="checkbox" name="chk_memo" id="chk_memo" onchange="col(this)">
                                                             <label for="chk_memo">Memo</label>
@@ -233,7 +236,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <input type="checkbox" checked name="chk_running_balance" id="chk_running_balance" onchange="col(this)">
                                                             <label for="chk_running_balance">Running Balance</label>
                                                         </div>
-											            <p class="m-0">Other</p>
+                                                        <?php else : ?>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" name="chk_open_balance" id="chk_open_balance" onchange="col(this)">
+                                                            <label for="chk_open_balance">Open Balance</label>
+                                                        </div>
+                                                        <?php endif; ?>
+                                                        <p class="m-0">Other</p>
                                                         <div class="checkbox checkbox-sec d-block my-2">
                                                             <input type="checkbox" id="show_in_one_line" value="1" checked>
                                                             <label for="show_in_one_line">Show in one line</label>
@@ -265,6 +274,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <table id="registers-table" class="table table-striped table-bordered">
 									<thead>
+                                        <?php if ($type !== 'A/R' && $type !== 'A/P') : ?>
                                         <tr>
                                             <th>DATE</th>
                                             <th>REF NO.</th>
@@ -272,8 +282,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>PAYEE</th>
                                             <th>ACCOUNT</th>
                                             <th class="memo d-none">MEMO</th>
-                                            <th>PAYMENT</th>
-                                            <th>DEPOSIT</th>
+                                            <th>
+                                                <?php if($type === 'Asset') : ?>
+                                                PAYMENT
+                                                <?php else : ?>
+                                                DECREASE
+                                                <?php endif; ?>
+                                            </th>
+                                            <th>
+                                                <?php if($type === 'Asset') : ?>
+                                                DEPOSIT
+                                                <?php else : ?>
+                                                INCREASE
+                                                <?php endif; ?>
+                                            </th>
                                             <th class="reconcile_status d-none">
                                                 <div class="d-flex align-items-center justify-content-center">
                                                     <i class="fa fa-check"></i>
@@ -292,6 +314,38 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="tax d-none">TAX</th>
                                             <th class="text-right running_balance" width="10%">BALANCE</th>
                                         </tr>
+                                        <?php else : ?>
+                                        <tr>
+                                            <th>DATE</th>
+                                            <th>REF NO.</th>
+                                            <th>
+                                                <?php if($type === 'A/R') : ?>
+                                                CUSTOMER
+                                                <?php else : ?>
+                                                VENDOR
+                                                <?php endif; ?>
+                                            </th>
+                                            <?php if($type === 'A/R') : ?>
+                                            <th>MEMO</th>
+                                            <?php endif; ?>
+                                            <th>DUE DATE</th>
+                                            <th>
+                                                <?php if($type === 'A/R') : ?>
+                                                CHARGE/CREDIT
+                                                <?php else : ?>
+                                                BILLED
+                                                <?php endif; ?>
+                                            </th>
+                                            <th>
+                                                <?php if($type === 'A/R') : ?>
+                                                PAYMENT
+                                                <?php else : ?>
+                                                PAID
+                                                <?php endif; ?>
+                                            </th>
+                                            <th class="open_balance d-none">OPEN BALANCE</th>
+                                        </tr>
+                                        <?php endif; ?>
 									</thead>
 									<tbody></tbody>
 								</table>

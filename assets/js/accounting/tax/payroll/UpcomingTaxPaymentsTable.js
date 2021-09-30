@@ -20,7 +20,7 @@ export class UpcomingTaxPaymentsTable {
       return {
         type: {
           title: currData.name,
-          date_range: "4/1/2021 — 6/30/2021",
+          date_range: currData.date_range,
         },
         status: "Ready to pay",
         amount: currData.balance,
