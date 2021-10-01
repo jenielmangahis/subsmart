@@ -2116,663 +2116,663 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <button type="button" class="close" id="closeReceivePaymentModal"><i
                                 class="fa fa-times fa-lg"></i></button>
                     </div>
+
+                    <div class="modal-body">
                     <!-- <div id="customer_receive_payment_modal">
-    <div class="customer_receive_payment_modal_content"> -->
-        <form action="#" method="POST" id="receive_payment_form">
-            <input type="text" name="invoice_count" style="display: none;">
-            <input type="text" name="submit_option" style="display: none;">
-            <input type="text" name="receive_payment_id" style="display:none;">
-            <div class="customer_receive_payment_modal_header">
-                <div class="tittle">
-                    <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
-                </div>
-                <!-- <div class="close-btn">
-                    <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
-                        alt="" style="width: 100px;">
-                </div> -->
-            </div>
-            <div class="customer_receive_payment_modal_body overflow-auto">
+                        <div class="customer_receive_payment_modal_content"> -->
+                            <form action="#" method="POST" id="receive_payment_form">
+                                <input type="text" name="invoice_count" style="display: none;">
+                                <input type="text" name="submit_option" style="display: none;">
+                                <input type="text" name="receive_payment_id" style="display:none;">
+                                <div class="customer_receive_payment_modal_header">
+                                    <div class="tittle">
+                                        <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
+                                    </div>
+                                    <!-- <div class="close-btn">
+                                        <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
+                                            alt="" style="width: 100px;">
+                                    </div> -->
+                                </div>
+                                <div class="customer_receive_payment_modal_body overflow-auto">
 
-                <div class="payment-field-part">
-                    <div class="row no-margin">
-                        <div class="col-md-6 no-padding">
-                            <div class="row no-margin">
-                                <div class="col-md-5 no-padding">
-                                    <div class="form-group">
-                                        <div class="label">Customer</div>
-                                        <select class="form-control required" name="customer_id" required>
-                                            <option></option>
-                                            <?php $customers= $this->accounting_customers_model->getAllByCompany();
-                                            if ($customers != null) {
-                                                foreach ($customers as $cus) {
-                                                    echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
-                                                }
-                                            }
-                                             ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-5 no-padding">
-                                    <div class="find-by-invoice-no-section">
-                                        <div class="form-group">
-                                            <div class="label"><br></div>
-                                            <button href="#" class="find-by-invoice-no">Find by invoice no.</button>
-                                            <div class="bottom-label">Don't have an invoice? <a href="">Create a new
-                                                    sale</a> </div>
-                                        </div>
-                                        <div class="find-by-invoice-no-panel" style="display:none;">
-                                            <img src="<?=base_url("assets/img/accounting/customers/anchor.png")?>"
-                                                class="filter-panel-anchor" alt="">
-                                            <label for="find-by-invoice-no"> Invoice no.</label>
-                                            <input type="text" name="find-by-invoice-no"
-                                                placeholder="Find by invoice no.">
-                                            <label class="error">Invoice not found.</label>
-                                            <div class="buttons">
-                                                <button href=""
-                                                    class="default-button float-left cancel-btn">Cancel</button>
-                                                <button href=""
-                                                    class="success-button float-right find-btn">Find</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 no-padding">
-                            <div class="row no-margin">
-                                <div class="col-md-12 no-padding">
-                                    <div class="total-receive-payment">
-                                        <div class="label">AMOUNT RECEIVED</div>
-                                        <div class="amount">$3,740.68</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row no-margin">
-                        <div class="col-md-6 no-padding">
-                            <div class="row no-margin">
-                                <div class="col-md-4 no-padding">
-                                    <div class="form-group" style="margin-bottom: 0!important;">
-                                        <div class="label">Payment date</div>
-                                        <input type="text" class="datepicker required" name="payment_date" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-margin">
-                        <div class="col-md-6 no-padding">
-                            <div class="row no-margin">
-                                <div class="col-md-4 no-padding">
-                                    <div class="form-group" style="margin-bottom: 5px!important;">
-                                        <div class="label">Payment method</div>
-                                        <select class="form-control required" id="payment_method" name="payment_method"
-                                            required>
-                                            <option value="" disabled selected>Choose a payment method</option>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Check">Check</option>
-                                            <option value="Credit Card">Credit Card</option>
-                                            <option value="Debit Card">Debit Card</option>
-                                            <option value="ACH">ACH</option>
-                                            <option value="Venmo">Venmo</option>
-                                            <option value="Paypal">Paypal</option>
-                                            <option value="Square">Square</option>
-                                            <option value="Invoicing">Invoicing</option>
-                                            <option value="Warranty Work">Warranty Work</option>
-                                            <option value="Home Owner Financing">Home Owner Financing</option>
-                                            <option value="e-Transfer">e-Transfer</option>
-                                            <option value="Other Credit Card Professor">Other Credit Card Professor
-                                            </option>
-                                            <option value="Other Payment Type">Other Payment Type</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 no-padding">
-                                    <div class="form-group" style="margin-bottom: 5px!important;">
-                                        <div class="label">Reference no.</div>
-                                        <input type="text" class="required" name="ref_no" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 no-padding">
-                                    <div class="form-group" style="margin-bottom: 5px!important;">
-                                        <div class="label">Deposit to</div><select class="form-control required"
-                                            name="deposite_to" required>
-                                            <option value=""></option>
-                                            <option value="Cash on Hand">Cash on hand</option>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Credit">Credit</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 no-padding">
-                            <div class="row no-margin">
-                                <div class="col-md-4 no-padding">
-
-                                </div>
-                                <div class="col-md-4 no-padding">
-
-                                </div>
-                                <div class="col-md-4 no-padding">
-                                    <div class="form-group" style="margin-bottom: 5px!important;">
-                                        <div class="label text-right">Amount received</div>
-                                        <input type="text" class="text-right required" name="amount_received" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row no-margin">
-                        <div class="col-md-6">
-                            <div class="payment_method_information">
-                                <div id="check_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Check Number</label>
-                                            <input type="text" class="form-control" name="check_number"
-                                                id="check_number" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Routing Number</label>
-                                            <input type="text" class="form-control" name="routing_number"
-                                                id="routing_number" />
-                                        </div>
-                                        <!-- </div>
-                                        <div class="row"> -->
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Number</label>
-                                            <input type="text" class="form-control" name="account_number"
-                                                id="account_number" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="credit_card" style="display:none;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            Credit Card Type:<br>
-                                            <div class="checkbox checkbox-sec margin-right mr-4">
-                                                <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
-                                                id="radio_credit_card">
-                                                <label for="radio_credit_card"><span>Visa</span></label>
-                                            </div>
-                                            <div class="checkbox checkbox-sec margin-right mr-4">
-                                                <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
-                                                id="radio_credit_cardAmex">
-                                                <label for="radio_credit_cardAmex"><span>Amex</span></label>
-                                            </div>
-                                            <div class="checkbox checkbox-sec margin-right mr-4">
-                                                <input type="radio" name="card[radio_credit_card]" value="Mastercard"
-                                                    <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
-                                                id="radio_credit_cardMastercard">
-                                                <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
-                                            </div>
-                                            <div class="checkbox checkbox-sec margin-right mr-4">
-                                                <input type="radio" name="card[radio_credit_card]" value="Discover"
-                                                    <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
-                                                id="radio_credit_cardMasterDiscover">
-                                                <label
-                                                    for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                    </div>
-                                    <br><br>
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Credit Card Number</label>
-                                            <input type="text" class="form-control" name="credit_number"
-                                                id="credit_number" placeholder="0000 0000 0000 000" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Credit Card Expiration</label>
-                                            <input type="text" class="form-control" name="credit_expiry"
-                                                id="credit_expiry" placeholder="MM/YYYY" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">CVC</label>
-                                            <input type="text" class="form-control" name="credit_cvc" id="credit_cvc"
-                                                placeholder="CVC" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="invoicing" style="display:none;">
-
-                                    <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
-                                            <label for="monitored_location">Mail Address</label>
-                                            <input type="text" class="form-control" name="mail-address"
-                                                id="mail-address" placeholder="Monitored Location" />
-                                        </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="city">City</label>
-                                            <input type="text" class="form-control" name="mail_locality"
-                                                id="mail_locality" placeholder="Enter Name" />
-                                        </div>
-                                        <div class="col-md-4 form-group">
-                                            <label for="state">State</label>
-                                            <input type="text" class="form-control" name="mail_state" id="mail_state"
-                                                placeholder="Enter State" />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
-                                            <label for="zip">ZIP</label>
-                                            <input type="text" id="mail_postcode" name="mail_postcode"
-                                                class="form-control" placeholder="Enter Zip" />
-                                        </div>
-
-                                        <div class="col-md-4 form-group">
-                                            <label for="cross_street">Cross Street</label>
-                                            <input type="text" class="form-control" name="mail_cross_street"
-                                                id="mail_cross_street" placeholder="Cross Street" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="debit_card" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Credit Card Number</label>
-                                            <input type="text" class="form-control" name="debit_credit_number"
-                                                id="credit_number" placeholder="0000 0000 0000 000" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Credit Card Expiration</label>
-                                            <input type="text" class="form-control" name="debit_credit_expiry"
-                                                id="credit_expiry" placeholder="MM/YYYY" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">CVC</label>
-                                            <input type="text" class="form-control" name="debit_credit_cvc"
-                                                id="credit_cvc" placeholder="CVC" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="ach_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Routing Number</label>
-                                            <input type="text" class="form-control" name="ach_routing_number"
-                                                id="ach_routing_number" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Number</label>
-                                            <input type="text" class="form-control" name="ach_account_number"
-                                                id="ach_account_number" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="venmo_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control" name="account_credentials"
-                                                id="account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="account_note"
-                                                id="account_note" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Confirmation</label>
-                                            <input type="text" class="form-control" name="confirmation"
-                                                id="confirmation" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="paypal_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control" name="paypal_account_credentials"
-                                                id="paypal_account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="paypal_account_note"
-                                                id="paypal_account_note" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Confirmation</label>
-                                            <input type="text" class="form-control" name="paypal_confirmation"
-                                                id="paypal_confirmation" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="square_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control" name="square_account_credentials"
-                                                id="square_account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="square_account_note"
-                                                id="square_account_note" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Confirmation</label>
-                                            <input type="text" class="form-control" name="square_confirmation"
-                                                id="square_confirmation" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="warranty_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control" name="warranty_account_credentials"
-                                                id="warranty_account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="warranty_account_note"
-                                                id="warranty_account_note" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="home_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control" name="home_account_credentials"
-                                                id="home_account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="home_account_note"
-                                                id="home_account_note" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="e_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control" name="e_account_credentials"
-                                                id="e_account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="e_account_note"
-                                                id="e_account_note" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="other_credit_card" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Credit Card Number</label>
-                                            <input type="text" class="form-control" name="other_credit_number"
-                                                id="other_credit_number" placeholder="0000 0000 0000 000" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Credit Card Expiration</label>
-                                            <input type="text" class="form-control" name="other_credit_expiry"
-                                                id="other_credit_expiry" placeholder="MM/YYYY" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">CVC</label>
-                                            <input type="text" class="form-control" name="other_credit_cvc"
-                                                id="other_credit_cvc" placeholder="CVC" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="other_payment_area" style="display:none;">
-                                    <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Credential</label>
-                                            <input type="text" class="form-control"
-                                                name="other_payment_account_credentials"
-                                                id="other_payment_account_credentials" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="job_type">Account Note</label>
-                                            <input type="text" class="form-control" name="other_payment_account_note"
-                                                id="other_payment_account_note" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="invoicing-part">
-                    <div class="invoices">
-                        <div class="outstanding-transactions">
-                            <div class="title">Outstanding Transactions</div>
-                            <div class="filter">
-                                <div class="row no-margin">
-                                    <div class="col-md-6 no-padding">
+                                    <div class="payment-field-part">
                                         <div class="row no-margin">
-                                            <div class="col-md-5 no-padding">
-                                                <div class="form-group">
-                                                    <input type="text" class="" name="invoice_number"
-                                                        placeholder="Find invoice no.">
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-5 no-padding">
+                                                        <div class="form-group">
+                                                            <div class="label">Customer</div>
+                                                            <select class="form-control required" name="customer_id" required>
+                                                                <option></option>
+                                                                <?php $customers= $this->accounting_customers_model->getAllByCompany();
+                                                                if ($customers != null) {
+                                                                    foreach ($customers as $cus) {
+                                                                        echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 no-padding">
+                                                        <div class="find-by-invoice-no-section">
+                                                            <div class="form-group">
+                                                                <div class="label"><br></div>
+                                                                <button href="#" class="find-by-invoice-no">Find by invoice no.</button>
+                                                                <div class="bottom-label">Don't have an invoice? <a href="">Create a new
+                                                                        sale</a> </div>
+                                                            </div>
+                                                            <div class="find-by-invoice-no-panel" style="display:none;">
+                                                                <img src="<?=base_url("assets/img/accounting/customers/anchor.png")?>"
+                                                                    class="filter-panel-anchor" alt="">
+                                                                <label for="find-by-invoice-no"> Invoice no.</label>
+                                                                <input type="text" name="find-by-invoice-no"
+                                                                    placeholder="Find by invoice no.">
+                                                                <label class="error">Invoice not found.</label>
+                                                                <div class="buttons">
+                                                                    <button href=""
+                                                                        class="default-button float-left cancel-btn">Cancel</button>
+                                                                    <button href=""
+                                                                        class="success-button float-right find-btn">Find</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-5 no-padding">
-                                                <div class="form-group">
-                                                    <button href="#" class="find-by-invoice-no">
-                                                        Filter
-                                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                    </button>
-                                                    <div class="filter-panel">
-                                                        <img src="<?=base_url("/assets/img/accounting/customers/anchor.png")?>"
-                                                            class="filter-panel-anchor" alt="">
-                                                        <div class="date-filter">
-                                                            <div class="date-from">
-                                                                <div class="label">Invoice from</div>
-                                                                <input type="text" class="datepicker"
-                                                                    name="filter_date_from">
-                                                            </div>
-                                                            <div class="date-to">
-                                                                <div class="label">To</div>
-                                                                <input type="text" class="datepicker"
-                                                                    name="filter_date_to">
-                                                            </div>
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-12 no-padding">
+                                                        <div class="total-receive-payment">
+                                                            <div class="label">AMOUNT RECEIVED</div>
+                                                            <div class="amount">$3,740.68</div>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                                        <div class="checkbox-filter">
-                                                            <input type="checkbox" name="filter_overdue"> Overdue
-                                                            invoices
-                                                            only
+                                        <div class="row no-margin">
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-4 no-padding">
+                                                        <div class="form-group" style="margin-bottom: 0!important;">
+                                                            <div class="label">Payment date</div>
+                                                            <input type="text" class="datepicker required" name="payment_date" required>
                                                         </div>
-                                                        <div class="buttons">
-                                                            <button href=""
-                                                                class="default-button float-left cancel-btn">Cancel</button>
-                                                            <button href=""
-                                                                class="success-button float-right apply-btn">Apply</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row no-margin">
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-4 no-padding">
+                                                        <div class="form-group" style="margin-bottom: 5px!important;">
+                                                            <div class="label">Payment method</div>
+                                                            <select class="form-control required" id="payment_method_pay" name="payment_method"
+                                                                required>
+                                                                <option value="" disabled selected>Choose a payment method</option>
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="Check">Check</option>
+                                                                <option value="Credit Card">Credit Card</option>
+                                                                <option value="Debit Card">Debit Card</option>
+                                                                <option value="ACH">ACH</option>
+                                                                <option value="Venmo">Venmo</option>
+                                                                <option value="Paypal">Paypal</option>
+                                                                <option value="Square">Square</option>
+                                                                <option value="Invoicing">Invoicing</option>
+                                                                <option value="Warranty Work">Warranty Work</option>
+                                                                <option value="Home Owner Financing">Home Owner Financing</option>
+                                                                <option value="e-Transfer">e-Transfer</option>
+                                                                <option value="Other Credit Card Professor">Other Credit Card Professor
+                                                                </option>
+                                                                <option value="Other Payment Type">Other Payment Type</option>
+                                                            </select>
                                                         </div>
+                                                    </div>
+                                                    <div class="col-md-4 no-padding">
+                                                        <div class="form-group" style="margin-bottom: 5px!important;">
+                                                            <div class="label">Reference no.</div>
+                                                            <input type="text" class="required" name="ref_no" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 no-padding">
+                                                        <div class="form-group" style="margin-bottom: 5px!important;">
+                                                            <div class="label">Deposit to</div><select class="form-control required"
+                                                                name="deposite_to" required>
+                                                                <option value=""></option>
+                                                                <option value="Cash on Hand">Cash on hand</option>
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="Credit">Credit</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-4 no-padding">
 
+                                                    </div>
+                                                    <div class="col-md-4 no-padding">
+
+                                                    </div>
+                                                    <div class="col-md-4 no-padding">
+                                                        <div class="form-group" style="margin-bottom: 5px!important;">
+                                                            <div class="label text-right">Amount received</div>
+                                                            <input type="text" class="text-right required" name="amount_received" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row no-margin">
+                                            <div class="col-md-6">
+                                                <div class="payment_method_information">
+                                                    <div id="check_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Check Number</label>
+                                                                <input type="text" class="form-control" name="check_number"
+                                                                    id="check_number" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Routing Number</label>
+                                                                <input type="text" class="form-control" name="routing_number"
+                                                                    id="routing_number" />
+                                                            </div>
+                                                            <!-- </div>
+                                                            <div class="row"> -->
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Number</label>
+                                                                <input type="text" class="form-control" name="account_number"
+                                                                    id="account_number" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="credit_card" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Credit Card Type:<br>
+                                                                <div class="checkbox checkbox-sec margin-right mr-4">
+                                                                    <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
+                                                                    id="radio_credit_card">
+                                                                    <label for="radio_credit_card"><span>Visa</span></label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec margin-right mr-4">
+                                                                    <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
+                                                                    id="radio_credit_cardAmex">
+                                                                    <label for="radio_credit_cardAmex"><span>Amex</span></label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec margin-right mr-4">
+                                                                    <input type="radio" name="card[radio_credit_card]" value="Mastercard"
+                                                                        <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
+                                                                    id="radio_credit_cardMastercard">
+                                                                    <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec margin-right mr-4">
+                                                                    <input type="radio" name="card[radio_credit_card]" value="Discover"
+                                                                        <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
+                                                                    id="radio_credit_cardMasterDiscover">
+                                                                    <label
+                                                                        for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                        </div>
+                                                        <br><br>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Credit Card Number</label>
+                                                                <input type="text" class="form-control" name="credit_number"
+                                                                    id="credit_number" placeholder="0000 0000 0000 000" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Credit Card Expiration</label>
+                                                                <input type="text" class="form-control" name="credit_expiry"
+                                                                    id="credit_expiry" placeholder="MM/YYYY" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">CVC</label>
+                                                                <input type="text" class="form-control" name="credit_cvc" id="credit_cvc"
+                                                                    placeholder="CVC" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="invoicing" style="display:none;">
+
+                                                        <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-4 form-group">
+                                                                <label for="monitored_location">Mail Address</label>
+                                                                <input type="text" class="form-control" name="mail-address"
+                                                                    id="mail-address" placeholder="Monitored Location" />
+                                                            </div>
+                                                            <div class="col-md-4 form-group">
+                                                                <label for="city">City</label>
+                                                                <input type="text" class="form-control" name="mail_locality"
+                                                                    id="mail_locality" placeholder="Enter Name" />
+                                                            </div>
+                                                            <div class="col-md-4 form-group">
+                                                                <label for="state">State</label>
+                                                                <input type="text" class="form-control" name="mail_state" id="mail_state"
+                                                                    placeholder="Enter State" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-4 form-group">
+                                                                <label for="zip">ZIP</label>
+                                                                <input type="text" id="mail_postcode" name="mail_postcode"
+                                                                    class="form-control" placeholder="Enter Zip" />
+                                                            </div>
+
+                                                            <div class="col-md-4 form-group">
+                                                                <label for="cross_street">Cross Street</label>
+                                                                <input type="text" class="form-control" name="mail_cross_street"
+                                                                    id="mail_cross_street" placeholder="Cross Street" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="debit_card" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Credit Card Number</label>
+                                                                <input type="text" class="form-control" name="debit_credit_number"
+                                                                    id="credit_number" placeholder="0000 0000 0000 000" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Credit Card Expiration</label>
+                                                                <input type="text" class="form-control" name="debit_credit_expiry"
+                                                                    id="credit_expiry" placeholder="MM/YYYY" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">CVC</label>
+                                                                <input type="text" class="form-control" name="debit_credit_cvc"
+                                                                    id="credit_cvc" placeholder="CVC" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="ach_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Routing Number</label>
+                                                                <input type="text" class="form-control" name="ach_routing_number"
+                                                                    id="ach_routing_number" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Number</label>
+                                                                <input type="text" class="form-control" name="ach_account_number"
+                                                                    id="ach_account_number" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="venmo_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control" name="account_credentials"
+                                                                    id="account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="account_note"
+                                                                    id="account_note" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Confirmation</label>
+                                                                <input type="text" class="form-control" name="confirmation"
+                                                                    id="confirmation" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="paypal_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control" name="paypal_account_credentials"
+                                                                    id="paypal_account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="paypal_account_note"
+                                                                    id="paypal_account_note" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Confirmation</label>
+                                                                <input type="text" class="form-control" name="paypal_confirmation"
+                                                                    id="paypal_confirmation" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="square_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control" name="square_account_credentials"
+                                                                    id="square_account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="square_account_note"
+                                                                    id="square_account_note" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Confirmation</label>
+                                                                <input type="text" class="form-control" name="square_confirmation"
+                                                                    id="square_confirmation" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="warranty_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control" name="warranty_account_credentials"
+                                                                    id="warranty_account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="warranty_account_note"
+                                                                    id="warranty_account_note" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="home_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control" name="home_account_credentials"
+                                                                    id="home_account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="home_account_note"
+                                                                    id="home_account_note" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="e_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control" name="e_account_credentials"
+                                                                    id="e_account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="e_account_note"
+                                                                    id="e_account_note" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="other_credit_card" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Credit Card Number</label>
+                                                                <input type="text" class="form-control" name="other_credit_number"
+                                                                    id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Credit Card Expiration</label>
+                                                                <input type="text" class="form-control" name="other_credit_expiry"
+                                                                    id="other_credit_expiry" placeholder="MM/YYYY" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">CVC</label>
+                                                                <input type="text" class="form-control" name="other_credit_cvc"
+                                                                    id="other_credit_cvc" placeholder="CVC" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="other_payment_area" style="display:none;">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Credential</label>
+                                                                <input type="text" class="form-control"
+                                                                    name="other_payment_account_credentials"
+                                                                    id="other_payment_account_credentials" />
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="job_type">Account Note</label>
+                                                                <input type="text" class="form-control" name="other_payment_account_note"
+                                                                    id="other_payment_account_note" />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 no-padding">
-                                        <div class="row no-margin">
-                                            <div class="col-md-12 no-padding text-right">
-                                                <a href="" class="settings"><i class="fa fa-cog"
-                                                        aria-hidden="true"></i></a>
+                                    <div class="invoicing-part">
+                                        <div class="invoices">
+                                            <div class="outstanding-transactions">
+                                                <div class="title">Outstanding Transactions</div>
+                                                <div class="filter">
+                                                    <div class="row no-margin">
+                                                        <div class="col-md-6 no-padding">
+                                                            <div class="row no-margin">
+                                                                <div class="col-md-5 no-padding">
+                                                                    <div class="form-group">
+                                                                        <input type="text" class="" name="invoice_number"
+                                                                            placeholder="Find invoice no.">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-5 no-padding">
+                                                                    <div class="form-group">
+                                                                        <button href="#" class="find-by-invoice-no">
+                                                                            Filter
+                                                                            <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                                        </button>
+                                                                        <div class="filter-panel">
+                                                                            <img src="<?=base_url("/assets/img/accounting/customers/anchor.png")?>"
+                                                                                class="filter-panel-anchor" alt="">
+                                                                            <div class="date-filter">
+                                                                                <div class="date-from">
+                                                                                    <div class="label">Invoice from</div>
+                                                                                    <input type="text" class="datepicker"
+                                                                                        name="filter_date_from">
+                                                                                </div>
+                                                                                <div class="date-to">
+                                                                                    <div class="label">To</div>
+                                                                                    <input type="text" class="datepicker"
+                                                                                        name="filter_date_to">
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="checkbox-filter">
+                                                                                <input type="checkbox" name="filter_overdue"> Overdue
+                                                                                invoices
+                                                                                only
+                                                                            </div>
+                                                                            <div class="buttons">
+                                                                                <button href=""
+                                                                                    class="default-button float-left cancel-btn">Cancel</button>
+                                                                                <button href=""
+                                                                                    class="success-button float-right apply-btn">Apply</button>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 no-padding">
+                                                            <div class="row no-margin">
+                                                                <div class="col-md-12 no-padding text-right">
+                                                                    <a href="" class="settings"><i class="fa fa-cog"
+                                                                            aria-hidden="true"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="customer-table-part">
+                                                    <table id="customer_invoice_table" class="table table-striped table-bordered w-100">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="center">
+                                                                    <input type="checkbox" name="checkbox-all-action"
+                                                                        id="checkbox-all-action">
+                                                                </th>
+                                                                <th>DESCRIPTION</th>
+                                                                <th>DUE DATE</th>
+                                                                <th class="text-right">ORIGINAL AMOUNT</th>
+                                                                <th class="text-right">OPEN BALANCE</th>
+                                                                <th class="text-right">PAYMENT</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-body">
+                                                            <!-- <tr>
+                                                                <td><input type="checkbox"></td>
+                                                                <td>John Meyer</td>
+                                                                <td>1234567890</td>
+                                                                <td>$32</td>
+                                                                <td><a href="">View</a></td>
+                                                            </tr> -->
+                                                            <?php $counter =0;
+                                                foreach ($customers as $cus) :
+                                                    $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
+                                                    $amount =0.00;
+                                                    $first_option ="Create invoice";
+                                                    foreach ($receive_payment as $payment) {
+                                                        $amount += $payment->amount;
+                                                        $first_option = "Receive rayment";
+                                                    }
+                                                    ?>
+                                                            <tr>
+                                                                <td class="center" style="width: 0;"><input type="checkbox"
+                                                                        name="checkbox<?=$counter?>">
+                                                                </td>
+                                                                <td><?php if(empty($cus->first_name)){
+                                                                        echo $cus->business_name;
+                                                                }else{
+                                                                     echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ;
+                                                                } ?>
+                                                                </td>
+                                                                <td>
+                                                                </td>
+                                                                <td class="text-right"><?php echo "$".number_format($amount, 2);?>
+                                                                </td>
+                                                                <td>
+
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <input type="text" class="" name="">
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <?php $counter++; endforeach; ?>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="total-amount text-right">
+                                                        <div class="amount-to-apply">
+                                                            <label class="label">Amount to Apply</label>
+                                                            <label class="amount">$422.00</label>
+                                                        </div>
+                                                        <div class="amount-to-credit">
+                                                            <label class="label">Amount to Credit</label>
+                                                            <label class="amount">$0.00</label>
+                                                        </div>
+                                                        <button type="button" class="default-button clear-payment">Clear Payment</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="proof-part">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-6 no-padding">
+                                                        <div class="row no-margin">
+                                                            <div class="col-md-4 no-padding">
+                                                                <div class="form-group" style="margin-bottom: 5px!important;">
+                                                                    <div class="label">Memo</div>
+                                                                    <textarea name="memo"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row no-margin">
+                                                            <div class="col-md-12 no-padding">
+                                                                <div class="attachement-file-section">
+                                                                    <div class="label">
+                                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                                                    </div>
+                                                                    <button type="button" class="attachment-btn">
+                                                                        <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                                                    </button>
+                                                                    <input type="file" class="form-control" name="attachment-file" multiple>
+                                                                    <div class="attachement-viewer">
+                                                                    </div>
+                                                                    <input type="text" name="attachement-filenames" style="display: none;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="customer-table-part">
-                                <table id="customer_invoice_table" class="table table-striped table-bordered w-100">
-                                    <thead>
-                                        <tr>
-                                            <th class="center">
-                                                <input type="checkbox" name="checkbox-all-action"
-                                                    id="checkbox-all-action">
-                                            </th>
-                                            <th>DESCRIPTION</th>
-                                            <th>DUE DATE</th>
-                                            <th class="text-right">ORIGINAL AMOUNT</th>
-                                            <th class="text-right">OPEN BALANCE</th>
-                                            <th class="text-right">PAYMENT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-body">
-                                        <!-- <tr>
-											<td><input type="checkbox"></td>
-											<td>John Meyer</td>
-											<td>1234567890</td>
-											<td>$32</td>
-											<td><a href="">View</a></td>
-										</tr> -->
-                                        <?php $counter =0;
-                            foreach ($customers as $cus) :
-                                $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
-                                $amount =0.00;
-                                $first_option ="Create invoice";
-                                foreach ($receive_payment as $payment) {
-                                    $amount += $payment->amount;
-                                    $first_option = "Receive rayment";
-                                }
-                                 ?>
-                                        <tr>
-                                            <td class="center" style="width: 0;"><input type="checkbox"
-                                                    name="checkbox<?=$counter?>">
-                                            </td>
-                                            <td><?php echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ?>
-                                            </td>
-                                            <td>
-                                            </td>
-                                            <td class="text-right"><?php echo "$".number_format($amount, 2);?>
-                                            </td>
-                                            <td>
-
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <input type="text" class="" name="">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <?php $counter++; endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <div class="total-amount text-right">
-                                    <div class="amount-to-apply">
-                                        <label class="label">Amount to Apply</label>
-                                        <label class="amount">$422.00</label>
-                                    </div>
-                                    <div class="amount-to-credit">
-                                        <label class="label">Amount to Credit</label>
-                                        <label class="amount">$0.00</label>
-                                    </div>
-                                    <button type="button" class="default-button clear-payment">Clear Payment</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="proof-part">
-                            <div class="row no-margin">
-                                <div class="col-md-6 no-padding">
+                                <div class="customer_receive_payment_modal_footer">
                                     <div class="row no-margin">
                                         <div class="col-md-4 no-padding">
-                                            <div class="form-group" style="margin-bottom: 5px!important;">
-                                                <div class="label">Memo</div>
-                                                <textarea name="memo"></textarea>
+                                            <button href="#" class="left-btn close-btn">Cancel</button>
+                                            <button href="#" class="left-btn clear-btn">Clear</button>
+                                        </div>
+                                        <div class="col-md-4 no-padding text-center center-options">
+                                            <button type="submit" data-action="print" class="btn-print">Print</button>
+                                            <button type="button" class="btn-more">More</button>
+                                            <div class="more-sub-option">
+                                                <ul>
+                                                    <li data-option-type="void">
+                                                        Void
+                                                    </li>
+                                                    <li data-option-type="delete">
+                                                        Delete
+                                                    </li>
+                                                    <li data-option-type="transaction-journal">
+                                                        Transactionjournal
+                                                    </li>
+                                                    <li data-option-type="audit-history">
+                                                        AuditHistory
+                                                    </li>
+                                                </ul>
+                                                <div class="more-anchor">
+                                                    <img src="<?=base_url("assets/img/accounting/customers/anchor_down.png")?>"
+                                                        alt="">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row no-margin">
-                                        <div class="col-md-12 no-padding">
-                                            <div class="attachement-file-section">
-                                                <div class="label">
-                                                    <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                        <div class="col-md-4 no-padding text-right">
+                                            <div class="right-option">
+                                                <div class="sub-option">
+                                                    <ul>
+                                                        <li><button type="submit" data-action="save" data-submit-type="save-close">Save and
+                                                                close</button></li>
+                                                        <li><button type="submit" data-action="save" data-submit-type="save-send">Save and
+                                                                send</button></li>
+                                                    </ul>
                                                 </div>
-                                                <button type="button" class="attachment-btn">
-                                                    <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                                <button type="submit" class="btn-save-new" data-action="save"
+                                                    data-submit-type="save-new">Save and new</button>
+                                                <button href="#" class="btn-save-dropdown">
+                                                    <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;
                                                 </button>
-                                                <input type="file" class="form-control" name="attachment-file" multiple>
-                                                <div class="attachement-viewer">
-                                                </div>
-                                                <input type="text" name="attachement-filenames" style="display: none;">
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </form>
                 </div>
-            </div>
-            <div class="customer_receive_payment_modal_footer">
-                <div class="row no-margin">
-                    <div class="col-md-4 no-padding">
-                        <button href="#" class="left-btn close-btn">Cancel</button>
-                        <button href="#" class="left-btn clear-btn">Clear</button>
-                    </div>
-                    <div class="col-md-4 no-padding text-center center-options">
-                        <button type="submit" data-action="print" class="btn-print">Print</button>
-                        <button type="button" class="btn-more">More</button>
-                        <div class="more-sub-option">
-                            <ul>
-                                <li data-option-type="void">
-                                    Void
-                                </li>
-                                <li data-option-type="delete">
-                                    Delete
-                                </li>
-                                <li data-option-type="transaction-journal">
-                                    Transactionjournal
-                                </li>
-                                <li data-option-type="audit-history">
-                                    AuditHistory
-                                </li>
-                            </ul>
-                            <div class="more-anchor">
-                                <img src="<?=base_url("assets/img/accounting/customers/anchor_down.png")?>"
-                                    alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 no-padding text-right">
-                        <div class="right-option">
-                            <div class="sub-option">
-                                <ul>
-                                    <li><button type="submit" data-action="save" data-submit-type="save-close">Save and
-                                            close</button></li>
-                                    <li><button type="submit" data-action="save" data-submit-type="save-send">Save and
-                                            send</button></li>
-                                </ul>
-                            </div>
-                            <button type="submit" class="btn-save-new" data-action="save"
-                                data-submit-type="save-new">Save and new</button>
-                            <button href="#" class="btn-save-dropdown">
-                                <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;
-                            </button>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    <!-- </div>
-</div>
-<div id="loader-modal" style="display: none;">
-    <div class="loader-modal-content">
-        <img src="<?=base_url("assets/img/accounting/customers/loader.gif")?>"
-            alt="">
-    </div>
-</div> -->
+                   <!--  </div>
                 </div>
 
             </div>
         </div>
     </div>
-    <!--    end of modal-->
+       end of modal-->
     <!--    Create Estimate Modal-->
     <div class="full-screen-modal">
         <div id="add-estimate" class="modal fade modal-fluid" role="dialog">
@@ -4091,132 +4091,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
 </div>
 </div>
-<?php include viewPath('accounting/customer_receive_payment_modal');?>
 
-<script src="<?php echo $url->assets ?>js/accounting/sales/customer_includes/receive_payment.js"></script>
+<?php include viewPath('includes/footer_accounting'); ?>
+
+<?php include viewPath('accounting/customer_receive_payment_modal');?>
 <?php include viewPath('accounting/estimate_one_modal'); ?>
 <?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
 <?php //include viewPath('accounting/customer_credit_memo_modal'); ?>
 <?php include viewPath('accounting/customer_delayed_charge_modal'); ?>
 <div></div>
 
-<?php include viewPath('includes/footer_accounting'); ?>
-
-<script>
-    function setitem(obj, title, price, discount, itemid) {
-        // var total = price * 1;
-        jQuery(obj).parent().parent().find(".getItems").val(title);
-        jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
-        jQuery(obj).parent().parent().parent().find(".price").val(price);
-        jQuery(obj).parent().parent().parent().find(".priceqty").val(price);
-        jQuery(obj).parent().parent().parent().find(".price").text(price);
-        jQuery(obj).parent().parent().parent().find(".discount").val(discount);
-        jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
-        var counter = jQuery(obj)
-            .parent()
-            .parent()
-            .parent()
-            .find(".price")
-            .data("counter");
-        jQuery(obj).parent().empty();
-
-        //   calculation(counter);
-        var idd = itemid;
-
-        var in_id = idd;
-        var price = $("#price_" + in_id).val();
-        var quantity = $("#quantity_" + in_id).val();
-        var discount = $("#discount_" + in_id).val();
-        var tax = (parseFloat(price) * 7.5) / 100;
-        var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-            2
-        );
-        if (discount == '') {
-            discount = 0;
-        }
-
-        var total = (
-            (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-            parseFloat(discount)
-        ).toFixed(2);
-
-        // alert( 'yeah' + total);
-
-        $("#span_total_" + in_id).text(total);
-        $("#tax_1_" + in_id).text(tax1);
-        $("#tax1_" + in_id).val(tax1);
-        $("#discount_" + in_id).val(discount);
-
-        if ($('#tax_1_' + in_id).length) {
-            $('#tax_1_' + in_id).val(tax1);
-        }
-
-        if ($('#item_total_' + in_id).length) {
-            $('#item_total_' + in_id).val(total);
-        }
-
-        var eqpt_cost = 0;
-        var cnt = $("#count").val();
-        var total_discount = 0;
-        for (var p = 0; p <= cnt; p++) {
-            var prc = $("#price_" + p).val();
-            var quantity = $("#quantity_" + p).val();
-            var discount = $("#discount_" + p).val();
-            // var discount= $('#discount_' + p).val();
-            // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-            eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-            total_discount += parseFloat(discount);
-        }
-        //   var subtotal = 0;
-        // $( total ).each( function(){
-        //   subtotal += parseFloat( $( this ).val() ) || 0;
-        // });
-
-        eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-        total_discount = parseFloat(total_discount).toFixed(2);
-        // var test = 5;
-
-        var subtotal = 0;
-        // $("#span_total_0").each(function(){
-        $('*[id^="span_total_"]').each(function() {
-            subtotal += parseFloat($(this).text());
-        });
-        // $('#sum').text(subtotal);
-
-        var subtotaltax = 0;
-        // $("#span_total_0").each(function(){
-        $('*[id^="tax_1_"]').each(function() {
-            subtotaltax += parseFloat($(this).text());
-        });
-
-        // alert(subtotaltax);
-
-        $("#eqpt_cost").val(eqpt_cost);
-        $("#total_discount").val(total_discount);
-        $("#span_sub_total_0").text(total_discount);
-        $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-        $("#item_total").val(subtotal.toFixed(2));
-
-        var s_total = subtotal.toFixed(2);
-        var adjustment = $("#adjustment_input").val();
-        var grand_total = s_total - parseFloat(adjustment);
-        var markup = $("#markup_input_form").val();
-        var grand_total_w = grand_total + parseFloat(markup);
-
-        $("#total_tax_").text(subtotaltax.toFixed(2));
-        $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-        $("#grand_total").text(grand_total_w.toFixed(2));
-        $("#grand_total_input").val(grand_total_w.toFixed(2));
-        $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-        var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-        sls = parseFloat(sls).toFixed(2);
-        $("#sales_tax").val(sls);
-        cal_total_due();
-    }
-</script>
 
 <script>
     var price = $("#price2_" + counter).val();
@@ -5121,40 +5005,6 @@ $("#total_tax_dch_").text(over_tax);
 </script>
 
 <script>
-$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel .btn-success.apply-btn", function(event) {
-    single_customer_get_transaction_lists($("#customer-single-modal input[name='customer_id']").val());
-});
-
-function single_customer_get_transaction_lists(customer_id) {
-    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table th input[name='customer_checkbox_all']").prop("checked", false);
-    var filter_type = $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_type']").val();
-    $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'><center><img src='" + baseURL + "assets/img/accounting/customers/loader.gif' style='width:50px;' /></center></td></tr>");
-    $.ajax({
-        url: baseURL + "/accounting/single_customer_get_transaction_lists",
-        type: "POST",
-        dataType: "json",
-        data: {
-            customer_id: customer_id,
-            filter_type: filter_type,
-            filter_date: $("#customer-single-modal .single-customer-info-section .body-section .filter-btn-section .filter-panel select[name='filter_date']").val(),
-        },
-        success: function(data) {
-            if (data.tbody_html == "") {
-                $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html("<tr><td colspan='18' style='text-align:center;color: #C7C7C7;'>No transaction list found.</td></tr>");
-            } else {
-                $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table tbody").html(data.tbody_html);
-            }
-            single_customer_table_columns_changed();
-            single_customer_sortTable();
-            table_viewing_affected(filter_type);
-            $("#loader-modal").hide();
-        },
-    });
-
-}
-</script>
-
-<script>
 
 $(document).on("focusout", ".adjustment_input_cm_c", function () {
   // var counter = $(this).data("counter");
@@ -5675,8 +5525,251 @@ $("#total_tax_").text(over_tax);
         });
 </script>
 <script>
-$('#addcreditmemoModal').modal({
-    backdrop: 'static',
-    keyboard: false
-});
+// $('#addcreditmemoModal').modal({
+//     backdrop: 'static',
+//     keyboard: false
+// });
+
+document.getElementById("payment_method_pay").onchange = function() {
+    if (this.value == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#invoicing').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    	}
+    else if(this.value == 'Invoicing'){
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+	
+    else if(this.value == 'Check'){
+        // alert('Check');
+        $('#cash_area').hide();
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Credit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Debit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#invoicing').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'ACH'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Venmo'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#invoicing').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Paypal'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Square'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Warranty Work'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'e-Transfer'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
+    }
+}
 </script>

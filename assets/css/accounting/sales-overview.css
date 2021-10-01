@@ -1,0 +1,227 @@
+.overview-widget {
+    box-shadow: 1px 2px 15px #cacaca52;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+    color: #8D9096;
+}
+
+.overview-widget .widget-title {
+    text-transform: uppercase;
+    color: #8D9096;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.overview-widget .filter-section select:focus,
+.overview-widget .filter-section select:active,
+.overview-widget .filter-section select:hover {
+    outline: none
+}
+
+.overview-widget .filter-section {
+    display: flex;
+}
+
+.overview-widget .filter-section,
+.overview-widget .filter-section label,
+.overview-widget .filter-section select {
+    color: #8D9096;
+    font-size: 13px;
+}
+
+.overview-widget .filter-section select {
+    border: none;
+}
+
+.overview-widget .filter-section .compare-prev-year {
+    display: flex;
+}
+
+.overview-widget .filter-section {
+    display: flex;
+}
+
+.overview-widget .filter-section .compare-prev-year .form-group {
+    margin-bottom: 0!important;
+    padding-left: 10px;
+}
+
+.overview-widget .filter-section .duration,
+.overview-widget .filter-section .compare-prev-year {
+    padding: 0 10px;
+}
+
+.custom-control-label {
+    cursor: pointer;
+}
+
+.custom-control-input:checked~.custom-control-label:before {
+    border-color: #2CA01C;
+    background-color: #2CA01C;
+}
+
+.overview-widget .content-monitary-highlight {
+    font-size: 35px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.overview-widget .widget-content .content-monitary-highlight span {
+    font-size: 13px;
+    font-weight: lighter;
+    color: #8D9096;
+}
+
+.overview-widget .widget-content .monitary-increase {
+    color: #2CA01C;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.overview-widget .widget-content .monitary-increase::before {
+    content: '';
+    padding: 0 10px;
+    background-image: url('https://nsmartrac.com/assets/img/accounting/overview/up-arrow.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.overview-widget .widget-content {
+    padding: 10px 0;
+}
+
+.overview-widget .widget-content .content-checklists .checklist-icon {
+    font-size: 25px;
+}
+
+.overview-widget .widget-content .content-checklists .checklist-icon.success {
+    color: #2CA01C;
+}
+
+.overview-widget .widget-content .content-checklists .checklist-text {
+    padding: 10px 0;
+}
+
+.overview-widget .widget-content .content-checklists .checklist-link,
+.overview-widget .widget-content .content-checklists .checklist-link a {
+    padding: 10px 0;
+    color: #0378C5;
+    font-weight: 600;
+}
+
+.overview-widget .widget-content .content-checklists .checklist-link a:hover {
+    text-decoration: underline;
+}
+
+.overview-widget .widget-content .headway {
+    padding: 10px 0;
+}
+
+.overview-widget .widget-content .headway .label {
+    color: #2CA01C;
+    font-size: 14px;
+    font-weight: 600;
+    padding-bottom: 5px;
+}
+
+.overview-widget .widget-content .headway .progress-bar {
+    background-color: #2CA01C;
+}
+
+.overview-widget .widget-with-counter {
+    position: relative;
+    opacity: 0.4;
+}
+
+.overview-widget .widget-with-counter.focused {
+    opacity: 1;
+}
+
+.overview-widget .widget-with-counter>.row>.col-md-1 {
+    max-width: 60px;
+    min-width: 60px;
+}
+
+.overview-widget .widget-with-counter .counter {
+    text-align: center;
+    border: solid 3px #8E9197;
+    border-radius: 50%;
+    max-width: 60px;
+    padding: 2px;
+    font-weight: 700;
+}
+
+.overview-widget .widget-with-counter.focused .counter {
+    border: solid 3px #2CA01C;
+    color: #2CA01C;
+}
+
+.overview-widget .widget-with-counter .counter::before {
+    content: ' ';
+    position: absolute;
+    border-radius: 30px;
+    transform: translate(-50%, -50%);
+    transition: left 1s, opacity 0.3s, top 1s, padding 1s, background-color 1s, transform 1s;
+    margin-top: 10px;
+    margin-left: 4px;
+    padding: 13px;
+    opacity: 1;
+}
+
+.overview-widget:hover .widget-with-counter .counter::before {
+    border: solid 3px #2CA01C;
+    padding: 25px;
+}
+
+.overview-widget .widget-with-counter.focused .counter.no-before::before {
+    opacity: 0;
+}
+
+.overview-widget .widget-with-counter.focused .counter.empty-before::before {
+    content: '';
+}
+
+.overview-widget .widget-with-counter.focused .counter::after {
+    width: 100px;
+    border: solid 3px #2CA01C;
+}
+
+.overview-widget .widget-content .content-title {
+    color: #3B3B3B;
+    font-size: 15px;
+    font-weight: 600;
+    padding-bottom: 10px;
+}
+
+.overview-widget .widget-with-counter .sinking-section {
+    position: absolute;
+    bottom: 0;
+    display: none;
+    transition: 0.3s;
+    right: 10px;
+}
+
+.overview-widget .widget-with-counter.focused .sinking-section {
+    display: block;
+}
+
+.overview-widget .widget-with-counter .sinking-section button {
+    border: none;
+    font-weight: 600;
+    border-radius: 25px;
+    height: auto;
+    margin: 0 10px;
+}
+
+.overview-widget .widget-with-counter .sinking-section button.success-button {
+    background: #2CA01C;
+    color: #fff;
+    padding: 8px 35px;
+}
+
+.overview-widget .widget-with-counter .sinking-section button.transparent-button {
+    background: transparent;
+    color: #0378C5;
+}
