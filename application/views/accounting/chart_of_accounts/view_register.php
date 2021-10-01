@@ -284,16 +284,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="memo d-none">MEMO</th>
                                             <th>
                                                 <?php if($type === 'Asset') : ?>
-                                                PAYMENT
-                                                <?php else : ?>
                                                 DECREASE
+                                                <?php elseif($type === 'Liability') : ?>
+                                                INCREASE
+                                                <?php elseif($type === 'Credit Card') : ?>
+                                                CHARGE
+                                                <?php else : ?>
+                                                PAYMENT
                                                 <?php endif; ?>
                                             </th>
                                             <th>
                                                 <?php if($type === 'Asset') : ?>
-                                                DEPOSIT
-                                                <?php else : ?>
                                                 INCREASE
+                                                <?php elseif($type === 'Liability') : ?>
+                                                DECREASE
+                                                <?php elseif($type === 'Credit Card') : ?>
+                                                PAYMENT
+                                                <?php else : ?>
+                                                DEPOSIT
                                                 <?php endif; ?>
                                             </th>
                                             <th class="reconcile_status d-none">

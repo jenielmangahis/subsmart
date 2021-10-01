@@ -229,6 +229,13 @@ class Accounting extends MY_Controller
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['rules'] = $this->rules_model->getRules();
+        add_css([
+            'assets/css/accounting/banking/rules/rules.css',
+        ]);
+        add_footer_js([
+            'assets/js/accounting/banking/rules/rules.js',
+        ]);
+
         $this->load->view('accounting/rules', $this->page_data);
     }
 
@@ -241,6 +248,12 @@ class Accounting extends MY_Controller
 
     public function salesoverview()
     {
+        add_css(array(
+            "assets/css/accounting/sales-overview.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/overview.js",
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/sales_overview', $this->page_data);

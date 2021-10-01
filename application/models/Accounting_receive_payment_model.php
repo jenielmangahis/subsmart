@@ -124,6 +124,7 @@ class Accounting_receive_payment_model extends MY_Model
             return false;
         }
     }
+    
     public function update_receive_payment_details($data, $receive_payment_id)
     {
         $where = array(

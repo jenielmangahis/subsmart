@@ -1,6 +1,6 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+defined('BASEPATH') or exit('No direct script access allowed');?>
+<?php include viewPath('includes/header');?>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
@@ -16,10 +16,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-6">
                             <!-- <h2>Rules</h2> -->
                             <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
-                                <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab">Banking</a>
-                                <a href="<?php echo url('/accounting/rules')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Rules</a>
-                                <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab">Receipts</a>
-                                <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
+                                <a href="<?php echo url('/accounting/link_bank') ?>" class="banking-tab">Banking</a>
+                                <a href="<?php echo url('/accounting/rules') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "link_bank") ?: '-active'; ?>" style="text-decoration: none">Rules</a>
+                                <a href="<?php echo url('/accounting/receipts') ?>" class="banking-tab">Receipts</a>
+                                <a href="<?php echo url('/accounting/tags') ?>" class="banking-tab">Tags</a>
                             </div>
                             </div>
                             <div class="col-md-6" style="text-align: right">
@@ -55,24 +55,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <tbody class="displayRules">
                             <?php foreach ($rules as $rule): ?>
                             <tr>
-                                <td><input type="checkbox" value="<?php echo $rule->id;?>"></td>
-                                <td><?php echo $rule->rules_name;?></td>
+                                <td><input type="checkbox" value="<?php echo $rule->id; ?>"></td>
+                                <td><?php echo $rule->rules_name; ?></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><?php echo ($rule->auto==1)?"Auto":" ";?></td>
+                                <td><?php echo ($rule->auto == 1) ? "Auto" : " "; ?></td>
                                 <td></td>
                                 <td>
-                                    <a href="<?php echo site_url()?>accounting/edit_rules?id=<?php echo $rule->id;?>" style="color: #0b97c4;">View/Edit</a>&nbsp;
+                                    <a href="<?php echo site_url() ?>accounting/edit_rules?id=<?php echo $rule->id; ?>" style="color: #0b97c4;">View/Edit</a>&nbsp;
                                     <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                         <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
                                         <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="#" id="deleteRules" data-id="<?php echo $rule->id;?>">Delete</a></li>
+                                            <li><a href="#" id="deleteRules" data-id="<?php echo $rule->id; ?>">Delete</a></li>
                                         </ul>
                                     </div>&nbsp;
                                 </td>
                             </tr>
-                            <?php endforeach; ?>
+                            <?php endforeach;?>
                             </tbody>
                         </table>
                         </div>
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
         <!-- end container-fluid -->
 <!--    Modal for creating rules-->
-    <div class="modal-right-side">
+    <div class="modal-right-side createRuleModalRight" id="createRuleModalRight">
         <div class="modal right fade" id="createRules" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -94,37 +94,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h3 class="modal-title" id="myModalLabel2" >Create rule</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    <form action="<?php echo site_url()?>accounting/addRules" method="post">
+                    <form action="<?php echo site_url() ?>accounting/addRules" method="post">
                     <div class="modal-body">
                         <div class="subheader">Rules only apply to unreviewed transactions.</div>
                             <div class="form-group">
                                 <label for="">What do you want to call this rule? *</label>
-                                <input type="text" name="rules_name" class="form-control" placeholder="Name this rule">
+                                <input required type="text" name="rules_name" class="form-control" placeholder="Name this rule">
                             </div>
                             <div class="form-group">
                                 <div>
                                     <label for="">Apply this to transactions that are</label>
                                 </div>
-                                <div class="tab-select">
-                                    <select name="apply" id="" class="form-control">
-                                        <option selected>Money in</option>
-                                        <option>Money out</option>
-                                    </select>
-                                </div>
-                                <span style="margin-right: 5px;margin-left: 5px;">in</span>
-                                <div class="tab-select">
-                                    <div class="selectBox" onclick="showCheckboxes()">
-                                        <select name="banks" id="" class="form-control">
-                                            <option value="1">All bank accounts</option>
-                                            <option value="0">No bank account selected</option>
+                                <div class="createRuleModalRight__transactions">
+                                    <div class="tab-select">
+                                        <select name="apply" id="" class="form-control">
+                                            <option selected>Money in</option>
+                                            <option>Money out</option>
                                         </select>
-                                        <div class="overSelect"></div>
                                     </div>
-                                    <div id="checkboxes">
-                                        <label for="one">
-                                            <input type="checkbox" id="one" checked /> First checkbox</label>
-                                        <label for="two">
-                                            <input type="checkbox" id="two" checked /> Second checkbox</label>
+                                    <span style="margin-right: 5px;margin-left: 5px;">in</span>
+                                    <div class="tab-select">
+                                        <div class="selectWithCheckbox" id="transactionsBankSelect">
+                                            <button type="button" class="selectWithCheckbox__btn">
+                                                <span class="selectWithCheckbox__text">No bank account selected</span>
+                                                <i class="fa fa-angle-down"></i>
+                                            </button>
+
+                                            <div class="selectWithCheckbox__options">
+                                                <div class="form-group selectWithCheckbox__optionsItem">
+                                                    <input name="banks" type="checkbox" class="form-check-input" id="allBankAccountsCb">
+                                                    <label class="form-check-label" for="allBankAccountsCb">All bank accounts</label>
+                                                </div>
+
+                                                <div class="form-group selectWithCheckbox__optionsItem">
+                                                    <input name="banks" type="checkbox" class="form-check-input" id="checkingCb">
+                                                    <label class="form-check-label" for="checkingCb">Checking</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -316,10 +323,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 <!--    end of modal-->
-	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+	<?php include viewPath('includes/sidebars/accounting/accounting');?>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer_accounting');?>
 <script>
     //dropdown checkbox
     var expanded = false;
@@ -342,4 +349,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
     } );
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+        if (!isLocalhost) return;
+
+        $.ajaxSetup({
+            beforeSend: function (xhr,settings) {
+                if (settings.url.startsWith("/accounting/")) {
+                    settings.url = settings.url.replace("/accounting/", "/nsmartrac/accounting/")
+                }
+            }
+        });
+    });
 </script>

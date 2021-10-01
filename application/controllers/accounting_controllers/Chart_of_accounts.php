@@ -536,6 +536,7 @@ class Chart_of_accounts extends MY_Controller {
     public function load_registers($accountId)
     {
         $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
         $post = json_decode(file_get_contents('php://input'), true);
         $column = $post['order'][0]['column'];
         $order = $post['order'][0]['dir'];
@@ -546,67 +547,71 @@ class Chart_of_accounts extends MY_Controller {
 
         $data = [];
 
-        switch($post['transaction_type']) {
-            case 'cc-expense' :
-                $data = $this->cc_expense_registers($accountId, $data);
-            break;
-            case 'check' :
-                $data = $this->check_registers($accountId, $data);
-            break;
-            case 'journal-entry' :
-                $data = $this->journal_registers($accountId, $data);
-            break;
-            case 'bill' :
-                $data = $this->bill_registers($accountId, $data);
-            break;
-            case 'cc-credit' :
-                $data = $this->cc_credit_registers($accountId, $data);
-            break;
-            case 'vendor-credit' :
-                $data = $this->vendor_credit_registers($accountId, $data);
-            break;
-            case 'bill-payment' :
-                $data = $this->bill_payment_registers($accountId, $data);
-            break;
-            case 'cc-bill-payment' :
-                $data = $this->bill_payment_registers($accountId, $data, true);
-            break;
-            case 'transfer' :
-                $data = $this->transfer_registers($accountId, $data);
-            break;
-            case 'deposit' :
-                $data = $this->deposit_registers($accountId, $data);
-            break;
-            case 'cash-expense' :
-                $data = $this->cash_expense_registers($accountId, $data);
-            break;
-            case 'inv-qty-adjustment' :
-                $data = $this->quantity_adjustment_registers($accountId, $data);
-            break;
-            case 'expense' :
-                $data = $this->expense_registers($accountId, $data);
-            break;
-            case 'inv-starting-value' :
-                $data = $this->item_starting_value_registers($accountId, $data);
-            break;
-            case 'cc-payment' :
-                $data = $this->credit_card_payment_registers($accountId, $data);
-            break;
-            default : 
-                $data = $this->cc_expense_registers($accountId, $data);
-                $data = $this->check_registers($accountId, $data);
-                $data = $this->journal_registers($accountId, $data);
-                $data = $this->bill_registers($accountId, $data);
-                $data = $this->cc_credit_registers($accountId, $data);
-                $data = $this->vendor_credit_registers($accountId, $data);
-                $data = $this->bill_payment_registers($accountId, $data);
-                $data = $this->transfer_registers($accountId, $data);
-                $data = $this->deposit_registers($accountId, $data);
-                $data = $this->quantity_adjustment_registers($accountId, $data);
-                $data = $this->expense_registers($accountId, $data);
-                $data = $this->item_starting_value_registers($accountId, $data);
-                $data = $this->credit_card_payment_registers($accountId, $data);
-            break;
+        if(stripos($accountType->account_name, 'A/R') !== false || stripos($accountType->account_name, 'A/P') !== false) {
+
+        } else {
+            switch($post['transaction_type']) {
+                case 'cc-expense' :
+                    $data = $this->cc_expense_registers($accountId, $data);
+                break;
+                case 'check' :
+                    $data = $this->check_registers($accountId, $data);
+                break;
+                case 'journal-entry' :
+                    $data = $this->journal_registers($accountId, $data);
+                break;
+                case 'bill' :
+                    $data = $this->bill_registers($accountId, $data);
+                break;
+                case 'cc-credit' :
+                    $data = $this->cc_credit_registers($accountId, $data);
+                break;
+                case 'vendor-credit' :
+                    $data = $this->vendor_credit_registers($accountId, $data);
+                break;
+                case 'bill-payment' :
+                    $data = $this->bill_payment_registers($accountId, $data);
+                break;
+                case 'cc-bill-payment' :
+                    $data = $this->bill_payment_registers($accountId, $data, true);
+                break;
+                case 'transfer' :
+                    $data = $this->transfer_registers($accountId, $data);
+                break;
+                case 'deposit' :
+                    $data = $this->deposit_registers($accountId, $data);
+                break;
+                case 'cash-expense' :
+                    $data = $this->cash_expense_registers($accountId, $data);
+                break;
+                case 'inv-qty-adjustment' :
+                    $data = $this->quantity_adjustment_registers($accountId, $data);
+                break;
+                case 'expense' :
+                    $data = $this->expense_registers($accountId, $data);
+                break;
+                case 'inv-starting-value' :
+                    $data = $this->item_starting_value_registers($accountId, $data);
+                break;
+                case 'cc-payment' :
+                    $data = $this->credit_card_payment_registers($accountId, $data);
+                break;
+                default : 
+                    $data = $this->cc_expense_registers($accountId, $data);
+                    $data = $this->check_registers($accountId, $data);
+                    $data = $this->journal_registers($accountId, $data);
+                    $data = $this->bill_registers($accountId, $data);
+                    $data = $this->cc_credit_registers($accountId, $data);
+                    $data = $this->vendor_credit_registers($accountId, $data);
+                    $data = $this->bill_payment_registers($accountId, $data);
+                    $data = $this->transfer_registers($accountId, $data);
+                    $data = $this->deposit_registers($accountId, $data);
+                    $data = $this->quantity_adjustment_registers($accountId, $data);
+                    $data = $this->expense_registers($accountId, $data);
+                    $data = $this->item_starting_value_registers($accountId, $data);
+                    $data = $this->credit_card_payment_registers($accountId, $data);
+                break;
+            }
         }
 
         // Filter
@@ -670,8 +675,19 @@ class Chart_of_accounts extends MY_Controller {
             $accBalance = floatval($account->balance);
             foreach($registers as $key => $reg) {
                 $registers[$key]['balance'] = '$'.number_format($accBalance, 2, '.', ',');
-                $accBalance -= floatval($reg['deposit']);
-                $accBalance += floatval($reg['payment']);
+                if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+                    $depKey = 'decrease';
+                    $paymentKey = 'increase';
+                } else if($accountType->account_name === 'Credit Card') {
+                    $depKey = 'payment';
+                    $paymentKey = 'charge';
+                } else {
+                    $depKey = 'deposit';
+                    $paymentKey = 'payment';
+                }
+
+                $accBalance -= floatval($reg[$depKey]);
+                $accBalance += floatval($reg[$paymentKey]);
             }
 
             $data = $registers;
@@ -759,6 +775,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function cc_expense_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
 
         foreach($expenses as $expense) {
@@ -777,11 +803,11 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-            $accountType = $this->account_model->getById($account->account_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-            if($accountType->account_name === 'Credit Card') {
-                $data[] = [
+            if($paymentAccType->account_name === 'Credit Card') {
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'CC Expense',
@@ -790,8 +816,6 @@ class Chart_of_accounts extends MY_Controller {
                     'payee' => $payeeName,
                     'account' => $this->account_col($expense->id, 'Expense'),
                     'memo' => $expense->memo,
-                    'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'deposit' => '',
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -799,6 +823,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['payment'] = '';
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    default :
+                        $transaction['payment'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['deposit'] = '';
+                    break;
+                }
+
+                $data[] = $transaction;
             }
         }
 
@@ -806,8 +851,8 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($expenseCategories as $expenseCategory) {
             $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
-            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-            $accountType = $this->account_model->getById($account->account_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($account->account_id);
 
             switch($expense->payee_type) {
                 case 'vendor':
@@ -824,15 +869,15 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            if($accountType->account_name === 'Credit Card') {
-                $data[] = [
+            if($paymentAccType->account_name === 'Credit Card') {
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'CC Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
-                    'account' => $account->name,
+                    'account' => $paymentAcc->name,
                     'memo' => $expense->memo,
                     'payment' => '',
                     'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
@@ -843,6 +888,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = '';
+                        $transaction['payment'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    default :
+                        $transaction['payment'] = '';
+                        $transaction['deposit'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                }
+
+                $data[] = $transaction;
             }
         }
 
@@ -851,6 +917,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function check_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $checks = $this->chart_of_accounts_model->get_checks_registers($accountId);
 
         foreach($checks as $check) {
@@ -869,7 +945,7 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
@@ -878,8 +954,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->account_col($check->id, 'Check'),
                 'memo' => $check->memo,
-                'payment' => number_format(floatval($check->total_amount), 2, '.', ','),
-                'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -887,6 +961,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format(floatval($check->total_amount), 2, '.', ',');
+                    $transaction['payment'] = '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($check->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($check->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                default :
+                    $transaction['payment'] = number_format(floatval($check->total_amount), 2, '.', ',');
+                    $transaction['deposit'] = '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         $checkCategories = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Check');
@@ -909,7 +1004,7 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
@@ -918,8 +1013,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->chart_of_accounts_model->getName($check->bank_account_id),
                 'memo' => $check->memo,
-                'payment' => '',
-                'deposit' => number_format(floatval($checkCategory->amount), 2, '.', ','),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -927,6 +1020,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($checkCategory->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($checkCategory->amount), 2, '.', ',');
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($checkCategory->amount), 2, '.', ',');
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($checkCategory->amount), 2, '.', ',');
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($checkCategory->amount), 2, '.', ',');
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -935,12 +1049,22 @@ class Chart_of_accounts extends MY_Controller {
     private function journal_registers($accountId, $data = [])
     {
         $this->load->model('accounting_journal_entries_model');
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $journalEntries = $this->chart_of_accounts_model->get_journal_entry_registers($accountId);
 
         foreach($journalEntries as $journalEntryItem) {
             $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id);
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
                 'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
                 'type' => 'Journal',
@@ -949,8 +1073,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => '-Split-',
                 'memo' => $journalEntry->memo,
-                'payment' => $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "",
-                'deposit' => $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "",
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -958,6 +1080,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($journalEntry->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $transaction['payment'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $transaction['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $transaction['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                break;
+                default :
+                    $transaction['payment'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
+                    $transaction['deposit'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -965,6 +1108,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function bill_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $billItems = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Bill');
 
         foreach($billItems as $billItem) {
@@ -972,7 +1125,7 @@ class Chart_of_accounts extends MY_Controller {
             $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
             $payeeName = $payee->display_name;
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
                 'type' => 'Bill',
@@ -981,8 +1134,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => 'Accounts Payable',
                 'memo' => $bill->memo,
-                'payment' => "",
-                'deposit' => number_format(floatval($billItem->amount), 2, '.', ','),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -990,6 +1141,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($billItem->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = "";
+                    $transaction['payment'] = number_format(floatval($billItem->amount), 2, '.', ',');
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = "";
+                    $transaction['decrease'] = number_format(floatval($billItem->amount), 2, '.', ',');
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = "";
+                    $transaction['decrease'] = number_format(floatval($billItem->amount), 2, '.', ',');
+                break;
+                default :
+                    $transaction['payment'] = "";
+                    $transaction['deposit'] = number_format(floatval($billItem->amount), 2, '.', ',');
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -997,6 +1169,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function cc_credit_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $ccCredits = $this->chart_of_accounts_model->get_credit_card_credit_registers($accountId);
 
         foreach($ccCredits as $ccCredit) {
@@ -1025,7 +1207,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account' => $this->account_col($ccCredit->id, 'Credit Card Credit'),
                 'memo' => $ccCredit->memo,
                 'payment' => number_format(floatval($ccCredit->total_amount), 2, '.', ','),
-                'deposit' => '',
+                'charge' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1055,7 +1237,7 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                 'type' => 'CC-Credit',
@@ -1064,8 +1246,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
                 'memo' => $ccCredit->memo,
-                'payment' => number_format(floatval($ccCreditCategory->amount), 2, '.', ','),
-                'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1073,6 +1253,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditCategory->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['payment'] = '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                default :
+                    $transaction['payment'] = number_format(floatval($ccCredit->total_amount), 2, '.', ',');
+                    $transaction['deposit'] = '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1080,6 +1281,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function vendor_credit_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $vendorCredits = $this->chart_of_accounts_model->get_vendor_transaction_registers($accountId, 'Vendor Credit');
 
         foreach($vendorCredits as $vendorCredit) {
@@ -1087,7 +1298,7 @@ class Chart_of_accounts extends MY_Controller {
             $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
             $payeeName = $payee->display_name;
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
                 'type' => 'Vendor Credit',
@@ -1096,8 +1307,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => 'Accounts Payable',
                 'memo' => $vCredit->memo,
-                'payment' => number_format(floatval($vendorCredit->amount), 2, '.', ','),
-                'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1105,6 +1314,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format(floatval($vendorCredit->amount), 2, '.', ',');
+                    $transaction['payment'] = '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($vendorCredit->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($vendorCredit->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                default :
+                    $transaction['payment'] = number_format(floatval($vendorCredit->amount), 2, '.', ',');
+                    $transaction['deposit'] = '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1112,25 +1342,33 @@ class Chart_of_accounts extends MY_Controller {
 
     private function transfer_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $transfers = $this->chart_of_accounts_model->get_transfer_registers($accountId);
 
         foreach($transfers as $transfer) {
             if($transfer->transfer_from_account_id === $accountId) {
-                $account = $this->chart_of_accounts_model->getName($transfer->transfer_to_account_id);
+                $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_to_account_id);
             } else {
-                $account = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
+                $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
             }
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
                 'ref_no' => '',
                 'type' => 'Transfer',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
-                'account' => $account,
+                'account' => $transferAcc,
                 'memo' => $transfer->transfer_memo,
-                'payment' => $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '',
-                'deposit' => $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1138,6 +1376,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $transaction['payment'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $transaction['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $transaction['decrease'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                break;
+                default :
+                    $transaction['payment'] = $transfer->transfer_from_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                    $transaction['deposit'] = $transfer->transfer_to_account_id === $accountId ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1145,6 +1404,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function deposit_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $this->load->model('accounting_bank_deposit_model');
         $deposits = $this->chart_of_accounts_model->get_deposit_registers($accountId);
 
@@ -1156,7 +1425,7 @@ class Chart_of_accounts extends MY_Controller {
             } else {
                 $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
             }
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'ref_no' => '',
                 'type' => 'Deposit',
@@ -1165,8 +1434,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $account,
                 'memo' => $deposit->memo,
-                'payment' => '',
-                'deposit' => number_format(floatval($deposit->total_amount), 2, '.', ','),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1174,6 +1441,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($deposit->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         $depositFunds = $this->chart_of_accounts_model->get_deposit_payment_registers($accountId);
@@ -1181,7 +1469,7 @@ class Chart_of_accounts extends MY_Controller {
         foreach($depositFunds as $depFund) {
             $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id);
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($dep->date)),
                 'ref_no' => '',
                 'type' => 'Deposit',
@@ -1190,8 +1478,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($dep->account_id),
                 'memo' => $dep->memo,
-                'payment' => number_format(floatval($depFund->amount), 2, '.', ','),
-                'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1199,6 +1485,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($depFund->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $transaction['payment'] = '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                default :
+                    $transaction['payment'] = number_format(floatval($depFund->amount), 2, '.', ',');
+                    $transaction['deposit'] = '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1206,6 +1513,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function cash_expense_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
 
         foreach($expenses as $expense) {
@@ -1224,12 +1541,12 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-            $accountType = $this->account_model->getById($account->account_id);
-            $detailType = $this->account_detail_model->getById($account->acc_detail_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccountType = $this->account_model->getById($paymentAcc->account_id);
+            $detailType = $this->account_detail_model->getById($paymentAcc->acc_detail_id);
 
-            if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
-                $data[] = [
+            if($paymentAccountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1238,8 +1555,6 @@ class Chart_of_accounts extends MY_Controller {
                     'payee' => $payeeName,
                     'account' => $this->account_col($expense->id, 'Expense'),
                     'memo' => $expense->memo,
-                    'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'deposit' => '',
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -1247,6 +1562,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['payment'] = '';
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    default :
+                        $transaction['payment'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['deposit'] = '';
+                    break;
+                }
+    
+                $data[] = $transaction;
             }
         }
 
@@ -1274,7 +1610,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
-                $data[] = [
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1283,8 +1619,6 @@ class Chart_of_accounts extends MY_Controller {
                     'payee' => $payeeName,
                     'account' => $account->name,
                     'memo' => $expense->memo,
-                    'payment' => '',
-                    'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -1292,6 +1626,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = '';
+                        $transaction['payment'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    default :
+                        $transaction['payment'] = '';
+                        $transaction['deposit'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                }
+    
+                $data[] = $transaction;
             }
         }
 
@@ -1302,6 +1657,17 @@ class Chart_of_accounts extends MY_Controller {
     {
         $this->load->model('accounting_inventory_qty_adjustments_model');
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
+
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $invQtyAdjs = $this->chart_of_accounts_model->get_qty_adjustments_registers($accountId);
 
         foreach($invQtyAdjs as $invQtyAdj) {
@@ -1319,7 +1685,7 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
@@ -1328,8 +1694,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
                 'memo' => $invQtyAdj->memo,
-                'payment' => number_format($payment, 2, '.', ','),
-                'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1337,6 +1701,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($invQtyAdj->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format($payment, 2, '.', ',');
+                    $transaction['payment'] = '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format($payment, 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format($payment, 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                default :
+                    $transaction['payment'] = number_format($payment, 2, '.', ',');
+                    $transaction['deposit'] = '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         $invQtyAdjItems = $this->chart_of_accounts_model->get_qty_adjustment_item_registers($accountId);
@@ -1353,7 +1738,7 @@ class Chart_of_accounts extends MY_Controller {
                 $payment = floatval($invQtyAdjItem->change_in_quantity) *  floatval($item->cost);
             }
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
@@ -1362,8 +1747,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
                 'memo' => $invQtyAdj->memo,
-                'payment' => number_format($payment, 2, '.', ','),
-                'deposit' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1371,6 +1754,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($invQtyAdjItem->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = number_format($payment, 2, '.', ',');
+                    $transaction['payment'] = '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = number_format($payment, 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = number_format($payment, 2, '.', ',');
+                    $transaction['decrease'] = '';
+                break;
+                default :
+                    $transaction['payment'] = number_format($payment, 2, '.', ',');
+                    $transaction['deposit'] = '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1378,6 +1782,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function expense_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
 
         foreach($expenses as $expense) {
@@ -1396,11 +1810,11 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-            $accountType = $this->account_model->getById($account->account_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-            if($accountType->account_name !== 'Credit Card') {
-                $data[] = [
+            if($paymentAccType->account_name !== 'Credit Card') {
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1409,8 +1823,6 @@ class Chart_of_accounts extends MY_Controller {
                     'payee' => $payeeName,
                     'account' => $this->account_col($expense->id, 'Expense'),
                     'memo' => $expense->memo,
-                    'payment' => number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'deposit' => '',
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -1418,6 +1830,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['payment'] = '';
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    default :
+                        $transaction['payment'] = number_format(floatval($expense->total_amount), 2, '.', ',');
+                        $transaction['deposit'] = '';
+                    break;
+                }
+    
+                $data[] = $transaction;
             }
         }
 
@@ -1425,8 +1858,8 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($expenseCategories as $expenseCategory) {
             $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
-            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-            $accountType = $this->account_model->getById($account->account_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
             switch($expense->payee_type) {
                 case 'vendor':
@@ -1443,8 +1876,8 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
-            if($accountType->account_name !== 'Credit Card') {
-                $data[] = [
+            if($paymentAccType->account_name !== 'Credit Card') {
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1453,8 +1886,6 @@ class Chart_of_accounts extends MY_Controller {
                     'payee' => $payeeName,
                     'account' => $account->name,
                     'memo' => $expense->memo,
-                    'payment' => '',
-                    'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -1462,6 +1893,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = '';
+                        $transaction['payment'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                    default :
+                        $transaction['payment'] = '';
+                        $transaction['deposit'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                    break;
+                }
+
+                $data[] = $transaction;
             }
         }
 
@@ -1470,6 +1922,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function item_starting_value_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $adjustments = $this->chart_of_accounts_model->get_item_starting_value_registers($accountId);
 
         foreach($adjustments as $adjustment) {
@@ -1478,7 +1940,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $deposit = floatval($adjustment->initial_cost) * intval($adjustment->initial_qty);
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
                 'ref_no' => $adjustment->ref_no === null ? '' : $adjustment->ref_no,
                 'type' => 'Inventory Starting Value',
@@ -1496,6 +1958,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($adjustment->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         $adjustedItems = $this->chart_of_accounts_model->get_adjusted_starting_value_registers($accountId);
@@ -1506,7 +1989,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $deposit = floatval($adjusted->initial_cost) * intval($adjusted->initial_qty);
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($adjusted->as_of_date)),
                 'ref_no' => $adjusted->ref_no === null ? '' : $adjusted->ref_no,
                 'type' => 'Inventory Starting Value',
@@ -1515,8 +1998,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => '',
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
                 'memo' => $adjusted->memo,
-                'payment' => '',
-                'deposit' => number_format(floatval($deposit), 2, '.', ','),
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1524,6 +2005,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($adjusted->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = '';
+                    $transaction['payment'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = '';
+                    $transaction['decrease'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+                default :
+                    $transaction['payment'] = '';
+                    $transaction['deposit'] = number_format(floatval($deposit), 2, '.', ',');
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1531,6 +2033,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function credit_card_payment_registers($accountId, $data = [])
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $ccPayments = $this->chart_of_accounts_model->get_credit_card_payment_registers($accountId);
 
         foreach($ccPayments as $ccPayment) {
@@ -1539,7 +2051,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $account = $ccPayment->credit_card_id === $accountId ? $this->chart_of_accounts_model->getName($ccPayment->bank_account_id) : $this->chart_of_accounts_model->getName($ccPayment->credit_card_id);
 
-            $data[] = [
+            $transaction = [
                 'date' => date("m/d/Y", strtotime($ccPayment->date)),
                 'ref_no' => '',
                 'type' => 'Credit Card Pmt',
@@ -1548,8 +2060,6 @@ class Chart_of_accounts extends MY_Controller {
                 'payee' => $payeeName,
                 'account' => $account,
                 'memo' => $ccPayment->memo,
-                'payment' => $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '',
-                'deposit' => $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '',
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1557,6 +2067,27 @@ class Chart_of_accounts extends MY_Controller {
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
             ];
+
+            switch($accType) {
+                case 'Credit Card' :
+                    $transaction['charge'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $transaction['payment'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                break;
+                case 'Asset' :
+                    $transaction['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $transaction['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                break;
+                case 'Liability' :
+                    $transaction['increase'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $transaction['decrease'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                break;
+                default :
+                    $transaction['payment'] = $ccPayment->bank_account_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                    $transaction['deposit'] = $ccPayment->credit_card_id === $accountId ? number_format(floatval($ccPayment->amount), 2, '.', ',') : '';
+                break;
+            }
+
+            $data[] = $transaction;
         }
 
         return $data;
@@ -1564,6 +2095,16 @@ class Chart_of_accounts extends MY_Controller {
 
     private function bill_payment_registers($accountId, $data = [], $creditCard = false)
     {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else {
+            $accType = $accountType->account_name;
+        }
         $billPayments = $this->chart_of_accounts_model->get_bill_payment_registers($accountId);
 
         foreach($billPayments as $billPayment) {
@@ -1572,7 +2113,7 @@ class Chart_of_accounts extends MY_Controller {
             $accountType = $this->account_model->getById($account->account_id);
 
             if($creditCard === true && $accountType->account_name === 'Credit Card' || $creditCard === false) {
-                $data[] = [
+                $transaction = [
                     'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
                     'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : $billPayment->check_no === null ? '' : $billPayment->check_no,
                     'type' => 'Bill Payment',
@@ -1590,6 +2131,27 @@ class Chart_of_accounts extends MY_Controller {
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
                 ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $transaction['payment'] = '';
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $transaction['decrease'] = '';
+                    break;
+                    default :
+                        $transaction['payment'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
+                        $transaction['deposit'] = '';
+                    break;
+                }
+    
+                $data[] = $transaction;
             }
         }
 

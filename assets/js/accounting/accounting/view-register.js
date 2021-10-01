@@ -113,163 +113,77 @@ var columns = [
     }
 ];
 
-if(type === 'Asset') {
-    columns = [
-        {
-            data: 'date',
-            name: 'date'
-        },
-        {
-            data: 'ref_no',
-            name: 'ref_no'
-        },
-        {
-            data: 'type',
-            name: 'type'
-        },
-        {
-            data: 'payee',
-            name: 'payee'
-        },
-        {
-            orderable: false,
-            data: 'account',
-            name: 'account'
-        },
-        {
-            orderable: false,
-            data: 'memo',
-            name: 'memo',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('memo');
-    
-                if($('#chk_memo').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
-            }
-        },
-        {
-            data: 'decrease',
-            name: 'decrease'
-        },
-        {
-            data: 'increase',
-            name: 'increase'
-        },
-        {
-            data: 'reconcile_status',
-            name: 'reconcile_status',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('reconcile_status');
-    
-                if($('#chk_reconcile_status').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
-            }
-        },
-        {
-            orderable: false,
-            data: 'banking_status',
-            name: 'banking_status',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('banking_status');
-    
-                if($('#chk_banking_status').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
-            }
-        },
-        {
-            orderable: false,
-            data: 'attachments',
-            name: 'attachments',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('attachments');
-    
-                if($('#chk_attachments').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
-            }
-        },
-        {
-            orderable: false,
-            data: 'tax',
-            name: 'tax',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('tax');
-    
-                if($('#chk_tax').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
-            }
-        },
-        {
-            orderable: false,
-            data: 'balance',
-            name: 'balance',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('running_balance');
-    
-                if($('#chk_running_balance').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
+if(type === 'Credit Card') {
+    columns[6] = {
+        data: 'charge',
+        name: 'charge',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            if(cellData !== '') {
+                $(td).html(`$${cellData}`);
             }
         }
-    ];
+    };
+
+    columns[7] = {
+        data: 'payment',
+        name: 'payment',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            if(cellData !== '') {
+                $(td).html(`$${cellData}`);
+            }
+        }
+    };
+}
+
+if(type === 'Asset' || type === 'Liability') {
+    columns[6] = {
+        data: type === 'Asset' ? 'decrease' : 'increase',
+        name: type === 'Asset' ? 'decrease' : 'increase',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            if(cellData !== '') {
+                $(td).html(`$${cellData}`);
+            }
+        }
+    };
+
+    columns[7] = {
+        data: type === 'Asset' ? 'increase' : 'decrease',
+        name: type === 'Asset' ? 'increase' : 'decrease',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            if(cellData !== '') {
+                $(td).html(`$${cellData}`);
+            }
+        }
+    };
 }
 
 if(type === 'A/R' || type === 'A/P') {
-    columns = [
-        {
-            orderable: false,
-            data: 'date',
-            name: 'date'
-        },
-        {
-            orderable: false,
-            data: 'ref_no',
-            name: 'ref_no'
-        },
-        {
+    columns[0].orderable = false;
+    columns[1].orderable = false;
+    columns.splice(3, 2);
+    columns[4] = {
+        orderable: false,
+        data: 'due_date',
+        name: 'due_date'
+    };
+
+    if(type === 'A/R') {
+        columns[2] = {
             orderable: false,
             data: 'customer',
             name: 'customer'
-        },
-        {
-            orderable: false,
-            data: 'memo',
-            name: 'memo'
-        },
-        {
-            orderable: false,
-            data: 'due_date',
-            name: 'due_date'
-        },
-        {
+        };
+        columns[5] = {
             orderable: false,
             data: 'charge_credit',
             name: 'charge_credit'
-        },
-        {
+        };
+        columns[6] = {
             orderable: false,
             data: 'payment',
             name: 'payment'
-        },
-        {
-            orderable: false,
-            data: 'open_balance',
-            name: 'open_balance',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('open_balance');
-    
-                if($('#chk_open_balance').prop('checked') === false) {
-                    $(td).addClass('d-none');
-                }
-            }
-        }
-    ];
-
-    if(type === 'A/P') {
+        };
+    } else {
         columns[2] = {
             orderable: false,
             data: 'vendor',
@@ -286,6 +200,20 @@ if(type === 'A/R' || type === 'A/P') {
             name: 'paid'
         };
     }
+    columns[7] = {
+        orderable: false,
+        data: 'open_balance',
+        name: 'open_balance',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('open_balance');
+
+            if($('#chk_open_balance').prop('checked') === false) {
+                $(td).addClass('d-none');
+            }
+        }
+    };
+
+    columns.splice(8, 3);
 }
 
 $('#registers-table').DataTable({
@@ -416,6 +344,11 @@ function col(el) {
 
     if(el.prop('checked')) {
         $(`#registers-table .${col}`).removeClass('d-none');
+
+        if($('#registers-table tbody tr td.dataTables_empty').length > 0) {
+            var colspan = $('#registers-table tbody tr td.dataTables_empty').attr('colspan');
+            $('#registers-table tbody tr td.dataTables_empty').prop('colspan', parseInt(colspan) + 1);
+        }
     } else {
         $(`#registers-table .${col}`).addClass('d-none');
     }
