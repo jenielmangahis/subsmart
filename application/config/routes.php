@@ -810,6 +810,7 @@ $route['users/_add_payscale'] = 'Users/ajax_add_payscale';
 $route['users/_edit_payscale'] = 'Users/ajax_edit_payscale';
 $route['users/_update_payscale'] = 'Users/ajax_update_payscale';
 $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
+$route['users/export_list'] = 'Users/user_export';
 
 //Jobs
 $route['job/details/(:any)'] = 'job/details/$1';

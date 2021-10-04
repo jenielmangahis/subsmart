@@ -257,8 +257,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <h4 class="mt-0 header-title mb-5">Employee list</h4>
                                 </div>
                                 <div class="col-md-6">
-                                    <button class="btn btn-info add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
-                                    <button class="btn btn-info share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
+                                    <button class="btn btn-primary btn-md btn-export-list" style="float: right;margin-left: 10px;"><i class="fa fa-upload"></i> Export List</button>
+                                    <button class="btn btn-primary btn-md add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
+                                    <button class="btn btn-primary btn-md share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -734,6 +735,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $('#employeeTable').DataTable({
             "searching": true,
             "sort": false
+        });
+
+        $(".btn-export-list").click(function(){
+            window.location.href= base_url + 'users/export_list';
         });
 
         $("#shareEmployeeForm").click(function() {

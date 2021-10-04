@@ -1727,6 +1727,68 @@ class Users extends MY_Controller {
 
 		redirect('users/socialMedia');
 	}
+
+	public function user_export()
+    {
+    	$this->load->model('users_model');
+
+        $cid   = logged('company_id');
+        $users = $this->users_model->getCompanyUsers($cid);        
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "users_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
+                        'AbortCode','Address','Address1','Area','City','State','Zip','ContractTerm','CreditScore','CreditScore2','Email','MonitoringCompany','StatusID','Technician');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                $csvData = array(
+                    $item->monitor_id,
+                    $item->last_name,
+                    $item->first_name,
+                    $item->business_name,
+                    $item->panel_type,
+                    $item->acct_type,
+                    $item->install_date,
+                    $item->sales_date,
+                    $item->mmr,
+                    $item->fk_sales_rep_office,
+                    $item->status,
+                    $item->status,
+                    $item->passcode,
+                    $item->mail_add,
+                    $item->mail_add,
+                    'COR',
+                    $item->city,
+                    $item->state,
+                    $item->zip_code,
+                    $item->contract_term,
+                    $item->credit_score,
+                    $item->credit_score,
+                    $item->email,
+                    $item->monitor_comp,
+                    3,
+                    $item->technician,
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
 }
 
 
