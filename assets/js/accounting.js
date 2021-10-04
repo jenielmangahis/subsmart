@@ -1423,3 +1423,33 @@ $(".select_item_sr").click(function() {
   cal_total_due();
 
 });
+
+var price = $("#price2_" + counter).val();
+var quantity = $("#quantity2_" + counter).val();
+var discount = $("#discount2_" + counter).val();
+var tax = (parseFloat(price) * 7.5) / 100;
+var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+);
+if (discount == '') {
+    discount = 0;
+}
+
+var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+).toFixed(2);
+
+// alert( 'yeah' + total);
+
+$("#span_total2_" + counter).text(total);
+$("#tax2_" + counter).text(tax1);
+$("#discount2_" + counter).val(discount);
+
+if ($('#tax2_' + counter).length) {
+    $('#tax2_' + counter).val(tax1);
+}
+
+if ($('#item_total2_' + counter).length) {
+    $('#item_total2_' + counter).val(total);
+}
