@@ -338,6 +338,55 @@ $('#apply-filter').on('click', function(e) {
     $('#registers-table').DataTable().ajax.reload(null, true);
 });
 
+$('#search').on('keyup', function(e) {
+    var search = $(this).val();
+
+    if(search.includes('<') && search.includes('>')) {
+        $(this).addClass('border-danger');
+    } else {
+        $(this).removeClass('border-danger');
+    }
+});
+
+$('#print-transactions').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+	data.set('from_date', $('#from').val());
+	data.set('to_date', $('#to').val());
+	data.set('search', $('#search').val());
+	data.set('reconcile_status', $('#reconcile_status').val());
+	data.set('transaction_type', $('#transaction_type').val());
+	data.set('payee', $('#payee').val());
+
+    var order = $('#registers-table').DataTable().order();
+    data.set('column', columns[order[0][0]].name);
+    data.set('order', order[0][1]);
+
+    $('div[aria-labelledby="dropdownMenuLink"] input[type="checkbox"]').each(function() {
+        var id = $(this).attr('id');
+        if(id.includes('chk_')) {
+            data.set(id, $(this).prop('checked') ? 1 : 0);
+        }
+    });
+
+    $.ajax({
+		url: `/accounting/chart-of-accounts/view-register/${accountId}/print-transactions`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+			let pdfWindow = window.open("");
+			pdfWindow.document.write(result);
+			$(pdfWindow.document).find('body').css('padding', '0');
+			$(pdfWindow.document).find('body').css('margin', '0');
+			$(pdfWindow.document).find('iframe').css('border', '0');
+			pdfWindow.print();
+		}
+	});
+});
+
 function col(el) {
     var el = $(el);
     var col = el.attr('id').replace('chk_', '');

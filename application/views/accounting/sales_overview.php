@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 						</div>
 						<div class="overview-widget">
-							<div class="widget-with-counter">
+							<div class="widget-with-counter focused">
 								<div class="row">
 									<div class="col-md-1">
 										<div class="counter">
@@ -138,8 +138,188 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</div>
 							</div>
 						</div>
+						<div class="overview-widget invoices">
+							<div class="row" style="padding-top: 10px;">
+								<div class="col-md-5">
+									<div class="widget-title">
+										INVOICES
+									</div>
+								</div>
+							</div>
+							<div class="widget-content" style="padding-bottom:25px ;">
+								<div class="row">
+									<div class="col-md-3">
+										<div class="center-content">
+											<div class="items">
+												<div class="sigments warning">
+													<div class="icon">
+														<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+													</div>
+													<div class="the-text bold">
+														Needs attention $58.04
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-9">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="sigments">
+													<div class="last-365days">
+														<div class="bold">$89,028.27 Unpaid</div>
+													</div>
+													<div class="text">
+														<div class="text" style="padding: 0 10px;">Last 365 days</div>
+													</div>
+												</div>
+												<div style="padding: 20px 0;">
+													<div class="row">
+														<div class="col-md-6">
+															<div class="content-monitary-highlight small">
+																$65,225.74
+															</div>
+															<div class="text">Overdue</div>
+														</div>
+														<div class="col-md-6">
+															<div class="content-monitary-highlight small"
+																style="text-align: right;">
+																$23,802.51
+															</div>
+															<div class="text" style="text-align: right;">Not due yet
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="invoices-bars">
+													<div class="progress">
+														<div class="progress-bar orange" role="progressbar"
+															style="width: 75%" aria-valuenow="75" aria-valuemin="0"
+															aria-valuemax="100">
+														</div>
+														<div class="progress-bar default" role="progressbar"
+															style="width: 30%" aria-valuenow="30" aria-valuemin="0"
+															aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="sigments">
+													<div class="last-365days">
+														<div class="bold">$21,201.35 Unpaid</div>
+													</div>
+													<div class="text">
+														<div class="text" style="padding: 0 10px;">Last 30 days</div>
+													</div>
+												</div>
+												<div style="padding: 20px 0;">
+													<div class="row">
+														<div class="col-md-6">
+															<div class="content-monitary-highlight small">
+																$59.9
+															</div>
+															<div class="text">No deposited</div>
+														</div>
+														<div class="col-md-6">
+															<div class="content-monitary-highlight small"
+																style="text-align: right;">
+																$21,146.36
+															</div>
+															<div class="text" style="text-align: right;">Deposited
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="invoices-bars">
+													<div class="progress">
+														<div class="progress-bar light-success" role="progressbar"
+															style="width: 10%" aria-valuenow="10" aria-valuemin="0"
+															aria-valuemax="100">
+														</div>
+														<div class="progress-bar success" role="progressbar"
+															style="width: 90%" aria-valuenow="90" aria-valuemin="0"
+															aria-valuemax="100"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="overview-widget deposite">
+							<div class="row" style="padding-top: 10px;">
+								<div class="col-md-5">
+									<div class="widget-title">
+										DEPOSITE
+									</div>
+								</div>
+							</div>
+							<div class="widget-content">
+								<div class="content-monitary-highlight">
+									$839.04
+								</div>
+								<div class="text">
+									Expected October 04, 2021
+								</div>
+								<div class="stepper-container">
+									<div class="step">
+										<div class="icon text-center">
+											<i class="fa fa-circle" aria-hidden="true"></i>
+										</div>
+										<div class="text">
+											<div class="top text-center">
+												Processing
+											</div>
+											<div class="sub text-center">
+												12 transaction
+											</div>
+										</div>
+									</div>
+									<div class="step">
+										<div class="icon text-center">
+											<i class="fa fa-check-circle" aria-hidden="true"></i>
+										</div>
+										<div class="text">
+											<div class="top text-center">
+												Batched
+											</div>
+											<div class="sub text-center">
+												10/01/21
+											</div>
+										</div>
+									</div>
+									<div class="step">
+										<div class="icon text-center success">
+											<i class="fa fa-circle" aria-hidden="true"></i>
+										</div>
+										<div class="text">
+											<div class="top text-center">
+												Transit
+											</div>
+											<div class="sub text-center">
+												10/04/21
+											</div>
+										</div>
+									</div>
+									<div class="step">
+										<div class="icon text-center">
+											<i class="fa fa-circle" aria-hidden="true"></i>
+										</div>
+										<div class="text">
+											<div class="top text-center">
+												Deposited
+											</div>
+											<div class="sub text-center">
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-5 side-bar-widgets">
 						<div class="overview-widget">
 							<div class="row">
 								<div class="col-md-5">
@@ -237,34 +417,65 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 						</div>
 						<div class="overview-widget">
 							<div class="widget-content">
-								<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+								<div class="content-title">
 									DISCOVER MORE
+								</div>
+								<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+									<ol class="carousel-indicators">
+										<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active">
+										</li>
+										<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+									</ol>
 									<div class="carousel-inner">
 										<div class="carousel-item active">
-											<div class="content-title">
-												Got Feedback?
-											</div>
-											<br>
-											<div class="content-text">
-												Help us make this Overview more useful by providing feedback
-											</div>
-											<br>
-											<div class="content-link-text">
-												<a href="#">Provide feedback</a>
+											<div class="row">
+												<div class="col-md-7">
+													<div class="content-title">
+														Got Feedback?
+													</div>
+													<div class="path-circle-separator">
+														<path
+															d="M2.3,0.2c-1.1,0-2,0.9-2,2s0.9,2,2,2h60c1.1,0,2-0.9,2-2s-0.9-2-2-2H2.3z">
+														</path>
+														<circle cx="70.3" cy="2.2" r="2"></circle>
+													</div>
+													<div class="content-text" style="margin-bottom: 25px;">
+														Help us make this Overview more useful by providing feedback
+													</div>
+													<button class="transparent-button">Provide feedback</button>
+												</div>
+												<div class="col-md-5">
+													<div class="img">
+														<img src="<?=base_url('assets/img/accounting/overview/Lifestyle_Contractor.png')?>"
+															alt="">
+													</div>
+												</div>
 											</div>
 										</div>
-										<div class="carousel-item">
-											<div class="content-title">
-												Get paid fast with payment links
-											</div>
-											<br>
-											<div class="content-text">
-												Create and send a link your customers can use to pay you. It’s quick,
-												easy, and secure!
-											</div>
-											<br>
-											<div class="content-link-text">
-												<a href="#">Let’s go</a>
+										<div class="carousel-item ">
+											<div class="row">
+												<div class="col-md-7">
+													<div class="content-title">
+														Got Feedback?
+													</div>
+													<div class="path-circle-separator">
+														<path class="success"
+															d="M2.3,0.2c-1.1,0-2,0.9-2,2s0.9,2,2,2h60c1.1,0,2-0.9,2-2s-0.9-2-2-2H2.3z">
+														</path>
+														<circle class="success" cx="70.3" cy="2.2" r="2"></circle>
+													</div>
+													<div class="content-text" style="margin-bottom: 25px;">
+														Create and send a link your customers can use to pay you. It’s
+														quick, easy, and secure!
+													</div>
+													<button class="transparent-button">Let's go</button>
+												</div>
+												<div class="col-md-5">
+													<div class="img">
+														<img src="<?=base_url('assets/img/accounting/overview/DiscoverMoreIllustration.png')?>"
+															alt="">
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -281,166 +492,244 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="row pt-3">
-					<div class="col-lg-12">
-						<div class="row bg-white px-3 py-4 rounded">
-							<div class="col-lg-3">
-								<h5 class="text-secondary">INCOME OVER TIME</h5>
-								<div class="">
-									<h1 class="display-4 pt-4"><strong>$2</strong></h1>
-									<h6 class="text-secondary">THIS MONTH</h6>
-								</div>
-							</div>
-							<div class="col-lg-9">
-								<div class="dropdown pull-right dropdown-toggle">
-									<button class="btn btn-default border-0 p-2" type="button" id="dropdownMenuButton"
-										data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										This Month&ensp;
-									</button>
-									<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-										<a class="dropdown-item" href="#">This Week</a>
-										<a class="dropdown-item" href="#">This Month</a>
-										<a class="dropdown-item" href="#">Last Month</a>
-										<a class="dropdown-item" href="#">This Quarter</a>
-										<a class="dropdown-item" href="#">Last Quarter</a>
-										<a class="dropdown-item" href="#">This year by month</a>
-										<a class="dropdown-item" href="#">This year by quarter</a>
-										<a class="dropdown-item" href="#">Last year by month</a>
-										<a class="dropdown-item" href="#">Last year by quarter</a>
-									</div>
-								</div>
-								<div class="chart w-100 border-left px-3" id="line-chart" style="height: 250px;">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row pt-3">
-					<div class="col-lg-7 pl-0">
-						<a
-							href="<?php echo url('/accounting/invoices')?>">
-							<div class="bg-white p-4 rounded">
-								<h5 class="text-secondary mt-0">INVOICES</h5>
-								<div class="row px-3">
-									<div class="col-sm-12">
-										<h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span class="pl-3">Last
-												365 days</span></h6>
-									</div>
-									<div class="col-sm-12 mt-0">
-										<div class="pull-left">
-											<h3 class="mb-0"><strong>$0</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Overdue</h6>
-										</div>
-										<div class="pull-right">
-											<h3 class="mb-0"><strong>$4</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Not due yet</h6>
-										</div>
-									</div>
-									<div class="col-sm-12 mt-1">
-										<div class="progress" style="height:30px">
-											<div class="progress-bar bg-secondary w-50"></div>
-											<div class="progress-bar bg-dark  w-50"></div>
-										</div>
-									</div>
-								</div>
-								<div class="row px-3 mt-3 pb-2">
-									<div class="col-sm-12">
-										<h6 class="font-weight-normal"><strong>$0 Paid</strong><span class="pl-3">Last
-												30 days</span></h6>
-									</div>
-									<div class="col-sm-12 mt-0">
-										<div class="pull-left">
-											<h3 class="mb-0"><strong>$0</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
-										</div>
-										<div class="pull-right">
-											<h3 class="mb-0"><strong>$0</strong></h3>
-											<h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
-										</div>
-									</div>
-									<div class="col-sm-12 mt-1">
-										<div class="progress" style="height:30px">
-											<div class="progress-bar bg-success w-50"></div>
-											<div class="progress-bar bg-info  w-50"></div>
-										</div>
+						<div class="overview-widget shortcuts">
+							<div class="row">
+								<div class="col-md-5">
+									<div class="widget-title">
+										SHORTCUTS
 									</div>
 								</div>
 							</div>
-						</a>
-					</div>
-					<div class="col-lg-5 pr-0">
-						<div class="bg-white p-4 rounded h-100">
-							<h5 class="text-secondary mt-0">SHORTCUTS</h5>
-							<div class="row px-2 text-center mt-5 align-items-center">
-								<div class="col-sm-6">
-									<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
-											src="<?php echo base_url();?>assets/img/accounting/new-invoice.png"
-											class="w-25 img-responsive" /></p>
-									<h6 class="pt-3">New Invoice</h6>
-								</div>
-								<div class="col-sm-6">
-									<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
-											src="<?php echo base_url();?>assets/img/accounting/recurring-invoice.png"
-											class="w-25 img-responsive" /></p>
-									<h6 class="pt-3">Recurring Invoice</h6>
-								</div>
-								<div class="col-sm-6 mt-4">
-									<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
-											src="<?php echo base_url();?>assets/img/accounting/new-sale.png"
-											class="w-25 img-responsive" /></p>
-									<h6 class="pt-3">New Sale</h6>
-								</div>
-								<div class="col-sm-6 mt-4">
-									<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
-											src="<?php echo base_url();?>assets/img/accounting/recurring-sale.png"
-											class="w-25 img-responsive" /></p>
-									<h6 class="pt-3">Recurring Sale</h6>
+							<div class="widget-content">
+								<div class="img-button-links">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="img">
+												<img src="<?=base_url('assets/img/accounting/overview/quick-sale.png')?>"
+													alt="">
+											</div>
+											<div class="text bold">
+												Quick sale
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="img">
+												<img src="<?=base_url('assets/img/accounting/overview/payment-link.png')?>"
+													alt="">
+											</div>
+											<div class="text bold">
+												Payment link
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="img">
+												<img src="<?=base_url('assets/img/accounting/overview/new-invoice.png')?>"
+													alt="">
+											</div>
+											<div class="text bold">
+												New invoice
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="img">
+												<img src="<?=base_url('assets/img/accounting/overview/recurring-invoice.png')?>"
+													alt="">
+											</div>
+											<div class="text bold">
+												Recurring invoice
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="img">
+												<img src="<?=base_url('assets/img/accounting/overview/new-sales-receipt.png')?>"
+													alt="">
+											</div>
+											<div class="text bold">
+												New sales receipt
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="img">
+												<img src="<?=base_url('assets/img/accounting/overview/recurring-sales-receipt.png')?>"
+													alt="">
+											</div>
+											<div class="text bold">
+												Recurring sales receipt
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row pt-3">
-					<div class="col-sm-12 px-0">
-						<a
-							href="<?php echo url('/accounting/deposits')?>">
-							<div class="bg-white p-4 rounded text-secondary">
-								<h5 class="text-secondary mt-0">DEPOSITS</h5>
-								<h1 class="mb-0 d-block mt-4"><strong>$0.00</strong></h1>
-								<h6 class="font-weight-normal text-secondary mt-1 d-block">Deposit for July 10, 2020
-								</h6>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="w-100 d-inline-block">
-											<ul class="timeline timeline-horizontal text-center">
-												<li class="timeline-item">
-													<div class="timeline-badge primary"><i
-															class="glyphicon glyphicon-check"></i></div>
-													<h5 class="timeline-title">Processing</h5>
-												</li>
-												<li class="timeline-item">
-													<div class="timeline-badge primary"><i
-															class="glyphicon glyphicon-check"></i></div>
-													<h5 class="timeline-title">Batched</h5>
-												</li>
-												<li class="timeline-item">
-													<div class="timeline-badge primary"><i
-															class="glyphicon glyphicon-check"></i></div>
-													<h5 class="timeline-title">In transit</h5>
-												</li>
-												<li class="timeline-item">
-													<div class="timeline-badge primary"><i
-															class="glyphicon glyphicon-check"></i></div>
-													<h5 class="timeline-title">Deposited</h5>
-												</li>
-											</ul>
+				<div style="display:none;">
+					<div class="row pt-3">
+						<div class="col-lg-12">
+							<div class="row bg-white px-3 py-4 rounded">
+								<div class="col-lg-3">
+									<h5 class="text-secondary">INCOME OVER TIME</h5>
+									<div class="">
+										<h1 class="display-4 pt-4"><strong>$2</strong></h1>
+										<h6 class="text-secondary">THIS MONTH</h6>
+									</div>
+								</div>
+								<div class="col-lg-9">
+									<div class="dropdown pull-right dropdown-toggle">
+										<button class="btn btn-default border-0 p-2" type="button"
+											id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+											aria-expanded="false">
+											This Month&ensp;
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											<a class="dropdown-item" href="#">This Week</a>
+											<a class="dropdown-item" href="#">This Month</a>
+											<a class="dropdown-item" href="#">Last Month</a>
+											<a class="dropdown-item" href="#">This Quarter</a>
+											<a class="dropdown-item" href="#">Last Quarter</a>
+											<a class="dropdown-item" href="#">This year by month</a>
+											<a class="dropdown-item" href="#">This year by quarter</a>
+											<a class="dropdown-item" href="#">Last year by month</a>
+											<a class="dropdown-item" href="#">Last year by quarter</a>
 										</div>
+									</div>
+									<div class="chart w-100 border-left px-3" id="line-chart" style="height: 250px;">
 									</div>
 								</div>
 							</div>
-						</a>
+						</div>
+					</div>
+					<div class="row pt-3">
+						<div class="col-lg-7 pl-0">
+							<a
+								href="<?php echo url('/accounting/invoices')?>">
+								<div class="bg-white p-4 rounded">
+									<h5 class="text-secondary mt-0">INVOICES</h5>
+									<div class="row px-3">
+										<div class="col-sm-12">
+											<h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span
+													class="pl-3">Last
+													365 days</span></h6>
+										</div>
+										<div class="col-sm-12 mt-0">
+											<div class="pull-left">
+												<h3 class="mb-0"><strong>$0</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Overdue</h6>
+											</div>
+											<div class="pull-right">
+												<h3 class="mb-0"><strong>$4</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Not due yet</h6>
+											</div>
+										</div>
+										<div class="col-sm-12 mt-1">
+											<div class="progress" style="height:30px">
+												<div class="progress-bar bg-secondary w-50"></div>
+												<div class="progress-bar bg-dark  w-50"></div>
+											</div>
+										</div>
+									</div>
+									<div class="row px-3 mt-3 pb-2">
+										<div class="col-sm-12">
+											<h6 class="font-weight-normal"><strong>$0 Paid</strong><span
+													class="pl-3">Last
+													30 days</span></h6>
+										</div>
+										<div class="col-sm-12 mt-0">
+											<div class="pull-left">
+												<h3 class="mb-0"><strong>$0</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
+											</div>
+											<div class="pull-right">
+												<h3 class="mb-0"><strong>$0</strong></h3>
+												<h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
+											</div>
+										</div>
+										<div class="col-sm-12 mt-1">
+											<div class="progress" style="height:30px">
+												<div class="progress-bar bg-success w-50"></div>
+												<div class="progress-bar bg-info  w-50"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="col-lg-5 pr-0">
+							<div class="bg-white p-4 rounded h-100">
+								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
+								<div class="row px-2 text-center mt-5 align-items-center">
+									<div class="col-sm-6">
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
+												src="<?php echo base_url();?>assets/img/accounting/new-invoice.png"
+												class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">New Invoice</h6>
+									</div>
+									<div class="col-sm-6">
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
+												src="<?php echo base_url();?>assets/img/accounting/recurring-invoice.png"
+												class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">Recurring Invoice</h6>
+									</div>
+									<div class="col-sm-6 mt-4">
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
+												src="<?php echo base_url();?>assets/img/accounting/new-sale.png"
+												class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">New Sale</h6>
+									</div>
+									<div class="col-sm-6 mt-4">
+										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
+												src="<?php echo base_url();?>assets/img/accounting/recurring-sale.png"
+												class="w-25 img-responsive" /></p>
+										<h6 class="pt-3">Recurring Sale</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row pt-3">
+						<div class="col-sm-12 px-0">
+							<a
+								href="<?php echo url('/accounting/deposits')?>">
+								<div class="bg-white p-4 rounded text-secondary">
+									<h5 class="text-secondary mt-0">DEPOSITS</h5>
+									<h1 class="mb-0 d-block mt-4"><strong>$0.00</strong></h1>
+									<h6 class="font-weight-normal text-secondary mt-1 d-block">Deposit for July 10, 2020
+									</h6>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="w-100 d-inline-block">
+												<ul class="timeline timeline-horizontal text-center">
+													<li class="timeline-item">
+														<div class="timeline-badge primary"><i
+																class="glyphicon glyphicon-check"></i></div>
+														<h5 class="timeline-title">Processing</h5>
+													</li>
+													<li class="timeline-item">
+														<div class="timeline-badge primary"><i
+																class="glyphicon glyphicon-check"></i></div>
+														<h5 class="timeline-title">Batched</h5>
+													</li>
+													<li class="timeline-item">
+														<div class="timeline-badge primary"><i
+																class="glyphicon glyphicon-check"></i></div>
+														<h5 class="timeline-title">In transit</h5>
+													</li>
+													<li class="timeline-item">
+														<div class="timeline-badge primary"><i
+																class="glyphicon glyphicon-check"></i></div>
+														<h5 class="timeline-title">Deposited</h5>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>

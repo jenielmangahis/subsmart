@@ -104,7 +104,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-sm-7">
                                                             <div class="form-group">
                                                                 <label for="search">Find</label>
-                                                                <input type="text" name="search" id="search" class="form-control" placeholder="Memo, Ref no., $amt, >$amt, <$amt">
+                                                                <input type="text" name="search" id="search" class="form-control" aria-describedby="search-help">
+                                                                <small id="search-help" class="form-text text-muted">Memo, Ref no., $amt, >$amt, <$amt</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -203,7 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#"><i class="fa fa-print"></i></a></li>
+                                                <li><a href="#" id="print-transactions"><i class="fa fa-print"></i></a></li>
                                                 <li><a href="#"><i class="fa fa-download"></i></a></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -97,3 +97,31 @@
     }
   }
 }
+
+.rulesTable {
+  &__head {
+    th {
+      text-transform: uppercase;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+
+    .rulesTable__link {
+      color: #0077c5;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .dropdown {
+      cursor: pointer;
+    }
+  }
+
+  &__selectColumn {
+    padding: 0 8px !important;
+    text-align: center;
+  }
+}

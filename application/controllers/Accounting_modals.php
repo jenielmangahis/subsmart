@@ -2657,7 +2657,13 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        }
                         $newBalance = number_format($newBalance, 2, '.', ',');
 
                         $expenseAccData = [
@@ -2807,13 +2813,22 @@ class Accounting_modals extends MY_Controller
         if (count($categories) > 0) {
             foreach ($categories as $category) {
                 $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
                 switch ($transactionType) {
                     case 'Expense':
-                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        }
                     break;
                     case 'Bill':
-                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        }
                     break;
                 }
 
@@ -3007,7 +3022,13 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        }
                         $newBalance = number_format($newBalance, 2, '.', ',');
 
                         $expenseAccData = [
@@ -3280,7 +3301,13 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        }
                         $newBalance = number_format($newBalance, 2, '.', ',');
 
                         $expenseAccData = [
@@ -3785,7 +3812,13 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        }
                         $newBalance = number_format($newBalance, 2, '.', ',');
 
                         $expenseAccData = [
@@ -4183,7 +4216,13 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                        if ($expenseAccType->account_name === 'Credit Card') {
+                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                        } else {
+                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                        }
                         $newBalance = number_format($newBalance, 2, '.', ',');
 
                         $expenseAccData = [
