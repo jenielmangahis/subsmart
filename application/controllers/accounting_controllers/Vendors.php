@@ -2061,9 +2061,14 @@ class Vendors extends MY_Controller
         $update = $this->vendors_model->update_expense($expenseId, $expenseData);
 
         if ($update) {
-            if ($data['payment_account'] !== $expense->payment_account_id) {
-                $newPaymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
-                $newBalance = floatval($newPaymentAcc->balance) + floatval($data['total_amount']);
+            if ($data['expense_payment_account'] !== $expense->payment_account_id) {
+                $newPaymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
+                $newPaymentAccType = $this->account_model->getById($newPaymentAcc->account_id);
+                if ($newPaymentAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($newPaymentAcc->balance) + floatval($data['total_amount']);
+                } else {
+                    $newBalance = floatval($newPaymentAcc->balance) - floatval($data['total_amount']);
+                }
                 $newBalance = number_format($newBalance, 2, '.', ',');
     
                 $newPaymentAccData = [
@@ -2075,11 +2080,16 @@ class Vendors extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($newPaymentAccData);
     
                 $oldPaymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-                $revertBalance = floatval($oldPaymentAcc->balance) - floatval($expense->total_amount);
+                $oldPaymentAccType = $this->account_model->getById($oldPaymentAcc->account_id);
+                if ($oldPaymentAccType->account_name === 'Credit Card') {
+                    $revertBalance = floatval($oldPaymentAcc->balance) - floatval($expense->total_amount);
+                } else {
+                    $revertBalance = floatval($oldPaymentAcc->balance) + floatval($expense->total_amount);
+                }
                 $revertBalance = number_format($revertBalance, 2, '.', ',');
     
                 $oldPaymentAccData = [
-                    'id' => $newPaymentAcc->id,
+                    'id' => $oldPaymentAcc->id,
                     'company_id' => logged('company_id'),
                     'balance' => $revertBalance
                 ];
@@ -2087,8 +2097,8 @@ class Vendors extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($oldPaymentAccData);
             }
     
-            if ($data['total_amount'] !== $expense->total_amount && $data['payment_account'] === $expense->payment_account_id) {
-                $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+            if ($data['total_amount'] !== $expense->total_amount && $data['expense_payment_account'] === $expense->payment_account_id) {
+                $paymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
                 $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
                 $newBalance = $newBalance + floatval($data['total_amount']);
                 $newBalance = number_format($newBalance, 2, '.', ',');
@@ -2170,7 +2180,12 @@ class Vendors extends MY_Controller
 
             if ($data['bank_account'] !== $check->bank_account_id) {
                 $newBankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
-                $newBalance = floatval($newBankAcc->balance) - floatval($data['total_amount']);
+                $newBankAccType = $this->account_model->getById($newBankAcc->account_id);
+                if ($newBankAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($newBankAcc->balance) + floatval($data['total_amount']);
+                } else {
+                    $newBalance = floatval($newBankAcc->balance) - floatval($data['total_amount']);
+                }
                 $newBalance = number_format($newBalance, 2, '.', ',');
     
                 $newBankAccData = [
@@ -2182,11 +2197,16 @@ class Vendors extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($newBankAccData);
     
                 $oldBankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
-                $revertBalance = floatval($oldBankAcc->balance) + floatval($check->total_amount);
+                $oldBankAccType = $this->account_model->getById($oldBankAcc->account_id);
+                if ($oldBankAccType->account_name === 'Credit Card') {
+                    $revertBalance = floatval($oldBankAcc->balance) - floatval($check->total_amount);
+                } else {
+                    $revertBalance = floatval($oldBankAcc->balance) + floatval($check->total_amount);
+                }
                 $revertBalance = number_format($revertBalance, 2, '.', ',');
     
                 $oldBankAccData = [
-                    'id' => $newPaymentAcc->id,
+                    'id' => $oldBankAcc->id,
                     'company_id' => logged('company_id'),
                     'balance' => $revertBalance
                 ];
@@ -2395,7 +2415,7 @@ class Vendors extends MY_Controller
                 $revertBalance = number_format($revertBalance, 2, '.', ',');
     
                 $oldAccData = [
-                    'id' => $newPaymentAcc->id,
+                    'id' => $oldAcc->id,
                     'company_id' => logged('company_id'),
                     'balance' => $revertBalance
                 ];
@@ -2405,8 +2425,8 @@ class Vendors extends MY_Controller
     
             if ($data['total_amount'] !== $ccCredit->total_amount && $data['bank_credit_account'] === $ccCredit->bank_credit_account_id) {
                 $bankAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
-                $newBalance = floatval($bankAcc->balance) - floatval($ccCredit->total_amount);
-                $newBalance = $newBalance + floatval($data['total_amount']);
+                $newBalance = floatval($bankAcc->balance) + floatval($ccCredit->total_amount);
+                $newBalance = $newBalance - floatval($data['total_amount']);
                 $newBalance = number_format($newBalance, 2, '.', ',');
     
                 $bankAccData = [
@@ -2624,28 +2644,75 @@ class Vendors extends MY_Controller
 
                 if ($value !== $categories[$index]->expense_account_id) {
                     $newCat = $this->chart_of_accounts_model->getById($value);
+                    $newCatType = $this->account_model->getById($newCat->account_id);
                     $oldCat = $this->chart_of_accounts_model->getById($categories[$index]->expense_account_id);
+                    $oldCatType = $this->account_model->getById($oldCat->account_id);
 
                     switch ($transactionType) {
                         case 'Expense':
-                            $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
-                            $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            }
                         break;
                         case 'Check':
-                            $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
-                            $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            }
                         break;
                         case 'Bill':
-                            $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
-                            $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            }
                         break;
                         case 'Vendor Credit':
-                            $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
-                            $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            }
                         break;
                         case 'Credit Card Credit':
-                            $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
-                            $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            }
                         break;
                     }
         
@@ -2669,27 +2736,53 @@ class Vendors extends MY_Controller
 
                 if ($data['category_amount'][$index] !== $categories[$index]->amount && $value === $categories[$index]->expense_account_id) {
                     $catAcc = $this->chart_of_accounts_model->getById($value);
+                    $catAccType = $this->account_model->getById($catAcc->account_id);
 
                     switch ($transactionType) {
                         case 'Expense':
-                            $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
-                            $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            }
                         break;
                         case 'Check':
-                            $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
-                            $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            }
                         break;
                         case 'Bill':
-                            $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
-                            $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            }
                         break;
                         case 'Vendor Credit':
-                            $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
-                            $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            }
                         break;
                         case 'Credit Card Credit':
-                            $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
-                            $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            }
                         break;
                     }
         
@@ -2708,21 +2801,43 @@ class Vendors extends MY_Controller
             foreach ($categories as $index => $category) {
                 if ($data['expense_account'] === null || $data['expense_account'][$index] === null) {
                     $catAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $catAccType = $this->account_model->getById($catAcc->account_id);
+
                     switch ($transactionType) {
                         case 'Expense':
-                            $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            }
                         break;
                         case 'Check':
-                            $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            }
                         break;
                         case 'Bill':
-                            $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            }
                         break;
                         case 'Vendor Credit':
-                            $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            }
                         break;
                         case 'Credit Card Credit':
-                            $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            }
                         break;
                     }
 

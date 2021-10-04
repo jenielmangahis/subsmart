@@ -39,7 +39,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                 The more you uses your bank rules, the better it gets at categorizing. After a while, it can even scan transactions and add details like payees. Step 1: Create a bank rule. Go to the Banking menu or Transactions menu. Then select the Rules tab. Select New rule. Enter a name in the Rule field. From the drop-down, select Money in or Money out.  Simply acknowledge and our accounting platform will remember your selection for that particular entry for the next time.  Saving you time and money.
                 </div>
                 <!--                        DataTables-->
-                        <table id="rules_table" class="table table-striped table-bordered" style="width:100%">
+                        <!-- <table id="rules_table" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                             <tr>
                                 <th><input type="checkbox"></th>
@@ -74,7 +74,26 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             </tr>
                             <?php endforeach;?>
                             </tbody>
+                        </table> -->
+
+                        <table id="rulesTable" class="table table-striped table-bordered rulesTable">
+                            <thead class="rulesTable__head">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="rulesTable__checkbox"/>
+                                    </th>
+                                    <th>Priority</th>
+                                    <th>Rule Name</th>
+                                    <th>Applied To</th>
+                                    <th>Conditions</th>
+                                    <th>Settings</th>
+                                    <th>Auto-add</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
                         </table>
+
                         </div>
                     </div>
                 </div>
@@ -94,20 +113,31 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <h3 class="modal-title" id="myModalLabel2" >Create rule</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    <form action="<?php echo site_url() ?>accounting/addRules" method="post">
+                    <form action="<?php echo site_url() ?>accounting/addRules" method="post" id="addRuleForm">
                     <div class="modal-body">
                         <div class="subheader">Rules only apply to unreviewed transactions.</div>
                             <div class="form-group">
-                                <label for="">What do you want to call this rule? *</label>
-                                <input required type="text" name="rules_name" class="form-control" placeholder="Name this rule">
+                                <label>What do you want to call this rule? *</label>
+                                <input
+                                    required
+                                    type="text"
+                                    name="rules_name"
+                                    class="form-control"
+                                    placeholder="Name this rule"
+                                    data-type="rules_name"
+                                >
                             </div>
                             <div class="form-group">
                                 <div>
-                                    <label for="">Apply this to transactions that are</label>
+                                    <label>Apply this to transactions that are</label>
                                 </div>
                                 <div class="createRuleModalRight__transactions">
                                     <div class="tab-select">
-                                        <select name="apply" id="" class="form-control">
+                                        <select
+                                            name="apply_type"
+                                            class="form-control"
+                                            data-type="apply_type"
+                                        >
                                             <option selected>Money in</option>
                                             <option>Money out</option>
                                         </select>
@@ -122,12 +152,18 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 
                                             <div class="selectWithCheckbox__options">
                                                 <div class="form-group selectWithCheckbox__optionsItem">
-                                                    <input name="banks" type="checkbox" class="form-check-input" id="allBankAccountsCb">
+                                                    <input
+                                                        name="banks"
+                                                        type="checkbox"
+                                                        class="form-check-input"
+                                                        id="allBankAccountsCb"
+                                                        data-type="banks"
+                                                    >
                                                     <label class="form-check-label" for="allBankAccountsCb">All bank accounts</label>
                                                 </div>
 
                                                 <div class="form-group selectWithCheckbox__optionsItem">
-                                                    <input name="banks" type="checkbox" class="form-check-input" id="checkingCb">
+                                                    <input type="checkbox" class="form-check-input" id="checkingCb">
                                                     <label class="form-check-label" for="checkingCb">Checking</label>
                                                 </div>
                                             </div>
@@ -136,8 +172,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="" style="position: relative;display: inline-block;">and include the following:</label>
-                                <select name="include" id="" class="form-control inline-select">
+                                <label style="position: relative;display: inline-block;">and include the following:</label>
+                                <select
+                                    name="include"
+                                    class="form-control inline-select"
+                                    data-type="include"
+                                >
                                     <option selected>All</option>
                                     <option>Any</option>
                                 </select>
@@ -147,21 +187,36 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <div id="addCondition">
                                         <div class="tab-select">
                                             <input type="hidden" id="counterCondition" value="1">
-                                            <select name="description[]" id="" class="form-control">
+                                            <select
+                                                name="description[]"
+                                                class="form-control"
+                                                data-type="conditions.description"
+                                            >
                                                 <option selected>Description</option>
                                                 <option>Bank text</option>
                                                 <option>Amount</option>
                                             </select>
                                         </div>
                                         <div class="tab-select">
-                                            <select name="contain[]" id="" class="form-control" style="max-width: 140px">
+                                            <select
+                                                name="contain[]"
+                                                class="form-control"
+                                                style="max-width: 140px"
+                                                data-type="conditions.contain"
+                                            >
                                                 <option  selected>Contain</option>
                                                 <option>Doesn't contain</option>
                                                 <option>Is exactly</option>
                                             </select>
                                         </div>
                                         <div class="tab-select" style="max-width: 140px">
-                                            <input type="text" name="comment[]" class="form-control" placeholder="Enter Text">
+                                            <input
+                                                type="text"
+                                                name="comment[]"
+                                                class="form-control"
+                                                placeholder="Enter Text"
+                                                data-type="conditions.comment"
+                                            >
                                         </div>
                                         <div class="tab-select deleteCondition" id="deleteCondition" style="display: none;">
                                             <a href="#" id="btnDeleteCondition"><i class="fa fa-trash fa-lg"></i></a>
@@ -174,10 +229,14 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="">Then assign</label>
+                                <label>Then assign</label>
                                 <div class="action-section">
                                     <span class="action-label">Transaction type</span>
-                                    <select name="trans_type" id="" class="form-control">
+                                    <select
+                                        name="trans_type"
+                                        class="form-control"
+                                        data-type="transaction_type"
+                                    >
                                         <option selected>Expenses</option>
                                         <option>Transfer</option>
                                         <option>Check</option>
@@ -187,7 +246,11 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <div id="categoryDefault">
                                         <span class="action-label" style="margin-right: 70px">Category</span>
                                         <div style="width: 220px;display: inline-block;">
-                                            <select name="category[]" id="mainCategory" class="form-control select2-rules-category">
+                                            <select
+                                                name="category[]"
+                                                id="mainCategory"
+                                                class="form-control select2-rules-category"
+                                            >
                                                 <option></option>
                                                 <option disabled>&plus; Add new</option>
                                                 <option>Advertising</option>
@@ -251,7 +314,11 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 <div class="action-section">
                                     <span class="action-label">Payee</span>
                                     <div style="width: 220px;display: inline-block;">
-                                        <select name="payee" id="" class="form-control select2-rules-payee">
+                                        <select
+                                            name="payee"
+                                            class="form-control select2-rules-payee"
+                                            data-type="payee"
+                                        >
                                             <option></option>
                                             <option>Abacus Accounting</option>
                                             <option>Absolute Power</option>
@@ -261,7 +328,14 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 </div>
                                 <div class="action-section" id="assignMore" style="display: none;">
                                     <span class="action-label">Add memo</span>
-                                    <textarea name="memo" id="" cols="30" rows="5" placeholder="Enter Text" style="resize: none;"></textarea>
+                                    <textarea
+                                        name="memo"
+                                        cols="30"
+                                        rows="5"
+                                        placeholder="Enter Text"
+                                        style="resize: none;"
+                                        data-type="memo"
+                                    ></textarea>
                                 </div>
                                 <div style="margin-top: 15px;">
                                     <a href="#" id="btnAssignMore" style="color: #0b62a4;"><i class="fa fa-plus"></i> Assign more</a>
@@ -273,11 +347,16 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             <div class="form-group">
                                 <label for="">Automatically confirm transactions this rule applies to</label>
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" name="auto" class="custom-control-input" value="1" id="autoAddswitch">
+                                    <input
+                                        type="checkbox"
+                                        name="auto"
+                                        class="custom-control-input"
+                                        id="autoAddswitch"
+                                        data-type="auto"
+                                    >
                                     <label class="custom-control-label" for="autoAddswitch">Auto-add</label>
                                 </div>
                             </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -426,6 +426,7 @@ $route['accounting/chart-of-accounts/print-table']['post'] = 'accounting_control
 $route['accounting/chart-of-accounts/update-accounts-name']['post'] = 'accounting_controllers/chart_of_accounts/update_account_names';
 $route['accounting/chart-of-accounts/view-register/(:any)'] = 'accounting_controllers/chart_of_accounts/view_register/$1';
 $route['accounting/chart-of-accounts/(:any)/load-registers']['post'] = 'accounting_controllers/chart_of_accounts/load_registers/$1';
+$route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['post'] = 'accounting_controllers/chart_of_accounts/print_transactions/$1';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';

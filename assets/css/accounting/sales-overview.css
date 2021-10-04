@@ -67,6 +67,10 @@
     color: #333333;
 }
 
+.overview-widget .content-monitary-highlight.small {
+    font-size: 20px;
+}
+
 .overview-widget .widget-content .content-monitary-highlight span {
     font-size: 13px;
     font-weight: lighter;
@@ -224,4 +228,195 @@
 .overview-widget .widget-with-counter .sinking-section button.transparent-button {
     background: transparent;
     color: #0378C5;
+}
+
+.overview-widget .carousel .carousel-inner {
+    padding-top: 10px;
+}
+
+.overview-widget .carousel .carousel-control-next {
+    right: -20px;
+}
+
+.overview-widget .carousel .carousel-control-prev {
+    left: -20px;
+}
+
+.overview-widget .path-circle-separator {
+    display: flex;
+    margin: 25px 0;
+}
+
+.overview-widget .path-circle-separator path {
+    padding: 2px;
+    background: #8D9096;
+    width: 64px;
+    border-radius: 15px;
+}
+
+.overview-widget .path-circle-separator circle {
+    padding: 2px;
+    float: left;
+    background: #8D9096;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.overview-widget .path-circle-separator path.success {
+    background: #52B702;
+}
+
+.overview-widget .path-circle-separator circle.success {
+    background: #52B702;
+}
+
+.overview-widget button.transparent-button {
+    background: transparent;
+    color: #0378C5;
+    border: none;
+    font-weight: 600;
+    border-radius: 25px;
+    height: auto;
+    margin: 10px 0;
+}
+
+.overview-widget .carousel .carousel-indicators li {
+    background-color: #333333;
+}
+
+.overview-widget .carousel {
+    padding-bottom: 20px;
+}
+
+.overview-widget .center-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.overview-widget .center-content>div {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+}
+
+.overview-widget .warning {
+    color: #B80101;
+}
+
+.overview-widget .warning .icon {
+    font-size: 40px;
+}
+
+.overview-widget .sigments {
+    display: flex;
+}
+
+.overview-widget .sigments>div {
+    float: left;
+}
+
+.overview-widget .sigments div.the-text {
+    padding: 10px;
+}
+
+.overview-widget.invoices .progress {
+    background-color: transparent;
+}
+
+.overview-widget.invoices .progress-bar.orange {
+    background-color: #FF8001;
+    margin-right: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices .progress-bar.success {
+    background-color: #2CA01C;
+    margin-right: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices .progress-bar.light-success {
+    background-color: #7CD203;
+    margin-right: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices .progress-bar.default {
+    background-color: #D4D7DC;
+    margin-left: 1px;
+    border-radius: 5px;
+}
+
+.side-bar-widgets .overview-widget {
+    max-width: 372px;
+}
+
+.overview-widget.shortcuts .img-button-links img {
+    max-width: 80px;
+    display: block;
+    margin: auto;
+}
+
+.overview-widget.shortcuts .img-button-links .text.bold {
+    text-align: center;
+    font-weight: 600;
+    color: #404145;
+}
+
+.overview-widget .bold {
+    color: #404145;
+}
+
+.overview-widget.shortcuts .img-button-links .img {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.overview-widget .stepper-container {
+    display: flex;
+    padding: 25px 0;
+}
+
+.overview-widget .stepper-container .step {
+    float: left;
+    width: 25%;
+    position: relative;
+}
+
+.overview-widget .stepper-container .step .icon.success {
+    color: #2CA01C;
+}
+
+.overview-widget .stepper-container .step::before {
+    content: ' ';
+    width: 86%;
+    border-top: solid 1px #8D9096;
+    top: 9px;
+    left: 54%;
+    display: block;
+    margin-left: 56%;
+    margin-bottom: -10px;
+}
+
+.overview-widget .stepper-container .step:last-child::before {
+    border-top: solid 1px transparent;
+}
+
+.overview-widget .stepper-container .step .text .sub {
+    font-size: 12px;
+}
+
+.overview-widget .stepper-container .step .icon.success::after {
+    content: ' ';
+    background: transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    z-index: 1;
+    border: solid 6px #2ca01c33;
+    display: block;
+    margin: auto;
+    margin-top: -20px;
 }
