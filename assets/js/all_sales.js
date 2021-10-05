@@ -1554,64 +1554,261 @@ $("#filter_paid30").click(function() {
 });
 
 // test datatable filter
-$(document).ready(function() {
-  function cbDropdown(column) {
-    return $('<ul>', {
-      'class': 'cb-dropdown'
-    }).appendTo($('<div>', {
-      'class': 'cb-dropdown-wrap'
-    }).appendTo(column));
-  }
+// $(document).ready(function() {
+//   function cbDropdown(column) {
+//     return $('<ul>', {
+//       'class': 'cb-dropdown'
+//     }).appendTo($('<div>', {
+//       'class': 'cb-dropdown-wrap'
+//     }).appendTo(column));
+//   }
 
-  $('#example').DataTable({
-    initComplete: function() {
-      this.api().columns().every(function() {
-        var column = this;
-        var ddmenu = cbDropdown($(column.header()))
-          .on('change', ':checkbox', function() {
-            var active;
-            var vals = $(':checked', ddmenu).map(function(index, element) {
-              active = true;
-              return $.fn.dataTable.util.escapeRegex($(element).val());
-            }).toArray().join('|');
+//   $('#example').DataTable({
+//     initComplete: function() {
+//       this.api().columns().every(function() {
+//         var column = this;
+//         var ddmenu = cbDropdown($(column.header()))
+//           .on('change', ':checkbox', function() {
+//             var active;
+//             var vals = $(':checked', ddmenu).map(function(index, element) {
+//               active = true;
+//               return $.fn.dataTable.util.escapeRegex($(element).val());
+//             }).toArray().join('|');
 
-            column
-              .search(vals.length > 0 ? '^(' + vals + ')$' : '', true, false)
-              .draw();
+//             column
+//               .search(vals.length > 0 ? '^(' + vals + ')$' : '', true, false)
+//               .draw();
 
-            // Highlight the current item if selected.
-            if (this.checked) {
-              $(this).closest('li').addClass('active');
-            } else {
-              $(this).closest('li').removeClass('active');
-            }
+//             // Highlight the current item if selected.
+//             if (this.checked) {
+//               $(this).closest('li').addClass('active');
+//             } else {
+//               $(this).closest('li').removeClass('active');
+//             }
 
-            // Highlight the current filter if selected.
-            var active2 = ddmenu.parent().is('.active');
-            if (active && !active2) {
-              ddmenu.parent().addClass('active');
-            } else if (!active && active2) {
-              ddmenu.parent().removeClass('active');
-            }
-          });
+//             // Highlight the current filter if selected.
+//             var active2 = ddmenu.parent().is('.active');
+//             if (active && !active2) {
+//               ddmenu.parent().addClass('active');
+//             } else if (!active && active2) {
+//               ddmenu.parent().removeClass('active');
+//             }
+//           });
 
-        column.data().unique().sort().each(function(d, j) {
-          var // wrapped
-            $label = $('<label>'),
-            $text = $('<span>', {
-              text: d
-            }),
-            $cb = $('<input>', {
-              type: 'checkbox',
-              value: d
+//         column.data().unique().sort().each(function(d, j) {
+//           var // wrapped
+//             $label = $('<label>'),
+//             $text = $('<span>', {
+//               text: d
+//             }),
+//             $cb = $('<input>', {
+//               type: 'checkbox',
+//               value: d
+//             });
+
+//           $text.appendTo($label);
+//           $cb.appendTo($label);
+
+//           ddmenu.append($('<li>').append($label));
+//         });
+//       });
+//     }
+//   });
+// });
+
+
+$('.close').on('hidden.bs.modal', function (e) {
+  $(this)
+    .find("input,textarea,select")
+       .val('')
+       .end()
+    .find("input[type=checkbox], input[type=radio]")
+       .prop("checked", "")
+       .end();
+
+       if(check_original != check_updated){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to leave without saving?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, leave without saving!'
+        }).then((result) => {
+            if (result.value) {
+            if(attachment == 0){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "There is/are a attachment that temporarily removed?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove it permanently!'
+                }).then((result) => {
+                    if (result.value) {
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#edit-expensesCheck').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                    attachment = null;
+                    attachment_id = [];
+                }
             });
-
-          $text.appendTo($label);
-          $cb.appendTo($label);
-
-          ddmenu.append($('<li>').append($label));
+            }else{
+                $(".loader").fadeIn('fast',function(){
+                    $('.loader').show();
+                });
+                $('#edit-expensesCheck').modal('hide');
+                $(".loader").fadeOut('fast',function(){
+                    $('.loader').hide();
+                });
+                attachment = null;
+                attachment_id = [];
+            }
+        }
+    });
+    }else{
+        if(attachment == 0){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "There is/are a attachment that temporarily removed?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, remove it permanently!'
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:"/accounting/removePermanentlyAttachment",
+                    type:"POST",
+                    data:{attachment_id:attachment_id},
+                    success:function () {
+  
+                    }
+                });
+                $(".loader").fadeIn('fast',function(){
+                    $('.loader').show();
+                });
+                $('#edit-expensesCheck').modal('hide');
+                $(".loader").fadeOut('fast',function(){
+                    $('.loader').hide();
+                });
+                attachment = null;
+                attachment_id = [];
+            }
         });
-      });
+        }else{
+            $(".loader").fadeIn('fast',function(){
+                $('.loader').show();
+            });
+            $('#edit-expensesCheck').modal('hide');
+            $(".loader").fadeOut('fast',function(){
+                $('.loader').hide();
+            });
+            attachment = null;
+            attachment_id = [];
+        }
     }
-  });
-});
+})
+
+// $('.close').on('hidden.bs.modal', function () {
+//   $(this).find('form').trigger('reset');
+// });
+
+// $(document).on('click','#closeModalExpense',function () {
+//   if(check_original != check_updated){
+//       Swal.fire({
+//           title: 'Are you sure?',
+//           text: "You want to leave without saving?",
+//           icon: 'warning',
+//           showCancelButton: true,
+//           confirmButtonColor: '#2ca01c',
+//           cancelButtonColor: '#d33',
+//           confirmButtonText: 'Yes, leave without saving!'
+//       }).then((result) => {
+//           if (result.value) {
+//           if(attachment == 0){
+//               Swal.fire({
+//                   title: 'Are you sure?',
+//                   text: "There is/are a attachment that temporarily removed?",
+//                   icon: 'warning',
+//                   showCancelButton: true,
+//                   confirmButtonColor: '#2ca01c',
+//                   cancelButtonColor: '#d33',
+//                   confirmButtonText: 'Yes, remove it permanently!'
+//               }).then((result) => {
+//                   if (result.value) {
+//                   $(".loader").fadeIn('fast',function(){
+//                       $('.loader').show();
+//                   });
+//                   $('#edit-expensesCheck').modal('hide');
+//                   $(".loader").fadeOut('fast',function(){
+//                       $('.loader').hide();
+//                   });
+//                   attachment = null;
+//                   attachment_id = [];
+//               }
+//           });
+//           }else{
+//               $(".loader").fadeIn('fast',function(){
+//                   $('.loader').show();
+//               });
+//               $('#edit-expensesCheck').modal('hide');
+//               $(".loader").fadeOut('fast',function(){
+//                   $('.loader').hide();
+//               });
+//               attachment = null;
+//               attachment_id = [];
+//           }
+//       }
+//   });
+//   }else{
+//       if(attachment == 0){
+//           Swal.fire({
+//               title: 'Are you sure?',
+//               text: "There is/are a attachment that temporarily removed?",
+//               icon: 'warning',
+//               showCancelButton: true,
+//               confirmButtonColor: '#2ca01c',
+//               cancelButtonColor: '#d33',
+//               confirmButtonText: 'Yes, remove it permanently!'
+//           }).then((result) => {
+//               if (result.value) {
+//               $.ajax({
+//                   url:"/accounting/removePermanentlyAttachment",
+//                   type:"POST",
+//                   data:{attachment_id:attachment_id},
+//                   success:function () {
+
+//                   }
+//               });
+//               $(".loader").fadeIn('fast',function(){
+//                   $('.loader').show();
+//               });
+//               $('#edit-expensesCheck').modal('hide');
+//               $(".loader").fadeOut('fast',function(){
+//                   $('.loader').hide();
+//               });
+//               attachment = null;
+//               attachment_id = [];
+//           }
+//       });
+//       }else{
+//           $(".loader").fadeIn('fast',function(){
+//               $('.loader').show();
+//           });
+//           $('#edit-expensesCheck').modal('hide');
+//           $(".loader").fadeOut('fast',function(){
+//               $('.loader').hide();
+//           });
+//           attachment = null;
+//           attachment_id = [];
+//       }
+//   }
+// });

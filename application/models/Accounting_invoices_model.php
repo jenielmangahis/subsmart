@@ -352,6 +352,15 @@ class Accounting_invoices_model extends MY_Model
             return $query->result();
         }
     }
+    public function get_ranged_invoices_by_company_id($company_id, $start_date, $end_date)
+    {
+        if ($company_id != "") {
+            $conditions ="AND (date_issued >= '".$start_date."' AND date_issued <=  '".$end_date."') AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid')";
+            $sql="SELECT * FROM invoices WHERE company_id = ".$company_id." ".$conditions;
+            $query = $this->db->query($sql);
+            return $query->result();
+        }
+    }
     public function get_amount_received_per_invoice($invoice_id)
     {
         $sql="SELECT SUM(payment_amount) as total_amount FROM accounting_receive_payment_invoices WHERE invoice_id = ".$invoice_id."";

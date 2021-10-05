@@ -23,6 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent .action-bar ul li {
         margin-right: 5px;
     }
+    #myTabContent .action-bar ul li .dropdown-menu.show {
+        top: 100% !important;
+        left: auto !important;
+        right: 0 !important;
+        transform: none !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -104,8 +110,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="col-sm-7">
                                                             <div class="form-group">
                                                                 <label for="search">Find</label>
-                                                                <input type="text" name="search" id="search" class="form-control" aria-describedby="search-help">
-                                                                <small id="search-help" class="form-text text-muted">Memo, Ref no., $amt, >$amt, <$amt</small>
+                                                                <input type="text" name="search" id="search" class="form-control" placeholder="Memo, Ref no., $amt, >$amt, <$amt">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -213,32 +218,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
                                                         <?php if($type !== 'A/R' && $type !== 'A/P') : ?>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 memo-chk">
                                                             <input type="checkbox" name="chk_memo" id="chk_memo" onchange="col(this)">
                                                             <label for="chk_memo">Memo</label>
                                                         </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 reconcile-status-chk">
                                                             <input type="checkbox" name="chk_reconcile_status" id="chk_reconcile_status" onchange="col(this)">
                                                             <label for="chk_reconcile_status">Reconcile Status</label>
                                                         </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 banking-status-chk">
                                                             <input type="checkbox" name="chk_banking_status" id="chk_banking_status" onchange="col(this)"> 
                                                             <label for="chk_banking_status">Banking Status</label>
                                                         </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 attachments-chk">
                                                             <input type="checkbox" name="chk_attachments" id="chk_attachments" onchange="col(this)">
                                                             <label for="chk_attachments">Attachments</label>
                                                         </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 tax-chk">
                                                             <input type="checkbox" name="chk_tax" id="chk_tax" onchange="col(this)">
                                                             <label for="chk_tax">Tax</label>
                                                         </div>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 running-balance-chk">
                                                             <input type="checkbox" checked name="chk_running_balance" id="chk_running_balance" onchange="col(this)">
                                                             <label for="chk_running_balance">Running Balance</label>
                                                         </div>
                                                         <?php else : ?>
-                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                        <div class="checkbox checkbox-sec d-block my-2 open-balance-chk">
                                                             <input type="checkbox" name="chk_open_balance" id="chk_open_balance" onchange="col(this)">
                                                             <label for="chk_open_balance">Open Balance</label>
                                                         </div>

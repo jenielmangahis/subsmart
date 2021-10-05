@@ -41,7 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 				</div>
 				<div class="row">
 					<div class="col-md-7">
-						<div class="overview-widget" style="    height: 360px;">
+						<div class="overview-widget" style="  ">
 							<div class="row" style="padding-top: 10px;">
 								<div class="col-md-5">
 									<div class="widget-title">
@@ -82,6 +82,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</div>
 								<div class="monitary-increase">
 									$11,834.87 more than Sep 1-30, 2020
+								</div>
+								<div id="chartContainer1" class="dynamic-graph-container"
+									style="width: 100%; height:200px;">
+
 								</div>
 							</div>
 						</div>
@@ -148,6 +152,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 							<div class="widget-content" style="padding-bottom:25px ;">
 								<div class="row">
+									<?php
+                                    if ($invoice_needs_attention) {
+                                        ?>
 									<div class="col-md-3">
 										<div class="center-content">
 											<div class="items">
@@ -155,19 +162,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 													<div class="icon">
 														<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
 													</div>
-													<div class="the-text bold">
+													<div class="the-text " style="font-weight: bold;">
 														Needs attention $58.04
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="col-md-9">
+									<?php
+                                    }
+                                    ?>
+									<div class="<?php if($invoice_needs_attention){echo "col-md-9";}else{echo "col-md-12";}?>">
 										<div class="row">
 											<div class="col-md-6">
 												<div class="sigments">
 													<div class="last-365days">
-														<div class="bold">$89,028.27 Unpaid</div>
+														<div class="bold">$<?=number_format($unpaid_last_365, 2)?>
+															Unpaid</div>
 													</div>
 													<div class="text">
 														<div class="text" style="padding: 0 10px;">Last 365 days</div>
@@ -177,14 +188,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 													<div class="row">
 														<div class="col-md-6">
 															<div class="content-monitary-highlight small">
-																$65,225.74
+																$<?=number_format($due_last_365, 2)?>
 															</div>
 															<div class="text">Overdue</div>
 														</div>
 														<div class="col-md-6">
 															<div class="content-monitary-highlight small"
 																style="text-align: right;">
-																$23,802.51
+																$<?=number_format($not_due_last_365, 2)?>
 															</div>
 															<div class="text" style="text-align: right;">Not due yet
 															</div>
@@ -193,20 +204,41 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 												</div>
 												<div class="invoices-bars">
 													<div class="progress">
+														<?php
+                                                        if ($due_last_365 == 0 && $not_due_last_365==0) {
+                                                            $progress_overdue =50;
+                                                            $progress_not_due =50;
+                                                        } elseif ($due_last_365 == 0) {
+                                                            $progress_overdue =0;
+                                                            $progress_not_due =100;
+                                                        } else {
+                                                            
+                                                            if($due_last_365 > $not_due_last_365){
+																$progress_overdue =100-(($not_due_last_365/$due_last_365)*100);
+																$progress_not_due =($not_due_last_365/$due_last_365)*100;
+															}else{
+																$progress_overdue =100-(($due_last_365/$not_due_last_365)*100);
+																$progress_not_due =($due_last_365/$not_due_last_365)*100;
+															}
+                                                        }
+                                                        ?>
 														<div class="progress-bar orange" role="progressbar"
-															style="width: 75%" aria-valuenow="75" aria-valuemin="0"
-															aria-valuemax="100">
+															style="width: <?=$progress_overdue?>%"
+															aria-valuenow="<?=$progress_overdue?>"
+															aria-valuemin="0" aria-valuemax="100">
 														</div>
 														<div class="progress-bar default" role="progressbar"
-															style="width: 30%" aria-valuenow="30" aria-valuemin="0"
-															aria-valuemax="100"></div>
+															style="width: <?=$progress_not_due?>%"
+															aria-valuenow="<?=$progress_not_due?>"
+															aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>
 											<div class="col-md-6">
 												<div class="sigments">
 													<div class="last-365days">
-														<div class="bold">$21,201.35 Unpaid</div>
+														<div class="bold">$<?=number_format($unpaid_last_30, 2)?>
+															Unpaid</div>
 													</div>
 													<div class="text">
 														<div class="text" style="padding: 0 10px;">Last 30 days</div>
@@ -216,14 +248,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 													<div class="row">
 														<div class="col-md-6">
 															<div class="content-monitary-highlight small">
-																$59.9
+																$<?=number_format($not_deposited_last30_days, 2)?>
 															</div>
-															<div class="text">No deposited</div>
+															<div class="text">Not deposited</div>
 														</div>
 														<div class="col-md-6">
 															<div class="content-monitary-highlight small"
 																style="text-align: right;">
-																$21,146.36
+																$<?=number_format($deposited_last30_days, 2)?>
 															</div>
 															<div class="text" style="text-align: right;">Deposited
 															</div>
@@ -232,13 +264,32 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 												</div>
 												<div class="invoices-bars">
 													<div class="progress">
+														<?php
+                                                        if ($deposited_last30_days == 0 && $not_deposited_last30_days==0) {
+                                                            $progress_deposited =50;
+                                                            $progress_not_deposited =50;
+                                                        } elseif ($deposited_last30_days == 0) {
+                                                            $progress_deposited =0;
+                                                            $progress_not_deposited =100;
+                                                        } else {
+                                                            if($deposited_last30_days > $not_deposited_last30_days){
+																$progress_deposited =100 - (($not_deposited_last30_days/$deposited_last30_days)*100);
+																$progress_not_deposited =($not_deposited_last30_days/$deposited_last30_days)*100;
+															}else{
+																$progress_deposited =100 - (($deposited_last30_days/$not_deposited_last30_days)*100);
+																$progress_not_deposited =($deposited_last30_days/$not_deposited_last30_days)*100;
+															}
+                                                        }
+                                                        ?>
 														<div class="progress-bar light-success" role="progressbar"
-															style="width: 10%" aria-valuenow="10" aria-valuemin="0"
-															aria-valuemax="100">
+															style="width: <?=$progress_not_deposited?>%"
+															aria-valuenow="<?=$progress_not_deposited?>"
+															aria-valuemin="0" aria-valuemax="100">
 														</div>
 														<div class="progress-bar success" role="progressbar"
-															style="width: 90%" aria-valuenow="90" aria-valuemin="0"
-															aria-valuemax="100"></div>
+															style="width: <?=$progress_deposited?>%"
+															aria-valuenow="<?=$progress_deposited?>"
+															aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>
@@ -265,7 +316,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								<div class="stepper-container">
 									<div class="step">
 										<div class="icon text-center">
-											<i class="fa fa-circle" aria-hidden="true"></i>
+											<i class="fa fa-check-circle" aria-hidden="true"></i>
 										</div>
 										<div class="text">
 											<div class="top text-center">
@@ -415,10 +466,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 							</div>
 						</div>
-						<div class="overview-widget">
+						<div class="overview-widget discover-more">
 							<div class="widget-content">
 								<div class="content-title">
 									DISCOVER MORE
+									<span class="hide-option"><a href="#">Hide</a></span>
 								</div>
 								<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
 									<ol class="carousel-indicators">
@@ -739,5 +791,62 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 	<!-- page wrapper end -->
 	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
+
+<script>
+	window.onload = function() {
+
+		var chart = new CanvasJS.Chart("chartContainer1", {
+			animationEnabled: true,
+			theme: "light2",
+			title: {
+				text: ""
+			},
+			data: [{
+				type: "line",
+				indexLabelFontSize: 16,
+				dataPoints: [{
+						y: 450
+					},
+					{
+						y: 414
+					},
+					{
+						y: 520
+					},
+					{
+						y: 460
+					},
+					{
+						y: 450
+					},
+					{
+						y: 500
+					},
+					{
+						y: 480
+					},
+					{
+						y: 480
+					},
+					{
+						y: 410
+					},
+					{
+						y: 500
+					},
+					{
+						y: 480
+					},
+					{
+						y: 510
+					}
+				]
+			}]
+		});
+		chart.render();
+
+	}
+</script>
+
 
 <?php include viewPath('includes/footer_accounting');

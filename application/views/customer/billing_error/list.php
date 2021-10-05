@@ -35,36 +35,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
-.card-help {
-    padding-left: 45px;
-    padding-top: 10px;
+table.dataTable {
+    border-collapse: collapse;
+    margin-top: 5px;
 }
-.text-ter {
-    color: #888888;
+table.dataTable thead tr th {
+    border: 1px solid black !important;
 }
-.card-type.visa {
-    background-position: 0 0;
+table.dataTable tbody tr td {
+    border: 1px solid black !important;
 }
-.card-type {
-    display: inline-block;
-    width: 30px;
-    height: 20px;
-    background: url(<?= base_url("/assets/img/credit_cards.png"); ?>) no-repeat 0 0;
-    background-size: cover;
-    vertical-align: middle;
-    margin-right: 10px;
-}
-.card-type.americanexpress {
-    background-position: -83px 0;
-}
-.expired{
-  color:red;
-}
-.card-type.discover {
-    background-position: -125px 0;
-}
-.cc-is-primary{
-  height: 23px;
+.modal-backdrop {
+    width: 103vw;
+    height: 103vh;
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -86,25 +69,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </span>
                       </div>
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover">
+                        <table class="table table-hover" id="dt-billing-errors">
                             <thead>
                                 <tr>
-                                    <th style="width: 20%;">Date</th>                                    
-                                    <th style="width: 60%;">Error</th>
-                                    <th style="width: 10%;">Error Type</th>
+                                    <th>Date</th>
+                                    <th>Name</th>                                                                        
+                                    <th>Error</th>
+                                    <th>Error Type</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach($billingErrors as $b){ ?>
+                                    <?php if( $b->error_date != '' ){ ?>
                                     <tr>
-                                        <td><?= date("m/d/Y", strtotime($b->error_date)); ?></td>
+                                        <td><?= $b->error_date != '' ? date("m/d/Y", strtotime($b->error_date)) : '---'; ?></td>
+                                        <td><?= $b->first_name . ' ' . $b->last_name; ?></td>
                                         <td><?= $b->error_message; ?></td>
                                         <td><?= $b->error_type; ?></td>
                                         <td>
                                           <a class="btn btn-sm btn-primary btn-fix-cc-error" data-id="<?= $b->bill_id; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i> Fix</a>
+                                          <a class="btn btn-sm btn-primary" href="<?= base_url("customer/subscription/" . $b->fk_prof_id); ?>"><i class="fa fa-eye"></i> View Subscription</a>
                                         </td>
                                     </tr>
+                                    <?php } ?>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -150,6 +138,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <script type="text/javascript">
 $(function(){
+    var table = $('#dt-billing-errors').DataTable({
+        "searching" : false,
+        "pageLength": 10,
+        "autoWidth": false,
+        "order": [],
+         "aoColumnDefs": [
+          { "sWidth": "10%", "aTargets": [ 0 ] },
+          { "sWidth": "20%", "aTargets": [ 1 ] },
+          { "sWidth": "45%", "aTargets": [ 2 ] },
+          { "sWidth": "10%", "aTargets": [ 3 ] },
+          { "sWidth": "15%", "aTargets": [ 3 ] },
+        ]
+    });
+
     $(".btn-fix-cc-error").click(function(){
         var billing_id = $(this).attr("data-id");
         var url = base_url + 'customer/_load_billing_credit_card_details';

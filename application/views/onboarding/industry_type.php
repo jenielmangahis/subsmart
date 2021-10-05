@@ -177,9 +177,9 @@ span.text-ter {
     <div class="col-md-12"><form id="form-business-services" method="post" action="#">
       <?php include viewPath('flash'); ?>
     <div class="card">
-        <?php  $service = 1;
-           foreach($businessTypes as $businessType){  ?>
-        <div class="service-type">
+        <?php  $service = 1; ?>
+        <?php foreach($businessTypes as $businessType){  ?>        
+        <div class="service-type" id="cservicetype<?php echo $service; ?>">
             <div class="checkbox checkbox-head" data-action="toggle" data-id="servicetype<?php echo $service; ?>" data-id2="servicetypeoff<?php echo $service; ?>"  data-checked="">
                 <div class="icon-btn"><span class="icon plus-icon collapse-group"><i class="fa fa-plus" style="font-size: 14px; line-height: 31px;"></i></span></div>
                 <label><span class="section-header"><?php echo $businessType; ?></span></label>
@@ -307,8 +307,9 @@ $(function(){
         }
     });
 
-   $(".section-header").click(function(){    
-    $(this).find("div").closest(".plus-icon").click();
+   $(".section-header").click(function(){      
+    $(this).closest("div.checkbox-head").find(".plus-icon").click();
+    $(this).closest(".checkbox-head").click();
    });
 
    $(".checkbox").click();
@@ -316,7 +317,6 @@ $(function(){
    service = 1;
 
    $(".plus-icon").click(function(){
-    alert(5);
     if( $(this).hasClass('collapse-group') ){
       $(this).removeClass('collapse-group');
       $(this).addClass('uncollapse-group');
@@ -349,6 +349,29 @@ $(function(){
      // $box.prop("checked", false);
     }
   });
+
+   <?php
+    $count_service = 1;
+    foreach($businessTypes as $businessType){
+      foreach($industryType as $industryValue){
+        if($industryValue->business_type_name == $businessType){
+          $select = false;
+          if($selectedCategories){
+            foreach ($selectedCategories as $key => $selectedCategory) {
+              if($industryValue->id ==  $selectedCategory->industry_type_id){                 
+                echo "$('#cservicetype".$count_service." .plus-icon').click();";
+              }
+            }
+          }else{
+            if($industryTypeId  ==  $industryValue->id){
+              echo "$('#cservicetype".$count_service." .plus-icon').click();";
+            }
+          }
+        }
+      }
+      $count_service++;
+    }
+  ?>
 
   // $('input[type="checkbox"]').on('change', function() {
   //   $('input[name="' + this.name + '"]').not(this).prop('checked', false);

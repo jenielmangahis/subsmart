@@ -450,7 +450,7 @@ Chartist Chart-->
 	CKEDITOR.replace('updateheader');
 </script>
 
-<script>
+<!-- <script>
 	window.onload = function() {
 
 		//Better to construct options first and then pass it as a parameter
@@ -500,7 +500,7 @@ Chartist Chart-->
 		$("#chartContainer").CanvasJSChart(options);
 
 	}
-</script>
+</script> -->
 
 
 <script>

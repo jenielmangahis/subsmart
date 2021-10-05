@@ -313,7 +313,7 @@ $(function(){
                       { "sWidth": "45%", "aTargets": [ 0 ] },
                       { "sWidth": "10%", "aTargets": [ 1 ] },
                       { "sWidth": "10%", "aTargets": [ 2 ] },
-                      { "sWidth": "20%", "aTargets": [ 3 ] },
+                      { "sWidth": "25%", "aTargets": [ 3 ] },
                     ]
                 });
              }
@@ -368,9 +368,10 @@ $(function(){
                     "autoWidth": false,
                     "order": [],
                      "aoColumnDefs": [
-                      { "sWidth": "30%", "aTargets": [ 0 ] },
-                      { "sWidth": "20%", "aTargets": [ 1 ] },
-                      { "sWidth": "30%", "aTargets": [ 2 ] },
+                      { "sWidth": "45%", "aTargets": [ 0 ] },
+                      { "sWidth": "15%", "aTargets": [ 1 ] },
+                      { "sWidth": "15%", "aTargets": [ 2 ] },
+                      { "sWidth": "10%", "aTargets": [ 3 ] },
                       { "sWidth": "15%", "aTargets": [ 3 ] },
                     ]
                 });

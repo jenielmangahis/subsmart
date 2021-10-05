@@ -1,12 +1,28 @@
-window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
 export class RulesTable {
   constructor($table) {
     this.$table = $table;
-    this.setUpTable();
+
+    this.loadDeps().then(() => {
+      this.setUpTable();
+    });
+  }
+
+  async loadDeps() {
+    this.api = await import("./api.js");
   }
 
   setUpTable() {
+    const actions = {
+      makeActive: async ({ id }) => {
+        await this.api.editRate(id, { is_active: 1 });
+        window.location.reload();
+      },
+      makeInactive: async ({ id }) => {
+        await this.api.editRate(id, { is_active: 0 });
+        window.location.reload();
+      },
+    };
+
     const columns = {
       checkbox: () => {
         return '<input type="checkbox" class="rulesTable__checkbox" />';
@@ -17,11 +33,22 @@ export class RulesTable {
       name: (_, __, row) => {
         return row.rules_name;
       },
-      appliedTo: () => {
-        return "appliedTo";
+      appliedTo: (_, __, row) => {
+        const text = row.banks === "1" ? "All accounts" : "Checking";
+        return `<span class="rulesTable__applied">${text}</span>`;
       },
-      conditions: () => {
-        return "conditions";
+      conditions: (_, __, row) => {
+        const conditions = row.conditions.map((condition) => {
+          const { description, contain, comment } = condition;
+          return `${description} ${contain.toLowerCase()} "${comment}"`;
+        });
+
+        const conditionString = conditions.join(", and ");
+        return `
+          <span class="rulesTable__conditions" title='${conditionString}'>
+            ${conditionString}
+          </span>
+        `;
       },
       settings: () => {
         return "settings";
@@ -29,25 +56,37 @@ export class RulesTable {
       autoAdd: () => {
         return "autoAdd";
       },
-      status: () => {
-        return "status";
+      status: (_, __, row) => {
+        const status = row.is_active === "1" ? "Active" : "Inactive";
+        return `<span>${status}</span>`;
       },
       actions: (_, __, row) => {
-        return `
-            <div class="rulesTable__actions">
-                <a
-                    href="${window.prefixURL}/accounting/edit_rules?id=${row.id}"
-                    class="rulesTable__link">
-                    View/Edit
-                </a>
+        const subOptions = {
+          delete: `<li><a href="#" id="deleteRules" data-id="${row.id}">Delete</a></li>`,
+          makeInactive: `<li><a href="#" class="action" data-action="makeInactive">Disable</a></li>`,
+          makeActive: `<li><a href="#" class="action" data-action="makeActive">Enable</a></li>`,
+        };
 
-                <div class="dropdown">
-                    <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="#" id="deleteRules" data-id="${row.id}">Delete</a></li>
-                    </ul>
-                </div>
+        delete subOptions[
+          row.is_active === "1" ? "makeActive" : "makeInactive"
+        ];
+
+        return `
+          <div class="rulesTable__actions">
+            <a
+              class="rulesTable__link"
+              href="${this.api.prefixURL}/accounting/edit_rules?id=${row.id}"
+            >
+              View/Edit
+            </a>
+
+            <div class="dropdown">
+                <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    ${Object.values(subOptions).join("")}
+                </ul>
             </div>
+          </div>
         `;
       },
     };
@@ -55,7 +94,7 @@ export class RulesTable {
     const table = this.$table.DataTable({
       searching: true,
       ajax: {
-        url: `${window.prefixURL}/AccountingRules/apiGetRules`,
+        url: `${this.api.prefixURL}/AccountingRules/apiGetRules`,
       },
       columns: [
         {
@@ -79,6 +118,7 @@ export class RulesTable {
         {
           sortable: false,
           render: columns.conditions,
+          class: "rulesTable__conditionsColumn",
         },
         {
           sortable: false,
@@ -98,18 +138,53 @@ export class RulesTable {
         },
       ],
       rowId: (row) => `row${row.id}`,
+      createdRow: (row, data) => {
+        $(row).attr("data-id", data.id);
+      },
     });
 
     table.on("click", "th .rulesTable__checkbox", function () {
       const rows = table.rows({ search: "applied" }).nodes();
       $("input[type=checkbox]", rows).prop("checked", this.checked);
+
+      $(rows)[this.checked ? "addClass" : "removeClass"](
+        "rulesTable__row--selected"
+      );
     });
 
-    table.on("change", "[role=row] .rulesTable__checkbox", function () {
-      if (this.checked) return;
-      const $table = $(this.closest("table"));
-      const $mainCheckbox = $table.find("th .rulesTable__checkbox").get(0);
-      $mainCheckbox.indeterminate = true;
+    table.on(
+      "change",
+      "[role=row] .rulesTable__checkbox:not(.rulesTable__checkbox--primary)",
+      function () {
+        const $parent = $(this).closest("tr");
+
+        if (this.checked) {
+          $parent.addClass("rulesTable__row--selected");
+          return;
+        }
+
+        const $table = $(this.closest("table"));
+        const $mainCheckbox = $table.find("th .rulesTable__checkbox").get(0);
+        $mainCheckbox.indeterminate = true;
+        $parent.removeClass("rulesTable__row--selected");
+      }
+    );
+
+    table.on("click", ".action", async (event) => {
+      event.preventDefault();
+
+      const $target = $(event.target);
+      const $parent = $target.closest("tr");
+      const rows = table.rows().data().toArray();
+
+      const rowId = $parent.data("id");
+      const row = rows.find(({ id }) => id == rowId);
+
+      const action = $target.data("action");
+      const func = actions[action].bind(this);
+
+      if (!func) return;
+      await actions[action](row, table, event);
     });
   }
 }

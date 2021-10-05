@@ -47,12 +47,13 @@
   &__btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: max-content;
+    justify-content: space-between;
     padding: 0.375rem 0.75rem;
     background-color: #fff;
     border: 2px solid #e0e0e0;
     border-radius: 2px;
+    width: 100%;
+    min-width: max-content;
 
     &:focus,
     &:active {
@@ -123,5 +124,33 @@
   &__selectColumn {
     padding: 0 8px !important;
     text-align: center;
+  }
+
+  &__applied {
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    background-color: rgb(107, 108, 114);
+  }
+
+  &__conditions {
+    width: 200px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &Column {
+      width: 200px;
+    }
+  }
+
+  &__row--selected {
+    background-color: #e4e7eb !important;
   }
 }

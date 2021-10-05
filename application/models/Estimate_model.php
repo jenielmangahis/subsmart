@@ -27,10 +27,11 @@ class Estimate_model extends MY_Model
         $where = array(
             'view_flag'     => '0',
             'company_id'    => $company_id,
-            'status'        => 'Submitted',
-            'status'        => 'Accepted',
-            'status'        => 'Invoiced',
-            'status'        => 'Lost',
+            // 'status'        => 'Submitted',
+            // 'status'        => 'Accepted',
+            // 'status'        => 'Invoiced',
+            // 'status'        => 'Lost',
+            'status !='        => 'Draft',
           );
 
         $this->db->select('*');

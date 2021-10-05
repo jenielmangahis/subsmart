@@ -231,6 +231,7 @@ $('#registers-table').DataTable({
         contentType: 'application/json',
         type: 'POST',
         data: function(d) {
+            d.single_line = $('#show_in_one_line').prop('checked') ? 1 : 0;
             d.reconcile_status = $('#reconcile_status').val();
             d.transaction_type = $('#transaction_type').val();
             d.payee = $('#payee').val();
@@ -243,6 +244,38 @@ $('#registers-table').DataTable({
         pagingType: 'full_numbers'
     },
     columns: columns
+});
+
+$('#show_in_one_line').on('change', function(e) {
+    if($(this).prop('checked') === false) {
+        $('#myTabContent .action-bar ul li .dropdown-menu input[type="checkbox"]').each(function() {
+            if($(this).attr('id').includes('chk_')) {
+                $(this).prop('checked', true).trigger('change');
+            }
+        });
+
+        $('.reconcile-status-chk').remove();
+        $('.banking-status-chk').addClass('reconcile-banking-status-chk').removeClass('banking-status-chk');
+        $('#chk_banking_status').next().html('<p class="m-0">Reconcile and</p><p class="m-0">Banking Status</p>').attr('for', 'chk_reconcile_banking_status');
+        $('#chk_banking_status').attr('name', 'chk_reconcile_banking_status').attr('id', 'chk_reconcile_banking_status');
+    } else {
+        $(`<div class="checkbox checkbox-sec d-block my-2 reconcile-status-chk">
+            <input type="checkbox" name="chk_reconcile_status" id="chk_reconcile_status" onchange="col(this)">
+            <label for="chk_reconcile_status">Reconcile Status</label>
+        </div>`).insertBefore($('.reconcile-banking-status-chk'));
+        $('.reconcile-banking-status-chk').addClass('banking-status-chk').removeClass('reconcile-banking-status-chk');
+        $('#chk_reconcile_banking_status').next().html('Banking Status').attr('for', 'chk_banking_status');
+        $('#chk_reconcile_banking_status').attr('name', 'chk_banking_status').attr('id', 'chk_banking_status');
+
+        $('#myTabContent .action-bar ul li .dropdown-menu input[type="checkbox"]').each(function() {
+            if(!$(this).attr('id').includes('chk_running_balance') && !$(this).attr('id').includes('paper_ledger_mode') &&
+            !$(this).attr('id').includes('compact') && !$(this).attr('id').includes('show_in_one_line')) {
+                $(this).prop('checked', false).trigger('change');
+            }
+        });
+    }
+
+    $('#registers-table').DataTable().ajax.reload(null, true);
 });
 
 $('select').each(function() {

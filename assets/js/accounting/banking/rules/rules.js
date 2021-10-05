@@ -8,6 +8,15 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const bankSelect = new SelectWithCheckbox($selectWithCheckbox);
   bankSelect.onSelect = function (event) {
+    const $text = bankSelect.$text;
+
+    if (event.target.checked) {
+      $text.setAttribute("data-prev-text", $text.textContent);
+      $text.textContent = "All bank accounts";
+    } else {
+      $text.textContent = $text.getAttribute("data-prev-text");
+    }
+
     [...$checkboxes].forEach(($checkbox) => {
       $checkbox.checked = event.target.checked;
     });
