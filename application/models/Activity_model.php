@@ -24,7 +24,9 @@ class Activity_model extends MY_Model {
 		return $this->create([
 			'title' => $message,
 			'user' => ($user_id==0) ? logged('id') : $user_id,
-			'ip_address' => !empty($ip_address) ? $ip_address : ip_address()
+			'ip_address' => !empty($ip_address) ? $ip_address : ip_address(),
+			'created_at' => date("Y-m-d H:i:s"),
+			'updated_at' => date("Y-m-d H:i:s")
 		]);
 	}
 	

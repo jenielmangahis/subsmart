@@ -313,7 +313,7 @@ $(function(){
                       { "sWidth": "45%", "aTargets": [ 0 ] },
                       { "sWidth": "10%", "aTargets": [ 1 ] },
                       { "sWidth": "10%", "aTargets": [ 2 ] },
-                      { "sWidth": "20%", "aTargets": [ 3 ] },
+                      { "sWidth": "25%", "aTargets": [ 3 ] },
                     ]
                 });
              }
@@ -372,7 +372,7 @@ $(function(){
                       { "sWidth": "15%", "aTargets": [ 1 ] },
                       { "sWidth": "15%", "aTargets": [ 2 ] },
                       { "sWidth": "10%", "aTargets": [ 3 ] },
-                      { "sWidth": "12%", "aTargets": [ 3 ] },
+                      { "sWidth": "15%", "aTargets": [ 3 ] },
                     ]
                 });
              }
