@@ -1904,3 +1904,99 @@ Alarm Direct, Inc</textarea>
         }
     });
 </script>
+
+<script>
+
+$(document).on('click','#closeModalExpense',function () {
+    // alert('gwapa ko');
+  if(check_original != check_updated){
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to leave without saving?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#2ca01c',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, leave without saving!'
+      }).then((result) => {
+          if (result.value) {
+          if(attachment == 0){
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "There is/are a attachment that temporarily removed?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#2ca01c',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, remove it permanently!'
+              }).then((result) => {
+                  if (result.value) {
+                  $(".loader").fadeIn('fast',function(){
+                      $('.loader').show();
+                  });
+                  $('#edit-expensesCheck').modal('hide');
+                  $(".loader").fadeOut('fast',function(){
+                      $('.loader').hide();
+                  });
+                  attachment = null;
+                  attachment_id = [];
+              }
+          });
+          }else{
+              $(".loader").fadeIn('fast',function(){
+                  $('.loader').show();
+              });
+              $('#edit-expensesCheck').modal('hide');
+              $(".loader").fadeOut('fast',function(){
+                  $('.loader').hide();
+              });
+              attachment = null;
+              attachment_id = [];
+          }
+      }
+  });
+  }else{
+      if(attachment == 0){
+          Swal.fire({
+              title: 'Are you sure?',
+              text: "There is/are a attachment that temporarily removed?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#2ca01c',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, remove it permanently!'
+          }).then((result) => {
+              if (result.value) {
+              $.ajax({
+                  url:"/accounting/removePermanentlyAttachment",
+                  type:"POST",
+                  data:{attachment_id:attachment_id},
+                  success:function () {
+
+                  }
+              });
+              $(".loader").fadeIn('fast',function(){
+                  $('.loader').show();
+              });
+              $('#edit-expensesCheck').modal('hide');
+              $(".loader").fadeOut('fast',function(){
+                  $('.loader').hide();
+              });
+              attachment = null;
+              attachment_id = [];
+          }
+      });
+      }else{
+          $(".loader").fadeIn('fast',function(){
+              $('.loader').show();
+          });
+          $('#edit-expensesCheck').modal('hide');
+          $(".loader").fadeOut('fast',function(){
+              $('.loader').hide();
+          });
+          attachment = null;
+          attachment_id = [];
+      }
+  }
+});
+</script>

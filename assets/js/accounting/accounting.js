@@ -173,7 +173,7 @@ $(document).ready(function () {
                 data:{id:id},
                 success:function (data) {
                     $('.displayRules').html(data);
-                    window.location.href= '/'+ url;
+                    window.location.reload();
                     Swal.fire(
                         'Deleted!',
                         'Rule has been deleted.',

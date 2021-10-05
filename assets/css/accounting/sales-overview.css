@@ -13,6 +13,25 @@
     font-weight: 600;
 }
 
+.overview-widget .widget-content .content-title .hide-option {
+    display: none;
+    float: right;
+}
+
+.overview-widget .widget-content .content-title .hide-option a {
+    font-size: 13px;
+    color: #0378C5;
+    font-weight: lighter;
+}
+
+.overview-widget .widget-content .content-title .hide-option a:hover {
+    text-decoration: underline;
+}
+
+.overview-widget:hover .widget-content .content-title .hide-option {
+    display: block;
+}
+
 .overview-widget .filter-section select:focus,
 .overview-widget .filter-section select:active,
 .overview-widget .filter-section select:hover {
@@ -234,12 +253,19 @@
     padding-top: 10px;
 }
 
+.overview-widget.discover-more:hover .carousel .carousel-control-next,
+.overview-widget.discover-more:hover .carousel .carousel-control-prev {
+    display: flex;
+}
+
 .overview-widget .carousel .carousel-control-next {
     right: -20px;
+    display: none;
 }
 
 .overview-widget .carousel .carousel-control-prev {
     left: -20px;
+    display: none;
 }
 
 .overview-widget .path-circle-separator {
@@ -419,4 +445,10 @@
     display: block;
     margin: auto;
     margin-top: -20px;
+}
+
+@media only screen and (max-width: 1500px) {
+    .overview-widget .content-monitary-highlight.small {
+        font-size: 15px;
+    }
 }

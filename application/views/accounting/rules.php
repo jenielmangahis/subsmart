@@ -80,7 +80,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             <thead class="rulesTable__head">
                                 <tr>
                                     <th>
-                                        <input type="checkbox" class="rulesTable__checkbox"/>
+                                        <input type="checkbox" class="rulesTable__checkbox rulesTable__checkbox--primary"/>
                                     </th>
                                     <th>Priority</th>
                                     <th>Rule Name</th>

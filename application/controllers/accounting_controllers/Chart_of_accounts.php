@@ -556,7 +556,7 @@ class Chart_of_accounts extends MY_Controller {
             'draw' => $post['draw'],
             'recordsTotal' => count($data),
             'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
+            'data' => $data
         ];
 
         echo json_encode($result);
@@ -2069,7 +2069,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             if($post['payee'] !== "all") {
-                $payee = explode($post['payee']);
+                $payee = explode('-', $post['payee']);
 
                 if($reg['payee_type'] !== $payee[0] || $reg['payee_id'] !== $payee[1]) {
                     $flag = false;
@@ -2205,6 +2205,46 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
         });
+
+        $data = array_slice($data, $post['start'], $post['length']);
+        if($post['single_line'] === 0) {
+            $registers = $data;
+
+            $data = [];
+            foreach($registers as $register) {
+                $data[] = [
+                    'date' => $register['date'],
+                    'ref_no' => $register['ref_no'],
+                    'type' => '',
+                    'payee' => $register['payee'],
+                    'account' => '',
+                    'memo' => $register['memo'],
+                    'payment' => $register['payment'],
+                    'deposit' => $register['deposit'],
+                    'reconcile_status' => $register['reconcile_status'],
+                    'banking_status' => '',
+                    'attachments' => $register['atttachments'],
+                    'tax' => $register['tax'],
+                    'balance' => $register['balance']
+                ];
+
+                $data[] = [
+                    'date' => '',
+                    'ref_no' => $register['type'],
+                    'type' => '',
+                    'payee' => $register['account'],
+                    'account' => '',
+                    'memo' => '',
+                    'payment' => '',
+                    'deposit' => '',
+                    'reconcile_status' => $register['banking_status'],
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => ''
+                ];
+            }
+        }
 
         return $data;
     }

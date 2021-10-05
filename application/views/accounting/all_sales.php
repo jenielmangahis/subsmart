@@ -394,17 +394,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="col-md-4">
                 <a class="btn btn-primary link-modal-open" href="#" id="add_another_items" data-toggle="modal"
                     data-target="#filterBY">Filter</a>
-                            <select class="form-control" id="categoryFilter">
+                            <!-- <select class="form-control" id="categoryFilter">
                                 <option value="">All Transactions</option>
-                                <option value="Estimates">Estimates</option>
-                                <option value="Invoices">Invoices</option>
+                                <option value="Estimate">Estimates</option>
+                                <option value="Invoice">Invoices</option>
                                 <option value="Sales Receipt">Sales Receipt</option>
                                 <option value="Credit Memo">Credit Memo</option>
                                 <option value="">Unbilled Income</option>
                                 <option value="">Recently Paid</option>
                                 <option value="">Money Received</option>
                                 <option value="Statements">Statements</option>
-                            </select>
+                            </select> -->
             </div>
         </div>
 
@@ -1669,7 +1669,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!-- Modal -->
     <div class="modal fade" id="filterBY" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="newcustomerLabel">Filter</h5>
@@ -1681,7 +1681,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="row">
                         <div class="col-md-3">
                             Type
-                            <select class="form-control">
+                            <!-- <select class="form-control">
                                 <option>All Transactions</option>
                                 <option>Estimates</option>
                                 <option>Invoices</option>
@@ -1691,6 +1691,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <option>Recently Paid</option>
                                 <option>Money Received</option>
                                 <option>Statements</option>
+                            </select> -->
+                            <select class="form-control" id="categoryFilter">
+                                <option value="">All Transactions</option>
+                                <option value="Estimate">Estimates</option>
+                                <option value="Invoice">Invoices</option>
+                                <option value="Sales Receipt">Sales Receipt</option>
+                                <option value="Credit Memo">Credit Memo</option>
+                                <option value="">Unbilled Income</option>
+                                <option value="">Recently Paid</option>
+                                <option value="">Money Received</option>
+                                <option value="Statements">Statements</option>
                             </select>
                         </div>
                     </div>

@@ -45,4 +45,23 @@ class AccountingRules extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $rules]);
     }
+
+    public function apiEditRule($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('id', $id);
+        $this->db->update('accounting_rules', $payload);
+
+        $this->db->where('id', $id);
+        $record = $this->db->get('accounting_rules')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
+    }
 }
