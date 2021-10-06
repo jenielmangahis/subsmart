@@ -40,7 +40,8 @@ export class RulesTable {
       conditions: (_, __, row) => {
         const conditions = row.conditions.map((condition) => {
           const { description, contain, comment } = condition;
-          return `${description} ${contain.toLowerCase()} "${comment}"`;
+          const text = `${description} ${contain.toLowerCase()} "${comment}"`;
+          return text.replace(/'/g, "&#39;");
         });
 
         const conditionString = conditions.join(", and ");
@@ -54,7 +55,13 @@ export class RulesTable {
         return "settings";
       },
       autoAdd: () => {
-        return "autoAdd";
+        return `
+          <div class="rulesTable__autoAdd">
+            <button class="rulesTable__autoAddBtn">
+              <i class="fa fa-plus-square"></i>
+            </button>
+          </div>
+        `;
       },
       status: (_, __, row) => {
         const status = row.is_active === "1" ? "Active" : "Inactive";
@@ -127,6 +134,7 @@ export class RulesTable {
         {
           sortable: false,
           render: columns.autoAdd,
+          class: "rulesTable__autoAddColumn",
         },
         {
           sortable: false,

@@ -1424,32 +1424,377 @@ $(".select_item_sr").click(function() {
 
 });
 
-var price = $("#price2_" + counter).val();
-var quantity = $("#quantity2_" + counter).val();
-var discount = $("#discount2_" + counter).val();
-var tax = (parseFloat(price) * 7.5) / 100;
-var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-);
-if (discount == '') {
-    discount = 0;
-}
+// var price = $("#price2_" + counter).val();
+// var quantity = $("#quantity2_" + counter).val();
+// var discount = $("#discount2_" + counter).val();
+// var tax = (parseFloat(price) * 7.5) / 100;
+// var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+//     2
+// );
+// if (discount == '') {
+//     discount = 0;
+// }
 
-var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-).toFixed(2);
+// var total = (
+//     (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+//     parseFloat(discount)
+// ).toFixed(2);
 
-// alert( 'yeah' + total);
+// // alert( 'yeah' + total);
 
-$("#span_total2_" + counter).text(total);
-$("#tax2_" + counter).text(tax1);
-$("#discount2_" + counter).val(discount);
+// $("#span_total2_" + counter).text(total);
+// $("#tax2_" + counter).text(tax1);
+// $("#discount2_" + counter).val(discount);
 
-if ($('#tax2_' + counter).length) {
-    $('#tax2_' + counter).val(tax1);
-}
+// if ($('#tax2_' + counter).length) {
+//     $('#tax2_' + counter).val(tax1);
+// }
 
-if ($('#item_total2_' + counter).length) {
-    $('#item_total2_' + counter).val(total);
+// if ($('#item_total2_' + counter).length) {
+//     $('#item_total2_' + counter).val(total);
+// }
+
+
+
+$('.close').on('hidden.bs.modal', function (e) {
+  $(this)
+    .find("input,textarea,select")
+       .val('')
+       .end()
+    .find("input[type=checkbox], input[type=radio]")
+       .prop("checked", "")
+       .end();
+
+       if(check_original != check_updated){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to leave without saving?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2ca01c',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, leave without saving!'
+        }).then((result) => {
+            if (result.value) {
+            if(attachment == 0){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "There is/are a attachment that temporarily removed?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, remove it permanently!'
+                }).then((result) => {
+                    if (result.value) {
+                    $(".loader").fadeIn('fast',function(){
+                        $('.loader').show();
+                    });
+                    $('#edit-expensesCheck').modal('hide');
+                    $(".loader").fadeOut('fast',function(){
+                        $('.loader').hide();
+                    });
+                    attachment = null;
+                    attachment_id = [];
+                }
+            });
+            }else{
+                $(".loader").fadeIn('fast',function(){
+                    $('.loader').show();
+                });
+                $('#edit-expensesCheck').modal('hide');
+                $(".loader").fadeOut('fast',function(){
+                    $('.loader').hide();
+                });
+                attachment = null;
+                attachment_id = [];
+            }
+        }
+    });
+    }else{
+        if(attachment == 0){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "There is/are a attachment that temporarily removed?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2ca01c',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, remove it permanently!'
+            }).then((result) => {
+                if (result.value) {
+                $.ajax({
+                    url:"/accounting/removePermanentlyAttachment",
+                    type:"POST",
+                    data:{attachment_id:attachment_id},
+                    success:function () {
+  
+                    }
+                });
+                $(".loader").fadeIn('fast',function(){
+                    $('.loader').show();
+                });
+                $('#edit-expensesCheck').modal('hide');
+                $(".loader").fadeOut('fast',function(){
+                    $('.loader').hide();
+                });
+                attachment = null;
+                attachment_id = [];
+            }
+        });
+        }else{
+            $(".loader").fadeIn('fast',function(){
+                $('.loader').show();
+            });
+            $('#edit-expensesCheck').modal('hide');
+            $(".loader").fadeOut('fast',function(){
+                $('.loader').hide();
+            });
+            attachment = null;
+            attachment_id = [];
+        }
+    }
+});
+
+document.getElementById("payment_method_pay").onchange = function() {
+  if (this.value == 'Cash') {
+      // alert('cash');
+  // $('#exampleModal').modal('toggle');
+      $('#cash_area').show();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#invoicing').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+    }
+  else if(this.value == 'Invoicing'){
+
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#invoicing').show();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+
+  else if(this.value == 'Check'){
+      // alert('Check');
+      $('#cash_area').hide();
+      $('#check_area').show();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Credit Card'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').show();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Debit Card'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').show();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#invoicing').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'ACH'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').show();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Venmo'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#ach_area').hide();
+      $('#invoicing').hide();
+      $('#venmo_area').show();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Paypal'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').show();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Square'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#invoicing').hide();
+      $('#debit_card').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').show();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Warranty Work'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#invoicing').hide();
+      $('#debit_card').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').show();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Home Owner Financing'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').show();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'e-Transfer'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').show();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Other Credit Card Professor'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').show();
+      $('#other_payment_area').hide();
+  }
+  else if(this.value == 'Other Payment Type'){
+      // alert('Credit card');
+      $('#cash_area').hide();
+      $('#check_area').hide();
+      $('#credit_card').hide();
+      $('#debit_card').hide();
+      $('#invoicing').hide();
+      $('#ach_area').hide();
+      $('#venmo_area').hide();
+      $('#paypal_area').hide();
+      $('#square_area').hide();
+      $('#warranty_area').hide();
+      $('#home_area').hide();
+      $('#e_area').hide();
+      $('#other_credit_card').hide();
+      $('#other_payment_area').show();
+  }
 }
