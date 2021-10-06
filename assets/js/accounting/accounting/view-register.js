@@ -1,5 +1,7 @@
 const accountId = $('#account').val();
 let type = $('.page-title').html().replace(' Register', '');
+var orderIndex = 0;
+var order = 'desc';
 var columns = [
     {
         data: 'date',
@@ -246,6 +248,151 @@ $('#registers-table').DataTable({
     columns: columns
 });
 
+function initDoubleLineTable() {
+    $('#registers-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: $('#table_rows').val(),
+        order: [[orderIndex, order]],
+        ajax: {
+            url: `/accounting/chart-of-accounts/${accountId}/load-registers`,
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.single_line = $('#show_in_one_line').prop('checked') ? 1 : 0;
+                d.reconcile_status = $('#reconcile_status').val();
+                d.transaction_type = $('#transaction_type').val();
+                d.payee = $('#payee').val();
+                d.from_date = $('#from').val();
+                d.to_date = $('#to').val();
+                d.length = $('#table_rows').val();
+                d.columns[0].search.value = $('input#search').val();
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: 'date',
+                name: 'date'
+            },
+            {
+                data: 'ref_no',
+                name: 'ref_no'
+            },
+            {
+                data: 'payee',
+                name: 'payee'
+            },
+            {
+                orderable: false,
+                data: 'memo',
+                name: 'memo',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('memo');
+        
+                    // if($('#chk_memo').prop('checked') === false) {
+                    //     $(td).addClass('d-none');
+                    // }
+                }
+            },
+            {
+                data: 'payment',
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(cellData !== '') {
+                        $(td).html(`$${cellData}`);
+                    }
+                }
+            },
+            {
+                data: 'deposit',
+                name: 'deposit',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(cellData !== '') {
+                        $(td).html(`$${cellData}`);
+                    }
+                }
+            },
+            {
+                data: 'reconcile_status',
+                name: 'reconcile_status',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('reconcile_status');
+        
+                    // if($('#chk_reconcile_status').prop('checked') === false) {
+                    //     $(td).addClass('d-none');
+                    // }
+                }
+            },
+            {
+                orderable: false,
+                data: 'attachments',
+                name: 'attachments',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('attachments');
+        
+                    // if($('#chk_attachments').prop('checked') === false) {
+                    //     $(td).addClass('d-none');
+                    // }
+                }
+            },
+            {
+                orderable: false,
+                data: 'tax',
+                name: 'tax',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('tax');
+        
+                    // if($('#chk_tax').prop('checked') === false) {
+                    //     $(td).addClass('d-none');
+                    // }
+                }
+            },
+            {
+                orderable: false,
+                data: 'balance',
+                name: 'balance',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).addClass('running_balance');
+        
+                    // if($('#chk_running_balance').prop('checked') === false) {
+                    //     $(td).addClass('d-none');
+                    // }
+                }
+            },
+            {
+                data: 'type',
+                name: 'type',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).remove();
+                }
+            },
+            {
+                orderable: false,
+                data: 'account',
+                name: 'account',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).remove();
+                }
+            },
+            {
+                orderable: false,
+                data: 'banking_status',
+                name: 'banking_status',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).remove();
+                }
+            }
+        ]
+    });
+}
+
 $('#show_in_one_line').on('change', function(e) {
     if($(this).prop('checked') === false) {
         $('#myTabContent .action-bar ul li .dropdown-menu input[type="checkbox"]').each(function() {
@@ -254,27 +401,56 @@ $('#show_in_one_line').on('change', function(e) {
             }
         });
 
-        $('.reconcile-status-chk').remove();
-        $('.banking-status-chk').addClass('reconcile-banking-status-chk').removeClass('banking-status-chk');
-        $('#chk_banking_status').next().html('<p class="m-0">Reconcile and</p><p class="m-0">Banking Status</p>').attr('for', 'chk_reconcile_banking_status');
-        $('#chk_banking_status').attr('name', 'chk_reconcile_banking_status').attr('id', 'chk_reconcile_banking_status');
+        if(type !== 'A/R' && type !== 'A/P') {
+            $('.reconcile-status-chk').remove();
+            $('.banking-status-chk').addClass('reconcile-banking-status-chk').removeClass('banking-status-chk');
+            $('#chk_banking_status').next().html('<p class="m-0">Reconcile and</p><p class="m-0">Banking Status</p>').attr('for', 'chk_reconcile_banking_status');
+            $('#chk_banking_status').attr('name', 'chk_reconcile_banking_status').attr('id', 'chk_reconcile_banking_status');
+
+            $('#registers-table thead tr th').each(function() {
+                if($(this).html() === 'TYPE' || $(this).html() === 'ACCOUNT' || $(this).find('i.fa.fa-copy').length > 0) {
+                    $(this).remove();
+                } else {
+                    if($(this).html() !== 'REF NO.' && $(this).html() !== 'PAYEE' && $(this).find('i.fa.fa-check').length < 1) {
+                        $(this).prop('rowspan', '2');
+                    }
+                }
+            });
+
+            $('#registers-table thead').append(`<tr>
+                <th>TYPE</th>
+                <th>ACCOUNT</th>
+                <th>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="fa fa-copy"></i>
+                    </div>
+                </th>
+            </tr>`);
+        } else {
+
+        }
     } else {
-        $(`<div class="checkbox checkbox-sec d-block my-2 reconcile-status-chk">
-            <input type="checkbox" name="chk_reconcile_status" id="chk_reconcile_status" onchange="col(this)">
-            <label for="chk_reconcile_status">Reconcile Status</label>
-        </div>`).insertBefore($('.reconcile-banking-status-chk'));
-        $('.reconcile-banking-status-chk').addClass('banking-status-chk').removeClass('reconcile-banking-status-chk');
-        $('#chk_reconcile_banking_status').next().html('Banking Status').attr('for', 'chk_banking_status');
-        $('#chk_reconcile_banking_status').attr('name', 'chk_banking_status').attr('id', 'chk_banking_status');
+        if(type !== 'A/R' && type !== 'A/P') {
+            $(`<div class="checkbox checkbox-sec d-block my-2 reconcile-status-chk">
+                <input type="checkbox" name="chk_reconcile_status" id="chk_reconcile_status" onchange="col(this)">
+                <label for="chk_reconcile_status">Reconcile Status</label>
+            </div>`).insertBefore($('.reconcile-banking-status-chk'));
+            $('.reconcile-banking-status-chk').addClass('banking-status-chk').removeClass('reconcile-banking-status-chk');
+            $('#chk_reconcile_banking_status').next().html('Banking Status').attr('for', 'chk_banking_status');
+            $('#chk_reconcile_banking_status').attr('name', 'chk_banking_status').attr('id', 'chk_banking_status');
+        } else {
+
+        }
 
         $('#myTabContent .action-bar ul li .dropdown-menu input[type="checkbox"]').each(function() {
             if(!$(this).attr('id').includes('chk_running_balance') && !$(this).attr('id').includes('paper_ledger_mode') &&
-            !$(this).attr('id').includes('compact') && !$(this).attr('id').includes('show_in_one_line')) {
+            !$(this).attr('id').includes('compact') && !$(this).attr('id').includes('show_in_one_line') && !$(this).attr('id').includes('chk_open_balance')) {
                 $(this).prop('checked', false).trigger('change');
             }
         });
     }
 
+    // $('#registers-table').DataTable().destroy();
     $('#registers-table').DataTable().ajax.reload(null, true);
 });
 
@@ -418,6 +594,24 @@ $('#print-transactions').on('click', function(e) {
 			pdfWindow.print();
 		}
 	});
+});
+
+$('#test-table thead tr a').on('click', function() {
+    var rowIndex = $(this).parent().parent().index();
+    var index = $(this).parent().index();
+
+    if(rowIndex > 0) {
+        index += 1;
+        orderIndex = 9 + index;
+    }
+
+    if(order === 'desc') {
+        order = 'asc';
+    } else {
+        order = 'desc';
+    }
+
+    $('#test-table').DataTable().order([orderIndex, order]).draw();
 });
 
 function col(el) {

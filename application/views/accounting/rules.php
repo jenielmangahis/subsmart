@@ -82,7 +82,15 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <th>
                                         <input type="checkbox" class="rulesTable__checkbox rulesTable__checkbox--primary"/>
                                     </th>
-                                    <th>Priority</th>
+                                    <th>
+                                        <div>
+                                            Priority
+                                            <i
+                                                title="You can reorder your rules to change a rule's priority. The rule with the highest priority will always be applied first."
+                                                class="fa fa-info-circle"
+                                            ></i>
+                                        </div>
+                                    </th>
                                     <th>Rule Name</th>
                                     <th>Applied To</th>
                                     <th>Conditions</th>
@@ -211,6 +219,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         </div>
                                         <div class="tab-select" style="max-width: 140px">
                                             <input
+                                                required
                                                 type="text"
                                                 name="comment[]"
                                                 class="form-control"

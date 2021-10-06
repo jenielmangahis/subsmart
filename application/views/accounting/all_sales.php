@@ -450,38 +450,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <!-- <a href="">View</a> -->
 
                                     <div class="dropdown dropdown-btn">
-                                            <!-- <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                            </button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                            aria-labelledby="dropdown-edit">
-                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span
-                                                        class="fa fa-file-text-o icon"></span>Send</a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1" href=""><span
-                                                        class="fa fa-envelope-o icon"></span>Share Invoice Link</a>
-                                            </li>
-                                            <li role="separator" class="divider"></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                    data-toggle="modal" data-target="#modalCloneWorkorder" data-id=""
-                                                    data-name="WO-00433"> <span class="fa fa-print icon"></span>Print
-                                                    Packing Slip</a> </li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                                                    data-toggle="modal" data-target="#add-invoice"
-                                                    data-convert-to-invoice-modal="open" data-id="161983"
-                                                    data-name="WO-00433"><span
-                                                        class="fa fa-pencil-square-o icon"></span>View/Edit</a> </li>
-                                            <li role="presentation"> <a role="menuitem" href="#" class=""><span
-                                                        class="fa fa-files-o icon clone-workorder"></span>Copy</a></li>
-                                            <li role="presentation"> <a role="menuitem" target="_new" href="#" class="">
-                                                    <span class="fa fa-trash-o icon"></span>Delete</a></li>
-                                            <li role="presentation"> <a role="menuitem" href="javascript:void(0);"
-                                                    class="btn-send-customer" data-id=""> <span
-                                                        class="fa fa-envelope-open-o icon"></span>Void</a></li>
-                                            <li>
-                                                <div class="dropdown-divider"></div>
-                                            </li>
-                                            </li>
-                                        </ul> -->
                                         <?php if($inv->INV_status == 'Paid'){ ?>
                                             <a href="<?php echo base_url('accounting/invoice_edit/' . $inv->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
                                         <?php }else{ ?>
@@ -528,13 +496,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </a>
                                             </li>
                                             <li role="presentation">
-                                                <!-- <a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"
-                                                    href="javascript:void(0)" data-toggle="modal"
-                                                    data-target="#convertToWorkOrder"
-                                                    data-invoice-number="<?php echo $inv->invoice_number ?>"
-                                                    data-id="<?php echo $inv->id ?>">
-                                                    <span class="fa fa-file-text-o icon"></span> Convert to Work Order
-                                                </a> -->
                                                 <a role="menuitem" tabindex="-1"
                                                                                     href="<?php echo base_url('workorder/invoice_workorder/' . $inv->id) ?>"
                                                                                     data-convert-to-invoice-modal="open"
@@ -613,12 +574,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </td>
                                             <td><?php echo $estimate->grand_total; ?></td>
                                             <td>
+
                                             <?php
                                                 if( $estimate->is_mail_open == 1 ){
                                                 echo "<i class='fa fa-eye'></i>  ";
                                                 }
                                                 echo $estimate->status;
                                             ?>
+                                            
                                             </td>
                                             <td class="text-right" style="padding-right:20px;">
                                                 <div class="dropdown dropdown-btn">
@@ -4195,4 +4158,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
       table.draw();
     });
-  </script>
+</script>
+
+<script>
+    // $("document").ready(function () {
+
+    //   $("#all_sales_table").dataTable({
+    //     "searching": true
+    //   });
+
+    //   var table = $('#all_sales_table').DataTable();
+
+    //   $("#filterTable_filter.dataTables_filter").append($("#categoryFiltertop"));
+      
+    //   var categoryIndex = 0;
+    //   $("#all_sales_table th").each(function (i) {
+    //     if ($($(this)).html() == "Type") {
+    //       categoryIndex = i; return false;
+    //     }
+    //   });
+
+    //   $.fn.dataTable.ext.search.push(
+    //     function (settings, data, dataIndex) {
+    //       var selectedItem = $('#categoryFiltertop').val()
+    //       var category = data[categoryIndex];
+    //       if (selectedItem === "" || category.includes(selectedItem)) {
+    //         return true;
+    //       }
+    //       return false;
+    //     }
+    //   );
+
+    // //   $("#categoryFiltertop").change(function (e) {
+    // //     table.draw();
+    // //   });
+
+    // $("#categoryFiltertop").click(function () {
+    //     table.draw();
+    // });
+
+    //   table.draw();
+    // });
+</script>

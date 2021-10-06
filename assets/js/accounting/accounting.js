@@ -27,6 +27,7 @@ $(document).ready(function () {
         var $target = $('html,body');
         $target.animate({scrollTop: $target.height()}, 1000);
         var row = $('#addCondition').clone(true);
+        row.find("[data-type='conditions.comment']").val("");
         row.find("#conID").val("");
         row.appendTo('.addCondition-container');
     });

@@ -153,4 +153,31 @@
   &__row--selected {
     background-color: #e4e7eb !important;
   }
+
+  &__autoAdd {
+    text-align: center;
+
+    &Column {
+      width: 80px;
+    }
+
+    &Btn {
+      --size: 30px;
+
+      padding: 0;
+      border: 0;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--size);
+      width: var(--size);
+      background-color: transparent;
+    }
+
+    .fa {
+      color: #4fb248;
+      font-size: 18px;
+    }
+  }
 }
