@@ -1030,3 +1030,6 @@ $route['customer/_load_subscription_payment_history'] = 'Customer/ajax_load_subs
 
 //Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
+
+//Sales Overview
+$route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';

@@ -41,7 +41,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 				</div>
 				<div class="row">
 					<div class="col-md-7">
-						<div class="overview-widget" style="  ">
+						<div class="overview-widget income-overtime" style="  ">
 							<div class="row" style="padding-top: 10px;">
 								<div class="col-md-5">
 									<div class="widget-title">
@@ -78,10 +78,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 							<div class="widget-content">
 								<div class="content-monitary-highlight">
-									$86,602.74 <span>This month</span>
+									$<?=number_format($income_this_month, 2)?> <span>This month</span>
 								</div>
 								<div class="monitary-increase">
-									$11,834.87 more than Sep 1-30, 2020
+									$<?=number_format($income_this_month-$income_last_month, 2)?> more than <?=date("M d",strtotime("first day of previous month"))?> - <?=date("d, Y", strtotime("last day of previous month"))?>
 								</div>
 								<div id="chartContainer1" class="dynamic-graph-container"
 									style="width: 100%; height:200px;">
@@ -208,18 +208,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         if ($due_last_365 == 0 && $not_due_last_365==0) {
                                                             $progress_overdue =50;
                                                             $progress_not_due =50;
-                                                        } elseif ($due_last_365 == 0) {
-                                                            $progress_overdue =0;
-                                                            $progress_not_due =100;
                                                         } else {
-                                                            
-                                                            if($due_last_365 > $not_due_last_365){
-																$progress_overdue =100-(($not_due_last_365/$due_last_365)*100);
-																$progress_not_due =($not_due_last_365/$due_last_365)*100;
-															}else{
-																$progress_overdue =100-(($due_last_365/$not_due_last_365)*100);
-																$progress_not_due =($due_last_365/$not_due_last_365)*100;
-															}
+                                                            $progress_overdue =($due_last_365/($not_due_last_365+$due_last_365))*100;
+															$progress_not_due =($not_due_last_365/($not_due_last_365+$due_last_365))*100;
                                                         }
                                                         ?>
 														<div class="progress-bar orange" role="progressbar"
@@ -268,17 +259,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         if ($deposited_last30_days == 0 && $not_deposited_last30_days==0) {
                                                             $progress_deposited =50;
                                                             $progress_not_deposited =50;
-                                                        } elseif ($deposited_last30_days == 0) {
-                                                            $progress_deposited =0;
-                                                            $progress_not_deposited =100;
                                                         } else {
-                                                            if($deposited_last30_days > $not_deposited_last30_days){
-																$progress_deposited =100 - (($not_deposited_last30_days/$deposited_last30_days)*100);
-																$progress_not_deposited =($not_deposited_last30_days/$deposited_last30_days)*100;
-															}else{
-																$progress_deposited =100 - (($deposited_last30_days/$not_deposited_last30_days)*100);
-																$progress_not_deposited =($deposited_last30_days/$not_deposited_last30_days)*100;
-															}
+                                                            $progress_deposited =($deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
+															$progress_not_deposited =($not_deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
                                                         }
                                                         ?>
 														<div class="progress-bar light-success" role="progressbar"

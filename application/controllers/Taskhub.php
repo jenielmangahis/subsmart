@@ -19,6 +19,14 @@ class Taskhub extends MY_Controller {
                     
         }
 
+		function loadV2WidgetContents()
+        {
+            $company_id = logged('company_id');
+            $data['tasks'] = $this->taskhub_model->getTask($company_id);
+            $this->load->view('v2/widgets/task_hub_details', $data);
+                    
+        }
+
 	public function index(){
 		$this->hasAccessModule(6); 
 		$this->page_data['tasks'] = getTasks();

@@ -121,8 +121,16 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <h3 class="modal-title" id="myModalLabel2" >Create rule</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    <form action="<?php echo site_url() ?>accounting/addRules" method="post" id="addRuleForm">
+                    <form id="addRuleForm">
                     <div class="modal-body">
+
+                        <div class="formError">
+                            <div class="formError__inner">
+                                <i class="fa fa-info-circle"></i>
+                                <p>Something’s not quite right</p>
+                            </div>
+                        </div>
+
                         <div class="subheader">Rules only apply to unreviewed transactions.</div>
                             <div class="form-group">
                                 <label>What do you want to call this rule? *</label>
@@ -244,7 +252,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <select
                                         name="trans_type"
                                         class="form-control"
-                                        data-type="transaction_type"
+                                        data-type="assignment.transaction_type"
                                     >
                                         <option selected>Expenses</option>
                                         <option>Transfer</option>
@@ -259,6 +267,8 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 name="category[]"
                                                 id="mainCategory"
                                                 class="form-control select2-rules-category"
+                                                data-type="assignment.category"
+                                                required
                                             >
                                                 <option></option>
                                                 <option disabled>&plus; Add new</option>
@@ -267,7 +277,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 <option>Bank Charges</option>
                                             </select>
                                         </div>
-                                        <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
+                                        <span class="action-label d-none" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
                                     </div>
                                     <!--Add Split Div-->
                                     <div class="add-split-container">
@@ -326,7 +336,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <select
                                             name="payee"
                                             class="form-control select2-rules-payee"
-                                            data-type="payee"
+                                            data-type="assignment.payee"
                                         >
                                             <option></option>
                                             <option>Abacus Accounting</option>
@@ -343,7 +353,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         rows="5"
                                         placeholder="Enter Text"
                                         style="resize: none;"
-                                        data-type="memo"
+                                        data-type="assignment.memo"
                                     ></textarea>
                                 </div>
                                 <div style="margin-top: 15px;">
@@ -369,7 +379,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-success" data-action="save">Save</button>
                     </div>
                     </form>
                 </div>

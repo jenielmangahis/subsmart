@@ -1812,3 +1812,51 @@ $('.close').on('hidden.bs.modal', function (e) {
 //       }
 //   }
 // });
+
+
+$(".estchangestatus").click(function() {
+  var id = $(this).attr('data-id');
+  var est_number = $(this).attr('est-num');
+  var est_status = $(this).attr('est-status');
+  
+  // alert('nisulod');
+  $('#estchangestatus').modal('show'); 
+
+  $('#est_number_status').text(est_number);
+  $('.estID').text(id);
+  $(".est_status").val(est_status);
+
+});
+
+
+$(".sendESTemail").click(function() {
+  var id = $(this).attr('data-id');
+  var est_number = $(this).attr('est-num');
+  var est_status = $(this).attr('est-status');
+  var est_email = $(this).attr('est-email');
+  var est_cust = $(this).attr('est-cust');
+
+  var message = 'Dear ' + est_cust + ', <br><br> Please review the estimate below.  Feel free to contact us if you have any questions.  <br> We look forward to working with you. <br><br> Thanks for your business!';
+  
+  // alert('nisulod');
+  $('#sendESTemail').modal('show'); 
+
+  $('#est_number_email').text(est_number);
+  $('.estID').text(id);
+  $('.custEmail').val(est_email);
+  $('.custmessage').val(`Dear {est_cust}, 
+      
+Please review the estimate below.  Feel free to contact us if you have any questions.  
+We look forward to working with you. 
+      
+Thanks for your business!`);
+
+jQuery(function($){
+  $("#custmessage").val(function() { 
+
+   return $(this).html().replace("{est_cust}", est_cust);  
+  
+  });
+});
+
+});

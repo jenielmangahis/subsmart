@@ -536,8 +536,8 @@ class Chart_of_accounts extends MY_Controller {
     public function load_registers($accountId)
     {
         $post = json_decode(file_get_contents('php://input'), true);
-        $column = $post['order'][0]['column'];
-        $order = $post['order'][0]['dir'];
+        $column = isset($post['column']) ? $post['column'] : $post['order'][0]['column'];
+        $order = !is_array($post['order']) ? $post['order'] : $post['order'][0]['dir'];
         $columnName = $post['columns'][$column]['name'];
         $start = $post['start'];
         $limit = $post['length'];
@@ -2196,6 +2196,37 @@ class Chart_of_accounts extends MY_Controller {
                         return intval($a['ref_no']) < intval($b['ref_no']);
                     }
                 break;
+                case 'ref_no_type' :
+                    if($sort['order'] === 'asc') {
+                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
+                            return false;
+                        }
+    
+                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
+                            return true;
+                        }
+
+                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
+                            return strcmp($a['ref_no'], $b['ref_no']);
+                        }
+
+                        return intval($a['ref_no']) > intval($b['ref_no']);
+                    } else {
+                        if($a['ref_no'] === '' && $b['ref_no'] !== '') {
+                            return true;
+                        }
+    
+                        if($a['ref_no'] !== '' && $b['ref_no'] === '') {
+                            return false;
+                        }
+
+                        if(intval($a['ref_no']) === 0 && intval($b['ref_no']) === 0) {
+                            return strcmp($b['ref_no'], $a['ref_no']);
+                        }
+
+                        return intval($a['ref_no']) < intval($b['ref_no']);
+                    }
+                break;
                 default :
                     if($sort['order'] === 'asc') {
                         return strcmp($a[$sort['column']], $b[$sort['column']]);
@@ -2214,34 +2245,30 @@ class Chart_of_accounts extends MY_Controller {
             foreach($registers as $register) {
                 $data[] = [
                     'date' => $register['date'],
-                    'ref_no' => $register['ref_no'],
-                    'type' => '',
-                    'payee' => $register['payee'],
-                    'account' => '',
+                    'ref_no_type' => $register['ref_no'],
+                    'payee_account' => $register['payee'],
                     'memo' => $register['memo'],
                     $paymentKey => $register[$paymentKey],
                     $depKey => $register[$depKey],
-                    'reconcile_status' => $register['reconcile_status'],
-                    'banking_status' => '',
+                    'reconcile_banking_status' => $register['reconcile_status'],
                     'attachments' => $register['atttachments'],
                     'tax' => $register['tax'],
-                    'balance' => $register['balance']
+                    'balance' => $register['balance'],
+                    'type' => ''
                 ];
 
                 $data[] = [
                     'date' => '',
-                    'ref_no' => $register['type'],
-                    'type' => '',
-                    'payee' => $register['account'],
-                    'account' => '',
+                    'ref_no_type' => $register['type'],
+                    'payee_account' => $register['account'],
                     'memo' => '',
                     $paymentKey => '',
                     $depKey => '',
-                    'reconcile_status' => $register['banking_status'],
-                    'banking_status' => '',
+                    'reconcile_banking_status' => $register['banking_status'],
                     'attachments' => '',
                     'tax' => '',
-                    'balance' => ''
+                    'balance' => '',
+                    'type' => ''
                 ];
             }
         }
