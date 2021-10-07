@@ -77,11 +77,23 @@
         <div class="col-md-6">
             <div class="input-switch">
                 <label for="">App Access</label><br>
-                <input type="checkbox" name="app_access" class="js-switch" checked />
+                <?php 
+                    $is_checked = '';
+                    if( $user->has_app_access == 1 ){
+                        $is_checked = 'checked="checked"';
+                    }                    
+                ?>
+                <input type="checkbox" name="app_access" class="edit-js-switch" <?= $is_checked; ?> />
             </div>
             <div class="input-switch">
+                 <?php 
+                    $is_checked = '';
+                    if( $user->has_web_access == 1 ){
+                        $is_checked = 'checked="checked"';
+                    }                    
+                ?>
                 <label for="">Web Access</label><br>
-                <input type="checkbox" name="web_access" class="js-switch" checked />
+                <input type="checkbox" name="web_access" class="edit-js-switch" <?= $is_checked; ?> />
             </div>
         </div>
     </div>
@@ -183,6 +195,13 @@
 </div>
 <script>
 $(function(){
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.edit-js-switch'));
+    elems.forEach(function(html) {
+        var switchery = new Switchery(html, {
+            size: 'small'
+        });
+    });
+
     $('.edit-select2-role').select2({
         placeholder: 'Select Title',
         allowClear: true,

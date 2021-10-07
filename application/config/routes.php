@@ -1030,3 +1030,6 @@ $route['customer/_load_subscription_payment_history'] = 'Customer/ajax_load_subs
 
 //Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
+
+//Inventory
+$route['inventory/export_list'] = 'inventory/inventory_export';

@@ -242,8 +242,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="row align-items-center">
-                            <div class="col-sm-12">
-                                <h3 class="page-title" style="margin-top: 5px;margin-bottom:10px;">Employees</h3>
+                            <div class="col-md-6">
+                                <h3 class="page-title">Employees</h3>
+                            </div>
+                            <div class="col-md-6" style="text-align: right;">
+                                <button class="btn btn-primary btn-md btn-export-list" style="float: right;margin-left: 10px;"><i class="fa fa-upload"></i> Export List</button>
+                                <button class="btn btn-primary btn-md add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
+                                <button class="btn btn-primary btn-md share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
                             </div>
                         </div>
                         <div class="pl-3 pr-3 mt-0 row">
@@ -251,17 +256,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Employees.</span>
                             </div>
                         </div>
-                        <div class="card-body" style="padding:0px !important;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h4 class="mt-0 header-title mb-5">Employee list</h4>
-                                </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-primary btn-md btn-export-list" style="float: right;margin-left: 10px;"><i class="fa fa-upload"></i> Export List</button>
-                                    <button class="btn btn-primary btn-md add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
-                                    <button class="btn btn-primary btn-md share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
-                                </div>
-                            </div>
+                        <br />
+                        <div class="card-body" style="padding:0px !important;">                            
                             <div class="row">
                                 <div class="col-lg-12 table-responsive">
                                     <table id="employeeTable" data-page-length='25' class="table table-bordered table-striped">
@@ -321,29 +317,44 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <?php //endif 
                                                         ?>
                                                     </td>
-                                                    <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
-                                                    <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
+                                                    <td class="text-center">
+                                                        <!-- <i class="fa fa-lg fa-mobile"></i> -->
+                                                        <?php if( $row->has_app_access == 1 ){ ?>
+                                                            <a class="btn btn-sm btn-primary" href="javascript:void(0);" title="Has mobile app access" data-toggle="tooltip"><i class="fa fa-lg fa-check"></i></a>
+                                                        <?php }else{ ?>
+                                                            <a class="btn btn-sm btn-danger" href="javascript:void(0);" title="Has no mobile app access" data-toggle="tooltip"><i class="fa fa-lg fa-close"></i></a>
+                                                        <?php } ?>                                                        
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <!-- <span class="fa fa-lg fa-desktop"></span> -->
+                                                        <?php if( $row->has_web_access == 1 ){ ?>
+                                                            <a class="btn btn-sm btn-primary" href="javascript:void(0);" title="Has web app access" data-toggle="tooltip"><i class="fa fa-lg fa-check"></i></a>
+                                                        <?php }else{ ?>
+                                                            <a class="btn btn-sm btn-danger" href="javascript:void(0);" title="Has no web app access" data-toggle="tooltip"><i class="fa fa-lg fa-close"></i></a>
+                                                        <?php } ?>  
+                                                    </td>
                                                     <td class="center">
                                                         <?php //if (hasPermissions('users_edit')){ 
                                                         ?>
                                                         <!-- <a href="<?php echo url('users/edit/' . $row->id); ?>" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a> -->
                                                         <?php //} 
                                                         ?>
-                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-                                                        <a href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
+                                                        <a class="btn btn-sm btn-primary" href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                        <a class="btn btn-sm btn-primary" href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
                                                         <?php //endif 
                                                         ?>
                                                         <?php //if (hasPermissions('users_view')): 
                                                         ?>
-                                                        <a href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
+                                                        <a class="btn btn-sm btn-primary" href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
                                                         <?php //endif 
                                                         ?>
                                                         <?php //if (hasPermissions('users_delete')): 
                                                         ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                            <a href="<?php echo url('users/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                                                            <!-- <a class="btn btn-sm btn-primary" href="<?php echo url('users/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a> -->
+                                                            <a class="btn btn-sm btn-primary btn-delete-user" data-id="<?= $row->id; ?>" href="javascript:void(0);" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                                                         <?php else : ?>
-                                                            <a href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
+                                                            <a class="btn btn-sm btn-primary" href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                                                         <?php endif ?>
                                                         <?php //endif 
                                                         ?>
@@ -702,10 +713,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closedEmployeeModal">Cancel</button>
-                    <button type="button" class="btn btn-success" id="savedNewEmployee">Save</button>
+                    <button type="button" class="btn btn-primary" id="savedNewEmployee">Save</button>
                 </div>
             </form>
 
+        </div>
+    </div>
+</div>
+
+<!--Delete User modal-->
+<div class="modal fade" id="modalDeleteUser">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-trash"></i> Delete User</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <input type="hidden" id="eid" value="">
+                <p>Are you sure you want to delete selected user?</p>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger" id="btn-modal-delete-user">Yes</button>
+            </div>
         </div>
     </div>
 </div>
@@ -753,6 +787,49 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             copyText.type = 'hidden';
 
             $(".label-public-url").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+        });
+
+        $("#btn-modal-delete-user").click(function(){
+            var eid = $("#eid").val();
+            $.ajax({
+                url: base_url + 'users/_delete_user',
+                type:"POST",
+                dataType:"json",
+                data:{eid:eid},
+                success:function (data) {
+                    if (data.is_success){
+                        $("#modalDeleteUser").modal('hide');
+                        Swal.fire({
+                          title: 'Success',
+                          text: "User was successfully deleted.",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                        });
+                    }else{
+                        Swal.fire(
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: data.msg,
+                            icon: 'warning'
+                        });
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-delete-user', function() {
+            var eid = $(this).attr("data-id");
+            $("#eid").val(eid);
+            $("#modalDeleteUser").modal('show');
         });
 
         $(document).on('click', '#addEmployeeData', function() {
@@ -1015,13 +1092,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         if (data == 1) {
                             $("#modalEditEmployee").modal('hide');
                             Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
                                 title: 'Success',
-                                text: "Employee record has been Updated",
-                                icon: 'success'
+                                text: "Employee record has been Updated.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
                             });
-                            location.reload();
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
@@ -1061,13 +1143,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         if (data == 1) {
                             $("#modalEditEmployeeProfile").modal('hide');
                             Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
                                 title: 'Success',
-                                text: "Employee record has been Updated",
-                                icon: 'success'
+                                text: "Employee record has been Updated.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#32243d',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
                             });
-                            location.reload();
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
@@ -1139,6 +1226,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         $(document).on('click', '#editEmployee', function() {
             var user_id = $(this).attr('data-id');
+            $(".modal-edit-employee").html('<span class="spinner-border spinner-border-sm m-0"></span>  Loading');
             $('#modalEditEmployee').modal({
                 backdrop: 'static',
                 keyboard: false
