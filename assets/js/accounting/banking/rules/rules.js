@@ -23,26 +23,69 @@ window.addEventListener("DOMContentLoaded", async () => {
   };
 
   const $addRuleForm = document.getElementById("addRuleForm");
-  $addRuleForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
+  const $addRuleBtn = $addRuleForm.querySelector("[data-action=save]");
 
+  const getFormElementValue = ($element) => {
+    if ($element.type === "checkbox") {
+      return $element.checked;
+    }
+
+    return $element.value;
+  };
+
+  function isEmpty(string) {
+    // https://stackoverflow.com/a/3261380/8062659
+    return !string || string.length === 0;
+  }
+
+  $addRuleBtn.addEventListener("click", async function (event) {
     const payload = {};
+    const assignment = {};
+    const conditions = [];
 
-    const $dataTypes = this.querySelectorAll("[data-type]");
+    const $dataTypes = $addRuleForm.querySelectorAll("[data-type]");
+    const $errorMessage = $addRuleForm.querySelector(".formError");
+    $errorMessage.classList.remove("formError--show");
+
+    for (let index = 0; index < $dataTypes.length; index++) {
+      const $element = $dataTypes[index];
+      $element.classList.remove("inputError");
+
+      if ($element.type === "checkbox") {
+        continue;
+      }
+
+      if (!$element.hasAttribute("required")) {
+        continue;
+      }
+
+      if (isEmpty(getFormElementValue($element))) {
+        $element.classList.add("inputError");
+        $errorMessage.classList.add("formError--show");
+        return;
+      }
+    }
+
+    $errorMessage.classList.remove("formError--show");
+
     [...$dataTypes].forEach(($dataType) => {
       const dataType = $dataType.getAttribute("data-type");
-      if (dataType.includes(".")) return;
+      const value = getFormElementValue($dataType);
 
-      if ($dataType.type === "checkbox") {
-        payload[dataType] = $dataType.checked;
+      if (dataType.startsWith("conditions.")) {
         return;
       }
 
-      payload[dataType] = $dataType.value;
+      if (!dataType.startsWith("assignment.")) {
+        payload[dataType] = value;
+        return;
+      }
+
+      const [, assignmentKey] = dataType.split(".");
+      assignment[assignmentKey] = value;
     });
 
     const $conditions = this.querySelectorAll(".addCondition-container > div");
-    const conditions = [];
     [...$conditions].forEach(($condition) => {
       const $dataTypes = $condition.querySelectorAll("[data-type]");
       const condition = {};
@@ -50,13 +93,14 @@ window.addEventListener("DOMContentLoaded", async () => {
       [...$dataTypes].forEach(($dataType) => {
         const dataTypeTemp = $dataType.getAttribute("data-type");
         const dataType = [...dataTypeTemp.split(".")].pop();
-        condition[dataType] = $dataType.value;
+        condition[dataType] = getFormElementValue($dataType);
       });
 
       conditions.push(condition);
     });
 
-    const response = await api.saveRate({ ...payload, conditions });
+    const _payload = { ...payload, conditions, assignment };
+    const response = await api.saveRate(_payload);
     window.location.reload();
   });
 

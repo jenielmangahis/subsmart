@@ -154,6 +154,9 @@ class Dashboard extends Widgets {
         $this->page_data['events'] = $this->event_model->get_all_events(5);
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
+        $this->page_data['main_widgets'] = array_filter($this->page_data['widgets'], function($widget){
+            return $widget->wu_is_main == true;
+        });
         $this->page_data['status_arr'] = $status_arr;
 
         // fetch open estimates
@@ -237,7 +240,8 @@ class Dashboard extends Widgets {
         );
         $this->page_data['news'] = $this->general->get_data_with_param($news_query);
 
-        $this->load->view('dashboard', $this->page_data);
+        // $this->load->view('dashboard', $this->page_data);
+        $this->load->view('dashboard_v2', $this->page_data);
     }
     
     public function getInbox(){

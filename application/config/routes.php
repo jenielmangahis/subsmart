@@ -1033,3 +1033,7 @@ $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 
 //Inventory
 $route['inventory/export_list'] = 'inventory/inventory_export';
+
+//Sales Overview
+$route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
+

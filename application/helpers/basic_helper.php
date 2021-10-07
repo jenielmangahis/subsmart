@@ -122,6 +122,28 @@ if (!function_exists('userProfileImage')) {
     }
 }
 
+if (!function_exists('userProfilePicture')) {
+
+    function userProfilePicture($id)
+    {
+
+        $CI = &get_instance();
+        $url = urlUpload('users/user-profile/p_' . $id . '.png?' . time());
+        $user = $CI->users_model->getUser($id);
+        $img_ext = 'png';
+
+        if ($user->profile_img) {
+            $url = urlUpload('users/user-profile/' . $user->profile_img);
+            if( !file_exists(FCPATH."uploads/users/user-profile/" . $user->profile_img) ){
+                $url = urlUpload('users/default.png');
+            }
+            return $url;
+        } 
+        
+        return NULL;
+    }
+}
+
 if (!function_exists('companyProfileImage')) {
 
     function companyProfileImage($id)
@@ -770,6 +792,19 @@ if (!function_exists('getLoggedFullName')) {
         $result = $CI->user_model->getByWhere(array('id' => $finalUserId));
 
         return ucwords($result[0]->FName) . ' ' . ucwords($result[0]->LName);
+    }
+}
+
+if (!function_exists('getLoggedNameInitials')) {
+
+    function getLoggedNameInitials($userId)
+    {
+        $finalUserId = ($userId) ? $userId : logged('id');
+        $CI =& get_instance();
+        $CI->load->model('Users_model', 'user_model');
+        $result = $CI->user_model->getByWhere(array('id' => $finalUserId));
+
+        return ucwords($result[0]->FName[0]).ucwords($result[0]->LName[0]);
     }
 }
 

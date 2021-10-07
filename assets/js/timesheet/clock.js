@@ -35,7 +35,7 @@ $(document).ready(function() {
     $(document).on("click", "#notificationDP", function() {
         var id = $(this).attr("data-id");
         $.ajax({
-            url: baseURL + "/timesheet/readNotification",
+            url: baseURL + "timesheet/readNotification",
             type: "POST",
             data: { id: id },
             success: function(data) {},
@@ -46,7 +46,7 @@ $(document).ready(function() {
         Swal.fire({
             title: "Clock in?",
             html: "Are you sure you want to Clock-in?",
-            imageUrl: baseURL + "/assets/img/timesheet/work.png",
+            imageUrl: baseURL + "assets/img/timesheet/work.png",
             showCancelButton: true,
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
@@ -54,7 +54,7 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "/timesheet/clockinemployee",
+                    url: baseURL + "timesheet/clockinemployee",
                     type: "POST",
                     dataType: "json",
                     // data:{clock_in:clock_in},
@@ -115,7 +115,7 @@ $(document).ready(function() {
                             timer: 3000,
                             title: "Upgrade your subscription",
                             html: "Account can't clockin due to membership limitation.",
-                            imageUrl: baseURL + "/assets/img/timesheet/subscription.png",
+                            imageUrl: baseURL + "assets/img/timesheet/subscription.png",
                         });
                         setTimeout(function() { window.location.replace(baseURL + "mycrm/membership"); }, 3000);
                     }
@@ -204,7 +204,7 @@ $(document).ready(function() {
             Swal.fire({
                 title: "Lunch-in",
                 html: "Are you sure you want to take your lunch?",
-                imageUrl: baseURL + "/assets/img/timesheet/lunch-icon-23.png",
+                imageUrl: baseURL + "assets/img/timesheet/lunch-icon-23.png",
                 showDenyButton: true,
                 confirmButtonColor: "#2ca01c",
                 denyButtonColor: "#d33",
@@ -213,7 +213,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL + "/timesheet/lunchInEmployee",
+                        url: baseURL + "timesheet/lunchInEmployee",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id },
@@ -265,7 +265,7 @@ $(document).ready(function() {
         let attn_id = $("#attendanceId").val();
         // alert(attn_id);
         $.ajax({
-            url: baseURL + "/timesheet/clockOut_validation",
+            url: baseURL + "timesheet/clockOut_validation",
             type: "POST",
             dataType: "json",
             data: { attn_id: attn_id },
@@ -289,7 +289,7 @@ $(document).ready(function() {
             Swal.fire({
                 title: "Lunch-out",
                 html: "Done taking your Lunch?",
-                imageUrl: baseURL + "/assets/img/timesheet/work.png",
+                imageUrl: baseURL + "assets/img/timesheet/work.png",
                 showCancelButton: true,
                 confirmButtonColor: "#2ca01c",
                 cancelButtonColor: "#d33",
@@ -297,7 +297,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL + "/timesheet/lunchOutEmployee",
+                        url: baseURL + "timesheet/lunchOutEmployee",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id, pause_time: pause_time },
@@ -310,7 +310,7 @@ $(document).ready(function() {
                                     .children(".btn-lunch")
                                     .attr(
                                         "src",
-                                        baseURL + "/assets/css/timesheet/images/coffee-static.svg"
+                                        baseURL + "assets/css/timesheet/images/coffee-static.svg"
                                     );
                                 clearTimeout(counter);
                                 Swal.fire({
@@ -344,7 +344,7 @@ $(document).ready(function() {
             Swal.fire({
                 title: "Clock out?",
                 html: "Are you sure you want to Clock-out?",
-                imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
+                imageUrl: baseURL + "assets/img/timesheet/clock-out.png",
                 showCancelButton: true,
                 confirmButtonColor: "#2ca01c",
                 cancelButtonColor: "#d33",
@@ -352,7 +352,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: baseURL + "/timesheet/clockOutEmployee",
+                        url: baseURL + "timesheet/clockOutEmployee",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id },
@@ -419,7 +419,7 @@ $(document).ready(function() {
                 let end_shift = new Date(expected_end_shift * 1000);
                 let time = end_shift.setHours(end_shift.getHours() - time_diff);
                 $.ajax({
-                    url: baseURL + "/timesheet/clockOutEmployee",
+                    url: baseURL + "timesheet/clockOutEmployee",
                     type: "POST",
                     dataType: "json",
                     data: { attn_id: attn_id, time: time, auto: "Auto" },
@@ -491,7 +491,14 @@ $(document).ready(function() {
     }
     // end of Live clock
     show_my_attendance_logs();
-    $(".ts_schedule").datepicker();
+
+    try{
+        $(".ts_schedule").datepicker();
+    }
+    catch(err){
+        console.log(err);
+    }
+
     $(document).on("change", "#to_date_logs", function() {
         show_my_attendance_logs();
     });
@@ -504,9 +511,16 @@ $(document).ready(function() {
     function show_my_attendance_logs() {
         $("#my-attendance-logs").hide();
         $(".table-ts-loader").show();
-        $("#my-attendance-logs").DataTable().destroy();
+
+        try{
+            $("#my-attendance-logs").DataTable().destroy(); 
+        }
+        catch(err){
+            console.log(err);
+        }
+
         $.ajax({
-            url: baseURL + "/timesheet/show_my_attendance_logs",
+            url: baseURL + "timesheet/show_my_attendance_logs",
             type: "POST",
             dataType: "json",
             data: {
@@ -515,13 +529,18 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // console.log(data);
-                $(".table-ts-loader").hide();
-                $("#my-attendance-logs").show();
-                $("#my-attendance-logs").html(data);
-                $("#my-attendance-logs").DataTable({
-                    ordering: false,
-                    paging: false,
-                });
+                try{
+                    $(".table-ts-loader").hide();
+                    $("#my-attendance-logs").show();
+                    $("#my-attendance-logs").html(data);
+                    $("#my-attendance-logs").DataTable({
+                        ordering: false,
+                        paging: false,
+                    });
+                }
+                catch(err){
+                    console.log(err);
+                }
             },
         });
     }
@@ -537,14 +556,14 @@ $(document).ready(function() {
                 shift_date +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "/assets/img/timesheet/overtime.png",
+            imageUrl: baseURL + "assets/img/timesheet/overtime.png",
             confirmButtonColor: "#1D9E74",
             cancelButtonColor: "#d33",
             confirmButtonText: "Request now!",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "/timesheet/request_my_ot",
+                    url: baseURL + "timesheet/request_my_ot",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -580,7 +599,7 @@ $(document).ready(function() {
         // console.log($(this).attr("data-att-id"));
         let user_name = $(this).attr("data-name");
         $.ajax({
-            url: baseURL + "/timesheet/get_spicific_attendance_log",
+            url: baseURL + "timesheet/get_spicific_attendance_log",
             type: "POST",
             dataType: "json",
             data: {
@@ -630,14 +649,14 @@ $(document).ready(function() {
                 shift_date +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "/assets/img/timesheet/attendance_correction.png",
+            imageUrl: baseURL + "assets/img/timesheet/attendance_correction.png",
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
             confirmButtonText: "Submit Adjustment now!",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "/timesheet/submit_attendance_correction_request",
+                    url: baseURL + "timesheet/submit_attendance_correction_request",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -685,7 +704,7 @@ $(document).ready(function() {
         $(".my-correction-requests-loader").show();
         $("#my_correction_requests").DataTable().destroy();
         $.ajax({
-            url: baseURL + "/timesheet/show_my_correction_requests",
+            url: baseURL + "timesheet/show_my_correction_requests",
             type: "POST",
             dataType: "json",
             data: {
@@ -716,14 +735,14 @@ $(document).ready(function() {
                 shift_date +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "/assets/img/timesheet/cancel.png",
+            imageUrl: baseURL + "assets/img/timesheet/cancel.png",
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
             confirmButtonText: "Cancel now",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "/timesheet/cancel_my_correction_request",
+                    url: baseURL + "timesheet/cancel_my_correction_request",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -761,7 +780,7 @@ $(document).ready(function() {
         $("#my_leave_requests").hide();
         $(".my-leave-requests-loader").show();
         $.ajax({
-            url: baseURL + "/timesheet/show_my_leave_requests",
+            url: baseURL + "timesheet/show_my_leave_requests",
             type: "POST",
             dataType: "json",
             data: {
@@ -794,14 +813,14 @@ $(document).ready(function() {
                 date_filed +
                 "</strong>?",
             showCancelButton: true,
-            imageUrl: baseURL + "/assets/img/timesheet/cancel.png",
+            imageUrl: baseURL + "assets/img/timesheet/cancel.png",
             confirmButtonColor: "#2ca01c",
             cancelButtonColor: "#d33",
             confirmButtonText: "Cancel now",
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: baseURL + "/timesheet/cancel_my_leave_request",
+                    url: baseURL + "timesheet/cancel_my_leave_request",
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -836,7 +855,7 @@ $(document).ready(function() {
         $("#show_my_attendance_remarks").hide();
         $(".my-attendance-remarks-loader").show();
         $.ajax({
-            url: baseURL + "/timesheet/show_my_attendance_remarks",
+            url: baseURL + "timesheet/show_my_attendance_remarks",
             type: "POST",
             dataType: "json",
             data: {
@@ -864,7 +883,7 @@ $(document).ready(function() {
 
         let attn_id = $("#attendanceId").val();
         $.ajax({
-            url: baseURL + "/timesheet/get_shift_duration",
+            url: baseURL + "timesheet/get_shift_duration",
             type: "POST",
             dataType: "json",
             data: { attn_id: attn_id },
@@ -877,7 +896,7 @@ $(document).ready(function() {
                 if (anntendance_status == 1 && data.overtime_status == 0) {
                     // alert("pasok");
                     $.ajax({
-                        url: baseURL + "/timesheet/get_shift_duration",
+                        url: baseURL + "timesheet/get_shift_duration",
                         type: "POST",
                         dataType: "json",
                         data: { attn_id: attn_id },
@@ -886,7 +905,7 @@ $(document).ready(function() {
                             if (data.over_lunch) {
                                 clearInterval(autoclockout_checker_loop);
                                 $.ajax({
-                                    url: baseURL + "/timesheet/lunchOutEmployee",
+                                    url: baseURL + "timesheet/lunchOutEmployee",
                                     type: "POST",
                                     dataType: "json",
                                     data: { attn_id: attn_id, pause_time: pause_time },
@@ -914,7 +933,7 @@ $(document).ready(function() {
                                         title: "Do you need more time?",
                                         // icon:'question',
                                         html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
-                                        imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
+                                        imageUrl: baseURL + "assets/img/timesheet/clock-out.png",
                                         showDenyButton: true,
                                         confirmButtonText: `Continue`,
                                         denyButtonText: `End Session`,
@@ -954,7 +973,7 @@ $(document).ready(function() {
                                             $("#overtime_status_acknowledgement").val(1);
                                             status = 1;
                                             $.ajax({
-                                                url: baseURL + "/timesheet/overtimeApproval",
+                                                url: baseURL + "timesheet/overtimeApproval",
                                                 type: "POST",
                                                 dataType: "json",
                                                 data: { attn_id: attn_id, status: status },
@@ -982,7 +1001,7 @@ $(document).ready(function() {
                                         var di = result.dismiss;
                                         if (di == "close") {
                                             $.ajax({
-                                                url: baseURL + "/timesheet/get_shift_duration",
+                                                url: baseURL + "timesheet/get_shift_duration",
                                                 type: "POST",
                                                 dataType: "json",
                                                 data: { attn_id: attn_id },
@@ -1122,7 +1141,7 @@ function show_user_current_geo_possition(position) {
                     }
                     console.log("lat: " + current_user_latitude + " lng: " + current_user_longitude + " Address: " + formattedAddress);
                     $.ajax({
-                        url: baseURL + "/timesheet/timesheet_save_current_geo_location",
+                        url: baseURL + "timesheet/timesheet_save_current_geo_location",
                         type: "POST",
                         dataType: "json",
                         data: {

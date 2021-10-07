@@ -181,3 +181,52 @@
     }
   }
 }
+
+$colorError: #d52b1e;
+
+@mixin input-error {
+  background: rgba(213, 43, 30, 0.1) !important;
+  border-color: $colorError !important;
+}
+
+.inputError {
+  @include input-error;
+
+  & + .select2 .select2-selection {
+    @include input-error;
+  }
+}
+
+.formError {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  border-radius: 4px;
+  margin-bottom: 25px;
+  border: 1px solid $colorError;
+
+  display: none;
+
+  &--show {
+    display: flex;
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+  }
+
+  .fa {
+    font-size: 18px;
+    margin-right: 8px;
+    color: $colorError;
+  }
+
+  p {
+    margin-bottom: 0;
+    font-weight: 600;
+    font-size: 16px;
+    color: $colorError;
+  }
+}

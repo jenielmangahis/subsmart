@@ -160,4 +160,13 @@ class Accounting_receive_payment_model extends MY_Model
             return false;
         }
     }
+    public function get_ranged_received_payment_by_company_id($company_id, $start_date, $end_date)
+    {
+        if ($company_id != "") {
+            $conditions ="AND (payment_date >= '".$start_date."' AND payment_date <=  '".$end_date."')";
+            $sql="SELECT * FROM accounting_receive_payment WHERE company_id = ".$company_id." ".$conditions;
+            $query = $this->db->query($sql);
+            return $query->result();
+        }
+    }
 }

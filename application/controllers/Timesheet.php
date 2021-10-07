@@ -2163,6 +2163,85 @@ class Timesheet extends MY_Controller
         );
         echo json_encode($notificationListArray);
     }
+
+    public function getV2NotificationsAll()
+    {
+        $userid = logged('id');
+        $badgeCount = $this->input->post('badgeCount');
+        $notification = $this->timesheet_model->get_unreadNotification($badgeCount, "");
+        $html = '';
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        if ($notification != null) {
+            $notifyCount = count($notification);
+            foreach ($notification as $notify) {
+                $seen = '';
+                if ($notify->status == 1) {
+                    $seen = 'read';
+                }
+
+                $image = userProfilePicture($notify->user_id);
+                $date_created = date('m-d-Y h:i A', strtotime($notify->date_created));
+
+                if ($notify->title == 'New Work Order') {
+                    $html .= '<div class="list-item" onclick="location.href=\''.site_url("workorder").'\'" data-id="'.$notify->id.'">
+                                <div class="nsm-notification-item">';
+
+                                if(is_null($image)):
+                                    $html .= '<div class="nsm-profile"><span>'.ucwords($notify->FName[0]).ucwords($notify->LName[0]).'</span></div>';
+                                else:
+                                    $html .= '<div class="nsm-profile" style="background-image: url('.$image.');"></div>';
+                                endif;
+                                
+                                $html .= '<div class="nsm-notification-content '.$seen.'">
+                                        <span class="content-title fw-bold mb-1">'.$notify->FName . " " . $notify->LName.'</span>
+                                        <span class="content-subtitle">'.$notify->content.'</span>
+                                    </div>
+                                </div>
+                            </div>';
+                } elseif ($notify->title == 'New Estimates') {
+                    $html .= '<div class="list-item" onclick="location.href=\''.site_url("estimates").'\'" data-id="'.$notify->id.'">
+                                <div class="nsm-notification-item">';
+
+                                if(is_null($image)):
+                                    $html .= '<div class="nsm-profile"><span>'.ucwords($notify->FName[0]).ucwords($notify->LName[0]).'</span></div>';
+                                else:
+                                    $html .= '<div class="nsm-profile" style="background-image: url('.$image.');"></div>';
+                                endif;
+                                
+                                $html .= '<div class="nsm-notification-content '.$seen.'">
+                                        <span class="content-title fw-bold mb-1">'.$notify->FName . " " . $notify->LName.'</span>
+                                        <span class="content-subtitle">'.$notify->content.'</span>
+                                    </div>
+                                </div>
+                            </div>';
+                } else {
+                    $html .= '<div class="list-item" onclick="location.href=\''.site_url("timesheet/attendance").'\'" data-id="'.$notify->id.'">
+                                <div class="nsm-notification-item">';
+
+                                if(is_null($image)):
+                                    $html .= '<div class="nsm-profile"><span>'.ucwords($notify->FName[0]).ucwords($notify->LName[0]).'</span></div>';
+                                else:
+                                    $html .= '<div class="nsm-profile" style="background-image: url('.$image.');"></div>';
+                                endif;
+                            
+                                $html .= '<div class="nsm-notification-content '.$seen.'">
+                                        <span class="content-title fw-bold mb-1">'.$notify->FName . " " . $notify->LName.'</span>
+                                        <span class="content-subtitle">'.$notify->content.'</span>
+                                    </div>
+                                </div>
+                            </div>';
+                }
+            }
+        }
+
+        $notificationListArray = array(
+            'notifyCount' => $notifyCount,
+            'badgeCount' => $this->timesheet_model->get_unreadNotification($notifyCount, "counter"),
+            'autoNotifications' => $html,
+        );
+        echo json_encode($notificationListArray);
+    }
+
     public function getCount_NotificationsAll()
     {
         $userid = logged('id');

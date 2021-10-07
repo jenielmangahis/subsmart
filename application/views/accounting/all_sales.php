@@ -599,11 +599,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
                                                                 <span class="fa fa-print icon"></span>  Print</a></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="#" class="sendESTemail" data-id="<?= $estimate->id; ?>" est-num="<?= $estimate->estimate_number ?>"  est-status="<?= $estimate->status ?>" est-email="<?= $estimate->email ?>" est-cust="<?php echo get_customer_by_id($estimate->customer_id)->first_name .' '. get_customer_by_id($estimate->customer_id)->last_name ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="#" class="estchangestatus" data-id="<?= $estimate->id; ?>" est-num="<?= $estimate->estimate_number ?>"  est-status="<?= $estimate->status ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Update status</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
@@ -2793,6 +2793,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
        end of modal-->
+
+
+
     <!--    Create Estimate Modal-->
     <div class="full-screen-modal">
         <div id="add-estimate" class="modal fade modal-fluid" role="dialog">
@@ -4049,8 +4052,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 <!--    end of modal-->
 
-<div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+
+<div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -4080,36 +4083,36 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 href="<?php echo base_url('estimate/add?type=3') ?>"><span
                     class="fa fa-cubes"></span> Packages Estimate</a>
         </div>
-    </div> -->
-    <div class="modal-body text-center">
-        <p class="text-lg margin-bottom">
-            What type of estimate you want to create
-        </p>
-        <center>
-            <div class="margin-bottom text-center" style="width:60%;">
-                <div class="help help-sm">Create a regular estimate with items</div>
-                <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
-                    href="<?php echo base_url('estimate/add') ?>"><span
-                        class="fa fa-file-text-o"></span> Standard Estimate</a>
-            </div>
-            <div class="margin-bottom" style="width:60%;">
-                <div class="help help-sm">Customers can select all <br>or only certain options</div>
-                <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
-                    href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span
-                        class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
-            </div>
-            <div class="margin-bottom" style="width:60%;">
-                <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
-                <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
-                    href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span
-                        class="fa fa-cubes"></span> Bundle Estimate</a>
-            </div>
-        </center>
+        </div> -->
+        <div class="modal-body text-center">
+            <p class="text-lg margin-bottom">
+                What type of estimate you want to create
+            </p>
+            <center>
+                <div class="margin-bottom text-center" style="width:60%;">
+                    <div class="help help-sm">Create a regular estimate with items</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
+                        href="<?php echo base_url('estimate/add') ?>"><span
+                            class="fa fa-file-text-o"></span> Standard Estimate</a>
+                </div>
+                <div class="margin-bottom" style="width:60%;">
+                    <div class="help help-sm">Customers can select all <br>or only certain options</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
+                        href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span
+                            class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+                </div>
+                <div class="margin-bottom" style="width:60%;">
+                    <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
+                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
+                        href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span
+                            class="fa fa-cubes"></span> Bundle Estimate</a>
+                </div>
+            </center>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    </div>
-</div>
 </div>
 
 <?php include viewPath('includes/footer_accounting'); ?>
