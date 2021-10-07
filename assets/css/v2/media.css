@@ -1,0 +1,137 @@
+/***** MIN WIDTH *****/
+
+@media (min-width: 576px){
+    .nsm-nav-items ul > li:not(:last-child){
+        display: flex !important;
+    }
+
+    .nsm-nav .nsm-nav-items .main-nav-item{
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px){
+    #dashboard_buttons{
+        display: flex;
+    }
+    
+    .nsm-fab-container{
+        display: none;
+    }
+    
+    .nsm-nav{
+        margin-bottom: 3.5em;
+    }
+}
+
+@media (min-width: 992px){
+}
+
+@media (min-width: 1200px){
+}
+
+@media (min-width: 1400px){
+
+}
+
+
+/***** MAX WIDTH *****/
+
+@media (max-width: 1440px){
+    .nsm-widget-table .widget-item.timesheet-item .content .details{
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .nsm-widget-table .widget-item.timesheet-item .content .controls .timesheet-group{
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .nsm-widget-table .widget-item.timesheet-item .content .controls .timesheet-group .timesheet-time{
+        width: 100%;
+        text-align: left;
+    }
+
+    .nsm-widget-table .widget-item.timesheet-item .content .controls .timesheet-group .timesheet-time:first-child{
+        margin-bottom: 10px;
+        margin-top: 5px;
+    }
+
+    /* .nsm-widget-table .widget-item .content .controls{
+        width: 100%;
+        text-align: unset;
+        align-items: unset;
+    } */
+
+    .nsm-widget-table .timesheet-header .widget-item.timesheet-item{
+        min-height: unset;
+    }
+
+    .nsm-widget-table .timesheet-header .widget-item.timesheet-item .content .details{
+        width: 100%;
+        margin-bottom: unset;
+    }
+    
+    .nsm-widget-table .timesheet-header .widget-item.timesheet-item .content .controls{
+        display: none;
+    }
+
+    .timesheet-item .timesheet-time .timesheet-label{
+        display: initial;
+    }
+}
+
+@media (max-width: 1024px){
+    .nsm-widget-table .widget-item .content .details{
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .nsm-widget-table .widget-item .content .controls{
+        width: 100%;
+        text-align: unset;
+        align-items: unset;
+    }
+
+    .nsm-messages .details .content-subtitle{
+        flex: 1;
+    }
+
+    .nsm-counter .bx{
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 991px){
+    .nsm-widget-table .widget-item .content .details{
+        width: 70%;
+    }
+
+    .nsm-widget-table .widget-item .content .controls{
+        width: 30%;
+        align-items: end;
+        text-align: end;
+    }
+
+    .nsm-messages .details .content-subtitle{
+        flex: unset;
+    }
+}
+
+@media (max-width: 620px){
+    .nsm-widget-table .widget-item .content .details{
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .nsm-widget-table .widget-item .content .controls{
+        width: 100%;
+        text-align: unset;
+        align-items: unset;
+    }
+    
+    .nsm-messages .details .content-subtitle{
+        flex: 1;
+    }
+}

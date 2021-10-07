@@ -39,3 +39,76 @@
     </div>
   </div>
 </div>
+
+
+       
+<!-- Estimate change status modal -->
+<!-- The Modal -->
+<div class="modal fade" id="estchangestatus" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Update estimate status <span id="est_number_status"></span></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p>Status</p>
+                <select class="form-control est_status" name="est_status">
+                    <!-- <option value="Draft">Draft</option> -->
+                    <option value="Submitted">Submitted</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="Invoiced">Invoiced</option>
+                    <option value="Lost">Lost</option>
+                    <option value="Declined By Customer">Declined By Customer</option>
+                </select>
+
+                <input type="hidden" class="estID" name="estID">
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <a href="#" type="submit" class="btn btn-success update_est_status">OK</a>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+<!-- Estimate send customer -->
+<!-- The Modal -->
+<div class="modal fade" id="sendESTemail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Send email for <span id="est_number_email"></span></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p><b>To</b></p>
+                <input type="text" class="form-control custEmail" name="custEmail">
+
+                <p><b>Subject</b></p>
+                <input type="text" class="form-control custsubject" name="custsubject" value="Estimate [Estimate No.] from <?php echo $clients->business_name; ?>">
+
+                <p><b>Message</b></p>
+                <textarea class="form-control custmessage" name="custmessage" style="height:200px;"></textarea>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <a href="#" type="submit" class="btn btn-success send_est">Send</a>
+            </div>
+        
+        </div>
+    </div>
+</div>

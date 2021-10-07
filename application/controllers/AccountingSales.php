@@ -1,4 +1,7 @@
 <?php
+
+use oasis\names\specification\ubl\schema\xsd\CommonBasicComponents_2\StartDate;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class AccountingSales extends MY_Controller
@@ -70,7 +73,6 @@ class AccountingSales extends MY_Controller
         if (!array_key_exists('rates', $payload)) {
             $payload['user_id'] = $userId;
             $data = $this->saveRate($payload);
-
         } else {
             ['rates' => $rates] = $payload;
             $rateValues = array_map(function ($rate) {
@@ -299,11 +301,9 @@ SQL;
 
             if ($result->due_date === $currentDate) {
                 $type = 'due';
-
-            } else if ($dueDateUnix > $currentDateUnix) {
+            } elseif ($dueDateUnix > $currentDateUnix) {
                 $type = 'upcoming';
-
-            } else if ($dueDateUnix < $currentDateUnix) {
+            } elseif ($dueDateUnix < $currentDateUnix) {
                 $type = 'overdue';
             }
 
@@ -426,5 +426,59 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['data' => $record]);
+    }
+    public function get_income_overtime()
+    {
+        //caculating this month overall income
+        $duration = $this->input->post("duration");
+        if ($duration == "This month") {
+            $start_date=date("Y-m-d", strtotime("first day of previous month"));
+            $end_date=date("Y-m-t");
+        } elseif ($duration == "Last month") {
+            $end_date=date("Y-m-d", strtotime("last day of previous month"));
+            $start_date=date("Y-m-d", strtotime('-1 month', strtotime($end_date)));
+            $start_date=date("Y-m-01", strtotime($start_date));
+        } elseif ($duration == "This quarter") {
+            $month = date("n");
+            $yearQuarter = ceil($month / 3);
+            $end_date = date("Y-m-d");
+            if ($yearQuarter == 1) {
+                $start_date = date("Y-01-01");
+            } elseif ($yearQuarter == 2) {
+                $start_date = date("Y-04-01");
+            } elseif ($yearQuarter == 3) {
+                $start_date = date("Y-07-01");
+            } elseif ($yearQuarter == 4) {
+                $start_date = date("Y-10-01");
+            }
+        } elseif ($duration == "Last quarter") {
+            $month = date("n");
+            $yearQuarter = ceil($month / 3)-1;
+            if ($yearQuarter == 1) {
+                $start_date = date("Y-01-01");
+            } elseif ($yearQuarter == 2) {
+                $start_date = date("Y-04-01");
+            } elseif ($yearQuarter == 3) {
+                $start_date = date("Y-07-01");
+            } elseif ($yearQuarter == 4) {
+                $start_date = date("Y-10-01");
+            }
+            $end_date = date("Y-m-t", strtotime('+2 months', strtotime($start_date)));
+        } elseif ($duration == "This year by month") {
+        } elseif ($duration == "This year by quarter") {
+        } elseif ($duration == "Last year by month") {
+        } elseif ($duration == "Last year by quarter") {
+        }
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id(getLoggedCompanyID(), $start_date, date("Y-m-d"));
+        
+        $current_income=0;
+        $last_income=0;
+        foreach ($receive_payments as $payment) {
+            if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
+                $current_income +=$payment->amount;
+            } else {
+                $last_income +=$payment->amount;
+            }
+        }
     }
 }

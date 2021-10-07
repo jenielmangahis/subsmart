@@ -14,3 +14,15 @@ $(".overview-widget .widget-with-counter").hover(function() {
         $(this).addClass("focused");
     }
 );
+
+$(document).on("change", ".overview-widget.income-overtime .filter-section select.duration", function(event) {
+    $.ajax({
+        url: baseURL + "/sales-overview/income-overtime",
+        type: "POST",
+        dataType: "json",
+        data: { duration: $(this).find(":selected").text() },
+        success: function(data) {
+            console.log(data);
+        },
+    });
+});

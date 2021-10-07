@@ -13,10 +13,10 @@ class AccountingRules extends MY_Controller
         $payload = json_decode(file_get_contents('php://input'), true);
         $payload['user_id'] = logged('id');
 
-        // We can't include `conditions` when inserting to
-        // `accounting_rules` table, so we have to remove it.
-        ['conditions' => $conditions] = $payload;
+        // Remove unsupported columns on `accounting_rules` table.
+        ['conditions' => $conditions, 'assignment' => $assignment] = $payload;
         unset($payload['conditions']);
+        unset($payload['assignment']);
 
         $this->db->insert('accounting_rules', $payload);
         $this->db->where('id', $this->db->insert_id());
@@ -27,6 +27,9 @@ class AccountingRules extends MY_Controller
             return $condition;
         }, $conditions);
         $this->db->insert_batch('accounting_rules_conditions', $conditions);
+
+        $assignment['rule_id'] = $newRule->id;
+        $this->db->insert('accounting_rule_assignments', $assignment);
 
         header('content-type: application/json');
         echo json_encode(['data' => $newRule]);

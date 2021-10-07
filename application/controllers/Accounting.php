@@ -266,6 +266,7 @@ class Accounting extends MY_Controller
         $total_overdue = 0;
         $total_not_due = 0;
         $deposited_last30_days =0;
+        
         foreach ($invoices as $inv) {
             if (is_numeric($inv->grand_total)) {
                 $receivable_payment += $inv->grand_total;
@@ -289,6 +290,22 @@ class Accounting extends MY_Controller
                 $total_not_due += $inv->grand_total - $amount_payment;
             }
         }
+
+        //caculating this month overall income
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of previous month")), date("Y-m-d"));
+        $income_this_month=0;
+        $income_last_month=0;
+        foreach ($receive_payments as $payment) {
+            if(date("Y-m-d",strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d",strtotime($payment->payment_date)) <= date("Y-m-d")){
+                $income_this_month +=$payment->amount;
+            }else{
+                $income_last_month +=$payment->amount;
+            }
+            
+        }
+        // var_dump($receive_payments);
+
+
         $this->page_data['unpaid_last_365'] = $receivable_payment-$total_amount_received;
         $this->page_data['unpaid_last_30'] = $receivable_last30_days-$total_amount_received_last30_days;
         $this->page_data['due_last_365'] = $total_overdue;
@@ -296,6 +313,8 @@ class Accounting extends MY_Controller
         $this->page_data['deposited_last30_days'] = $deposited_last30_days;
         $this->page_data['not_deposited_last30_days'] = $receivable_last30_days-$deposited_last30_days;
         $this->page_data['invoice_needs_attention'] = false;
+        $this->page_data['income_this_month'] = $income_this_month;
+        $this->page_data['income_last_month'] = $income_last_month;
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
@@ -7483,7 +7502,7 @@ class Accounting extends MY_Controller
             $receive_payment_id = 0;
             $insert = array(
                 "customer_id" => $customer_id,
-                "payment_date" => $this->input->post("payment_date"),
+                "payment_date" => date("Y-m-d",strtotime($this->input->post("payment_date"))),
                 "payment_method" => $this->input->post("payment_method"),
                 "ref_no" => $this->input->post("ref_no"),
                 "deposit_to" => $this->input->post("deposite_to"),
@@ -9496,10 +9515,20 @@ class Accounting extends MY_Controller
     }
     public function tester()
     {
-        // echo $this->session->userdata('usertimezone');
-        date_default_timezone_set($this->session->userdata('usertimezone'));
-        date_default_timezone_set('America/Chicago');
-        echo date("m/d/Y h:i A");
+        $month = date("n");
+            $yearQuarter = ceil($month / 3)-1;
+            if($yearQuarter == 1){
+                $start_date = date("Y-01-01");
+            }elseif($yearQuarter == 2){
+                $start_date = date("Y-04-01");
+            }elseif($yearQuarter == 3){
+                $start_date = date("Y-07-01");
+            }elseif($yearQuarter == 4){
+                $start_date = date("Y-10-01");
+            }
+            $end_date = date("Y-m-t",strtotime ( '+2 months' , strtotime ( $start_date ) ));
+        echo $start_date;
+        var_dump($end_date);
     }
     public function update_customer_notes()
     {
