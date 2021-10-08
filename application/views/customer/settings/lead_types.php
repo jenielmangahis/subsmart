@@ -18,7 +18,7 @@
                         <tr>
                             <td><?= $lead_type->lead_name; ?></td>
                             <td>
-                                <a href="" class="btn btn-sm btn-default" title="Edit Lead Type" data-toggle="tooltip">
+                                <a href="javascript:void(0);" class="btn btn-sm btn-default edit-lead-type" data-id="<?= $lead_type->lead_id; ?>" data-name="<?= $lead_type->lead_name; ?>" title="Edit Lead Source" data-toggle="tooltip">
                                     <i class="fa fa-pencil"></i> Edit
                                 </a>
                                 <button id="<?= $lead_type->lead_id; ?>" class="btn btn-sm btn-default delete_leadtype" title="Delete Lead Type" data-toggle="tooltip">

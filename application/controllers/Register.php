@@ -745,6 +745,7 @@ class Register extends MYF_Controller {
 
         //Check if offer code is valid
         $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
+        $startup_checklist = generateClientChecklist();
 
         if( $offerCode && $offerCode->status == 0 ){
             $num_days_trial = $offerCode->trial_days;
@@ -774,7 +775,9 @@ class Register extends MYF_Controller {
                 'is_auto_renew' => 0,  
                 'next_billing_date' => $next_billing_date,
                 'num_months_discounted' => 0,
-                'recurring_payment_type' => 'monthly'
+                'recurring_payment_type' => 'monthly',
+                'checklist' => $startup_checklist,
+                'is_checklist' => 1
             ]);
 
             $uid = $this->users_model->create([
@@ -951,9 +954,12 @@ class Register extends MYF_Controller {
                 $num_months_discounted = REGISTRATION_MONTHS_DISCOUNTED - 1;
                 $plan_amount = $post['plan_price_discounted'];
             }
+
             $plan = $this->NsmartPlan_model->getById($post['plan_id']);
             $next_billing_date = date("Y-m-d", strtotime("+1 month"));
             $today = strtotime(date("Y-m-d"));
+            $startup_checklist = generateClientChecklist();
+
             $cid   = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
                 'last_name'  => $post['lastname'],
@@ -979,7 +985,9 @@ class Register extends MYF_Controller {
                 'number_of_license' => $plan->num_license,
                 'next_billing_date' => $next_billing_date,
                 'num_months_discounted' => $num_months_discounted,
-                'recurring_payment_type' => 'monthly'
+                'recurring_payment_type' => 'monthly',
+                'checklist' => $startup_checklist,
+                'is_checklist' => 1
             ]);
 
             $uid = $this->users_model->create([

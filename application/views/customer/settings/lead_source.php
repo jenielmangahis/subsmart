@@ -20,7 +20,7 @@
                             <td><?= $source->ls_name; ?></td>
                             <td><?= date("d-m-Y h:i A",strtotime($source->date_created)); ?></td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-default" title="Edit Lead Source" data-toggle="tooltip">
+                                <a href="javascript:void(0);" class="btn btn-sm btn-default edit-lead-source" data-id="<?= $source->ls_id; ?>" data-name="<?= $source->ls_name; ?>" title="Edit Lead Source" data-toggle="tooltip">
                                     <i class="fa fa-pencil"></i> Edit
                                 </a>
                                 <button id="<?= $source->ls_id; ?>" class="btn btn-sm btn-default delete_lead_source">

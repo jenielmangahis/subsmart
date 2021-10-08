@@ -46,7 +46,7 @@
         //var url = form.attr('action');
         $.ajax({
             type: "POST",
-            url: "/customer/add_salesarea_ajax",
+            url: base_url + "customer/add_salesarea_ajax",
             data: form.serialize(), // serializes the form's elements.
             success: function(data)
             {
@@ -62,6 +62,26 @@
         });
     });
 
+    $("#editSalesAreaForm").submit(function(e) {
+        e.preventDefault(); 
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/update_sales_area_ajax",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                console.log(data);
+                if(data === "Updated"){
+                    sucess_add('Nice!',data,0);
+                }else{
+                    sucess_add('Good Job!','Successfully Updated!','salesArea');
+                }
+                $('#modal_edit_sales_area').modal('hide');
+            }
+        });
+    });
+
     $(document).on('click', '.edit-rate-plan', function(){
         var rate_plan_id = $(this).attr("data-id");
         var rate_plan_amount = $(this).attr("data-amount");
@@ -72,6 +92,46 @@
         $("#edit-plan-name").val(plan_name);
 
         $("#modal_edit_rate_plan").modal("show");
+    });
+
+    $(document).on('click', '.edit-sales-area', function(){
+        var sales_area_id = $(this).attr("data-id");
+        var sales_area_name = $(this).attr("data-name");
+
+        $("#edit_sa_id").val(sales_area_id);
+        $("#edit_sa_name").val(sales_area_name);
+
+        $("#modal_edit_sales_area").modal("show");
+    });
+
+    $(document).on('click', '.edit-lead-source', function(){
+        var ls_id = $(this).attr("data-id");
+        var ls_name = $(this).attr("data-name");
+
+        $("#edit_ls_id").val(ls_id);
+        $("#edit_ls_name").val(ls_name);
+
+        $("#modal_edit_lead_source").modal("show");
+    });
+
+    $(document).on('click', '.edit-lead-type', function(){
+        var lt_id = $(this).attr("data-id");
+        var lt_name = $(this).attr("data-name");
+
+        $("#edit_lead_id").val(lt_id);
+        $("#edit_lead_name").val(lt_name);
+
+        $("#modal_edit_lead_type").modal("show");
+    });
+
+    $(document).on('click', '.edit-activation-fee', function(){
+        var af_id = $(this).attr("data-id");
+        var af_amount = $(this).attr("data-amount");
+
+        $("#edit_activation_fee_id").val(af_id);
+        $("#edit_activation_fee_amount").val(af_amount);
+
+        $("#modal_edit_activation_fee").modal("show");
     });
 
     $("body").delegate(".delete_sales_area", "click", function(){
@@ -89,7 +149,7 @@
             if (result.value) {
                 $.ajax({
                     type: "POST",
-                    url: "/customer/delete_sales_area",
+                    url: base_url + "customer/delete_sales_area",
                     data: { id:ID }, // serializes the form's elements.
                     success: function(data){
                         console.log(data);
@@ -153,6 +213,27 @@
         });
     });
 
+    $("#editLeadSourceForm").submit(function(e) {
+        e.preventDefault();
+        var form = $(this);        
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/update_leadsource_ajax",
+            data: form.serialize(),
+            success: function(data)
+            {
+                console.log(data);
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Updated!','leadSource');
+                }
+                $('#modal_lead_source').modal('hide');
+                $('#editLeadSourceForm')[0].reset();
+            }
+        });
+    });
+
 
     $("#leadTypeForm").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -172,6 +253,25 @@
                 $('#modal_lead_type').modal('hide');
                 $('[id="lead_name"]').val("");
                 $('[id="lead_id"]').val("");
+            }
+        });
+    });
+
+    $("#editLeadTypeForm").submit(function(e) {
+        e.preventDefault(); 
+        var form = $(this);        
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/update_lead_type_ajax",
+            data: form.serialize(),
+            success: function(data)
+            {
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Updated!','leadTypes');
+                }
+                $('#editLeadTypeForm').modal('hide');
             }
         });
     });
@@ -226,7 +326,7 @@
         //var url = form.attr('action');
         $.ajax({
             type: "POST",
-            url: "/customer/add_activation_fee_ajax",
+            url: base_url + "customer/add_activation_fee_ajax",
             data: form.serialize(), // serializes the form's elements.
             success: function(data)
             {
@@ -238,6 +338,26 @@
                 $('#modal_lead_type').modal('hide');
                 $('[id="lead_name"]').val("");
                 $('[id="lead_id"]').val("");
+            }
+        });
+    });
+
+    $("#editActivationFeeForm").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/update_activation_fee_ajax",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Updated!','activationFee');
+                }
+                $('#modal_edit_activation_fee').modal('hide');
             }
         });
     });

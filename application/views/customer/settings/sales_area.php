@@ -19,7 +19,7 @@
                         <td><?= $sa->sa_name; ?></td>
                         <td><?= date("d-m-Y h:i A",strtotime($sa->date_created)); ?></td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-default" title="Edit Sales Area" data-toggle="tooltip">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-default edit-sales-area" data-id="<?= $sa->sa_id; ?>" data-name="<?= $sa->sa_name; ?>" title="Edit Sales Area" data-toggle="tooltip">
                                 <i class="fa fa-pencil"></i> Edit
                             </a>
                             <button id="<?= $sa->sa_id; ?>" class="btn btn-sm btn-default delete_sales_area">

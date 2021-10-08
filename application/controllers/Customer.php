@@ -1448,6 +1448,16 @@ class Customer extends MY_Controller
         }
     }
 
+    public function update_lead_type_ajax(){
+        $input = $this->input->post();
+        $data = ['lead_id' => $input['lead_id'], 'lead_name' => $input['lead_name']];
+        if($this->customer_ad_model->update_data($data,"ac_leadtypes","lead_id")){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
     public function add_rate_plan_ajax(){
         $input = $this->input->post();
         // customer_ad_model
@@ -1497,6 +1507,16 @@ class Customer extends MY_Controller
         }
     }
 
+    public function update_sales_area_ajax(){
+        $input = $this->input->post();
+        $data = ['sa_id' => $input['sa_id'], 'sa_name' => $input['sa_name']];
+        if($this->customer_ad_model->update_data($data,"ac_salesarea","sa_id")){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
     public function add_leadsource_ajax(){
         $input = $this->input->post();
         // customer_ad_model
@@ -1513,6 +1533,16 @@ class Customer extends MY_Controller
             }else{
                 echo "Error";
             }
+        }
+    }
+
+    public function update_leadsource_ajax(){
+        $input = $this->input->post();
+        $data = ['ls_id' => $input['ls_id'], 'ls_name' => $input['ls_name']];
+        if($this->customer_ad_model->update_data($data,"ac_leadsource","ls_id")){
+            echo 1;
+        }else{
+            echo 0;
         }
     }
 
@@ -1533,6 +1563,16 @@ class Customer extends MY_Controller
             }else{
                 echo "Error";
             }
+        }
+    }
+
+    public function update_activation_fee_ajax(){
+        $input = $this->input->post();
+        $data = ['id' => $input['id'], 'amount' => $input['amount']];
+        if($this->customer_ad_model->update_data($data,"ac_activationfee","id")){
+            echo 1;
+        }else{
+            echo 0;
         }
     }
 
