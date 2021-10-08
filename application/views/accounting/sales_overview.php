@@ -78,7 +78,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 							<div class="widget-content">
 								<div class="content-monitary-highlight">
-									$<?=number_format($income_this_month, 2)?> <span>This month</span>
+									$<span class="amount"><?=number_format($income_this_month, 2)?></span> <span class="label">This month</span>
 								</div>
 								<div class="monitary-increase">
 									$<?=number_format($income_this_month-$income_last_month, 2)?> more than <?=date("M d",strtotime("first day of previous month"))?> - <?=date("d, Y", strtotime("last day of previous month"))?>

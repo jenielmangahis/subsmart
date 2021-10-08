@@ -90,7 +90,7 @@
     font-size: 20px;
 }
 
-.overview-widget .widget-content .content-monitary-highlight span {
+.overview-widget .widget-content .content-monitary-highlight span.label {
     font-size: 13px;
     font-weight: lighter;
     color: #8D9096;
@@ -102,6 +102,10 @@
     font-weight: 600;
 }
 
+.overview-widget .widget-content .monitary-increase.decreased {
+    color: #B80101;
+}
+
 .overview-widget .widget-content .monitary-increase::before {
     content: '';
     padding: 0 10px;
@@ -109,6 +113,10 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.overview-widget .widget-content .monitary-increase.decreased::before {
+    background-image: url('https://localhost/nsmartrac/assets/img/accounting/overview/arrow-down-red.png');
 }
 
 .overview-widget .widget-content {

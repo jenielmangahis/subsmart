@@ -93,6 +93,8 @@
             
             <!-- Modal body -->
             <div class="modal-body">
+            <input type="hidden" class="form-control custname" name="custname">
+
                 <p><b>To</b></p>
                 <input type="text" class="form-control custEmail" name="custEmail">
 
@@ -106,7 +108,7 @@
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                <a href="#" type="submit" class="btn btn-success send_est">Send</a>
+                <a href="#" type="submit" class="btn btn-success send_est_cust">Send</a>
             </div>
         
         </div>

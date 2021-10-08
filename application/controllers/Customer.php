@@ -45,14 +45,14 @@ class Customer extends MY_Controller
     }
 
     public function index()
-    {        
+    {
         $this->hasAccessModule(9);
 
         $this->load->library('wizardlib');        
         $input = $this->input->post();
         if($input){
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
-        }else{
+        }else {
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
         }
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");

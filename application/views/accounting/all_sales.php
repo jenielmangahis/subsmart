@@ -4202,4 +4202,85 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     //   table.draw();
     // });
+
+    
+$(".update_est_status").click(function() {
+
+var id = $(".estID").val();
+var est_status = $(".est_status").val();
+
+// alert(id);
+
+$.ajax({
+  url:"<?php echo base_url(); ?>accounting/save_update_estimate_status",
+  type: "POST",
+  data: {id : id, est_status : est_status },
+  success: function(dataResult){
+      // $('#table').html(dataResult); 
+      // alert('success')
+      console.log(dataResult);
+      sucess("Data Updated Successfully!");
+     
+  },
+      error: function(response){
+      alert('Error'+response);
+
+      }
+});
+
+
+});
+
+
+    function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+
+
+$(document).on('click touchstart','.send_est_cust',function(){
+
+var email = $(".custEmail").val();
+var subject = $(".custsubject").val();
+var message = $(".custmessage").val();
+var custname = $(".custname").val();
+// alert(wo_id);
+
+var r = confirm("Send this to customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>accounting/send_estimates_customer",
+	data : {email : email, subject : subject, message : message, custname : custname},
+	success: function(result){
+		sucess("Email Sent!");
+		// alert('Email Successfully!');
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+// else 
+// {
+// 	alert('no');
+// }
+
+});
+
+
 </script>
