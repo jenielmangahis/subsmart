@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   $addRuleBtn.addEventListener("click", async function (event) {
     const payload = {};
-    const assignment = {};
+    const assignments = [];
     const conditions = [];
 
     const $dataTypes = $addRuleForm.querySelectorAll("[data-type]");
@@ -60,6 +60,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
 
       if (isEmpty(getFormElementValue($element))) {
+        $element.focus();
         $element.classList.add("inputError");
         $errorMessage.classList.add("formError--show");
         return;
@@ -81,25 +82,29 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      const [, assignmentKey] = dataType.split(".");
-      assignment[assignmentKey] = value;
+      if (isEmpty(value)) {
+        return;
+      }
+
+      const [, assignmentType] = dataType.split(".");
+      assignments.push({ type: assignmentType, value });
     });
 
-    const $conditions = this.querySelectorAll(".addCondition-container > div");
+    const $conditions = $addRuleForm.querySelectorAll(".addCondition-container > div"); // prettier-ignore
     [...$conditions].forEach(($condition) => {
       const $dataTypes = $condition.querySelectorAll("[data-type]");
       const condition = {};
 
       [...$dataTypes].forEach(($dataType) => {
         const dataTypeTemp = $dataType.getAttribute("data-type");
-        const dataType = [...dataTypeTemp.split(".")].pop();
+        const [, dataType] = dataTypeTemp.split(".");
         condition[dataType] = getFormElementValue($dataType);
       });
 
       conditions.push(condition);
     });
 
-    const _payload = { ...payload, conditions, assignment };
+    const _payload = { ...payload, conditions, assignments };
     const response = await api.saveRate(_payload);
     window.location.reload();
   });

@@ -429,19 +429,20 @@ SQL;
     }
     public function get_income_overtime()
     {
+
+        $this->load->model('accounting_receive_payment_model');
         //caculating this month overall income
         $duration = $this->input->post("duration");
         if ($duration == "This month") {
-            $start_date=date("Y-m-d", strtotime("first day of previous month"));
-            $end_date=date("Y-m-t");
+            $start_date=date("Y-m-01");
+            $end_date=date("Y-m-d");
         } elseif ($duration == "Last month") {
             $end_date=date("Y-m-d", strtotime("last day of previous month"));
-            $start_date=date("Y-m-d", strtotime('-1 month', strtotime($end_date)));
-            $start_date=date("Y-m-01", strtotime($start_date));
+            $start_date=date("Y-m-01", strtotime($end_date));
         } elseif ($duration == "This quarter") {
+            
             $month = date("n");
             $yearQuarter = ceil($month / 3);
-            $end_date = date("Y-m-d");
             if ($yearQuarter == 1) {
                 $start_date = date("Y-01-01");
             } elseif ($yearQuarter == 2) {
@@ -451,34 +452,102 @@ SQL;
             } elseif ($yearQuarter == 4) {
                 $start_date = date("Y-10-01");
             }
+            $end_date = date("Y-m-d");
         } elseif ($duration == "Last quarter") {
             $month = date("n");
             $yearQuarter = ceil($month / 3)-1;
+            $year=date("Y");
+            if($yearQuarter < 1){
+                $yearQuarter+=4;
+                $year=date("Y",strtotime("-1 year", strtotime(date("Y-m-d"))));
+            }
             if ($yearQuarter == 1) {
-                $start_date = date("Y-01-01");
+                $start_date = $year."-".date("01-01");
             } elseif ($yearQuarter == 2) {
-                $start_date = date("Y-04-01");
+                $start_date = $year."-".date("04-01");
             } elseif ($yearQuarter == 3) {
-                $start_date = date("Y-07-01");
+                $start_date = $year."-".date("07-01");
             } elseif ($yearQuarter == 4) {
-                $start_date = date("Y-10-01");
+                $start_date = $year."-".date("10-01");
             }
             $end_date = date("Y-m-t", strtotime('+2 months', strtotime($start_date)));
-        } elseif ($duration == "This year by month") {
-        } elseif ($duration == "This year by quarter") {
-        } elseif ($duration == "Last year by month") {
-        } elseif ($duration == "Last year by quarter") {
+        } elseif ($duration == "This year by month" || $duration == "This year by quarter") {
+            $start_date = date("Y-01-01");
+            $end_date = date("Y-m-d");
+        }elseif ($duration == "Last year by month" || $duration == "Last year by quarter") {
+            $lastyear=date("Y")-1;
+            $start_date= date("Y-m-d",strtotime($lastyear."-01-01"));
+            $end_date = date("Y-m-t", strtotime('+11 months', strtotime($start_date)));
         }
-        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id(getLoggedCompanyID(), $start_date, date("Y-m-d"));
-        
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id(getLoggedCompanyID(), $start_date, $end_date);
         $current_income=0;
-        $last_income=0;
+        $income_per_day = array();
+        $income_per_month = array();
+        $income_per_quarter = array();
         foreach ($receive_payments as $payment) {
-            if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
-                $current_income +=$payment->amount;
-            } else {
-                $last_income +=$payment->amount;
-            }
+            $current_income +=$payment->amount;
+
+            $per_day_index=date("d",strtotime($payment->payment_date));
+            $income_per_day[$per_day_index]+=$payment->amount;
+
+            $per_month_index=date("M",strtotime($payment->payment_date));
+            $income_per_month[$per_month_index]+=$payment->amount;
+
+            $month = date("n");
+            $yearQuarter = "Q".ceil($month / 3);
+            $income_per_quarter[$yearQuarter] +=$payment->amount;
         }
+        ksort($income_per_day);
+        ksort($income_per_month);
+        ksort($income_per_quarter);
+
+        $last_start_date = date("Y-m-d",strtotime("-1 year",strtotime($start_date)));
+        $last_end_date = date("Y-m-d",strtotime("-1 year",strtotime($end_date)));
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id(getLoggedCompanyID(), $last_start_date, $last_end_date);
+        $last_income=0;
+        $last_income_per_day = array();
+        $last_income_per_month = array();
+        $last_income_per_quarter = array();
+        foreach ($receive_payments as $payment) {
+            $last_income +=$payment->amount;
+
+            $per_day_index=date("d",strtotime($payment->payment_date));
+            $last_income_per_day[$per_day_index]+=$payment->amount;
+
+            $per_month_index=date("M",strtotime($payment->payment_date));
+            $last_income_per_month[$per_month_index]+=$payment->amount;
+
+            $month = date("n");
+            $yearQuarter = "Q".ceil($month / 3);
+            $last_income_per_quarter[$yearQuarter] +=$payment->amount;
+        }
+
+        $data = new stdClass();
+        $data->current_income=$current_income;
+        $data->last_income=$last_income;
+        $data->formatted_current_income=number_format($current_income, 2);
+        $data->formatted_last_income=number_format($last_income, 2);
+        $data->income_per_day=$income_per_day;
+        $data->income_per_month=$income_per_month;
+        $data->income_per_quarter=$income_per_quarter;
+        $data->last_income_per_day=$last_income_per_day;
+        $data->last_income_per_month=$last_income_per_month;
+        $data->last_income_per_quarter=$last_income_per_quarter;
+
+        if(date("m",strtotime($last_start_date)) == date("m",strtotime($last_end_date))){
+            $data->more_than_prev_month_label=date("M d",strtotime($last_start_date))." - ".date("d, Y",strtotime($last_end_date));
+        }else{
+            $data->more_than_prev_month_label=date("M d",strtotime($last_start_date))." - ".date("M d, Y",strtotime($last_end_date));
+        }
+
+        if($last_income <= $current_income){
+            $data->increased_decreased_label=number_format($current_income-$last_income, 2);
+            $data->increased = true;
+        }else{
+            $data->increased_decreased_label=number_format($last_income-$current_income, 2);
+            $data->increased = false;
+        }
+        
+        echo json_encode($data);
     }
 }

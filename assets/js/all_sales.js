@@ -1823,7 +1823,7 @@ $(".estchangestatus").click(function() {
   $('#estchangestatus').modal('show'); 
 
   $('#est_number_status').text(est_number);
-  $('.estID').text(id);
+  $('.estID').val(id);
   $(".est_status").val(est_status);
 
 });
@@ -1844,6 +1844,7 @@ $(".sendESTemail").click(function() {
   $('#est_number_email').text(est_number);
   $('.estID').text(id);
   $('.custEmail').val(est_email);
+  $('.custname').val(est_cust);
   $('.custmessage').val(`Dear {est_cust}, 
       
 Please review the estimate below.  Feel free to contact us if you have any questions.  
@@ -1851,12 +1852,14 @@ We look forward to working with you.
       
 Thanks for your business!`);
 
-jQuery(function($){
-  $("#custmessage").val(function() { 
 
-   return $(this).html().replace("{est_cust}", est_cust);  
-  
-  });
 });
 
+jQuery(function($){
+  $("#custmessage").html(function() { 
+    var Cname = $('.custname').val();
+
+   return $(this).html().replace("{est_cust}", Cname);  
+  
+  });
 });

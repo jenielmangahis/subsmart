@@ -2374,4 +2374,166 @@ class Chart_of_accounts extends MY_Controller {
 
         echo $html;
     }
+
+    public function export_transactions($accountId)
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+        if(stripos($accountType->account_name, 'Asset') !== false) {
+            $accType = 'Asset';
+        } else if(stripos($accountType->account_name, 'Liabilities') !== false) {
+            $accType = 'Liability';
+        } else if(stripos($accountType->account_name, 'A/R') !== false) {
+            $accType = 'A/R';
+        } else if(stripos($accountType->account_name, 'A/P') !== false) {
+            $accType = 'A/P';
+        } else {
+            $accType = $accountType->account_name;
+        }
+
+        $balance = '$'.number_format(floatval($account->balance), 2, '.', ',');
+        $balance = str_replace('$-', '-$', $balance);
+        $post = $this->input->post();
+        $sort = [
+            'column' => $post['column'],
+            'order' => $post['order']
+        ];
+
+        $data = $this->get_transactions($accountId, $post, $sort);
+
+        header("Content-Description: File Transfer"); 
+        header("Content-Disposition: attachment; filename=Register.csv"); 
+        header("Content-Type: application/csv;");
+        $file = fopen('php://output', 'w');
+        $topHeader = [
+            $account->name,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            'Ending Balance:',
+            $balance
+        ];
+
+        switch($accType) {
+            case 'Credit Card' :
+                $paymentKey = 'Charge';
+                $depositKey = 'Payment';
+            break;
+            case 'Asset' :
+                $paymentKey = 'Increase';
+                $depositKey = 'Decrease';
+            break;
+            case 'Liability' :
+                $paymentKey = 'Increase';
+                $depositKey = 'Decrease';
+            break;
+            default :
+                $paymentKey = 'Payment';
+                $depositKey = 'Deposit';
+            break;
+        }
+
+        $header = [
+            'Date',
+            'Ref No.',
+            'Type',
+            'Payee',
+            'Account',
+            'Memo',
+            $paymentKey,
+            $depositKey,
+            'Reconciliation Status',
+            'Added in Banking',
+            'Attachments',
+            'Tax',
+            'Balance'
+        ];
+
+        if($post['chk_memo'] === "0") {
+            unset($header[5]);
+            unset($topHeader[5]);
+        }
+
+        if($post['chk_reconcile_status'] === "0") {
+            unset($header[8]);
+            unset($topHeader[8]);
+        }
+
+        if($post['chk_banking_status'] === "0") {
+            unset($header[9]);
+            unset($topHeader[9]);
+        }
+
+        if($post['chk_attachments'] === "0") {
+            unset($header[10]);
+            unset($topHeader[10]);
+        }
+
+        if($post['chk_tax'] === "0") {
+            unset($header[11]);
+            unset($topHeader[1]);
+        }
+
+        if($post['chk_running_balance'] === "0") {
+            unset($header[12]);
+            unset($topHeader[12]);
+        }
+
+        fputcsv($file, $topHeader);
+        fputcsv($file, $header);
+
+        foreach($data as $register) {
+            $entry = [
+                $register['date'],
+                $register['ref_no'],
+                $register['type'],
+                $register['payee'],
+                $register['account'],
+                $register['memo'],
+                $register[strtolower($paymentKey)],
+                $register[strtolower($depositKey)],
+                $register['reconcile_status'],
+                $register['banking_status'],
+                $register['attachments'],
+                $register['tax'],
+                $register['balance']
+            ];
+
+            if($post['chk_memo'] === "0") {
+                unset($entry[5]);
+            }
+    
+            if($post['chk_reconcile_status'] === "0") {
+                unset($entry[8]);
+            }
+    
+            if($post['chk_banking_status'] === "0") {
+                unset($entry[9]);
+            }
+    
+            if($post['chk_attachments'] === "0") {
+                unset($entry[10]);
+            }
+    
+            if($post['chk_tax'] === "0") {
+                unset($entry[11]);
+            }
+    
+            if($post['chk_running_balance'] === "0") {
+                unset($entry[12]);
+            }
+
+            fputcsv($file, $entry);
+        }
+
+        fclose($file); 
+        exit; 
+    }
 }
