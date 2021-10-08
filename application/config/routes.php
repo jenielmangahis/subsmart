@@ -427,6 +427,7 @@ $route['accounting/chart-of-accounts/update-accounts-name']['post'] = 'accountin
 $route['accounting/chart-of-accounts/view-register/(:any)'] = 'accounting_controllers/chart_of_accounts/view_register/$1';
 $route['accounting/chart-of-accounts/(:any)/load-registers']['post'] = 'accounting_controllers/chart_of_accounts/load_registers/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['post'] = 'accounting_controllers/chart_of_accounts/print_transactions/$1';
+$route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post'] = 'accounting_controllers/chart_of_accounts/export_transactions/$1';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';
@@ -1031,5 +1032,9 @@ $route['customer/_load_subscription_payment_history'] = 'Customer/ajax_load_subs
 //Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 
+//Inventory
+$route['inventory/export_list'] = 'inventory/inventory_export';
+
 //Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
+

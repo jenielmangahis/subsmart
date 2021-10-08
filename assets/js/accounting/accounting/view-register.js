@@ -641,6 +641,48 @@ $('#search').on('keyup', function(e) {
     }
 });
 
+$('#download-transactions').on('click', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('from_date', $('#from').val());
+    data.set('to_date', $('#to').val());
+    data.set('search', $('#search').val());
+    data.set('reconcile_status', $('#reconcile_status').val());
+	data.set('transaction_type', $('#transaction_type').val());
+	data.set('payee', $('#payee').val());
+
+    var order = $('#registers-table').DataTable().order();
+    data.set('column', columns[order[0][0]].name);
+    data.set('order', order[0][1]);
+
+    $('div[aria-labelledby="dropdownMenuLink"] input[type="checkbox"]').each(function() {
+        var id = $(this).attr('id');
+        data.set(id, $(this).prop('checked') ? 1 : 0);
+    });
+
+    $.ajax({
+		url: `/accounting/chart-of-accounts/view-register/${accountId}/export-table`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(data) {
+			var a = document.createElement('a');
+            var url = window.URL.createObjectURL(data);
+            a.href = url;
+            a.download = 'Register.csv';
+            document.body.append(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+		}
+	});
+});
+
 $('#print-transactions').on('click', function(e) {
     e.preventDefault();
 

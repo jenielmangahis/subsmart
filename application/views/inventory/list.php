@@ -24,9 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <a href="<?= url('inventor/import') ?>">
                                             <button type="button" class="btn btn-primary btn-sm" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
                                         </a>
-                                        <a href="<?= url('customer/export') ?>">
-                                            <button type="button" class="btn btn-primary btn-sm" id="exportCustomers"><span class="fa fa-upload"></span> Export</button>
-                                        </a>
+                                        <button type="button" class="btn btn-primary btn-sm" id="exportItems"><span class="fa fa-upload"></span> Export</button>
                                         <a class="btn btn-primary btn-sm" href="<?= base_url('inventory/add') ?>"><span class="fa fa-plus"></span> Add New Item</a>
                                     </div>
                                 </div>
@@ -195,33 +193,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $(".delete_item").on("click", function(event) {
-        var ID = this.id;
-        // alert(ID);
-        Swal.fire({
-            title: 'Continue to remove this Item?',
-            text: "",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#32243d',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: "POST",
-                    url: "/inventory/delete",
-                    data: { id: ID}, // serializes the form's elements.
-                    success: function(data) {
-                        if (data === "1") {
-                            window.location.reload();
-                        } else {
-                            alert(data);
+    $(function(){
+        $(".delete_item").on("click", function(event) {
+            var ID = this.id;
+            // alert(ID);
+            Swal.fire({
+                title: 'Continue to remove this Item?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/inventory/delete",
+                        data: { id: ID}, // serializes the form's elements.
+                        success: function(data) {
+                            if (data === "1") {
+                                window.location.reload();
+                            } else {
+                                alert(data);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
+
+        $("#exportItems").click(function(){
+            window.location.href= base_url + 'inventory/export_list';
+        });    
+    });    
 </script>

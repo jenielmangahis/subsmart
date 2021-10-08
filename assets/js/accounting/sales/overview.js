@@ -16,13 +16,26 @@ $(".overview-widget .widget-with-counter").hover(function() {
 );
 
 $(document).on("change", ".overview-widget.income-overtime .filter-section select.duration", function(event) {
+    var selected_duration = $(this).find(":selected").text();
     $.ajax({
         url: baseURL + "/sales-overview/income-overtime",
         type: "POST",
         dataType: "json",
-        data: { duration: $(this).find(":selected").text() },
+        data: { duration: selected_duration },
         success: function(data) {
-            console.log(data);
+            $(".overview-widget.income-overtime .content-monitary-highlight span.amount").html(data.formatted_current_income);
+            $(".overview-widget.income-overtime .content-monitary-highlight span.label").html(selected_duration);
+            if (data.current_income >= data.last_income) {
+                $(".overview-widget.income-overtime .monitary-increase").removeClass("decreased");
+                $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " more than " + data.more_than_prev_month_label);
+            } else {
+                $(".overview-widget.income-overtime .monitary-increase").addClass("decreased");
+                $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " less than " + data.more_than_prev_month_label);
+            }
+            var income_per_day = data.income_per_day;
+            $.each(income_per_day, function(key, value) {
+                // console.log(key + ": " + value);
+            });
         },
     });
 });

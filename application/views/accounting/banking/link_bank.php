@@ -114,6 +114,27 @@
         align-items: center;
     }
 </style>
+<style>
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+</style>
+<div id="overlay">
+    <div>
+        <img src="<?=base_url()?>assets/images/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center><p id="overlay_message">Processing...</p></center></div>
+</div>
+
 <div class="wrapper" role="wrapper" style="">
     <div class="container">
             <div class="row">
@@ -236,25 +257,22 @@
                                            </div>
                                            <div class="col-md-6">
                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
-                                                            <a href="https://www.sandbox.paypal.com/connect?flowEntry=static&client_id=AQxD9RzngFo48GkmU9jX2iOo-rcM7xK-dacDXigsFurFpLbsRFPf0pH3Cr8zzdO8hMRNVEe6FGsklZp5&scope=openid profile email&redirect_uri=http://nsmartrac.org/api/paypal_response&fullPage=true&response_type=code">
-                                                                <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
-                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
-                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
-                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/paypal.png') ?>" title="Paypal" alt="Paypal">
-                                                                        </div>
-                                                                        <div class=""></div>
+                                                   <div class="col-md-12">
+                                                        <div class="fdx-entity-container click-paypal" id="fdx-entity-row-num-1-0">
+                                                            <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                                <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
+                                                                    <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
+                                                                        <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/paypal.png') ?>" title="Paypal" alt="Paypal">
                                                                     </div>
-                                                                    <div class="fdx-recommended-entity-desc-container">
-                                                                        <label class="fdx-recommended-entity-name" title="Capital One">Connect to Paypal</label>
-                                                                        <label class="fdx-recommended-entity-desc">It's popular in your area</label>
-                                                                    </div>
-                                                                </button>
-                                                            </a>
+                                                                    <div class=""></div>
+                                                                </div>
+                                                                <div class="fdx-recommended-entity-desc-container">
+                                                                    <label class="fdx-recommended-entity-name" title="Capital One">Connect to Paypal</label>
+                                                                    <label class="fdx-recommended-entity-desc">It's popular in your area</label>
+                                                                </div>
+                                                            </button>
                                                         </div>
-                                                    </div>
-
+                                                   </div>
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
                                                            <a href="#">
@@ -273,7 +291,6 @@
                                                            </a>
                                                        </div>
                                                    </div>
-
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
                                                            <a href="#">
@@ -292,7 +309,6 @@
                                                            </a>
                                                        </div>
                                                    </div>
-
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
                                                            <a href="#">
@@ -315,27 +331,6 @@
                                            </div>
                                        </div>
                                     </div>
-                                </div>
-                                <div class="container modal-container paypal-container" style="display:none">
-                                    <form id="save-paypal-account">
-                                        <div class="row justify-content-md-center align-items-center pt-3">
-                                            <div class="col-md-5 col-sm-6 col-xs-12">
-                                                <h5 class="close-paypal-container text-right text-secondary" style="cursor:pointer;"><i class="fa fa-times fa-lg"></i></h5>
-                                                <p class="text-center"><img class="banks-img img-fluid mx-auto" style="width:125px" src="<?php echo base_url('assets/img/accounting/paypal_PNG20.png') ?>" alt=""></p>
-
-                                                <div class="header-modal text-center"><h3>Add PayPal Credentials</h3></div>
-                                                <div class="form-group pt-3">
-                                                    <label for="paypal_email">PayPal Email</label>
-                                                    <input type="text" class="form-control" name="paypal_email" id="paypal_email" required="" placeholder="Enter Your PayPal Email" autofocus="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-md-center align-items-center pb-5">
-                                            <div class="col-md-3 col-sm-4 col-xs-12">
-                                                <button type="submit" name="save" class="btn btn-success btn-block">Save</button>
-                                            </div>
-                                        </div>
-                                    </form>
                                 </div>
                                 <div class="container modal-container stripe-container" style="display:none">
                                     <div class="row justify-content-md-center align-items-center pt-3">
@@ -379,6 +374,48 @@
                                             </div>
                                         </div>
                                 </div>
+
+
+                                <div class="container modal-container paypal-container" style="display:none">
+                                    <div class="row justify-content-md-center align-items-center pt-3">
+                                        <div class="col-md-5 col-sm-6 col-xs-12">
+                                            <div class="header-modal text-center"><h4>Setup Paypal</h4></div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="fdx-entity-container">
+                                                        <center><a href="javascript:void;">
+                                                            <img style="width: 57%;margin:0 auto;margin-bottom: 10px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/paypal-logo.png') ?>" title="Paypal" alt="Stripe">
+                                                            <div class="fdx-recommended-entity-desc-container">
+                                                                <label class="fdx-recommended-entity-desc">https://www.paypal.com</label>
+                                                            </div>
+                                                        </a></center>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <span><i class="fa fa-info-circle fa-lg"></i>Enter your paypal token / keys to accept paypal payment</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-md-center align-items-center pb-5">
+                                        <form method="post" id="paypal_form">
+                                            <div class="col-md-12 form-group">
+                                                <label for=""><b>Client ID</b></label><br>
+                                                <input type="text" class="form-control" name="paypal_client_id" id="" required="" placeholder="" autofocus="">
+                                            </div>
+                                            <div class="col-md-12 form-group">
+                                                <label for=""><b>Secret Key</b></label><br>
+                                                <input type="text" class="form-control" name="paypal_secret_key" id="" required="" placeholder="" autofocus="">
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="modal-footer close-modal-footer">
+                                                    <button type="button" class="btn btn-default btn-block close-paypal-container">Back</button>
+                                                    <button type="submit" class="btn btn-success btn-block" id="open_stripe">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                             <div style="margin: auto;">
                                 <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
@@ -404,6 +441,7 @@
     </div>
 </footer><!-- End Footer -->
 
+
 <script type="text/javascript">
     var base_url = "<?php echo base_url();?>";
 </script>
@@ -423,7 +461,7 @@
 <script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
 <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!--Accounting JS-->
 <?php echo put_footer_assets();?>
 
@@ -455,6 +493,59 @@
         $('.stripe-container').hide();
         $('.accounts-list').show();
     });
+
+    $('.click-paypal').click(function () {
+        $('.accounts-list').hide();
+        $('.paypal-container').show();
+    });
+    $('.close-paypal-container').click(function () {
+        $('.paypal-container').hide();
+        $('.accounts-list').show();
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#paypal_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url:  "<?=base_url()?>api/on_save_paypal_credentials",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Saving credentials...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function (data) {
+                    if(data === "1"){
+                        nsmartrac_alert('Nice!','Paypal crendentials saved!','success');
+                    }
+                    document.getElementById('overlay').style.display = "none";
+                    $('.paypal-container').hide();
+                    $('.accounts-list').show();
+                }
+            });
+        });
+    } );
+
+
+    function nsmartrac_alert(title='Awesome',text,icon='success',redirect=''){
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                if(redirect !== ''){
+                    window.location.href='<?= base_url(); ?>'+redirect;
+                }
+            }
+        });
+    }
 </script>
 
 </body>

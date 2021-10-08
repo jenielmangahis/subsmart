@@ -89,6 +89,14 @@ class Estimate_model extends MY_Model
         return true;
     }
 
+    public function save_update_estimate_status($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array('status' => $status));
+        return true;
+    }
+
     public function getDataByESTID($id)
     {
         $this->db->select('*');

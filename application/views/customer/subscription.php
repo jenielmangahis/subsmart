@@ -384,6 +384,7 @@ add_css(array(
                                                     <div style="position: absolute; margin: 0;right: 40px;display: block;" >
                                                         <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Pre Auth Now</button>
                                                         <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Capture Now</button>
+                                                        <div id="paypal-button-container"></div>
                                                         <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
                                                         <input type="hidden" name="method" id="method" value="CC"/>
                                                     </div>
@@ -509,3 +510,41 @@ add_css(array(
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
         <?php include viewPath('customer/js/subscription_js'); ?>
+        <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
+        <script>
+            paypal.Buttons({
+                style: {
+                    layout: 'horizontal',
+                    tagline: false,
+                    //height:25,
+                    color:'blue'
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        payer: {
+                            name: {
+                                given_name: 'Testing Paypal'
+                            },
+                        },
+                        purchase_units: [{
+                            amount: {
+                                value: '0.01'
+                            }
+                        }],
+                        application_context: {
+                            shipping_preference: 'NO_SHIPPING'
+                        }
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        // Show a success message to the buyer
+                        console.log(details);
+                        //$("#payment-method").val('paypal');
+                        //$("#payment-method-status").val(details.status);
+                        //activate_registration();
+                    });
+                }
+            }).render('#paypal-button-container');
+            // This function displays Smart Payment Buttons on your web page.
+        </script>

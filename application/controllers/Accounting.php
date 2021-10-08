@@ -9515,18 +9515,9 @@ class Accounting extends MY_Controller
     }
     public function tester()
     {
-        $month = date("n");
-            $yearQuarter = ceil($month / 3)-1;
-            if($yearQuarter == 1){
-                $start_date = date("Y-01-01");
-            }elseif($yearQuarter == 2){
-                $start_date = date("Y-04-01");
-            }elseif($yearQuarter == 3){
-                $start_date = date("Y-07-01");
-            }elseif($yearQuarter == 4){
-                $start_date = date("Y-10-01");
-            }
-            $end_date = date("Y-m-t",strtotime ( '+2 months' , strtotime ( $start_date ) ));
+        $lastyear=date("Y")-1;
+            $start_date= date("Y-m-d",strtotime($lastyear."-01-01"));
+            $end_date = date("Y-m-t", strtotime('+11 months', strtotime($start_date)));
         echo $start_date;
         var_dump($end_date);
     }
@@ -10142,5 +10133,79 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->status = $status;
         echo json_encode($data);
+    }
+
+    public function save_update_estimate_status()
+    {
+        $id         = $this->input->post("id");
+        $status     = $this->input->post("est_status");
+
+        $new_data = array(
+            'id' => $id,
+            'status' => $status,
+        );
+
+        $status   = $this->estimate_model->save_update_estimate_status($new_data);
+        $this->page_data['estimates'] = $status;
+
+        echo json_encode($this->page_data);
+    }
+
+    public function send_estimates_customer()
+    {
+        // $id         = $this->input->post("id");
+        // $status     = $this->input->post("est_status");
+
+        $customer_name = $this->input->post("custname");
+        $customer_email = $this->input->post("email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        
+        $mail->MsgHTML($message);
+        
+        $data = new stdClass();
+        try {
+            $mail->addAddress($customer_email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+        echo json_encode($json_data);
     }
 }

@@ -14,9 +14,9 @@ class AccountingRules extends MY_Controller
         $payload['user_id'] = logged('id');
 
         // Remove unsupported columns on `accounting_rules` table.
-        ['conditions' => $conditions, 'assignment' => $assignment] = $payload;
+        ['conditions' => $conditions, 'assignments' => $assignments] = $payload;
         unset($payload['conditions']);
-        unset($payload['assignment']);
+        unset($payload['assignments']);
 
         $this->db->insert('accounting_rules', $payload);
         $this->db->where('id', $this->db->insert_id());
@@ -28,8 +28,11 @@ class AccountingRules extends MY_Controller
         }, $conditions);
         $this->db->insert_batch('accounting_rules_conditions', $conditions);
 
-        $assignment['rule_id'] = $newRule->id;
-        $this->db->insert('accounting_rule_assignments', $assignment);
+        $assignments = array_map(function ($assignment) use ($newRule) {
+            $assignment['rule_id'] = $newRule->id;
+            return $assignment;
+        }, $assignments);
+        $this->db->insert_batch('accounting_rule_assignments', $assignments);
 
         header('content-type: application/json');
         echo json_encode(['data' => $newRule]);

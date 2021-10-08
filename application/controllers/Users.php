@@ -833,12 +833,22 @@ class Users extends MY_Controller {
         $user_type = $this->input->post('values[user_type]');
         $role = $this->input->post('values[role]');
         $status = $this->input->post('values[status]');
-        $web_access = $this->input->post('values[web_access]');
-        $app_access = $this->input->post('values[app_access]');
-        $profile_img = $this->input->post('values[profile_photo]');
+        $profile_img = $this->input->post('[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
         $cid=logged('company_id');
+
+        $post       = $this->input->post();
+        $app_access = 0;
+        $web_access = 0;
+
+        if( isset($post['values']['app_access']) ){
+        	$app_access = 1;	
+        }
+        
+        if( isset($post['values']['web_access']) ){
+        	$web_access = 1;	
+        }
 
         $company = $this->Clients_model->getById($cid);
         if( $company->number_of_license <= 0 && $company->id != 1 ){
@@ -861,7 +871,9 @@ class Users extends MY_Controller {
 	            'city' => $city,
 	            'postal_code' => $postal_code,
 	            'payscale_id' => $payscale_id,
-	            'employee_number' => $emp_number
+	            'employee_number' => $emp_number,
+	            'has_web_access' => $web_access,
+	            'has_app_access' => $app_access
 	        );
 	        $last_id = $this->users_model->addNewEmployee($add);
 
@@ -1045,8 +1057,8 @@ class Users extends MY_Controller {
 	}
 
 	public function view($id){
-		ifPermissions('users_view');
-
+		//ifPermissions('users_view');
+		$user = $this->users_model->getById($id);
 		$this->page_data['User'] = $this->users_model->getById($id);
 		$this->page_data['User']->role = $this->roles_model->getByWhere([
 			'id'=> $this->page_data['User']->role
@@ -1741,39 +1753,21 @@ class Users extends MY_Controller {
 
         $f = fopen('php://memory', 'w');
 
-        $fields = array('MonitoringID', 'LastName', 'FirstName', 'Company', 'PanelType', 'AccountType', 'InstallDate', 'SaleDate', 'MonthlyMonitoringRate', 'SalesRep', 'Status', 'EquipmentStatus',
-                        'AbortCode','Address','Address1','Area','City','State','Zip','ContractTerm','CreditScore','CreditScore2','Email','MonitoringCompany','StatusID','Technician');
+        $fields = array('Last Name', 'First Name', 'Role', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State');
         fputcsv($f, $fields, $delimiter);
 
-        if (!empty($items)) {
-            foreach ($items as $item) {
+        if (!empty($users)) {
+            foreach ($users as $u) {
                 $csvData = array(
-                    $item->monitor_id,
-                    $item->last_name,
-                    $item->first_name,
-                    $item->business_name,
-                    $item->panel_type,
-                    $item->acct_type,
-                    $item->install_date,
-                    $item->sales_date,
-                    $item->mmr,
-                    $item->fk_sales_rep_office,
-                    $item->status,
-                    $item->status,
-                    $item->passcode,
-                    $item->mail_add,
-                    $item->mail_add,
-                    'COR',
-                    $item->city,
-                    $item->state,
-                    $item->zip_code,
-                    $item->contract_term,
-                    $item->credit_score,
-                    $item->credit_score,
-                    $item->email,
-                    $item->monitor_comp,
-                    3,
-                    $item->technician,
+                    $u->LName,
+                    $u->FName,
+                    getUserType($u->user_type),
+                    $u->email,
+                    $u->phone,
+                    $u->mobile,
+                    $u->address,
+                    $u->city,
+                    $u->state
                 );
                 fputcsv($f, $csvData, $delimiter);
             }
@@ -1789,6 +1783,34 @@ class Users extends MY_Controller {
 
         fpassthru($f);
     }
+
+    public function ajax_delete_user()
+	{
+        $is_success = false;
+    	$msg = "";
+
+    	$post = $this->input->post();
+    	$id   = $post['eid'];
+
+		$user = $this->users_model->delete($id);
+
+		//Delete Timesheet 
+		$this->load->model('TimesheetTeamMember_model');
+		$this->TimesheetTeamMember_model->deleteByUserId($id);
+		//Delete Tract360
+		$this->load->model('Trac360_model');
+		$this->Trac360_model->deleteUser('trac360_people', $id);
+
+		$this->activity_model->add("User #$id Deleted by User:".logged('name'));
+
+        $is_success = true;
+    	$json_data = [
+    		'is_success' => $is_success,
+    		'msg' => $msg
+    	];
+
+    	echo json_encode($json_data);
+	}
 }
 
 
