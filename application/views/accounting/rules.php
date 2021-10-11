@@ -268,6 +268,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 id="mainCategory"
                                                 class="form-control select2-rules-category"
                                                 data-type="assignment.category"
+                                                data-main-category="true"
                                                 required
                                             >
                                                 <option></option>
@@ -277,7 +278,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 <option>Bank Charges</option>
                                             </select>
                                         </div>
-                                        <span class="action-label d-none" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
+                                        <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
                                     </div>
                                     <!--Add Split Div-->
                                     <div class="add-split-container">
@@ -288,12 +289,24 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text" >Percentage</span>
-                                                <input type="text" name="percentage[]" class="form-control" style="width: 205px">
+                                                <input
+                                                    type="number"
+                                                    name="percentage[]"
+                                                    class="form-control"
+                                                    style="width: 205px"
+                                                    data-type="assignment.category_percent"
+                                                    required
+                                                >
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text">Category</span>
                                                 <div style="width: 220px;display: inline-block;">
-                                                    <select name="category[]" id="" class="form-control select2-rules-category">
+                                                    <select
+                                                        name="category[]"
+                                                        class="form-control select2-rules-category"
+                                                        data-type="assignment.category"
+                                                        required
+                                                    >
                                                         <option></option>
                                                         <option>Advertising</option>
                                                         <option>Bad Debts</option>
@@ -310,12 +323,24 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text" >Percentage</span>
-                                                <input type="text" name="percentage[]" class="form-control" value="" style="width: 205px">
+                                                <input
+                                                    type="number"
+                                                    name="percentage[]"
+                                                    class="form-control"
+                                                    style="width: 205px"
+                                                    data-type="assignment.category_percent"
+                                                    required
+                                                >
                                             </div>
                                             <div class="split-content">
                                                 <span class="split-category-text">Category</span>
                                                 <div style="width: 220px;display: inline-block;">
-                                                    <select name="category[]" id="" class="form-control select2-rules-category">
+                                                    <select
+                                                        name="category[]"
+                                                        class="form-control select2-rules-category"
+                                                        data-type="assignment.category"
+                                                        required
+                                                    >
                                                         <option></option>
                                                         <option>Advertising</option>
                                                         <option>Bad Debts</option>

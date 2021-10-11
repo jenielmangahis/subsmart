@@ -147,4 +147,24 @@ class Accounting_sales_receipt_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getsalesReceiptsItems($id)
+    {
+        $this->db->select('*');
+        $this->db->from('accounting_sales_receipt');
+        $this->db->join('acs_profile', 'accounting_sales_receipt.customer_id  = acs_profile.prof_id');
+        $this->db->where('accounting_sales_receipt.id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getclientsData($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('clients');
+        $this->db->where('id', $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }

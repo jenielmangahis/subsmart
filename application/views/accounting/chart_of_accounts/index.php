@@ -179,7 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
 
                                 </div>
-                                <table id="chart-of-accounts-table" class="table table-striped table-bordered">
+                                <table id="chart-of-accounts-table" class="table table-bordered table-hover">
 									<thead>
                                         <tr>
                                             <th>NAME</th>

@@ -296,14 +296,42 @@ class Accounting extends MY_Controller
         $income_this_month=0;
         $income_last_month=0;
         foreach ($receive_payments as $payment) {
-            if(date("Y-m-d",strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d",strtotime($payment->payment_date)) <= date("Y-m-d")){
+            if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
                 $income_this_month +=$payment->amount;
-            }else{
+            } else {
                 $income_last_month +=$payment->amount;
             }
-            
         }
         // var_dump($receive_payments);
+
+        //script for deposit widget
+        $invoices_this_week = $this->invoice_model->get_ranged_PaidInv($company_id, date("Y-m-d", strtotime('monday this week')), date("Y-m-d", strtotime('sunday this week')));
+        $total_deposit=0;
+        $statuses=array(0,0,0,0);
+        $deposit_transaction_count=0;
+        foreach ($invoices_this_week as $inv) {
+            $total_deposit+=$inv->grand_total;
+            $deposit_transaction_count++;
+            if ($inv->status == 'Submitted') {
+                $statuses[0]+=1;
+            } elseif ($inv->status == 'Approved') {
+                $statuses[1]+=1;
+            } elseif ($inv->status == 'Partially Paid') {
+                $statuses[2]+=1;
+            } elseif ($inv->status == 'Paid') {
+                $statuses[3]+=1;
+            }
+        }
+        $current_status=-1;
+        $largest_status=0;
+        for($i =0; $i<count($statuses); $i++){
+            if($statuses[$i] > $largest_status){
+                $current_status=$i;
+                $largest_status=$statuses[$i];
+                $i=-1;
+            }
+        }
+        var_dump($current_status);
 
 
         $this->page_data['unpaid_last_365'] = $receivable_payment-$total_amount_received;
@@ -315,6 +343,9 @@ class Accounting extends MY_Controller
         $this->page_data['invoice_needs_attention'] = false;
         $this->page_data['income_this_month'] = $income_this_month;
         $this->page_data['income_last_month'] = $income_last_month;
+        $this->page_data['deposit_current_status'] = $current_status;
+        $this->page_data['deposit_total_amount'] = $total_deposit;
+        $this->page_data['deposit_transaction_count'] = $deposit_transaction_count;
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
@@ -512,6 +543,14 @@ class Accounting extends MY_Controller
         // $this->page_data['jobs'] = $this->accounting_invoices_model->getDataInvoices();
         $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
         $this->load->view('accounting/jobs', $this->page_data);
+    }
+
+    public function printSalesReceipt($id)
+    {
+        $this->page_data['users'] = $this->accounting_sales_receipt_model->getsalesReceiptsItems($id);
+        $this->page_data['clients'] = $this->accounting_sales_receipt_model->getclientsData(logged('company_id'));
+        
+        $this->load->view('accounting/printSalesReceipt', $this->page_data);
     }
 
     public function invoice_edit($id)
@@ -7502,7 +7541,7 @@ class Accounting extends MY_Controller
             $receive_payment_id = 0;
             $insert = array(
                 "customer_id" => $customer_id,
-                "payment_date" => date("Y-m-d",strtotime($this->input->post("payment_date"))),
+                "payment_date" => date("Y-m-d", strtotime($this->input->post("payment_date"))),
                 "payment_method" => $this->input->post("payment_method"),
                 "ref_no" => $this->input->post("ref_no"),
                 "deposit_to" => $this->input->post("deposite_to"),
@@ -9516,8 +9555,8 @@ class Accounting extends MY_Controller
     public function tester()
     {
         $lastyear=date("Y")-1;
-            $start_date= date("Y-m-d",strtotime($lastyear."-01-01"));
-            $end_date = date("Y-m-t", strtotime('+11 months', strtotime($start_date)));
+        $start_date= date("Y-m-d", strtotime($lastyear."-01-01"));
+        $end_date = date("Y-m-t", strtotime('+11 months', strtotime($start_date)));
         echo $start_date;
         var_dump($end_date);
     }
@@ -10152,6 +10191,64 @@ class Accounting extends MY_Controller
     }
 
     public function send_estimates_customer()
+    {
+        // $id         = $this->input->post("id");
+        // $status     = $this->input->post("est_status");
+
+        $customer_name = $this->input->post("custname");
+        $customer_email = $this->input->post("email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+        
+        $mail->MsgHTML($message);
+        
+        $data = new stdClass();
+        try {
+            $mail->addAddress($customer_email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+        echo json_encode($json_data);
+    }
+
+    public function send_estimates_customer_sr()
     {
         // $id         = $this->input->post("id");
         // $status     = $this->input->post("est_status");

@@ -51,6 +51,16 @@ window.addEventListener("DOMContentLoaded", async () => {
       const $element = $dataTypes[index];
       $element.classList.remove("inputError");
 
+      if ($addRuleForm.hasAttribute("data-add-split")) {
+        if ($element.hasAttribute("data-main-category")) {
+          continue;
+        }
+      } else {
+        if ($element.closest(".add-split-section")) {
+          continue;
+        }
+      }
+
       if ($element.type === "checkbox") {
         continue;
       }
@@ -87,7 +97,34 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
 
       const [, assignmentType] = dataType.split(".");
-      assignments.push({ type: assignmentType, value });
+      const assignment = {
+        value,
+        type: assignmentType,
+        percentage: 100,
+      };
+
+      if ($addRuleForm.hasAttribute("data-add-split")) {
+        if ($dataType.hasAttribute("data-main-category")) {
+          return;
+        }
+
+        if (assignmentType === "category_percent") {
+          return; //skip category_percent
+        }
+
+        if (assignmentType === "category") {
+          // get category_percent value
+          const $parent = $dataType.closest(".add-split-section");
+          const $percent = $parent.querySelector("[data-type='assignment.category_percent']"); // prettier-ignore
+          assignment.percentage = $percent.value;
+        }
+      } else {
+        if ($dataType.closest(".add-split-section")) {
+          return;
+        }
+      }
+
+      assignments.push(assignment);
     });
 
     const $conditions = $addRuleForm.querySelectorAll(".addCondition-container > div"); // prettier-ignore

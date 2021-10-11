@@ -13,6 +13,8 @@
     <script src="<?= base_url("assets/js/v2/bootstrap.bundle.min.js") ?>" crossorigin="anonymous"></script>
     <!-- Sweetalert JS -->
     <script src="<?= base_url("assets/js/v2/sweetalert2.min.js") ?>"></script>
+    <!-- Pusher JS -->
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>
@@ -20,6 +22,10 @@
     <script type="text/javascript">
       var baseURL = '<?= base_url() ?>';
       var notification_badge_value = 0;
+      var current_user_company_id = <?=logged('company_id')?> ;
+      var all_notifications_html = '';
+      var notification_badge_value = 0;
+      var notification_html_holder_ctr = 0;
 
       $(document).ready(function() {
         //initializeChart();
@@ -36,6 +42,141 @@
                 }
             });
         });
+
+        var offset = new Date().getTimezoneOffset();
+        var offset_zone = (offset / 60) * (-1);
+        if (offset_zone >= 0) {
+            offset_zone = "+" + offset_zone;
+        }
+        $.ajax({
+            url: "<?= base_url() ?>/timesheet/timezonesetter",
+            type: "POST",
+            dataType: "json",
+            data: {
+                usertimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                offset_zone: "GMT" + offset_zone
+            },
+            success: function(data) {}
+        });
+
+        var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('nsmarttrac');
+        channel.bind('my-event', function(data) {
+
+            console.log(data.user_id);
+            if (data.notif_action_made == "over8less9") {
+                if (data.user_id == user_id) {
+                    notificationRing();
+                    Push.Permission.GRANTED;
+                    Push.create("Hey! " + data.FName, {
+                        body: "It's time for you to clock out. Do you still need more time?",
+                        icon: data.profile_img,
+                        timeout: 20000,
+                        onClick: function() {
+                            window.focus();
+                            this.close();
+                        }
+                    });
+                }
+            } else {
+
+                if (data.user_id != user_id && data.company_id == current_user_company_id) {
+                    notificationRing();
+                    Push.Permission.GRANTED; // 'granted'
+                    Push.create(data.FName + " " + data.LName, {
+                        body: data.content_notification,
+                        icon: data.profile_img,
+                        timeout: 20000,
+                        onClick: function() {
+                            window.focus();
+                            this.close();
+                        }
+                    });
+                }
+                if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout" && data
+                    .company_id == current_user_company_id) {
+                    notification_badge_value++;
+                    $('#notifyBadge').html(notification_badge_value);
+                    $('#notifyBadge').show();
+                    var current_notifs = $('#autoNotifications').html();
+                    $('#autoNotifications').html(data.html + current_notifs);
+                }
+                if (data.notif_action_made == "autoclockout") {
+                    if (data.user_id == user_id) {
+                        notificationRing();
+                        Push.Permission.GRANTED;
+                        Push.create("Hey! " + data.FName + " you have been auto clocked out.", {
+                            body: "We haven't heard from you since the last time clock notification.",
+                            icon: data.profile_img,
+                            timeout: 20000,
+                            onClick: function() {
+                                window.focus();
+                                this.close();
+                            }
+                        });
+                    }
+                }
+            }
+
+            function bell_acknowledged() {
+              // $('#notifyBadge').hide();
+              if (notification_badge_value > 0) {
+                  notification_badge_value = 0;
+                  $.ajax({
+                      url: baseURL + '/timesheet/notif_user_acknowledge',
+                      type: "POST",
+                      dataType: 'json',
+                      success: function(data) {
+                          console.log("Bell Acknowledged");
+                      }
+                  });
+              }
+            }
+
+        });
+        $difference = 10;
+        Swal.fire({
+        title: "Do you need more time?",
+        // icon:'question',
+        html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
+        imageUrl: baseURL + "assets/img/timesheet/clock-out.png",
+        showDenyButton: true,
+        confirmButtonText: `Continue`,
+        denyButtonText: `End Session`,
+        allowOutsideClick: false,
+        timer: $difference * 1000,
+        timerProgressBar: true,
+        willOpen: () => {
+            const content = Swal.getHtmlContainer();
+            const $ = content.querySelector.bind(content);
+            timerInterval = setInterval(() => {
+                if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
+                    var coundown = Swal.getTimerLeft() / 1000 / 60;
+                    var intV = parseInt(coundown);
+
+                    var text_countdown = "";
+                    if (intV != 0) {
+                        text_countdown =
+                            intV + ":" + parseInt((coundown - intV) * 60);
+                    } else {
+                        text_countdown = parseInt((coundown - intV) * 60);
+                    }
+
+                    Swal.getContent().querySelector(
+                        "strong"
+                    ).textContent = text_countdown;
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        },
+    });
       });
 
       function getNotificationsAll(){
@@ -203,6 +344,19 @@
                 }
             }
         });
+      }
+
+      async function notificationRing() {
+        var audioUrl = baseURL + '/assets/css/notification/notification_tone2.mp3';
+        const audio = new Audio();
+        audio.src = audioUrl;
+        audio.muted = true;
+        try {
+            await audio.play();
+        } catch (err) {
+            // console.log('error');
+            console.log(err);
+        }
       }
     </script>
   </body>

@@ -202,15 +202,37 @@ class Chart_of_accounts extends MY_Controller {
             }
         }
 
-        if($columnName === 'nsmartrac_balance') {
-            usort($data, function($a, $b) use ($order) {
-                if($order === 'asc') {
-                    return floatval($a['nsmartrac_balance']) > floatval($b['nsmartrac_balance']);
-                } else {
-                    return floatval($a['nsmartrac_balance']) < floatval($b['nsmartrac_balance']);
-                }
-            });
-        }
+        usort($data, function($a, $b) use ($order, $columnName) {
+            switch($columnName) {
+                case 'nsmartrac_balance' :
+                    if($a['is_sub_acc'] !== true && $b['is_sub_acc'] !== true) {
+                        if($order === 'asc') {
+                            return floatval($a['nsmartrac_balance']) > floatval($b['nsmartrac_balance']);
+                        } else {
+                            return floatval($a['nsmartrac_balance']) < floatval($b['nsmartrac_balance']);
+                        }
+                    }
+                break;
+                case 'type' :
+                    if($a['is_sub_acc'] !== true && $b['is_sub_acc'] !== true) {
+                        if($order === 'asc') {
+                            return strcmp($a['type'], $b['type']);
+                        } else {
+                            return strcmp($b['type'], $a['type']);
+                        }
+                    }
+                break;
+                case 'name' :
+                    if($a['is_sub_acc'] !== true && $b['is_sub_acc'] !== true) {
+                        if($order === 'asc') {
+                            return strcmp($a['name'], $b['name']);
+                        } else {
+                            return strcmp($b['name'], $a['name']);
+                        }
+                    }
+                break;
+            }
+        });
 
         $result = [
             'draw' => $postData['draw'],
@@ -413,6 +435,35 @@ class Chart_of_accounts extends MY_Controller {
             }, ARRAY_FILTER_USE_BOTH);
         }
 
+        usort($accounts, function($a, $b) use ($post) {
+            switch($post['column']) {
+                case 'name' :
+                    if($post['order'] === 'asc') {
+                        return strcmp($a->name, $b->name);
+                    } else {
+                        return strcmp($b->name, $a->name);
+                    }
+                break;
+                case 'nsmartrac_balance' :
+                    if($post['order'] === 'asc') {
+                        return floatval($a->balance) > floatval($b->balance);
+                    } else {
+                        return floatval($a->balance) < floatval($b->balance);
+                    }
+                break;
+                default :
+                    $aType = $this->account_model->getName($a->account_id);
+                    $bType = $this->account_model->getName($b->account_id);
+
+                    if($post['order'] === 'asc') {
+                        return strcmp($aType, $bType);
+                    } else {
+                        return strcmp($bType, $aType);
+                    }
+                break;
+            }
+        });
+
         $tableHtml = "<table width='100%'>";
         $tableHtml .= "<thead>";
         $tableHtml .= "<tr style='text-align: left;'>";
@@ -597,6 +648,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
+                    'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'CC Expense',
@@ -659,6 +711,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
+                    'id' => $expenseCategory->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'CC Expense',
@@ -734,6 +787,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
+                'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
@@ -793,6 +847,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
+                'id' => $checkCategory->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
@@ -853,6 +908,7 @@ class Chart_of_accounts extends MY_Controller {
             $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id);
 
             $transaction = [
+                'id' => $journalEntryItem->id,
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
                 'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
                 'type' => 'Journal',
@@ -914,6 +970,7 @@ class Chart_of_accounts extends MY_Controller {
             $payeeName = $payee->display_name;
 
             $transaction = [
+                'id' => $billItem->id,
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
                 'type' => 'Bill',
@@ -986,6 +1043,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $data[] = [
+                'id' => $ccCredit->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                 'type' => 'CC-Credit',
@@ -1026,6 +1084,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
+                'id' => $ccCreditCategory->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                 'type' => 'CC-Credit',
@@ -1087,6 +1146,7 @@ class Chart_of_accounts extends MY_Controller {
             $payeeName = $payee->display_name;
 
             $transaction = [
+                'id' => $vendorCredit->id,
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
                 'type' => 'Vendor Credit',
@@ -1149,6 +1209,7 @@ class Chart_of_accounts extends MY_Controller {
                 $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
             }
             $transaction = [
+                'id' => $transfer->id,
                 'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
                 'ref_no' => '',
                 'type' => 'Transfer',
@@ -1214,6 +1275,7 @@ class Chart_of_accounts extends MY_Controller {
                 $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
             }
             $transaction = [
+                'id' => $deposit->id,
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'ref_no' => '',
                 'type' => 'Deposit',
@@ -1258,6 +1320,7 @@ class Chart_of_accounts extends MY_Controller {
             $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id);
 
             $transaction = [
+                'id' => $depFund->id,
                 'date' => date("m/d/Y", strtotime($dep->date)),
                 'ref_no' => '',
                 'type' => 'Deposit',
@@ -1335,6 +1398,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
                 $transaction = [
+                    'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1399,6 +1463,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
                 $transaction = [
+                    'id' => $expenseCategory->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1474,6 +1539,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
+                'id' => $invQtyAdj->id,
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
@@ -1527,6 +1593,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
+                'id' => $invQtyAdjItem->id,
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
@@ -1603,6 +1670,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccType->account_name !== 'Credit Card') {
                 $transaction = [
+                    'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1666,6 +1734,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccType->account_name !== 'Credit Card') {
                 $transaction = [
+                    'id' => $expenseCategory->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1729,6 +1798,7 @@ class Chart_of_accounts extends MY_Controller {
             $deposit = floatval($adjustment->initial_cost) * intval($adjustment->initial_qty);
 
             $transaction = [
+                'id' => $adjustment->id,
                 'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
                 'ref_no' => $adjustment->ref_no === null ? '' : $adjustment->ref_no,
                 'type' => 'Inventory Starting Value',
@@ -1778,6 +1848,7 @@ class Chart_of_accounts extends MY_Controller {
             $deposit = floatval($adjusted->initial_cost) * intval($adjusted->initial_qty);
 
             $transaction = [
+                'id' => $adjusted->id,
                 'date' => date("m/d/Y", strtotime($adjusted->as_of_date)),
                 'ref_no' => $adjusted->ref_no === null ? '' : $adjusted->ref_no,
                 'type' => 'Inventory Starting Value',
@@ -1840,6 +1911,7 @@ class Chart_of_accounts extends MY_Controller {
             $account = $ccPayment->credit_card_id === $accountId ? $this->chart_of_accounts_model->getName($ccPayment->bank_account_id) : $this->chart_of_accounts_model->getName($ccPayment->credit_card_id);
 
             $transaction = [
+                'id' => $ccPayment->id,
                 'date' => date("m/d/Y", strtotime($ccPayment->date)),
                 'ref_no' => '',
                 'type' => 'Credit Card Pmt',
@@ -1902,6 +1974,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($creditCard === true && $accountType->account_name === 'Credit Card' || $creditCard === false) {
                 $transaction = [
+                    'id' => $billPayment->id,
                     'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
                     'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : $billPayment->check_no === null ? '' : $billPayment->check_no,
                     'type' => 'Bill Payment',
@@ -2237,7 +2310,9 @@ class Chart_of_accounts extends MY_Controller {
             }
         });
 
-        $data = array_slice($data, $post['start'], $post['length']);
+        if(isset($post['start']) && isset($post['length'])) {
+            $data = array_slice($data, $post['start'], $post['length']);
+        }
         if($post['single_line'] === 0) {
             $registers = $data;
 
@@ -2331,17 +2406,32 @@ class Chart_of_accounts extends MY_Controller {
 
             $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Date</th>";
             $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Ref No.</th>";
-            $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>";
+            $html .= $post['show_in_one_line'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>" : "";
             $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Payee</th>";
-            $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Account</th>";
+            $html .= $post['show_in_one_line'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Account</th>" : "";
             $html .= $post['chk_memo'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Memo</th>" : "";
             $html .= "<th style='border-bottom: 2px solid #BFBFBF'>$paymentKey</th>";
             $html .= "<th style='border-bottom: 2px solid #BFBFBF'>$depositKey</th>";
-            $html .= $post['chk_reconcile_status'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Stat</th>" : "";
+            $html .= $post['chk_reconcile_status'] === "1" || $post['chk_reconcile_banking_status'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Stat</th>" : "";
             $html .= $post['chk_banking_status'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Auto</th>" : "";
             $html .= $post['chk_attachments'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Attachments</th>" : "";
             $html .= $post['chk_tax'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Tax</th>" : "";
             $html .= $post['chk_running_balance'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Balance</th>" : "";
+
+            if($post['show_in_one_line'] === "0") {
+                $html .= "<tr style='text-align: left;'>";
+                $html .= "<th style='border-bottom: 2px solid #BFBFBF'></th>";
+                $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>";
+                $html .= "<th style='border-bottom: 2px solid #BFBFBF'>Account</th>";
+                $html .= $post['chk_memo'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'></th>" : "";
+                $html .= "<th style='border-bottom: 2px solid #BFBFBF'></th>";
+                $html .= "<th style='border-bottom: 2px solid #BFBFBF'></th>";
+                $html .= $post['chk_reconcile_banking_status'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Auto</th>" : "";
+                $html .= $post['chk_attachments'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'></th>" : "";
+                $html .= $post['chk_tax'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'></th>" : "";
+                $html .= $post['chk_running_balance'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'></th>" : "";
+                $html .= "</tr>";
+            }
         }
         $html .= "</tr>";
         $html .= "</thead>";
@@ -2350,9 +2440,9 @@ class Chart_of_accounts extends MY_Controller {
             $html .= "<tr>";
             $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['date']."</td>";
             $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['ref_no']."</td>";
-            $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['type']."</td>";
+            $html .= $post['show_in_one_line'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['type']."</td>" : "";
             $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['payee']."</td>";
-            $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['account']."</td>";
+            $html .= $post['show_in_one_line'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['account']."</td>" : "";
             $html .= $post['chk_memo'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['memo']."</td>" : "";
 
             if($accType === 'A/R' || $accType === 'A/P') {
@@ -2361,13 +2451,28 @@ class Chart_of_accounts extends MY_Controller {
                 $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register[strtolower($paymentKey)]."</td>";
                 $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register[strtolower($depositKey)]."</td>";
             }
-            $html .= $post['chk_reconcile_status'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['reconcile_status']."</td>" : "";
-            $html .= $post['chk_banking_status'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['banking_status']."</td>" : "";
+            $html .= $post['chk_reconcile_status'] === "1" || $post['chk_reconcile_banking_status'] ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['reconcile_status']."</td>" : "";
+            $html .= $post['chk_banking_status'] === "1" && $post['show_in_one_line'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['banking_status']."</td>" : "";
             $html .= $post['chk_attachments'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['attachments']."</td>" : "";
             $html .= $post['chk_tax'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['tax']."</td>" : "";
             $balance = $register['balance'] !== null && $register['balance'] !== '' ? $register['balance'] : 'n/a';
             $html .= $post['chk_running_balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>$balance</td>" : "";
             $html .= "</tr>";
+
+            if($post['show_in_one_line'] === "0") {
+                $html .= "<tr>";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['type']."</td>";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$register['account']."</td>";
+                $html .= $post['chk_memo'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'></td>" : "";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+                $html .= $post['chk_reconcile_banking_status'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'></td>" : "";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+                $html .= "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+                $html .= "</tr>";
+            }
         }
         $html .= "</tbody>";
         $html .= "</table>";
@@ -2456,17 +2561,29 @@ class Chart_of_accounts extends MY_Controller {
             'Balance'
         ];
 
+        if($post['show_in_one_line'] === "0") {
+            unset($header[2]);
+            unset($header[4]);
+            unset($header[9]);
+            $header[] = 'Type';
+            $header[] = 'Account';
+
+            if($post['chk_reconcile_banking_status'] === "1") {
+                $header[] = 'Added in Banking';
+            }
+        }
+
         if($post['chk_memo'] === "0") {
             unset($header[5]);
             unset($topHeader[5]);
         }
 
-        if($post['chk_reconcile_status'] === "0") {
+        if($post['chk_reconcile_status'] === "0" || $post['chk_reconcile_banking_status'] === "0") {
             unset($header[8]);
             unset($topHeader[8]);
         }
 
-        if($post['chk_banking_status'] === "0") {
+        if($post['chk_banking_status'] === "0" || $post['chk_reconcile_banking_status'] === "0") {
             unset($header[9]);
             unset($topHeader[9]);
         }
@@ -2506,15 +2623,20 @@ class Chart_of_accounts extends MY_Controller {
                 $register['balance']
             ];
 
+            if($post['show_in_one_line'] === "0") {
+                unset($entry[2]);
+                unset($entry[4]);
+            }
+
             if($post['chk_memo'] === "0") {
                 unset($entry[5]);
             }
     
-            if($post['chk_reconcile_status'] === "0") {
+            if($post['chk_reconcile_status'] === "0" || $post['chk_reconcile_banking_status'] === "0") {
                 unset($entry[8]);
             }
     
-            if($post['chk_banking_status'] === "0") {
+            if($post['chk_banking_status'] === "0" || $post['show_in_one_line'] === "0") {
                 unset($entry[9]);
             }
     
@@ -2528,6 +2650,15 @@ class Chart_of_accounts extends MY_Controller {
     
             if($post['chk_running_balance'] === "0") {
                 unset($entry[12]);
+            }
+
+            if($post['show_in_one_line'] === "0") {
+                $entry[] = $register['type'];
+                $entry[] = $register['account'];
+
+                if($post['chk_reconcile_banking_status'] === "1") {
+                    $entry[] = $register['banking_status'];
+                }
             }
 
             fputcsv($file, $entry);

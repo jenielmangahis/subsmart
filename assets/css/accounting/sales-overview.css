@@ -431,7 +431,7 @@
     left: 54%;
     display: block;
     margin-left: 56%;
-    margin-bottom: -10px;
+    margin-bottom: -6px;
 }
 
 .overview-widget .stepper-container .step:last-child::before {
@@ -452,7 +452,7 @@
     border: solid 6px #2ca01c33;
     display: block;
     margin: auto;
-    margin-top: -20px;
+    margin-top: -17px;
 }
 
 @media only screen and (max-width: 1500px) {

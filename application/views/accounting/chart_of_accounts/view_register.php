@@ -278,7 +278,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
 
                                 </div>
-                                <table id="registers-table" class="table table-striped table-bordered">
+                                <table id="registers-table" class="table table-bordered table-hover cursor-pointer">
 									<thead>
                                         <?php if ($type !== 'A/R' && $type !== 'A/P') : ?>
                                         <tr>

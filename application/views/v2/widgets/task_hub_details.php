@@ -16,7 +16,7 @@ if ($tasks) :
         endswitch;
 
         $assignee = $task->FName == "";
-        $assignee_class = $assignee ? 'error' : 'success';
+        $assignee_class = $assignee ? '' : 'success';
 
         if ($task->is_assigned == 1) :
             if ($task_count < $task_limit) :
