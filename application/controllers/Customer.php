@@ -1596,6 +1596,16 @@ class Customer extends MY_Controller
         }
     }
 
+    public function update_spt_ajax(){
+        $input = $this->input->post();
+        $data = ['id' => $input['id'], 'name' => $input['name']];
+        if($this->customer_ad_model->update_data($data,"ac_system_package_type","id")){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
     public function update_customer_profile(){
         $input = array();
         $input['notes'] = $_POST['notes'];

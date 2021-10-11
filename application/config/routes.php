@@ -746,6 +746,7 @@ $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_ca
 $route['calendar/_load_upcoming_events'] = 'Workcalender/ajax_load_upcoming_events';
 $route['calendar/_update_drop_event'] = 'Workcalender/ajax_update_event';
 $route['calendar/_update_drop_google_event'] = 'Workcalender/ajax_update_google_event';
+$route['calendar/_create_appointment'] = 'Autocomplete/company_event_tags';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
@@ -1037,4 +1038,9 @@ $route['inventory/export_list'] = 'inventory/inventory_export';
 
 //Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
+
+//Autocomplete
+$route['autocomplete/_company_users'] = 'Autocomplete/company_users';
+$route['autocomplete/_company_customer'] = 'Autocomplete/company_customers';
+$route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
 
