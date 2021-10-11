@@ -78,10 +78,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 							<div class="widget-content">
 								<div class="content-monitary-highlight">
-									$<span class="amount"><?=number_format($income_this_month, 2)?></span> <span class="label">This month</span>
+									$<span class="amount"><?=number_format($income_this_month, 2)?></span>
+									<span class="label">This month</span>
 								</div>
 								<div class="monitary-increase">
-									$<?=number_format($income_this_month-$income_last_month, 2)?> more than <?=date("M d",strtotime("first day of previous month"))?> - <?=date("d, Y", strtotime("last day of previous month"))?>
+									$<?=number_format($income_this_month-$income_last_month, 2)?>
+									more than <?=date("M d", strtotime("first day of previous month"))?>
+									- <?=date("d, Y", strtotime("last day of previous month"))?>
 								</div>
 								<div id="chartContainer1" class="dynamic-graph-container"
 									style="width: 100%; height:200px;">
@@ -172,7 +175,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									<?php
                                     }
                                     ?>
-									<div class="<?php if($invoice_needs_attention){echo "col-md-9";}else{echo "col-md-12";}?>">
+									<div
+										class="<?php if ($invoice_needs_attention) {
+                                        echo "col-md-9";
+                                    } else {
+                                        echo "col-md-12";
+                                    }?>">
 										<div class="row">
 											<div class="col-md-6">
 												<div class="sigments">
@@ -210,7 +218,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $progress_not_due =50;
                                                         } else {
                                                             $progress_overdue =($due_last_365/($not_due_last_365+$due_last_365))*100;
-															$progress_not_due =($not_due_last_365/($not_due_last_365+$due_last_365))*100;
+                                                            $progress_not_due =($not_due_last_365/($not_due_last_365+$due_last_365))*100;
                                                         }
                                                         ?>
 														<div class="progress-bar orange" role="progressbar"
@@ -261,7 +269,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $progress_not_deposited =50;
                                                         } else {
                                                             $progress_deposited =($deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
-															$progress_not_deposited =($not_deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
+                                                            $progress_not_deposited =($not_deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
                                                         }
                                                         ?>
 														<div class="progress-bar light-success" role="progressbar"
@@ -291,58 +299,64 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							</div>
 							<div class="widget-content">
 								<div class="content-monitary-highlight">
-									$839.04
+									$<?=number_format($deposit_total_amount, 2)?>
 								</div>
 								<div class="text">
-									Expected October 04, 2021
+									Expected <?=date("F d, Y", strtotime("monday next week"))?>
 								</div>
 								<div class="stepper-container">
 									<div class="step">
-										<div class="icon text-center">
-											<i class="fa fa-check-circle" aria-hidden="true"></i>
+										<div class="icon text-center <?=($deposit_current_status +1 == 0) ? "success" : '';?>">
+											<i class="fa fa<?=($deposit_current_status >= 0) ? "-check" : '';?>-circle"
+												aria-hidden="true"></i>
 										</div>
 										<div class="text">
 											<div class="top text-center">
-												Processing
+												Submitted
 											</div>
 											<div class="sub text-center">
-												12 transaction
+												<?=$deposit_transaction_count?>
+												transaction
 											</div>
 										</div>
 									</div>
 									<div class="step">
-										<div class="icon text-center">
-											<i class="fa fa-check-circle" aria-hidden="true"></i>
+										<div class="icon text-center <?=($deposit_current_status +1 == 1) ? "success" : '';?>">
+											<i class="fa fa<?=($deposit_current_status >= 1) ? "-check" : '';?>-circle"
+												aria-hidden="true"></i>
 										</div>
 										<div class="text">
 											<div class="top text-center">
-												Batched
+												Approved
 											</div>
 											<div class="sub text-center">
-												10/01/21
+												<!-- 10/01/21 -->
 											</div>
 										</div>
 									</div>
 									<div class="step">
-										<div class="icon text-center success">
-											<i class="fa fa-circle" aria-hidden="true"></i>
+										<div
+											class="icon text-center <?=($deposit_current_status +1 == 2) ? "success" : '';?>">
+											<i class="fa fa<?=($deposit_current_status >= 2) ? "-check" : '';?>-circle"
+												aria-hidden="true"></i>
 										</div>
 										<div class="text">
 											<div class="top text-center">
-												Transit
+												Partially Paid
 											</div>
 											<div class="sub text-center">
-												10/04/21
+												
 											</div>
 										</div>
 									</div>
 									<div class="step">
-										<div class="icon text-center">
-											<i class="fa fa-circle" aria-hidden="true"></i>
+										<div class="icon text-center <?=($deposit_current_status +1 == 3) ? "success" : '';?>">
+											<i class="fa fa<?=($deposit_current_status >= 3) ? "-check" : '';?>-circle"
+												aria-hidden="true"></i>
 										</div>
 										<div class="text">
 											<div class="top text-center">
-												Deposited
+												Paid
 											</div>
 											<div class="sub text-center">
 

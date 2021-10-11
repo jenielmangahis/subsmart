@@ -46,6 +46,9 @@ class AccountingRules extends MY_Controller
         foreach ($rules as $rule) {
             $this->db->where('rules_id', $rule->id);
             $rule->conditions = $this->db->get('accounting_rules_conditions')->result();
+
+            $this->db->where('rule_id', $rule->id);
+            $rule->assignments = $this->db->get('accounting_rule_assignments')->result();
         }
 
         header('content-type: application/json');

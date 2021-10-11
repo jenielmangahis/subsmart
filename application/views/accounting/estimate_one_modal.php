@@ -114,3 +114,38 @@
         </div>
     </div>
 </div>
+
+<!-- The Modal -->
+<div class="modal fade" id="sendESTemail_sr" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Send email for <span id="est_number_email_sr"></span></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+            <input type="hidden" class="form-control custname_sr" name="custname_sr">
+
+                <p><b>To</b></p>
+                <input type="text" class="form-control custEmail_sr" name="custEmail_sr">
+
+                <p><b>Subject</b></p>
+                <input type="text" class="form-control custsubject_sr" name="custsubject_sr" value="Sales Receipt [Sales Receipt No.] from <?php echo $clients->business_name; ?>">
+
+                <p><b>Message</b></p>
+                <textarea class="form-control custmessage_sr" name="custmessage_sr" style="height:200px;"></textarea>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <a href="#" type="submit" class="btn btn-success send_est_cust_sr">Send</a>
+            </div>
+        
+        </div>
+    </div>
+</div>

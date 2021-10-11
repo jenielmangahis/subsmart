@@ -941,7 +941,15 @@ $(document).ready(function() {
                                         timer: $difference * 1000,
                                         timerProgressBar: true,
                                         willOpen: () => {
-                                            const content = Swal.getContent();
+                                            try{
+                                                const content = Swal.getContent();
+                                            }
+                                            catch(err){}
+
+                                            try{
+                                                const content = Swal.getHtmlContainer();
+                                            }
+                                            catch(err){}
                                             const $ = content.querySelector.bind(content);
                                             timerInterval = setInterval(() => {
                                                 if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {

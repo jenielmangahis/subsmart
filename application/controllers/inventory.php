@@ -738,6 +738,48 @@ class Inventory extends MY_Controller
         $result = $this->items_model->getLocationByItemId($this->input->post('item_id'));
         echo json_encode($result);
     }
+
+    public function inventory_export()
+    {
+        $cid   = logged('company_id');
+        $items = $this->items_model->getByCompanyId($cid);    
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "inventory_list_".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Item Name', 'Type', 'Model', 'Brand', 'Price', 'Retail', 'Rebate', 'units', 'Qty Order');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($items)) {
+            foreach ($items as $i) {
+                $csvData = array(
+                    $i->title,
+                    $i->type,
+                    $i->model,
+                    $i->brand,
+                    number_format($i->price,2),
+                    number_format($i->retail,2),
+                    number_format($i->rebate, 2),
+                    $i->units,
+                    $i->qty_order
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
+    }
 }
 /* End of file items.php */
 

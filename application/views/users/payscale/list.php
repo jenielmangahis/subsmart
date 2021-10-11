@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       padding-right: 20px !important;
       padding-left: 20px !important;
     }
-    button#addPayscale {
+    /*button#addPayscale {
       border: 1px solid transparent;
       border-radius: 2px;
       box-shadow: none;
@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       height: 38px;
       position: relative;
       bottom: 5px;
-    }
+    }*/
     @media only screen and (max-width: 600px) {
       .p-40 {
         padding-top: 0px !important;
@@ -82,15 +82,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div style="padding: 10px 0px;">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h3 class="page-title">Pay Scale list</h3>
+                                    <h3 class="page-title">Pay Scale</h3>
                                 </div>
                                 <div class="col-md-6" style="text-align: right;">
                                     <button class="btn btn-primary btn-md add-employee" id="addPayscale"><i class="fa fa-user-plus"></i> Add Pay Scale</button>
                                 </div>
                             </div>
+                            <br />
                             <div class="pl-3 pr-3 mt-0 row" style="position: relative;bottom: 10px;">
                               <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</span>
+                                  <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Payscale.</span>
                               </div>
                             </div>
                             <div class="row" style="position: relative;bottom: 10px;">
@@ -194,7 +195,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-success" id="addPayscale">Save</button>
+                <button type="submit" class="btn btn-primary" id="addPayscale">Save</button>
             </div>
         	</form>
         </div>
@@ -244,24 +245,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 success:function (data) {
                     if (data.is_success){
                         $("#modalDeletePayscale").modal('hide');
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "Payscale was successfully deleted",
-                                icon: 'success'
-                            });
-                        location.reload();
+                        Swal.fire({
+                          title: 'Success',
+                          text: "Payscale was successfully deleted.",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                        });
                     }else{
                         Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: data.msg,
-                                icon: 'warning'
-                            });
+                        {
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: data.msg,
+                            icon: 'warning'
+                        });
                     }
                 }
             });
@@ -277,15 +282,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 success:function (data) {
                     if (data.is_success){
                         $("#modalAddPayScale").modal('hide');
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "Payscale was successfully saved",
-                                icon: 'success'
-                            });
-                        location.reload();
+                        Swal.fire({
+                          title: 'Success',
+                          text: "Payscale was successfully saved.",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                        });
                     }else{
                         Swal.fire(
                             {
@@ -310,15 +319,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 success:function (data) {
                     if (data.is_success){
                         $("#modalEditPayScale").modal('hide');
-                        Swal.fire(
-                            {
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Success',
-                                text: "Payscale was successfully updated",
-                                icon: 'success'
-                            });
-                        location.reload();
+                        Swal.fire({
+                          title: 'Success',
+                          text: "Payscale was successfully updated.",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                        });
                     }else{
                         Swal.fire(
                             {

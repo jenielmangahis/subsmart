@@ -12,6 +12,8 @@ export class RulesTable {
   }
 
   setUpTable() {
+    console.clear();
+
     const actions = {
       makeActive: async ({ id }) => {
         await this.api.editRate(id, { is_active: 1 });
@@ -51,8 +53,23 @@ export class RulesTable {
           </span>
         `;
       },
-      settings: () => {
-        return "settings";
+      settings: (_, __, row) => {
+        if (!row.assignments.length) {
+          return "—";
+        }
+
+        const assignments = row.assignments.map((assignment) => {
+          const { type, value } = assignment;
+          const text = `Set ${type} to "${value}"`;
+          return text.replace(/'/g, "&#39;");
+        });
+
+        const assignmentString = assignments.join(", and ");
+        return `
+          <span class="rulesTable__assignments" title='${assignmentString}'>
+            ${assignmentString}
+          </span>
+        `;
       },
       autoAdd: () => {
         return `
@@ -130,6 +147,7 @@ export class RulesTable {
         {
           sortable: false,
           render: columns.settings,
+          class: "rulesTable__assignmentsColumn",
         },
         {
           sortable: false,

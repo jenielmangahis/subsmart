@@ -690,14 +690,14 @@ class Invoice_model extends MY_Model
     public function getPackageItemsById()
     {
         $this->db->select('*');
-		$this->db->from('item_package');
+        $this->db->from('item_package');
         // $this->db->join('package_details', 'item_package.package_id  = package_details.id');
         $this->db->join('items', 'item_package.item_id  = items.id');
         // $this->db->where('package_id', $id);
         $query2 = $this->db->get();
         return $query2->result();
         // $this->db->select('*');
-		// $this->db->from('package_details');
+        // $this->db->from('package_details');
         // $this->db->join('item_package', 'package_details.id  = item_package.package_id');
         // $this->db->join('items', 'item_package.item_id  = items.id');
         // $this->db->where('package_details.company_id', $cid);
@@ -712,11 +712,11 @@ class Invoice_model extends MY_Model
         $query = $this->db->get($this->table);
         $invoice = $this->getLastRow($comp_id);
         // foreach ($number as $num):
-            $next = $invoice->invoice_number;
-            $arr = explode("-", $next);
-            $date_start = $arr[0];
-            $nextNum = $arr[1];
-            //    echo $number;
+        $next = $invoice->invoice_number;
+        $arr = explode("-", $next);
+        $date_start = $arr[0];
+        $nextNum = $arr[1];
+        //    echo $number;
         // endforeach;
         $val = $nextNum + 1;
         $new_invoice_number = 'INV-'. str_pad($val, 9, "0", STR_PAD_LEFT);
@@ -776,6 +776,14 @@ class Invoice_model extends MY_Model
         $custom = $this->db->insert('acs_profile', $data);
         $insert = $this->db->insert_id();
         return  $insert;
+    }
+    public function get_ranged_PaidInv($company_id, $start_date, $end_date)
+    {
+
+        // $this->db->select('*');
+        $sql="SELECT * FROM invoices WHERE company_id = $company_id AND due_date >= '$start_date' AND due_date <= '$end_date' AND (status = 'Submitted' OR status = 'Approved' OR status = 'Partially Paid' OR status = 'Paid')";
+        $query = $this->db->query($sql);
+        return $query->result();
     }
 }
 

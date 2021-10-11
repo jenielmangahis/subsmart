@@ -121,6 +121,8 @@ $(document).ready(function () {
 	
     // Add Split Line
     $('#btnAddSplit').click(function () {
+        $("#addRuleForm").attr('data-add-split', 'true');
+
         $('.add-split-container').show();
         $('#categoryDefault').hide();
         $('#btnAddLine').show();
@@ -134,7 +136,15 @@ $(document).ready(function () {
     });
 
     $(document).on("click","#btnAddLine",function () {
-        $(".add-split-container").append($('.add-split-section').first().clone());
+        const $clone = $('.add-split-section').first().clone();
+        const $percentInput = $clone.find("[data-type='assignment.category_percent']");
+        const $categorySelect = $clone.find("[data-type='assignment.category']");
+
+        $percentInput.val("");
+        $percentInput.removeClass("inputError");
+        $categorySelect.removeClass("inputError");
+
+        $(".add-split-container").append($clone);
         var num = $('.add-split-section').length;
         $('.splitNum').last().html(num);
         $('.select2-rules-category').select2({
@@ -147,6 +157,8 @@ $(document).ready(function () {
     $(document).on("click","#deleteSplitLine",function () {
         var num = $('.add-split-section').length;
         if(num == 2){
+            $("#addRuleForm").removeAttr('data-add-split');
+
             $('.add-split-container').hide();
             $('#categoryDefault').show();
             $('#btnAddLine').hide();

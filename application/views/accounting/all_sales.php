@@ -708,26 +708,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     </button>
                                                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="#" class="sendESTemail_sr" data-id="<?= $salesReceipts->id; ?>" sr-num="<?= $salesReceipts->id ?>" est-email="<?= $salesReceipts->email ?>" est-cust="<?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($salesReceipts->customer_id)->last_name ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                                <a role="menuitem" target="_new" href="<?php echo base_url('accounting/printSalesReceipt/' . $salesReceipts->id) ?>" class="">
                                                                 <span class="fa fa-print icon"></span>  Print packing slip</a></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  View/Edit</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Copy</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Delete</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Void</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                         </ul>
@@ -4260,9 +4260,44 @@ var custname = $(".custname").val();
 var r = confirm("Send this to customer?");
 
 if (r == true) {
+
 	$.ajax({
 	type : 'POST',
 	url : "<?php echo base_url(); ?>accounting/send_estimates_customer",
+	data : {email : email, subject : subject, message : message, custname : custname},
+	success: function(result){
+		sucess("Email Sent!");
+		// alert('Email Successfully!');
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+// else 
+// {
+// 	alert('no');
+// }
+
+});
+
+$(document).on('click touchstart','.send_est_cust_sr',function(){
+
+var email = $(".custEmail_sr").val();
+var subject = $(".custsubject_sr").val();
+var message = $(".custmessage_sr").val();
+var custname = $(".custname_sr").val();
+// alert(wo_id);
+
+var r = confirm("Send this to customer?");
+
+if (r == true) {
+
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>accounting/send_estimates_customer_sr",
 	data : {email : email, subject : subject, message : message, custname : custname},
 	success: function(result){
 		sucess("Email Sent!");

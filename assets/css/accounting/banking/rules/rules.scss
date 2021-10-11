@@ -138,7 +138,8 @@
     background-color: rgb(107, 108, 114);
   }
 
-  &__conditions {
+  &__conditions,
+  &__assignments {
     width: 200px;
     display: block;
     white-space: nowrap;

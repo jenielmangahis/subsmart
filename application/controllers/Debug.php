@@ -567,6 +567,11 @@
             //$obj_pdf->Output($file, 'F');
             return $file;
         }
+
+        public function testStartupChecklistGenerator(){
+            $checklist = generateClientChecklist();
+            echo $checklist;exit;
+        }
     }
     /* End of file Debug.php */
 

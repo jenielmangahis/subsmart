@@ -1,3 +1,110 @@
+var columns = [
+    {
+        data: 'name',
+        name: 'name',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            if(rowData.status === 1 || rowData.status === "1") {
+                $(td).html(cellData);
+                if(rowData.is_sub_acc) {
+                    $(td).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+cellData);
+                }
+            } else {
+                $(td).html(cellData+' (deleted)');
+            }
+        }
+    },
+    {
+        data: 'type',
+        name: 'type',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('type');
+        }
+    },
+    {
+        orderable: false,
+        data: 'detail_type',
+        name: 'detail_type',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('detailtype');
+        }
+    },
+    {
+        data: 'nsmartrac_balance',
+        name: 'nsmartrac_balance',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('nbalance');
+        }
+    },
+    {
+        data: 'bank_balance',
+        name: 'bank_balance',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('bank_balance');
+        }
+    },
+    {
+        orderable: false,
+        data: null,
+        name: 'action',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            if(rowData.status === 0 || rowData.status === "0") {
+                $(td).html(`
+                <div class="btn-group float-right">
+                    <a href="#" class="btn text-primary d-flex align-items-center justify-content-center make-active">Make active</a>
+
+                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Run Report</a>
+                    </div>
+                </div>
+                `);
+            } else {
+                var noRegTypes = [
+                    'Income',
+                    'Cost of Goods Sold',
+                    'Expenses',
+                    'Other Income',
+                    'Other Expense'
+                ];
+
+                if(noRegTypes.includes(rowData.type) === false) {
+                    var inactiveText = rowData.type === 'Bank' ? 'reduces usage' : "won't reduce usage";
+                    $(td).html(`
+                    <div class="btn-group float-right">
+                        <a href="/accounting/chart-of-accounts/view-register/${rowData.id}" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
+
+                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
+                            <a class="dropdown-item make-inactive" href="#">Make inactive (${inactiveText})</a>
+                            <a class="dropdown-item" href="#">Run Report</a>
+                        </div>
+                    </div>
+                    `);
+                } else {
+                    $(td).html(`
+                    <div class="btn-group float-right">
+                        <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">Run report</a>
+
+                        <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
+                            <a class="dropdown-item make-inactive" href="#">Make inactive (won't reduce usage)</a>
+                        </div>
+                    </div>
+                    `);
+                }
+            }
+        }
+    }
+];
+
 function showdiv(el)
 {
     var value = $(el).val();
@@ -175,112 +282,7 @@ $(document).ready(function () {
             },
             pagingType: 'full_numbers'
         },
-        columns: [
-            {
-                data: 'name',
-                name: 'name',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    if(rowData.status === 1 || rowData.status === "1") {
-                        $(td).html(cellData);
-                        if(rowData.is_sub_acc) {
-                            $(td).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+cellData);
-                        }
-                    } else {
-                        $(td).html(cellData+' (deleted)');
-                    }
-                }
-            },
-            {
-                data: 'type',
-                name: 'type',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).addClass('type');
-                }
-            },
-            {
-                orderable: false,
-                data: 'detail_type',
-                name: 'detail_type',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).addClass('detailtype');
-                }
-            },
-            {
-                data: 'nsmartrac_balance',
-                name: 'nsmartrac_balance',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).addClass('nbalance');
-                }
-            },
-            {
-                data: 'bank_balance',
-                name: 'bank_balance',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).addClass('bank_balance');
-                }
-            },
-            {
-                orderable: false,
-                data: null,
-                name: 'action',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    if(rowData.status === 0 || rowData.status === "0") {
-                        $(td).html(`
-                        <div class="btn-group float-right">
-                            <a href="#" class="btn text-primary d-flex align-items-center justify-content-center make-active">Make active</a>
-
-                            <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Run Report</a>
-                            </div>
-                        </div>
-                        `);
-                    } else {
-                        var noRegTypes = [
-                            'Income',
-                            'Cost of Goods Sold',
-                            'Expenses',
-                            'Other Income',
-                            'Other Expense'
-                        ];
-
-                        if(noRegTypes.includes(rowData.type) === false) {
-                            var inactiveText = rowData.type === 'Bank' ? 'reduces usage' : "won't reduce usage";
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <a href="/accounting/chart-of-accounts/view-register/${rowData.id}" class="btn text-primary d-flex align-items-center justify-content-center view-register">View Register</a>
-
-                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
-                                    <a class="dropdown-item make-inactive" href="#">Make inactive (${inactiveText})</a>
-                                    <a class="dropdown-item" href="#">Run Report</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <a href="#" class="btn text-primary d-flex align-items-center justify-content-center">Run report</a>
-
-                                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);" id="editAccount" data-id="${rowData.id}">Edit</a>
-                                    <a class="dropdown-item make-inactive" href="#">Make inactive (won't reduce usage)</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    }
-                }
-            }
-        ]
+        columns: columns
     });
 
     $(document).on('click', '#chart-of-accounts-table .make-active', function(e) {
@@ -389,6 +391,12 @@ $('#time_date, #edit_time_date').on('change', function() {
     }
 });
 
+$(document).on('dblclick', '#chart-of-accounts-table tbody tr', function() {
+    if($(this).find('a.view-register').length > 0) {
+        location.href = $(this).find('a.view-register').attr('href');
+    }
+});
+
 $('#print-accounts').on('click', function(e) {
     e.preventDefault();
 
@@ -400,6 +408,10 @@ $('#print-accounts').on('click', function(e) {
     data.set('nsmart_balance', $('#chk_nsmart_balance').prop('checked') ? 1 : 0);
     data.set('balance', $('#chk_bank_balance').prop('checked') ? 1 : 0);
 	data.set('search', $('#search').val());
+
+    var tableOrder = $('#chart-of-accounts-table').DataTable().order();
+    data.set('column', columns[tableOrder[0][0]].name);
+    data.set('order', tableOrder[0][1]);
 
     $.ajax({
 		url: '/accounting/chart-of-accounts/print-table',
