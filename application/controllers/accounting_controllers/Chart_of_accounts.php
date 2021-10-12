@@ -182,8 +182,12 @@ class Chart_of_accounts extends MY_Controller {
             $data[] = $acc;
 
             if(end($data)['id'] == $account->id && !empty($childAccounts) && $columnName !== 'nsmartrac_balance') {
-                usort($childAccounts, function($a, $b) {
-                    return strcmp($a->name, $b->name);
+                usort($childAccounts, function($a, $b) use ($order) {
+                    if($order === 'asc') {
+                        return strcmp($a->name, $b->name);
+                    } else {
+                        return strcmp($b->name, $a->name);
+                    }
                 });
                 foreach($childAccounts as $subAcc) {
                     if($search !== "") {

@@ -24,12 +24,18 @@ class EventTags_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByCompanyId($company_id)
+    public function getAllByCompanyId($company_id, $filters = array())
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->like('name', $filters['search'], 'both');                
+            }
+        }
 
         $query = $this->db->get();
         return $query->result();
