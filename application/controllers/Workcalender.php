@@ -28,7 +28,8 @@ class Workcalender extends MY_Controller
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'assets/libs/jcanvas/global.css',
-            'assets/plugins/timeline_calendar/main.css'
+            'assets/plugins/timeline_calendar/main.css',
+            'assets/css/wokrcalendar/workcalendar.css',
         ));
 
         add_footer_js(array(
@@ -41,8 +42,10 @@ class Workcalender extends MY_Controller
 
     public function index()
     {
+
         $this->hasAccessModule(4); 
         $this->load->model('Event_model', 'event_model');
+        $this->load->model('Appointment_model');
 
         $role = logged('role');
         if ($role == 2 || $role == 3) {
@@ -315,6 +318,7 @@ class Workcalender extends MY_Controller
 
         $this->load->model('Users_model', 'user_model');
 
+        $this->page_data['optionAppointmentTypes'] = $this->Appointment_model->optionAppointmentType();
         $this->page_data['settings'] = $settings;
         $this->page_data['enabled_calendar'] = $enabled_calendar;
         $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
@@ -1788,7 +1792,7 @@ class Workcalender extends MY_Controller
                 //Request
                 $service = new Google_Service_Calendar($client);
                 $event   = $service->events->get($post['calendar_id'],$post['event_id']);
-                print_r($event);
+                //print_r($event);
 
                 $start = new Google_Service_Calendar_EventDateTime();
                 $start->setTimeZone($user_timezone);

@@ -94,6 +94,16 @@
         $("#modal_edit_rate_plan").modal("show");
     });
 
+    $(document).on('click', '.edit-system-package', function(){
+        var spt_id = $(this).attr("data-id");
+        var spt_name = $(this).attr("data-name");
+
+        $("#spt-edit-id").val(spt_id);        
+        $("#spt-edit-name").val(spt_name);
+
+        $("#modal_edit_system_package").modal("show");
+    });
+
     $(document).on('click', '.edit-sales-area', function(){
         var sales_area_id = $(this).attr("data-id");
         var sales_area_name = $(this).attr("data-name");
@@ -379,6 +389,25 @@
                 $('#modal_lead_type').modal('hide');
                 $('[id="lead_name"]').val("");
                 $('[id="lead_id"]').val("");
+            }
+        });
+    });
+
+    $("#editSptForm").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/update_spt_ajax",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Updated!','spt');
+                }
+                $('#modal_edit_system_package').modal('hide');
             }
         });
     });

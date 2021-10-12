@@ -29,7 +29,6 @@
 
       $(document).ready(function() {
         //initializeChart();
-        getNotificationsAll();
 
         $('#manage_widgets_modal').on('show.bs.modal', function () {
             console.log("TEST");
@@ -137,46 +136,6 @@
             }
 
         });
-        $difference = 10;
-        Swal.fire({
-        title: "Do you need more time?",
-        // icon:'question',
-        html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
-        imageUrl: baseURL + "assets/img/timesheet/clock-out.png",
-        showDenyButton: true,
-        confirmButtonText: `Continue`,
-        denyButtonText: `End Session`,
-        allowOutsideClick: false,
-        timer: $difference * 1000,
-        timerProgressBar: true,
-        willOpen: () => {
-            const content = Swal.getHtmlContainer();
-            const $ = content.querySelector.bind(content);
-            timerInterval = setInterval(() => {
-                if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
-                    var coundown = Swal.getTimerLeft() / 1000 / 60;
-                    var intV = parseInt(coundown);
-
-                    var text_countdown = "";
-                    if (intV != 0) {
-                        text_countdown =
-                            intV + ":" + parseInt((coundown - intV) * 60);
-                    } else {
-                        text_countdown = parseInt((coundown - intV) * 60);
-                    }
-
-                    Swal.getContent().querySelector(
-                        "strong"
-                    ).textContent = text_countdown;
-                } else {
-                    clearInterval(timerInterval);
-                }
-            }, 100);
-        },
-        willClose: () => {
-            clearInterval(timerInterval);
-        },
-    });
       });
 
       function getNotificationsAll(){

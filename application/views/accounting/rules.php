@@ -76,6 +76,24 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             </tbody>
                         </table> -->
 
+                        <div class="dropdown rulesDropdown d-none" id="batchActions">
+                            <button
+                                class="btn dropdown-toggle rulesDropdown__btn"
+                                type="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                Batch Actions
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-left">
+                                <li><a href="#" class="dropdown-item" data-action="batchDelete">Delete</a></li>
+                                <li><a href="#" class="dropdown-item" data-action="batchMakeInactive">Disable</a></li>
+                                <li><a href="#" class="dropdown-item" data-action="batchMakeActive">Enable</a></li>
+                            </ul>
+                        </div>
+
                         <table id="rulesTable" class="table table-striped table-bordered rulesTable">
                             <thead class="rulesTable__head">
                                 <tr>

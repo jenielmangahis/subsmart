@@ -143,11 +143,13 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($accounts as $account)
         {
-            $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $status);
+            if($columnName !== 'nsmartrac_balance') {
+                $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $status);
+            }
 
             if($search !== "") {
                 if(stripos($account->name, $search) !== false) {
-                    $data[] = [
+                    $acc = [
                         'id' => $account->id,
                         'name' => $account->name,
                         'type' => $this->account_model->getName($account->account_id),
@@ -159,7 +161,7 @@ class Chart_of_accounts extends MY_Controller {
                     ];
                 }
             } else {
-                $data[] = [
+                $acc = [
                     'id' => $account->id,
                     'name' => $account->name,
                     'type' => $this->account_model->getName($account->account_id),
@@ -171,7 +173,18 @@ class Chart_of_accounts extends MY_Controller {
                 ];
             }
 
-            if(end($data)['id'] == $account->id && !empty($childAccounts)) {
+            if($columnName === 'nsmartrac_balance') {
+                if($account->parent_acc_id !== '' && $account->parent_acc_id !== null && $account->parent_acc_id !== "0") {
+                    $acc['parent_acc'] = $this->chart_of_accounts_model->getName($account->parent_acc_id);
+                }
+            }
+
+            $data[] = $acc;
+
+            if(end($data)['id'] == $account->id && !empty($childAccounts) && $columnName !== 'nsmartrac_balance') {
+                usort($childAccounts, function($a, $b) {
+                    return strcmp($a->name, $b->name);
+                });
                 foreach($childAccounts as $subAcc) {
                     if($search !== "") {
                         if(stripos($subAcc->name, $search) !== false) {

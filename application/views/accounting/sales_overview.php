@@ -573,7 +573,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									</div>
 									<div class="row">
 										<div class="col-md-6">
-											<div class="img">
+											<div class="img" onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'">
 												<img src="<?=base_url('assets/img/accounting/overview/new-invoice.png')?>"
 													alt="">
 											</div>
@@ -595,7 +595,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										<div class="col-md-6">
 											<div class="img">
 												<img src="<?=base_url('assets/img/accounting/overview/new-sales-receipt.png')?>"
-													alt="">
+													alt="" data-toggle="modal" data-target="#addsalesreceiptModal">
 											</div>
 											<div class="text bold">
 												New sales receipt
@@ -604,7 +604,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										<div class="col-md-6">
 											<div class="img">
 												<img src="<?=base_url('assets/img/accounting/overview/recurring-sales-receipt.png')?>"
-													alt="">
+													alt="" data-toggle="modal" data-target="#addsalesreceiptModal" class="recurring-sales-receipt">
 											</div>
 											<div class="text bold">
 												Recurring sales receipt

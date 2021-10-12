@@ -1,428 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.css" />
 <!-- page wrapper start -->
-<style>
-.btn-right-nav-hide-show{
-    position: relative;
-    left: 48%;
-    top: -35px;
-}
-.icons-list-navbar span {
-  font-size: 14px !important;
-}
-img.datagrid-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50px;
-    margin: 0 auto;
-    object-fit: cover;
-    margin-top: 10px;
-}
-a.calendar-profile-contact {
-    color: black;
-    position: relative;
-    top: 2px;
-    font-size: 16px;
-    width: 39%;
-    display: block;
-    float: left;
-}
-a.calendar-profile-contact:hover {
-    color: green;
-}
-.btn-calendar-small {
-    font-size: 12px;
-}
-td.fc-datagrid-cell.fc-resource {
-    text-align: center;
-}
-.right-col .fc-left{
-    font-size: 10px;
-}
-.right-col .fc-left h2{
-    margin-top: 10px;
-    font-weight: 300;
-}
-span.calendar-email {
-    font-size: 12px;
-    position: relative;
-    left: 3px;
-}
-#right-calendar{
-    margin-top: 10px;
-    padding: 10px;
-}
-img.calendar-user-profile {
-    border-radius: 100px;
-    object-fit: cover;
-    position: relative;
-    top: 6px;
-}
-a.top-1 {
-  position: relative;
-  top: 1px;
-}
-.dot {
-  height: 25px;
-  width: 25px;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-  padding: 2px;
-  text-align: center;
-  color:#ffffff;
-}
-.fc-button-group{
-    margin: 15px 0;
-}
-.dot-red{
-    background-color: #ff2a26;
-}
-.dot-green{
-    background-color: #bee336;
-}
-.dot-yellow{
-    background-color: #f7f016;
-}
-.dot-blue{
-    background-color: #16b7f7;
-}
-.right-list-events li{
-    text-align: left;
-    margin: 5px;
-    padding: 10px;
-}
-.right-filter-header, .left-header{
-    font-size: 16px;
-    text-align: left;
-    background-color: #76828E;
-    padding: 10px;
-    color: #ffffff;
-}
-.list-group li{
-    padding: 0px;
-    margin-top: 20px;
-    border: none;
-}
-.hide{
-    display: none;
-}
-
-/*Tooltip*/
-.tooltip-table td{
-  text-align: left;
-}
-/*.fc .fc-scrollgrid, .fc .fc-scrollgrid table {
-    width: 101% !important;
-}*/
-.tooltip{
-  opacity: 1;
-}
-.calendar-tooltip .tooltip-inner{
-  background: #0B92FB;
-  color : #ffffff;
-}
-.calendar-tooltip .popper,.calendar-tooltip .tooltip {
-    position: absolute;
-    z-index: 9999;
-    background: #0B92FB;
-    color: #ffffff;
-    width: auto;
-    border-radius: 3px;
-    box-shadow: 0 0 2px rgba(0,0,0,0.5);
-    padding: 10px;
-    text-align: center;
-  }
-  .calendar-tooltip .style5 .tooltip {
-    background: #1E252B;
-    color: #FFFFFF;
-    max-width: 200px;
-    width: auto;
-    font-size: .8rem;
-    padding: .5em 1em;
-  }
-  .calendar-tooltip .popper .popper__arrow,
-  .calendar-tooltip .tooltip .tooltip-arrow {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    position: absolute;
-    margin: 5px;
-  }
-
-  .calendar-tooltip .tooltip .tooltip-arrow,
-  .calendar-tooltip .popper .popper__arrow {
-    border-color: #0B92FB;
-  }
-  .calendar-tooltip .style5 .tooltip .tooltip-arrow {
-    border-color: #1E252B;
-  }
-  .calendar-tooltip .popper[x-placement^="top"],
-  .calendar-tooltip .tooltip[x-placement^="top"] {
-    margin-bottom: 5px;
-  }
-  .calendar-tooltip .popper[x-placement^="top"] .popper__arrow,
-  .calendar-tooltip .tooltip[x-placement^="top"] .tooltip-arrow {
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  div.no-data {
-      text-align: center;
-      margin-top: 60px;
-      font-size: 20px;
-      color: #6b6b6b;
-  }
-  .job-caption {
-    display: block;
-    margin-bottom: 14px !important;
-  }
-  img.rounded-circle.nav-user-img.vertical-center.jobs {
-    max-width: 45px;
-    position: relative;
-    bottom: 11px;
-    float: right;
-    box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
-  }
-  .col-widget {
-    width: 49%;
-    float: left;
-    padding: 0px 10px 0px 5px;
-  }
-  img.rounded-circle.nav-user-img.vertical-center.events {
-    max-width: 45px;
-    position: relative;
-    top: 10px;
-    margin-bottom: 30px;
-    box-shadow: rgb(0 0 0 / 28%) 0 1px 3px;
-  }
-  .calendar-tooltip .popper[x-placement^="bottom"],
-  .calendar-tooltip .tooltip[x-placement^="bottom"] {
-    margin-top: 5px;
-  }
-  .calendar-tooltip .tooltip[x-placement^="bottom"] .tooltip-arrow,
-  .calendar-tooltip .popper[x-placement^="bottom"] .popper__arrow {
-    border-width: 0 5px 5px 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
-    top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  .calendar-tooltip .tooltip[x-placement^="right"],
-  .calendar-tooltip .popper[x-placement^="right"] {
-    margin-left: 5px;
-  }
-  .calendar-tooltip .popper[x-placement^="right"] .popper__arrow,
-  .calendar-tooltip .tooltip[x-placement^="right"] .tooltip-arrow {
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    left: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .calendar-tooltip .popper[x-placement^="left"],
-  .calendar-tooltip .tooltip[x-placement^="left"] {
-    margin-right: 5px;
-  }
-  .page-title {
-    font-family: Sarabun, sans-serif !important;
-    font-size: 1.75rem !important;
-    font-weight: 600 !important;
-  }
-  /*
-  .col-20 {
-    width: 20%;
-  }
-  */
-  .col-20 {
-    width: 30%;
-  }
-  .calendar-tooltip .popper[x-placement^="left"] .popper__arrow,
-  .calendar-tooltip .tooltip[x-placement^="left"] .tooltip-arrow {
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    right: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .right-calendar-loading{
-    position: absolute;
-    width: 50%;
-    left: 28%;
-    top: 217px;
-    z-index: 99999;
-  }
-  .left-calendar-loading{
-    position: absolute;
-    width: 90%;
-    left: 5%;
-    top: 50%;
-    z-index: 99999;
-  }
-  .right-calendar-loading .alert-info{
-    border: 1px solid;
-  }
-  .right-calendar-loading img{
-    display: inline-block;
-    margin-right: 10px;
-  }
-  .fc .fc-toolbar-title {
-    font-size: 23px;
-  }
-  .btn-gcustom {
-    min-width: 24px;
-    padding: 0px 3px;
-    min-height: 24px;
-  }
-  a.btn-gcustom i {
-    position: relative;
-    left: 1px;
-    top: 2px;
-  }
-  .br-99 {
-    border-radius: 99px;
-  }
-  .sc-bottom-2 {
-    position: relative;
-    bottom: 3px;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 10px;
-  }
-  .p-40 {
-    padding-top: 40px !important;
-  }
-  .p-20 {
-    padding-top: 25px !important;
-    padding-bottom: 25px !important;
-    padding-right: 20px !important;
-    padding-left: 20px !important;
-  }
-  .mt-40 {
-    margin-top: 55px !important;
-    border-radius: 5px;
-  }
-  @media only screen and (max-width: 600px) {
-    .row.d-lg-flex .col-md-12 {
-      padding-left: 0px !important;
-      padding-right: 0px !important;
-    }
-    .col-20 {
-      width: 100% !important;
-      border: 0px !important;
-    }
-    .mb-2.col-lg-12.float-left.jobsRow {
-      padding-bottom: 20px !important;
-      padding-top: 20px !important;
-    }
-    img.rounded-circle.nav-user-img.vertical-center.jobs, img.rounded-circle.nav-user-img.vertical-center.events {
-      margin: 0 auto;
-      float: none !important;
-    }
-    .p-40 {
-      padding-top: 0px !important;
-    }
-    .mt-40 {
-      margin-top: 0px !important;
-    }
-    .pr-b10 {
-      position: relative;
-      bottom: 0px;
-    }
-  }
-  @media screen and (max-width: 1500px) {
-    .col-widget {
-      width: 95%;
-      float: left;
-      padding: 0px 10px 0px 5px;
-    }
-  }
-  @media screen and (max-width: 1190px) {
-    div#calender_toolbar div {
-        width: 100%;
-    }
-  }
-  @media screen and (max-width: 1080px) {
-    div.fc-toolbar-chunk div.btn-group {
-      display: contents !important;
-    }
-  }
-  @media screen and (max-width: 600px) {
-    .card.p-20 {
-      padding-right: 0px !important;
-    }
-    .col-12.col-md-9.left-col.pr-0, .card.p-20 {
-      padding-left: 0px !important;
-      box-shadow: none !important;
-    }
-    .card, .card-body.mt-3 {
-      width: 100% !important;
-    }
-    #calender_toolbar {
-      display: block;
-      margin-bottom: 0px;
-    }
-    .stcs-print.cs-float-print {
-      width: 85px !important;
-      float: left;
-    }
-    .stcs-1.cs-float {
-        width: 60% !important;
-        float: left !important;
-    }
-  }
-  .fc-timeline-lane, .fc-resource {
-    height: 102px;
-  }
-  #calendar .fc-direction-ltr .fc-timeline-slot {
-    vertical-align: middle;
-    text-align: center;
-  }
-  #calendar .fc-timeline-slot-cushion{
-    margin: 0 auto;
-  }
-  .fc-daygrid-event:hover, .fc-timeline-event:hover{
-    cursor: pointer;
-  }
-  .fc-datagrid-cell-cushion{
-    width: 100%;
-  }
-  .fc-datagrid-cell-main{
-    text-align: center;
-  }
-  .recent-contacts-container{
-    overflow-y: scroll;
-    height: 400px;
-    overflow-x: hidden;
-  }
-  .fc-event-main{
-      white-space: nowrap !important;
-      min-height:34px !important;
-      overflow:hidden;
-  }
-  .fc .fc-daygrid-event {
-    padding: 6px !important;
-  }
-  .fc-event{
-    max-width: 200px !important;
-  }
-</style>
 <div class="wrapper" role="wrapper">
     <div class="row">
         <div class="col-12 col-md-9 left-col pr-0">
@@ -471,7 +51,7 @@ a.top-1 {
                                     <a class="btn-right-nav-hide-show show-right" style="color:#45a73c !important; display:none !important;" href="javascript:void(0);"><i class="fa fa-gear"></i> Right Nav</a>
                                     <div class="calender-toolbar" id="calender_toolbar">
                                         <div class="stcs-2 left">
-                                          <h3 class="page-title left">Schedule</h3>
+                                          <h3 class="page-title left">Schedule</h3>                                                                                    
                                         </div>
                                         <div class="stcs-cover left">
                                           <form id="frm_calender_filter_events" method="post">
@@ -783,6 +363,76 @@ a.top-1 {
     </div>
 </div>
 
+<!-- MODAL CREATE APPOINTMENT -->
+<div class="modal fade modal-enhanced" id="modal-create-appointment" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Create Appointment</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+          </div>
+            <form id="frm-create-appointment" method="post">
+                <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> When</label>
+                      <div class="row g-3">
+                        <div class="col-sm-8">
+                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date" placeholder="Date" aria-label="Date">
+                        </div>
+                        <div class="col-sm-4">
+                          <input type="text" name="appointment_time" class="form-control appointment-time" placeholder="Time" aria-label="Time">
+                        </div>
+                      </div>
+                  </div>  
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-address-card-o"></i> Which Employee</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                          <select name="appointment_user_id" id="appointment-user" class="form-control"></select>
+                        </div>
+                      </div>
+                  </div> 
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-user"></i> Which Customer</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                          <select name="appointment_customer_id" id="appointment-customer" class="form-control"></select>
+                        </div>
+                      </div>
+                  </div> 
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-list"></i> Appointment Type</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                          <select name="appointment_type_id" id="appointment-type form-control" class="form-control" style="border:solid 1px rgba(0,0,0,0.35);">
+                            <?php $start = 0; ?>
+                            <?php foreach($optionAppointmentTypes as $key => $value){ ?>
+                                <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                            <?php $start++;} ?>
+                          </select>
+                        </div>
+                      </div>
+                  </div>  
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-tag"></i> Tags</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                          <select name="appointment_tags" id="appointment-tags" multiple="multiple" class="form-control"></select>
+                        </div>
+                      </div>
+                  </div>                 
+                </div>
+                <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
+                  <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary" name="action" value="create_appointment">Save</button>
+                </div>
+            </form>
+      </div>
+  </div>
+</div>
+
 <!-- MODAL CREATE GOOGLE CALENDAR EVENT -->
 <div id="modalCreateGoogleEvent" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -915,7 +565,7 @@ a.top-1 {
         <div class="modal-content">
             <div class="modal-header">
                 <h4 style="" class="modal-title">Schedule</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>                
             </div>
             <div class="modal-body" style="padding-top: 0px; padding-bottom: 2px;">
                 <p>loading...</p>
@@ -970,6 +620,7 @@ a.top-1 {
 </style>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.js"></script>
 <script type="text/javascript" src="<?php echo $url->assets ?>/js/tooltip.min.js"></script>
 <script>
     var calendar;
@@ -1151,7 +802,7 @@ a.top-1 {
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
             headerToolbar: {
-            center: 'employeeTimeline,monthView,dayView,weekView,listView' // buttons for switching between views
+            center: 'employeeTimeline,monthView,dayView,threeDaysView,weekView,listView' // buttons for switching between views
           },
           themeSystem : 'bootstrap',
           eventDisplay: 'block',
@@ -1175,11 +826,33 @@ a.top-1 {
             listView: {
               type: 'listWeek',
               buttonText: 'List'
-            }
+            },
+            threeDaysView: {
+              type: 'timeGrid',
+              slotLabelFormat: [
+                { hour: 'numeric', minute: 'numeric', meridiem: true }
+              ],
+              expandRows: true,
+              buttonText: '3 days',
+              duration: { days: 3 },              
+              slotDuration: '00:15',
+              slotLabelInterval : '01:00'
+            },
+          },          
+          selectable: true,
+          select: function(info) {
+            console.log(info);
+            //alert('selected ' + info.startStr + ' to ' + info.endStr);
+            $(".appointment-date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
+            $(".appointment-time").val(moment(info.startStr).format('hh:mm A'));
+            $("#appointment-user").empty().trigger('change');
+            $("#appointment-customer").empty().trigger('change');
+            $("#appointment-tags").empty().trigger('change');
+            $("#modal-create-appointment").modal('show');
           },
           slotEventOverlap: false,
           resourceLabelDidMount: function(info) {
-            console.log(info);
+            //console.log(info);
             let img = document.createElement('img');
             img.src = info.resource.extendedProps.imageurl;
             img.setAttribute("class", "datagrid-image");
@@ -1193,9 +866,9 @@ a.top-1 {
                   element.find('.fc-event-title').html(event.title);
               },*/
           defaultDate: "<?php echo date('Y-m-d') ?>",
-            editable: true,
-            eventDrop: function(info) {
-              console.log(info.event);
+          editable: true,
+          eventDrop: function(info) {
+              //console.log(info.event);
               //alert(info.event.extendedProps.eventType);
               //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
               if( info.event.extendedProps.eventType != 'google_events' ){
@@ -1382,9 +1055,17 @@ a.top-1 {
   });
 
   $('.default-datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true
+      format: 'yyyy-mm-dd',      
+      autoclose: true,
   });
+
+  $('.appointment-datepicker').datepicker({
+      //format: 'yyyy-mm-dd',
+      format: 'DD, MM dd, yy',
+      autoclose: true,
+  });
+
+  $('.appointment-time').timepicker({'timeFormat': 'h:i A'});
 
   $("#btn-create-google-event").click(function(){
     var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
@@ -1596,6 +1277,163 @@ a.top-1 {
           templateSelection: formatRepoSelection
     });
 
+    $('#appointment-user').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            formatResult: function(item){ 
+                //console.log(item);
+                return '<div>'+item.FName + ' ' + item.LName +'<br /><small>'+item.email+'</small></div>';
+            },
+            cache: true
+          },
+          placeholder: 'Select User',
+          minimumInputLength: 0,
+          templateResult: formatRepoUser,
+          templateSelection: formatRepoSelectionUser
+    });
+
+    $('#appointment-customer').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select Customer',
+          minimumInputLength: 0,
+          templateResult: formatRepoCustomer,
+          templateSelection: formatRepoCustomerSelection
+    });
+
+    $('#appointment-tags').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_event_tags',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select Tags',
+          minimumInputLength: 0,
+          templateResult: formatRepoTag,
+          templateSelection: formatRepoTagSelection
+    });
+
+    function formatRepoTagSelection(repo) {
+        if( repo.name != null ){
+            return repo.name;      
+        }else{
+            return repo.text;
+        }
+      
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if( repo.first_name != null ){
+            return repo.first_name + ' ' + repo.last_name;      
+        }else{
+            return repo.text;
+        }
+      
+    }
+
+    function formatRepoTag(repo) {
+      if (repo.loading) {
+        return repo.text;
+      }
+
+      var $container = $(
+        '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.img_marker+'" /></div><div class="autocomplete-right">'+repo.name +'</div></div>'
+      );
+
+      return $container;
+    }
+
+    function formatRepoUser(repo) {
+      if (repo.loading) {
+        return repo.text;
+      }
+
+      var $container = $(
+        '<div><div class="autocomplete-left"><img class="autocomplete-img" src="'+repo.user_image+'" /></div><div class="autocomplete-right">'+repo.FName + ' ' + repo.LName +'<br /><small>'+repo.email+'</small></div></div>'
+      );
+
+      return $container;
+    }
+
+    function formatRepoCustomer(repo) {
+      if (repo.loading) {
+        return repo.text;
+      }
+
+      var $container = $(
+        '<div>'+repo.first_name + ' ' + repo.last_name +'<br /><small>'+repo.phone_h+' / '+repo.email+'</small></div>'
+      );
+
+      return $container;
+    }
+
     $('#google-assign-users').select2({
         ajax: {
             url: base_url + 'users/json_dropdown_user_list',
@@ -1677,5 +1515,44 @@ a.top-1 {
          }
       });
     }
+
+    $("#frm-create-appointment").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'calendar/_create_appointment';
+        $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#activate-email-blast").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      Swal.fire({
+                          title: 'Update Successful!',
+                          text: 'Email Campaign was successfully activated',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                              window.location.href= base_url + 'email_campaigns/payment_details';
+                          }
+                      });
+                  }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot activate campaign.',
+                        text: o.msg
+                      });
+                  }
+               }
+            });
+        }, 1000);
+    });
 
 </script>

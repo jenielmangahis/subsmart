@@ -391,6 +391,7 @@
     max-width: 80px;
     display: block;
     margin: auto;
+    cursor: pointer;
 }
 
 .overview-widget.shortcuts .img-button-links .text.bold {

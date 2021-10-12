@@ -29,6 +29,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         right: 0 !important;
         transform: none !important;
     }
+    #registers-table tbody tr.hover {
+        background-color: #f8f9fa;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

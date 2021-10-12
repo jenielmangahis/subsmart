@@ -73,4 +73,41 @@ class AccountingRules extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $record]);
     }
+
+    public function apiBatchEditRule()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['ids' => $ids] = $payload;
+        unset($payload['ids']);
+
+        $rules = array_map(function ($id) use ($payload) {
+            return array_merge(['id' => $id], $payload);
+        }, $ids);
+        $this->db->update_batch('accounting_rules', $rules, 'id');
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $rules]);
+    }
+
+    public function apiBatchDeleteRule()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['ids' => $ids] = $payload;
+
+        $this->db->where_in('id', $ids);
+        $this->db->delete('accounting_rules');
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $ids]);
+    }
 }

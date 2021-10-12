@@ -126,15 +126,29 @@ class Chart_of_accounts_model extends MY_Model {
 		$company_id = logged('company_id');
 		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);
 		$this->db->where_in('accounting_chart_of_accounts.active', $status);
-		$this->db->where('accounting_chart_of_accounts.parent_acc_id', null);
+
+		if($orderColumn !== 'nsmartrac_balance') {
+			$this->db->where('accounting_chart_of_accounts.parent_acc_id', null);
+		}
 
 		$this->db->or_where('accounting_chart_of_accounts.company_id', $company_id);
 		$this->db->where_in('accounting_chart_of_accounts.active', $status);
-		$this->db->where('accounting_chart_of_accounts.parent_acc_id', 0);
+
+		if($orderColumn !== 'nsmartrac_balance') {
+			$this->db->where('accounting_chart_of_accounts.parent_acc_id', 0);
+		}
+
+		$this->db->or_where('accounting_chart_of_accounts.company_id', $company_id);
+		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+
+		if($orderColumn !== 'nsmartrac_balance') {
+			$this->db->where('accounting_chart_of_accounts.parent_acc_id', '');
+		}
 
 		switch($orderColumn) {
 			case 'nsmartrac_balance' :
 				$this->db->order_by('balance', $order);
+				$this->db->order_by('name', 'asc');
 			break;
 			case 'name' :
 				$this->db->order_by('name', $order);
@@ -143,6 +157,7 @@ class Chart_of_accounts_model extends MY_Model {
 				$this->db->select('accounting_chart_of_accounts.*, account.account_name');
 				$this->db->join('account', 'account.id = accounting_chart_of_accounts.account_id');
 				$this->db->order_by('account.account_name', $order);
+				$this->db->order_by('accounting_chart_of_accounts.name', 'asc');
 			break;
 		}
 

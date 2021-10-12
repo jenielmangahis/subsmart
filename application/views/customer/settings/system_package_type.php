@@ -20,8 +20,8 @@
                             <td><?= $type->name; ?></td>
                             <td><?= date("d-m-Y h:i A",strtotime($type->date_created)); ?></td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-default" title="Edit Sales Area" data-toggle="tooltip">
-                                    <i class="fa fa-pencil"></i> Edit
+                                <a href="javascript:void(0);" class="btn btn-sm btn-default edit-system-package" data-id="<?= $type->id; ?>" data-name="<?= $type->name; ?>"  title="Edit System Package" data-toggle="tooltip">
+                                <i class="fa fa-pencil"></i> Edit
                                 </a>
                                 <button id="<?= $type->id; ?>" class="btn btn-sm btn-default delete_spt">
                                     <i class="fa fa-trash"></i> Delete

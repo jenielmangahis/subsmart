@@ -39,3 +39,7 @@ $(document).on("change", ".overview-widget.income-overtime .filter-section selec
         },
     });
 });
+
+$(document).on("click", ".overview-widget.shortcuts .img-button-links .recurring-sales-receipt", function(event) {
+    $("#addsalesreceiptModal .modal-footer-check .middle-links.end a").trigger("click");
+});

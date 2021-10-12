@@ -132,20 +132,20 @@
                 <table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">ACTIVITY</th>
-                            <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">ACTIVITY</th>
-                            <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
+                            <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">ITEMS</th>
+                            <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">QUANTITY</th>
+                            <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">PRICE</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Collections</td>
-                            <td></td>
+                            <td>1</td>
                             <td>1</td>
                         </tr>
                         <tr>
                             <td>Commission</td>
-                            <td></td>
+                            <td>1</td>
                             <td>1</td>
                         </tr>
                     </tbody>
