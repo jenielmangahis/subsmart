@@ -231,3 +231,25 @@ $colorError: #d52b1e;
     color: $colorError;
   }
 }
+
+.rulesDropdown {
+  margin-bottom: 16px;
+
+  &__btn {
+    border: 3px solid rgb(107, 108, 114);
+
+    &::after {
+      display: inline-block;
+      position: relative;
+      transform: unset;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: #d8d8d8;
+      color: #333;
+      border: 3px solid rgb(107, 108, 114) !important;
+    }
+  }
+}

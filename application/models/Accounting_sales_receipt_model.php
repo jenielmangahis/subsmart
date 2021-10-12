@@ -167,4 +167,12 @@ class Accounting_sales_receipt_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function additem_details($data)
+    {
+        $query = $this->db->insert('sales_receipt_items', $data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
 }

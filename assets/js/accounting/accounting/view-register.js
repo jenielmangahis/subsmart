@@ -751,11 +751,89 @@ $(document).on('click', '#registers-table thead tr a', function() {
     $('#registers-table').DataTable().ajax.reload();
 });
 
-// $(document).on('click', '#registers-table tbody tr', function() {
-//     $(this).children('td').each(function() {
-        
-//     });
-// });
+$(document).on('mouseenter', '#registers-table tbody tr', function() {
+    if($('#show_in_one_line').prop('checked') === false) {
+        if($(this).hasClass('odd')) {
+            $(this).next().addClass('hover');
+        } else {
+            $(this).prev().addClass('hover');
+        }
+    }
+});
+
+$(document).on('mouseleave', '#registers-table tbody tr', function() {
+    if($('#show_in_one_line').prop('checked') === false) {
+        if($(this).hasClass('odd')) {
+            $(this).next().removeClass('hover');
+        } else {
+            $(this).prev().removeClass('hover');
+        }
+    }
+});
+
+$(document).on('click', '#registers-table tbody tr', function() {
+    if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1) {
+        var count = 0;
+        $(this).children('td').each(function() {
+            var current = $(this).html();
+
+            switch(columns[count].name) {
+                case 'date' :
+                    $(this).html(`<input type="text" class="form-control" value="${current}">`);
+                    $(this).find('input').datepicker({
+                        uiLibrary: 'bootstrap'
+                    });
+                break;
+                case 'ref_no' :
+                    $(this).html(`<input type="text" class="form-control" value="${current}">`);
+                break;
+                case 'type' :
+                    $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
+                break;
+                case 'payee' :
+                    var rowData = $('#registers-table').DataTable().row($(this)).data();
+                    $(this).html(`<select class="form-control"><option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option></select>`);
+                    $(this).find('select').select2();
+                break;
+                case 'account' :
+                    var rowData = $('#registers-table').DataTable().row($(this)).data();
+                    $(this).html(`<select class="form-control"><option value="">${current}</option></select>`);
+                    $(this).find('select').select2();
+                break;
+                case 'payment' :
+                    if(current === '') {
+                        $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
+                    } else {
+                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '').replaceAll('-$', '')}">`);
+                    }
+                break;
+                case 'deposit' :
+                    if(current === '') {
+                        $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Deposit" disabled>`);
+                    } else {
+                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}">`);
+                    }
+                break;
+                case 'reconcile_status' :
+                    $(this).html('');
+                break;
+                case 'banking_status' :
+                    $(this).html('');
+                break;
+                case 'attachments' :
+                    $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
+                break;
+                case 'tax' :
+                    $(this).html('');
+                break;
+                case 'balance' :
+                    $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" disabled>`);
+                break;
+            }
+            count++;
+        });
+    }
+});
 
 function col(el) {
     var el = $(el);

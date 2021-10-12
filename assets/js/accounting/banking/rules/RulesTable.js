@@ -2,6 +2,9 @@ export class RulesTable {
   constructor($table) {
     this.$table = $table;
 
+    this.$batchActions = $("#batchActions");
+    this.$batchActionsBtn = this.$batchActions.find(".btn");
+
     this.loadDeps().then(() => {
       this.setUpTable();
     });
@@ -12,8 +15,6 @@ export class RulesTable {
   }
 
   setUpTable() {
-    console.clear();
-
     const actions = {
       makeActive: async ({ id }) => {
         await this.api.editRate(id, { is_active: 1 });
@@ -21,6 +22,30 @@ export class RulesTable {
       },
       makeInactive: async ({ id }) => {
         await this.api.editRate(id, { is_active: 0 });
+        window.location.reload();
+      },
+      batchMakeActive: async (ids) => {
+        await this.api.batchEditRate(ids, { is_active: 1 });
+        window.location.reload();
+      },
+      batchMakeInactive: async (ids) => {
+        await this.api.batchEditRate(ids, { is_active: 0 });
+        window.location.reload();
+      },
+      batchDelete: async (ids) => {
+        const response = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#2ca01c",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete!",
+        });
+
+        if (!response.isConfirmed) return;
+
+        await this.api.batchDeleteRate(ids);
         window.location.reload();
       },
     };
@@ -169,30 +194,41 @@ export class RulesTable {
       },
     });
 
-    table.on("click", "th .rulesTable__checkbox", function () {
-      const rows = table.rows({ search: "applied" }).nodes();
-      $("input[type=checkbox]", rows).prop("checked", this.checked);
+    this.$batchActions.on("click", ".dropdown-item", async (event) => {
+      const $target = $(event.target);
+      const action = $target.data("action");
+      const func = actions[action];
 
-      $(rows)[this.checked ? "addClass" : "removeClass"](
-        "rulesTable__row--selected"
-      );
+      if (!func) return;
+
+      const $selected = this.$table.find(".rulesTable__row--selected");
+      const ids = [...$selected].map((row) => row.dataset.id);
+      await actions[action](ids);
+    });
+
+    table.on("click", "th .rulesTable__checkbox", (event) => {
+      const isChecked = event.target.checked;
+      const rows = table.rows({ search: "applied" }).nodes();
+      $("input[type=checkbox]", rows).prop("checked", isChecked);
+
+      const func = isChecked ? "addClass" : "removeClass";
+      $(rows)[func]("rulesTable__row--selected");
+      this.onCheckboxStateChange();
     });
 
     table.on(
       "change",
       "[role=row] .rulesTable__checkbox:not(.rulesTable__checkbox--primary)",
-      function () {
-        const $parent = $(this).closest("tr");
+      (event) => {
+        const $parent = $(event.target).closest("tr");
 
-        if (this.checked) {
+        if (event.target.checked) {
           $parent.addClass("rulesTable__row--selected");
-          return;
+        } else {
+          $parent.removeClass("rulesTable__row--selected");
         }
 
-        const $table = $(this.closest("table"));
-        const $mainCheckbox = $table.find("th .rulesTable__checkbox").get(0);
-        $mainCheckbox.indeterminate = true;
-        $parent.removeClass("rulesTable__row--selected");
+        this.onCheckboxStateChange();
       }
     );
 
@@ -212,5 +248,31 @@ export class RulesTable {
       if (!func) return;
       await actions[action](row, table, event);
     });
+  }
+
+  onCheckboxStateChange() {
+    const $rows = this.$table.find("tr[data-id]");
+    const $selected = this.$table.find(".rulesTable__row--selected");
+    const $mainCheckbox = this.$table.find("th .rulesTable__checkbox").get(0);
+
+    if ($selected.length === 0) {
+      this.$batchActions.addClass("d-none");
+    } else {
+      this.$batchActions.removeClass("d-none");
+    }
+
+    if ($selected.length === $rows.length) {
+      $mainCheckbox.indeterminate = false;
+      $mainCheckbox.checked = true;
+      return;
+    }
+
+    if ($selected.length >= 1) {
+      $mainCheckbox.indeterminate = true;
+      return;
+    }
+
+    $mainCheckbox.indeterminate = false;
+    $mainCheckbox.checked = false;
   }
 }

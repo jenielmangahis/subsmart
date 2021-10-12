@@ -11,6 +11,10 @@ var columns = [
             } else {
                 $(td).html(cellData+' (deleted)');
             }
+
+            if(rowData.hasOwnProperty('parent_acc')) {
+                $(td).append(`<p class="m-0 font-italic text-muted">Sub-account of ${rowData.parent_acc}</p>`);
+            }
         }
     },
     {

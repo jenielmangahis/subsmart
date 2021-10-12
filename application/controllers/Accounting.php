@@ -4228,31 +4228,59 @@ class Accounting extends MY_Controller
             }
 
             if ($addQuery > 0) {
-                $a = $this->input->post('items');
-                $b = $this->input->post('item_type');
-                $d = $this->input->post('quantity');
-                $f = $this->input->post('price');
-                $g = $this->input->post('discount');
-                $h = $this->input->post('tax');
-                $ii = $this->input->post('total');
+                // $a = $this->input->post('items');
+                // $b = $this->input->post('item_type');
+                // $d = $this->input->post('quantity');
+                // $f = $this->input->post('price');
+                // $g = $this->input->post('discount');
+                // $h = $this->input->post('tax');
+                // $ii = $this->input->post('total');
 
-                $i = 0;
-                foreach ($a as $row) {
-                    $data['item'] = $a[$i];
-                    $data['item_type'] = $b[$i];
-                    $data['qty'] = $d[$i];
-                    $data['cost'] = $f[$i];
-                    $data['discount'] = $g[$i];
-                    $data['tax'] = $h[$i];
-                    $data['total'] = (($d[$i] * $f[$i]) + $h[$i]) - $g[$i];
-                    $data['type'] = 'Sales Receipt';
-                    $data['type_id'] = $addQuery;
-                    // $data['status'] = '1';
-                    $data['created_at'] = date("Y-m-d H:i:s");
-                    $data['updated_at'] = date("Y-m-d H:i:s");
-                    $additem_details_id = $this->accounting_invoices_model->additem_details($data);
-                    $i++;
-                }
+                // $i = 0;
+                // foreach ($a as $row) {
+                //     $data['item'] = $a[$i];
+                //     $data['item_type'] = $b[$i];
+                //     $data['qty'] = $d[$i];
+                //     $data['cost'] = $f[$i];
+                //     $data['discount'] = $g[$i];
+                //     $data['tax'] = $h[$i];
+                //     $data['total'] = (($d[$i] * $f[$i]) + $h[$i]) - $g[$i];
+                //     $data['type'] = 'Sales Receipt';
+                //     $data['type_id'] = $addQuery;
+                //     // $data['status'] = '1';
+                //     $data['created_at'] = date("Y-m-d H:i:s");
+                //     $data['updated_at'] = date("Y-m-d H:i:s");
+                //     $additem_details_id = $this->accounting_invoices_model->additem_details($data);
+                //     $i++;
+                // } //change item details
+
+                 //echo json_encode($addQuery);
+
+                 
+                 $a          = $this->input->post('itemid');
+                //  $packageID  = $this->input->post('packageID');
+                 $quantity   = $this->input->post('quantity');
+                 $price      = $this->input->post('price');
+                 $h          = $this->input->post('tax');
+                 $discount   = $this->input->post('discount');
+                 $total      = $this->input->post('total');
+ 
+                 $i = 0;
+                 foreach($a as $row){
+                     $data['items_id']       = $a[$i];
+                    //  $data['package_id ']    = $packageID[$i];
+                     $data['qty']            = $quantity[$i];
+                     $data['cost']           = $price[$i];
+                     $data['tax']            = $h[$i];
+                     $data['discount']       = $discount[$i];
+                     $data['total']          = $total[$i];
+                     $data['sales_receipt_id '] = $addQuery;
+                     $addQuery2 = $this->accounting_sales_receipt_model->additem_details($data);
+                     $i++;
+                 }
+
+                
+
                 $sales_receipt_file_name = 'sales_receipt_' . $addQuery . ".pdf";
                 $packaging_slip_file_name = 'packaging_slip_' . $addQuery . ".pdf";
                 $this->create_pdf_sales_receipt($sales_receipt_file_name, $customer_id, $addQuery, "print_sales_receipt");

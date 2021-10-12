@@ -371,7 +371,7 @@ function setitemsr(obj, title, price, discount, itemid) {
     jQuery(obj).parent().parent().find(".getItemssr").val(title);
     jQuery(obj).parent().parent().parent().find(".pricesr").val(price);
     jQuery(obj).parent().parent().parent().find(".discountsr").val(discount);
-    jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+    jQuery(obj).parent().parent().parent().find(".itemidSR").val(itemid);
     jQuery(obj).parent().parent().parent().find(".quantitysr").val(1);
     jQuery(obj).parent().parent().parent().find(".tax_change").val((price * 7.5) / 100);
     jQuery(obj).parent().parent().parent().find(".tax_hide").val(7.5);
