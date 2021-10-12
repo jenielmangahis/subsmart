@@ -791,6 +791,7 @@ class Workcalender extends MY_Controller
         $this->load->model('ColorSettings_model');
         $this->load->model('DealsBookings_model');
         $this->load->model('ColorSettings_model');
+        $this->load->model('Appointment_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -826,8 +827,8 @@ class Workcalender extends MY_Controller
                 if ($event->event_description != '') {
                     if ($event->employee_id > 0) {
                         $starttime = $event->start_date . " " . $event->start_time;
-                        $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                        $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                        $start_date_time = date('Y-m-d\TH:i:s', strtotime($event->start_date . " " . $event->start_time));
+                        $start_date_end  = date('Y-m-d\TH:i:s', strtotime($event->end_date . " " . $event->end_time));
 
                         $title = $event->start_time . " - " . $event->end_time;
                         /*$custom_html = "<i class='fa fa-calendar'></i> " . $event->start_time . " - " . $event->end_time . "<br /><small>" . $event->event_type . "</small><br /><small>" . $event->FName . ' ' . $event->LName . "</small><br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . "</small>";*/
@@ -883,6 +884,29 @@ class Workcalender extends MY_Controller
                     }*/
                 }
             }
+        }
+
+        //Appointments
+        $appointments = $this->Appointment_model->getAllByCompany($company_id);
+        foreach ($appointments as $a) {
+            $starttime = $a->appointment_date . " " . $a->appointment_time;
+            $start_date_time = date('Y-m-d\TH:i:s', strtotime($a->appointment_date . " " . $a->appointment_time));
+            $start_date_end  = $start_date_time;
+            $backgroundColor = "#38a4f8";
+
+            $custom_html = date("F j, Y, g:i a", strtotime($a->appointment_date . " " . $a->appointment_time)) . "<br /><small>" . $a->customer_name . " - " . $a->appointment_type . "</small>";
+
+            $resources_user_events[$inc]['eventId'] = $a->id;
+            $resources_user_events[$inc]['eventType'] = 'appointments';
+            $resources_user_events[$inc]['resourceId'] = 'appointment' . $a->user_id;
+            $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = $start_date_time;
+            $resources_user_events[$inc]['end'] = $start_date_end;
+            $resources_user_events[$inc]['starttime'] = $start_date_time;
+            $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
+
+            $inc++;
         }
 
         //Google Events
@@ -1810,6 +1834,45 @@ class Workcalender extends MY_Controller
         }
 
         $json_data = ['is_success' => $is_success];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_create_appointment()
+    {
+        $this->load->model('Appointment_model');
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $is_success = false;
+        $message    = 'Cannot create appointment';
+
+        if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type'] != '') {
+
+            $data_appointment = [
+                'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
+                'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
+                'user_id' => $post['appointment_user_id'],
+                'prof_id' => $post['appointment_customer_id'],
+                'company_id' => $company_id,
+                'tag_ids' => implode(",", $post['appointment_tags']),
+                'appointment_type' => $post['appointment_type'],
+                'created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->Appointment_model->create($data_appointment);
+
+            $is_success = true;
+            $message    = '';
+
+        } else {
+            $message = 'Required fields cannot be empty';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
         echo json_encode($json_data);
     }
 }

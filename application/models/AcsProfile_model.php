@@ -6,7 +6,7 @@ class AcsProfile_model extends MY_Model
 
     public $table = 'acs_profile';
 
-    public function getAllByCompanyId($company_id, $conditions=array())
+    public function getAllByCompanyId($company_id, $conditions=array(), $filters=array())
     {
 
         $this->db->select('*');
@@ -15,7 +15,17 @@ class AcsProfile_model extends MY_Model
 
         if( !empty($conditions) ){
             foreach( $conditions as $c ){
-                $this->db->where($c['field'], $c['value']);                
+                if( $c['field'] != '' && $c['value'] != '' ){
+                    $this->db->where($c['field'], $c['value']);    
+                }
+                
+            }
+        }
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->like('first_name', $filters['search'], 'both');
+                $this->db->or_like('last_name', $filters['search'], 'both');
             }
         }
 
