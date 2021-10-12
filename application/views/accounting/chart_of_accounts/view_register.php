@@ -8,6 +8,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-color: #32243D;
         border: 1px solid #32243D;
     }
+    .btn-transparent:hover {
+        background: #d4d7dc !important;
+        border-color: #6B6C72 !important;
+    }
+    .btn-transparent {
+        color: #6B6C72 !important;
+    }
+    .btn-transparent:focus {
+        border-color: #6B6C72 !important;
+    }
     #registers-table .btn-group .btn:hover, #registers-table .btn-group .btn:focus {
         color: unset;
     }
@@ -29,7 +39,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         right: 0 !important;
         transform: none !important;
     }
-    #registers-table tbody tr.hover {
+    #registers-table tbody tr.hover, #registers-table tbody tr.editting, #registers-table tbody tr.action-row {
         background-color: #f8f9fa;
     }
 </style>

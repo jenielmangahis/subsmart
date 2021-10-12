@@ -48,7 +48,11 @@ function setColumns() {
             name: 'payment',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 if(cellData !== '') {
-                    $(td).html(`$${cellData}`);
+                    if(cellData.includes('-')) {
+                        $(td).html(cellData.replaceAll('-', '-$'));
+                    } else {
+                        $(td).html(`$${cellData}`);
+                    }
                 }
             }
         },
@@ -57,7 +61,11 @@ function setColumns() {
             name: 'deposit',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 if(cellData !== '') {
-                    $(td).html(`$${cellData}`);
+                    if(cellData.includes('-')) {
+                        $(td).html(cellData.replaceAll('-', '-$'));
+                    } else {
+                        $(td).html(`$${cellData}`);
+                    }
                 }
             }
         },
@@ -128,7 +136,11 @@ function setColumns() {
             name: 'charge',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 if(cellData !== '') {
-                    $(td).html(`$${cellData}`);
+                    if(cellData.includes('-')) {
+                        $(td).html(cellData.replaceAll('-', '-$'));
+                    } else {
+                        $(td).html(`$${cellData}`);
+                    }
                 }
             }
         };
@@ -138,7 +150,11 @@ function setColumns() {
             name: 'payment',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 if(cellData !== '') {
-                    $(td).html(`$${cellData}`);
+                    if(cellData.includes('-')) {
+                        $(td).html(cellData.replaceAll('-', '-$'));
+                    } else {
+                        $(td).html(`$${cellData}`);
+                    }
                 }
             }
         };
@@ -150,7 +166,11 @@ function setColumns() {
             name: type === 'Asset' ? 'decrease' : 'increase',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 if(cellData !== '') {
-                    $(td).html(`$${cellData}`);
+                    if(cellData.includes('-')) {
+                        $(td).html(cellData.replaceAll('-', '-$'));
+                    } else {
+                        $(td).html(`$${cellData}`);
+                    }
                 }
             }
         };
@@ -160,7 +180,11 @@ function setColumns() {
             name: type === 'Asset' ? 'increase' : 'decrease',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 if(cellData !== '') {
-                    $(td).html(`$${cellData}`);
+                    if(cellData.includes('-')) {
+                        $(td).html(cellData.replaceAll('-', '-$'));
+                    } else {
+                        $(td).html(`$${cellData}`);
+                    }
                 }
             }
         };
@@ -336,7 +360,11 @@ $('#show_in_one_line').on('change', function(e) {
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     if(cellData !== '') {
-                        $(td).html(`$${cellData}`);
+                        if(cellData.includes('-')) {
+                            $(td).html(cellData.replaceAll('-', '-$'));
+                        } else {
+                            $(td).html(`$${cellData}`);
+                        }
                     }
                 }
             },
@@ -345,7 +373,11 @@ $('#show_in_one_line').on('change', function(e) {
                 name: 'deposit',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     if(cellData !== '') {
-                        $(td).html(`$${cellData}`);
+                        if(cellData.includes('-')) {
+                            $(td).html(cellData.replaceAll('-', '-$'));
+                        } else {
+                            $(td).html(`$${cellData}`);
+                        }
                     }
                 }
             },
@@ -771,13 +803,63 @@ $(document).on('mouseleave', '#registers-table tbody tr', function() {
     }
 });
 
+$(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', function() {
+    if($('#show_in_one_line').prop('checked')) {
+        var rowData = $('#registers-table').DataTable().row($('#registers-table tbody tr.editting')).data();
+        $('#registers-table tbody tr.editting td').each(function() {
+            var el = $(this);
+            $.each(rowData, function(key, value) {
+                if(key === columns[el.index()].name) {
+                    el.html(value);
+                    if(key === 'payment' || key === 'deposit' || key === 'charge' || key === 'increase' || key === 'decrease') {
+                        if(value !== '') {
+                            if(value.includes('-')) {
+                                el.html(value.replaceAll('-', '-$'));
+                            } else {
+                                el.html(`$${value}`);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    
+        $('#registers-table tbody tr.editting').removeClass('editting');
+        $('#registers-table tbody tr.action-row').remove();
+    }
+});
+
 $(document).on('click', '#registers-table tbody tr', function() {
-    if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1) {
-        var count = 0;
+    if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1 && !$(this).hasClass('action-row')) {
+        if($('#registers-table tbody tr.editting').length > 0) {
+            $('#registers-table tbody tr.editting').next().find('#cancel-edit').trigger('click');
+        }
+
+        $(this).addClass('editting');
+        var colCount = $(this).children('td').length;
+        var row = '<tr class="action-row">';
+        row += `<td colspan="${colCount}">
+            <div class="row">
+                <div class="col-6 d-flex align-items-center">
+                    <h6 class="m-0">
+                        <i class="fa fa-paperclip"></i> <a href="#" class="text-info">Add Attachment</a>
+                    </h6>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-success float-right">Save</button>
+                    <button class="btn btn-transparent float-right mr-1" id="cancel-edit">Cancel</button>
+                    <button class="btn btn-transparent float-right mr-1">Edit</button>
+                    <button class="btn btn-transparent float-right mr-1">Delete</button>
+                </div>
+            </div>
+        </td>`;
+        row += '</tr>';
+
+        $(row).insertAfter(this);
         $(this).children('td').each(function() {
             var current = $(this).html();
 
-            switch(columns[count].name) {
+            switch(columns[$(this).index()].name) {
                 case 'date' :
                     $(this).html(`<input type="text" class="form-control" value="${current}">`);
                     $(this).find('input').datepicker({
@@ -830,7 +912,6 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" disabled>`);
                 break;
             }
-            count++;
         });
     }
 });
