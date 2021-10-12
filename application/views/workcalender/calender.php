@@ -406,7 +406,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-list"></i> Appointment Type</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                          <select name="appointment_type_id" id="appointment-type form-control" class="form-control" style="border:solid 1px rgba(0,0,0,0.35);">
+                          <select name="appointment_type" id="appointment-type form-control" class="form-control" style="border:solid 1px rgba(0,0,0,0.35);">
                             <?php $start = 0; ?>
                             <?php foreach($optionAppointmentTypes as $key => $value){ ?>
                                 <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
@@ -419,14 +419,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-tag"></i> Tags</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                          <select name="appointment_tags" id="appointment-tags" multiple="multiple" class="form-control"></select>
+                          <select name="appointment_tags[]" id="appointment-tags" multiple="multiple" class="form-control"></select>
                         </div>
                       </div>
                   </div>                 
                 </div>
                 <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
                   <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-primary" name="action" value="create_appointment">Save</button>
+                  <button type="submit" class="btn btn-primary btn-create-appointment" name="action" value="create_appointment">Schedule</button>
                 </div>
             </form>
       </div>
@@ -838,10 +838,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               slotDuration: '00:15',
               slotLabelInterval : '01:00'
             },
+            displayEventEnd: true,
+            allDaySlot: false,
+            //timeFormat: 'h(:mm)a'
           },          
           selectable: true,
           select: function(info) {
-            console.log(info);
+            //console.log(info);
             //alert('selected ' + info.startStr + ' to ' + info.endStr);
             $(".appointment-date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
             $(".appointment-time").val(moment(info.startStr).format('hh:mm A'));
@@ -865,7 +868,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 alert(event.title);
                   element.find('.fc-event-title').html(event.title);
               },*/
-          defaultDate: "<?php echo date('Y-m-d') ?>",
+          defaultDate: "<?php echo date('Y-m-d'); ?>",
           editable: true,
           eventDrop: function(info) {
               //console.log(info.event);
@@ -1520,19 +1523,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         e.preventDefault();
 
         var url = base_url + 'calendar/_create_appointment';
-        $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        $(".btn-create-appointment").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
         setTimeout(function () {
             $.ajax({
                type: "POST",
                url: url,
                dataType: "json",
-               data: $("#activate-email-blast").serialize(),
+               data: $("#frm-create-appointment").serialize(),
                success: function(o)
                {
                   if( o.is_success ){
+                      $("#modal-create-appointment").modal('hide');
                       Swal.fire({
-                          title: 'Update Successful!',
-                          text: 'Email Campaign was successfully activated',
+                          title: 'Success',
+                          text: 'Appointment was successfully created.',
                           icon: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#32243d',
@@ -1540,16 +1544,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           confirmButtonText: 'Ok'
                       }).then((result) => {
                           if (result.value) {
-                              window.location.href= base_url + 'email_campaigns/payment_details';
+                            //location.reload();    
+                            
+                            var calendarEl = document.getElementById('calendar');
+                            var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+                            var events = <?php echo json_encode($events) ?>;
+                            render_calender(calendarEl, timeZoneSelectorEl, events);
                           }
                       });
                   }else{
                       Swal.fire({
                         icon: 'error',
-                        title: 'Cannot activate campaign.',
+                        title: 'Cannot save data.',
                         text: o.msg
                       });
                   }
+
+                  $(".btn-create-appointment").html('Schedule');
                }
             });
         }, 1000);

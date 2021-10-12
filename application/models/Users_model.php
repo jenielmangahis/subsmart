@@ -129,11 +129,17 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
-    public function getCompanyUsers($company_id)
+    public function getCompanyUsers($company_id, $filters=array())
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->like('FName', $filters['search'], 'both');
+                $this->db->or_like('LName', $filters['search'], 'both');
+            }
+        }
         $query = $this->db->get();
         return $query->result();
     }
