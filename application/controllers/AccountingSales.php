@@ -497,10 +497,9 @@ SQL;
             $yearQuarter = "Q".ceil($month / 3);
             $income_per_quarter[$yearQuarter] +=$payment->amount;
         }
-        ksort($income_per_day);
-        ksort($income_per_month);
-        ksort($income_per_quarter);
-
+        // ksort($income_per_day);
+        // ksort($income_per_month);
+        // ksort($income_per_quarter);
         $last_start_date = date("Y-m-d",strtotime("-1 year",strtotime($start_date)));
         $last_end_date = date("Y-m-d",strtotime("-1 year",strtotime($end_date)));
         $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id(getLoggedCompanyID(), $last_start_date, $last_end_date);
@@ -521,6 +520,10 @@ SQL;
             $yearQuarter = "Q".ceil($month / 3);
             $last_income_per_quarter[$yearQuarter] +=$payment->amount;
         }
+
+        // ksort($last_income_per_day);
+        // ksort($last_income_per_month);
+        // ksort($last_income_per_quarter);
 
         $data = new stdClass();
         $data->current_income=$current_income;

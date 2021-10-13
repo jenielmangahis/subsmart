@@ -56,3 +56,17 @@ export async function batchDeleteRate(ids) {
 
   return await response.json();
 }
+
+export async function editRulePriorities(payload) {
+  const endpoint = `${window.prefixURL}/AccountingRules/apiEditRulePriorities`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return await response.json();
+}

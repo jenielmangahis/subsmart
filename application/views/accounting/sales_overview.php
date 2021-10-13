@@ -175,8 +175,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									<?php
                                     }
                                     ?>
-									<div
-										class="<?php if ($invoice_needs_attention) {
+									<div class="<?php if ($invoice_needs_attention) {
                                         echo "col-md-9";
                                     } else {
                                         echo "col-md-12";
@@ -306,7 +305,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</div>
 								<div class="stepper-container">
 									<div class="step">
-										<div class="icon text-center <?=($deposit_current_status +1 == 0) ? "success" : '';?>">
+										<div
+											class="icon text-center <?=($deposit_current_status +1 == 0) ? "success" : '';?>">
 											<i class="fa fa<?=($deposit_current_status >= 0) ? "-check" : '';?>-circle"
 												aria-hidden="true"></i>
 										</div>
@@ -321,7 +321,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</div>
 									</div>
 									<div class="step">
-										<div class="icon text-center <?=($deposit_current_status +1 == 1) ? "success" : '';?>">
+										<div
+											class="icon text-center <?=($deposit_current_status +1 == 1) ? "success" : '';?>">
 											<i class="fa fa<?=($deposit_current_status >= 1) ? "-check" : '';?>-circle"
 												aria-hidden="true"></i>
 										</div>
@@ -345,12 +346,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 												Partially Paid
 											</div>
 											<div class="sub text-center">
-												
+
 											</div>
 										</div>
 									</div>
 									<div class="step">
-										<div class="icon text-center <?=($deposit_current_status +1 == 3) ? "success" : '';?>">
+										<div
+											class="icon text-center <?=($deposit_current_status +1 == 3) ? "success" : '';?>">
 											<i class="fa fa<?=($deposit_current_status >= 3) ? "-check" : '';?>-circle"
 												aria-hidden="true"></i>
 										</div>
@@ -573,7 +575,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 									</div>
 									<div class="row">
 										<div class="col-md-6">
-											<div class="img" onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'">
+											<div class="img"
+												onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'">
 												<img src="<?=base_url('assets/img/accounting/overview/new-invoice.png')?>"
 													alt="">
 											</div>
@@ -604,7 +607,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										<div class="col-md-6">
 											<div class="img">
 												<img src="<?=base_url('assets/img/accounting/overview/recurring-sales-receipt.png')?>"
-													alt="" data-toggle="modal" data-target="#addsalesreceiptModal" class="recurring-sales-receipt">
+													alt="" data-toggle="modal" data-target="#addsalesreceiptModal"
+													class="recurring-sales-receipt">
 											</div>
 											<div class="text bold">
 												Recurring sales receipt
@@ -790,58 +794,102 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 
 <script>
-	window.onload = function() {
+var chart;
+var graph_data={};
+var graph_data_prev={};
+var income_per_day;
+var income_per_month;
+var income_per_quarter;
+var last_income_per_day;
+var last_income_per_month;
+var last_income_per_quarter;
 
-		var chart = new CanvasJS.Chart("chartContainer1", {
+	window.onload = function() {
+		chart = new CanvasJS.Chart("chartContainer1", {
 			animationEnabled: true,
 			theme: "light2",
 			title: {
 				text: ""
 			},
+			axisX: {
+				valueFormatString: "DD MMM",
+				crosshair: {
+					enabled: true,
+					snapToDataPoint: true
+				}
+			},
+			axisY: {
+				title: "",
+				includeZero: true,
+				crosshair: {
+					enabled: true
+				}
+			},
+			toolTip: {
+				shared: true
+			},
+			legend: {
+				cursor: "pointer",
+				verticalAlign: "bottom",
+				horizontalAlign: "center",
+				dockInsidePlotArea: false,
+				itemclick: toogleDataSeries
+			},
 			data: [{
-				type: "line",
-				indexLabelFontSize: 16,
-				dataPoints: [{
-						y: 450
-					},
-					{
-						y: 414
-					},
-					{
-						y: 520
-					},
-					{
-						y: 460
-					},
-					{
-						y: 450
-					},
-					{
-						y: 500
-					},
-					{
-						y: 480
-					},
-					{
-						y: 480
-					},
-					{
-						y: 410
-					},
-					{
-						y: 500
-					},
-					{
-						y: 480
-					},
-					{
-						y: 510
-					}
-				]
-			}]
+					type: "line",
+					showInLegend: true,
+					name: "Oct 2021",
+					xValueFormatString: "DD MMM, YYYY",
+					color: "#00A402",
+					dataPoints: [{
+							x: new Date(2017, 09, 3),
+							y: 650
+						},
+						{
+							x: new Date(2017, 09, 4),
+							y: 700
+						},
+						{
+							x: new Date(2017, 09, 5),
+							y: 710
+						},
+						{
+							x: new Date(2017, 09, 6),
+							y: 658
+						},
+						{
+							x: new Date(2017, 09, 7),
+							y: 734
+						},
+						{
+							x: new Date(2017, 09, 8),
+							y: 963
+						},
+						{
+							x: new Date(2017, 09, 9),
+							y: 847
+						},
+						{
+							x: new Date(2017, 09, 10),
+							y: 853
+						},
+						{
+							x: new Date(2017, 09, 11),
+							y: 869
+						},
+						{
+							x: new Date(2017, 09, 12),
+							y: 943
+						},
+						{
+							x: new Date(2017, 09, 13),
+							y: 970
+						}
+					]
+				},
+			]
 		});
 		chart.render();
-
 	}
 </script>
 
