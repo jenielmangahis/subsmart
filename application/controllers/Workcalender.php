@@ -1875,6 +1875,113 @@ class Workcalender extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_view_appointment()
+    {
+        $this->load->model('Appointment_model');
+
+        $post = $this->input->post();
+        $company_id  = logged('company_id');
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $company_id);
+        $optionAppointmentType = $this->Appointment_model->optionAppointmentType();
+
+        $this->page_data['appointment'] = $appointment;
+        $this->page_data['optionAppointmentType'] = $optionAppointmentType;
+        $this->load->view('workcalender/ajax_load_view_appointment', $this->page_data);
+    }
+
+    public function ajax_edit_appointment()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $tags = $this->EventTags_model->getAllByCompanyId($cid, array());
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
+        $optionAppointmentTypes = $this->Appointment_model->optionAppointmentType();
+
+        $a_tags = array();
+        $selected_tags = explode(",", $appointment->tag_ids);
+        foreach($tags as $t){
+            if( in_array($t->id, $selected_tags) ){
+                $a_tags[$t->id] = $t->name;
+            }
+        }
+
+        $this->page_data['a_selected_tags'] = $a_tags;
+        $this->page_data['appointment'] = $appointment;
+        $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
+        $this->load->view('workcalender/ajax_edit_appointment', $this->page_data);
+    }
+
+    public function ajax_update_appointment()
+    {
+        $this->load->model('Appointment_model');
+
+        $is_success = false;
+        $message    = 'Cannot find appointment';
+
+        $post       = $this->input->post();
+        $cid = logged('company_id');
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
+
+        if( $appointment ){
+            if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type'] != '') {
+
+                $data_appointment = [
+                    'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
+                    'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
+                    'user_id' => $post['appointment_user_id'],
+                    'prof_id' => $post['appointment_customer_id'],
+                    'tag_ids' => implode(",", $post['appointment_tags']),
+                    'appointment_type' => $post['appointment_type']
+                ];
+
+                $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                $is_success = true;
+                $message    = '';
+
+            } else {
+                $message = 'Required fields cannot be empty';
+            }
+        }
+
+        
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_appointment()
+    {
+        $this->load->model('Appointment_model');
+
+        $is_success = false;
+        $message    = 'Cannot find appointment';
+
+        $post       = $this->input->post();
+        $cid = logged('company_id');
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
+
+        if( $appointment ){
+            $this->Appointment_model->delete($appointment->id);
+            $is_success = true;
+            $message    = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
 }
 
 
