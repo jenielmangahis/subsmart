@@ -37,6 +37,19 @@ $(document).ready(function () {
 		_fabOptions.removeClass("shown");
 		_this.find(".bx").removeClass("bx-x").addClass("bx-plus");
 	});
+
+	$(".nsm-sidebar-menu li").on("click", function(){
+		let _this = $(this);
+		let _menuList = $(".nsm-sidebar-menu").find("li");
+
+		if(_this.hasClass("shown")){
+			_this.removeClass("shown");
+		}
+		else{
+			_menuList.removeClass("shown")
+			_this.addClass("shown");
+		}
+	});
 });
 
 function toggleSidebar() {

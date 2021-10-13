@@ -723,11 +723,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Copy</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
+                                                                <a role="menuitem" href="#" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>" data-toggle="modal" data-target="#sr_delete">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Delete</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
+                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>" data-toggle="modal" data-target="#sr_void">
                                                                 <span class="fa fa-envelope-open-o icon"></span>  Void</a></li>
                                                             <li><div class="dropdown-divider"></div></li>
                                                         </ul>
@@ -2121,6 +2121,51 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+
+    
+<!-- The Modal -->
+<div class="modal fade" id="sr_delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+        <div class="modal-content">
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+            <input type="hidden" class="form-control sr_id" name="sr_id">
+
+                <p><b><i class="fa fa-info-circle" style="font-size:36px;color:red;"> </i>Are you sure you want to delete this transaction?</b></p>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                <a href="#" type="submit" class="btn btn-success">Yes</a>
+            </div>
+        
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="sr_void" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+        <div class="modal-content">
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+            <input type="hidden" class="form-control sr_id" name="sr_id">
+
+                <p><b><i class="fa fa-info-circle" style="font-size:36px;color:red;"> </i>Are you sure you want to void this transaction?</b></p>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                <a href="#" type="submit" class="btn btn-success">Yes</a>
+            </div>
+        
+        </div>
+    </div>
+</div>
 
     <!--    Create Invoice Modal-->
     <div class="full-screen-modal">

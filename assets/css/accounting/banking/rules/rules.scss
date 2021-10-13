@@ -181,6 +181,31 @@
       font-size: 18px;
     }
   }
+
+  &__drag {
+    --size: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size);
+    height: var(--size);
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    margin: 0;
+    cursor: all-scroll !important;
+
+    &::after {
+      content: "⁝⁝⁝";
+      font-size: 18px;
+    }
+
+    &Column {
+      text-align: center;
+      padding: 0 !important;
+    }
+  }
 }
 
 $colorError: #d52b1e;

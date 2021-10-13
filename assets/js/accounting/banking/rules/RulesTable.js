@@ -51,11 +51,16 @@ export class RulesTable {
     };
 
     const columns = {
+      drag: () => {
+        return `
+          <button class="rulesTable__drag"></button>
+        `;
+      },
       checkbox: () => {
         return '<input type="checkbox" class="rulesTable__checkbox" />';
       },
-      priority: (_, __, ___, meta) => {
-        return meta.row + 1;
+      priority: (_, __, row) => {
+        return row.priority;
       },
       name: (_, __, row) => {
         return row.rules_name;
@@ -142,49 +147,69 @@ export class RulesTable {
 
     const table = this.$table.DataTable({
       searching: true,
+      rowReorder: {
+        snapX: true,
+        dataSrc: "priority",
+        selector: ".rulesTable__drag",
+      },
       ajax: {
         url: `${this.api.prefixURL}/AccountingRules/apiGetRules`,
       },
       columns: [
         {
           sortable: false,
+          orderable: true,
+          render: columns.drag,
+          class: "rulesTable__dragColumn",
+        },
+        {
+          sortable: false,
+          orderable: true,
           render: columns.checkbox,
           targets: 0,
           class: "rulesTable__selectColumn",
         },
         {
           sortable: true,
+          orderable: true,
           render: columns.priority,
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.name,
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.appliedTo,
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.conditions,
           class: "rulesTable__conditionsColumn",
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.settings,
           class: "rulesTable__assignmentsColumn",
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.autoAdd,
           class: "rulesTable__autoAddColumn",
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.status,
         },
         {
           sortable: false,
+          orderable: true,
           render: columns.actions,
         },
       ],
@@ -247,6 +272,15 @@ export class RulesTable {
 
       if (!func) return;
       await actions[action](row, table, event);
+    });
+
+    table.on("row-reorder.dt", async (_, diff) => {
+      const updates = diff.map(({ node, newPosition }) => {
+        const id = node.dataset.id;
+        return { id, priority: newPosition };
+      });
+
+      await this.api.editRulePriorities(updates);
     });
   }
 
