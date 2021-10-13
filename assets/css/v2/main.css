@@ -18,6 +18,10 @@ html, body{
 	position: relative;
 }
 
+.nsm-content{
+	min-height: calc(100vh - 202px);
+}
+
 .nsm-container.nsm-mobile .nsm-sidebar{
 	/* width: 100%; */
 	/* left: -100%; */
@@ -117,6 +121,10 @@ html, body{
 	list-style: none;
 }
 
+.nsm-sidebar-menu > li:hover{
+	background-color: #7f7f7f1a;
+}
+
 .nsm-sidebar-menu li.selected > a{
 	color: #505050;
 	margin-bottom: unset !important;
@@ -157,7 +165,12 @@ html, body{
 
 .nsm-sidebar-menu .list-dropdown-icon{
 	float: right;
-	margin-top: 3px !important;
+	font-size: 22px !important;
+}
+
+.nsm-sidebar-menu li.shown .list-dropdown-icon{
+	transform: rotate(180deg);
+	transform-origin: center;
 }
 
 .nsm-sidebar-menu li > ul{
@@ -168,7 +181,7 @@ html, body{
 	display: block;
 }
 
-.nsm-sidebar-menu li:hover > ul{
+.nsm-sidebar-menu li.shown > ul{
 	display: block;
 }
 

@@ -231,9 +231,15 @@ class Accounting extends MY_Controller
         $this->page_data['rules'] = $this->rules_model->getRules();
         add_css([
             'assets/css/accounting/banking/rules/rules.css',
+            'https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css'
         ]);
         add_footer_js([
             'assets/js/accounting/banking/rules/rules.js',
+
+            // for some reason the oldest version is the only one that
+            // works while implementing this. not sure why though.
+            // https://cdn.datatables.net/rowreorder/
+            'https://cdn.datatables.net/rowreorder/1.0.0/js/dataTables.rowReorder.min.js'
         ]);
 
         $this->load->view('accounting/rules', $this->page_data);
@@ -266,7 +272,7 @@ class Accounting extends MY_Controller
         $total_overdue = 0;
         $total_not_due = 0;
         $deposited_last30_days =0;
-        
+
         foreach ($invoices as $inv) {
             if (is_numeric($inv->grand_total)) {
                 $receivable_payment += $inv->grand_total;
@@ -292,16 +298,27 @@ class Accounting extends MY_Controller
         }
 
         //caculating this month overall income
-        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of previous month")), date("Y-m-d"));
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of this month")), date("Y-m-d"));
         $income_this_month=0;
         $income_last_month=0;
+        $income_per_day = array();
+
+        $graph_data= array();
+        $graph_data["type"]= "line";
+        $graph_data["indexLabelFontSize"]= "12";
+        $dataPoints= array();
         foreach ($receive_payments as $payment) {
             if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
                 $income_this_month +=$payment->amount;
+                $per_day_index=date("d", strtotime($payment->payment_date));
+                $income_per_day[$per_day_index]+=$payment->amount;
+                $dataPoints["y"][]=$payment->amount;
             } else {
                 $income_last_month +=$payment->amount;
             }
         }
+        $dataPoints["y"][]=100;
+        $graph_data["dataPoints"]= $dataPoints;
         // var_dump($receive_payments);
 
         //script for deposit widget
@@ -324,14 +341,13 @@ class Accounting extends MY_Controller
         }
         $current_status=-1;
         $largest_status=0;
-        for($i =0; $i<count($statuses); $i++){
-            if($statuses[$i] > $largest_status){
+        for ($i =0; $i<count($statuses); $i++) {
+            if ($statuses[$i] > $largest_status) {
                 $current_status=$i;
                 $largest_status=$statuses[$i];
                 $i=-1;
             }
         }
-        var_dump($current_status);
 
 
         $this->page_data['unpaid_last_365'] = $receivable_payment-$total_amount_received;
@@ -346,10 +362,28 @@ class Accounting extends MY_Controller
         $this->page_data['deposit_current_status'] = $current_status;
         $this->page_data['deposit_total_amount'] = $total_deposit;
         $this->page_data['deposit_transaction_count'] = $deposit_transaction_count;
+        $this->page_data['graph_data'] = "[".$this->graph_data_to_text($graph_data)."]";
 
+        var_dump($this->page_data['graph_data']);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/sales_overview', $this->page_data);
+    }
+    public function graph_data_to_text($graph_data=array())
+    {
+        $the_text="{";
+        $data_keys=array_keys($graph_data);
+        for ($i=0;$i<count($data_keys);$i++) {
+            $the_text.=$data_keys[$i].":";
+            if (is_array($graph_data[$data_keys[$i]])) {
+                $the_text.="[".$this->graph_data_to_text($graph_data[$data_keys[$i]])."]";
+            } else {
+                $the_text.=$graph_data[$data_keys[$i]];
+            }
+            $the_text.=",";
+        }
+        $the_text.="}";
+        return $the_text;
     }
     public function allsales()
     {
@@ -549,7 +583,7 @@ class Accounting extends MY_Controller
     {
         $this->page_data['users'] = $this->accounting_sales_receipt_model->getsalesReceiptsItems($id);
         $this->page_data['clients'] = $this->accounting_sales_receipt_model->getclientsData(logged('company_id'));
-        
+
         $this->load->view('accounting/printSalesReceipt', $this->page_data);
     }
 
@@ -4024,7 +4058,7 @@ class Accounting extends MY_Controller
                 if ($file_names[$i]!="") {
                     $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
                     $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
-                    
+
                     if (file_exists($source)) {
                         copy($source, $destination);
                         unlink($source);
@@ -4254,32 +4288,32 @@ class Accounting extends MY_Controller
                 //     $i++;
                 // } //change item details
 
-                 //echo json_encode($addQuery);
+                //echo json_encode($addQuery);
 
                  
-                 $a          = $this->input->post('itemid');
+                $a          = $this->input->post('itemid');
                 //  $packageID  = $this->input->post('packageID');
-                 $quantity   = $this->input->post('quantity');
-                 $price      = $this->input->post('price');
-                 $h          = $this->input->post('tax');
-                 $discount   = $this->input->post('discount');
-                 $total      = $this->input->post('total');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
+                $discount   = $this->input->post('discount');
+                $total      = $this->input->post('total');
  
-                 $i = 0;
-                 foreach($a as $row){
-                     $data['items_id']       = $a[$i];
+                $i = 0;
+                foreach ($a as $row) {
+                    $data['items_id']       = $a[$i];
                     //  $data['package_id ']    = $packageID[$i];
-                     $data['qty']            = $quantity[$i];
-                     $data['cost']           = $price[$i];
-                     $data['tax']            = $h[$i];
-                     $data['discount']       = $discount[$i];
-                     $data['total']          = $total[$i];
-                     $data['sales_receipt_id '] = $addQuery;
-                     $addQuery2 = $this->accounting_sales_receipt_model->additem_details($data);
-                     $i++;
-                 }
+                    $data['qty']            = $quantity[$i];
+                    $data['cost']           = $price[$i];
+                    $data['tax']            = $h[$i];
+                    $data['discount']       = $discount[$i];
+                    $data['total']          = $total[$i];
+                    $data['sales_receipt_id '] = $addQuery;
+                    $addQuery2 = $this->accounting_sales_receipt_model->additem_details($data);
+                    $i++;
+                }
 
-                
+
 
                 $sales_receipt_file_name = 'sales_receipt_' . $addQuery . ".pdf";
                 $packaging_slip_file_name = 'packaging_slip_' . $addQuery . ".pdf";
@@ -4420,7 +4454,7 @@ class Accounting extends MY_Controller
             if ($file_names[$i]!="") {
                 $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
                 $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
-                
+
                 if (file_exists($source)) {
                     copy($source, $destination);
                     unlink($source);
@@ -5053,14 +5087,14 @@ class Accounting extends MY_Controller
                 if ($file_names[$i]!="") {
                     $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
                     $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
-                    
+
                     if (file_exists($source)) {
                         copy($source, $destination);
                         unlink($source);
                     }
                 }
             }
-                
+
             $new_recurring_data = array(
                 'txn_type' => "Delayed Charge",
                 'txn_id' => $delayed_charge_id,
@@ -7331,7 +7365,7 @@ class Accounting extends MY_Controller
             }
             $html .= '<tr>
 								<td class="center"><input type="checkbox"
-										name="checkbox' . $counter . '" data-customer-id="' . $cus->prof_id . '" data-email-add="' . $cus->email . '"> 
+										name="checkbox' . $counter . '" data-customer-id="' . $cus->prof_id . '" data-email-add="' . $cus->email . '">
 								</td>
 								<td><a class="customer-full-page-btn" href="javascript:void(0)" data-customer-id="' . $cus->prof_id . '">' . $cus->first_name . ' ' .  $cus->middle_name . ' ' . $cus->last_name . '</a>
 								</td>
@@ -7586,7 +7620,7 @@ class Accounting extends MY_Controller
                 if ($file_names[$i]!="") {
                     $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
                     $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
-                    
+
                     if (file_exists($source)) {
                         copy($source, $destination);
                         unlink($source);
@@ -7918,7 +7952,7 @@ class Accounting extends MY_Controller
         $inv_count = $this->input->post("invoice_count");
         $receive_payment_id = $this->input->post("receive_payment_id");
         $receive_payment_details_old = $this->accounting_receive_payment_model->getReceivePaymentDetails($receive_payment_id);
-        
+
         if ($receive_payment_details_old->attachments != $this->input->post("attachement-filenames")) {
             $old_attachments = explode(",", $receive_payment_details_old->attachments);
             for ($i=0;$i<count($old_attachments);$i++) {
@@ -7929,7 +7963,7 @@ class Accounting extends MY_Controller
                 }
             }
         }
-        
+
         $where = array(
             "id" => $receive_payment_id
         );
@@ -8368,7 +8402,7 @@ class Accounting extends MY_Controller
 
         Please review the sales receipt below.
         We appreciate it very much.
-                                    
+
         Thanks for your business!
         Sample Company';
         $this->page_data['sales_receipt_id'] = "1234";
@@ -8515,7 +8549,7 @@ class Accounting extends MY_Controller
                 </td>
                 <td class="column-email">
                     <div class="form-group">
-                        <input type="email" value="' . $customer_info->email . '" 
+                        <input type="email" value="' . $customer_info->email . '"
                             name="emails[]">
                     </div>
                 </td>
@@ -10252,13 +10286,13 @@ class Accounting extends MY_Controller
         $this->page_data['customer_name'] = $customer_name;
         $this->page_data['message'] = $message;
         $this->page_data['subject'] = $subject;
-        
+
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
         // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
-        
+
         $mail->MsgHTML($message);
-        
+
         $data = new stdClass();
         try {
             $mail->addAddress($customer_email);
@@ -10310,13 +10344,13 @@ class Accounting extends MY_Controller
         $this->page_data['customer_name'] = $customer_name;
         $this->page_data['message'] = $message;
         $this->page_data['subject'] = $subject;
-        
+
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
         // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
-        
+
         $mail->MsgHTML($message);
-        
+
         $data = new stdClass();
         try {
             $mail->addAddress($customer_email);

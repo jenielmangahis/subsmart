@@ -941,13 +941,14 @@ $(document).ready(function() {
                                         timer: $difference * 1000,
                                         timerProgressBar: true,
                                         willOpen: () => {
+                                            var content;
                                             try{
-                                                const content = Swal.getContent();
+                                                content = Swal.getContent();
                                             }
                                             catch(err){}
 
                                             try{
-                                                const content = Swal.getHtmlContainer();
+                                                content = Swal.getHtmlContainer();
                                             }
                                             catch(err){}
                                             const $ = content.querySelector.bind(content);
@@ -963,10 +964,20 @@ $(document).ready(function() {
                                                     } else {
                                                         text_countdown = parseInt((coundown - intV) * 60);
                                                     }
+                                                    
+                                                    try{
+                                                        Swal.getContent().querySelector(
+                                                            "strong"
+                                                        ).textContent = text_countdown;
+                                                    }
+                                                    catch(err){}
 
-                                                    Swal.getContent().querySelector(
-                                                        "strong"
-                                                    ).textContent = text_countdown;
+                                                    try{
+                                                        Swal.getHtmlContainer().querySelector(
+                                                            "strong"
+                                                        ).textContent = text_countdown;
+                                                    }
+                                                    catch(err){}
                                                 } else {
                                                     clearInterval(timerInterval);
                                                 }

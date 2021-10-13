@@ -40,13 +40,13 @@
 
             <ul class="nsm-sidebar-menu">
                 <li class="active selected">
-                    <a href="<?= base_url("dashboard_v2") ?>">
+                    <a href="<?= base_url("dashboard") ?>">
                         <i class='bx bx-fw bx-tachometer'></i> Dashboard
                         <!-- <i class='bx bx-fw bx-chevron-down list-dropdown-icon'></i> -->
                     </a>
                     <ul class="mt-3">
                         <li>
-                            <a href="<?= base_url("dashboard_v2") ?>">
+                            <a href="<?= base_url("sms") ?>">
                                 <i class='bx bx-fw bx-message-square-dots'></i> SMS
                             </a>
                         </li>
@@ -84,7 +84,7 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class='bx bx-fw bx-line-chart'></i> Sales <i class='bx bx-fw bx-chevron-down list-dropdown-icon'></i>
+                        <i class='bx bx-fw bx-line-chart'></i> Sales <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li>
@@ -164,7 +164,7 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class='bx bx-fw bx-extension'></i> Tools <i class='bx bx-fw bx-chevron-down list-dropdown-icon'></i>
+                        <i class='bx bx-fw bx-extension'></i> Tools <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li>
@@ -211,7 +211,7 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class='bx bx-fw bx-buildings'></i> Company <i class='bx bx-fw bx-chevron-down list-dropdown-icon'></i>
+                        <i class='bx bx-fw bx-buildings'></i> Company <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li>
@@ -245,7 +245,7 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class='bx bx-fw bx-dots-vertical-rounded'></i> More <i class='bx bx-fw bx-chevron-down list-dropdown-icon'></i>
+                        <i class='bx bx-fw bx-dots-vertical-rounded'></i> More <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
                         <li>
@@ -265,7 +265,7 @@
                     </a>
                 </div>
                 <div class="nsm-page-title">
-                    <h4>Dashboard</h4>
+                    <h4><?= $page->title ?></h4>
                     <span>Welcome <?php echo getLoggedName(); ?>!</span>
                 </div>
                 <div class="nsm-nav-items">

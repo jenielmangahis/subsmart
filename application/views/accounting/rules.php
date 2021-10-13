@@ -97,6 +97,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <table id="rulesTable" class="table table-striped table-bordered rulesTable">
                             <thead class="rulesTable__head">
                                 <tr>
+                                    <th></th>
                                     <th>
                                         <input type="checkbox" class="rulesTable__checkbox rulesTable__checkbox--primary"/>
                                     </th>
