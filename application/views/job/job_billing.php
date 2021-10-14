@@ -194,7 +194,7 @@ add_css(array(
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                                             </div>
-                                                            <input readonly type="text" class="form-control input_select" name="amount" value="<?= number_format((float)$jobs_data->amount,2,'.',','); ?>">
+                                                            <input readonly type="text" class="form-control input_select" name="amount" value="<?= number_format((float)$jobs_data->total_amount,2,'.',','); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -204,7 +204,7 @@ add_css(array(
                                                             Account Holder Name
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" name="account_name" id="account_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" />
+                                                            <input type="text" class="form-control" name="account_name" id="account_name" value="<?= isset($jobs_data ) ?  $jobs_data->first_name .' '. $jobs_data->last_name : '' ?>" />
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
@@ -386,9 +386,12 @@ add_css(array(
                                                     </div>
                                                 </div>
                                                 <div style="text-align: right;right: 0;position: relative;">
-                                                    <br><br>
-                                                    <button type="button" class="btn btn-primary"> <span class="fa fa-remove"></span> Cancel</button>
-                                                    <button type="submit" class="btn btn-primary btn-save-payment"> <span class="fa fa-money"></span> Save</button>
+                                                    <br>
+                                                    <div id="payment-button">
+                                                        <button type="button" class="btn btn-primary"> <span class="fa fa-remove"></span> Cancel</button>
+                                                        <button type="submit" class="btn btn-primary btn-save-payment"> <span class="fa fa-money"></span> Pay</button>
+                                                    </div>
+                                                    <div id="paypal-button-container" style="display: none;"></div>
                                                 </div>
 
                                             </div>
@@ -432,3 +435,64 @@ add_css(array(
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 
         <?php include viewPath('job/js/job_billing_js'); ?>
+        <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
+        <script>
+            paypal.Buttons({
+                style: {
+                    //layout: 'horizontal',
+                    //tagline: false,
+                    //height:25,
+                    color:'blue'
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        payer: {
+                            name: {
+                                given_name: 'Testing Paypal'
+                            },
+                        },
+                        purchase_units: [{
+                            amount: {
+                                value: '0.01'
+                            }
+                        }],
+                        application_context: {
+                            shipping_preference: 'NO_SHIPPING'
+                        }
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        // Show a success message to the buyer
+                        console.log(details);
+                        var tokenRequest = {
+                            id: "<?= $this->uri->segment(3) ?>",
+                            stat: 'Completed'
+                        };
+                        //$("#payment-method").val('paypal');
+                        $.post("<?= base_url() ?>job/on_update_status", tokenRequest, function( data ) {
+                            paid('Nice!','Thank you for your payment!','success')
+                        });
+                        //$("#payment-method-status").val(details.status);
+                        //activate_registration();
+                    });
+                }
+            }).render('#paypal-button-container');
+            // This function displays Smart Payment Buttons on your web page.
+
+            function paid($title,information,$icon){
+                Swal.fire({
+                    title: $title,
+                    text: information,
+                    icon: $icon,
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href="<?= base_url() ?>job/new_job1/<?= $this->uri->segment(3) ?>";
+                    }
+                });
+            }
+        </script>

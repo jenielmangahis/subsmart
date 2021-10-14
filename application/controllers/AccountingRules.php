@@ -18,6 +18,11 @@ class AccountingRules extends MY_Controller
         unset($payload['conditions']);
         unset($payload['assignments']);
 
+        $this->db->select_max('priority', 'value');
+        $this->db->where('user_id', $payload['user_id']);
+        $maxPrio = $this->db->get('accounting_rules')->row();
+        $payload['priority'] = is_null($maxPrio->value) ? 0 : ((int) $maxPrio->value) + 1;
+
         $this->db->insert('accounting_rules', $payload);
         $this->db->where('id', $this->db->insert_id());
         $newRule = $this->db->get('accounting_rules')->row();

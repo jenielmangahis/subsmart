@@ -382,9 +382,11 @@ add_css(array(
                                                         </a>
                                                     </div>
                                                     <div style="position: absolute; margin: 0;right: 40px;display: block;" >
-                                                        <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Pre Auth Now</button>
-                                                        <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Capture Now</button>
-                                                        <div id="paypal-button-container"></div>
+                                                        <div id="payment-button">
+                                                            <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Pre Auth Now</button>&nbsp;&nbsp;
+                                                            <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Capture Now</button>
+                                                        </div>
+                                                        <div id="paypal-button-container" style="display: none;"></div>
                                                         <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
                                                         <input type="hidden" name="method" id="method" value="CC"/>
                                                     </div>
@@ -464,14 +466,12 @@ add_css(array(
         .material-switch > input[type="checkbox"] {
             display: none;
         }
-
         .material-switch > label {
             cursor: pointer;
             height: 0;
             position: relative;
             width: 40px;
         }
-
         .material-switch > label::before {
             background-color: #32243d;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
@@ -515,7 +515,7 @@ add_css(array(
             paypal.Buttons({
                 style: {
                     layout: 'horizontal',
-                    tagline: false,
+                    //tagline: false,
                     //height:25,
                     color:'blue'
                 },

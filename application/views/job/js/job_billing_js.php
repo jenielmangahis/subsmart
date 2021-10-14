@@ -112,6 +112,11 @@
     $('.payment_method').on( 'change', function () {
         var method = this.value;
         $('#pay_method').val(method);
+        if(method !== 'PP'){
+            document.getElementById('payment-button').style.display = "flex";
+            document.getElementById('paypal-button-container').style.display = "none";
+        }
+
         if(method === 'CASH'){
             hide_all();
             $("#payment_collected").show('slow');
@@ -126,7 +131,12 @@
             hide_all();
             $(".CNRN").show('slow');
             $("#day_of_month").show('slow');
-        }else if(method === 'VENMO' || method === 'PP' || method === 'SQ'){
+        }else if(method === 'PP'){
+            hide_all();
+            $(".account_cred").show('slow');
+            document.getElementById('payment-button').style.display = "none";
+            document.getElementById('paypal-button-container').style.display = "flex";
+        }else if(method === 'VENMO'  || method === 'SQ'){
             hide_all();
             $(".account_cred").show('slow');
         }else if(method === 'WW' || method === 'HOF' || method === 'OPT'){

@@ -142,7 +142,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
     const _payload = { ...payload, conditions, assignments };
-    const response = await api.saveRate(_payload);
+    const response = await api.saveRule(_payload);
     window.location.reload();
   });
 

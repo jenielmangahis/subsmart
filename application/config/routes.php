@@ -428,6 +428,7 @@ $route['accounting/chart-of-accounts/view-register/(:any)'] = 'accounting_contro
 $route['accounting/chart-of-accounts/(:any)/load-registers']['post'] = 'accounting_controllers/chart_of_accounts/load_registers/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['post'] = 'accounting_controllers/chart_of_accounts/print_transactions/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post'] = 'accounting_controllers/chart_of_accounts/export_transactions/$1';
+$route['accounting/chart-of-accounts/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/chart_of_accounts/delete_transaction/$1/$2';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';
@@ -747,6 +748,10 @@ $route['calendar/_load_upcoming_events'] = 'Workcalender/ajax_load_upcoming_even
 $route['calendar/_update_drop_event'] = 'Workcalender/ajax_update_event';
 $route['calendar/_update_drop_google_event'] = 'Workcalender/ajax_update_google_event';
 $route['calendar/_create_appointment'] = 'Workcalender/ajax_create_appointment';
+$route['calendar/_view_appointment'] = 'Workcalender/ajax_view_appointment';
+$route['calendar/_edit_appointment'] = 'Workcalender/ajax_edit_appointment';
+$route['calendar/_update_appointment'] = 'Workcalender/ajax_update_appointment';
+$route['calendar/_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

@@ -6804,6 +6804,7 @@ class Accounting_modals extends MY_Controller
             'inv_adj_account' => $this->input->post('inv_adj_acc'),
             'memo' => $this->input->post('memo'),
             'total_amount' => floatval($this->input->post('initial_qty_on_hand')) * floatval($this->input->post('initial_cost')),
+            'status' => 1,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];

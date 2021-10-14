@@ -364,7 +364,6 @@ class Accounting extends MY_Controller
         $this->page_data['deposit_transaction_count'] = $deposit_transaction_count;
         $this->page_data['graph_data'] = "[".$this->graph_data_to_text($graph_data)."]";
 
-        var_dump($this->page_data['graph_data']);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/sales_overview', $this->page_data);
@@ -10311,6 +10310,64 @@ class Accounting extends MY_Controller
     }
 
     public function send_estimates_customer_sr()
+    {
+        // $id         = $this->input->post("id");
+        // $status     = $this->input->post("est_status");
+
+        $customer_name = $this->input->post("custname");
+        $customer_email = $this->input->post("email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+
+        $server   = MAIL_SERVER;
+        $port     = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from     = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        // $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+
+        $mail->MsgHTML($message);
+
+        $data = new stdClass();
+        try {
+            $mail->addAddress($customer_email);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
+
+        echo json_encode($json_data);
+    }
+
+    public function send_estimates_customer_cm()
     {
         // $id         = $this->input->post("id");
         // $status     = $this->input->post("est_status");

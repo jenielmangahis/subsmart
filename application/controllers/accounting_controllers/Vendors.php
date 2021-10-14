@@ -1212,7 +1212,13 @@ class Vendors extends MY_Controller
         $expense = $this->vendors_model->get_expense_by_id($expenseId);
 
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
-        $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+        if($paymentAccType->account_name === 'Credit Card') {
+            $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+        } else {
+            $newBalance = floatval($paymentAcc->balance) + floatval($expense->total_amount);
+        }
         $newBalance = number_format($newBalance, 2, '.', ',');
 
         $paymentAccData = [
@@ -1229,7 +1235,13 @@ class Vendors extends MY_Controller
         if (count($categories) > 0) {
             foreach ($categories as $category) {
                 $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                if ($expenseAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                } else {
+                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                }
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $expenseAccData = [
@@ -1277,7 +1289,7 @@ class Vendors extends MY_Controller
     {
         $check = $this->vendors_model->get_check_by_id($checkId);
 
-        $paymentAcc = $this->chart_of_accounts_model->getById($check->payment_account_id);
+        $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
         $newBalance = floatval($paymentAcc->balance) + floatval($check->total_amount);
         $newBalance = number_format($newBalance, 2, '.', ',');
 
@@ -1295,7 +1307,12 @@ class Vendors extends MY_Controller
         if (count($categories) > 0) {
             foreach ($categories as $category) {
                 $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                if ($expenseAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                } else {
+                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                }
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $expenseAccData = [
@@ -1347,7 +1364,12 @@ class Vendors extends MY_Controller
         if (count($categories) > 0) {
             foreach ($categories as $category) {
                 $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                if($expenseAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                } else {
+                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                }
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $expenseAccData = [
@@ -1397,11 +1419,11 @@ class Vendors extends MY_Controller
 
         if (count($items) > 0) {
             foreach ($items as $item) {
-                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
 
-                $newQty = intval($location->qty) - intval($item->quantity);
+                $newQtyPO = intval($itemAccDetails->qty_po) + intval($item->quantity);
 
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+                $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
             }
         }
 
@@ -1433,7 +1455,12 @@ class Vendors extends MY_Controller
         if (count($categories) > 0) {
             foreach ($categories as $category) {
                 $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
-                $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                if ($expenseAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                } else {
+                    $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                }
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $expenseAccData = [
@@ -1457,6 +1484,19 @@ class Vendors extends MY_Controller
                 $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
 
                 if ($itemAccDetails) {
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($item->rate) + 5.00;
+                    $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                     $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
                     $newBalance = number_format($newBalance, 2, '.', ',');

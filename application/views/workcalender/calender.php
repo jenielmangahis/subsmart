@@ -433,6 +433,52 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   </div>
 </div>
 
+<!-- MODAL VIEW APPOINTMENT -->
+<div class="modal fade modal-enhanced" id="modal-view-appointment" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                <div class="view-appointment-container"></div>
+            </div>
+            <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                                    
+                <a class="btn btn-primary btn-edit-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-pencil"></i> Edit</a>                
+                <a class="btn btn-danger" href="javascript:void(0);"><i class="fa fa-check"></i> Check out</a>                
+                <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
+            </div>
+      </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT APPOINTMENT -->
+<div class="modal fade modal-enhanced" id="modal-edit-appointment" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="frm-update-appointment" method="post">
+                <input type="hidden" name="aid" id="edit-aid" value="">
+                <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                    <div class="edit-appointment-container"></div>
+                </div>
+                <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                    
+                    <button type="button" style="" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-update-appointment" name="action" value="update_appointment">Update</button>
+                </div>
+            </form>
+      </div>
+  </div>
+</div>
+
 <!-- MODAL CREATE GOOGLE CALENDAR EVENT -->
 <div id="modalCreateGoogleEvent" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -706,7 +752,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         if (action === 'open_event_modal') {
 
-            console.log('opening modal...');
+            //console.log('opening modal...');
             var data = {
                 id: "<?php echo (!empty($_GET['customer_id'])) ? get_customer_by_id($_GET['customer_id'])->id : 0 ?>",
                 contact_name: "<?php echo (!empty($_GET['customer_id'])) ?  get_customer_by_id($_GET['customer_id'])->contact_name : '' ?>",
@@ -789,10 +835,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var events = <?php echo json_encode($events) ?>;
         var customer_events = <?php echo json_encode($resources_user_events) ?>
 
-        console.log(events);
-
         render_calender(calendarEl, timeZoneSelectorEl, events);
     });
+
+    function reload_calendar(){
+        var calendarEl = document.getElementById('calendar');
+        var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+        var events = <?php echo json_encode($events) ?>;
+        var customer_events = <?php echo json_encode($resources_user_events) ?>
+
+        render_calender(calendarEl, timeZoneSelectorEl, events);
+
+        //location.reload();  
+    }
 
 
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
@@ -928,10 +983,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 var isGet  = 1;
                 if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
                     //alert(arg.event._def.extendedProps.eventType);
-                    if( arg.event._def.extendedProps.eventType == 'jobs'){
+                    if( arg.event._def.extendedProps.eventType == 'jobs' ){
                         location.href = base_url + 'job/job_preview/' + arg.event._def.extendedProps.eventId;
-                    }else if(arg.event._def.extendedProps.eventType == 'booking'){
+                    }else if(arg.event._def.extendedProps.eventType == 'booking' ){
                         location.href = base_url + 'promote/view_booking/' + arg.event._def.extendedProps.eventId;
+                    }else if( arg.event._def.extendedProps.eventType == 'appointments' ){
+                        viewAppointment(arg.event._def.extendedProps.eventId);
                     }else{
                         location.href = base_url + 'events/event_preview/' + arg.event._def.extendedProps.eventId;
                     }
@@ -1064,7 +1121,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
   $('.appointment-datepicker').datepicker({
       //format: 'yyyy-mm-dd',
-      format: 'DD, MM dd, yy',
+      format: 'DD, MM dd, yyyy',
       autoclose: true,
   });
 
@@ -1544,12 +1601,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                           confirmButtonText: 'Ok'
                       }).then((result) => {
                           if (result.value) {
-                            //location.reload();    
-                            
-                            var calendarEl = document.getElementById('calendar');
-                            var timeZoneSelectorEl = document.getElementById('time-zone-selector');
-                            var events = <?php echo json_encode($events) ?>;
-                            render_calender(calendarEl, timeZoneSelectorEl, events);
+                            reload_calendar();
                           }
                       });
                   }else{
@@ -1564,6 +1616,141 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                }
             });
         }, 1000);
+    });
+
+    $("#frm-update-appointment").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'calendar/_update_appointment';
+        $(".btn-update-appointment").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#frm-update-appointment").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      $("#modal-edit-appointment").modal('hide');
+                      Swal.fire({
+                          title: 'Success',
+                          text: 'Appointment was successfully updated.',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {                            
+                            reload_calendar();
+                          }
+                      });
+                  }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot find data.',
+                        text: o.msg
+                      });
+                  }
+
+                  $(".btn-update-appointment").html('Update');
+               }
+            });
+        }, 1000);
+    });
+
+    function viewAppointment( appointment_id ){
+        var url = base_url + 'calendar/_view_appointment';
+
+        $("#modal-view-appointment").modal('show');
+        $(".view-appointment-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {
+                    $(".btn-edit-appointment").attr("data-id", appointment_id);
+                    $(".btn-delete-appointment").attr("data-id", appointment_id);
+
+                    $('.view-appointment-container').hide().html(o).fadeIn(800);
+               }
+            });
+        }, 800);
+    }
+
+    $(".btn-delete-appointment").click(function(){
+        Swal.fire({
+          title: 'Do you want to delete selected appointment?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          confirmButtonColor: '#ec4561'
+        }).then((result) => {          
+          if (result.isConfirmed) {
+            var url = base_url + 'calendar/_delete_appointment';
+            var appointment_id = $(this).attr('data-id');
+
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: 'json',
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {     
+                    if( o.is_success ){
+                        $('#modal-view-appointment').modal('hide');
+                        Swal.fire({
+                          title: 'Success',
+                          text: 'Appointment was successfully deleted.',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          if (result.value) {
+                            reload_calendar();
+                          }
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot find data.',
+                            text: o.msg
+                        });
+                    }            
+               }
+            });
+          } 
+        })
+    });
+
+    $(".btn-edit-appointment").click(function(){
+        var appointment_id = $(this).attr('data-id');
+
+        $("#edit-aid").val(appointment_id);
+        $("#modal-view-appointment").modal('hide');
+        $("#modal-edit-appointment").modal('show');
+
+        var url = base_url + 'calendar/_edit_appointment';
+
+        $(".edit-appointment-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {
+
+                    $('.edit-appointment-container').hide().html(o).fadeIn(800);
+               }
+            });
+        }, 800);
+
     });
 
 </script>

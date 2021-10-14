@@ -849,7 +849,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     <button class="btn btn-success float-right">Save</button>
                     <button class="btn btn-transparent float-right mr-1" id="cancel-edit">Cancel</button>
                     <button class="btn btn-transparent float-right mr-1">Edit</button>
-                    <button class="btn btn-transparent float-right mr-1">Delete</button>
+                    <button class="btn btn-transparent float-right mr-1" id="delete-transaction">Delete</button>
                 </div>
             </div>
         </td>`;
@@ -914,6 +914,30 @@ $(document).on('click', '#registers-table tbody tr', function() {
             }
         });
     }
+});
+
+$(document).on('click', '#registers-table tbody tr.action-row #delete-transaction', function() {
+    if($('#show_in_one_line').prop('checked')) {
+        var data = $('#registers-table').DataTable().row($('#registers-table tbody tr.editting')).data();
+        var transactionType = data.type.replaceAll(' ', '-').toLowerCase();
+
+        switch(data.type) {
+            case 'CC Expense' :
+                transactionType = 'expense';
+            break;
+            case 'CC Bill Payment' :
+                transactionType = 'bill-payment';
+            break;
+        }
+    }
+
+    $.ajax({
+        url: `/accounting/chart-of-accounts/delete-transaction/${transactionType}/${data.id}`,
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
+        }
+    });
 });
 
 function col(el) {

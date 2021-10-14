@@ -898,6 +898,22 @@ class Job extends MY_Controller
         }
     }
 
+    public function on_update_status()
+    {
+        $id = $_POST['id'];
+        $status = $_POST['stat'];
+
+        $input = array();
+        $input['status'] = $status;
+
+        if ($this->general->update_with_key($input, $id, "jobs")) {
+            echo "Success";
+        } else {
+            echo "Error";
+        }
+
+    }
+
     public function get_customer_selected()
     {
         $id = $_POST['id'];
@@ -1190,6 +1206,8 @@ class Job extends MY_Controller
         $this->page_data['title'] ='Job Time Settings';
         $this->load->view('job/job_settings/job_time_settings', $this->page_data);
     }
+
+
 
     public function save_job()
     {

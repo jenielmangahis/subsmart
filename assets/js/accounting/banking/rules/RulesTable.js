@@ -17,19 +17,19 @@ export class RulesTable {
   setUpTable() {
     const actions = {
       makeActive: async ({ id }) => {
-        await this.api.editRate(id, { is_active: 1 });
+        await this.api.editRule(id, { is_active: 1 });
         window.location.reload();
       },
       makeInactive: async ({ id }) => {
-        await this.api.editRate(id, { is_active: 0 });
+        await this.api.editRule(id, { is_active: 0 });
         window.location.reload();
       },
       batchMakeActive: async (ids) => {
-        await this.api.batchEditRate(ids, { is_active: 1 });
+        await this.api.batchEditRule(ids, { is_active: 1 });
         window.location.reload();
       },
       batchMakeInactive: async (ids) => {
-        await this.api.batchEditRate(ids, { is_active: 0 });
+        await this.api.batchEditRule(ids, { is_active: 0 });
         window.location.reload();
       },
       batchDelete: async (ids) => {
@@ -45,7 +45,7 @@ export class RulesTable {
 
         if (!response.isConfirmed) return;
 
-        await this.api.batchDeleteRate(ids);
+        await this.api.batchDeleteRule(ids);
         window.location.reload();
       },
     };
@@ -60,7 +60,7 @@ export class RulesTable {
         return '<input type="checkbox" class="rulesTable__checkbox" />';
       },
       priority: (_, __, row) => {
-        return row.priority;
+        return Number(row.priority) + 1;
       },
       name: (_, __, row) => {
         return row.rules_name;
@@ -274,13 +274,16 @@ export class RulesTable {
       await actions[action](row, table, event);
     });
 
-    table.on("row-reorder.dt", async (_, diff) => {
-      const updates = diff.map(({ node, newPosition }) => {
-        const id = node.dataset.id;
-        return { id, priority: newPosition };
-      });
+    let isReordering = false;
+    table.on("row-reorder.dt", async () => {
+      if (isReordering) return;
+
+      isReordering = true;
+      const tableData = table.data().toArray();
+      const updates = tableData.map(({ id, priority }) => ({ id, priority }));
 
       await this.api.editRulePriorities(updates);
+      isReordering = false;
     });
   }
 
