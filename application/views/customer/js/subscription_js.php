@@ -34,6 +34,12 @@
         var method = this.value;
         $('#method').val(method);
         remove_required();
+
+        if(method !== 'PP'){
+            document.getElementById('payment-button').style.display = "flex";
+            document.getElementById('paypal-button-container').style.display = "none";
+        }
+
         if(method === 'CASH'){
             hide_all();
             $("#payment_collected").show('slow');
@@ -52,6 +58,11 @@
             hide_all();
             $(".CNRN").show('slow');
             $("#day_of_month").show('slow');
+        }else if(method === 'PP'){
+            hide_all();
+            $(".account_cred").show('slow');
+            document.getElementById('payment-button').style.display = "none";
+            document.getElementById('paypal-button-container').style.display = "flex";
         }else if(method === 'VENMO' || method === 'PP' || method === 'SQ'){
             hide_all();
             $(".account_cred").show('slow');

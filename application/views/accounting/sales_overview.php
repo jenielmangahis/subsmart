@@ -794,102 +794,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 
 <script>
-var chart;
-var graph_data={};
-var graph_data_prev={};
-var income_per_day;
-var income_per_month;
-var income_per_quarter;
-var last_income_per_day;
-var last_income_per_month;
-var last_income_per_quarter;
+	var chart;
+	var graph_data = {};
+	var graph_data_prev = {};
+	var income_per_day;
+	var income_per_month;
+	var income_per_quarter;
+	var last_income_per_day;
+	var last_income_per_month;
+	var last_income_per_quarter;
+	var income_label = "";
+	var last_income_label = "";
+	var income_month_label = "";
+	var income_year_label = "";
 
 	window.onload = function() {
-		chart = new CanvasJS.Chart("chartContainer1", {
-			animationEnabled: true,
-			theme: "light2",
-			title: {
-				text: ""
-			},
-			axisX: {
-				valueFormatString: "DD MMM",
-				crosshair: {
-					enabled: true,
-					snapToDataPoint: true
-				}
-			},
-			axisY: {
-				title: "",
-				includeZero: true,
-				crosshair: {
-					enabled: true
-				}
-			},
-			toolTip: {
-				shared: true
-			},
-			legend: {
-				cursor: "pointer",
-				verticalAlign: "bottom",
-				horizontalAlign: "center",
-				dockInsidePlotArea: false,
-				itemclick: toogleDataSeries
-			},
-			data: [{
-					type: "line",
-					showInLegend: true,
-					name: "Oct 2021",
-					xValueFormatString: "DD MMM, YYYY",
-					color: "#00A402",
-					dataPoints: [{
-							x: new Date(2017, 09, 3),
-							y: 650
-						},
-						{
-							x: new Date(2017, 09, 4),
-							y: 700
-						},
-						{
-							x: new Date(2017, 09, 5),
-							y: 710
-						},
-						{
-							x: new Date(2017, 09, 6),
-							y: 658
-						},
-						{
-							x: new Date(2017, 09, 7),
-							y: 734
-						},
-						{
-							x: new Date(2017, 09, 8),
-							y: 963
-						},
-						{
-							x: new Date(2017, 09, 9),
-							y: 847
-						},
-						{
-							x: new Date(2017, 09, 10),
-							y: 853
-						},
-						{
-							x: new Date(2017, 09, 11),
-							y: 869
-						},
-						{
-							x: new Date(2017, 09, 12),
-							y: 943
-						},
-						{
-							x: new Date(2017, 09, 13),
-							y: 970
-						}
-					]
-				},
-			]
-		});
-		chart.render();
+		income_overtime_duration_changed();
 	}
 </script>
 

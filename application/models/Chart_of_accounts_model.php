@@ -329,28 +329,63 @@ class Chart_of_accounts_model extends MY_Model {
 	public function get_checks_registers($accountId)
 	{
 		$this->db->where('bank_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_check');
 		return $query->result();
 	}
 
 	public function get_journal_entry_registers($accountId)
 	{
-		$this->db->where('account_id', $accountId);
-		$query = $this->db->get('accounting_journal_entry_items');
+		$this->db->select('*');
+		$this->db->from('accounting_journal_entry_items');
+		$this->db->where('accounting_journal_entry_items.account_id', $accountId);
+		$this->db->where('accounting_journal_entries.status !=', 0);
+		$this->db->join('accounting_journal_entries', 'accounting_journal_entries.id = accounting_journal_entry_items.journal_entry_id');
+		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function get_vendor_transaction_registers($accountId, $transactionType)
 	{
-		$this->db->where('expense_account_id', $accountId);
-		$this->db->where('transaction_type', $transactionType);
-		$query = $this->db->get('accounting_vendor_transaction_categories');
+		$this->db->select('*');
+		$this->db->from('accounting_vendor_transaction_categories');
+		$this->db->where('accounting_vendor_transaction_categories.expense_account_id', $accountId);
+		$this->db->where('accounting_vendor_transaction_categories.transaction_type', $transactionType);
+
+		switch($transactionType) {
+			case 'Expense' :
+				$this->db->where('accounting_expense.status !=', 0);
+				$this->db->join('accounting_expense', 'accounting_expense.id = accounting_vendor_transaction_categories.transaction_id');
+			break;
+			case 'Check' :
+				$this->db->where('accounting_check.status !=', 0);
+				$this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_categories.transaction_id');
+			break;
+			case 'Bill' :
+				$this->db->where('accounting_bill.status !=', 0);
+				$this->db->join('accounting_bill', 'accounting_bill.id = accounting_vendor_transaction_categories.transaction_id');
+			break;
+			case 'Purchase Order' :
+				$this->db->where('accounting_purchase_order.status !=', 0);
+				$this->db->join('accounting_purchase_order', 'accounting_purchase_order.id = accounting_vendor_transaction_categories.transaction_id');
+			break;
+			case 'Vendor Credit' :
+				$this->db->where('accounting_vendor_credit.status !=', 0);
+				$this->db->join('accounting_vendor_credit', 'accounting_vendor_credit.id = accounting_vendor_transaction_categories.transaction_id');
+			break;
+			case 'Credit Card Credit' :
+				$this->db->where('accounting_credit_card_credits.status !=', 0);
+				$this->db->join('accounting_credit_card_credits', 'accounting_credit_card_credits.id = accounting_vendor_transaction_categories.transaction_id');
+			break;
+		}
+		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function get_credit_card_credit_registers($accountId)
 	{
 		$this->db->where('bank_credit_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_credit_card_credits');
 		return $query->result();
 	}
@@ -358,7 +393,9 @@ class Chart_of_accounts_model extends MY_Model {
 	public function get_transfer_registers($accountId)
 	{
 		$this->db->where('transfer_from_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$this->db->or_where('transfer_to_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_transfer_funds_transaction');
 		return $query->result();
 	}
@@ -366,20 +403,26 @@ class Chart_of_accounts_model extends MY_Model {
 	public function get_deposit_registers($accountId)
 	{
 		$this->db->where('account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_bank_deposit');
 		return $query->result();
 	}
 
 	public function get_deposit_payment_registers($accountId)
 	{
-		$this->db->where('received_from_account_id', $accountId);
-		$query = $this->db->get('accounting_bank_deposit_funds');
+		$this->db->select('*');
+		$this->db->from('accounting_bank_deposit_funds');
+		$this->db->where('accounting_bank_deposit_funds.received_from_account_id', $accountId);
+		$this->db->where('accounting_bank_deposit.status !=', 0);
+		$this->db->join('accounting_bank_deposit', 'accounting_bank_deposit.id = accounting_bank_deposit_funds.bank_deposit_id');
+		$query = $this->db->get();
 		return $query->result();
 	}
 
 	public function get_qty_adjustments_registers($accountId)
 	{
 		$this->db->where('inventory_adjustment_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_inventory_qty_adjustments');
 		return $query->result();
 	}
@@ -389,7 +432,9 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->select('*');
 		$this->db->from('accounting_inventory_qty_adjustment_items');
 		$this->db->where('items_accounting_details.inv_asset_acc_id', $accountId);
+		$this->db->where('accounting_inventory_qty_adjustments.status !=', 0);
 		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = accounting_inventory_qty_adjustment_items.product_id');
+		$this->db->join('accounting_inventory_qty_adjustments', 'accounting_inventory_qty_adjustments.id = accounting_inventory_qty_adjustment_items.adjustment_id');
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -397,6 +442,7 @@ class Chart_of_accounts_model extends MY_Model {
 	public function get_expense_registers($accountId)
 	{
 		$this->db->where('payment_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_expense');
 		return $query->result();
 	}
@@ -404,6 +450,7 @@ class Chart_of_accounts_model extends MY_Model {
 	public function get_item_starting_value_registers($accountId)
 	{
 		$this->db->where('inv_adj_account', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_item_starting_value_adjustment');
 		return $query->result();
 	}
@@ -413,6 +460,7 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->select('*');
 		$this->db->from('accounting_item_starting_value_adjustment');
 		$this->db->where('items_accounting_details.inv_asset_acc_id', $accountId);
+		$this->db->where('status !=', 0);
 		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = accounting_item_starting_value_adjustment.item_id');
 		$query = $this->db->get();
 		return $query->result();
@@ -422,6 +470,7 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('credit_card_id', $accountId);
 		$this->db->or_where('bank_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_pay_down_credit_card');
 		return $query->result();
 	}
@@ -429,6 +478,7 @@ class Chart_of_accounts_model extends MY_Model {
 	public function get_bill_payment_registers($accountId)
 	{
 		$this->db->where('payment_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_bill_payments');
 		return $query->result();
 	}

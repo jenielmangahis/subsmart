@@ -93,7 +93,7 @@ add_css(array(
                                                 data-job-status="<?= isset($jobs_data) ? $jobs_data->status : ''  ?>"
                                                 <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
                                                     data-toggle="modal"
-                                                    data-target="##finish_modal"
+                                                    data-target="#finish_modal"
                                                     data-backdrop="static"
                                                     data-keyboard="false"
                                                 <?php endif; ?>

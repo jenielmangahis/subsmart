@@ -1890,3 +1890,40 @@ jQuery(function($){
   
   });
 });
+
+
+$(".sendESTemail_cm").click(function() {
+  var id = $(this).attr('data-id');
+  var number = $(this).attr('cm-num');
+  // var est_status = $(this).attr('est-status');
+  var est_email = $(this).attr('est-email');
+  var est_cust = $(this).attr('est-cust');
+
+  var message = 'Dear ' + est_cust + ', <br><br> Please review the estimate below.  Feel free to contact us if you have any questions.  <br> We look forward to working with you. <br><br> Thanks for your business!';
+  
+  // alert('nisulod');
+  $('#sendESTemail_cm').modal('show'); 
+
+  $('#est_number_email_cm').text(number);
+  $('.estID_cm').text(id);
+  $('.custEmail_cm').val(est_email);
+  // $('.custname').val(est_cust);
+  $('.custmessage_cm').val(`Dear {est_cust}, 
+      
+  Please review the sales receipt below.
+  We appreciate it very much.
+  
+  Thanks for your business!
+  nSmarTrac`);
+
+
+});
+
+jQuery(function($){
+  $("#custmessage").html(function() { 
+    var Cname = $('.custname').val();
+
+   return $(this).html().replace("{est_cust}", Cname);  
+  
+  });
+});

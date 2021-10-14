@@ -428,6 +428,7 @@ $route['accounting/chart-of-accounts/view-register/(:any)'] = 'accounting_contro
 $route['accounting/chart-of-accounts/(:any)/load-registers']['post'] = 'accounting_controllers/chart_of_accounts/load_registers/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['post'] = 'accounting_controllers/chart_of_accounts/print_transactions/$1';
 $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post'] = 'accounting_controllers/chart_of_accounts/export_transactions/$1';
+$route['accounting/chart-of-accounts/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/chart_of_accounts/delete_transaction/$1/$2';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';

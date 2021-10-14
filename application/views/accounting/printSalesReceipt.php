@@ -140,13 +140,13 @@
                     <tbody>
                         <tr>
                             <td>Collections</td>
-                            <td>1</td>
-                            <td>1</td>
+                            <td style="background: #f4f4f4; text-align: right; padding: 5px 0;">1</td>
+                            <td style="background: #f4f4f4; text-align: right; padding: 5px 0;">1</td>
                         </tr>
                         <tr>
                             <td>Commission</td>
-                            <td>1</td>
-                            <td>1</td>
+                            <td style="background: #f4f4f4; text-align: right; padding: 5px 0;">1</td>
+                            <td style="background: #f4f4f4; text-align: right; padding: 5px 0;">1</td>
                         </tr>
                     </tbody>
                 </table>

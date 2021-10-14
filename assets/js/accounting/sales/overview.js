@@ -16,7 +16,11 @@ $(".overview-widget .widget-with-counter").hover(function() {
 );
 
 $(document).on("change", ".overview-widget.income-overtime .filter-section select.duration", function(event) {
-    var selected_duration = $(this).find(":selected").text();
+    income_overtime_duration_changed();
+});
+
+function income_overtime_duration_changed() {
+    var selected_duration = $(".overview-widget.income-overtime .filter-section select.duration").find(":selected").text();
     $.ajax({
         url: baseURL + "/sales-overview/income-overtime",
         type: "POST",
@@ -38,10 +42,15 @@ $(document).on("change", ".overview-widget.income-overtime .filter-section selec
             last_income_per_day = data.last_income_per_day;
             last_income_per_month = data.last_income_per_month;
             last_income_per_quarter = data.last_income_per_quarter;
-            console.log(graph_data);
+            income_label = data.income_label;
+            last_income_label = data.last_income_label;
+            income_month_label = data.income_month_label;
+            income_year_label = data.income_year_label;
+            income_overtime_graph_setter();
+            console.log(income_per_month);
         },
     });
-});
+}
 
 $(document).on("click", ".overview-widget.shortcuts .img-button-links .recurring-sales-receipt", function(event) {
     $("#addsalesreceiptModal .modal-footer-check .middle-links.end a").trigger("click");
@@ -73,13 +82,18 @@ function sortKeys(obj_1) {
 }
 
 function graph_data_setter(data, for_data) {
+    var selected_duration = $(".overview-widget.income-overtime .filter-section select.duration").find(":selected").text();
     var x_y = {};
     var graph_data_temp = [];
     data = sortKeys(data);
-    console.log(data);
     $.each(data, function(key, value) {
-        console.log(key + ": " + value);
-        x_y.x = parseInt(key);
+        if (selected_duration == "This month" || selected_duration == "Last month") {
+            x_y.x = new Date(parseInt(income_year_label), parseInt(income_month_label) - 1, parseInt(key) - 10);
+        } else if (selected_duration == "This quarter" || selected_duration == "Last quarter" || selected_duration == "This year by month" || selected_duration == "Last year by month") {
+            x_y.x = new Date(parseInt(income_year_label), parseInt(key) - 11, 1);
+        } else if (selected_duration == "This year by quarter" || selected_duration == "Last year by quarter") {
+            x_y.x = parseInt(key);
+        }
         x_y.y = value;
         graph_data_temp.push(x_y);
         x_y = {};
@@ -95,36 +109,83 @@ function graph_data_setter(data, for_data) {
 //income over time chart
 
 $(document).on("change", ".overview-widget.income-overtime .filter-section input#compare-prev-year", function(event) {
+    income_overtime_graph_setter();
+});
+
+function income_overtime_graph_setter() {
     var graph_data_temp;
-    if ($(this).is(':checked')) {
+    var selected_duration = $(".overview-widget.income-overtime .filter-section select.duration").find(":selected").text();
+    var valueFormatString_for_X = "DD MMM";
+    var axisX_for_chart = {
+        valueFormatString: valueFormatString_for_X,
+        crosshair: {
+            enabled: true,
+            snapToDataPoint: true
+        },
+        interval: 1
+    };
+    if (selected_duration == "This month" || selected_duration == "Last month") {
         graph_data_setter(income_per_day, "current");
         graph_data_setter(last_income_per_day, "previous");
+    } else if (selected_duration == "This quarter" || selected_duration == "Last quarter" || selected_duration == "This year by month" || selected_duration == "Last year by month") {
+        graph_data_setter(income_per_month, "current");
+        graph_data_setter(last_income_per_month, "previous");
+        valueFormatString_for_X = "MMM";
+        axisX_for_chart = {
+            valueFormatString: valueFormatString_for_X,
+            crosshair: {
+                enabled: true,
+                snapToDataPoint: true
+            },
+            interval: 1,
+            intervalType: "month",
+        };
+    } else if (selected_duration == "This year by quarter" || selected_duration == "Last year by quarter") {
+        graph_data_setter(income_per_quarter, "current");
+        graph_data_setter(last_income_per_quarter, "previous");
+        valueFormatString_for_X = "Q#";
+        axisX_for_chart = {
+            valueFormatString: valueFormatString_for_X,
+            crosshair: {
+                enabled: true,
+                snapToDataPoint: true
+            },
+            interval: 1,
+            minimum: 1,
+            maximum: 4,
+        };
+    }
+    console.log(graph_data);
+    if ($(".overview-widget.income-overtime .filter-section input#compare-prev-year").is(':checked')) {
         graph_data_temp = [{
             type: "line",
             showInLegend: true,
-            name: "Oct 2021",
+            name: income_label,
             color: "#00A402",
+            xValueFormatString: valueFormatString_for_X,
+            markerSize: 12,
             dataPoints: graph_data
         }, {
             type: "line",
             lineDashType: "dash",
             markerType: "triangle",
             showInLegend: true,
-            name: "Oct 2020",
+            name: last_income_label,
             color: "#8D9096",
+            xValueFormatString: valueFormatString_for_X,
             dataPoints: graph_data_prev
-        }]
+        }, ];
     } else {
         graph_data_temp = [{
             type: "line",
             showInLegend: true,
-            name: "Oct 2021",
+            name: income_label,
             color: "#00A402",
+            xValueFormatString: valueFormatString_for_X,
             interval: 1,
             dataPoints: graph_data
-        }]
+        }];
     }
-    console.log(graph_data_temp);
     chart = new CanvasJS.Chart("chartContainer1", {
         animationEnabled: true,
         theme: "light2",
@@ -134,10 +195,13 @@ $(document).on("change", ".overview-widget.income-overtime .filter-section input
         toolTip: {
             shared: true
         },
-        axisX: {
-            interval: 1,
-            valueFormatString: "#0",
-            minimum: 1,
+        axisX: axisX_for_chart,
+        axisY: {
+            title: "",
+            includeZero: true,
+            crosshair: {
+                enabled: true
+            }
         },
         legend: {
             verticalAlign: "bottom",
@@ -147,8 +211,7 @@ $(document).on("change", ".overview-widget.income-overtime .filter-section input
         data: graph_data_temp
     });
     chart.render();
-    console.log(typeof graph_data);
-});
+}
 
 function toogleDataSeries(e) {
     if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
