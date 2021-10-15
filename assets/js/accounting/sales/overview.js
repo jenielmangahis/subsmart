@@ -113,6 +113,12 @@ $(document).on("change", ".overview-widget.income-overtime .filter-section input
 });
 
 function income_overtime_graph_setter() {
+    var widget_height = $(".overview-widget.income-overtime").height();
+    $(".overview-widget.income-overtime").height(widget_height);
+    $(".overview-widget.income-overtime .widget-elements").hide();
+    $(".overview-widget .widget-loader ").show();
+
+
     var graph_data_temp;
     var selected_duration = $(".overview-widget.income-overtime .filter-section select.duration").find(":selected").text();
     var valueFormatString_for_X = "DD MMM";
@@ -155,7 +161,6 @@ function income_overtime_graph_setter() {
             maximum: 4,
         };
     }
-    console.log(graph_data);
     if ($(".overview-widget.income-overtime .filter-section input#compare-prev-year").is(':checked')) {
         graph_data_temp = [{
             type: "line",
@@ -163,7 +168,6 @@ function income_overtime_graph_setter() {
             name: income_label,
             color: "#00A402",
             xValueFormatString: valueFormatString_for_X,
-            markerSize: 12,
             dataPoints: graph_data
         }, {
             type: "line",
@@ -210,7 +214,18 @@ function income_overtime_graph_setter() {
         },
         data: graph_data_temp
     });
-    chart.render();
+
+    $(".overview-widget.income-overtime .widget-elements").show();
+    $(".overview-widget .widget-loader").hide();
+    $(".overview-widget.income-overtime").removeAttr("style");
+    if (graph_data.length > 0) {
+        $(".overview-widget.income-overtime .no-graph").hide();
+        $(".overview-widget.income-overtime #chartContainer1").show();
+        chart.render();
+    } else {
+        $(".overview-widget.income-overtime #chartContainer1").hide();
+        $(".overview-widget.income-overtime .no-graph").show();
+    }
 }
 
 function toogleDataSeries(e) {

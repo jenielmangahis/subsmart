@@ -519,7 +519,7 @@ SQL;
             $per_month_index=date("m", strtotime($payment->payment_date))+10;
             $income_per_month[$per_month_index]+=$payment->amount;
 
-            $month = date("n");
+            $month = date("n", strtotime($payment->payment_date));
             $yearQuarter = ceil($month / 3);
             $income_per_quarter[$yearQuarter] +=$payment->amount;
         }
@@ -542,7 +542,7 @@ SQL;
             $per_month_index=date("m", strtotime($payment->payment_date))+10;
             $last_income_per_month[$per_month_index]+=$payment->amount;
 
-            $month = date("n");
+            $month = date("n", strtotime($payment->payment_date));
             $yearQuarter = ceil($month / 3);
             $last_income_per_quarter[$yearQuarter] +=$payment->amount;
         }

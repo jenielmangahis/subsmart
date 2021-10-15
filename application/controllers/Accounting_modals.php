@@ -1212,9 +1212,7 @@ class Accounting_modals extends MY_Controller
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : 0,
                 'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
+                'status' => 1
             ];
 
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
@@ -1271,9 +1269,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                        'status' => 1,
-                        'created_at' => date('Y-m-d h:i:s'),
-                        'updated_at' => date('Y-m-d h:i:s')
+                        'status' => 1
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
@@ -1511,9 +1507,7 @@ class Accounting_modals extends MY_Controller
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
+                'status' => 1
             ];
 
             $entryId = $this->accounting_journal_entries_model->create($insertData);
@@ -1536,9 +1530,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                        'status' => 1,
-                        'created_at' => date('Y-m-d h:i:s'),
-                        'updated_at' => date('Y-m-d h:i:s')
+                        'status' => 1
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
@@ -1556,7 +1548,6 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $entryItems = [];
-                $startingTime = date("m/d/Y H:i:s");
                 foreach ($data['journal_entry_accounts'] as $key => $value) {
                     $name = explode('-', $data['names'][$key]);
     
@@ -1567,9 +1558,7 @@ class Accounting_modals extends MY_Controller
                         'credit' => $data['credits'][$key],
                         'description' => $data['descriptions'][$key],
                         'name_key' => $name[0],
-                        'name_id' => $name[1],
-                        'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                        'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                        'name_id' => $name[1]
                     ];
 
                     $account = $this->chart_of_accounts_model->getById($value);
@@ -1584,8 +1573,6 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($accountData);
-
-                    $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                 }
 
                 $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
@@ -2537,9 +2524,7 @@ class Accounting_modals extends MY_Controller
                     'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                     'total_amount' => $data['total_amount'],
                     'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                    'status' => 1,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'status' => 1
                 ];
         
                 $expenseId = $this->expenses_model->addExpense($expenseData);
@@ -2563,8 +2548,7 @@ class Accounting_modals extends MY_Controller
                         'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                         'total_amount' => $data['total_amount'],
                         'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                        'status' => 1,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'status' => 1
                     ];
 
                     $expenseId = $this->vendors_model->update_expense($expense->id, $expenseData);
@@ -2637,7 +2621,6 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Expense',
@@ -2651,9 +2634,7 @@ class Accounting_modals extends MY_Controller
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
                             'linked_transaction_type' => $data['category_linked'][$index] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null,
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -2673,8 +2654,6 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -2682,7 +2661,6 @@ class Accounting_modals extends MY_Controller
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Expense',
@@ -2695,9 +2673,7 @@ class Accounting_modals extends MY_Controller
                             'tax' => $data['item_tax'][$index],
                             'total' => $data['item_total'][$index],
                             'linked_transaction_type' => $data['item_linked'][$index] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null,
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
     
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -2721,8 +2697,6 @@ class Accounting_modals extends MY_Controller
     
                             $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                         }
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -2969,9 +2943,7 @@ class Accounting_modals extends MY_Controller
                         'check_no' => $checkData['check_no'],
                         'transaction_type' => 'check',
                         'transaction_id' => $checkId,
-                        'payment_account_id' => $checkData['bank_account_id'],
-                        'created_at' => date("Y-m-d H:i:s"),
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'payment_account_id' => $checkData['bank_account_id']
                     ];
 
                     $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
@@ -3002,7 +2974,6 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Check',
@@ -3016,9 +2987,7 @@ class Accounting_modals extends MY_Controller
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
                             'linked_transaction_type' => $data['category_linked'][$index] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null,
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -3038,8 +3007,6 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -3047,7 +3014,6 @@ class Accounting_modals extends MY_Controller
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Check',
@@ -3060,9 +3026,7 @@ class Accounting_modals extends MY_Controller
                             'tax' => $data['item_tax'][$index],
                             'total' => $data['item_total'][$index],
                             'linked_transaction_type' => $data['item_linked'][$index] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null,
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -3086,8 +3050,6 @@ class Accounting_modals extends MY_Controller
     
                             $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                         }
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -3199,9 +3161,7 @@ class Accounting_modals extends MY_Controller
                     'remaining_balance' => $data['total_amount'],
                     'total_amount' => $data['total_amount'],
                     'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                    'status' => 1,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'status' => 1
                 ];
         
                 $billId = $this->expenses_model->addBill($billData);
@@ -3226,8 +3186,7 @@ class Accounting_modals extends MY_Controller
                         'remaining_balance' => $data['total_amount'],
                         'total_amount' => $data['total_amount'],
                         'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                        'status' => 1,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'status' => 1
                     ];
 
                     $billId = $this->vendors_model->update_bill($data['transaction_id'], $billData);
@@ -3281,7 +3240,6 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Bill',
@@ -3295,9 +3253,7 @@ class Accounting_modals extends MY_Controller
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
                             'linked_transaction_type' => $data['category_linked'] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['category_linked'] ? $linkedTransaction[1] : null,
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'linked_transaction_id' => $data['category_linked'] ? $linkedTransaction[1] : null
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -3317,8 +3273,6 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -3326,7 +3280,6 @@ class Accounting_modals extends MY_Controller
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Bill',
@@ -3339,9 +3292,7 @@ class Accounting_modals extends MY_Controller
                             'tax' => $data['item_tax'][$index],
                             'total' => $data['item_total'][$index],
                             'linked_transaction_type' => $data['item_linked'] ? $linkedTransaction[0] : null,
-                            'linked_transaction_id' => $data['item_linked'] ? $linkedTransaction[1] : null,
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'linked_transaction_id' => $data['item_linked'] ? $linkedTransaction[1] : null
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -3365,8 +3316,6 @@ class Accounting_modals extends MY_Controller
     
                             $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                         }
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -3606,9 +3555,7 @@ class Accounting_modals extends MY_Controller
                     'to_print_check_no' => $data['print_later'],
                     'total_amount' => $paymentTotal,
                     'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
-                    'status' => 1,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'status' => 1
                 ];
 
                 $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
@@ -3619,9 +3566,7 @@ class Accounting_modals extends MY_Controller
                             'check_no' => $billPayment['check_no'],
                             'transaction_type' => 'bill-payment',
                             'transaction_id' => $billPaymentId,
-                            'payment_account_id' => $billPayment['payment_account_id'],
-                            'created_at' => date("Y-m-d H:i:s"),
-                            'updated_at' => date("Y-m-d H:i:s")
+                            'payment_account_id' => $billPayment['payment_account_id']
                         ];
     
                         $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
@@ -3665,8 +3610,7 @@ class Accounting_modals extends MY_Controller
         
                                 $vCreditData = [
                                     'status' => $remainingBal === 0 ? 2 : 1,
-                                    'remaining_balance' => $remainingBal,
-                                    'updated_at' => date("Y-m-d H:i:s")
+                                    'remaining_balance' => $remainingBal
                                 ];
         
                                 $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
@@ -3685,9 +3629,7 @@ class Accounting_modals extends MY_Controller
                             'bill_id' => $data['bills'][$key],
                             'credit_applied_amount' => $data['credit_applied'][$key],
                             'payment_amount' => $data['payment_amount'][$key],
-                            'total_amount' => $data['total_amount'][$key],
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'total_amount' => $data['total_amount'][$key]
                         ];
 
                         $bill = $this->expenses_model->get_bill_data($data['bills'][$key]);
@@ -3695,8 +3637,7 @@ class Accounting_modals extends MY_Controller
 
                         $billData = [
                             'remaining_balance' => number_format($remainingBal, 2, '.', ','),
-                            'status' => $remainingBal === 0.00 ? 2 : 1,
-                            'updated_at' => date("Y-m-d H:i:s")
+                            'status' => $remainingBal === 0.00 ? 2 : 1
                         ];
     
                         $this->expenses_model->update_bill_data($bill->id, $billData);
@@ -3759,9 +3700,7 @@ class Accounting_modals extends MY_Controller
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
                 'remaining_balance' => $data['total_amount'],
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'status' => 1
             ];
     
             $vendorCreditId = $this->expenses_model->add_vendor_credit($vendorCredit);
@@ -3794,7 +3733,6 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Vendor Credit',
@@ -3806,9 +3744,7 @@ class Accounting_modals extends MY_Controller
                             'billable' => $data['category_billable'][$index],
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
-                            'customer_id' => $data['category_customer'][$index],
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'customer_id' => $data['category_customer'][$index]
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -3828,8 +3764,6 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -3837,7 +3771,6 @@ class Accounting_modals extends MY_Controller
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Vendor Credit',
@@ -3848,9 +3781,7 @@ class Accounting_modals extends MY_Controller
                             'rate' => $data['item_amount'][$index],
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'total' => $data['item_total'][$index],
-                            'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                            'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                            'total' => $data['item_total'][$index]
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -3887,8 +3818,6 @@ class Accounting_modals extends MY_Controller
     
                             $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                         }
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -3993,9 +3922,7 @@ class Accounting_modals extends MY_Controller
                     'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                     'total_amount' => $data['total_amount'],
                     'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
-                    'status' => $data['status'] === "open" ? 1 : 2,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'status' => $data['status'] === "open" ? 1 : 2
                 ];
         
                 $purchaseOrderId = $this->expenses_model->add_purchase_order($purchaseOrderData);
@@ -4021,8 +3948,7 @@ class Accounting_modals extends MY_Controller
                         'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                         'total_amount' => $data['total_amount'],
                         'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
-                        'status' => $data['status'] === "open" ? 1 : 2,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'status' => $data['status'] === "open" ? 1 : 2
                     ];
             
                     $purchaseOrderId = $this->vendors_model->update_purchase_order($data['transaction_id'], $purchaseOrderData);
@@ -4048,7 +3974,6 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Purchase Order',
@@ -4060,12 +3985,8 @@ class Accounting_modals extends MY_Controller
                             'billable' => $data['category_billable'][$index],
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
-                            'customer_id' => $data['category_customer'][$index],
-                            'created_at' => date('Y-m-d H:i:s', strtotime($startingTime)),
-                            'updated_at' => date('Y-m-d H:i:s', strtotime($startingTime))
+                            'customer_id' => $data['category_customer'][$index]
                         ];
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -4073,7 +3994,6 @@ class Accounting_modals extends MY_Controller
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Purchase Order',
@@ -4084,9 +4004,7 @@ class Accounting_modals extends MY_Controller
                             'rate' => $data['item_amount'][$index],
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'total' => $data['item_total'][$index],
-                            'created_at' => date('Y-m-d H:i:s', strtotime($startingTime)),
-                            'updated_at' => date('Y-m-d H:i:s', strtotime($startingTime))
+                            'total' => $data['item_total'][$index]
                         ];
 
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
@@ -4094,8 +4012,6 @@ class Accounting_modals extends MY_Controller
                         $newQtyPO = intval($itemAccDetails->qty_po) + intval($data['quantity'][$index]);
 
                         $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $value);
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -4170,9 +4086,7 @@ class Accounting_modals extends MY_Controller
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'status' => 1
             ];
 
             $creditId = $this->expenses_model->add_credit_card_credit($creditData);
@@ -4198,7 +4112,6 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['expense_account'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Credit Card Credit',
@@ -4210,9 +4123,7 @@ class Accounting_modals extends MY_Controller
                             'billable' => $data['category_billable'][$index],
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
-                            'customer_id' => $data['category_customer'][$index],
-                            'created_at' => date('Y-m-d H:i:s', strtotime($startingTime)),
-                            'updated_at' => date('Y-m-d H:i:s', strtotime($startingTime))
+                            'customer_id' => $data['category_customer'][$index]
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -4232,8 +4143,6 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -4241,7 +4150,6 @@ class Accounting_modals extends MY_Controller
     
                 if (isset($data['item'])) {
                     $itemDetails = [];
-                    $startingTime = date("m/d/Y H:i:s");
                     foreach ($data['item'] as $index => $value) {
                         $itemDetails[] = [
                             'transaction_type' => 'Credit Card Credit',
@@ -4252,9 +4160,7 @@ class Accounting_modals extends MY_Controller
                             'rate' => $data['item_amount'][$index],
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'total' => $data['item_total'][$index],
-                            'created_at' => date('Y-m-d H:i:s', strtotime($startingTime)),
-                            'updated_at' => date('Y-m-d H:i:s', strtotime($startingTime))
+                            'total' => $data['item_total'][$index]
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -4291,8 +4197,6 @@ class Accounting_modals extends MY_Controller
     
                             $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                         }
-
-                        $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -4331,8 +4235,7 @@ class Accounting_modals extends MY_Controller
 
                 $vCreditData = [
                     'status' => $remainingBal === 0.00 ? 2 : 1,
-                    'remaining_balance' => $remainingBal,
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'remaining_balance' => $remainingBal
                 ];
 
                 $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
@@ -4347,9 +4250,7 @@ class Accounting_modals extends MY_Controller
                 'to_print_check_no' => null,
                 'total_amount' => $paymentTotal,
                 'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'status' => 1
             ];
 
             $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
@@ -4375,7 +4276,6 @@ class Accounting_modals extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
                 $paymentItems = [];
-                $startingTime = date("m/d/Y H:i:s");
                 foreach ($data['bills'] as $index => $bill) {
                     $paymentItems[] = [
                         'bill_payment_id' => $billPaymentId,
@@ -4404,8 +4304,6 @@ class Accounting_modals extends MY_Controller
                     }
 
                     $this->expenses_model->update_bill_data($bill->id, $billData);
-
-                    $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                 }
 
                 $this->expenses_model->insert_bill_payment_items($paymentItems);
@@ -4810,15 +4708,13 @@ class Accounting_modals extends MY_Controller
             if ($flag) {
                 if ($post['type'][$key] === 'check') {
                     $data = [
-                        'to_print' => 0,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'to_print' => 0
                     ];
     
                     $update = $this->vendors_model->update_check($id, $data);
                 } else {
                     $data = [
-                        'to_print_check_no' => 0,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'to_print_check_no' => 0
                     ];
     
                     $update = $this->vendors_model->update_bill_payment($id, $data);
@@ -4832,15 +4728,13 @@ class Accounting_modals extends MY_Controller
             foreach ($post['id'] as $key => $id) {
                 if ($post['type'][$key] === 'check') {
                     $data = [
-                        'to_print' => 1,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'to_print' => 1
                     ];
     
                     $update = $this->vendors_model->update_check($id, $data);
                 } else {
                     $data = [
-                        'to_print_check_no' => 1,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'to_print_check_no' => 1
                     ];
     
                     $update = $this->vendors_model->update_bill_payment($id, $data);
@@ -4916,8 +4810,7 @@ class Accounting_modals extends MY_Controller
 
                 $checkData = [
                     'check_no' => $startingCheckNo,
-                    'to_print' => null,
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'to_print' => null
                 ];
 
                 $this->vendors_model->update_check($id, $checkData);
@@ -4982,8 +4875,7 @@ class Accounting_modals extends MY_Controller
 
                 $checkData = [
                     'check_no' => $startingCheckNo,
-                    'to_print_check_no' => null,
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'to_print_check_no' => null
                 ];
 
                 $this->vendors_model->update_bill_payment($id, $checkData);
@@ -4993,9 +4885,7 @@ class Accounting_modals extends MY_Controller
                 'check_no' => $startingCheckNo,
                 'transaction_type' => $post['type'][$key],
                 'transaction_id' => $check->id,
-                'payment_account_id' => $paymentAcc->id,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'payment_account_id' => $paymentAcc->id
             ];
 
             $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
@@ -5054,8 +4944,7 @@ class Accounting_modals extends MY_Controller
 
                     if (intval($checkNo->check_no) >= intval($fromCheckNo)) {
                         $checkData = [
-                            'check_no' => null,
-                            'updated_at' => date("Y-m-d H:i:s")
+                            'check_no' => null
                         ];
 
                         if ($type === 'check') {
@@ -5082,8 +4971,7 @@ class Accounting_modals extends MY_Controller
                     $type = $post['type'][$key];
 
                     $checkData = [
-                        'check_no' => null,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'check_no' => null
                     ];
 
                     if ($type === 'check') {
@@ -5192,9 +5080,7 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'display_name' => trim($post['payee_name']),
                 'print_on_check_name' => trim($post['payee_name']),
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'status' => 1
             ];
 
             switch (strval($nameCount)) {
@@ -6306,9 +6192,7 @@ class Accounting_modals extends MY_Controller
                 'notes' => $post['notes'],
                 'attachments' => isset($post['attachments']) ? json_encode($post['attachments']) : null,
                 'status' => 1,
-                'created_by' => logged('id'),
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'created_by' => logged('id')
             ];
 
             $id = $this->vendors_model->createVendor($data);
@@ -6427,9 +6311,7 @@ class Accounting_modals extends MY_Controller
             'time' => $post['choose_time'],
             'balance' => $post['balance'],
             'time_date' => $date,
-            'active' => 1,
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
+            'active' => 1
         ];
 
         $accountId = $this->chart_of_accounts_model->saverecords($data);
@@ -6493,9 +6375,7 @@ class Accounting_modals extends MY_Controller
             'company_id' => getLoggedCompanyID(),
             'name' => $post['name'],
             'credit_card' => $post['credit_card'],
-            'status' => 1,
-            'created_at' => date('Y-m-d h:i:s'),
-            'updated_at' => date('Y-m-d h:i:s')
+            'status' => 1
         ];
 
         $methodId = $this->accounting_payment_methods_model->create($data);
@@ -6522,9 +6402,7 @@ class Accounting_modals extends MY_Controller
             'day_of_month_due' => $post['payment_term_type'] === "2" ? $post['day_of_month_due'] === "" ? 0 : $post['day_of_month_due'] : null,
             'minimum_days_to_pay' => $post['payment_term_type'] === "2" ? $post['minimum_days_to_pay'] === "" ? 0 : $post['minimum_days_to_pay'] : null,
             'discount_days' => 0,
-            'status' => 1,
-            'created_at' => date('Y-m-d h:i:s'),
-            'updated_at' => date('Y-m-d h:i:s')
+            'status' => 1
         ];
 
         $termId = $this->accounting_terms_model->create($data);
@@ -6721,9 +6599,7 @@ class Accounting_modals extends MY_Controller
                 'file_extension' => $extension,
                 'size' => $files['size'][$key],
                 'notes' => null,
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
+                'status' => 1
             ];
 
             move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
@@ -6804,9 +6680,7 @@ class Accounting_modals extends MY_Controller
             'inv_adj_account' => $this->input->post('inv_adj_acc'),
             'memo' => $this->input->post('memo'),
             'total_amount' => floatval($this->input->post('initial_qty_on_hand')) * floatval($this->input->post('initial_cost')),
-            'status' => 1,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'status' => 1
         ];
 
         $itemData = [

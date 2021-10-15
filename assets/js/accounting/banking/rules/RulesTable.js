@@ -12,6 +12,7 @@ export class RulesTable {
 
   async loadDeps() {
     this.api = await import("./api.js");
+    this.utils = await import("./utils.js");
   }
 
   setUpTable() {
@@ -32,17 +33,15 @@ export class RulesTable {
         await this.api.batchEditRule(ids, { is_active: 0 });
         window.location.reload();
       },
-      batchDelete: async (ids) => {
-        const response = await Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#2ca01c",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete!",
-        });
+      delete: async ({ id }) => {
+        const response = await this.utils.confirmDelete();
+        if (!response.isConfirmed) return;
 
+        await this.api.deleteRule(id);
+        window.location.reload();
+      },
+      batchDelete: async (ids) => {
+        const response = await this.utils.confirmDelete();
         if (!response.isConfirmed) return;
 
         await this.api.batchDeleteRule(ids);
@@ -116,7 +115,7 @@ export class RulesTable {
       },
       actions: (_, __, row) => {
         const subOptions = {
-          delete: `<li><a href="#" id="deleteRules" data-id="${row.id}">Delete</a></li>`,
+          delete: `<li><a href="#" class="action" data-action="delete">Delete</a></li>`,
           makeInactive: `<li><a href="#" class="action" data-action="makeInactive">Disable</a></li>`,
           makeActive: `<li><a href="#" class="action" data-action="makeActive">Enable</a></li>`,
         };
@@ -276,6 +275,7 @@ export class RulesTable {
 
     let isReordering = false;
     table.on("row-reorder.dt", async () => {
+      await this.utils.sleep(1);
       if (isReordering) return;
 
       isReordering = true;
