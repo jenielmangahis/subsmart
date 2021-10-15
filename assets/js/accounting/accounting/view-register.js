@@ -879,7 +879,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
                 case 'account' :
                     var rowData = $('#registers-table').DataTable().row($(this)).data();
-                    $(this).html(`<select class="form-control"><option value="">${current}</option></select>`);
+                    $(this).html(`<select class="form-control" ${current === '-Split-' ? 'disabled' : ''}><option value="">${current}</option></select>`);
                     $(this).find('select').select2();
                 break;
                 case 'payment' :

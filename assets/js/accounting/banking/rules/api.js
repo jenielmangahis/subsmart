@@ -70,3 +70,15 @@ export async function editRulePriorities(payload) {
 
   return await response.json();
 }
+
+export async function deleteRule(id) {
+  const endpoint = `${window.prefixURL}/AccountingRules/apiDeleteRule/${id}`;
+  const response = await fetch(endpoint, {
+    method: "delete",
+    headers: {
+      accept: "application/json",
+    },
+  });
+
+  return await response.json();
+}

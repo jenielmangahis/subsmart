@@ -41,54 +41,66 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 				</div>
 				<div class="row">
 					<div class="col-md-7">
-						<div class="overview-widget income-overtime" style="  ">
-							<div class="row" style="padding-top: 10px;">
-								<div class="col-md-5">
-									<div class="widget-title">
-										INCOME OVER TIME <i class="fa fa-info-circle" aria-hidden="true"></i>
-									</div>
-								</div>
-								<div class="col-md-7">
-									<div class="filter-section">
-										<div class="duration">
-											<label for="">Duration:</label>
-											<select name="duration" class="duration">
-												<option value="">This month</option>
-												<option value="">Last month</option>
-												<option value="">This quarter</option>
-												<option value="">Last quarter</option>
-												<option value="">This year by month</option>
-												<option value="">This year by quarter</option>
-												<option value="">Last year by month</option>
-												<option value="">Last year by quarter</option>
-											</select>
+						<div class="overview-widget income-overtime">
+							<div class="widget-loader">
+								<center>
+									<img src="<?=base_url("assets/img/accounting/customers/loader.gif")?>"
+										alt="">
+								</center>
+							</div>
+							<div class="widget-elements">
+								<div class="row" style="padding-top: 10px;">
+									<div class="col-md-5">
+										<div class="widget-title">
+											INCOME OVER TIME <i class="fa fa-info-circle" aria-hidden="true"></i>
 										</div>
-										<div class="compare-prev-year">
-											<label class="main-label">Compare previous year:</label>
-											<div class="form-group">
-												<div class="custom-control custom-switch">
-													<input type="checkbox" on class="custom-control-input"
-														id="compare-prev-year">
-													<label class="custom-control-label" for="compare-prev-year"></label>
+									</div>
+									<div class="col-md-7">
+										<div class="filter-section">
+											<div class="duration">
+												<label for="">Duration:</label>
+												<select name="duration" class="duration">
+													<option value="">This month</option>
+													<option value="">Last month</option>
+													<option value="">This quarter</option>
+													<option value="">Last quarter</option>
+													<option value="">This year by month</option>
+													<option value="">This year by quarter</option>
+													<option value="">Last year by month</option>
+													<option value="">Last year by quarter</option>
+												</select>
+											</div>
+											<div class="compare-prev-year">
+												<label class="main-label">Compare previous year:</label>
+												<div class="form-group">
+													<div class="custom-control custom-switch">
+														<input type="checkbox" on class="custom-control-input"
+															id="compare-prev-year">
+														<label class="custom-control-label"
+															for="compare-prev-year"></label>
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="widget-content">
-								<div class="content-monitary-highlight">
-									$<span class="amount"><?=number_format($income_this_month, 2)?></span>
-									<span class="label">This month</span>
-								</div>
-								<div class="monitary-increase">
-									$<?=number_format($income_this_month-$income_last_month, 2)?>
-									more than <?=date("M d", strtotime("first day of previous month"))?>
-									- <?=date("d, Y", strtotime("last day of previous month"))?>
-								</div>
-								<div id="chartContainer1" class="dynamic-graph-container"
-									style="width: 100%; height:200px;">
+								<div class="widget-content">
+									<div class="content-monitary-highlight">
+										$<span class="amount"><?=number_format($income_this_month, 2)?></span>
+										<span class="label">This month</span>
+									</div>
+									<div class="monitary-increase">
+										$<?=number_format($income_this_month-$income_last_month, 2)?>
+										more than <?=date("M d", strtotime("first day of previous month"))?>
+										- <?=date("d, Y", strtotime("last day of previous month"))?>
+									</div>
+									<div id="chartContainer1" class="dynamic-graph-container"
+										style="width: 100%; height:200px;">
 
+									</div>
+									<div class="no-graph">
+										<div class="text">No data found.</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -182,6 +194,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     }?>">
 										<div class="row">
 											<div class="col-md-6">
+											<div class="invoices-365-segment">
 												<div class="sigments">
 													<div class="last-365days">
 														<div class="bold">$<?=number_format($unpaid_last_365, 2)?>
@@ -230,39 +243,41 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 															aria-valuenow="<?=$progress_not_due?>"
 															aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
-												</div>
+												</div></div>
 											</div>
 											<div class="col-md-6">
-												<div class="sigments">
-													<div class="last-365days">
-														<div class="bold">$<?=number_format($unpaid_last_30, 2)?>
-															Unpaid</div>
-													</div>
-													<div class="text">
-														<div class="text" style="padding: 0 10px;">Last 30 days</div>
-													</div>
-												</div>
-												<div style="padding: 20px 0;">
-													<div class="row">
-														<div class="col-md-6">
-															<div class="content-monitary-highlight small">
-																$<?=number_format($not_deposited_last30_days, 2)?>
-															</div>
-															<div class="text">Not deposited</div>
+												<div class="invoices-30-segment">
+													<div class="sigments">
+														<div class="last-365days">
+															<div class="bold">$<?=number_format($unpaid_last_30, 2)?>
+																Unpaid</div>
 														</div>
-														<div class="col-md-6">
-															<div class="content-monitary-highlight small"
-																style="text-align: right;">
-																$<?=number_format($deposited_last30_days, 2)?>
-															</div>
-															<div class="text" style="text-align: right;">Deposited
+														<div class="text">
+															<div class="text" style="padding: 0 10px;">Last 30 days
 															</div>
 														</div>
 													</div>
-												</div>
-												<div class="invoices-bars">
-													<div class="progress">
-														<?php
+													<div style="padding: 20px 0;">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="content-monitary-highlight small">
+																	$<?=number_format($not_deposited_last30_days, 2)?>
+																</div>
+																<div class="text">Not deposited</div>
+															</div>
+															<div class="col-md-6">
+																<div class="content-monitary-highlight small"
+																	style="text-align: right;">
+																	$<?=number_format($deposited_last30_days, 2)?>
+																</div>
+																<div class="text" style="text-align: right;">Deposited
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="invoices-bars">
+														<div class="progress">
+															<?php
                                                         if ($deposited_last30_days == 0 && $not_deposited_last30_days==0) {
                                                             $progress_deposited =50;
                                                             $progress_not_deposited =50;
@@ -271,15 +286,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $progress_not_deposited =($not_deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
                                                         }
                                                         ?>
-														<div class="progress-bar light-success" role="progressbar"
-															style="width: <?=$progress_not_deposited?>%"
-															aria-valuenow="<?=$progress_not_deposited?>"
-															aria-valuemin="0" aria-valuemax="100">
+															<div class="progress-bar light-success" role="progressbar"
+																style="width: <?=$progress_not_deposited?>%"
+																aria-valuenow="<?=$progress_not_deposited?>"
+																aria-valuemin="0" aria-valuemax="100">
+															</div>
+															<div class="progress-bar success" role="progressbar"
+																style="width: <?=$progress_deposited?>%"
+																aria-valuenow="<?=$progress_deposited?>"
+																aria-valuemin="0" aria-valuemax="100"></div>
 														</div>
-														<div class="progress-bar success" role="progressbar"
-															style="width: <?=$progress_deposited?>%"
-															aria-valuenow="<?=$progress_deposited?>"
-															aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
 												</div>
 											</div>

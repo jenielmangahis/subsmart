@@ -46,6 +46,7 @@ class AccountingRules extends MY_Controller
     public function apiGetRules()
     {
         $this->db->where('user_id', logged('id'));
+        $this->db->order_by('priority', 'ASC');
         $rules = $this->db->get('accounting_rules')->result();
 
         foreach ($rules as $rule) {
@@ -112,8 +113,42 @@ class AccountingRules extends MY_Controller
         $this->db->where_in('id', $ids);
         $this->db->delete('accounting_rules');
 
+        $this->resetPriorities();
+
         header('content-type: application/json');
         echo json_encode(['data' => $ids]);
+    }
+
+    public function apiDeleteRule($id)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('id', $id);
+        $this->db->delete('accounting_rules');
+
+        $this->resetPriorities();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $id]);
+    }
+
+    private function resetPriorities()
+    {
+        $this->db->where('user_id', logged('id'));
+        $this->db->select('id');
+        $this->db->order_by('priority', 'ASC');
+        $rules = $this->db->get('accounting_rules')->result();
+
+        $updates = [];
+        foreach ($rules as $key => $rule) {
+            $updates[] = ['id' => $rule->id, 'priority' => $key];
+        }
+
+        $this->db->update_batch('accounting_rules', $updates, 'id');
+        return $updates;
     }
 
     public function apiEditRulePriorities()
