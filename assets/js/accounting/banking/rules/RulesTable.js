@@ -47,6 +47,9 @@ export class RulesTable {
         await this.api.batchDeleteRule(ids);
         window.location.reload();
       },
+      edit: (rule) => {
+        window.openRuleForm(rule);
+      },
     };
 
     const columns = {
@@ -126,10 +129,7 @@ export class RulesTable {
 
         return `
           <div class="rulesTable__actions">
-            <a
-              class="rulesTable__link"
-              href="${this.api.prefixURL}/accounting/edit_rules?id=${row.id}"
-            >
+            <a class="rulesTable__link action" href="#" data-action="edit">
               View/Edit
             </a>
 

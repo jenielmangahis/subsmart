@@ -541,6 +541,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   <!-- end container-fluid -->
 </div>
 
+<!-- MODAL CLONE estimate -->
+<div class="modal fade" id="modalCloneEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <!-- <h4 class="modal-title">Clone Estimate</h4> -->
+                </div>
+                <div class="modal-body">
+                    <form name="clone-modal-form">
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+                            You are going create a new Estimate based on <b>Estimate #<span
+                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="est_id"> </b>.<br>
+                            Afterwards you can edit the newly created Estimate.
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <button id="clone_estimate" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                    Estimate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <!-- CONVERT ESTIMATE MODAL -->
 <div class="modal fade" id="modalConvertEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
@@ -615,6 +646,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       </div>
     </div>
   </div>
+  
   <style>
     .hid-deskx {
       display: none !important;
@@ -750,3 +782,110 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       });
     });
   </script>
+
+<script>
+// $(document).on('click','#delete_workorder',function(){
+//     // alert('test');
+    
+// });
+
+// function myFunction() {
+// $('#delete_workorder').on('click', function(){
+$(document).on('click touchstart','#delete_estimate',function(){
+
+    var id = $(this).attr('est-id');
+    // alert(id);
+  
+  var r = confirm("Are you sure you want to delete this Estimate?");
+
+  if (r == true) {
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>estimate/delete_estimate",
+    data : {id: id},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        sucess("Data Deleted Successfully!");
+    },
+    });
+  } 
+  else 
+  {
+    alert('no');
+  }
+
+});
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+</script>
+
+<script>
+$(document).on('click touchstart','.send_to_customer',function(){
+
+var id = $(this).attr('acs-id');
+var est_id = $(this).attr('est-id');
+// alert(wo_id);
+
+var r = confirm("Send this to customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
+	data : {id: id, est_id: est_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+        sucess("Successfully sent to Customer!");
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+
+    function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+// else 
+// {
+// 	alert('no');
+// }
+
+});
+</script>

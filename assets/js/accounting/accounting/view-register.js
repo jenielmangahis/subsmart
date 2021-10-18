@@ -848,7 +848,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 <div class="col-6">
                     <button class="btn btn-success float-right">Save</button>
                     <button class="btn btn-transparent float-right mr-1" id="cancel-edit">Cancel</button>
-                    <button class="btn btn-transparent float-right mr-1">Edit</button>
+                    <button class="btn btn-transparent float-right mr-1" id="edit-transaction">Edit</button>
                     <button class="btn btn-transparent float-right mr-1" id="delete-transaction">Delete</button>
                 </div>
             </div>
@@ -871,6 +871,10 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
                 case 'type' :
                     $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
+
+                    if(current === 'Inventory Starting Value') {
+                        $('#registers-table tbody tr.action-row #delete-transaction').remove();
+                    }
                 break;
                 case 'payee' :
                     var rowData = $('#registers-table').DataTable().row($(this)).data();
@@ -917,6 +921,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
 });
 
 $(document).on('click', '#registers-table tbody tr.action-row #delete-transaction', function() {
+    var html = 'Are you sure you want to delete this transaction?';
     if($('#show_in_one_line').prop('checked')) {
         var data = $('#registers-table').DataTable().row($('#registers-table tbody tr.editting')).data();
         var transactionType = data.type.replaceAll(' ', '-').toLowerCase();
@@ -929,13 +934,30 @@ $(document).on('click', '#registers-table tbody tr.action-row #delete-transactio
                 transactionType = 'bill-payment';
             break;
         }
+
+        if(data.account === '-Split-') {
+            html = 'This is just one part of a split transaction. Deleting it will remove the whole transaction. Are you sure you want to delete?'
+        }
     }
 
-    $.ajax({
-        url: `/accounting/chart-of-accounts/delete-transaction/${transactionType}/${data.id}`,
-        type: 'DELETE',
-        success: function(result) {
-            location.reload();
+    Swal.fire({
+        html: html,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            $.ajax({
+                url: `/accounting/chart-of-accounts/delete-transaction/${transactionType}/${data.id}`,
+                type: 'DELETE',
+                success: function(result) {
+                    location.reload();
+                }
+            });
         }
     });
 });

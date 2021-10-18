@@ -323,28 +323,10 @@ span.sc-item {
    <div wrapper__section style="margin: 0px;">
         <div class="card" style="margin: 0 auto; width:68%;">
             <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
-              <a class="btn btn-success btn-print" href="#" onclick="printDiv('printable-container')"><span class="fa fa-print icon"></span> PRINT</a>
+              <a class="btn btn-success btn-print" href="#" onclick="printDivES('printableES')"><span class="fa fa-print icon"></span> PRINT</a>
             </div>
             <br class="clear"/>
-            <div class="row" id="printable-container">    
-                        <!-- <div class="col-xl-12" style="float: right;">
-                          <div style="text-align: right;">
-                            <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
-                            <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
-                          </div>
-                          <div class="" style="text-align: right;margin-top: 20px;">
-                            <table style="width: 100%;text-align: right;">
-                              <tr>
-                                <td style="text-align: right;width: 70%;">Estimate Date :</td>
-                                <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
-                              </tr>
-                              <tr>
-                                <td style="text-align: right;width: 70%;">Expiry Date :</td>
-                                <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
-                              </tr>
-                            </table>
-                          </div>
-                        </div> -->
+            <div class="row" id="printableES">    
                         <div style="margin-bottom: 20px;margin-left: 5% !important;">
                             <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
                             <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;margin-left: 5% !important;" />
@@ -465,7 +447,16 @@ span.sc-item {
   </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_print'); ?>
+<script>
+function printDivES(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+}
+</script>
+<?php //include viewPath('includes/footer_print'); ?>
 <script>
 // $(function(){
 //   $(".btn-print").click(function(e){
@@ -483,14 +474,5 @@ span.sc-item {
 //   //   return false;
 //   // }
 // });
-</script>
-<script>
-function printDiv(divName) {
-    var printContents = document.getElementById(divName).innerHTML;
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    document.body.innerHTML = originalContents;
-}
 </script>
 
