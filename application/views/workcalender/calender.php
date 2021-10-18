@@ -448,7 +448,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
             <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                                    
                 <a class="btn btn-primary btn-edit-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-pencil"></i> Edit</a>                
-                <a class="btn btn-danger" href="javascript:void(0);"><i class="fa fa-check"></i> Check out</a>                
+                <a class="btn btn-danger btn-checkout-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-check"></i> Check out</a>                
                 <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
             </div>
       </div>
@@ -474,6 +474,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <button type="button" style="" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary btn-update-appointment" name="action" value="update_appointment">Update</button>
                 </div>
+            </form>
+      </div>
+  </div>
+</div>
+
+<!-- MODAL CHECKOUT APPOINTMENT -->
+<div class="modal fade modal-enhanced" id="modal-checkout-appointment" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Checkout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="frm-checkout-appointment" method="post">
+                <input type="hidden" name="aid" id="checkout-aid" value="">
+                <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                    <div class="checkoout-appointment-container"></div>
+                </div>
+                <!-- <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                    
+                    <button type="button" style="" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-update-appointment" name="action" value="update_appointment">Update</button>
+                </div> -->
             </form>
       </div>
   </div>
@@ -1674,7 +1698,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                {
                     $(".btn-edit-appointment").attr("data-id", appointment_id);
                     $(".btn-delete-appointment").attr("data-id", appointment_id);
-
+                    $(".btn-checkout-appointment").attr("data-id", appointment_id);
+                    
                     $('.view-appointment-container').hide().html(o).fadeIn(800);
                }
             });
@@ -1750,6 +1775,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                }
             });
         }, 800);
+    });
+
+    $(".btn-checkout-appointment").click(function(){
+        var appointment_id = $(this).attr('data-id');
+
+        $("#modal-checkout-appointment").modal('show');
+        $("#modal-view-appointment").modal('hide');
+
+        var url = base_url + 'calendar/_appointment_checkout';
+
+        $(".checkoout-appointment-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {
+
+                    $('.checkoout-appointment-container').hide().html(o).fadeIn(800);
+               }
+            });
+        }, 800);
+
 
     });
 

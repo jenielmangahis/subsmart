@@ -3,6 +3,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   const { RulesTable } = await import("./RulesTable.js");
   const api = await import("./api.js");
 
+  const $newRuleButton = document.getElementById("newRuleButton");
+  $newRuleButton.addEventListener("click", () => {
+    window.openRuleForm();
+  });
+
   const $selectWithCheckbox = document.querySelector("#transactionsBankSelect");
   const $checkboxes = $selectWithCheckbox.querySelectorAll("[type=checkbox]");
 
@@ -38,7 +43,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     return !string || string.length === 0;
   }
 
-  $addRuleBtn.addEventListener("click", async function (event) {
+  $addRuleBtn.addEventListener("click", async function () {
+    if (this.hasAttribute("data-id")) {
+      return; // TODO: implement update
+    }
+
     const payload = {};
     const assignments = [];
     const conditions = [];
@@ -148,3 +157,80 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   new RulesTable($("#rulesTable"));
 });
+
+window.openRuleForm = async (data = null) => {
+  const $newRuleModal = document.getElementById("createRules");
+  const $parent = $newRuleModal.closest("#createRuleModalRight");
+
+  $parent.classList.remove("createRuleModalRight--edit");
+
+  if (data === null) {
+    $($newRuleModal).modal("show");
+    return;
+  }
+
+  $parent.classList.add("createRuleModalRight--edit");
+
+  const $addRuleForm = document.getElementById("addRuleForm");
+  const $dataTypes = $addRuleForm.querySelectorAll("[data-type]");
+  const $conditions = $addRuleForm.querySelectorAll(".addCondition-container > div"); // prettier-ignore
+  const $conditionsWrapper = $addRuleForm.querySelector(".addCondition-container"); // prettier-ignore
+  const $saveBtn = $addRuleForm.querySelector("[data-action=save]");
+
+  $saveBtn.setAttribute("data-id", data.id);
+
+  const assignCondition = ($element, conditionData) => {
+    const { description, contain, comment } = conditionData;
+    $element.querySelector("[data-type='conditions.description']").value = description; // prettier-ignore
+    $element.querySelector("[data-type='conditions.contain']").value = contain;
+    $element.querySelector("[data-type='conditions.comment']").value = comment;
+  };
+
+  Object.keys(data).forEach((key) => {
+    const value = data[key];
+    const isNonEmptyArray = Array.isArray(value) && value.length >= 1;
+
+    if (key === "conditions" && isNonEmptyArray) {
+      const [firstCondition, ...rest] = value;
+      assignCondition($conditions[0], firstCondition);
+
+      if (rest.length) {
+        rest.forEach((condition) => {
+          const $condition = $conditions[0].cloneNode(true);
+          assignCondition($condition, condition);
+          $($conditionsWrapper).append($condition);
+        });
+      }
+      return;
+    }
+
+    if (key === "assignments" && isNonEmptyArray) {
+      value.forEach((assignment) => {
+        const $input = $addRuleForm.querySelector(`[data-type='assignment.${assignment.type}']`); // prettier-ignore
+        if ($input) {
+          $input.value = assignment.value;
+          if ($input.classList.contains("select2-hidden-accessible")) {
+            $($input).val(assignment.value).trigger("change");
+          }
+        }
+      });
+      return;
+    }
+
+    $input = [...$dataTypes].find(($dataType) => {
+      return $dataType.getAttribute("data-type") === key;
+    });
+
+    if (!$input) {
+      return;
+    }
+
+    if ($input.matches('[type="checkbox"]')) {
+      $input.checked = value == 0;
+    } else {
+      $input.value = value;
+    }
+  });
+
+  $($newRuleModal).modal("show");
+};

@@ -752,6 +752,7 @@ $route['calendar/_view_appointment'] = 'Workcalender/ajax_view_appointment';
 $route['calendar/_edit_appointment'] = 'Workcalender/ajax_edit_appointment';
 $route['calendar/_update_appointment'] = 'Workcalender/ajax_update_appointment';
 $route['calendar/_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
+$route['calendar/_appointment_checkout'] = 'Workcalender/ajax_checkout_appointment';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

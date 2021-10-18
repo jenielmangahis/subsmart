@@ -18,6 +18,9 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('items_model');
         $this->load->model('accounting_journal_entries_model');
         $this->load->model('accounting_transfer_funds_model');
+        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('accounting_inventory_qty_adjustments_model');
+        $this->load->model('item_starting_value_adj_model', 'starting_value_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -730,7 +733,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
-                    'id' => $expenseCategory->id,
+                    'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'CC Expense',
@@ -866,7 +869,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
-                'id' => $checkCategory->id,
+                'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
                 'type' => 'Check',
@@ -910,7 +913,6 @@ class Chart_of_accounts extends MY_Controller {
 
     private function journal_registers($accountId, $data = [])
     {
-        $this->load->model('accounting_journal_entries_model');
         $account = $this->chart_of_accounts_model->getById($accountId);
         $accountType = $this->account_model->getById($account->account_id);
 
@@ -989,7 +991,7 @@ class Chart_of_accounts extends MY_Controller {
             $payeeName = $payee->display_name;
 
             $transaction = [
-                'id' => $billItem->id,
+                'id' => $bill->id,
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
                 'type' => 'Bill',
@@ -1165,7 +1167,7 @@ class Chart_of_accounts extends MY_Controller {
             $payeeName = $payee->display_name;
 
             $transaction = [
-                'id' => $vendorCredit->id,
+                'id' => $vCredit->id,
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
                 'type' => 'Vendor Credit',
@@ -1282,7 +1284,6 @@ class Chart_of_accounts extends MY_Controller {
         } else {
             $accType = $accountType->account_name;
         }
-        $this->load->model('accounting_bank_deposit_model');
         $deposits = $this->chart_of_accounts_model->get_deposit_registers($accountId);
 
         foreach($deposits as $deposit) {
@@ -1339,7 +1340,7 @@ class Chart_of_accounts extends MY_Controller {
             $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id);
 
             $transaction = [
-                'id' => $depFund->id,
+                'id' => $dep->id,
                 'date' => date("m/d/Y", strtotime($dep->date)),
                 'ref_no' => '',
                 'type' => 'Deposit',
@@ -1482,7 +1483,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
                 $transaction = [
-                    'id' => $expenseCategory->id,
+                    'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -1527,9 +1528,6 @@ class Chart_of_accounts extends MY_Controller {
 
     private function quantity_adjustment_registers($accountId, $data = [])
     {
-        $this->load->model('accounting_inventory_qty_adjustments_model');
-        $this->load->model('item_starting_value_adj_model', 'starting_value_model');
-
         $account = $this->chart_of_accounts_model->getById($accountId);
         $accountType = $this->account_model->getById($account->account_id);
 
@@ -1612,7 +1610,7 @@ class Chart_of_accounts extends MY_Controller {
             }
 
             $transaction = [
-                'id' => $invQtyAdjItem->id,
+                'id' => $invQtyAdj->id,
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
                 'type' => 'Inventory Qty Adjust',
@@ -1753,7 +1751,7 @@ class Chart_of_accounts extends MY_Controller {
 
             if($paymentAccType->account_name !== 'Credit Card') {
                 $transaction = [
-                    'id' => $expenseCategory->id,
+                    'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
                     'type' => 'Expense',
@@ -2715,13 +2713,10 @@ class Chart_of_accounts extends MY_Controller {
                 $delete = $this->delete_transfer($transactionId);
             break;
             case 'deposit' :
-
+                $delete = $this->delete_deposit($transactionId);
             break;
-            case 'inventory-qty-adjustment' :
-
-            break;
-            case 'inventory-starting-value' :
-            
+            case 'inventory-qty-adjust' :
+                $delete = $this->delete_qty_adjustment($transactionId);
             break;
             case 'credit-card-payment':
                 $delete = $this->delete_cc_payment($transactionId);
@@ -3271,6 +3266,108 @@ class Chart_of_accounts extends MY_Controller {
 
             $this->chart_of_accounts_model->updateBalance($transferFromAccData);
             $this->chart_of_accounts_model->updateBalance($transferToAccData);
+        }
+
+        return $update;
+    }
+
+    private function delete_deposit($depositId)
+    {
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+        $update = $this->accounting_bank_deposit_model->update($deposit->id, ['status' => 0]);
+
+        if($update) {
+            foreach($funds as $fund) {
+                $account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+                $accountBalance = $account->account_id !== "7" ? floatval($account->balance) + floatval($fund->amount) : floatval($account->balance) - floatval($fund->amount);
+                $accountBalance = number_format($accountBalance, 2, '.', ',');
+                $accountData = [
+                    'id' => $account->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $accountBalance
+                ];
+                $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
+            }
+
+            $depositToAcc = $this->chart_of_accounts_model->getById($deposit->account_id);
+            $depositData = [
+                'id' => $depositToAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval($depositToAcc->balance) - floatval($deposit->total_amount)
+            ];
+            $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+            if ($deposit->cash_back_amount !== "" && $deposit->cash_back_amount !== null && $deposit->cash_back_amount !== "0") {
+                $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account);
+                $cashBackData = [
+                    'id' => $cashBackAccount->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) - floatval($deposit->cash_back_amount) : floatval($cashBackAccount->balance) + floatval($deposit->cash_back_amount)
+                ];
+
+                $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+            }
+        }
+
+        return $update;
+    }
+
+    private function delete_qty_adjustment($adjustmentId)
+    {
+        $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($adjustmentId);
+        $adjustedProds = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+
+        $update = $this->accounting_inventory_qty_adjustments_model->update($adjustment->id, ['status' => 0]);
+
+        if($update) {
+            $locationData = [];
+            foreach($adjustedProds as $adjustedProd) {
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($adjustedProd->product_id);
+                $startingValAdj = $this->starting_value_model->get_by_item_id($adjustedProd->product_id);
+                $item = $this->items_model->getItemById($adjustedProd->product_id)[0];
+
+                if(!is_null($startingValAdj)) {
+                    $amount = floatval($adjustedProd->change_in_quantity) * floatval($startingValAdj->initial_cost);
+                } else {
+                    $amount = floatval($adjustedProd->change_in_quantity) *  floatval($item->cost);
+                }
+
+                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                $newBalance = floatval($invAssetAcc->balance) - $amount;
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $invAssetAccData = [
+                    'id' => $invAssetAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                $location = $this->items_model->getItemLocation($adjustedProd->location_id, $adjustedProd->product_id);
+                $qty = intval($location->qty) - intval($adjustedProd->change_in_quantity);
+                $locationData[] = [
+                    'id' => $adjustedProd->location_id,
+                    'qty' => $qty
+                ];
+            }
+
+            $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
+
+            $adjustmentAcc = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+            $newBalance = floatval($adjustmentAcc->balance) + floatval($adjustment->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $adjustmentAccData = [
+                'id' => $adjustmentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
         }
 
         return $update;

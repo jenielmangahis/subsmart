@@ -1982,6 +1982,31 @@ class Workcalender extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_checkout_appointment()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $tags = $this->EventTags_model->getAllByCompanyId($cid, array());
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
+        $optionAppointmentTypes = $this->Appointment_model->optionAppointmentType();
+
+        $a_tags = array();
+        $selected_tags = explode(",", $appointment->tag_ids);
+        foreach($tags as $t){
+            if( in_array($t->id, $selected_tags) ){
+                $a_tags[$t->id] = $t->name;
+            }
+        }
+
+        $this->page_data['a_selected_tags'] = $a_tags;
+        $this->page_data['appointment'] = $appointment;
+        $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
+        $this->load->view('workcalender/ajax_checkout_appointment', $this->page_data);
+    }
 }
 
 

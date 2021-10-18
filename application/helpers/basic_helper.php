@@ -859,8 +859,11 @@ if (!function_exists('getLoggedIsPlanActive')) {
     {
 
         $CI = &get_instance();
-        $user = (object)$CI->session->userdata('logged');
-        return $user->is_plan_active;
+        $user = $CI->session->userdata('logged');
+
+        if (!is_null($user)) {
+            return (object) $user->is_plan_active;
+        }
     }
 }
 

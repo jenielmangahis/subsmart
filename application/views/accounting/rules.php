@@ -25,7 +25,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             <div class="col-md-6" style="text-align: right">
                                 <a href="" style="font-size: 14px;line-height: 40px;">Learn more about bank rules.</a>
                                 <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createRules"  style="border-radius: 36px 0 0 36px">New rule</button>
+                                    <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px" id="newRuleButton">New rule</button>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">

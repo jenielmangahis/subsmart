@@ -1660,9 +1660,7 @@ class Accounting_modals extends MY_Controller
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : 0,
                 'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
+                'status' => 1
             ];
 
             $depositId = $this->accounting_bank_deposit_model->create($insertData);
@@ -1685,9 +1683,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                        'status' => 1,
-                        'created_at' => date('Y-m-d h:i:s'),
-                        'updated_at' => date('Y-m-d h:i:s')
+                        'status' => 1
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
@@ -1705,7 +1701,6 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $fundsData = [];
-                $startingTime = date("m/d/Y H:i:s");
                 foreach ($data['funds_account'] as $key => $value) {
                     $receivedFrom = explode('-', $data['received_from'][$key]);
 
@@ -1717,9 +1712,7 @@ class Accounting_modals extends MY_Controller
                         'description' => $data['description'][$key],
                         'payment_method' => $data['payment_method'][$key],
                         'ref_no' => $data['reference_no'][$key],
-                        'amount' => $data['amount'][$key],
-                        'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                        'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                        'amount' => $data['amount'][$key]
                     ];
 
                     if (!isset($data['template_name'])) {
@@ -1728,20 +1721,18 @@ class Accounting_modals extends MY_Controller
                         $accountBalance = $account->account_id !== "7" ? floatval($account->balance) - floatval($data['amount'][$key]) : floatval($account->balance) + floatval($data['amount'][$key]);
                         $accountBalance = number_format($accountBalance, 2, '.', ',');
                         $accountData = [
-                            'id' => $account[1],
+                            'id' => $value,
                             'company_id' => logged('company_id'),
                             'balance' => $accountBalance
                         ];
                         $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
                     }
-
-                    $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                 }
 
                 $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
 
                 if (!isset($data['template_name'])) {
-                    $depositToAcc = $this->chart_of_accounts_model->getById($bankAccount[1]);
+                    $depositToAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
                     $depositData = [
                         'id' => $depositToAcc->id,
                         'company_id' => logged('company_id'),
@@ -1750,7 +1741,7 @@ class Accounting_modals extends MY_Controller
                     $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
 
                     if ($data['cash_back_amount'] !== "") {
-                        $cashBackAccount = $this->chart_of_accounts_model->getById($cashBackTarget[1]);
+                        $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
                         $cashBackData = [
                             'id' => $cashBackAccount->id,
                             'company_id' => logged('company_id'),
@@ -1873,16 +1864,13 @@ class Accounting_modals extends MY_Controller
             if ($adjustmentId > 0) {
                 $adjustmentProducts = [];
                 $locationData = [];
-                $startingTime = date("m/d/Y H:i:s");
                 foreach ($data['product'] as $key => $value) {
                     $adjustmentProducts[] = [
                         'adjustment_id' => $adjustmentId,
                         'product_id' => $value,
                         'location_id' => $data['location'][$key],
                         'new_quantity' => $data['new_qty'][$key],
-                        'change_in_quantity' => $data['change_in_qty'][$key],
-                        'created_at' => date("Y-m-d H:i:s", strtotime($startingTime)),
-                        'updated_at' => date("Y-m-d H:i:s", strtotime($startingTime))
+                        'change_in_quantity' => $data['change_in_qty'][$key]
                     ];
 
                     $locationData[] = [
@@ -1911,8 +1899,6 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                    $startingTime = date("m/d/Y H:i:s", strtotime($startingTime.' + 1 second'));
                 }
 
                 $adjustQuantity = $this->items_model->updateBatchLocations($locationData);

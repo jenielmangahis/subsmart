@@ -763,6 +763,11 @@ if ($this->session->userdata('usertimezone') == null) {
                                 $expected_endshift = 0;
                             }
 
+                            // Fixes undefined error
+                            $break_duration_for_auto_out = null;
+                            if (!isset($_SESSION['alert_class'])) {
+                                $_SESSION['alert_class'] = null;
+                            }
                             ?>
                 <li class="dropdown notification-list list-inline-item ml-auto"
                     style="vertical-align: middle;min-width: 50px">
