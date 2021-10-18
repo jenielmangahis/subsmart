@@ -1855,6 +1855,9 @@ class Workcalender extends MY_Controller
                 'prof_id' => $post['appointment_customer_id'],
                 'company_id' => $company_id,
                 'tag_ids' => implode(",", $post['appointment_tags']),
+                'total_item_price' => 0,
+                'total_item_discount' => 0,
+                'total_amount' => 0,
                 'appointment_type' => $post['appointment_type'],
                 'created' => date("Y-m-d H:i:s")
             ];
@@ -1987,6 +1990,7 @@ class Workcalender extends MY_Controller
     {
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
+        $this->load->model('AppointmentItem_model');
 
         $post = $this->input->post();
         $cid  = logged('company_id');
@@ -2002,10 +2006,56 @@ class Workcalender extends MY_Controller
             }
         }
 
+        $appointmentItems = $this->AppointmentItem_model->getAllByAppointmentId($appointment->id);
+
         $this->page_data['a_selected_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
+        $this->page_data['appointmentItems'] = $appointmentItems;
         $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
         $this->load->view('workcalender/ajax_checkout_appointment', $this->page_data);
+    }
+
+    public function ajax_save_checkout_items()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('AppointmentItem_model');
+
+        $post       = $this->input->post();
+        $cid        = logged('company_id');
+        $is_success = false;
+        $message    = 'Cannot create appointment';
+
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
+
+        if( $appointment ) {
+            $this->AppointmentItem_model->deleteAllByAppointmentId($appointment->id);
+            foreach( $post['items'] as $key => $value ){
+                if( isset($post['price'][$key]) && isset($post['discount'][$key]) ){
+                    $data_item = [
+                        'appointment_id' => $appointment->id,
+                        'item_name' => $value,
+                        'item_price' => $post['price'][$key],
+                        'discount_amount' => $post['discount'][$key],
+                        'created' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->AppointmentItem_model->create($data_item);
+                }
+            }
+
+            $is_success = true;
+            $message    = '';
+
+        } else {
+            $message = 'Required fields cannot be empty';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

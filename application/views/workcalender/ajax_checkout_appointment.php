@@ -135,7 +135,7 @@ vertical-align: middle;
   display: inline-block;
   width: 92%;
 }
-.btn-payment{
+.btn-c-payment, .btn-c-back{
   margin: 0 auto;
   display: block;
 }
@@ -168,58 +168,150 @@ vertical-align: middle;
 ?>
 <div class="row" style="text-align: left;">
   <div class="col-md-9">
-    <div class="row" style="border: 1px solid #656565; margin: 10px;">
-      <div class="col">
-        <h3 class="c-appointment-header"><b>Client</b></h3>
-        <h3 class="c-appointment-customer"><b><?= $appointment->customer_name; ?></b></h3>
-        <span class="c-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $optionAppointmentTypes[$appointment->appointment_type]; ?></span><br />
-        <span class="c-appointment-phone"><i class="fa fa-phone"> Phone : </i> <?= $c_phone; ?> / </span>
-        <span class="c-appointment-email"><i class="fa fa-envelope"> Email :</i> <?= $c_email; ?></span><br />
-        <span class="c-appointment-date-time"><i class="fa fa-clock-o"></i> <?= date("g:i A",strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?> - <i class="fa fa-calendar"></i> <?= date("l, F D, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
-      </div>
-      <div class="col">
-        <h3 class="c-appointment-header"><b>Assigned Employee</b></h3>
-        <div class="row">
-          <div class="col-2">
-            <img src="<?= userProfileImage($appointment->user_id); ?>" alt="Admin" class="rounded-circle" width="150" style="margin: 0 auto;">
-          </div>
-          <div class="col">
-            <span class="a-appointment-user"><i class="fa fa-address-card-o"></i> <?= $appointment->employee_name; ?></span><br />
-            <span class="c-appointment-phone"><i class="fa fa-phone"> Phone : </i> <?= $u_mobile; ?> / </span>
-            <span class="c-appointment-email"><i class="fa fa-envelope"> Email :</i> <?= $u_email; ?></span><br />
+    <!-- Start step1 -->
+    <div class="checkout-step1">
+      <div class="row" style="border: 1px solid #656565; margin: 10px;">
+        <div class="col">
+          <h3 class="c-appointment-header"><b>Client</b></h3>
+          <h3 class="c-appointment-customer"><b><?= $appointment->customer_name; ?></b></h3>
+          <span class="c-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $optionAppointmentTypes[$appointment->appointment_type]; ?></span><br />
+          <span class="c-appointment-phone"><i class="fa fa-phone"> Phone : </i> <?= $c_phone; ?> / </span>
+          <span class="c-appointment-email"><i class="fa fa-envelope"> Email :</i> <?= $c_email; ?></span><br />
+          <span class="c-appointment-date-time"><i class="fa fa-clock-o"></i> <?= date("g:i A",strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?> - <i class="fa fa-calendar"></i> <?= date("l, F D, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
+        </div>
+        <div class="col">
+          <h3 class="c-appointment-header"><b>Assigned Employee</b></h3>
+          <div class="row">
+            <div class="col-2">
+              <img src="<?= userProfileImage($appointment->user_id); ?>" alt="Admin" class="rounded-circle" width="150" style="margin: 0 auto;">
+            </div>
+            <div class="col">
+              <span class="a-appointment-user"><i class="fa fa-address-card-o"></i> <?= $appointment->employee_name; ?></span><br />
+              <span class="c-appointment-phone"><i class="fa fa-phone"> Phone : </i> <?= $u_mobile; ?> / </span>
+              <span class="c-appointment-email"><i class="fa fa-envelope"> Email :</i> <?= $u_email; ?></span><br />
+            </div>
           </div>
         </div>
-      </div>
-    </div>    
-    <div class="row" style="border: solid 1px #656565; margin: 10px;">
-      <div class="col" style="margin-top:21px;">
-        
-        <div class="widget-header">          
-          <h3><i class="fa fa-tag"></i> Items</h3>
-          <a href="javascript:;" class="btn btn-sm btn-primary btn-checkout-add-item">
-            <i class="fa fa-plus"></i> Add Item
-          </a>
-        </div>
-        <div class="widget-content">
-          <table class="table table-borderless tbl-items" style="border: none;">            
-            <tbody>
-              <tr style="background: none !important;">
-                <td style="width:60%;">
-                  <input type="text" class="form-control" name="items[][name]" placeholder="Item Name">
-                </td>
-                <td>
-                  <input type="text" class="form-control" name="items[][price]" placeholder="Item Price">
-                </td>
-                <td>
-                  <input type="text" class="form-control" name="items[][discount]" placeholder="Item Discount">
-                </td>
-                <td class="td-actions"></td>
-              </tr>
-              </tbody>
-          </table>
+      </div>  
+
+      <div class="row" style="border: solid 1px #656565; margin: 10px;">
+        <div class="col" style="margin-top:21px;">
+          
+          <div class="widget-header">          
+            <h3><i class="fa fa-tag"></i> Items</h3>
+            <a href="javascript:;" class="btn btn-sm btn-primary btn-checkout-add-item">
+              <i class="fa fa-plus"></i> Add Item
+            </a>
+          </div>
+          <div class="widget-content">
+            <form id="frm-checkout-items" method="post">
+            <input type="hidden" name="aid" value="<?= $appointment->id; ?>">
+            <table class="table table-borderless tbl-items" style="border: none;">            
+              <tbody>
+                <?php if( $appointmentItems ){ ?>
+                  <?php $row = 1; foreach($appointmentItems as $item){ ?>
+                  <tr style="background: none !important;">
+                    <td style="width:60%;">
+                      <input type="text" class="form-control" value="<?= $item->item_name; ?>" name="items[]" placeholder="Item Name">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control item-price" value="<?= number_format($item->item_price,2); ?>" name="price[]" placeholder="Item Price">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control item-discount" value="<?= number_format($item->discount_amount,2); ?>" name="discount[]" placeholder="Item Discount">
+                    </td>
+                    <td class="td-actions">
+                      <?php if( $start == 1 ){ ?>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a>
+                      <?php } ?>
+                    </td>
+                  </tr>
+                  <?php $row++;} ?>
+                <?php }else{ ?>
+                  <tr style="background: none !important;">
+                    <td style="width:60%;">
+                      <input type="text" class="form-control" name="items[]" placeholder="Item Name">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control item-price" name="price[]" placeholder="Item Price">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount">
+                    </td>
+                    <td class="td-actions"></td>
+                  </tr>
+                <?php } ?>              
+                </tbody>
+            </table>
+            </form>
+          </div>
         </div>
       </div>
     </div>
+    <!-- End step1 -->
+
+    <!-- Start step2 -->
+    <div class="checkout-step2" style="display: none;border: solid 1px #656565; padding: 35px;">
+      <h3><i class="fa fa-credit-card"></i> Payment</h3>
+      <div id="credit_card">
+        <div class="row form_line">
+            <div class="col-md-2">
+                Card Number
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="card_number" id="cardnumber" value="" required/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-2">
+                <label for="">Expiration 
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4">
+                        <select id="exp_month" name="exp_month" class="form-control exp_month" required>
+                            <option  value="">Month</option>
+                            <option  value="01">01</option>
+                            <option  value="02">02</option>
+                            <option  value="03">03</option>
+                            <option  value="04">04</option>
+                            <option  value="05">05</option>
+                            <option  value="06">06</option>
+                            <option  value="07">07</option>
+                            <option  value="08">08</option>
+                            <option  value="09">09</option>
+                            <option  value="10">10</option>
+                            <option  value="11">11</option>
+                            <option  value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="exp_year" name="exp_year" class="form-control exp_year" required>
+                            <option  value="">Year</option>
+                            <option  value="2021">2021</option>
+                            <option  value="2022">2022</option>
+                            <option  value="2023">2023</option>
+                            <option  value="2024">2024</option>
+                            <option  value="2025">2025</option>
+                            <option  value="2026">2026</option>
+                            <option  value="2027">2027</option>
+                            <option  value="2028">2028</option>
+                            <option  value="2029">2029</option>
+                            <option  value="2030">2030</option>
+                            <option  value="2031">2031</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
   </div>
   <div class="col-md-3" style="border-left: solid 1px #656565;">
     <h3><i class="fa fa-list"></i> Order Summary</h3>
@@ -227,11 +319,11 @@ vertical-align: middle;
       <tbody>
         <tr style="background: none !important;">
           <td style="width:70%;">Items</td>
-          <td style="text-align:right;">$0.00</td>
+          <td style="text-align:right;">$<span class="c-total-price">0.00</span></td>
         </tr>
         <tr style="background: none !important;">
           <td>Discount</td>
-          <td style="text-align:right;">$0.00</td>
+          <td style="text-align:right;">$<span class="c-total-discount">0.00</span></td>
         </tr>
         <tr style="background: none !important;">
           <td>Tax</td>
@@ -239,11 +331,12 @@ vertical-align: middle;
         </tr>
         <tr style="background: none !important;">
           <td>Total</td>
-          <td style="text-align:right;">$0.00</td>
+          <td style="text-align:right;">$<span class="c-total-amount">0.00</span></td>
         </tr>
         </tbody>
     </table>
-    <a class="btn btn-primary btn-payment" href="javascript:void(0);">PROCEED TO PAYMENT</a>
+    <a class="btn btn-primary btn-c-payment" href="javascript:void(0);">PROCEED TO PAYMENT</a>
+    <a class="btn btn-primary btn-c-back" href="javascript:void(0);" style="display:none;">BACK</a>
   </div>
 </div>
 <?php }else{ ?>
@@ -255,14 +348,126 @@ vertical-align: middle;
 <script>
 $(function(){
   $(".btn-checkout-add-item").click(function(){
-    var append_row = '<tr style="background: none !important;"><td style="width:60%;"><input type="text" class="form-control" name="" placeholder="Item Name"></td><td><input type="text" class="form-control" name="" placeholder="Item Price"></td><td><input type="text" class="form-control" name="" placeholder="Item Discount"></td><td class="td-actions aaaa"><a href="javascript:;" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
+    var append_row = '<tr style="background: none !important;"><td style="width:60%;"><input type="text" class="form-control" name="items[]" placeholder="Item Name"></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
 
     $(".tbl-items tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
-    //$('.tbl-items tr:last').clone(true).hide().insertAfter('.tbl-items tr:last').fadeIn('slow');    
   });
 
   $(document).on('click', '.btn-item-delete', function(){
-    $(this).parents('tr').fadeOut("slow");
+    //$(this).parents('tr').remove().fadeOut("slow");
+    $(this).parents('tr').fadeOut("normal", function() {        
+        $(this).remove();
+        c_compute_totals();
+    });
+    //$(this).parents('tr').remove();
+    //c_compute_totals();
   });
+
+  function c_compute_totals(){
+    var total_price    = 0;
+    var total_discount = 0;
+    var total_amount   = 0;
+    var total_tax = 0;
+
+    $('#frm-checkout-items .form-control').each(function(){
+      var $el = $(this); // element we're testing
+      var n   = parseFloat($el.val());
+
+      if( $el.hasClass('item-price') ){        
+        if ($.isNumeric(n)){
+          total_price = total_price + parseFloat($el.val());
+        }
+      }
+
+      if( $el.hasClass('item-discount') ){        
+        if ($.isNumeric(n)){
+          total_discount = total_discount + parseFloat($el.val());
+        }
+      }
+    });
+
+    total_amount = parseFloat(total_price) + parseFloat(total_discount) + parseFloat(total_tax);
+
+    $(".c-total-amount").text(parseFloat(total_amount).toFixed(2));
+    $(".c-total-price").text(parseFloat(total_price).toFixed(2));
+    $(".c-total-discount").text(parseFloat(total_discount).toFixed(2));
+  }
+
+  function validateNumber(event) {
+      var key = window.event ? event.keyCode : event.which;
+      if (event.keyCode === 8 || event.keyCode === 46) {
+          return true;
+      } else if ( key < 48 || key > 57 ) {
+          return false;
+      } else {
+          return true;
+      }
+  };
+
+  $(document).on('keypress', '.item-price', function(event){
+    var key = window.event ? event.keyCode : event.which;
+    if (event.keyCode === 8 || event.keyCode === 46) {
+        return true;
+    } else if ( key < 48 || key > 57 ) {
+        return false;
+    } else {
+        return true;
+    }
+  });
+
+  $(document).on('keyup', '.item-price', function(event){
+    c_compute_totals();
+  });
+
+  $(document).on('keypress', '.item-discount', function(event){
+    var key = window.event ? event.keyCode : event.which;
+    if (event.keyCode === 8 || event.keyCode === 46) {
+        return true;
+    } else if ( key < 48 || key > 57 ) {
+        return false;
+    } else {
+        return true;
+    }
+  });
+
+  $(document).on('keyup', '.item-discount', function(event){
+    c_compute_totals();
+  });
+
+  $(".btn-c-payment").click(function(){
+    var aid = $(this).attr("data-id");
+    var url = base_url + 'calendar/_save_checkout_items';
+    $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: 'json',
+           data: $("#frm-checkout-items").serialize(),
+           success: function(o)
+           {            
+              //$(this).html('PROCEED TO PAYMENT');
+              $(".btn-c-payment").fadeOut(function(){
+                $(".btn-c-back").fadeIn();
+              });
+              $(".checkout-step1").fadeOut(function(){
+                $(".checkout-step2").fadeIn();
+              });
+
+              $(this).html('PROCEED TO PAYMENT');
+           }
+        });
+    }, 800);
+  });
+
+  $(".btn-c-back").click(function(){
+    $(".btn-c-back").fadeOut(function(){
+      $(".btn-c-payment").fadeIn();
+    });
+    $(".checkout-step2").fadeOut(function(){
+      $(".checkout-step1").fadeIn();
+    });
+  });
+
 });
 </script>

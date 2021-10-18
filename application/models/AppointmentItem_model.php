@@ -25,6 +25,18 @@ class AppointmentItem_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByAppointmentId($appointment_id)
+    {
+
+        $this->db->select('appointment_items.*');
+        $this->db->from($this->table);
+        $this->db->where('appointment_items.appointment_id', $appointment_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getByIdAndCompanyId($id, $company_id)
     {
         $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, acs_profile.phone_m AS customer_phone, acs_profile.email AS customer_email, users.email AS user_email, users.mobile AS user_mobile');
@@ -49,6 +61,10 @@ class AppointmentItem_model extends MY_Model
         ];
 
         return $options;
+    }
+
+    public function deleteAllByAppointmentId($appointment_id){
+        $this->db->delete($this->table, array('appointment_id' => $appointment_id));
     }
 }
 
