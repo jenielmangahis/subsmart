@@ -17,6 +17,13 @@ class Item_starting_value_adj_model extends MY_Model
         $query = $this->db->get($this->table);
         return $query->row();
     }
+
+    public function update($itemId, $data)
+    {
+        $this->db->where('item_id', $itemId);
+        $query = $this->db->update($this->table, $data);
+        return $query ? true : false;
+    }
 }
 
 /* End of file Item_starting_value_adj_model.php */

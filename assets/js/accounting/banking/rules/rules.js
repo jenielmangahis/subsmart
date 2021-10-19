@@ -44,9 +44,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   $addRuleBtn.addEventListener("click", async function () {
-    if (this.hasAttribute("data-id")) {
-      return; // TODO: implement update
-    }
+    const ruleId = this.getAttribute("data-id");
 
     const payload = {};
     const assignments = [];
@@ -133,6 +131,10 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       }
 
+      if ($dataType.hasAttribute("data-id")) {
+        assignment.id = $dataType.getAttribute("data-id");
+      }
+
       assignments.push(assignment);
     });
 
@@ -147,12 +149,24 @@ window.addEventListener("DOMContentLoaded", async () => {
         condition[dataType] = getFormElementValue($dataType);
       });
 
+      if ($condition.hasAttribute("data-id")) {
+        condition.id = $condition.getAttribute("data-id");
+      }
+
       conditions.push(condition);
     });
 
     const _payload = { ...payload, conditions, assignments };
-    const response = await api.saveRule(_payload);
+    if (ruleId === null) {
+      await api.saveRule(_payload);
+    } else {
+      await api.editRule(ruleId, _payload);
+    }
     window.location.reload();
+  });
+
+  $("#createRules").on("hidden.bs.modal", () => {
+    window.resetRuleForm();
   });
 
   new RulesTable($("#rulesTable"));
@@ -181,6 +195,7 @@ window.openRuleForm = async (data = null) => {
 
   const assignCondition = ($element, conditionData) => {
     const { description, contain, comment } = conditionData;
+    $element.setAttribute("data-id", conditionData.id);
     $element.querySelector("[data-type='conditions.description']").value = description; // prettier-ignore
     $element.querySelector("[data-type='conditions.contain']").value = contain;
     $element.querySelector("[data-type='conditions.comment']").value = comment;
@@ -209,6 +224,7 @@ window.openRuleForm = async (data = null) => {
         const $input = $addRuleForm.querySelector(`[data-type='assignment.${assignment.type}']`); // prettier-ignore
         if ($input) {
           $input.value = assignment.value;
+          $input.setAttribute("data-id", assignment.id);
           if ($input.classList.contains("select2-hidden-accessible")) {
             $($input).val(assignment.value).trigger("change");
           }
@@ -233,4 +249,49 @@ window.openRuleForm = async (data = null) => {
   });
 
   $($newRuleModal).modal("show");
+};
+
+window.resetRuleForm = () => {
+  const $newRuleModal = document.getElementById("createRules");
+  const $parent = $newRuleModal.closest("#createRuleModalRight");
+  const $dataTypes = $newRuleModal.querySelectorAll("[data-type]");
+  const $formError = $newRuleModal.querySelector(".formError");
+
+  $parent.classList.remove("createRuleModalRight--edit");
+  $formError.classList.remove("formError--show");
+
+  for (let index = 0; index < $dataTypes.length; index++) {
+    const $element = $dataTypes[index];
+    $element.classList.remove("inputError");
+
+    if ($element.type === "checkbox") {
+      $element.checked = false;
+      continue;
+    }
+
+    if ($element.type !== "select-one") {
+      $element.value = "";
+      continue;
+    }
+
+    const $firstOption = $element.querySelector("option");
+    const firstOptionValue = $firstOption.textContent;
+    $element.value = firstOptionValue;
+    if ($element.classList.contains("select2-hidden-accessible")) {
+      $($element).val(firstOptionValue).trigger("change");
+    }
+  }
+
+  const $conditions = $newRuleModal.querySelectorAll(".addCondition-container > div"); // prettier-ignore
+
+  for (let index = 0; index < $conditions.length; index++) {
+    const $condition = $conditions[index];
+
+    if (index === 1) {
+      $condition.removeAttribute("data-id");
+      continue;
+    }
+
+    $condition.remove();
+  }
 };

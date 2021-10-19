@@ -29,6 +29,7 @@ $(document).ready(function () {
         var row = $('#addCondition').clone(true);
         row.find("[data-type='conditions.comment']").val("");
         row.find("#conID").val("");
+        row.removeAttr("data-id");
         row.appendTo('.addCondition-container');
     });
     //Remove added condition

@@ -6655,6 +6655,8 @@ class Accounting_modals extends MY_Controller
     public function adjust_starting_value($item_id)
     {
         $item = $this->items_model->getItemById($item_id)[0];
+        $startingValAdjustment = $this->starting_value_model->get_by_item_id($item_id);
+
         $startValueAdjData = [
             'company_id' => logged('company_id'),
             'item_id' => $item_id,
@@ -6663,14 +6665,14 @@ class Accounting_modals extends MY_Controller
             'initial_qty' => $this->input->post('initial_qty_on_hand'),
             'as_of_date' => date('Y-m-d', strtotime($this->input->post('as_of_date'))),
             'initial_cost' => $this->input->post('initial_cost'),
-            'inv_adj_account' => $this->input->post('inv_adj_acc'),
+            'inv_adj_account' => $this->input->post('inventory_adj_account'),
             'memo' => $this->input->post('memo'),
             'total_amount' => floatval($this->input->post('initial_qty_on_hand')) * floatval($this->input->post('initial_cost')),
             'status' => 1
         ];
 
         $itemData = [
-            'initial_cost' => $startValueAdjData['initial_cost']
+            'cost' => $startValueAdjData['initial_cost']
         ];
 
         $accDetails = [
@@ -6726,9 +6728,13 @@ class Accounting_modals extends MY_Controller
         $this->chart_of_accounts_model->updateBalance($invAssetAccData);
 
         // Insert starting value adjustment record
-        $insert = $this->starting_value_model->create($startValueAdjData);
+        if(is_null($startingValAdjustment)) {
+            $sql = $this->starting_value_model->create($startValueAdjData);
+        } else {
+            $sql = $this->starting_value_model->update($startingValAdjustment->id, $startValueAdjData);
+        }
 
-        if ($insert > 0) {
+        if ($sql > 0) {
             $this->session->set_flashdata('success', "Item $item->title starting value successfully adjusted.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");

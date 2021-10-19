@@ -519,6 +519,7 @@ class Products_and_services extends MY_Controller {
                             $locations[] = [
                                 'company_id' => logged('company_id'),
                                 'qty' => $input['quantity'][$key],
+                                'initial_qty' => $input['quantity'][$key],
                                 'name' => $locName,
                                 'item_id' => $create,
                                 'insert_date' => date('Y-m-d H:i:s')

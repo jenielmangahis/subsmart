@@ -548,7 +548,6 @@ div#saved-notification-modal-section {
     display: none;
 }
 
-
 #addsalesreceiptModal form .attachement-file-section {
     border: dashed 4px #EAF3EE;
     padding: 10px;
@@ -597,4 +596,119 @@ div#saved-notification-modal-section {
 
 #addsalesreceiptModal form .attachement-file-section button.attachment-btn:hover {
     background: #238a15;
+}
+
+div#addsalesreceiptModal .default-button {
+    font-size: 13px;
+    font-weight: 100;
+    border: solid 1px #8E9095;
+    padding: 2px 20px;
+    background: transparent;
+    border-radius: 5px;
+    height: auto;
+    margin-top: 15px;
+}
+
+div#addsalesreceiptModal .default-button:hover {
+    background: rgba(107, 108, 114, .25);
+    color: #393a3d;
+}
+
+#addsalesreceiptModal table .suggestions li {
+    border-bottom: solid 1px #DEE2E6;
+    font-size: 12px;
+}
+
+#addsalesreceiptModal table .suggestions {
+    width: 100%;
+    box-shadow: 3px 6px 20px #2829294d;
+    max-height: 300px;
+    overflow: auto;
+}
+
+#addsalesreceiptModal table .suggestions li:hover {
+    background: #2ca01cd4;
+    color: #fff;
+}
+
+#addsalesreceiptModal table tr td {
+    position: relative;
+    font-size: 12px;
+}
+
+div#addsalesreceiptModal form .table tbody tr td.item-action {
+    text-align: center;
+    font-size: 18px;
+}
+
+div#addsalesreceiptModal form .table tbody tr td.item-action a {
+    color: #999999;
+}
+
+div#addsalesreceiptModal form .item-totals .label,
+div#addsalesreceiptModal form .item-totals .amount {
+    float: left;
+    text-align: right;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+div#addsalesreceiptModal form .item-totals div {
+    padding: 3px 0;
+}
+
+div#addsalesreceiptModal form .item-totals .label {
+    width: 50%;
+}
+
+div#addsalesreceiptModal form .item-totals .amount {
+    width: 50%;
+}
+
+div#addsalesreceiptModal form .item-totals .amount .grand-total {
+    padding-top: 10px;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+div#addsalesreceiptModal form .item-totals .label .taxable-sub {
+    font-size: 12px;
+}
+
+div#addsalesreceiptModal form .item-totals .label .taxable-sub span {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+div#addsalesreceiptModal form .table tbody tr td.item-action a {
+    color: #999999;
+}
+
+div#addsalesreceiptModal form .item-totals input[name="adjustment_value"] {
+    width: 100px!important;
+    margin-left: 10px;
+    text-align: right;
+    border: 1px dashed #d1d1d1!important;
+}
+
+div#addsalesreceiptModal form .item-totals input[name="adjustment_name"] {
+    width: 150px!important;
+    text-align: right;
+    border: 1px dashed #d1d1d1!important;
+}
+
+div#addsalesreceiptModal form .item-totals input[name="adjustment_name"]:focus,
+div#addsalesreceiptModal form .item-totals input[name="adjustment_value"]:focus {
+    border-color: rgba(126, 239, 104, 0.8)!important;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03!important;
+    font-style: normal;
+}
+
+div#addsalesreceiptModal form .item-totals span.clarification {
+    right: -20px;
+    z-index: 1;
+    position: absolute;
 }

@@ -444,6 +444,16 @@ $(document).on('click', '#products-services-table .adjust-starting-value', funct
 	var row = $(this).parent().parent().parent().parent();
 	rowData = $('#products-services-table').DataTable().row(row).data();
 
+	adjustStartingValueModal();
+});
+
+$(document).on('click', '#item-modal .adjust-starting-value', function(e) {
+	e.preventDefault();
+
+	adjustStartingValueModal();
+});
+
+function adjustStartingValueModal() {
 	$.get('adjust-starting-value-form/'+rowData.id, function(result) {
 		if ($('div#modal-container').length > 0) {
 			$('div#modal-container').html(result);
@@ -501,7 +511,7 @@ $(document).on('click', '#products-services-table .adjust-starting-value', funct
 
 		$('#adjust-starting-value-modal').modal('show');
 	});
-});
+}
 
 $(document).on('click', '#products-services-table .duplicate-item', function(e) {
 	e.preventDefault();
@@ -1177,7 +1187,7 @@ $(document).on('click', '#products-services-table .edit-item', function(e) {
 		<div class="form-group row" style="margin: 0 !important">
 			<div class="col-sm-6">
 				<label for="" class="m-0">Quantity on hand</label>
-				<p class="m-0">Adjust: <a class="text-info adjust-quantity" href="#">Quantity</a> | <a class="text-info" href="#">Starting value</a></p>
+				<p class="m-0">Adjust: <a class="text-info adjust-quantity" href="#">Quantity</a> | <a class="text-info adjust-starting-value" href="#">Starting value</a></p>
 			</div>
 			<div class="col-sm-6">
 				<p class="text-right m-0">${rowData.qty_on_hand}</p>
