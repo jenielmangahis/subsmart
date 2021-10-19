@@ -754,6 +754,7 @@ $route['calendar/_update_appointment'] = 'Workcalender/ajax_update_appointment';
 $route['calendar/_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
 $route['calendar/_appointment_checkout'] = 'Workcalender/ajax_checkout_appointment';
 $route['calendar/_save_checkout_items'] = 'Workcalender/ajax_save_checkout_items';
+$route['calendar/_appointment_cash_checkout'] = 'Workcalender/ajax_appointment_cash_checkout';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

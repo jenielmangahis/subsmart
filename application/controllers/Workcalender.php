@@ -2057,6 +2057,38 @@ class Workcalender extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_appointment_cash_checkout()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('AppointmentItem_model');
+
+        $post       = $this->input->post();
+        $cid        = logged('company_id');
+        $is_success = false;
+        $message    = 'Cannot create appointment';
+
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['cash_checkout_aid'], $cid);
+
+        if( $appointment ) {
+            echo "<pre>";
+            print_r($appointment);
+            exit;
+
+            $is_success = true;
+            $message    = '';
+
+        } else {
+            $message = 'Required fields cannot be empty';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
 }
 
 
