@@ -1153,7 +1153,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
   $("#btn-create-google-event").click(function(){
     var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...</div>';
-        var url = base_url + '/calendar/_create_google_event';
+    var url = base_url + '/calendar/_create_google_event';
         $(".create-gevent-validation-error").html(msg);
         setTimeout(function () {
             $.ajax({

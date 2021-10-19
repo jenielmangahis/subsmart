@@ -2029,6 +2029,10 @@ class Workcalender extends MY_Controller
 
         if( $appointment ) {
             $this->AppointmentItem_model->deleteAllByAppointmentId($appointment->id);
+            $total_tax = 0;
+            $total_discount = 0;
+            $total_items    = 0;
+
             foreach( $post['items'] as $key => $value ){
                 if( isset($post['price'][$key]) && isset($post['discount'][$key]) ){
                     $data_item = [
@@ -2040,8 +2044,20 @@ class Workcalender extends MY_Controller
                     ];
 
                     $this->AppointmentItem_model->create($data_item);
+
+                    $total_discount += $post['discount'][$key];
+                    $total_items += $post['price'][$key];                    
                 }
             }
+
+            $total_amount = ($total_items + $total_tax) - $total_discount;
+            $data_appointment = [
+                'total_item_price' => $total_items,
+                'total_item_discount' => $total_discount,
+                'total_amount' => $total_amount
+            ];
+
+            $this->Appointment_model->update($appointment->id, $data_appointment);
 
             $is_success = true;
             $message    = '';
@@ -2066,20 +2082,31 @@ class Workcalender extends MY_Controller
         $post       = $this->input->post();
         $cid        = logged('company_id');
         $is_success = false;
-        $message    = 'Cannot create appointment';
+        $message    = 'Cannot find appointment';
 
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['cash_checkout_aid'], $cid);
 
         if( $appointment ) {
-            echo "<pre>";
-            print_r($appointment);
-            exit;
+            if( $post['cash_amount_receive'] <= 0 ){
+                $message = 'Please enter amount received';
+            }elseif( $post['cash_date_received'] == '' ){
+                $message = 'Please enter amount date received';
+            }else{
+                $data_appointment = [
+                    'payment_gateway' => $this->Appointment_model->isCashPayment(),
+                    'date_paid' => date("H:i:s", strtotime($post['cash_date_received'])),
+                    'amount_received' => $post['cash_amount_receive'],
+                    'is_paid' => $this->Appointment_model->isPaid()              
+                ];
 
-            $is_success = true;
-            $message    = '';
+                $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                $is_success = true;
+                $message    = '';
+            }            
 
         } else {
-            $message = 'Required fields cannot be empty';
+            $message = 'Cannot find data';
         }
 
         $json_data = [

@@ -587,10 +587,9 @@ $(function(){
   });
 
   $("#frm-cash-payment").submit(function(e){
-    e.preventDefault();
-    var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /></div>';
+    e.preventDefault();    
     var url = base_url + 'calendar/_appointment_cash_checkout';
-        $(".btn-cash-payment").html(msg);
+        $(".btn-cash-payment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
             $.ajax({
                type: "POST",
@@ -621,10 +620,10 @@ $(function(){
                       text: o.msg
                     });
                   }
+                  $(".btn-cash-payment").html("SUBMIT");
                }
             });
-        }, 1000);
-        $(".btn-cash-payment").html("SUBMIT");
+        }, 1000);        
   });
 
 });
