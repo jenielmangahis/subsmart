@@ -28,7 +28,7 @@ class AccountingRules extends MY_Controller
         $newRule = $this->db->get('accounting_rules')->row();
 
         $conditions = array_map(function ($condition) use ($newRule) {
-            $condition['rules_id'] = $newRule->id;
+            $condition['rule_id'] = $newRule->id;
             return $condition;
         }, $conditions);
         $this->db->insert_batch('accounting_rules_conditions', $conditions);
@@ -50,7 +50,7 @@ class AccountingRules extends MY_Controller
         $rules = $this->db->get('accounting_rules')->result();
 
         foreach ($rules as $rule) {
-            $this->db->where('rules_id', $rule->id);
+            $this->db->where('rule_id', $rule->id);
             $rule->conditions = $this->db->get('accounting_rules_conditions')->result();
 
             $this->db->where('rule_id', $rule->id);
@@ -70,8 +70,40 @@ class AccountingRules extends MY_Controller
 
         $payload = json_decode(file_get_contents('php://input'), true);
 
+        // Remove unsupported columns on `accounting_rules` table.
+        ['conditions' => $conditions, 'assignments' => $assignments] = $payload;
+        unset($payload['conditions']);
+        unset($payload['assignments']);
+
+        $separate = function ($data) use ($id) {
+            $default = ['new' => [], 'existing' => []];
+            return array_reduce($data, function ($carry, $currData) use ($id) {
+                $currData['rule_id'] = $id;
+                $hasId = array_key_exists('id', $currData);
+                $carry[$hasId ? 'existing' : 'new'][] = $currData;
+                return $carry;
+            }, $default);
+        };
+
         $this->db->where('id', $id);
         $this->db->update('accounting_rules', $payload);
+
+        ['new' => $newConditions, 'existing' => $existingConditions] = $separate($conditions);
+        ['new' => $newAssignments, 'existing' => $existingAssignments] = $separate($assignments);
+
+        if (!empty($newConditions)) {
+            $this->db->insert_batch('accounting_rules_conditions', $newConditions);
+        }
+        if (!empty($existingConditions)) {
+            $this->db->update_batch('accounting_rules_conditions', $existingConditions, 'id');
+        }
+
+        if (!empty($newAssignments)) {
+            $this->db->insert_batch('accounting_rule_assignments', $newAssignments);
+        }
+        if (!empty($existingAssignments)) {
+            $this->db->update_batch('accounting_rule_assignments', $existingAssignments, 'id');
+        }
 
         $this->db->where('id', $id);
         $record = $this->db->get('accounting_rules')->row();
@@ -171,7 +203,7 @@ class AccountingRules extends MY_Controller
         $rule = $this->db->get('accounting_rules')->row();
 
         if (!is_null($rule)) {
-            $this->db->where('rules_id', $rule->id);
+            $this->db->where('rule_id', $rule->id);
             $rule->conditions = $this->db->get('accounting_rules_conditions')->result();
 
             $this->db->where('rule_id', $rule->id);

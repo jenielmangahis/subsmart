@@ -830,7 +830,7 @@ $(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', fun
 });
 
 $(document).on('click', '#registers-table tbody tr', function() {
-    if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1 && !$(this).hasClass('action-row')) {
+    if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1 && !$(this).hasClass('action-row') && $(this).find('td.dataTables_empty').length < 1) {
         if($('#registers-table tbody tr.editting').length > 0) {
             $('#registers-table tbody tr.editting').next().find('#cancel-edit').trigger('click');
         }
@@ -917,6 +917,33 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
             }
         });
+    }
+});
+
+$(document).on('click', '#registers-table tbody tr.action-row #edit-transaction', function() {
+    var row = $('#registers-table tbody tr.editting');
+    var data = $('#registers').DataTable().row(row).data();
+
+    switch(data.type) {
+        default :
+            // $.get('/accounting/vendors/view-expense/'+data.id, function(res) {
+            //     if ($('div#modal-container').length > 0) {
+            //         $('div#modal-container').html(res);
+            //     } else {
+            //         $('body').append(`
+            //             <div id="modal-container"> 
+            //                 ${res}
+            //             </div>
+            //         `);
+            //     }
+        
+            //     initModalFields('expenseModal', data);
+        
+            //     $('#expenseModal #payee').trigger('change');
+        
+            //     $('#expenseModal').modal('show');
+            // });
+        break;
     }
 });
 

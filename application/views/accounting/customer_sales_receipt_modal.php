@@ -417,21 +417,21 @@ Alarm Direct, Inc</textarea>
                                     </div>
                                     <div class="col-md-3">
                                         Sales Receipt date<br>
-                                        <input type="text" class="form-control" name="sales_receipt_date"
-                                            id="datepickerinv8"><br>
+                                        <input type="text" class="form-control required" required
+                                            name="sales_receipt_date" id="datepickerinv8"><br>
                                         Ship via<br>
                                         <input type="text" class="form-control" name="ship_via">
                                     </div>
                                     <div class="col-md-3">
                                         <br><br><br><br>
                                         Shipping date<br>
-                                        <input type="text" class="form-control" name="shipping_date"
+                                        <input type="text" class="form-control required" required name="shipping_date"
                                             id="datepickerinv9">
                                     </div>
                                     <div class="col-md-3">
                                         <br><br><br><br>
                                         Tracking no.<br>
-                                        <input type="text" class="form-control" name="tracking_no">
+                                        <input type="text" class="form-control required" required name="tracking_no">
                                     </div>
 
                                 </div>
@@ -455,7 +455,7 @@ Alarm Direct, Inc</textarea>
                                         <?php } ?>
                                         </select> -->
                                         <select name="payment_method" id="payment_method"
-                                            class="form-control custom-select">
+                                            class="form-control custom-select required" required>
                                             <option value="">Choose method</option>
                                             <option value="Cash">Cash</option>
                                             <option value="Check">Check</option>
@@ -476,11 +476,11 @@ Alarm Direct, Inc</textarea>
                                     </div>
                                     <div class="col-md-3">
                                         Reference no.
-                                        <input type="text" class="form-control" name="ref_number">
+                                        <input type="text" class="form-control required" required name="ref_number">
                                     </div>
                                     <div class="col-md-3">
                                         Deposit to
-                                        <select class="form-control" name="deposit_to">
+                                        <select class="form-control required" required name="deposit_to">
                                             <option></option>
                                             <option value="1">Cash on hand</option>
                                             <option value="2">A</option>
@@ -493,14 +493,12 @@ Alarm Direct, Inc</textarea>
                             </div>
                             <div class="col-md-6" align="right">
                                 <div class="label-grand_total_sr_t">AMOUNT</div>
-                                <h2><span id="grand_total_sr_t">0.00</span></h2><br>
+                                <h2><span class="grand_total_sr_t bigdisplay">0.00</span></h2><br>
                                 Location of sale<br>
                                 <input type="text" class="form-control required" required style="width:200px;"
                                     name="location_scale">
                             </div>
                         </div>
-
-                        <hr>
                         <div class="col-md-6 payment_method_information">
                             <div id="check_area" style="display:none;">
                                 <div class="row">
@@ -771,131 +769,111 @@ Alarm Direct, Inc</textarea>
                         </div>
                     </div>
 
-                    <!-- <hr> -->
                     <div class="row" style="margin:5px;">
                         <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <!-- <th></th>
-                                    <th>#</th>
-                                    <th>PRODUCT/SERVICE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>RATE</th>
-                                    <th>AMOUNT</th>
-                                    <th>TAX</th>
-                                    <th></th> -->
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <!-- <th>Description</th> -->
-                                    <th width="150px">Quantity</th>
-                                    <!-- <th>Location</th> -->
-                                    <th width="150px">Price</th>
-                                    <th width="150px">Discount</th>
-                                    <th width="150px">Tax (Change in %)</th>
-                                    <th>Total</th>
-                                </thead>
-                                <tbody id="items_table_body_sales_receipt">
-                                    <!-- <tr>
-                                        <td>
-                                            <input type="text" class="form-control getItemssr required" required onKeyup="getItemssr(this)" name="items[]">
-                                            <ul class="suggestions"></ul>
-                                        </td>
-                                        <td><select name="item_type[]" class="form-control">
-                                                <option value="product">Product</option>
-                                                <option value="material">Material</option>
-                                                <option value="service">Service</option>
-                                                <option value="fee">Fee</option>
-                                            </select></td>
-                                        <td width="150px"><input type="number" class="form-control quantitysr required item-field-monitary" required name="quantity[]" data-counter="0" id="quantity_0" value="1">
-                                        </td>
-                                        <td width="150px"><input type="number" class="form-control pricesr required item-field-monitary" required name="price[]" data-counter="0" id="price_sr_0" min="0" value="0"></td>
-                                        <td width="150px"><input type="number" class="form-control discountsr required item-field-monitary" required name="discount[]" data-counter="0" id="discount_sr_0" min="0" value="0">
-                                        </td>
-                                        <td width="150px"><input type="text" class="form-control tax_change required item-field-monitary" data-itemfieldtype="tax" required name="tax[]" data-counter="0" id="tax1_sr_0" min="0" value="0">
-                                            <input type="text" class="tax-hide" value="0" type="hidden">
-                                        </td>
-                                        <td width="150px" align="right"><input type="hidden" class="form-control total_per_input" name="total[]" data-counter="0" id="item_total_sr_0" min="0" value="0">
-                                            $<span class="total_per_item" id="span_total_sr_0">0.00</span></td>
-                                    </tr> -->
-
-                                    <tr>
-                                        <td width="30%">
-                                            <input type="text" class="form-control getItemssr"
-                                                onKeyup="getItemssr(this)" name="items[]">
-                                            <ul class="suggestions"></ul>
-                                            <div class="show_mobile_view"><span class="getItems_hidden"></span>
-                                            </div>
-                                            <input type="hidden" name="itemid[]" id="itemid" class="itemidSR">
-                                        </td>
-                                        <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                            <div class="items-section">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th width="150px">Quantity</th>
+                                        <th width="150px">Price</th>
+                                        <th width="150px">Discount</th>
+                                        <th width="150px">Tax (Change in %)</th>
+                                        <th style="text-align: right;">Total</th>
+                                        <th></th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="text" style="display: none;" name="item_ids[]">
+                                                <input type="text" class="form-control getItemssr required" required
+                                                    name="items[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
+                                            <td><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                        </td>
-                                        <td width="10%"><input type="number"
-                                                class="form-control quantitysr quantity_inv2 mobile_qty"
-                                                name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
-                                        <td width="10%"><input type="number"
-                                                class="form-control price pricesr hidden_mobile_view" name="price[]"
-                                                data-counter="0" id="price_sr_0" min="0" value="0">
-                                            <!-- <input type="hidden" class="priceqty" id="priceqty_0"> -->
-                                            <div class="show_mobile_view">
-                                                <!-- <span class="price">0</span> -->
-                                                <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                            </div><input id="priceqty_0" value="0" type="hidden" name="price_qty[]"
-                                                class="form-control hidden_mobile_view price_qty">
-                                        </td>
-                                        <td width="10%" class="hidden_mobile_view"><input type="number"
-                                                class="form-control discountsr" name="discount[]" data-counter="0"
-                                                id="discount_sr_0" min="0" value="0" readonly></td>
-                                        <td width="10%" class="hidden_mobile_view"><input type="text"
-                                                class="form-control tax_change" name="tax[]" data-counter="0"
-                                                id="tax1_0" min="0" value="0">
-                                            <!-- <span id="span_tax_0">0.0</span> -->
-                                        </td>
-                                        <td width="10%" class="hidden_mobile_view"><input type="hidden"
-                                                class="form-control " name="total[]" data-counter="0" id="item_total_0"
-                                                min="0" value="0">
-                                            $<span id="span_total_sr_0">0.00</span></td>
-                                        <td><a href="#" class="remove36 btn btn-sm btn-success" id="0"><i
-                                                    class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div>
+                                                </select></td>
+                                            <td width="150px"><input type="number"
+                                                    class="form-control quantitysr required item-field-monitary"
+                                                    required name="quantity[]" data-counter="0" value="">
+                                            </td>
+                                            <td width="150px"><input type="number"
+                                                    class="form-control pricesr required item-field-monitary" required
+                                                    name="price[]" data-counter="0" min="0" value=""></td>
+                                            <td width="150px"><input type="number"
+                                                    class="form-control discountsr required item-field-monitary"
+                                                    required name="discount[]" data-counter="0" min="0" value="">
+                                            </td>
+                                            <td width="150px"><input type="text" class="form-control"
+                                                    data-itemfieldtype="tax" required name="tax[]" data-type="tax"
+                                                    data-counter="0" min="0" value="">
+                                                <input type="text" class="tax-hide" name="tax_percent[]" value="7.5"
+                                                    type="hidden">
+                                            </td>
+                                            <td width="150px" style="text-align: right;"><input type="text"
+                                                    class="form-control total_per_input" name="total[]" data-counter="0"
+                                                    min="0" value="" style="display: none;">
+                                                $<span class="total_per_item">0.00</span></td>
+                                            <td class="item-action">
+                                                <a href="#" class="delete-item">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <hr>
 
                             <div class="row">
                                 <div class="col-md-3">
-                                    <!-- <button class="btn1">Add lines</button> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal"
-                                        data-target="#item_list2"><span
-                                            class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <div class="item-buttons">
+                                        <button type="button" class="default-button add-lines">
+                                            Add lines
+                                        </button>
+                                        <button type="button" class="default-button clear-all-lines">
+                                            Clear all lines
+                                        </button>
+                                    </div>
                                 </div>
-                                <!-- <div class="col-md-1">
-                                    <button class="btn1">Clear all lines</button>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3">
+                                    <div class="item-totals">
+                                        <div class="label">
+                                            <div for="">Subtotal</div>
+                                            <div for="">Taxes</div>
+                                            <div style="position:relative;">
+                                                <input type="text" name="adjustment_name" placeholder="Adjustment name">
+                                                <span class="fa fa-question-circle clarification" data-toggle="popover"
+                                                    data-placement="top" data-trigger="hover"
+                                                    data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
+                                                    data-original-title="" title=""></span>
+                                            </div>
+                                            <div style="padding-top:20px;">Grand total</div>
+                                        </div>
+                                        <div class="amount">
+                                            <div class="subtotal">$0</div>
+                                            <div class="taxes">$0</div>
+                                            <div class="adjustment">
+                                                <input type="text" name="adjustment_value" placeholder="0.00"
+                                                    value="0.00">
+                                            </div>
+                                            <div class="grand-total">$0</div>
+                                            <div class="fields" style="display: none;">
+                                                <input type="text" name="subtotal" placeholder="0.00" value="0.00">
+                                                <input type="text" name="taxes" placeholder="0.00" value="0.00">
+                                                <input type="text" name="grand_total" placeholder="0.00" value="0.00">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-1">
-                                    </div>
-                                    <div class="col-md-7">
-                                    </div>
-                                    <div class="col-md-1">
-                                        <b>Subtotal</b>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <b>$0.00</b>
-                                    </div> -->
-                            </div>
-                            <hr>
+                                </div>
+                            </div><br><br>
+
 
                             <div class="row">
                                 <div class="col-md-2">
@@ -907,138 +885,11 @@ Alarm Direct, Inc</textarea>
                                 <div class="col-md-6">
                                 </div>
                                 <div class="col-md-4">
-                                    <!-- Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless" style="text-align:right;">
-                                <tr>
-                                    <td>
-                                        <select class="form-control" name="tax_rate">
-                                            <option value="1">Based on location</option>
-                                        </select>
-                                    </td>
-                                    <td><b>$0.00</b><br><a href="">See the math</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping</td>
-                                    <td align="right"><input type="text" class="form-control" style="width:100px!important;"></td>
-                                </tr>
-                                <tr>
-                                    <td>Tax on shipping</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td>$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Balance due</td>
-                                    <td>$0.00</td>
-                                </tr>
-                            </table> -->
-                                    <table class="table" style="text-align:left;" id="summaryContainer__sales">
-                                        <tr>
-                                            <td>Subtotal</td>
-                                            <td></td>
-                                            <td align="right">$ <span id="span_sub_total_sr">0.00</span>
-                                                <input type="hidden" name="subtotal" id="item_total_sr">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="addInvoiceTax">
-                                                    <div class="form-group" style="margin-bottom: 0 !important;">
-                                                        <div class="taxRateSelect" id="invoiceTaxRate__sales">
-                                                            <button class="taxRateSelect__main" type="button" disabled>
-                                                                <span>Items total tax rate</span>
-                                                                <i class="fa fa-angle-down"></i>
-                                                            </button>
-
-                                                            <div class="taxRateSelect__options">
-                                                                <div class="taxRateSelect__item" value="items_tax"
-                                                                    default="true">Items total tax rate</div>
-                                                                <div class="taxRateSelect__item" value="location">Based
-                                                                    on location</div>
-
-                                                                <div
-                                                                    class="taxRateSelect__item taxRateSelect__item--customWrapper">
-                                                                    <div class="taxRateSelect__title">Custom Rates</div>
-                                                                    <div class="taxRateSelect__item taxRateSelect__item--custom"
-                                                                        value="add_custom">
-                                                                        <i class="fa fa-plus"></i>
-                                                                        <span>Add rate</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td align="right">$ <span id="total_tax_sr_">0.00</span><input type="hidden"
-                                                    name="taxes" id="total_tax_input_sr"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name"
-                                                    id="adjustment_name" placeholder="Adjustment Name"
-                                                    class="form-control"
-                                                    style="width:200px; display:inline; border: 1px dashed #d1d1d1">
-                                            </td>
-                                            <td style="width:150px;">
-                                                <input type="number" name="adjustment_value" id="adjustment_input_sr"
-                                                    value="0" class="form-control adjustment_input_sr"
-                                                    style="width:100px; display:inline-block">
-                                                <span class="fa fa-question-circle" data-toggle="popover"
-                                                    data-placement="top" data-trigger="hover"
-                                                    data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
-                                                    data-original-title="" title=""></span>
-                                            </td>
-                                            <td align="right">$<span id="adjustment_area_sr">0.00</span></td>
-                                        </tr>
-                                        <!-- <tr>
-                                            <td>Markup $<span id="span_markup"></td> -->
-                                        <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form"
-                                            class="markup_input" value="0">
-                                        <!-- </tr> -->
-                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
-                                            <td>Amount Saved</td>
-                                            <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden"
-                                                    name="voucher_value" id="offer_cost_input"></td>
-                                        </tr>
-                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                            <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td align="right"><b><span id="grand_total_sr">0.00</span>
-                                                    <input type="hidden" name="grand_total" id="grand_total_sr_g"
-                                                        value='0'></b></td>
-                                        </tr>
-                                    </table>
-
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <!-- <div class="file-upload">
-                                        <button class="file-upload-btn" type="button"
-                                            onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
-
-                                        <div class="image-upload-wrap">
-                                            <input class="file-upload-input" type='file' onchange="readURL(this);"
-                                                accept="image/*" />
-                                            <div class="drag-text">
-                                                <i>Drag and drop files here or click the icon</i>
-                                            </div>
-                                        </div>
-                                        <div class="file-upload-content">
-                                            <img class="file-upload-image" src="#" alt="your image" />
-                                            <div class="image-title-wrap">
-                                                <button type="button" onclick="removeUpload()"
-                                                    class="remove-image">Remove <span class="image-title">Uploaded
-                                                        File</span></button>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <div class="attachement-file-section">
                                         <div class="label">
                                             <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement

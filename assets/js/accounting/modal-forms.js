@@ -5429,10 +5429,12 @@ const viewPrint = (id, title = "") => {
 }
 
 const computeTotalValue = () => {
-    var initalQty = $('#adjust-starting-value-modal #initialQty').val();
+    var initialQty = $('#adjust-starting-value-modal #initialQty').val();
     var initialCost = $('#adjust-starting-value-modal #initialCost').val();
+    initialQty = initialQty === "" ? 0 : initialQty;
+    initialCost = initialCost === "" ? 0.00 : initialCost;
 
-    var totalValue = parseFloat(initialCost) * parseInt(initalQty);
+    var totalValue = parseFloat(initialCost) * parseInt(initialQty);
     totalValue = totalValue === 0 ? 0.00 : totalValue
 
     $('#adjust-starting-value-modal .total-value').html('$'+parseFloat(totalValue).toFixed(2));

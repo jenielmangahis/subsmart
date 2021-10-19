@@ -137,7 +137,7 @@ class Accounting_sales_receipt_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    public function get_recuring_sales_receipt($recurring_id="0",$sales_receipt_id="0")
+    public function get_recuring_sales_receipt($recurring_id="0", $sales_receipt_id="0")
     {
         $this->db->select('*');
         $this->db->from('accounting_sales_receipt');
@@ -172,7 +172,10 @@ class Accounting_sales_receipt_model extends MY_Model
     {
         $query = $this->db->insert('sales_receipt_items', $data);
         $insert_id = $this->db->insert_id();
-
         return  $insert_id;
     }
+    // public function delete_sales_receipt_items($sales_receipt_id)
+    // {
+    //     $this->db->delete('sales_receipt_items', array('sales_receipt_id' => $sales_receipt_id));
+    // }
 }

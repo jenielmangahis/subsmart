@@ -9,7 +9,9 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check  #closeCheckM
     $("#addsalesreceiptModal").modal('hide');
 });
 
-
+$(document).on('show.bs.modal', '#addsalesreceiptModal', function() {
+    clear_all_lines_sales_receipt();
+})
 
 function save_sales_receipt(submit_type, element) {
     var empty_flds = 0;
@@ -167,6 +169,7 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check #clearsalerec
     $('#addsalesreceiptModal form').trigger("reset");
     $("#addsalesreceiptModal form textarea").html("");
     $("#addsalesreceiptModal form input[name='recurring_selected']").val(recurring_selected);
+    clear_all_lines_sales_receipt();
 });
 
 $(document).on("click", "#addsalesreceiptModal .modal-footer-check #cancel_recurring", function(event) {
@@ -562,354 +565,136 @@ $(document).on("click", ".remove34", function(e) {
     cal_total_due();
 });
 
-$(".select_item_sr").click(function() {
-    var idd = this.id;
-    console.log(idd);
-    console.log($(this).data('itemname'));
-    var title = $(this).data('itemname');
-    var price = $(this).data('price');
 
-    if (!$(this).data('quantity')) {
-        // alert($(this).data('quantity'));
-        var qty = 0;
-    } else {
-        // alert('0');
-        var qty = $(this).data('quantity');
-    }
-    var number_of_items_added = 0;
-    $('*[id^="span_total_sr_"]').each(function() {
-        number_of_items_added++;
+$(document).on("keyup", "#addsalesreceiptModal .items-section table input[name='items[]']", function(event) {
+    var iteam_search = $(this).val();
+    var suggestions = $(this).parent("td").children(".suggestions");
+    get_search_items_sales_receipt(iteam_search, suggestions);
+});
+
+$(document).on("focus", "#addsalesreceiptModal .items-section table input[name='items[]']", function(event) {
+    var iteam_search = $(this).val();
+    var suggestions = $(this).parent("td").children(".suggestions");
+    $(this).attr("autocomplete", "off");
+    get_search_items_sales_receipt(iteam_search, suggestions);
+});
+
+function get_search_items_sales_receipt(iteam_search, suggestions) {
+    $.ajax({
+        url: baseURL + "/accounting/get_search_items",
+        type: "POST",
+        dataType: "json",
+        data: {
+            iteam_search: iteam_search,
+        },
+        success: function(data) {
+            suggestions.html(data.html);
+        },
     });
-    var count = parseInt($("#count").val()) + 1;
-    $("#count").val(count);
-    var total_ = price * qty;
-    var tax_ = (parseFloat(total_).toFixed(2) * 7.5) / 100;
-    var taxes_t = parseFloat(tax_).toFixed(2);
-    var total = parseFloat(total_).toFixed(2);
-    var withCommas = Number(total).toLocaleString('en');
-    total = '$' + withCommas + '.00';
-    // console.log(total);
-    // alert(total);
-    markup = "<tr id=\"ss\">" +
-        "<td width=\"35%\"><input value='" + title +
-        "' type=\"text\" name=\"items[]\" class=\"form-control getItemssr required\"  required onKeyup=\"getItemssr(this)\" ><input type=\"hidden\" value='" +
-        idd +
-        "' name=\"itemid[]\"><ul class=\"suggestions\"></ul></td>\n" +
-        "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
-        "<td width=\"10%\"><input data-itemid='" + idd + "' id='quantity_" + idd + "' value='" + qty +
-        "' type=\"number\" name=\"quantity[]\" data-counter=\"" + number_of_items_added +
-        "\" min=\"0\" class=\"form-control quantitysr  required item-field-monitary\"></td>\n" +
-        // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-        "<td width=\"10%\"><input id='price_sr_" + idd + "' value='" + price +
-        "'  type=\"number\"  data-counter=\"" + number_of_items_added +
-        "\" name=\"price[]\" class=\"form-control pricesr required item-field-monitary\" placeholder=\"Unit Price\"></td>\n" +
-        // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-        // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-        "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discountsr item-field-monitary\"  data-counter=\"" +
-        number_of_items_added +
-        "\" id='discount_sr_" +
-        idd + "'></td>\n" +
-        // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-        "<td width=\"20%\"><input type=\"text\" data-itemid='" + idd +
-        "' class=\"form-control tax_change item-field-monitary\" data-itemfieldtype=\"tax\"  data-counter=\"" +
-        number_of_items_added +
-        "\" name=\"tax[]\" data-counter=\"" + number_of_items_added +
-        "\" id='tax1_sr_" + idd +
-        "' min=\"0\" value='" + taxes_t +
-        "'><input type=\"text\" class=\"tax-hide\" value=\"0\" type=\"hidden\"></td>\n" +
-        "<td style=\"text-align: center\"  width=\"15%\">$<span data-subtotal='" + total_ +
-        "' id='span_total_sr_" + idd + "' class=\"total_per_item\">" + total +
-        // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-        "</span> <input type=\"hidden\" name=\"total[]\" class=\"total_per_input\" id='sub_total_text" +
-        idd + "' value='" + total +
-        "'></td>" +
-        "<td>\n" +
-        '<a href="#" class="remove36 btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
-        "</td>\n" +
-        "</tr>";
-    tableBody = $("#items_table_body_sales_receipt");
-    tableBody.append(markup);
-    markup2 =
-        "<tr id=\"sss\">" +
-        "<td >" + title + "</td>\n" +
-        "<td ></td>\n" +
-        "<td ></td>\n" +
-        "<td >" + price + "</td>\n" +
-        "<td ></td>\n" +
-        "<td >" + qty + "</td>\n" +
-        "<td ></td>\n" +
-        "<td ></td>\n" +
-        "<td >0</td>\n" +
-        "<td ></td>\n" +
-        "<td ><a href=\"#\" data-name='" + title + "' data-price='" + price + "' data-quantity='" + qty +
-        "' id='" + idd +
-        "' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-        "</tr>";
-    tableBody2 = $("#device_audit_datas");
-    tableBody2.append(markup2);
-    // calculate_subtotal();
-    // var counter = $(this).data("counter");
-    // calculation(idd);
+}
+$(document).on("click", "#addsalesreceiptModal  .items-section table .suggestions li", function(event) {
+    $(this).parent("ul").parent("td").children("input[name='item_ids[]']").val($(this).attr('data-id'));
+    $(this).parent("ul").parent("td").children("input[name='items[]']").val($(this).html());
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='quantity[]']").val(1);
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='price[]']").val($(this).attr('data-price'));
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='discount[]']").val($(this).attr('data-discount'));
+    var tax_computed = $(this).attr('data-price') * 0.075;
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='tax[]']").val(Number(tax_computed).toLocaleString('en'));
+    $(this).parent("ul").parent("td").parent("tr").find("input.tax-hide").val("7.5");
+    var total = tax_computed + parseFloat($(this).attr('data-price'));
+    $(this).parent("ul").parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='total[]']").val(total);
+    console.log($(this).parent("ul").parent("td").parent("tr").find("input[name='total[]']").val());
+    $("#addsalesreceiptModal  .items-section table .suggestions").html("");
+    compute_grand_total_sales_receipt();
+});
 
-    var in_id = idd;
-    var price = $("#price_sr_" + in_id).val();
-    var quantity = $("#quantity_" + in_id).val();
-    var discount = $("#discount_sr_" + in_id).val();
-    var tax = (parseFloat(price) * 7.5) / 100;
-    var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-        2
-    );
-    if (discount == '') {
-        discount = 0;
+$(document).on("change", "#addsalesreceiptModal  .items-section table td input", function(event) {
+    var qty = $(this).parent("td").parent("tr").find("input[name='quantity[]']").val();
+    var price = $(this).parent("td").parent("tr").find("input[name='price[]']").val();
+    var discount = $(this).parent("td").parent("tr").find("input[name='discount[]']").val();
+    if ($(this).attr("data-type") == "tax") {
+        $(this).parent("td").parent("tr").find("input.tax-hide").val($(this).val());
+        var computed_tax = parseFloat(price) * parseFloat($(this).val());
+        $(this).val(Number(computed_tax).toLocaleString('en'));
+        console.log($(this).parent("td").parent("tr").find("input.tax-hide").val());
     }
-
-    var total = (
-        (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-        parseFloat(discount)
-    ).toFixed(2);
-
-    // alert( 'yeah' + total);
-
-    $("#span_total_sr_" + in_id).text(total);
-    $("#sub_total_text" + in_id).val(total);
-    $("#tax_1_" + in_id)
-        .text(tax1);
-    $("#tax1_sr_" + in_id).val(tax1);
-    $("#discount_sr_" + in_id).val(discount);
-
-    if ($('#tax_1_' + in_id).length) {
-        $('#tax_1_' + in_id).val(tax1);
-    }
-
-    if ($('#item_total_sr_' + in_id).length) {
-        $('#item_total_sr_' + in_id).val(total);
-    }
-
-    var eqpt_cost = 0;
-    // var total_cost = 0;
-    var cnt = $("#count").val();
-    var total_discount = 0;
-    for (var p = 0; p <= cnt; p++) {
-        var prc = $("#price_sr_" + p).val();
-        var quantity = $("#quantity_" + p).val();
-        var discount = $("#discount_sr_" + p).val();
-        // var discount= $('#discount_' + p).val();
-        // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-        // total_cost += parseFloat(prc);
-        eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-        total_discount += parseFloat(discount);
-    }
-    //   var subtotal = 0;
-    // $( total ).each( function(){
-    //   subtotal += parseFloat( $( this ).val() ) || 0;
-    // });
-
-    var total_cost = 0;
-    // $("#span_total_0").each(function(){
-    $('*[id^="price_sr_"]').each(function() {
-        total_cost += parseFloat($(this).val());
-    });
-
-    var tax_tot = 0;
-    $('*[id^="tax1_sr_"]').each(function() {
-        tax_tot += parseFloat($(this).val());
-    });
-
-    over_tax = parseFloat(tax_tot).toFixed(2);
-    // alert(over_tax);
-
-    $("#sales_taxs").val(over_tax);
-    $("#total_tax_input_sr").val(over_tax);
-    $("#total_tax_sr_").text(over_tax);
-
-
-    eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-    total_discount = parseFloat(total_discount).toFixed(
-        2);
-    stotal_cost = parseFloat(total_cost).toFixed(2);
-    // var test = 5;
-
-    var subtotal = 0;
-    // $("#span_total_0").each(function(){
-    $('*[id^="span_total_sr_"]').each(function() {
-        subtotal += parseFloat($(this).text());
-    });
-    // $('#sum').text(subtotal);
-
-    var subtotaltax = 0;
-    // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function() {
-        subtotaltax += parseFloat($(this).text());
-    });
-
-    // alert(subtotaltax);
-
-    $("#eqpt_cost").val(eqpt_cost);
-    $("#total_discount").val(total_discount);
-    $("#span_sub_total_0").text(
-        total_discount);
-    $("#span_sub_total_invoice_sr").text(subtotal.toFixed(2));
-    // $("#item_total").val(subtotal.toFixed(2));
-    $("#item_total_sr").val(stotal_cost);
-
-    var s_total = subtotal.toFixed(2);
-    var adjustment = $("#adjustment_input_sr").val();
-    var grand_total = s_total - parseFloat(adjustment);
-    var markup = $("#markup_input_form").val();
-    var grand_total_w = grand_total + parseFloat(markup);
-
-    // $("#total_tax_").text(subtotaltax.toFixed(2));
-    // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-    $("#grand_total_sr").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(
-        2));
-    $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
-    $("#grand_total_sr_g").val(grand_total_w
-        .toFixed(2));
-    $("#span_sub_total_sr").text(grand_total_w.toFixed(2));
-
-    var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-    sls = parseFloat(sls).toFixed(2);
-    $("#sales_tax")
-        .val(sls);
-    cal_total_due();
+    var tax = $(this).parent("td").parent("tr").find("input.tax-hide").val();
+    var total = ((qty * price) + ((qty * price) * (tax / 100))) - discount;
+    $(this).parent("td").parent("tr").find("input[name='tax[]']").val(Number((qty * price) * (tax / 100)).toLocaleString('en'));
+    $(this).parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
+    $(this).parent("td").parent("tr").find("input[name='total[]']").val(total);
+    console.log($(this).parent("td").parent("tr").find("input[name='total[]']").val());
+    compute_grand_total_sales_receipt();
 
 });
 
-$(document).on("click", ".remove36", function(e) {
-    e.preventDefault();
-    $(this).parent().parent().remove();
-    var idd = this.id;
-    var count = parseInt($("#count").val()) - 1;
-    $("#count").val(count);
-    // calculation(count);
 
-
-    var in_id = idd;
-    var price = $("#price_sr_" + in_id).val();
-    var quantity = $("#quantity_" + in_id).val();
-    var discount = $("#discount_sr_" + in_id).val();
-    var tax = (parseFloat(price) * 7.5) / 100;
-    var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-        2
-    );
-    if (discount == '') {
-        discount = 0;
-    }
-
-    var total = (
-        (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-        parseFloat(discount)
-    ).toFixed(2);
-
-    // alert( 'yeah' + total);
-
-    $("#span_total_sr_" + in_id).text(total);
-    $("#sub_total_text" + in_id).val(total);
-    $("#tax_1_" + in_id)
-        .text(tax1);
-    $("#tax1_sr_" + in_id).val(tax1);
-    $("#discount_sr_" + in_id).val(discount);
-
-    if ($('#tax_1_' + in_id).length) {
-        $('#tax_1_' + in_id).val(tax1);
-    }
-
-    if ($('#item_total_sr_' + in_id).length) {
-        $('#item_total_sr_' + in_id).val(total);
-    }
-
-    var eqpt_cost = 0;
-    // var total_cost = 0;
-    var cnt = $("#count").val();
-    var total_discount = 0;
-    for (var p = 0; p <= cnt; p++) {
-        var prc = $("#price_sr_" + p).val();
-        var quantity = $("#quantity_" + p).val();
-        var discount = $("#discount_sr_" + p).val();
-        // var discount= $('#discount_' + p).val();
-        // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-        // total_cost += parseFloat(prc);
-        eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-        total_discount += parseFloat(discount);
-    }
-    //   var subtotal = 0;
-    // $( total ).each( function(){
-    //   subtotal += parseFloat( $( this ).val() ) || 0;
-    // });
-
-    var total_cost = 0;
-    // $("#span_total_0").each(function(){
-    $('*[id^="price_sr_"]').each(function() {
-        total_cost += parseFloat($(this).val());
-    });
-
-    var tax_tot = 0;
-    $('*[id^="tax1_sr_"]').each(function() {
-        tax_tot += parseFloat($(this).val());
-    });
-
-    over_tax = parseFloat(tax_tot).toFixed(2);
-    // alert(over_tax);
-
-    $("#sales_taxs").val(over_tax);
-    $("#total_tax_input_sr").val(over_tax);
-    $("#total_tax_sr_").text(over_tax);
-
-
-    eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-    total_discount = parseFloat(total_discount).toFixed(
-        2);
-    stotal_cost = parseFloat(total_cost).toFixed(2);
-    // var test = 5;
-
+function compute_grand_total_sales_receipt() {
+    var qty_array = $("#addsalesreceiptModal table tr td input[name='quantity[]']").map(function() { return $(this).val(); }).get();
+    var price_array = $("#addsalesreceiptModal table tr td input[name='price[]']").map(function() { return $(this).val(); }).get();
+    var discount_array = $("#addsalesreceiptModal table tr td input[name='discount[]']").map(function() { return $(this).val(); }).get();
+    var tax_pecent_array = $("#addsalesreceiptModal table tr td input[name='tax_percent[]']").map(function() { return $(this).val(); }).get();
+    var grand_total = 0;
+    var total_taxes = 0;
     var subtotal = 0;
-    // $("#span_total_0").each(function(){
-    $('*[id^="span_total_sr_"]').each(function() {
-        subtotal += parseFloat($(this).text());
-    });
-    // $('#sum').text(subtotal);
+    for (var i = 0; i < qty_array.length; i++) {
+        grand_total += ((qty_array[i] * price_array[i]) + ((qty_array[i] * price_array[i]) * (parseFloat(tax_pecent_array[i] / 100)))) - discount_array[i];
+        total_taxes += ((qty_array[i] * price_array[i]) * (parseFloat(tax_pecent_array[i] / 100)));
+        subtotal += (qty_array[i] * price_array[i]);
+    }
+    grand_total -= parseFloat($("#addsalesreceiptModal form .item-totals input[name='adjustment_value']").val().replace(/,/g, ''));
+    $("#addsalesreceiptModal .item-totals .amount .subtotal").html("$" + Number(subtotal).toLocaleString('en'));
+    $("#addsalesreceiptModal .item-totals .amount .taxes").html("$" + Number(total_taxes).toLocaleString('en'));
+    $("#addsalesreceiptModal .item-totals .amount .grand-total").html("$" + Number(grand_total).toLocaleString('en'));
+    $("#addsalesreceiptModal form input[name='grand_total']").val(grand_total);
+    $("#addsalesreceiptModal form input[name='subtotal']").val(subtotal);
+    $("#addsalesreceiptModal form input[name='taxes']").val(total_taxes);
+    $("#addsalesreceiptModal form h2 span.grand_total_sr_t.bigdisplay").html("$" + Number(grand_total).toLocaleString('en'));
+}
+$(document).on("change", "#addsalesreceiptModal form .item-totals input[name='adjustment_value']", function(event) {
+    if ($(this).val() == "") {
+        $(this).val("0.00");
+    } else {
+        $(this).val(parseFloat($(this).val().replace(/,/g, '')));
+        $(this).val(Number($(this).val()).toLocaleString('en'));
+    }
+    compute_grand_total_sales_receipt();
+});
+$(document).on("focus", "#addsalesreceiptModal .items-section table tr td", function(event) {
 
-    var subtotaltax = 0;
-    // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function() {
-        subtotaltax += parseFloat($(this).text());
-    });
+    if (!$(this).is(':last-child')) {
+        if ($(this).parent("tr").is(':last-child')) {
+            $("#addsalesreceiptModal .items-section table tbody").append("<tr>" + $(this).parent("tr").html() + "</tr>");
+            $("#addsalesreceiptModal .items-section table tbody tr:last-child").find(".total_per_item").html("0.00");
+        }
+    }
+});
 
-    // alert(subtotaltax);
+$(document).on("click", "#addsalesreceiptModal .items-section table tr td a.delete-item", function(event) {
+    if ($("#addsalesreceiptModal .items-section table tbody tr").length > 1) {
+        $(this).parent("td").parent("tr").remove();
+        compute_grand_total_sales_receipt();
+    }
+});
 
-    $("#eqpt_cost").val(eqpt_cost);
-    $("#total_discount").val(total_discount);
-    $("#span_sub_total_0").text(
-        total_discount);
-    $("#span_sub_total_invoice_sr").text(subtotal.toFixed(2));
-    // $("#item_total").val(subtotal.toFixed(2));
-    $("#item_total_sr").val(stotal_cost);
+$(document).on("click", "#addsalesreceiptModal .item-buttons .add-lines", function(event) {
+    $("#addsalesreceiptModal .items-section table tbody").append("<tr>" + $("#addsalesreceiptModal .items-section table tbody tr:last-child").html() + "</tr>");
+    $("#addsalesreceiptModal .items-section table tbody tr:last-child").find(".total_per_item").html("0.00");
+    $("#addsalesreceiptModal .items-section table tbody").append("<tr>" + $("#addsalesreceiptModal .items-section table tbody tr:last-child").html() + "</tr>");
+    $("#addsalesreceiptModal .items-section table tbody tr:last-child").find(".total_per_item").html("0.00");
+    $("#addsalesreceiptModal .items-section table tbody").append("<tr>" + $("#addsalesreceiptModal .items-section table tbody tr:last-child").html() + "</tr>");
+    $("#addsalesreceiptModal .items-section table tbody tr:last-child").find(".total_per_item").html("0.00");
+    $("#addsalesreceiptModal .items-section table tbody").append("<tr>" + $("#addsalesreceiptModal .items-section table tbody tr:last-child").html() + "</tr>");
+    $("#addsalesreceiptModal .items-section table tbody tr:last-child").find(".total_per_item").html("0.00");
+});
 
-    var s_total = subtotal.toFixed(2);
-    var adjustment = $("#adjustment_input_sr").val();
-    var grand_total = s_total - parseFloat(adjustment);
-    var markup = $("#markup_input_form").val();
-    var grand_total_w = grand_total + parseFloat(markup);
-
-    // $("#total_tax_").text(subtotaltax.toFixed(2));
-    // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-    $("#grand_total_sr").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(
-        2));
-    $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
-    $("#grand_total_sr_g").val(grand_total_w
-        .toFixed(2));
-    $("#span_sub_total_sr").text(grand_total_w.toFixed(2));
-
-    var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-    sls = parseFloat(sls).toFixed(2);
-    $("#sales_tax")
-        .val(sls);
-    cal_total_due();
+function clear_all_lines_sales_receipt() {
+    var new_tr = "<tr>" + $("#addsalesreceiptModal .items-section table tbody tr:last-child").html() + "</tr>";
+    $("#addsalesreceiptModal .items-section table tbody").html(new_tr);
+    $("#addsalesreceiptModal .items-section table tbody tr:last-child").find(".total_per_item").html("0.00");
+    compute_grand_total_sales_receipt();
+}
+$(document).on("click", "#addsalesreceiptModal .item-buttons .clear-all-lines", function(event) {
+    clear_all_lines_sales_receipt();
 });

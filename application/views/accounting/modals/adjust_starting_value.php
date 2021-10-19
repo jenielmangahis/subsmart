@@ -44,7 +44,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="asOfDate">As of date</label>
-                                                <input type="text" name="as_of_date" id="asOfDate" class="form-control" value="<?=date('m/d/Y', strtotime($accountingDetails->as_of_date))?>">
+                                                <input type="text" name="as_of_date" id="asOfDate" class="form-control" value="<?=!is_null($accountingDetails) ? date('m/d/Y', strtotime($accountingDetails->as_of_date)) : date('m/d/Y')?>">
                                             </div>
                                         </div>
                                         <div class="col-md-2 offset-md-4">
@@ -59,7 +59,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="initialCost">Initial cost</label>
-                                                <input type="number" step="0.01" name="initial_cost" id="initialCost" value="<?=$item->initial_cost?>" class="form-control text" onchange="convertToDecimal(this)">
+                                                <input type="number" step="0.01" name="initial_cost" id="initialCost" value="<?=$item->cost?>" class="form-control text" onchange="convertToDecimal(this)">
                                             </div>
                                         </div>
                                     </div>
@@ -77,7 +77,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="invAdjustmentAcc">Inventory adjustment account</label>
-                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control"></select>
+                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control" required></select>
                                             </div>
                                         </div>
                                     </div>
