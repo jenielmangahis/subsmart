@@ -102,6 +102,7 @@ class Accounting_modals extends MY_Controller
                 case 'journal_entry_modal':
                     $lastJournalNo = (int)$this->accounting_journal_entries_model->getLastJournalNo();
                     $this->page_data['journal_no'] = $lastJournalNo + 1;
+                    $this->page_data['journal_date'] = date('m/d/Y');
                 break;
                 case 'bank_deposit_modal':
                     $this->page_data['balance'] = '$0.00';

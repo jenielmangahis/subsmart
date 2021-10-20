@@ -2,6 +2,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const { SelectWithCheckbox } = await import("./SelectWithCheckbox.js");
   const { RulesTable } = await import("./RulesTable.js");
   const api = await import("./api.js");
+  const utils = await import("./utils.js");
 
   const $newRuleButton = document.getElementById("newRuleButton");
   $newRuleButton.addEventListener("click", () => {
@@ -107,7 +108,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       const assignment = {
         value,
         type: assignmentType,
-        percentage: 100,
+        percentage: null,
       };
 
       if ($addRuleForm.hasAttribute("data-add-split")) {
@@ -163,6 +164,29 @@ window.addEventListener("DOMContentLoaded", async () => {
       await api.editRule(ruleId, _payload);
     }
     window.location.reload();
+  });
+
+  const $exportLink = document.getElementById("exportRules");
+  $exportLink.addEventListener("click", async (event) => {
+    event.preventDefault();
+    await api.exportRules();
+    await utils.sleep(0.5);
+
+    Swal.fire({
+      title: "What’s next?",
+      html: `
+        <ol>
+          <li>Switch to the company you want these rules for.</li>
+          <li>From the Banking page, go to your Rules list. Click New Rule > Import rules.</li>
+          <li>Step through the workflow to upload and import your rules.</li>
+        </ol>
+      `,
+      showCloseButton: true,
+      confirmButtonText: "Close",
+      customClass: {
+        container: "exportRulesPrompt",
+      },
+    });
   });
 
   $("#createRules").on("hidden.bs.modal", () => {
@@ -256,6 +280,7 @@ window.resetRuleForm = () => {
   const $parent = $newRuleModal.closest("#createRuleModalRight");
   const $dataTypes = $newRuleModal.querySelectorAll("[data-type]");
   const $formError = $newRuleModal.querySelector(".formError");
+  const $form = $newRuleModal.querySelector("#addRuleForm");
 
   $parent.classList.remove("createRuleModalRight--edit");
   $formError.classList.remove("formError--show");
@@ -282,8 +307,21 @@ window.resetRuleForm = () => {
     }
   }
 
-  const $conditions = $newRuleModal.querySelectorAll(".addCondition-container > div"); // prettier-ignore
+  // assignments
+  if ($form.hasAttribute("data-add-split")) {
+    const $$form = $($form);
+    $$form.removeAttr("data-add-split");
+    $$form.find("#mainCategory").attr("name", "category[]");
+    $$form.find(".add-split-container").hide();
+    $$form.find("#categoryDefault").show();
+    $$form.find("#btnAddLine").hide();
+  }
 
+  // conditions
+  const $conditions = $newRuleModal.querySelectorAll(".addCondition-container > div"); // prettier-ignore
+  if ($conditions.length === 1) {
+    return;
+  }
   for (let index = 0; index < $conditions.length; index++) {
     const $condition = $conditions[index];
 

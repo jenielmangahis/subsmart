@@ -205,7 +205,8 @@ function income_overtime_graph_setter() {
             includeZero: true,
             crosshair: {
                 enabled: true
-            }
+            },
+            valueFormatString: "$#,##0.##"
         },
         legend: {
             verticalAlign: "bottom",

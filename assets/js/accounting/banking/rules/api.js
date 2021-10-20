@@ -82,3 +82,18 @@ export async function deleteRule(id) {
 
   return await response.json();
 }
+
+export async function exportRules() {
+  const endpoint = `${window.prefixURL}/AccountingRules/apiExportRules`;
+  const response = await fetch(endpoint);
+
+  if (response.status !== 200) {
+    return;
+  }
+
+  let filename = response.headers.get("content-disposition");
+  filename = filename.match(/(?<=")(?:\\.|[^"\\])*(?=")/)[0];
+
+  const blob = await response.blob();
+  download(blob, filename, "application/octet-stream");
+}

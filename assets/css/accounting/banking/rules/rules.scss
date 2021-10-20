@@ -278,3 +278,48 @@ $colorError: #d52b1e;
     }
   }
 }
+
+.exportRulesPrompt {
+  .swal2-popup {
+    max-width: 360px !important;
+  }
+
+  .swal2-title {
+    font-size: 1rem;
+    font-family: inherit;
+    align-self: flex-start;
+  }
+
+  #swal2-content {
+    padding: 0 1.3rem;
+    margin-top: 1rem;
+
+    ol,
+    li {
+      list-style-type: decimal;
+      text-align: initial;
+    }
+
+    li {
+      margin-bottom: 1.3rem;
+      font-size: 0.9rem !important;
+      font-weight: 600;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+  }
+
+  .swal2-actions {
+    margin-top: 0;
+    border-top: 1px solid #ebebeb;
+    padding-top: 1rem;
+  }
+
+  .swal2-confirm {
+    padding: 0;
+    width: 100px;
+    height: 40px;
+    border-radius: 40px !important;
+    background-color: #2ca01c !important;
+  }
+}

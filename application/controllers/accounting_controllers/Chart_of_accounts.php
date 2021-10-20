@@ -21,6 +21,8 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_bank_deposit_model');
         $this->load->model('accounting_inventory_qty_adjustments_model');
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
+        $this->load->model('accounting_terms_model');
+        $this->load->model('accounting_payment_methods_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -3371,5 +3373,205 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         return $update;
+    }
+
+    public function view_transaction($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'expense':
+                $this->view_expense($transactionId);
+            break;
+            case 'check':
+                $this->view_check($transactionId);
+            break;
+            case 'journal' :
+                $this->view_journal($transactionId);
+            break;
+            case 'bill':
+                $this->view_bill($transactionId);
+            break;
+            case 'cc-credit' :
+                $this->view_cc_credit($transactionId);
+            break;
+            case 'vendor-credit':
+                $this->view_vendor_credit($transactionId);
+            break;
+            case 'bill-payment':
+                $this->view_bill_payment($transactionId);
+            break;
+            case 'transfer' :
+
+            break;
+            case 'deposit' :
+
+            break;
+            case 'inventory-qty-adjust' :
+
+            break;
+            case 'credit-card-payment':
+                $this->view_cc_payment($transactionId);
+            break;
+        }
+    }
+
+    private function view_expense($expenseId)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+
+        $selectedBalance = $paymentAcc->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
+        $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
+
+        $this->page_data['expense'] = $expense;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view('accounting/vendors/view_expense', $this->page_data);
+    }
+
+    private function view_check($checkId)
+    {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+
+        $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+
+        $selectedBalance = $bankAcc->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+
+        $this->page_data['check'] = $check;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view('accounting/vendors/view_check', $this->page_data);
+    }
+
+    private function view_bill($billId)
+    {
+        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $term = $this->accounting_terms_model->getById($bill->term_id);
+
+        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
+
+        $totalPayment = 0.00;
+        foreach ($billPayments as $billPayment) {
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
+
+            foreach ($paymentItems as $paymentItem) {
+                if ($paymentItem->bill_id === $billId) {
+                    $totalPayment += floatval($paymentItem->total_amount);
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        $this->page_data['bill_payments'] = $billPayments;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        $this->page_data['bill'] = $bill;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['term'] = $term;
+
+        $this->load->view('accounting/vendors/view_bill', $this->page_data);
+    }
+
+    private function view_vendor_credit($vendorCreditId)
+    {
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+
+        $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
+        $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
+
+        $this->page_data['vendorCredit'] = $vendorCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+
+        $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
+    }
+
+    private function view_cc_payment($ccPaymentId)
+    {
+        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
+
+        $this->page_data['ccPayment'] = $ccPayment;
+
+        $this->load->view('accounting/vendors/view_credit_card_payment', $this->page_data);
+    }
+
+    private function view_cc_credit($ccCreditId)
+    {
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+
+        $creditCard = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+        $selectedBalance = $creditCard->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
+        $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
+
+        $this->page_data['ccCredit'] = $ccCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view('accounting/vendors/view_credit_card_credit', $this->page_data);
+    }
+
+    private function view_bill_payment($billPaymentId, $vendorId)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+
+        $selectedBalance = $paymentAcc->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($vendorId);
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
+    }
+
+    private function view_journal($journalId)
+    {
+        $journalEntry = $this->accounting_journal_entries_model->getById($journalId);
+        $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
+
+        $this->page_data['journal_no'] = $journalEntry->journal_no;
+        $this->page_data['journal_date'] = date("m/d/Y", strtotime($journalEntry->journal_date));
+
+        $this->load->view("accounting/modals/journal_entry_modal", $this->page_data);
     }
 }
