@@ -1053,3 +1053,5 @@ $route['autocomplete/_company_users'] = 'Autocomplete/company_users';
 $route['autocomplete/_company_customer'] = 'Autocomplete/company_customers';
 $route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
 
+//Quick Add
+$route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
