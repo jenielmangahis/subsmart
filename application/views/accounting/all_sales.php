@@ -217,46 +217,42 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         overflow-y: auto;
     }
 
-    .filter_estimates:hover
-    {
+    .filter_estimates:hover {
         height: 120px;
         border-width: 10px;
         background-color: #38a4f8;
     }
 
-    .filter_unbilled:hover
-    {
+    .filter_unbilled:hover {
         height: 120px;
         border-width: 10px;
         background-color: #007bff;
     }
 
-    .filter_overdue:hover
-    {
+    .filter_overdue:hover {
         height: 120px;
         border-width: 10px;
         background-color: #f8b425;
     }
 
-    .filter_invoices:hover
-    {
+    .filter_invoices:hover {
         height: 120px;
         border-width: 10px;
         background-color: #6c757d;
     }
 
-    .filter_paid30:hover
-    {
+    .filter_paid30:hover {
         height: 120px;
         border-width: 10px;
         background-color: #28a745;
     }
-    
 </style>
 
 <?php include viewPath('includes/header'); ?>
 
-<link href="<?php echo $url->assets ?>css/accounting/accounting_includes/receive_payment.css" rel="stylesheet" type="text/css">
+<link
+    href="<?php echo $url->assets ?>css/accounting/accounting_includes/receive_payment.css"
+    rel="stylesheet" type="text/css">
 
 <div class="wrapper accounting-sales" role="wrapper">
     <!-- page wrapper start -->
@@ -324,30 +320,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="dropdown-menu" aria-labelledby="dropNewTraaction">
                         <a class="dropdown-item"
                             href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#receive-payment_">Payment</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#receive-payment_">Payment</a>
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newJobModal">Estimate</a>
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addsalesreceiptModal">Sales
                             Receipt</a>
                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#credit-memo">Credit Memo</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#adddelayedchargeModal">Delayed
+                        <a class="dropdown-item" href="#" data-toggle="modal"
+                            data-target="#adddelayedchargeModal">Delayed
                             Charge</a>
                         <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#sales-time-activity">Time
                             Activity</a> -->
-                        <a href="#" class="dropdown-item ajax-single_time_activity_modal" data-view="single_time_activity_modal" data-toggle="modal" data-target="#singleTimeModal">Single time activity</a>
+                        <a href="#" class="dropdown-item ajax-single_time_activity_modal"
+                            data-view="single_time_activity_modal" data-toggle="modal"
+                            data-target="#singleTimeModal">Single time activity</a>
                     </div>
                 </div>
 
-				<!-- end row -->
-				<div class="row ml-2"></div>
-            <!-- end row -->
-			</div>
+                <!-- end row -->
+                <div class="row ml-2"></div>
+                <!-- end row -->
+            </div>
         </div>
         <div class="row">
             <div class="col-md-4 col-sm-4 col-xs-12">
                 <div class="row pt-3 align-items-end mr-1">
                     <div class="col px-0 filter_estimates" id="filter_estimates">
                         <div class="bg-info px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white"><?php $estimateCount = 0; foreach ($estimates as $estimate){ $estimateCount++; } echo $estimateCount;  ?></h4>
+                            <h4 class="text-white"><?php $estimateCount = 0; foreach ($estimates as $estimate) {
+    $estimateCount++;
+} echo $estimateCount;  ?>
+                            </h4>
                             <h6 class="text-white">ESTIMATES</h6>
                         </div>
                     </div>
@@ -365,13 +368,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col px-0 filter_overdue" id="filter_overdue">
                         <p class="text-primary mb-1">Unpaid Last 365 Days</p>
                         <div class="bg-warning px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white"><?php $Over = 0; foreach ($InvOverdue as $InvOver){ $Over++; } echo $Over;  ?></h4>
+                            <h4 class="text-white"><?php $Over = 0; foreach ($InvOverdue as $InvOver) {
+    $Over++;
+} echo $Over;  ?>
+                            </h4>
                             <h6 class="text-white">OVERDUE</h6>
                         </div>
                     </div>
                     <div class="col px-0 filter_invoices" id="filter_invoices">
                         <div class="bg-secondary px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white"><?php $OpenInv = 0; foreach ($OpenInvoices as $OpenInvoice){ $OpenInv++; } echo $OpenInv;  ?></h4>
+                            <h4 class="text-white"><?php $OpenInv = 0; foreach ($OpenInvoices as $OpenInvoice) {
+    $OpenInv++;
+} echo $OpenInv;  ?>
+                            </h4>
                             <h6 class="text-white">OPEN INVOICES</h6>
                         </div>
                     </div>
@@ -382,7 +391,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col px-0 filter_paid30" id="filter_paid30">
                         <p class="text-primary mb-1">Paid</p>
                         <div class="bg-success px-3 py-2" style="height:100px !important;">
-                            <h4 class="text-white"><?php $InvPaid = 0; foreach ($getAllInvPaid as $getAllInvPaid){ $InvPaid++; } echo $InvPaid;  ?></h4>
+                            <h4 class="text-white"><?php $InvPaid = 0; foreach ($getAllInvPaid as $getAllInvPaid) {
+    $InvPaid++;
+} echo $InvPaid;  ?>
+                            </h4>
                             <h6 class="text-white">PAID LAST 30 DAYS</h6>
                         </div>
                     </div>
@@ -390,11 +402,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
         <br>
-        <div class="row">
+        <div class="row all-sales-section">
             <div class="col-md-4">
-                <a class="btn btn-primary link-modal-open" href="#" id="add_another_items" data-toggle="modal"
-                    data-target="#filterBY">Filter</a>
-                            <!-- <select class="form-control" id="categoryFilter">
+                <!-- <a class="btn btn-primary link-modal-open" href="#" id="add_another_items" data-toggle="modal"
+                    data-target="#filterBY">Filter</a> -->
+                <!-- <select class="form-control" id="categoryFilter">
                                 <option value="">All Transactions</option>
                                 <option value="Estimate">Estimates</option>
                                 <option value="Invoice">Invoices</option>
@@ -405,6 +417,140 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <option value="">Money Received</option>
                                 <option value="Statements">Statements</option>
                             </select> -->
+                <div class="filter-btn-section">
+                    <button class="btn btn-default filter-btn" type="button">
+                        Filter <span class="fa fa-caret-down"></span></button>
+                    <div class="filter-panel" style="display:none;">
+                        <div class="achor-holder"><img
+                                src="<?=base_url('assets/img/accounting/customers/anchor.png')?>"
+                                alt="">
+                        </div>
+                        <form action="#" class="filter_all_sales_table">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Type
+                                        </div>
+                                        <select class="form-control" name="filter_type">
+                                            <option>All transactions</option>
+                                            <option>All plus deposits</option>
+                                            <option>All invoices</option>
+                                            <option>Open invoices</option>
+                                            <option>Overdue invoices</option>
+                                            <option>Open estimates</option>
+                                            <option>Credit memos</option>
+                                            <option>Unbilled income</option>
+                                            <option>Recently paid</option>
+                                            <option>Money received</option>
+                                            <option>Recurring templates</option>
+                                            <option>Statements</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Status
+                                        </div>
+                                        <select class="form-control " name="filter_status">
+                                            <option>All statuses</option>
+                                            <option>Open</option>
+                                            <option>Overdue</option>
+                                            <option>Paid</option>
+                                            <option>Pending</option>
+                                            <option>Accepted</option>
+                                            <option>Closed</option>
+                                            <option>Rejected</option>
+                                            <option>Expired</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Delivery method
+                                        </div>
+                                        <select class="form-control " name="filter_delivery_method">
+                                            <option>Any</option>
+                                            <option>Print later</option>
+                                            <option>Send later</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Date
+                                        </div>
+                                        <select class="form-control " name="filter_date">
+                                            <option>All dates</option>
+                                            <option>Today</option>
+                                            <option>Yesterday</option>
+                                            <option>This week</option>
+                                            <option>This month</option>
+                                            <option>This quarter</option>
+                                            <option>This year</option>
+                                            <option>Last week</option>
+                                            <option>Last month</option>
+                                            <option>Last quarter</option>
+                                            <option>Last year</option>
+                                            <option>Last 365 days</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            From
+                                        </div>
+                                        <input type="date" class="form-control required" required="" name="filter_from">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            To
+                                        </div>
+                                        <input type="date" class="form-control required" required="" name="filter_to">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Customer
+                                        </div>
+                                        <select class="form-control " name="filter_customer">
+                                            <option value="all">All</option>
+                                            <?php foreach ($customers as $customer) : ?>
+                                            <option
+                                                value="<?php echo $customer->prof_id; ?>"
+                                                data-text="<?php echo $customer->first_name . ' ' . $customer->last_name; ?>">
+                                                <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btns">
+                                <div class="pull-left">
+                                    <button class="btn btn-default apply-btn px-4 reset" type="button">Reset</button>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-success apply-btn px-4" type="button">Apply</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -450,17 +596,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <!-- <a href="">View</a> -->
 
                                     <div class="dropdown dropdown-btn">
-                                        <?php if($inv->INV_status == 'Paid'){ ?>
-                                            <a href="<?php echo base_url('accounting/invoice_edit/' . $inv->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
-                                        <?php }else{ ?>
-                                            <a href="<?php echo base_url('accounting/invoice_edit/' . $inv->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; 
-                                            <!-- <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>  -->
-                                            <a href="" style="color:#3a96d2;font-weight:bold;" class="first-option customer_receive_payment_btn" data-customer-id="<?=$inv->customer_id?>">Receive payment </a>
-                                            &emsp;
+                                        <?php if ($inv->INV_status == 'Paid') { ?>
+                                        <a href="<?php echo base_url('accounting/invoice_edit/' . $inv->id) ?>"
+                                            style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        &emsp; <a
+                                            href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>"
+                                            style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
+                                        <?php } else { ?>
+                                        <a href="<?php echo base_url('accounting/invoice_edit/' . $inv->id) ?>"
+                                            style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        &emsp;
+                                        <!-- <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>  -->
+                                        <a href="" style="color:#3a96d2;font-weight:bold;"
+                                            class="first-option customer_receive_payment_btn"
+                                            data-customer-id="<?=$inv->customer_id?>">Receive
+                                            payment </a>
+                                        &emsp;
                                         <?php } ?>
 
-                                        <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                            data-toggle="dropdown" aria-expanded="true">
+                                        <button class="dropdown-toggle" type="button" id="dropdown-edit"
+                                            style="height: 25px;" data-toggle="dropdown" aria-expanded="true">
                                             <span class="btn-label"></span>
                                             <span class="caret-holder">
                                                 <span class="caret"></span>
@@ -497,16 +652,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </li>
                                             <li role="presentation">
                                                 <a role="menuitem" tabindex="-1"
-                                                                                    href="<?php echo base_url('workorder/invoice_workorder/' . $inv->id) ?>"
-                                                                                    data-convert-to-invoice-modal="open"
-                                                                                    data-id="<?php echo $inv->id ?>"
-                                                                                    data-invoice-number="<?php echo $inv->invoice_number ?>">
-                                                                            <span class="fa fa-file-text-o icon"></span> Convert to Work Order
-                                                                        </a>
+                                                    href="<?php echo base_url('workorder/invoice_workorder/' . $inv->id) ?>"
+                                                    data-convert-to-invoice-modal="open"
+                                                    data-id="<?php echo $inv->id ?>"
+                                                    data-invoice-number="<?php echo $inv->invoice_number ?>">
+                                                    <span class="fa fa-file-text-o icon"></span> Convert to Work Order
+                                                </a>
                                             </li>
                                             <li role="presentation">
                                                 <a role="menuitem" class="openCloneInvoice" tabindex="-1"
-                                                    href="javascript:void(0)" data-toggle="modal" data-target="#cloneModal"
+                                                    href="javascript:void(0)" data-toggle="modal"
+                                                    data-target="#cloneModal"
                                                     data-invoice-number="<?php echo $inv->invoice_number ?>"
                                                     data-id="<?php echo $inv->id ?>">
                                                     <span class="fa fa-files-o icon"></span> Clone Invoice
@@ -515,7 +671,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <li class="share-invoice-link-btn"
                                                 data-invoice-id="<?=$inv->id?>">
                                                 <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                                                <span class="fa fa-share icon" aria-hidden="true"></span>
+                                                    <span class="fa fa-share icon" aria-hidden="true"></span>
                                                     Share invoice link
                                                 </a>
                                             </li>
@@ -527,7 +683,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     id="deleteInvoiceBtnNew">
                                                     <span class="fa fa-trash-o icon"></span> Delete Invoice
                                                 </a>
-                                                <!-- <a href="#" work-id="<?php //echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete </a> -->
+                                                <!-- <a href="#" work-id="<?php //echo $workorder->id;?>"
+                                                id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete
+                                                </a> -->
                                             </li>
                                             <li role="separator" class="divider"></li>
                                             <li role="presentation"><a role="menuitem" tabindex="-1"
@@ -543,396 +701,501 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </tr>
                             <?php endforeach; ?>
                             <?php foreach ($estimates as $estimate) { ?>
-                                        <tr id="estimates_rows">
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php echo 'Estimate'; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $estimate->estimate_number; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
-                                                <a href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($estimate->customer_id)->first_name .' '. get_customer_by_id($estimate->customer_id)->last_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->expiry_date)); ?>
-                                            </td>
-                                            <td>
-                                                <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
-                                                    $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?php echo $estimate->grand_total; ?></td>
-                                            <td>
+                            <tr id="estimates_rows">
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <div class="table-nowrap">
+                                        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php echo 'Estimate'; ?>
+                                </td>
+                                <td>
+                                    <a class="a-default" href="#">
+                                        <?php echo $estimate->estimate_number; ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div><a href="#"><?php echo $estimate->job_name; ?></a>
+                                    </div>
+                                    <a
+                                        href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
+                                        <?php echo get_customer_by_id($estimate->customer_id)->first_name .' '. get_customer_by_id($estimate->customer_id)->last_name ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->expiry_date)); ?>
+                                </td>
+                                <td>
+                                    <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
+                                    $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
+                                    <?php } ?>
+                                </td>
+                                <td><?php echo $estimate->grand_total; ?>
+                                </td>
+                                <td>
 
-                                            <?php
-                                                if( $estimate->is_mail_open == 1 ){
-                                                echo "<i class='fa fa-eye'></i>  ";
+                                    <?php
+                                                if ($estimate->is_mail_open == 1) {
+                                                    echo "<i class='fa fa-eye'></i>  ";
                                                 }
                                                 echo $estimate->status;
                                             ?>
-                                            
-                                            </td>
-                                            <td class="text-right" style="padding-right:20px;">
-                                                <div class="dropdown dropdown-btn">
-                                                    <a role="menuitem" tabindex="-1" href="<?php echo base_url('estimate/view/' . $estimate->id) ?>" style="color:#3a96d2;font-weight:bold;">Create invoice</a> &emsp;
 
-                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"></span>
-                                                        <span class="caret-holder">
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                                <span class="fa fa-print icon"></span>  Print</a></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="#" class="sendESTemail" data-id="<?= $estimate->id; ?>" est-num="<?= $estimate->estimate_number ?>"  est-status="<?= $estimate->status ?>" est-email="<?= $estimate->email ?>" est-cust="<?php echo get_customer_by_id($estimate->customer_id)->first_name .' '. get_customer_by_id($estimate->customer_id)->last_name ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="#" class="estchangestatus" data-id="<?= $estimate->id; ?>" est-num="<?= $estimate->estimate_number ?>"  est-status="<?= $estimate->status ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Update status</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Copy</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                        </ul>
-                                                </div>
-                                                <!-- <div class="dropdown dropdown-btn">
+                                </td>
+                                <td class="text-right" style="padding-right:20px;">
+                                    <div class="dropdown dropdown-btn">
+                                        <a role="menuitem" tabindex="-1"
+                                            href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"
+                                            style="color:#3a96d2;font-weight:bold;">Create invoice</a> &emsp;
+
+                                        <button class="dropdown-toggle" type="button" id="dropdown-edit"
+                                            style="height: 25px;" data-toggle="dropdown" aria-expanded="true">
+                                            <span class="btn-label"></span>
+                                            <span class="caret-holder">
+                                                <span class="caret"></span>
+                                            </span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                            aria-labelledby="dropdown-edit">
+                                            <li role="presentation">
+                                                <a role="menuitem" target="_new"
+                                                    href="<?php echo base_url('estimate/print/' . $estimate->id) ?>"
+                                                    class="">
+                                                    <span class="fa fa-print icon"></span> Print</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a role="menuitem" href="#" class="sendESTemail"
+                                                    data-id="<?= $estimate->id; ?>"
+                                                    est-num="<?= $estimate->estimate_number ?>"
+                                                    est-status="<?= $estimate->status ?>"
+                                                    est-email="<?= $estimate->email ?>"
+                                                    est-cust="<?php echo get_customer_by_id($estimate->customer_id)->first_name .' '. get_customer_by_id($estimate->customer_id)->last_name ?>">
+                                                    <span class="fa fa-envelope-open-o icon"></span> Send</a>
+                                            </li>
+                                            <li>
+                                                <div class="dropdown-divider"></div>
+                                            </li>
+                                            <li role="presentation">
+                                                <a role="menuitem" href="#" class="estchangestatus"
+                                                    data-id="<?= $estimate->id; ?>"
+                                                    est-num="<?= $estimate->estimate_number ?>"
+                                                    est-status="<?= $estimate->status ?>">
+                                                    <span class="fa fa-envelope-open-o icon"></span> Update status</a>
+                                            </li>
+                                            <li>
+                                                <div class="dropdown-divider"></div>
+                                            </li>
+                                            <li role="presentation">
+                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                                    data-id="<?= $estimate->id; ?>">
+                                                    <span class="fa fa-envelope-open-o icon"></span> Copy</a>
+                                            </li>
+                                            <li>
+                                                <div class="dropdown-divider"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- <div class="dropdown dropdown-btn">
                                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
                                                         <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                 href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
-                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
-                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem"
-                                                                                tabindex="-1"
-                                                                                href="#"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modalCloneWorkorder"
-                                                                                data-id="<?php echo $estimate->id ?>"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-files-o icon clone-workorder">
+                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                            href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
+                                                class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
+                                            data-toggle="modal" data-target="#modalCloneWorkorder"
+                                            data-id="<?php echo $estimate->id ?>"
+                                            data-name="WO-00433"><span class="fa fa-files-o icon clone-workorder">
 
-                                                            </span> Clone Estimate</a>
-                                                        </li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('invoice') ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="161983"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-print icon"></span>  Print</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
-                                                        <li><div class="dropdown-divider"></div></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div> -->
-                                            </td>
-                                        </tr>
-                                    <?php } //print_r($sales_receipts); ?>
+                                            </span> Clone Estimate</a>
+                                    </li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                            href="<?php echo base_url('invoice') ?>"
+                                            data-convert-to-invoice-modal="open" data-id="161983"
+                                            data-name="WO-00433"><span class="fa fa-money icon"></span> Convert to
+                                            Invoice</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem"
+                                            href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"
+                                            class="">
+                                            <span class="fa fa-file-pdf-o icon"></span> View PDF</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem" target="_new"
+                                            href="<?php echo base_url('estimate/print/' . $estimate->id) ?>"
+                                            class="">
+                                            <span class="fa fa-print icon"></span> Print</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                            data-id="<?= $estimate->id; ?>">
+                                            <span class="fa fa-envelope-open-o icon"></span> Send to Customer</a>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                    </li>
+                                    <li role="presentation">
+                                        <a role="menuitem"
+                                            href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>"
+                                            onclick="return confirm('Do you really want to delete this item ?')"
+                                            data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                    </li>
+                                    </ul>
+                </div> -->
+                </td>
+                </tr>
+                <?php } //print_r($sales_receipts);?>
 
-                                    <?php foreach ($sales_receipts as $salesReceipts) { ?>
-                                        <tr id="sales_receipt_rows">
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($salesReceipts->sales_receipt_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php echo 'Sales Receipt'; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $salesReceipts->id; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="<?php echo base_url('customer/view/' . $salesReceipts->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($salesReceipts->customer_id)->last_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td><?php echo $salesReceipts->grand_total; ?></td>
-                                            <td>
-                                            <?php
+                <?php foreach ($sales_receipts as $salesReceipts) { ?>
+                <tr id="sales_receipt_rows">
+                    <td><input type="checkbox"></td>
+                    <td>
+                        <div class="table-nowrap">
+                            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($salesReceipts->sales_receipt_date)) ?>
+                        </div>
+                    </td>
+                    <td>
+                        <?php echo 'Sales Receipt'; ?>
+                    </td>
+                    <td>
+                        <a class="a-default" href="#">
+                            <?php echo $salesReceipts->id; ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a
+                            href="<?php echo base_url('customer/view/' . $salesReceipts->customer_id) ?>">
+                            <?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($salesReceipts->customer_id)->last_name ?>
+                        </a>
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td><?php echo $salesReceipts->grand_total; ?>
+                    </td>
+                    <td>
+                        <?php
                                                 echo "Paid";
                                             ?>
-                                            </td>
-                                            <td class="text-right" style="padding-right:20px;">
-                                                <div class="dropdown dropdown-btn">
-                                                    <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+                    </td>
+                    <td class="text-right" style="padding-right:20px;">
+                        <div class="dropdown dropdown-btn">
+                            <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>"
+                                style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
 
-                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"></span>
-                                                        <span class="caret-holder">
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="#" class="sendESTemail_sr" data-id="<?= $salesReceipts->id; ?>" sr-num="<?= $salesReceipts->id ?>" est-email="<?= $salesReceipts->email ?>" est-cust="<?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($salesReceipts->customer_id)->last_name ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" target="_new" href="<?php echo base_url('accounting/printSalesReceipt/' . $salesReceipts->id) ?>" class="">
-                                                                <span class="fa fa-print icon"></span>  Print packing slip</a></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  View/Edit</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Copy</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="#" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>" data-toggle="modal" data-target="#sr_delete">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Delete</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $salesReceipts->id; ?>" data-toggle="modal" data-target="#sr_void">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Void</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                        </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } //print_r($sales_receipts); ?>
+                            <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                data-toggle="dropdown" aria-expanded="true">
+                                <span class="btn-label"></span>
+                                <span class="caret-holder">
+                                    <span class="caret"></span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                <li role="presentation">
+                                    <a role="menuitem" href="#" class="sendESTemail_sr"
+                                        data-id="<?= $salesReceipts->id; ?>"
+                                        sr-num="<?= $salesReceipts->id ?>"
+                                        est-email="<?= $salesReceipts->email ?>"
+                                        est-cust="<?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($salesReceipts->customer_id)->last_name ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Send</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" target="_new"
+                                        href="<?php echo base_url('accounting/printSalesReceipt/' . $salesReceipts->id) ?>"
+                                        class="">
+                                        <span class="fa fa-print icon"></span> Print packing slip</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $salesReceipts->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> View/Edit</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $salesReceipts->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Copy</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="#" class="btn-send-customer"
+                                        data-id="<?= $salesReceipts->id; ?>"
+                                        data-toggle="modal" data-target="#sr_delete">
+                                        <span class="fa fa-envelope-open-o icon"></span> Delete</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $salesReceipts->id; ?>"
+                                        data-toggle="modal" data-target="#sr_void">
+                                        <span class="fa fa-envelope-open-o icon"></span> Void</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <?php } //print_r($sales_receipts);?>
 
-                                    <?php foreach ($credit_memo as $credit) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php echo 'Credit Memo'; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $credit->id; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="<?php echo base_url('customer/view/' . $credit->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($credit->customer_id)->first_name .' '. get_customer_by_id($credit->customer_id)->last_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td><?php echo $credit->grand_total; ?></td>
-                                            <td>
-                                            <?php
+                <?php foreach ($credit_memo as $credit) { ?>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>
+                        <div class="table-nowrap">
+                            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
+                        </div>
+                    </td>
+                    <td>
+                        <?php echo 'Credit Memo'; ?>
+                    </td>
+                    <td>
+                        <a class="a-default" href="#">
+                            <?php echo $credit->id; ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a
+                            href="<?php echo base_url('customer/view/' . $credit->customer_id) ?>">
+                            <?php echo get_customer_by_id($credit->customer_id)->first_name .' '. get_customer_by_id($credit->customer_id)->last_name ?>
+                        </a>
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td><?php echo $credit->grand_total; ?>
+                    </td>
+                    <td>
+                        <?php
                                                 //echo "Paid";
                                             ?>
-                                            </td>
-                                            <td class="text-right" style="padding-right:20px;">
-                                                <div class="dropdown dropdown-btn">
-                                                    <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+                    </td>
+                    <td class="text-right" style="padding-right:20px;">
+                        <div class="dropdown dropdown-btn">
+                            <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>"
+                                style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
 
-                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"></span>
-                                                        <span class="caret-holder">
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="#"  class="sendESTemail_cm" data-id="<?= $credit->id; ?>" sr-num="<?= $credit->id ?>" est-email="<?= $credit->email ?>" est-cust="<?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($credit->customer_id)->last_name ?>"  data-id="<?= $credit->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Copy</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Delete</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $credit->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Void</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                        </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } //print_r($sales_receipts); ?>
+                            <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                data-toggle="dropdown" aria-expanded="true">
+                                <span class="btn-label"></span>
+                                <span class="caret-holder">
+                                    <span class="caret"></span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                <li role="presentation">
+                                    <a role="menuitem" href="#" class="sendESTemail_cm"
+                                        data-id="<?= $credit->id; ?>"
+                                        sr-num="<?= $credit->id ?>"
+                                        est-email="<?= $credit->email ?>"
+                                        est-cust="<?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($credit->customer_id)->last_name ?>"
+                                        data-id="<?= $credit->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Send</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $credit->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Copy</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $credit->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Delete</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $credit->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Void</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <?php } //print_r($sales_receipts);?>
 
-                                    <?php foreach ($statements as $statement) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php echo 'Statements'; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $statement->id; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="<?php echo base_url('customer/view/' . $statement->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($statement->customer_id)->first_name .' '. get_customer_by_id($statement->customer_id)->last_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td><?php echo $statement->balance; ?></td>
-                                            <td>
-                                            <?php
+                <?php foreach ($statements as $statement) { ?>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>
+                        <div class="table-nowrap">
+                            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
+                        </div>
+                    </td>
+                    <td>
+                        <?php echo 'Statements'; ?>
+                    </td>
+                    <td>
+                        <a class="a-default" href="#">
+                            <?php echo $statement->id; ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a
+                            href="<?php echo base_url('customer/view/' . $statement->customer_id) ?>">
+                            <?php echo get_customer_by_id($statement->customer_id)->first_name .' '. get_customer_by_id($statement->customer_id)->last_name ?>
+                        </a>
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td><?php echo $statement->balance; ?>
+                    </td>
+                    <td>
+                        <?php
                                                 //echo "Paid";
                                             ?>
-                                            </td>
-                                            <td class="text-right" style="padding-right:20px;">
-                                                <div class="dropdown dropdown-btn">
-                                                    <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+                    </td>
+                    <td class="text-right" style="padding-right:20px;">
+                        <div class="dropdown dropdown-btn">
+                            <a href="<?php echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>"
+                                style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
 
-                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"></span>
-                                                        <span class="caret-holder">
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $statement->id; ?>">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                        </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } //print_r($sales_receipts); ?>
+                            <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                                data-toggle="dropdown" aria-expanded="true">
+                                <span class="btn-label"></span>
+                                <span class="caret-holder">
+                                    <span class="caret"></span>
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                <li role="presentation">
+                                    <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
+                                        data-id="<?= $statement->id; ?>">
+                                        <span class="fa fa-envelope-open-o icon"></span> Send</a>
+                                </li>
+                                <li>
+                                    <div class="dropdown-divider"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <?php } //print_r($sales_receipts);?>
 
-                                    <?php foreach ($rpayments as $rpayment) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($rpayment->payment_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php echo 'Payment'; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $rpayment->id; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="<?php echo base_url('customer/view/' . $rpayment->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($rpayment->customer_id)->first_name .' '. get_customer_by_id($rpayment->customer_id)->last_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td><?php echo $rpayment->amount; ?></td>
-                                            <td>
-                                            <?php
+                <?php foreach ($rpayments as $rpayment) { ?>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>
+                        <div class="table-nowrap">
+                            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($rpayment->payment_date)) ?>
+                        </div>
+                    </td>
+                    <td>
+                        <?php echo 'Payment'; ?>
+                    </td>
+                    <td>
+                        <a class="a-default" href="#">
+                            <?php echo $rpayment->id; ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a
+                            href="<?php echo base_url('customer/view/' . $rpayment->customer_id) ?>">
+                            <?php echo get_customer_by_id($rpayment->customer_id)->first_name .' '. get_customer_by_id($rpayment->customer_id)->last_name ?>
+                        </a>
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td>
+                        <!-- na -->
+                    </td>
+                    <td><?php echo $rpayment->amount; ?>
+                    </td>
+                    <td>
+                        <?php
                                                 //echo "Paid";
                                             ?>
-                                            </td>
-                                            <td class="text-right" style="padding-right:20px;">
-                                                <!-- <div class="dropdown dropdown-btn">
-                                                    <a href="<?php //echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+                    </td>
+                    <td class="text-right" style="padding-right:20px;">
+                        <!-- <div class="dropdown dropdown-btn">
+                                                    <a href="<?php //echo base_url('invoice/preview/'. $inv->id . '?format=print')?>"
+                        style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
 
-                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"></span>
-                                                        <span class="caret-holder">
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                        </ul>
-                                                </div> -->
-                                            </td>
-                                        </tr>
-                                    <?php } //print_r($sales_receipts); ?>
+                        <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                            data-toggle="dropdown" aria-expanded="true">
+                            <span class="btn-label"></span>
+                            <span class="caret-holder">
+                                <span class="caret"></span>
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                            <li role="presentation">
+                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="">
+                                    <span class="fa fa-envelope-open-o icon"></span> Send</a>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                        </ul>
+            </div> -->
+            </td>
+            </tr>
+            <?php } //print_r($sales_receipts);?>
 
-                                    <?php foreach ($checks as $check) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php echo 'Check'; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $check->id; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id) ?>"> -->
-                                                    <?php 
+            <?php foreach ($checks as $check) { ?>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>
+                    <div class="table-nowrap">
+                        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
+                    </div>
+                </td>
+                <td>
+                    <?php echo 'Check'; ?>
+                </td>
+                <td>
+                    <a class="a-default" href="#">
+                        <?php echo $check->id; ?>
+                    </a>
+                </td>
+                <td>
+                    <!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)?>">
+                    -->
+                    <?php
                                                         // if($check->payee_id == 'customer'){
                                                         //     echo get_customer_by_id($check->payee_id)->first_name .' '. get_customer_by_id($check->payee_id)->last_name;
                                                         // }
@@ -944,67 +1207,72 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                                         // }
 
-                                                        switch($check->payee_type) {
-                                                            case 'vendor' :
+                                                        switch ($check->payee_type) {
+                                                            case 'vendor':
                                                                 $vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
                                                                 // echo $vendor->display_name;
                                                                 print_r('test'.$vendor);
                                                             break;
-                                                            case 'customer' :
+                                                            case 'customer':
                                                                 $customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
                                                                 echo $customer->first_name . ' ' . $customer->last_name;
                                                             break;
-                                                            case 'employee' :
+                                                            case 'employee':
                                                                 $employee = $this->users_model->getUser($check->payee_id);
                                                                 echo $employee->FName . ' ' . $employee->LName;
                                                             break;
                                                         }
                                                         
                                                         ?>
-                                                <!-- </a> -->
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td>
-                                                <!-- na -->
-                                            </td>
-                                            <td><?php echo $check->total_amount; ?></td>
-                                            <td>
-                                            <?php
+                    <!-- </a> -->
+                </td>
+                <td>
+                    <!-- na -->
+                </td>
+                <td>
+                    <!-- na -->
+                </td>
+                <td><?php echo $check->total_amount; ?>
+                </td>
+                <td>
+                    <?php
                                                 //echo "Paid";
                                             ?>
-                                            </td>
-                                            <td class="text-right" style="padding-right:20px;">
-                                                <!-- <div class="dropdown dropdown-btn">
-                                                    <a href="<?php //echo base_url('invoice/preview/'. $inv->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
+                </td>
+                <td class="text-right" style="padding-right:20px;">
+                    <!-- <div class="dropdown dropdown-btn">
+                                                    <a href="<?php //echo base_url('invoice/preview/'. $inv->id . '?format=print')?>"
+                    style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a>
 
-                                                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label"></span>
-                                                        <span class="caret-holder">
-                                                            <span class="caret"></span>
-                                                        </span>
-                                                    </button>
-                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                            <li role="presentation">
-                                                                <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="">
-                                                                <span class="fa fa-envelope-open-o icon"></span>  Send</a></li>
-                                                            <li><div class="dropdown-divider"></div></li>
-                                                        </ul>
-                                                </div> -->
-                                            </td>
-                                        </tr>
-                                    <?php } //print_r($sales_receipts); ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- end row -->
-        <div class="row ml-2"></div>
-        <!-- end row -->
+                    <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                        data-toggle="dropdown" aria-expanded="true">
+                        <span class="btn-label"></span>
+                        <span class="caret-holder">
+                            <span class="caret"></span>
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                        <li role="presentation">
+                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="">
+                                <span class="fa fa-envelope-open-o icon"></span> Send</a>
+                        </li>
+                        <li>
+                            <div class="dropdown-divider"></div>
+                        </li>
+                    </ul>
+        </div> -->
+        </td>
+        </tr>
+        <?php } //print_r($sales_receipts);?>
+        </tbody>
+        </table>
     </div>
+</div>
+</div>
+<!-- end row -->
+<div class="row ml-2"></div>
+<!-- end row -->
+</div>
 </div>
 <!-- end container-fluid -->
 </div>
@@ -2116,50 +2384,54 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 
-    
-<!-- The Modal -->
-<div class="modal fade" id="sr_delete" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
-        <div class="modal-content">
-            
-            <!-- Modal body -->
-            <div class="modal-body">
-            <input type="hidden" class="form-control sr_id" name="sr_id">
 
-                <p><b><i class="fa fa-info-circle" style="font-size:36px;color:red;"> </i>Are you sure you want to delete this transaction?</b></p>
+    <!-- The Modal -->
+    <div class="modal fade" id="sr_delete" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document"
+            style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+            <div class="modal-content">
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <input type="hidden" class="form-control sr_id" name="sr_id">
+
+                    <p><b><i class="fa fa-info-circle" style="font-size:36px;color:red;"> </i>Are you sure you want to
+                            delete this transaction?</b></p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <a href="#" type="submit" class="btn btn-success">Yes</a>
+                </div>
+
             </div>
-            
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                <a href="#" type="submit" class="btn btn-success">Yes</a>
-            </div>
-        
         </div>
     </div>
-</div>
 
-<!-- The Modal -->
-<div class="modal fade" id="sr_void" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
-        <div class="modal-content">
-            
-            <!-- Modal body -->
-            <div class="modal-body">
-            <input type="hidden" class="form-control sr_id" name="sr_id">
+    <!-- The Modal -->
+    <div class="modal fade" id="sr_void" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document"
+            style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+            <div class="modal-content">
 
-                <p><b><i class="fa fa-info-circle" style="font-size:36px;color:red;"> </i>Are you sure you want to void this transaction?</b></p>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <input type="hidden" class="form-control sr_id" name="sr_id">
+
+                    <p><b><i class="fa fa-info-circle" style="font-size:36px;color:red;"> </i>Are you sure you want to
+                            void this transaction?</b></p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                    <a href="#" type="submit" class="btn btn-success">Yes</a>
+                </div>
+
             </div>
-            
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-                <a href="#" type="submit" class="btn btn-success">Yes</a>
-            </div>
-        
         </div>
     </div>
-</div>
 
     <!--    Create Invoice Modal-->
     <div class="full-screen-modal">
@@ -2177,521 +2449,535 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
 
                     <div class="modal-body">
-                    <!-- <div id="customer_receive_payment_modal">
+                        <!-- <div id="customer_receive_payment_modal">
                         <div class="customer_receive_payment_modal_content"> -->
-                            <form action="#" method="POST" id="receive_payment_form">
-                                <input type="text" name="invoice_count" style="display: none;">
-                                <input type="text" name="submit_option" style="display: none;">
-                                <input type="text" name="receive_payment_id" style="display:none;">
-                                <div class="customer_receive_payment_modal_header">
-                                    <div class="tittle">
-                                        <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
-                                    </div>
-                                    <!-- <div class="close-btn">
-                                        <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
-                                            alt="" style="width: 100px;">
-                                    </div> -->
+                        <form action="#" method="POST" id="receive_payment_form">
+                            <input type="text" name="invoice_count" style="display: none;">
+                            <input type="text" name="submit_option" style="display: none;">
+                            <input type="text" name="receive_payment_id" style="display:none;">
+                            <div class="customer_receive_payment_modal_header">
+                                <div class="tittle">
+                                    <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
                                 </div>
-                                <div class="customer_receive_payment_modal_body overflow-auto">
+                                <!-- <div class="close-btn">
+                                        <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
+                                alt="" style="width: 100px;">
+                            </div> -->
+                    </div>
+                    <div class="customer_receive_payment_modal_body overflow-auto">
 
-                                    <div class="payment-field-part">
-                                        <div class="row no-margin">
-                                            <div class="col-md-6 no-padding">
-                                                <div class="row no-margin">
-                                                    <div class="col-md-5 no-padding">
-                                                        <div class="form-group">
-                                                            <div class="label">Customer</div>
-                                                            <select class="form-control required" name="customer_id" required>
-                                                                <option></option>
-                                                                <?php $customers= $this->accounting_customers_model->getAllByCompany();
+                        <div class="payment-field-part">
+                            <div class="row no-margin">
+                                <div class="col-md-6 no-padding">
+                                    <div class="row no-margin">
+                                        <div class="col-md-5 no-padding">
+                                            <div class="form-group">
+                                                <div class="label">Customer</div>
+                                                <select class="form-control required" name="customer_id" required>
+                                                    <option></option>
+                                                    <?php $customers= $this->accounting_customers_model->getAllByCompany();
                                                                 if ($customers != null) {
                                                                     foreach ($customers as $cus) {
                                                                         echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
                                                                     }
                                                                 }
                                                                 ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-5 no-padding">
-                                                        <div class="find-by-invoice-no-section">
-                                                            <div class="form-group">
-                                                                <div class="label"><br></div>
-                                                                <button href="#" class="find-by-invoice-no">Find by invoice no.</button>
-                                                                <div class="bottom-label">Don't have an invoice? <a href="">Create a new
-                                                                        sale</a> </div>
-                                                            </div>
-                                                            <div class="find-by-invoice-no-panel" style="display:none;">
-                                                                <img src="<?=base_url("assets/img/accounting/customers/anchor.png")?>"
-                                                                    class="filter-panel-anchor" alt="">
-                                                                <label for="find-by-invoice-no"> Invoice no.</label>
-                                                                <input type="text" name="find-by-invoice-no"
-                                                                    placeholder="Find by invoice no.">
-                                                                <label class="error">Invoice not found.</label>
-                                                                <div class="buttons">
-                                                                    <button href=""
-                                                                        class="default-button float-left cancel-btn">Cancel</button>
-                                                                    <button href=""
-                                                                        class="success-button float-right find-btn">Find</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 no-padding">
-                                                <div class="row no-margin">
-                                                    <div class="col-md-12 no-padding">
-                                                        <div class="total-receive-payment">
-                                                            <div class="label">AMOUNT RECEIVED</div>
-                                                            <div class="amount">$3,740.68</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </select>
                                             </div>
                                         </div>
-
-                                        <div class="row no-margin">
-                                            <div class="col-md-6 no-padding">
-                                                <div class="row no-margin">
-                                                    <div class="col-md-4 no-padding">
-                                                        <div class="form-group" style="margin-bottom: 0!important;">
-                                                            <div class="label">Payment date</div>
-                                                            <input type="text" class="datepicker required" name="payment_date" required>
-                                                        </div>
-                                                    </div>
+                                        <div class="col-md-5 no-padding">
+                                            <div class="find-by-invoice-no-section">
+                                                <div class="form-group">
+                                                    <div class="label"><br></div>
+                                                    <button href="#" class="find-by-invoice-no">Find by invoice
+                                                        no.</button>
+                                                    <div class="bottom-label">Don't have an invoice? <a href="">Create a
+                                                            new
+                                                            sale</a> </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="row no-margin">
-                                            <div class="col-md-6 no-padding">
-                                                <div class="row no-margin">
-                                                    <div class="col-md-4 no-padding">
-                                                        <div class="form-group" style="margin-bottom: 5px!important;">
-                                                            <div class="label">Payment method</div>
-                                                            <select class="form-control required" id="payment_method_pay" name="payment_method"
-                                                                required>
-                                                                <option value="" disabled selected>Choose a payment method</option>
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="Check">Check</option>
-                                                                <option value="Credit Card">Credit Card</option>
-                                                                <option value="Debit Card">Debit Card</option>
-                                                                <option value="ACH">ACH</option>
-                                                                <option value="Venmo">Venmo</option>
-                                                                <option value="Paypal">Paypal</option>
-                                                                <option value="Square">Square</option>
-                                                                <option value="Invoicing">Invoicing</option>
-                                                                <option value="Warranty Work">Warranty Work</option>
-                                                                <option value="Home Owner Financing">Home Owner Financing</option>
-                                                                <option value="e-Transfer">e-Transfer</option>
-                                                                <option value="Other Credit Card Professor">Other Credit Card Professor
-                                                                </option>
-                                                                <option value="Other Payment Type">Other Payment Type</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 no-padding">
-                                                        <div class="form-group" style="margin-bottom: 5px!important;">
-                                                            <div class="label">Reference no.</div>
-                                                            <input type="text" class="required" name="ref_no" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4 no-padding">
-                                                        <div class="form-group" style="margin-bottom: 5px!important;">
-                                                            <div class="label">Deposit to</div><select class="form-control required"
-                                                                name="deposite_to" required>
-                                                                <option value=""></option>
-                                                                <option value="Cash on Hand">Cash on hand</option>
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="Credit">Credit</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 no-padding">
-                                                <div class="row no-margin">
-                                                    <div class="col-md-4 no-padding">
-
-                                                    </div>
-                                                    <div class="col-md-4 no-padding">
-
-                                                    </div>
-                                                    <div class="col-md-4 no-padding">
-                                                        <div class="form-group" style="margin-bottom: 5px!important;">
-                                                            <div class="label text-right">Amount received</div>
-                                                            <input type="text" class="text-right required" name="amount_received" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row no-margin">
-                                            <div class="col-md-6">
-                                                <div class="payment_method_information">
-                                                    <div id="check_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Check Number</label>
-                                                                <input type="text" class="form-control" name="check_number"
-                                                                    id="check_number" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Routing Number</label>
-                                                                <input type="text" class="form-control" name="routing_number"
-                                                                    id="routing_number" />
-                                                            </div>
-                                                            <!-- </div>
-                                                            <div class="row"> -->
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Number</label>
-                                                                <input type="text" class="form-control" name="account_number"
-                                                                    id="account_number" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="credit_card" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                Credit Card Type:<br>
-                                                                <div class="checkbox checkbox-sec margin-right mr-4">
-                                                                    <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
-                                                                    id="radio_credit_card">
-                                                                    <label for="radio_credit_card"><span>Visa</span></label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec margin-right mr-4">
-                                                                    <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
-                                                                    id="radio_credit_cardAmex">
-                                                                    <label for="radio_credit_cardAmex"><span>Amex</span></label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec margin-right mr-4">
-                                                                    <input type="radio" name="card[radio_credit_card]" value="Mastercard"
-                                                                        <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
-                                                                    id="radio_credit_cardMastercard">
-                                                                    <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
-                                                                </div>
-                                                                <div class="checkbox checkbox-sec margin-right mr-4">
-                                                                    <input type="radio" name="card[radio_credit_card]" value="Discover"
-                                                                        <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
-                                                                    id="radio_credit_cardMasterDiscover">
-                                                                    <label
-                                                                        for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                        </div>
-                                                        <br><br>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Credit Card Number</label>
-                                                                <input type="text" class="form-control" name="credit_number"
-                                                                    id="credit_number" placeholder="0000 0000 0000 000" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Credit Card Expiration</label>
-                                                                <input type="text" class="form-control" name="credit_expiry"
-                                                                    id="credit_expiry" placeholder="MM/YYYY" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">CVC</label>
-                                                                <input type="text" class="form-control" name="credit_cvc" id="credit_cvc"
-                                                                    placeholder="CVC" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="invoicing" style="display:none;">
-
-                                                        <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
-                                                        <br>
-                                                        <div class="row">
-                                                            <div class="col-md-4 form-group">
-                                                                <label for="monitored_location">Mail Address</label>
-                                                                <input type="text" class="form-control" name="mail-address"
-                                                                    id="mail-address" placeholder="Monitored Location" />
-                                                            </div>
-                                                            <div class="col-md-4 form-group">
-                                                                <label for="city">City</label>
-                                                                <input type="text" class="form-control" name="mail_locality"
-                                                                    id="mail_locality" placeholder="Enter Name" />
-                                                            </div>
-                                                            <div class="col-md-4 form-group">
-                                                                <label for="state">State</label>
-                                                                <input type="text" class="form-control" name="mail_state" id="mail_state"
-                                                                    placeholder="Enter State" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-md-4 form-group">
-                                                                <label for="zip">ZIP</label>
-                                                                <input type="text" id="mail_postcode" name="mail_postcode"
-                                                                    class="form-control" placeholder="Enter Zip" />
-                                                            </div>
-
-                                                            <div class="col-md-4 form-group">
-                                                                <label for="cross_street">Cross Street</label>
-                                                                <input type="text" class="form-control" name="mail_cross_street"
-                                                                    id="mail_cross_street" placeholder="Cross Street" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="debit_card" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Credit Card Number</label>
-                                                                <input type="text" class="form-control" name="debit_credit_number"
-                                                                    id="credit_number" placeholder="0000 0000 0000 000" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Credit Card Expiration</label>
-                                                                <input type="text" class="form-control" name="debit_credit_expiry"
-                                                                    id="credit_expiry" placeholder="MM/YYYY" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">CVC</label>
-                                                                <input type="text" class="form-control" name="debit_credit_cvc"
-                                                                    id="credit_cvc" placeholder="CVC" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="ach_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Routing Number</label>
-                                                                <input type="text" class="form-control" name="ach_routing_number"
-                                                                    id="ach_routing_number" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Number</label>
-                                                                <input type="text" class="form-control" name="ach_account_number"
-                                                                    id="ach_account_number" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="venmo_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control" name="account_credentials"
-                                                                    id="account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="account_note"
-                                                                    id="account_note" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Confirmation</label>
-                                                                <input type="text" class="form-control" name="confirmation"
-                                                                    id="confirmation" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="paypal_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control" name="paypal_account_credentials"
-                                                                    id="paypal_account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="paypal_account_note"
-                                                                    id="paypal_account_note" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Confirmation</label>
-                                                                <input type="text" class="form-control" name="paypal_confirmation"
-                                                                    id="paypal_confirmation" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="square_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control" name="square_account_credentials"
-                                                                    id="square_account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="square_account_note"
-                                                                    id="square_account_note" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Confirmation</label>
-                                                                <input type="text" class="form-control" name="square_confirmation"
-                                                                    id="square_confirmation" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="warranty_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control" name="warranty_account_credentials"
-                                                                    id="warranty_account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="warranty_account_note"
-                                                                    id="warranty_account_note" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="home_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control" name="home_account_credentials"
-                                                                    id="home_account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="home_account_note"
-                                                                    id="home_account_note" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="e_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control" name="e_account_credentials"
-                                                                    id="e_account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="e_account_note"
-                                                                    id="e_account_note" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="other_credit_card" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Credit Card Number</label>
-                                                                <input type="text" class="form-control" name="other_credit_number"
-                                                                    id="other_credit_number" placeholder="0000 0000 0000 000" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Credit Card Expiration</label>
-                                                                <input type="text" class="form-control" name="other_credit_expiry"
-                                                                    id="other_credit_expiry" placeholder="MM/YYYY" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">CVC</label>
-                                                                <input type="text" class="form-control" name="other_credit_cvc"
-                                                                    id="other_credit_cvc" placeholder="CVC" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div id="other_payment_area" style="display:none;">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Credential</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="other_payment_account_credentials"
-                                                                    id="other_payment_account_credentials" />
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                                <label for="job_type">Account Note</label>
-                                                                <input type="text" class="form-control" name="other_payment_account_note"
-                                                                    id="other_payment_account_note" />
-                                                            </div>
-                                                        </div>
+                                                <div class="find-by-invoice-no-panel" style="display:none;">
+                                                    <img src="<?=base_url("assets/img/accounting/customers/anchor.png")?>"
+                                                        class="filter-panel-anchor" alt="">
+                                                    <label for="find-by-invoice-no"> Invoice no.</label>
+                                                    <input type="text" name="find-by-invoice-no"
+                                                        placeholder="Find by invoice no.">
+                                                    <label class="error">Invoice not found.</label>
+                                                    <div class="buttons">
+                                                        <button href=""
+                                                            class="default-button float-left cancel-btn">Cancel</button>
+                                                        <button href=""
+                                                            class="success-button float-right find-btn">Find</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="invoicing-part">
-                                        <div class="invoices">
-                                            <div class="outstanding-transactions">
-                                                <div class="title">Outstanding Transactions</div>
-                                                <div class="filter">
-                                                    <div class="row no-margin">
-                                                        <div class="col-md-6 no-padding">
-                                                            <div class="row no-margin">
-                                                                <div class="col-md-5 no-padding">
-                                                                    <div class="form-group">
-                                                                        <input type="text" class="" name="invoice_number"
-                                                                            placeholder="Find invoice no.">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-5 no-padding">
-                                                                    <div class="form-group">
-                                                                        <button href="#" class="find-by-invoice-no">
-                                                                            Filter
-                                                                            <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                                                        </button>
-                                                                        <div class="filter-panel">
-                                                                            <img src="<?=base_url("/assets/img/accounting/customers/anchor.png")?>"
-                                                                                class="filter-panel-anchor" alt="">
-                                                                            <div class="date-filter">
-                                                                                <div class="date-from">
-                                                                                    <div class="label">Invoice from</div>
-                                                                                    <input type="text" class="datepicker"
-                                                                                        name="filter_date_from">
-                                                                                </div>
-                                                                                <div class="date-to">
-                                                                                    <div class="label">To</div>
-                                                                                    <input type="text" class="datepicker"
-                                                                                        name="filter_date_to">
-                                                                                </div>
-                                                                            </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <div class="row no-margin">
+                                        <div class="col-md-12 no-padding">
+                                            <div class="total-receive-payment">
+                                                <div class="label">AMOUNT RECEIVED</div>
+                                                <div class="amount">$3,740.68</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                                                            <div class="checkbox-filter">
-                                                                                <input type="checkbox" name="filter_overdue"> Overdue
-                                                                                invoices
-                                                                                only
-                                                                            </div>
-                                                                            <div class="buttons">
-                                                                                <button href=""
-                                                                                    class="default-button float-left cancel-btn">Cancel</button>
-                                                                                <button href=""
-                                                                                    class="success-button float-right apply-btn">Apply</button>
-                                                                            </div>
+                            <div class="row no-margin">
+                                <div class="col-md-6 no-padding">
+                                    <div class="row no-margin">
+                                        <div class="col-md-4 no-padding">
+                                            <div class="form-group" style="margin-bottom: 0!important;">
+                                                <div class="label">Payment date</div>
+                                                <input type="text" class="datepicker required" name="payment_date"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-margin">
+                                <div class="col-md-6 no-padding">
+                                    <div class="row no-margin">
+                                        <div class="col-md-4 no-padding">
+                                            <div class="form-group" style="margin-bottom: 5px!important;">
+                                                <div class="label">Payment method</div>
+                                                <select class="form-control required" id="payment_method_pay"
+                                                    name="payment_method" required>
+                                                    <option value="" disabled selected>Choose a payment method</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Check">Check</option>
+                                                    <option value="Credit Card">Credit Card</option>
+                                                    <option value="Debit Card">Debit Card</option>
+                                                    <option value="ACH">ACH</option>
+                                                    <option value="Venmo">Venmo</option>
+                                                    <option value="Paypal">Paypal</option>
+                                                    <option value="Square">Square</option>
+                                                    <option value="Invoicing">Invoicing</option>
+                                                    <option value="Warranty Work">Warranty Work</option>
+                                                    <option value="Home Owner Financing">Home Owner Financing</option>
+                                                    <option value="e-Transfer">e-Transfer</option>
+                                                    <option value="Other Credit Card Professor">Other Credit Card
+                                                        Professor
+                                                    </option>
+                                                    <option value="Other Payment Type">Other Payment Type</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 no-padding">
+                                            <div class="form-group" style="margin-bottom: 5px!important;">
+                                                <div class="label">Reference no.</div>
+                                                <input type="text" class="required" name="ref_no" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 no-padding">
+                                            <div class="form-group" style="margin-bottom: 5px!important;">
+                                                <div class="label">Deposit to</div><select class="form-control required"
+                                                    name="deposite_to" required>
+                                                    <option value=""></option>
+                                                    <option value="Cash on Hand">Cash on hand</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Credit">Credit</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <div class="row no-margin">
+                                        <div class="col-md-4 no-padding">
 
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                        </div>
+                                        <div class="col-md-4 no-padding">
+
+                                        </div>
+                                        <div class="col-md-4 no-padding">
+                                            <div class="form-group" style="margin-bottom: 5px!important;">
+                                                <div class="label text-right">Amount received</div>
+                                                <input type="text" class="text-right required" name="amount_received"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row no-margin">
+                                <div class="col-md-6">
+                                    <div class="payment_method_information">
+                                        <div id="check_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Check Number</label>
+                                                    <input type="text" class="form-control" name="check_number"
+                                                        id="check_number" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Routing Number</label>
+                                                    <input type="text" class="form-control" name="routing_number"
+                                                        id="routing_number" />
+                                                </div>
+                                                <!-- </div>
+                                                            <div class="row"> -->
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Number</label>
+                                                    <input type="text" class="form-control" name="account_number"
+                                                        id="account_number" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="credit_card" style="display:none;">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    Credit Card Type:<br>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Visa"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
+                                                        id="radio_credit_card">
+                                                        <label for="radio_credit_card"><span>Visa</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Amex"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
+                                                        id="radio_credit_cardAmex">
+                                                        <label for="radio_credit_cardAmex"><span>Amex</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]"
+                                                            value="Mastercard" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
+                                                        id="radio_credit_cardMastercard">
+                                                        <label
+                                                            for="radio_credit_cardMastercard"><span>Mastercard</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]"
+                                                            value="Discover" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
+                                                        id="radio_credit_cardMasterDiscover">
+                                                        <label
+                                                            for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                            </div>
+                                            <br><br>
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Credit Card Number</label>
+                                                    <input type="text" class="form-control" name="credit_number"
+                                                        id="credit_number" placeholder="0000 0000 0000 000" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Credit Card Expiration</label>
+                                                    <input type="text" class="form-control" name="credit_expiry"
+                                                        id="credit_expiry" placeholder="MM/YYYY" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">CVC</label>
+                                                    <input type="text" class="form-control" name="credit_cvc"
+                                                        id="credit_cvc" placeholder="CVC" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="invoicing" style="display:none;">
+
+                                            <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-4 form-group">
+                                                    <label for="monitored_location">Mail Address</label>
+                                                    <input type="text" class="form-control" name="mail-address"
+                                                        id="mail-address" placeholder="Monitored Location" />
+                                                </div>
+                                                <div class="col-md-4 form-group">
+                                                    <label for="city">City</label>
+                                                    <input type="text" class="form-control" name="mail_locality"
+                                                        id="mail_locality" placeholder="Enter Name" />
+                                                </div>
+                                                <div class="col-md-4 form-group">
+                                                    <label for="state">State</label>
+                                                    <input type="text" class="form-control" name="mail_state"
+                                                        id="mail_state" placeholder="Enter State" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4 form-group">
+                                                    <label for="zip">ZIP</label>
+                                                    <input type="text" id="mail_postcode" name="mail_postcode"
+                                                        class="form-control" placeholder="Enter Zip" />
+                                                </div>
+
+                                                <div class="col-md-4 form-group">
+                                                    <label for="cross_street">Cross Street</label>
+                                                    <input type="text" class="form-control" name="mail_cross_street"
+                                                        id="mail_cross_street" placeholder="Cross Street" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="debit_card" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Credit Card Number</label>
+                                                    <input type="text" class="form-control" name="debit_credit_number"
+                                                        id="credit_number" placeholder="0000 0000 0000 000" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Credit Card Expiration</label>
+                                                    <input type="text" class="form-control" name="debit_credit_expiry"
+                                                        id="credit_expiry" placeholder="MM/YYYY" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">CVC</label>
+                                                    <input type="text" class="form-control" name="debit_credit_cvc"
+                                                        id="credit_cvc" placeholder="CVC" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="ach_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Routing Number</label>
+                                                    <input type="text" class="form-control" name="ach_routing_number"
+                                                        id="ach_routing_number" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Number</label>
+                                                    <input type="text" class="form-control" name="ach_account_number"
+                                                        id="ach_account_number" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="venmo_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control" name="account_credentials"
+                                                        id="account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control" name="account_note"
+                                                        id="account_note" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Confirmation</label>
+                                                    <input type="text" class="form-control" name="confirmation"
+                                                        id="confirmation" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="paypal_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control"
+                                                        name="paypal_account_credentials"
+                                                        id="paypal_account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control" name="paypal_account_note"
+                                                        id="paypal_account_note" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Confirmation</label>
+                                                    <input type="text" class="form-control" name="paypal_confirmation"
+                                                        id="paypal_confirmation" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="square_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control"
+                                                        name="square_account_credentials"
+                                                        id="square_account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control" name="square_account_note"
+                                                        id="square_account_note" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Confirmation</label>
+                                                    <input type="text" class="form-control" name="square_confirmation"
+                                                        id="square_confirmation" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="warranty_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control"
+                                                        name="warranty_account_credentials"
+                                                        id="warranty_account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control" name="warranty_account_note"
+                                                        id="warranty_account_note" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="home_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control"
+                                                        name="home_account_credentials" id="home_account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control" name="home_account_note"
+                                                        id="home_account_note" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="e_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control" name="e_account_credentials"
+                                                        id="e_account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control" name="e_account_note"
+                                                        id="e_account_note" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="other_credit_card" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Credit Card Number</label>
+                                                    <input type="text" class="form-control" name="other_credit_number"
+                                                        id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Credit Card Expiration</label>
+                                                    <input type="text" class="form-control" name="other_credit_expiry"
+                                                        id="other_credit_expiry" placeholder="MM/YYYY" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">CVC</label>
+                                                    <input type="text" class="form-control" name="other_credit_cvc"
+                                                        id="other_credit_cvc" placeholder="CVC" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="other_payment_area" style="display:none;">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Credential</label>
+                                                    <input type="text" class="form-control"
+                                                        name="other_payment_account_credentials"
+                                                        id="other_payment_account_credentials" />
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="job_type">Account Note</label>
+                                                    <input type="text" class="form-control"
+                                                        name="other_payment_account_note"
+                                                        id="other_payment_account_note" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invoicing-part">
+                            <div class="invoices">
+                                <div class="outstanding-transactions">
+                                    <div class="title">Outstanding Transactions</div>
+                                    <div class="filter">
+                                        <div class="row no-margin">
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-5 no-padding">
+                                                        <div class="form-group">
+                                                            <input type="text" class="" name="invoice_number"
+                                                                placeholder="Find invoice no.">
                                                         </div>
-                                                        <div class="col-md-6 no-padding">
-                                                            <div class="row no-margin">
-                                                                <div class="col-md-12 no-padding text-right">
-                                                                    <a href="" class="settings"><i class="fa fa-cog"
-                                                                            aria-hidden="true"></i></a>
+                                                    </div>
+                                                    <div class="col-md-5 no-padding">
+                                                        <div class="form-group">
+                                                            <button href="#" class="find-by-invoice-no">
+                                                                Filter
+                                                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                            </button>
+                                                            <div class="filter-panel">
+                                                                <img src="<?=base_url("/assets/img/accounting/customers/anchor.png")?>"
+                                                                    class="filter-panel-anchor" alt="">
+                                                                <div class="date-filter">
+                                                                    <div class="date-from">
+                                                                        <div class="label">Invoice from</div>
+                                                                        <input type="text" class="datepicker"
+                                                                            name="filter_date_from">
+                                                                    </div>
+                                                                    <div class="date-to">
+                                                                        <div class="label">To</div>
+                                                                        <input type="text" class="datepicker"
+                                                                            name="filter_date_to">
+                                                                    </div>
                                                                 </div>
+
+                                                                <div class="checkbox-filter">
+                                                                    <input type="checkbox" name="filter_overdue">
+                                                                    Overdue
+                                                                    invoices
+                                                                    only
+                                                                </div>
+                                                                <div class="buttons">
+                                                                    <button href=""
+                                                                        class="default-button float-left cancel-btn">Cancel</button>
+                                                                    <button href=""
+                                                                        class="success-button float-right apply-btn">Apply</button>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="customer-table-part">
-                                                    <table id="customer_invoice_table" class="table table-striped table-bordered w-100">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="center">
-                                                                    <input type="checkbox" name="checkbox-all-action"
-                                                                        id="checkbox-all-action">
-                                                                </th>
-                                                                <th>DESCRIPTION</th>
-                                                                <th>DUE DATE</th>
-                                                                <th class="text-right">ORIGINAL AMOUNT</th>
-                                                                <th class="text-right">OPEN BALANCE</th>
-                                                                <th class="text-right">PAYMENT</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody class="table-body">
-                                                            <!-- <tr>
+                                            </div>
+                                            <div class="col-md-6 no-padding">
+                                                <div class="row no-margin">
+                                                    <div class="col-md-12 no-padding text-right">
+                                                        <a href="" class="settings"><i class="fa fa-cog"
+                                                                aria-hidden="true"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-table-part">
+                                        <table id="customer_invoice_table"
+                                            class="table table-striped table-bordered w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th class="center">
+                                                        <input type="checkbox" name="checkbox-all-action"
+                                                            id="checkbox-all-action">
+                                                    </th>
+                                                    <th>DESCRIPTION</th>
+                                                    <th>DUE DATE</th>
+                                                    <th class="text-right">ORIGINAL AMOUNT</th>
+                                                    <th class="text-right">OPEN BALANCE</th>
+                                                    <th class="text-right">PAYMENT</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-body">
+                                                <!-- <tr>
                                                                 <td><input type="checkbox"></td>
                                                                 <td>John Meyer</td>
                                                                 <td>1234567890</td>
                                                                 <td>$32</td>
                                                                 <td><a href="">View</a></td>
                                                             </tr> -->
-                                                            <?php $counter =0;
+                                                <?php $counter =0;
                                                 foreach ($customers as $cus) :
                                                     $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
                                                     $amount =0.00;
@@ -2701,131 +2987,137 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         $first_option = "Receive rayment";
                                                     }
                                                     ?>
-                                                            <tr>
-                                                                <td class="center" style="width: 0;"><input type="checkbox"
-                                                                        name="checkbox<?=$counter?>">
-                                                                </td>
-                                                                <td><?php if(empty($cus->first_name)){
-                                                                        echo $cus->business_name;
-                                                                }else{
-                                                                     echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ;
-                                                                } ?>
-                                                                </td>
-                                                                <td>
-                                                                </td>
-                                                                <td class="text-right"><?php echo "$".number_format($amount, 2);?>
-                                                                </td>
-                                                                <td>
+                                                <tr>
+                                                    <td class="center" style="width: 0;"><input type="checkbox"
+                                                            name="checkbox<?=$counter?>">
+                                                    </td>
+                                                    <td><?php if (empty($cus->first_name)) {
+                                                        echo $cus->business_name;
+                                                    } else {
+                                                        echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ;
+                                                    } ?>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td class="text-right"><?php echo "$".number_format($amount, 2);?>
+                                                    </td>
+                                                    <td>
 
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-group">
-                                                                        <input type="text" class="" name="">
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <?php $counter++; endforeach; ?>
-                                                        </tbody>
-                                                    </table>
-                                                    <div class="total-amount text-right">
-                                                        <div class="amount-to-apply">
-                                                            <label class="label">Amount to Apply</label>
-                                                            <label class="amount">$422.00</label>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="text" class="" name="">
                                                         </div>
-                                                        <div class="amount-to-credit">
-                                                            <label class="label">Amount to Credit</label>
-                                                            <label class="amount">$0.00</label>
-                                                        </div>
-                                                        <button type="button" class="default-button clear-payment">Clear Payment</button>
-                                                    </div>
-                                                </div>
+                                                    </td>
+                                                </tr>
+                                                <?php $counter++; endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                        <div class="total-amount text-right">
+                                            <div class="amount-to-apply">
+                                                <label class="label">Amount to Apply</label>
+                                                <label class="amount">$422.00</label>
                                             </div>
-                                            <div class="proof-part">
-                                                <div class="row no-margin">
-                                                    <div class="col-md-6 no-padding">
-                                                        <div class="row no-margin">
-                                                            <div class="col-md-4 no-padding">
-                                                                <div class="form-group" style="margin-bottom: 5px!important;">
-                                                                    <div class="label">Memo</div>
-                                                                    <textarea name="memo"></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row no-margin">
-                                                            <div class="col-md-12 no-padding">
-                                                                <div class="attachement-file-section">
-                                                                    <div class="label">
-                                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
-                                                                    </div>
-                                                                    <button type="button" class="attachment-btn">
-                                                                        <i class="fa fa-upload" aria-hidden="true"></i> Upload
-                                                                    </button>
-                                                                    <input type="file" class="form-control" name="attachment-file" multiple>
-                                                                    <div class="attachement-viewer">
-                                                                    </div>
-                                                                    <input type="text" name="attachement-filenames" style="display: none;">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div class="amount-to-credit">
+                                                <label class="label">Amount to Credit</label>
+                                                <label class="amount">$0.00</label>
                                             </div>
+                                            <button type="button" class="default-button clear-payment">Clear
+                                                Payment</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="customer_receive_payment_modal_footer">
+                                <div class="proof-part">
                                     <div class="row no-margin">
-                                        <div class="col-md-4 no-padding">
-                                            <button href="#" class="left-btn close-btn">Cancel</button>
-                                            <button href="#" class="left-btn clear-btn">Clear</button>
-                                        </div>
-                                        <div class="col-md-4 no-padding text-center center-options">
-                                            <button type="submit" data-action="print" class="btn-print">Print</button>
-                                            <button type="button" class="btn-more">More</button>
-                                            <div class="more-sub-option">
-                                                <ul>
-                                                    <li data-option-type="void">
-                                                        Void
-                                                    </li>
-                                                    <li data-option-type="delete">
-                                                        Delete
-                                                    </li>
-                                                    <li data-option-type="transaction-journal">
-                                                        Transactionjournal
-                                                    </li>
-                                                    <li data-option-type="audit-history">
-                                                        AuditHistory
-                                                    </li>
-                                                </ul>
-                                                <div class="more-anchor">
-                                                    <img src="<?=base_url("assets/img/accounting/customers/anchor_down.png")?>"
-                                                        alt="">
+                                        <div class="col-md-6 no-padding">
+                                            <div class="row no-margin">
+                                                <div class="col-md-4 no-padding">
+                                                    <div class="form-group" style="margin-bottom: 5px!important;">
+                                                        <div class="label">Memo</div>
+                                                        <textarea name="memo"></textarea>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-4 no-padding text-right">
-                                            <div class="right-option">
-                                                <div class="sub-option">
-                                                    <ul>
-                                                        <li><button type="submit" data-action="save" data-submit-type="save-close">Save and
-                                                                close</button></li>
-                                                        <li><button type="submit" data-action="save" data-submit-type="save-send">Save and
-                                                                send</button></li>
-                                                    </ul>
+                                            <div class="row no-margin">
+                                                <div class="col-md-12 no-padding">
+                                                    <div class="attachement-file-section">
+                                                        <div class="label">
+                                                            <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                                            Attachement
+                                                        </div>
+                                                        <button type="button" class="attachment-btn">
+                                                            <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                                        </button>
+                                                        <input type="file" class="form-control" name="attachment-file"
+                                                            multiple>
+                                                        <div class="attachement-viewer">
+                                                        </div>
+                                                        <input type="text" name="attachement-filenames"
+                                                            style="display: none;">
+                                                    </div>
                                                 </div>
-                                                <button type="submit" class="btn-save-new" data-action="save"
-                                                    data-submit-type="save-new">Save and new</button>
-                                                <button href="#" class="btn-save-dropdown">
-                                                    <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;
-                                                </button>
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="customer_receive_payment_modal_footer">
+                        <div class="row no-margin">
+                            <div class="col-md-4 no-padding">
+                                <button href="#" class="left-btn close-btn">Cancel</button>
+                                <button href="#" class="left-btn clear-btn">Clear</button>
+                            </div>
+                            <div class="col-md-4 no-padding text-center center-options">
+                                <button type="submit" data-action="print" class="btn-print">Print</button>
+                                <button type="button" class="btn-more">More</button>
+                                <div class="more-sub-option">
+                                    <ul>
+                                        <li data-option-type="void">
+                                            Void
+                                        </li>
+                                        <li data-option-type="delete">
+                                            Delete
+                                        </li>
+                                        <li data-option-type="transaction-journal">
+                                            Transactionjournal
+                                        </li>
+                                        <li data-option-type="audit-history">
+                                            AuditHistory
+                                        </li>
+                                    </ul>
+                                    <div class="more-anchor">
+                                        <img src="<?=base_url("assets/img/accounting/customers/anchor_down.png")?>"
+                                            alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 no-padding text-right">
+                                <div class="right-option">
+                                    <div class="sub-option">
+                                        <ul>
+                                            <li><button type="submit" data-action="save"
+                                                    data-submit-type="save-close">Save and
+                                                    close</button></li>
+                                            <li><button type="submit" data-action="save"
+                                                    data-submit-type="save-send">Save and
+                                                    send</button></li>
+                                        </ul>
+                                    </div>
+                                    <button type="submit" class="btn-save-new" data-action="save"
+                                        data-submit-type="save-new">Save and new</button>
+                                    <button href="#" class="btn-save-dropdown">
+                                        <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
                 </div>
-                   <!--  </div>
+                <!--  </div>
                 </div>
 
             </div>
@@ -2835,635 +3127,691 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
 
-    <!--    Create Estimate Modal-->
-    <div class="full-screen-modal">
-        <div id="add-estimate" class="modal fade modal-fluid" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Estimate<span id="checkNUmberHeader"></span>
-                        </div>
-                        <button type="button" class="close" id="closeAddEstimateModal"><i
-                                class="fa fa-times fa-lg"></i></button>
-                    </div>
-                    <form action="" method="post" id="addEditCheckmodal">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">Customer</label>
-                                    <input type="hidden" name="check_id" id="checkID" value="">
-                                    <input type="hidden" name="transaction_id" class="transaction_id" id="checktransID">
-                                    <input type="hidden" id="checkType" class="expenseType" value="Check">
-                                    <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
-                                        <option>Select a customer</option>
-                                        <?php foreach ($vendors as $vendor):?>
-                                        <option
-                                            value="<?php echo $vendor->vendor_id?>">
-                                            <?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                <!--    Create Estimate Modal-->
+                <div class="full-screen-modal">
+                    <div id="add-estimate" class="modal fade modal-fluid" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-title">
+                                        <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                                        Estimate<span id="checkNUmberHeader"></span>
+                                    </div>
+                                    <button type="button" class="close" id="closeAddEstimateModal"><i
+                                            class="fa fa-times fa-lg"></i></button>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="">Customer Email</label>
-                                    <input type="text" class="form-control" placeholder="Separate emails with a comma">
+                                <form action="" method="post" id="addEditCheckmodal">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="">Customer</label>
+                                                <input type="hidden" name="check_id" id="checkID" value="">
+                                                <input type="hidden" name="transaction_id" class="transaction_id"
+                                                    id="checktransID">
+                                                <input type="hidden" id="checkType" class="expenseType" value="Check">
+                                                <select name="vendor_id" id="checkVendorID"
+                                                    class="form-control select2-payee">
+                                                    <option>Select a customer</option>
+                                                    <?php foreach ($vendors as $vendor):?>
+                                                    <option
+                                                        value="<?php echo $vendor->vendor_id?>">
+                                                        <?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?>
+                                                    </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="">Customer Email</label>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Separate emails with a comma">
 
-                                    <div class="form-group mt-2">
-                                        <input type="checkbox" name="send_later" id="send_later" value="1">
-                                        <label for="">Send later</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-3" style="text-align: right">
-                                    <div>AMOUNT</div>
-                                    <div>
-                                        <h1 id="h1_amount-check">$0.00</h1>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 20px">
-                                <div class="col-md-3">
-                                    <label for="">Billing address</label>
-                                    <textarea name="billing_address" id="billing_address" cols="30" rows="4"
-                                        placeholder="" style="resize: none;"></textarea>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="">Estimate Date</label>
-                                    <input type="date" name="estimate_date" id="estimate_date" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="">Expiration Date</label>
-                                    <input type="date" name="invoice_date" id="expiration_date" class="form-control">
-                                </div>
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="">Location of sale</label>
-                                        <input type="text" name="location_sale" id="location_sale" class="form-control"
-                                            value="1">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-container mt-5">
-                                <div class="table-loader">
-                                    <p class="loading-text">Loading records</p>
-                                </div>
-                                <!--                        DataTables-->
-                                <table id="expensesCheckTable" class="table table-striped table-bordered"
-                                    style="width:100%;margin-top: 20px;">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>#</th>
-                                            <th>PRODUCT/SERVICE</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>QTY</th>
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
-                                            <th>TAX</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="line-container-check">
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">1</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
+                                                <div class="form-group mt-2">
+                                                    <input type="checkbox" name="send_later" id="send_later" value="1">
+                                                    <label for="">Send later</label>
                                                 </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">2</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                            </div>
+                                            <div class="col-md-3" style="text-align: right">
+                                                <div>AMOUNT</div>
+                                                <div>
+                                                    <h1 id="h1_amount-check">$0.00</h1>
                                                 </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="addAndRemoveRow">
-                                <div class="total-amount-container">
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Subtotal</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Taxable subtotal $0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Total</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Balance due</span>
-                                        $ 0.00
-                                    </p>
-                                </div>
-                                <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
-                                <button type="button" class="add-remove-line" id="clear-all-line">Clear all
-                                    lines</button>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Message displayed on estimate</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3"
-                                    placeholder="This will show up on the invoice"
-                                    style="width: 350px;resize: none;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Message displated on statement</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3"
-                                    placeholder="If you convert an estimate into an invoice and send a statement, this will show up as the description for the invoice."
-                                    style="width: 350px;resize: none;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                                        <span>Maximum size: 20MB</span>
-                                        <div id="checkAttachment" class="dropzone"
-                                            style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
-                                            <div class="dz-message" style="margin: 20px;">
-                                                <span
-                                                    style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag
-                                                    and drop files here or</span>
-                                                <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-3">
+                                                <label for="">Billing address</label>
+                                                <textarea name="billing_address" id="billing_address" cols="30" rows="4"
+                                                    placeholder="" style="resize: none;"></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="">Estimate Date</label>
+                                                <input type="date" name="estimate_date" id="estimate_date"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="">Expiration Date</label>
+                                                <input type="date" name="invoice_date" id="expiration_date"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Location of sale</label>
+                                                    <input type="text" name="location_sale" id="location_sale"
+                                                        class="form-control" value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-container mt-5">
+                                            <div class="table-loader">
+                                                <p class="loading-text">Loading records</p>
+                                            </div>
+                                            <!--                        DataTables-->
+                                            <table id="expensesCheckTable" class="table table-striped table-bordered"
+                                                style="width:100%;margin-top: 20px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>#</th>
+                                                        <th>PRODUCT/SERVICE</th>
+                                                        <th>DESCRIPTION</th>
+                                                        <th>QTY</th>
+                                                        <th>RATE</th>
+                                                        <th>AMOUNT</th>
+                                                        <th>TAX</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="line-container-check">
+                                                    <tr id="tableLine">
+                                                        <td></td>
+                                                        <td><span id="line-counter">1</span></td>
+                                                        <td>
+                                                            <div id="" style="display:none;">
+                                                                <input type="hidden" id="prevent_process" value="true">
+                                                                <select name="category[]" id=""
+                                                                    class="form-control checkCategory select2-check-category">
+                                                                    <option></option>
+                                                                    <?php foreach ($list_categories as $list): ?>
+                                                                    <option
+                                                                        value="<?php echo $list->id?>">
+                                                                        <?php echo $list->category_name;?>
+                                                                    </option>
+                                                                    <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td><input type="text" name="description[]"
+                                                                class="form-control checkDescription" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="qty[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="rate[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="amount[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="tax[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td style="text-align: center"><a href="#"
+                                                                id="delete-line-row"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="tableLine">
+                                                        <td></td>
+                                                        <td><span id="line-counter">2</span></td>
+                                                        <td>
+                                                            <div id="" style="display:none;">
+                                                                <input type="hidden" id="prevent_process" value="true">
+                                                                <select name="category[]" id=""
+                                                                    class="form-control checkCategory select2-check-category">
+                                                                    <option></option>
+                                                                    <?php foreach ($list_categories as $list): ?>
+                                                                    <option
+                                                                        value="<?php echo $list->id?>">
+                                                                        <?php echo $list->category_name;?>
+                                                                    </option>
+                                                                    <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td><input type="text" name="description[]"
+                                                                class="form-control checkDescription" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="qty[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="rate[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="amount[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="tax[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td style="text-align: center"><a href="#"
+                                                                id="delete-line-row"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="addAndRemoveRow">
+                                            <div class="total-amount-container">
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Subtotal</span>
+                                                    $<span id="total-amount-check">0.00</span>
+                                                </p>
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Taxable subtotal
+                                                        $0.00</span>
+                                                </p>
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Total</span>
+                                                    $<span id="total-amount-check">0.00</span>
+                                                </p>
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Balance due</span>
+                                                    $ 0.00
+                                                </p>
+                                            </div>
+                                            <button type="button" class="add-remove-line" id="add-four-line">Add
+                                                lines</button>
+                                            <button type="button" class="add-remove-line" id="clear-all-line">Clear all
+                                                lines</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Message displayed on estimate</label>
+                                            <textarea name="name" id="checkMemo" cols="30" rows="3"
+                                                placeholder="This will show up on the invoice"
+                                                style="width: 350px;resize: none;"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Message displated on statement</label>
+                                            <textarea name="name" id="checkMemo" cols="30" rows="3"
+                                                placeholder="If you convert an estimate into an invoice and send a statement, this will show up as the description for the invoice."
+                                                style="width: 350px;resize: none;"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label for=""><i
+                                                            class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                                    <span>Maximum size: 20MB</span>
+                                                    <div id="checkAttachment" class="dropzone"
+                                                        style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
+                                                        <div class="dz-message" style="margin: 20px;">
+                                                            <span
+                                                                style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag
+                                                                and drop files here or</span>
+                                                            <span style="font-size: 16px;color: #0b97c4">browse to
+                                                                upload</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8" style="padding-top: 30px;">
+                                                    <div class="file-container-list" id="file-list-check"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="show-existing-file">
+                                                <a href="#" id="showExistingFile">Show existing file</a>
+                                            </div>
+                                        </div>
+                                        <div class="privacy">
+                                            <a href="#">Privacy</a>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer-check">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                                    type="button">Cancel</button>
+
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="middle-links">
+                                                    <a href="">Print or Preview</a>
+                                                </div>
+                                                <div class="middle-links end">
+                                                    <a href="">Make recurring</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="dropdown" style="float: right">
+                                                    <button class="btn btn-dark cancel-button px-4"
+                                                        type="submit">Save</button>
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal"
+                                                        id="checkSaved" style="border-radius: 20px 0 0 20px">Save and
+                                                        new</button>
+                                                    <button class="btn btn-success" type="button" data-toggle="dropdown"
+                                                        style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                                        <span class="fa fa-caret-down"></span></button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                        <li><a href="#" data-dismiss="modal" id="checkSaved">Save and
+                                                                close</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-8" style="padding-top: 30px;">
-                                        <div class="file-container-list" id="file-list-check"></div>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <div class="show-existing-file">
-                                    <a href="#" id="showExistingFile">Show existing file</a>
-                                </div>
-                            </div>
-                            <div class="privacy">
-                                <a href="#">Privacy</a>
-                            </div>
-                        </div>
-                        <div class="modal-footer-check">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal"
-                                        type="button">Cancel</button>
 
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="middle-links">
-                                        <a href="">Print or Preview</a>
-                                    </div>
-                                    <div class="middle-links end">
-                                        <a href="">Make recurring</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                        <button type="button" class="btn btn-success" data-dismiss="modal"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!--    end of modal-->
-    <!--    Create Sales Receipt Modal-->
-    <div class="full-screen-modal">
-        <div id="sales-receipt" class="all_sales_modal modal fade modal-fluid" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Sales Receipt<span id="checkNUmberHeader"></span>
-                        </div>
-                        <button type="button" class="close" id="closeSalesReceiptModal"><i
-                                class="fa fa-times fa-lg"></i></button>
                     </div>
-                    <form action="" method="post" id="addEditCheckmodal">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">Customer</label>
-                                    <input type="hidden" name="check_id" id="checkID" value="">
-                                    <input type="hidden" name="transaction_id" class="transaction_id" id="checktransID">
-                                    <input type="hidden" id="checkType" class="expenseType" value="Check">
-                                    <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
-                                        <option>Select a customer</option>
-                                        <?php foreach ($vendors as $vendor):?>
-                                        <option
-                                            value="<?php echo $vendor->vendor_id?>">
-                                            <?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                </div>
+                <!--    end of modal-->
+                <!--    Create Sales Receipt Modal-->
+                <div class="full-screen-modal">
+                    <div id="sales-receipt" class="all_sales_modal modal fade modal-fluid" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-title">
+                                        <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                                        Sales Receipt<span id="checkNUmberHeader"></span>
+                                    </div>
+                                    <button type="button" class="close" id="closeSalesReceiptModal"><i
+                                            class="fa fa-times fa-lg"></i></button>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="">Customer Email</label>
-                                    <input type="text" class="form-control" placeholder="Separate emails with a comma">
+                                <form action="" method="post" id="addEditCheckmodal">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="">Customer</label>
+                                                <input type="hidden" name="check_id" id="checkID" value="">
+                                                <input type="hidden" name="transaction_id" class="transaction_id"
+                                                    id="checktransID">
+                                                <input type="hidden" id="checkType" class="expenseType" value="Check">
+                                                <select name="vendor_id" id="checkVendorID"
+                                                    class="form-control select2-payee">
+                                                    <option>Select a customer</option>
+                                                    <?php foreach ($vendors as $vendor):?>
+                                                    <option
+                                                        value="<?php echo $vendor->vendor_id?>">
+                                                        <?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?>
+                                                    </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="">Customer Email</label>
+                                                <input type="text" class="form-control"
+                                                    placeholder="Separate emails with a comma">
 
-                                    <div class="form-group mt-2">
-                                        <input type="checkbox" name="send_later" id="send_later" value="1">
-                                        <label for="">Send later</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" style="text-align: right">
-                                    <div>AMOUNT</div>
-                                    <div>
-                                        <h1 id="h1_amount-check">$0.00</h1>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 20px">
-                                <div class="col-md-3">
-                                    <label for="">Billing address</label>
-                                    <textarea name="billing_address" id="billing_address" cols="30" rows="4"
-                                        placeholder="" style="resize: none;"></textarea>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <label for="">Sales Receipt Date</label>
-                                            <input type="date" name="sales_receipt_date" id="sales_receipt_date"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3">
-                                        <div class="col-4">
-                                            <label for="">Ship Via</label>
-                                            <input type="text" name="ship_via" id="ship_via" class="form-control">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for="">Shipping Date</label>
-                                            <input type="date" name="shipping_date" id="shipping_date"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for="">Tracking No.</label>
-                                            <input type="text" name="tracking_no" id="tracking_no" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="">Location of sale</label>
-                                    <input type="text" name="location_sale" id="location_sale" class="form-control"
-                                        value="1">
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 20px">
-                                <div class="col-3">
-                                    <label for="">Shipping to</label>
-                                    <textarea name="shipping_to_address" id="shipping_to_address" cols="30" rows="4"
-                                        placeholder="" style="resize: none;"></textarea>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-top: 20px">
-                                <div class="col-md-2">
-                                    <label for="">Payment method</label>
-                                    <select name="payment_method" id="payment_method"
-                                        class="form-control select2-bill-terms">
-                                        <option></option>
-                                        <option>Cash</option>
-                                        <option>Check</option>
-                                        <option>Credit Card</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="">Referene No.</label>
-                                    <input type="text" name="reference_no" id="reference_no" class="form-control">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="">Deposit to</label>
-                                    <select name="payment_method" id="payment_method"
-                                        class="form-control select2-bill-terms">
-                                        <option></option>
-                                        <option>Cash on hand</option>
-                                        <option>Corporate Account</option>
-                                        <option>Inventory Asset</option>
-                                        <option>Payroll Refunds</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="table-container mt-5">
-                                <div class="table-loader">
-                                    <p class="loading-text">Loading records</p>
-                                </div>
-                                <!--                        DataTables-->
-                                <table id="expensesCheckTable" class="table table-striped table-bordered"
-                                    style="width:100%;margin-top: 20px;">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>#</th>
-                                            <th>PRODUCT/SERVICE</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>QTY</th>
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
-                                            <th>TAX</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="line-container-check">
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">1</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
+                                                <div class="form-group mt-2">
+                                                    <input type="checkbox" name="send_later" id="send_later" value="1">
+                                                    <label for="">Send later</label>
                                                 </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">2</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
+                                            </div>
+                                            <div class="col-md-6" style="text-align: right">
+                                                <div>AMOUNT</div>
+                                                <div>
+                                                    <h1 id="h1_amount-check">$0.00</h1>
                                                 </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="addAndRemoveRow">
-                                <div class="total-amount-container">
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Subtotal</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Taxable subtotal $0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Total</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </p>
-                                    <p>
-                                        <span style="margin-right: 200px;font-size: 20px">Balance due</span>
-                                        $ 0.00
-                                    </p>
-                                </div>
-                                <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
-                                <button type="button" class="add-remove-line" id="clear-all-line">Clear all
-                                    lines</button>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Message displayed on sales receipt</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3"
-                                    placeholder="This will show up on the invoice"
-                                    style="width: 350px;resize: none;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Message displayed on statement</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3"
-                                    placeholder="If you send statements to customers, this will show up as the description for this invoice."
-                                    style="width: 350px;resize: none;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                                        <span>Maximum size: 20MB</span>
-                                        <div id="checkAttachment" class="dropzone"
-                                            style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
-                                            <div class="dz-message" style="margin: 20px;">
-                                                <span
-                                                    style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag
-                                                    and drop files here or</span>
-                                                <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-3">
+                                                <label for="">Billing address</label>
+                                                <textarea name="billing_address" id="billing_address" cols="30" rows="4"
+                                                    placeholder="" style="resize: none;"></textarea>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <label for="">Sales Receipt Date</label>
+                                                        <input type="date" name="sales_receipt_date"
+                                                            id="sales_receipt_date" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-3">
+                                                    <div class="col-4">
+                                                        <label for="">Ship Via</label>
+                                                        <input type="text" name="ship_via" id="ship_via"
+                                                            class="form-control">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label for="">Shipping Date</label>
+                                                        <input type="date" name="shipping_date" id="shipping_date"
+                                                            class="form-control">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label for="">Tracking No.</label>
+                                                        <input type="text" name="tracking_no" id="tracking_no"
+                                                            class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="">Location of sale</label>
+                                                <input type="text" name="location_sale" id="location_sale"
+                                                    class="form-control" value="1">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-3">
+                                                <label for="">Shipping to</label>
+                                                <textarea name="shipping_to_address" id="shipping_to_address" cols="30"
+                                                    rows="4" placeholder="" style="resize: none;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-2">
+                                                <label for="">Payment method</label>
+                                                <select name="payment_method" id="payment_method"
+                                                    class="form-control select2-bill-terms">
+                                                    <option></option>
+                                                    <option>Cash</option>
+                                                    <option>Check</option>
+                                                    <option>Credit Card</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="">Referene No.</label>
+                                                <input type="text" name="reference_no" id="reference_no"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="">Deposit to</label>
+                                                <select name="payment_method" id="payment_method"
+                                                    class="form-control select2-bill-terms">
+                                                    <option></option>
+                                                    <option>Cash on hand</option>
+                                                    <option>Corporate Account</option>
+                                                    <option>Inventory Asset</option>
+                                                    <option>Payroll Refunds</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="table-container mt-5">
+                                            <div class="table-loader">
+                                                <p class="loading-text">Loading records</p>
+                                            </div>
+                                            <!--                        DataTables-->
+                                            <table id="expensesCheckTable" class="table table-striped table-bordered"
+                                                style="width:100%;margin-top: 20px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>#</th>
+                                                        <th>PRODUCT/SERVICE</th>
+                                                        <th>DESCRIPTION</th>
+                                                        <th>QTY</th>
+                                                        <th>RATE</th>
+                                                        <th>AMOUNT</th>
+                                                        <th>TAX</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="line-container-check">
+                                                    <tr id="tableLine">
+                                                        <td></td>
+                                                        <td><span id="line-counter">1</span></td>
+                                                        <td>
+                                                            <div id="" style="display:none;">
+                                                                <input type="hidden" id="prevent_process" value="true">
+                                                                <select name="category[]" id=""
+                                                                    class="form-control checkCategory select2-check-category">
+                                                                    <option></option>
+                                                                    <?php foreach ($list_categories as $list): ?>
+                                                                    <option
+                                                                        value="<?php echo $list->id?>">
+                                                                        <?php echo $list->category_name;?>
+                                                                    </option>
+                                                                    <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td><input type="text" name="description[]"
+                                                                class="form-control checkDescription" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="qty[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="rate[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="amount[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="tax[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td style="text-align: center"><a href="#"
+                                                                id="delete-line-row"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="tableLine">
+                                                        <td></td>
+                                                        <td><span id="line-counter">2</span></td>
+                                                        <td>
+                                                            <div id="" style="display:none;">
+                                                                <input type="hidden" id="prevent_process" value="true">
+                                                                <select name="category[]" id=""
+                                                                    class="form-control checkCategory select2-check-category">
+                                                                    <option></option>
+                                                                    <?php foreach ($list_categories as $list): ?>
+                                                                    <option
+                                                                        value="<?php echo $list->id?>">
+                                                                        <?php echo $list->category_name;?>
+                                                                    </option>
+                                                                    <?php endforeach;?>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td><input type="text" name="description[]"
+                                                                class="form-control checkDescription" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="qty[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="rate[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="amount[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td><input type="text" name="tax[]"
+                                                                class="form-control checkAmount" id="tbl-input"
+                                                                style="display: none;"></td>
+                                                        <td style="text-align: center"><a href="#"
+                                                                id="delete-line-row"><i class="fa fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="addAndRemoveRow">
+                                            <div class="total-amount-container">
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Subtotal</span>
+                                                    $<span id="total-amount-check">0.00</span>
+                                                </p>
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Taxable subtotal
+                                                        $0.00</span>
+                                                </p>
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Total</span>
+                                                    $<span id="total-amount-check">0.00</span>
+                                                </p>
+                                                <p>
+                                                    <span style="margin-right: 200px;font-size: 20px">Balance due</span>
+                                                    $ 0.00
+                                                </p>
+                                            </div>
+                                            <button type="button" class="add-remove-line" id="add-four-line">Add
+                                                lines</button>
+                                            <button type="button" class="add-remove-line" id="clear-all-line">Clear all
+                                                lines</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Message displayed on sales receipt</label>
+                                            <textarea name="name" id="checkMemo" cols="30" rows="3"
+                                                placeholder="This will show up on the invoice"
+                                                style="width: 350px;resize: none;"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Message displayed on statement</label>
+                                            <textarea name="name" id="checkMemo" cols="30" rows="3"
+                                                placeholder="If you send statements to customers, this will show up as the description for this invoice."
+                                                style="width: 350px;resize: none;"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label for=""><i
+                                                            class="fa fa-paperclip"></i>&nbsp;Attachment</label>
+                                                    <span>Maximum size: 20MB</span>
+                                                    <div id="checkAttachment" class="dropzone"
+                                                        style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
+                                                        <div class="dz-message" style="margin: 20px;">
+                                                            <span
+                                                                style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag
+                                                                and drop files here or</span>
+                                                            <span style="font-size: 16px;color: #0b97c4">browse to
+                                                                upload</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8" style="padding-top: 30px;">
+                                                    <div class="file-container-list" id="file-list-check"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="show-existing-file">
+                                                <a href="#" id="showExistingFile">Show existing file</a>
+                                            </div>
+                                        </div>
+                                        <div class="privacy">
+                                            <a href="#">Privacy</a>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer-check">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                                    type="button">Cancel</button>
+
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="middle-links">
+                                                    <a href="">Print or Preview</a>
+                                                </div>
+                                                <div class="middle-links end">
+                                                    <a href="">Make recurring</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="dropdown" style="float: right">
+                                                    <button class="btn btn-dark cancel-button px-4"
+                                                        type="submit">Save</button>
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal"
+                                                        id="checkSaved" style="border-radius: 20px 0 0 20px">Save and
+                                                        new</button>
+                                                    <button class="btn btn-success" type="button" data-toggle="dropdown"
+                                                        style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                                        <span class="fa fa-caret-down"></span></button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                        <li><a href="#" data-dismiss="modal" id="checkSaved">Save and
+                                                                close</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-8" style="padding-top: 30px;">
-                                        <div class="file-container-list" id="file-list-check"></div>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <div class="show-existing-file">
-                                    <a href="#" id="showExistingFile">Show existing file</a>
-                                </div>
-                            </div>
-                            <div class="privacy">
-                                <a href="#">Privacy</a>
-                            </div>
-                        </div>
-                        <div class="modal-footer-check">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal"
-                                        type="button">Cancel</button>
 
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="middle-links">
-                                        <a href="">Print or Preview</a>
-                                    </div>
-                                    <div class="middle-links end">
-                                        <a href="">Make recurring</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                        <button type="button" class="btn btn-success" data-dismiss="modal"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
+                <!--    end of modal-->
+                <!--    Create Credit Memo Modal-->
+                <div class="full-screen-modal">
+                    <div id="credit-memo" class="all_sales_modal modal fade modal-fluid" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-title">
+                                        <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                                        Credit Memo
+                                    </div>
+                                    <button type="button" class="close" id="closeModalExpense" data-dismiss="modal"
+                                        aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
+                                </div>
+                                <form
+                                    action="<?php echo site_url()?>accounting/addCreditMemo"
+                                    method="post">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Customer
+                                                        <select class="form-control" name="customer_id"
+                                                            id="sel-customer">
+                                                            <option></option>
+                                                            <?php foreach ($customers as $customer) : ?>
+                                                            <option
+                                                                value="<?php echo $customer->prof_id; ?>">
+                                                                <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
+                                                            </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        Email
+                                                        <input type="email" class="form-control" name="email"
+                                                            id="email">
+                                                        <input type="checkbox"> Send later
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Billing address
+                                                        <textarea style="height:100px;width:100%;"
+                                                            name="billing_address" id="billing_address"></textarea>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        Credit Memo Date<br>
+                                                        <input type="text" class="form-control" id="datepickerinv7"
+                                                            name="credit_memo_date">
+                                                    </div>
 
-            </div>
-        </div>
-    </div>
-    <!--    end of modal-->
-    <!--    Create Credit Memo Modal-->
-    <div class="full-screen-modal">
-        <div id="credit-memo" class="all_sales_modal modal fade modal-fluid" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                <div class="modal-title">
-                    <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                    Credit Memo
-                </div>
-                <button type="button" class="close" id="closeModalExpense" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
-                </div>
-                <form action="<?php echo site_url()?>accounting/addCreditMemo" method="post">
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Customer
-                                        <select class="form-control" name="customer_id" id="sel-customer">
-                                            <option></option>
-                                            <?php foreach($customers as $customer) : ?>
-                                                <option value="<?php echo $customer->prof_id; ?>"><?php echo $customer->first_name . ' ' . $customer->last_name; ?></option>
-                                                <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        Email
-                                        <input type="email" class="form-control" name="email"  id="email">
-                                        <input type="checkbox"> Send later
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Billing address
-                                        <textarea style="height:100px;width:100%;" name="billing_address" id="billing_address"></textarea>
-                                    </div>
-                                    <div class="col-md-3">
-                                        Credit Memo Date<br>
-                                        <input type="text" class="form-control" id="datepickerinv7" name="credit_memo_date">
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                            <div class="col-md-6" align="right">
-                                AMOUNT<h2><span id="grand_total_cm_t">0.00</span></h2><br>
-                                Location of sale<br>
-                                <input type="text" class="form-control" style="width:200px;" name="location_scale">
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-bordered" id="reportstable">
-                                    <thead>
-                                        <!-- <th></th>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6" align="right">
+                                                AMOUNT<h2><span id="grand_total_cm_t">0.00</span></h2><br>
+                                                Location of sale<br>
+                                                <input type="text" class="form-control" style="width:200px;"
+                                                    name="location_scale">
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered" id="reportstable">
+                                                    <thead>
+                                                        <!-- <th></th>
                                         <th>#</th>
                                         <th>PRODUCT/SERVICE</th>
                                         <th>DESCRIPTION</th>
@@ -3472,56 +3820,66 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <th>AMOUNT</th>
                                         <th>TAX</th>
                                         <th></th> -->
-                                        <th>Name</th>
-                                                <th>Type</th>
-                                                <!-- <th>Description</th> -->
-                                                <th width="150px">Quantity</th>
-                                                <!-- <th>Location</th> -->
-                                                <th width="150px">Price</th>
-                                                <th width="150px">Discount</th>
-                                                <th width="150px">Tax (Change in %)</th>
-                                                <th>Total</th>
-                                    </thead>
-                                    <tbody id="items_table_body_credit_memo">
-                                        <tr>
-                                                <td>
-                                                    <input type="text" class="form-control getItemsCM"
-                                                        onKeyup="getItemscm(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                </td>
-                                                <td><select name="item_type[]" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select></td>
-                                                <td width="150px"><input type="number" class="form-control quantitycm" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="150px"><input type="number" class="form-control pricecm" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                                <td width="150px"><input type="number" class="form-control discountcm" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                                <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0">
-                                                        <!-- <span id="span_tax_0">0.0</span> -->
-                                                        </td>
-                                                <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                            </tr>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            <div>
-                        </div>
-                        <hr>
-                    
-                        <div class="row">
-                            <div class="col-md-1">
-                            <!-- <button class="btn1">Add lines</button> -->
-                            <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                            </div>
-                            <!-- <div class="col-md-1">
+                                                        <th>Name</th>
+                                                        <th>Type</th>
+                                                        <!-- <th>Description</th> -->
+                                                        <th width="150px">Quantity</th>
+                                                        <!-- <th>Location</th> -->
+                                                        <th width="150px">Price</th>
+                                                        <th width="150px">Discount</th>
+                                                        <th width="150px">Tax (Change in %)</th>
+                                                        <th>Total</th>
+                                                    </thead>
+                                                    <tbody id="items_table_body_credit_memo">
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control getItemsCM"
+                                                                    onKeyup="getItemscm(this)" name="items[]">
+                                                                <ul class="suggestions"></ul>
+                                                            </td>
+                                                            <td><select name="item_type[]" class="form-control">
+                                                                    <option value="product">Product</option>
+                                                                    <option value="material">Material</option>
+                                                                    <option value="service">Service</option>
+                                                                    <option value="fee">Fee</option>
+                                                                </select></td>
+                                                            <td width="150px"><input type="number"
+                                                                    class="form-control quantitycm" name="quantity[]"
+                                                                    data-counter="0" id="quantity_0" value="1"></td>
+                                                            <td width="150px"><input type="number"
+                                                                    class="form-control pricecm" name="price[]"
+                                                                    data-counter="0" id="price_0" min="0" value="0">
+                                                            </td>
+                                                            <td width="150px"><input type="number"
+                                                                    class="form-control discountcm" name="discount[]"
+                                                                    data-counter="0" id="discount_0" min="0" value="0">
+                                                            </td>
+                                                            <td width="150px"><input type="text"
+                                                                    class="form-control tax_change" name="tax[]"
+                                                                    data-counter="0" id="tax1_0" min="0" value="0">
+                                                                <!-- <span id="span_tax_0">0.0</span> -->
+                                                            </td>
+                                                            <td width="150px"><input type="hidden" class="form-control "
+                                                                    name="total[]" data-counter="0" id="item_total_0"
+                                                                    min="0" value="0">
+                                                                $<span id="span_total_0">0.00</span></td>
+                                                        </tr>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div>
+                                                </div>
+                                                <hr>
+
+                                                <div class="row">
+                                                    <div class="col-md-1">
+                                                        <!-- <button class="btn1">Add lines</button> -->
+                                                        <a class="link-modal-open" href="#" id="add_another_items"
+                                                            data-toggle="modal" data-target="#item_list"><span
+                                                                class="fa fa-plus-square fa-margin-right"></span>Add
+                                                            Items</a>
+                                                    </div>
+                                                    <!-- <div class="col-md-1">
                             <button class="btn1">Clear all lines</button>
                             </div>
                             <div class="col-md-1">
@@ -3535,20 +3893,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-md-1">
                                 <b>$0.00</b>
                             </div> -->
-                        </div>
-                        <hr>
+                                                </div>
+                                                <hr>
 
-                        <div class="row">
-                            <div class="col-md-3">
-                                Message on invoice<br>
-                                <textarea style="height:100px;width:100%;" name="message_displayed_on_credit_memo"></textarea><br>
-                                Message on statement<br>
-                                <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
-                            </div>
-                            <div class="col-md-5">
-                            </div>
-                            <div class="col-md-4">
-                                <!-- Taxable subtotal <b>$0.00</b><br>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Message on invoice<br>
+                                                        <textarea style="height:100px;width:100%;"
+                                                            name="message_displayed_on_credit_memo"></textarea><br>
+                                                        Message on statement<br>
+                                                        <textarea style="height:100px;width:100%;"
+                                                            name="message_on_statement"></textarea>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <!-- Taxable subtotal <b>$0.00</b><br>
                                 <table class="table table-borderless">
                                     <tr>
                                         <td>
@@ -3576,218 +3936,280 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     </tr>
                                 </table> -->
 
-                                <table class="table" style="text-align:left;">
-                                        <tr>
-                                            <td>Subtotal</td>
-                                            <td></td>
-                                            <td align="right">$ <span id="span_sub_total_cm">0.00</span>
-                                                <input type="hidden" name="subtotal" id="item_total"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taxes</td>
-                                            <td></td>
-                                            <td align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                            <td style="width:150px;">
-                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
-                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                            </td>
-                                            <td align="right">$<span id="adjustment_area">0.00</span></td>
-                                        </tr>
-                                        <!-- <tr>
+                                                        <table class="table" style="text-align:left;">
+                                                            <tr>
+                                                                <td>Subtotal</td>
+                                                                <td></td>
+                                                                <td align="right">$ <span
+                                                                        id="span_sub_total_cm">0.00</span>
+                                                                    <input type="hidden" name="subtotal"
+                                                                        id="item_total">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Taxes</td>
+                                                                <td></td>
+                                                                <td align="right">$ <span
+                                                                        id="total_tax_">0.00</span><input type="hidden"
+                                                                        name="taxes" id="total_tax_input"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="width:250px;"><input type="text"
+                                                                        name="adjustment_name" id="adjustment_name"
+                                                                        placeholder="Adjustment Name"
+                                                                        class="form-control"
+                                                                        style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                                                </td>
+                                                                <td style="width:150px;">
+                                                                    <input type="number" name="adjustment_value"
+                                                                        id="adjustment_input_cm" value="0"
+                                                                        class="form-control adjustment_input_cm_c"
+                                                                        style="width:100px; display:inline-block">
+                                                                    <span class="fa fa-question-circle"
+                                                                        data-toggle="popover" data-placement="top"
+                                                                        data-trigger="hover"
+                                                                        data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
+                                                                        data-original-title="" title=""></span>
+                                                                </td>
+                                                                <td align="right">$<span
+                                                                        id="adjustment_area">0.00</span></td>
+                                                            </tr>
+                                                            <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
-                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                            <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                        <!-- </tr> -->
-                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
-                                            <td>Amount Saved</td>
-                                            <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
-                                        </tr>
-                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                            <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td align="right"><b><span id="grand_total_cm">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                        </tr>
-                                    </table>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="file-upload">
-                                    <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+                                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                                            <input type="hidden" name="markup_input_form"
+                                                                id="markup_input_form" class="markup_input" value="0">
+                                                            <!-- </tr> -->
+                                                            <tr id="saved"
+                                                                style="color:green;font-weight:bold;display:none;">
+                                                                <td>Amount Saved</td>
+                                                                <td></td>
+                                                                <td><span id="offer_cost">0.00</span><input
+                                                                        type="hidden" name="voucher_value"
+                                                                        id="offer_cost_input"></td>
+                                                            </tr>
+                                                            <tr style="color:blue;font-weight:bold;font-size:18px;">
+                                                                <td><b>Grand Total ($)</b></td>
+                                                                <td></td>
+                                                                <td align="right"><b><span
+                                                                            id="grand_total_cm">0.00</span>
+                                                                        <input type="hidden" name="grand_total"
+                                                                            id="grand_total_input" value='0'></b></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="file-upload">
+                                                            <button class="file-upload-btn" type="button"
+                                                                onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
 
-                                    <div class="image-upload-wrap">
-                                        <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-                                        <div class="drag-text">
-                                        <i>Drag and drop files here or click the icon</i>
-                                        </div>
-                                    </div>
-                                    <div class="file-upload-content">
-                                        <img class="file-upload-image" src="#" alt="your image" />
-                                        <div class="image-title-wrap">
-                                        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                                            <div class="image-upload-wrap">
+                                                                <input class="file-upload-input" type='file'
+                                                                    onchange="readURL(this);" accept="image/*" />
+                                                                <div class="drag-text">
+                                                                    <i>Drag and drop files here or click the icon</i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="file-upload-content">
+                                                                <img class="file-upload-image" src="#"
+                                                                    alt="your image" />
+                                                                <div class="image-title-wrap">
+                                                                    <button type="button" onclick="removeUpload()"
+                                                                        class="remove-image">Remove <span
+                                                                            class="image-title">Uploaded
+                                                                            File</span></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="modal-footer-check">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                                            type="button">Cancel</button>
+
+                                                    </div>
+                                                    <div class="col-md-5" align="center">
+                                                        <div class="middle-links">
+                                                            <a href="">Print or Preview</a>
+                                                        </div>
+                                                        <div class="middle-links end">
+                                                            <a href="">Make recurring</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="dropdown" style="float: right">
+                                                            <button class="btn btn-dark cancel-button px-4"
+                                                                type="submit">Save</button>
+                                                            <button type="button" class="btn btn-success"
+                                                                data-dismiss="modal" id="checkSaved"
+                                                                style="border-radius: 20px 0 0 20px">Save and
+                                                                new</button>
+                                                            <button class="btn btn-success" type="button"
+                                                                data-toggle="dropdown"
+                                                                style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                                                <span class="fa fa-caret-down"></span></button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                                <li><a href="#" data-dismiss="modal"
+                                                                        id="checkSaved">Save and close</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                </form>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="item_list" tabindex="-1" role="dialog"
+                                    aria-labelledby="newcustomerLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document"
+                                        style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <table id="items_table_credit_memo" class="table table-hover"
+                                                            style="width: 100%;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <td> Name</td>
+                                                                    <td> Qty</td>
+                                                                    <td> Price</td>
+                                                                    <td> Action</td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php foreach ($items as $item) { // print_r($item);?>
+                                                                <tr>
+                                                                    <td><?php echo $item->title; ?>
+                                                                    </td>
+                                                                    <td></td>
+                                                                    <td><?php echo $item->price; ?>
+                                                                    </td>
+                                                                    <td><button
+                                                                            id="<?= $item->id; ?>"
+                                                                            data-quantity="<?= $item->units; ?>"
+                                                                            data-itemname="<?= $item->title; ?>"
+                                                                            data-price="<?= $item->price; ?>"
+                                                                            type="button" data-dismiss="modal"
+                                                                            class="btn btn-sm btn-default select_itemcm">
+                                                                            <span class="fa fa-plus"></span>
+
+                                                                        </button></td>
+                                                                </tr>
+
+                                                                <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer modal-footer-detail">
+                                                <div class="button-modal-list">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal"><span class="fa fa-remove"></span>
+                                                        Close</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-8">
-                            </div>
-                        </div>
-                    </div>
-                            <hr>
-                            <div class="modal-footer-check">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <button class="btn btn-dark cancel-button" id="closeCheckModal" type="button">Cancel</button>
-                                        
-                                    </div>
-                                    <div class="col-md-5" align="center">
-                                        <div class="middle-links">
-                                            <a href="">Print or Preview</a>
-                                        </div>
-                                        <div class="middle-links end">
-                                            <a href="">Make recurring</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="dropdown" style="float: right">
-                                            <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                            <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                            <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                                <span class="fa fa-caret-down"></span></button>
-                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                <li><a href="#" data-dismiss="modal" id="checkSaved" >Save and close</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+
+                                <div style="margin: auto;">
+                                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg"
+                                            style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the
+                                        privacy and security of your information are top priorities.</span>
+                                </div>
+                                <div style="margin: auto">
+                                    <a href="" style="text-align: center">Privacy</a>
                                 </div>
                             </div>
 
-
-                </form>
-
-                <!-- Modal -->
-                <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table id="items_table_credit_memo" class="table table-hover" style="width: 100%;">
-                                            <thead>
-                                            <tr>
-                                                <td> Name</td>
-                                                <td> Qty</td>
-                                                <td> Price</td>
-                                                <td> Action</td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php foreach($items as $item){ // print_r($item); ?>
-                                                <tr>
-                                                    <td><?php echo $item->title; ?></td>
-                                                    <td></td>
-                                                    <td><?php echo $item->price; ?></td>
-                                                    <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_itemcm">
-                                                    <span class="fa fa-plus"></span>
-
-                                                </button></td>
-                                                </tr>
-                                                
-                                            <?php } ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer modal-footer-detail">
-                                <div class="button-modal-list">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-                    
-                    <div style="margin: auto;">
-                        <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
-                    </div>
-                    <div style="margin: auto">
-                        <a href="" style="text-align: center">Privacy</a>
-                    </div>
-                </div>
+                <!--    end of modal-->
+                <!--    Create Delayed Charge Modal-->
+                <div class="full-screen-modal">
+                    <div id="delayed-charge" class="all_sales_modal modal fade modal-fluid" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-title">
+                                        <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                                        Delayed Charge<span id="checkNUmberHeader"></span>
+                                    </div>
+                                    <button type="button" class="close" id="closeDelayedChargeModal"><i
+                                            class="fa fa-times fa-lg"></i></button>
+                                </div>
+                                <form action="" method="post" id="addEditCheckmodal">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Customer
+                                                        <select id="sel-customer" name="customer_id"
+                                                            data-customer-source="dropdown"
+                                                            class="form-control searchable-dropdown"
+                                                            placeholder="Select">
+                                                            <option value="0">- none -</option>
+                                                            <?php foreach ($customers as $c) { ?>
+                                                            <option
+                                                                value="<?= $c->prof_id; ?>">
+                                                                <?= $c->first_name . ' ' . $c->last_name; ?>
+                                                            </option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Delayed Credit date<br>
+                                                        <input type="text" class="form-control" name="charge_date"
+                                                            id="datepickerinv12">
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Tags <a href="#" style="float:right">Manage tags</a>
+                                                        <input type="text" class="form-control" name="tags">
+                                                    </div>
+                                                </div>
 
-            </div>
-        </div>
-    </div>
-    <!--    end of modal-->
-    <!--    Create Delayed Charge Modal-->
-    <div class="full-screen-modal">
-        <div id="delayed-charge" class="all_sales_modal modal fade modal-fluid" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Delayed Charge<span id="checkNUmberHeader"></span>
-                        </div>
-                        <button type="button" class="close" id="closeDelayedChargeModal"><i
-                                class="fa fa-times fa-lg"></i></button>
-                    </div>
-                    <form action="" method="post" id="addEditCheckmodal">
-                    <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Customer
-                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                        <option value="0">- none -</option>
-                                        <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Delayed Credit date<br>
-                                    <input type="text" class="form-control" name="charge_date" id="datepickerinv12">
-                                </div>                                
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    Tags <a href="#" style="float:right">Manage tags</a>
-                                    <input type="text" class="form-control" name="tags">
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <div class="col-md-6" align="right">
-                            AMOUNT<h2><span id="grand_total_dch_total">0.00</span></h2><br>
-                            <input type="hidden" name="grand_total_amount" id="grand_total_dc_total_val_dc">
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">
-                        <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <!-- <th></th>
+                                            </div>
+                                            <div class="col-md-6" align="right">
+                                                AMOUNT<h2><span id="grand_total_dch_total">0.00</span></h2><br>
+                                                <input type="hidden" name="grand_total_amount"
+                                                    id="grand_total_dc_total_val_dc">
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered" id="reportstable">
+                                                    <thead>
+                                                        <!-- <th></th>
                                     <th>#</th>
                                     <th>PRODUCT/SERVICE</th>
                                     <th>DESCRIPTION</th>
@@ -3796,63 +4218,81 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th>AMOUNT</th>
                                     <th>TAX</th>
                                     <th></th> -->
-                                    <th>Name</th>
-                                            <th>Type</th>
-                                            <!-- <th>Description</th> -->
-                                            <th width="150px">Quantity</th>
-                                            <!-- <th>Location</th> -->
-                                            <th width="150px">Price</th>
-                                            <th width="150px">Discount</th>
-                                            <th width="150px">Tax (Change in %)</th>
-                                            <th>Total</th>
-                                </thead>
-                                <tbody id="items_table_body_delayed_charge">
-                                <tr>
-                                            <td>
-                                                <input type="text" class="form-control getItemCharge"
-                                                       onKeyup="getItemCharge_k(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                            </td>
-                                            <td><select name="item_type[]" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select></td>
-                                            <td width="150px"><input type="number" class="form-control quantitydch" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="150px"><input type="number" class="form-control pricedch" name="price[]"
-                                                       data-counter="0" id="price_dch_0" min="0" value="0"></td>
-                                            <td width="150px"><input type="number" class="form-control discountdch" name="discount[]"
-                                                       data-counter="0" id="discount_dch_0" min="0" value="0" ></td>
-                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_dch_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_dch_0" min="0" value="0">
-                                                       $<span id="span_total_charge_0">0.00</span></td>
-                                        </tr>
-                                </tr>
-                                </tbody>
-                            </table>
-                            </table>
-                        <div>
-                    </div>
-                    <hr>
-                
-                    <div class="row">
-                        <div class="col-md-1">
-                           <!-- <button class="btn1">Add lines</button> -->
-                           <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list_delayed_charge"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                        </div>
+                                                        <th>Name</th>
+                                                        <th>Type</th>
+                                                        <!-- <th>Description</th> -->
+                                                        <th width="150px">Quantity</th>
+                                                        <!-- <th>Location</th> -->
+                                                        <th width="150px">Price</th>
+                                                        <th width="150px">Discount</th>
+                                                        <th width="150px">Tax (Change in %)</th>
+                                                        <th>Total</th>
+                                                    </thead>
+                                                    <tbody id="items_table_body_delayed_charge">
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" class="form-control getItemCharge"
+                                                                    onKeyup="getItemCharge_k(this)" name="items[]">
+                                                                <ul class="suggestions"></ul>
+                                                            </td>
+                                                            <td><select name="item_type[]" class="form-control">
+                                                                    <option value="product">Product</option>
+                                                                    <option value="material">Material</option>
+                                                                    <option value="service">Service</option>
+                                                                    <option value="fee">Fee</option>
+                                                                </select></td>
+                                                            <td width="150px"><input type="number"
+                                                                    class="form-control quantitydch" name="quantity[]"
+                                                                    data-counter="0" id="quantity_0" value="1"></td>
+                                                            <td width="150px"><input type="number"
+                                                                    class="form-control pricedch" name="price[]"
+                                                                    data-counter="0" id="price_dch_0" min="0" value="0">
+                                                            </td>
+                                                            <td width="150px"><input type="number"
+                                                                    class="form-control discountdch" name="discount[]"
+                                                                    data-counter="0" id="discount_dch_0" min="0"
+                                                                    value="0"></td>
+                                                            <td width="150px"><input type="text"
+                                                                    class="form-control tax_change" name="tax[]"
+                                                                    data-counter="0" id="tax1_dch_0" min="0" value="0">
+                                                                <!-- <span id="span_tax_0">0.0</span> -->
+                                                            </td>
+                                                            <td width="150px"><input type="hidden" class="form-control "
+                                                                    name="total[]" data-counter="0"
+                                                                    id="item_total_dch_0" min="0" value="0">
+                                                                $<span id="span_total_charge_0">0.00</span></td>
+                                                        </tr>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                </table>
+                                                <div>
+                                                </div>
+                                                <hr>
 
-                                        <input type="hidden" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
-                                        <input type="hidden" name="adjustment_value" id="adjustment_input_dch" value="0" class="form-control adjustment_input_dch" style="width:100px; display:inline-block">
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                        <input type="hidden" name="voucher_value" id="offer_cost_input">
-                                        <input type="hidden" name="grand_total" id="grand_total_dch" value='0'>
-                        <!-- <div class="col-md-1">
+                                                <div class="row">
+                                                    <div class="col-md-1">
+                                                        <!-- <button class="btn1">Add lines</button> -->
+                                                        <a class="link-modal-open" href="#" id="add_another_items"
+                                                            data-toggle="modal"
+                                                            data-target="#item_list_delayed_charge"><span
+                                                                class="fa fa-plus-square fa-margin-right"></span>Add
+                                                            Items</a>
+                                                    </div>
+
+                                                    <input type="hidden" name="adjustment_name" id="adjustment_name"
+                                                        placeholder="Adjustment Name" class="form-control"
+                                                        style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                                    <input type="hidden" name="adjustment_value"
+                                                        id="adjustment_input_dch" value="0"
+                                                        class="form-control adjustment_input_dch"
+                                                        style="width:100px; display:inline-block">
+                                                    <input type="hidden" name="markup_input_form" id="markup_input_form"
+                                                        class="markup_input" value="0">
+                                                    <input type="hidden" name="voucher_value" id="offer_cost_input">
+                                                    <input type="hidden" name="grand_total" id="grand_total_dch"
+                                                        value='0'>
+                                                    <!-- <div class="col-md-1">
                            <button class="btn1">Clear all lines</button>
                         </div>
                         <div class="col-md-1">
@@ -3865,599 +4305,649 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-md-1">
                             <b><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="sub_total" value="0.00" readonly></b>
                         </div> -->
-                    </div>
-                    <hr>
+                                                </div>
+                                                <hr>
 
-                    <div class="row">
-                        <div class="col-md-2">
-                            Memo<br>
-                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        Memo<br>
+                                                        <textarea style="height:100px;width:100%;"
+                                                            name="memo"></textarea><br>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="file-upload">
+                                                            <button class="file-upload-btn" type="button"
+                                                                onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+
+                                                            <div class="image-upload-wrap">
+                                                                <input class="file-upload-input" type='file'
+                                                                    onchange="readURL(this);" accept="image/*" />
+                                                                <div class="drag-text">
+                                                                    <i>Drag and drop files here or click the icon</i>
+                                                                </div>
+                                                            </div>
+                                                            <div class="file-upload-content">
+                                                                <img class="file-upload-image" src="#"
+                                                                    alt="your image" />
+                                                                <div class="image-title-wrap">
+                                                                    <button type="button" onclick="removeUpload()"
+                                                                        class="remove-image">Remove <span
+                                                                            class="image-title">Uploaded
+                                                                            File</span></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                    </div>
+                                                </div>
+                                                <hr>
+
+
+                                            </div>
+                                            <div class="modal-footer-check">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                                            type="button">Cancel</button>
+
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="middle-links">
+                                                            <a href="">Print or Preview</a>
+                                                        </div>
+                                                        <div class="middle-links end">
+                                                            <a href="">Make recurring</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="dropdown" style="float: right">
+                                                            <button class="btn btn-dark cancel-button px-4"
+                                                                type="submit">Save</button>
+                                                            <button type="button" class="btn btn-success"
+                                                                data-dismiss="modal" id="checkSaved"
+                                                                style="border-radius: 20px 0 0 20px">Save and
+                                                                new</button>
+                                                            <button class="btn btn-success" type="button"
+                                                                data-toggle="dropdown"
+                                                                style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                                                <span class="fa fa-caret-down"></span></button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                                <li><a href="#" data-dismiss="modal"
+                                                                        id="checkSaved">Save and close</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                </form>
+                            </div>
+
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="file-upload">
-                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
-
-                                <div class="image-upload-wrap">
-                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-                                    <div class="drag-text">
-                                    <i>Drag and drop files here or click the icon</i>
+                </div>
+                <!--    end of modal-->
+                <!--    Create Time Activity Modal-->
+                <div class="full-screen-modal">
+                    <div id="sales-time-activity" class="all_sales_modal modal fade modal-fluid" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content h-100">
+                                <div class="modal-header">
+                                    <div class="modal-title">
+                                        <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
+                                        Time Activity<span id="checkNUmberHeader"></span>
                                     </div>
+                                    <button type="button" class="close" id="closeSalesTimeActivityModal"><i
+                                            class="fa fa-times fa-lg"></i></button>
                                 </div>
-                                <div class="file-upload-content">
-                                    <img class="file-upload-image" src="#" alt="your image" />
-                                    <div class="image-title-wrap">
-                                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                <form action="" method="post" id="addEditCheckmodal">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <table class="form-inline-group">
+                                                    <tr>
+                                                        <td><label for="">Date</label></td>
+                                                        <td>
+                                                            <input type="date" name="date" class="form-inline"
+                                                                style="width: 45%">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="">Name</label></td>
+                                                        <td>
+                                                            <input type="text" name="name" class="form-inline">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="">Customer</label></td>
+                                                        <td>
+                                                            <input type="text" name="customer" class="form-inline">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="">Service</label></td>
+                                                        <td>
+                                                            <select name="service" id="" class="form-inline">
+                                                                <option disabled selected>Chose the service worked on
+                                                                </option>
+                                                                <option>Credit</option>
+                                                                <option>Discount</option>
+                                                                <option>Hours</option>
+                                                                <option>Installation</option>
+                                                                <option>Labor</option>
+                                                                <option>Material</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>
+                                                            <input type="checkbox" id="billable" value="1">
+                                                            <span>Billable (/hr)</span>
+                                                            <input type="hidden" class="form-control" name="billable"
+                                                                id="hideTextBox"
+                                                                style="display: inline-block; width: 60px;height: 36px">
+                                                            <div style="display: none;" id="hideTaxable">
+                                                                <input type="checkbox" name="taxable">
+                                                                <span>Taxable</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <table class="form-inline-group">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>
+                                                            <input type="checkbox" name="start_end_times"
+                                                                id="start_end_times" value="1">
+                                                            <span>Enter Start and End Times</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="timeRow">
+                                                        <td><label for="">Time</label></td>
+                                                        <td>
+                                                            <input type="time" name="time" class="form-inline" id="time"
+                                                                placeholder="hh:mm" style="width: 35%">
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="startEndRow" style="display: none;">
+                                                        <td><label for="">Time</label></td>
+                                                        <td>
+                                                            <div>
+                                                                <input type="time" name="start_time"
+                                                                    class="form-control"
+                                                                    style="width: 25%;display: inline-block;margin-bottom: 10px">
+                                                                <span>Start time</span>
+                                                            </div>
+                                                            <div>
+                                                                <input type="time" name="end_time" class="form-control"
+                                                                    style="width: 25%;display: inline-block;margin-bottom: 10px">
+                                                                <span>End time</span>
+                                                            </div>
+                                                            <div>
+                                                                <input type="time" name="break" class="form-control"
+                                                                    style="width: 30%;display: inline-block;"
+                                                                    placeholder="hh:mm">
+                                                                <span>Break</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><label for="">Description</label></td>
+                                                        <td>
+                                                            <textarea name="description" id="" cols="60"
+                                                                rows="5"></textarea>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-2"></div>
+                                        </div>
+
+                                        <div class="privacy">
+                                            <a href="#">Privacy</a>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="modal-footer-check">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <button class="btn btn-dark cancel-button" id="closeCheckModal"
+                                            type="button">Cancel</button>
+
+                                    </div>
+                                    <div class="col-md-5">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="dropdown" style="float: right">
+                                            <button class="btn btn-dark px-4" type="submit">Save</button>
+                                            <button type="button" class="btn btn-success" data-dismiss="modal"
+                                                id="checkSaved" style="border-radius: 20px 0 0 20px">Save and
+                                                new</button>
+                                            <button class="btn btn-success" type="button" data-toggle="dropdown"
+                                                style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                                                <span class="fa fa-caret-down"></span></button>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            </form>
                         </div>
-                        <div class="col-md-8">
-                        </div>
+
                     </div>
-                    <hr>
-
-
                 </div>
-                        <div class="modal-footer-check">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <button class="btn btn-dark cancel-button" id="closeCheckModal"
-                                        type="button">Cancel</button>
-
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="middle-links">
-                                        <a href="">Print or Preview</a>
-                                    </div>
-                                    <div class="middle-links end">
-                                        <a href="">Make recurring</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" type="submit">Save</button>
-                                        <button type="button" class="btn btn-success" data-dismiss="modal"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
-                                        <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                            <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
             </div>
-        </div>
-    </div>
-    <!--    end of modal-->
-    <!--    Create Time Activity Modal-->
-    <div class="full-screen-modal">
-        <div id="sales-time-activity" class="all_sales_modal modal fade modal-fluid" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content h-100">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                            Time Activity<span id="checkNUmberHeader"></span>
+            <!--    end of modal-->
+
+
+            <div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <button type="button" class="close" id="closeSalesTimeActivityModal"><i
-                                class="fa fa-times fa-lg"></i></button>
-                    </div>
-                    <form action="" method="post" id="addEditCheckmodal">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <table class="form-inline-group">
-                                        <tr>
-                                            <td><label for="">Date</label></td>
-                                            <td>
-                                                <input type="date" name="date" class="form-inline" style="width: 45%">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="">Name</label></td>
-                                            <td>
-                                                <input type="text" name="name" class="form-inline">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="">Customer</label></td>
-                                            <td>
-                                                <input type="text" name="customer" class="form-inline">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="">Service</label></td>
-                                            <td>
-                                                <select name="service" id="" class="form-inline">
-                                                    <option disabled selected>Chose the service worked on</option>
-                                                    <option>Credit</option>
-                                                    <option>Discount</option>
-                                                    <option>Hours</option>
-                                                    <option>Installation</option>
-                                                    <option>Labor</option>
-                                                    <option>Material</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                <input type="checkbox" id="billable" value="1">
-                                                <span>Billable (/hr)</span>
-                                                <input type="hidden" class="form-control" name="billable"
-                                                    id="hideTextBox"
-                                                    style="display: inline-block; width: 60px;height: 36px">
-                                                <div style="display: none;" id="hideTaxable">
-                                                    <input type="checkbox" name="taxable">
-                                                    <span>Taxable</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-md-5">
-                                    <table class="form-inline-group">
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                <input type="checkbox" name="start_end_times" id="start_end_times"
-                                                    value="1">
-                                                <span>Enter Start and End Times</span>
-                                            </td>
-                                        </tr>
-                                        <tr id="timeRow">
-                                            <td><label for="">Time</label></td>
-                                            <td>
-                                                <input type="time" name="time" class="form-inline" id="time"
-                                                    placeholder="hh:mm" style="width: 35%">
-
-                                            </td>
-                                        </tr>
-                                        <tr id="startEndRow" style="display: none;">
-                                            <td><label for="">Time</label></td>
-                                            <td>
-                                                <div>
-                                                    <input type="time" name="start_time" class="form-control"
-                                                        style="width: 25%;display: inline-block;margin-bottom: 10px">
-                                                    <span>Start time</span>
-                                                </div>
-                                                <div>
-                                                    <input type="time" name="end_time" class="form-control"
-                                                        style="width: 25%;display: inline-block;margin-bottom: 10px">
-                                                    <span>End time</span>
-                                                </div>
-                                                <div>
-                                                    <input type="time" name="break" class="form-control"
-                                                        style="width: 30%;display: inline-block;" placeholder="hh:mm">
-                                                    <span>Break</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="">Description</label></td>
-                                            <td>
-                                                <textarea name="description" id="" cols="60" rows="5"></textarea>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class="col-md-2"></div>
-                            </div>
-
-                            <div class="privacy">
-                                <a href="#">Privacy</a>
-                            </div>
-                        </div>
-                </div>
-                <div class="modal-footer-check">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <button class="btn btn-dark cancel-button" id="closeCheckModal"
-                                type="button">Cancel</button>
-
-                        </div>
-                        <div class="col-md-5">
-                        </div>
-                        <div class="col-md-3">
-                            <div class="dropdown" style="float: right">
-                                <button class="btn btn-dark px-4" type="submit">Save</button>
-                                <button type="button" class="btn btn-success" data-dismiss="modal" id="checkSaved"
-                                    style="border-radius: 20px 0 0 20px">Save and new</button>
-                                <button class="btn btn-success" type="button" data-toggle="dropdown"
-                                    style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                    <span class="fa fa-caret-down"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                    <li><a href="#" data-dismiss="modal" id="checkSaved">Save and close</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!--    end of modal-->
-
-
-<div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <!-- <div class="modal-body text-center">
+                        <!-- <div class="modal-body text-center">
         <p class="text-lg margin-bottom">
             What type of estimate you want to create
         </p>
         <div class="margin-bottom">
             <div class="help help-sm">Create a regular estimate with items</div>
             <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add') ?>"><span
-                class="fa fa-file-text-o"></span> Standard Estimate</a>
-        </div>
-        <div class="margin-bottom">
-            <div class="help help-sm">Customers can select all or only certain options</div>
-            <a class="btn btn-primary add-modal__btn-primary"
-                href="<?php echo base_url('estimate/add?type=2') ?>"><span
-                    class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
-        </div>
-        <div>
-            <div class="help help-sm">Customers can select only one package</div>
-            <a class="btn btn-primary add-modal__btn-primary"
-                href="<?php echo base_url('estimate/add?type=3') ?>"><span
-                    class="fa fa-cubes"></span> Packages Estimate</a>
-        </div>
-        </div> -->
-        <div class="modal-body text-center">
-            <p class="text-lg margin-bottom">
-                What type of estimate you want to create
-            </p>
-            <center>
-                <div class="margin-bottom text-center" style="width:60%;">
-                    <div class="help help-sm">Create a regular estimate with items</div>
-                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
-                        href="<?php echo base_url('estimate/add') ?>"><span
                             class="fa fa-file-text-o"></span> Standard Estimate</a>
+                    </div>
+                    <div class="margin-bottom">
+                        <div class="help help-sm">Customers can select all or only certain options</div>
+                        <a class="btn btn-primary add-modal__btn-primary"
+                            href="<?php echo base_url('estimate/add?type=2') ?>"><span
+                                class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+                    </div>
+                    <div>
+                        <div class="help help-sm">Customers can select only one package</div>
+                        <a class="btn btn-primary add-modal__btn-primary"
+                            href="<?php echo base_url('estimate/add?type=3') ?>"><span
+                                class="fa fa-cubes"></span> Packages Estimate</a>
+                    </div>
+                </div> -->
+                <div class="modal-body text-center">
+                    <p class="text-lg margin-bottom">
+                        What type of estimate you want to create
+                    </p>
+                    <center>
+                        <div class="margin-bottom text-center" style="width:60%;">
+                            <div class="help help-sm">Create a regular estimate with items</div>
+                            <a class="btn btn-primary add-modal__btn-success"
+                                style="background-color: #2ab363 !important"
+                                href="<?php echo base_url('estimate/add') ?>"><span
+                                    class="fa fa-file-text-o"></span> Standard Estimate</a>
+                        </div>
+                        <div class="margin-bottom" style="width:60%;">
+                            <div class="help help-sm">Customers can select all <br>or only certain options</div>
+                            <a class="btn btn-primary add-modal__btn-success"
+                                style="background-color: #2ab363 !important"
+                                href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span
+                                    class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+                        </div>
+                        <div class="margin-bottom" style="width:60%;">
+                            <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall
+                                discount</div>
+                            <a class="btn btn-primary add-modal__btn-success"
+                                style="background-color: #2ab363 !important"
+                                href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span
+                                    class="fa fa-cubes"></span> Bundle Estimate</a>
+                        </div>
+                    </center>
                 </div>
-                <div class="margin-bottom" style="width:60%;">
-                    <div class="help help-sm">Customers can select all <br>or only certain options</div>
-                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
-                        href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span
-                            class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-                <div class="margin-bottom" style="width:60%;">
-                    <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
-                    <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important"
-                        href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span
-                            class="fa fa-cubes"></span> Bundle Estimate</a>
-                </div>
-            </center>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-    </div>
-</div>
 
-<?php include viewPath('includes/footer_accounting'); ?>
+        <?php include viewPath('includes/footer_accounting'); ?>
 
-<?php include viewPath('accounting/customer_receive_payment_modal');?>
-<?php include viewPath('accounting/estimate_one_modal'); ?>
-<?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
-<?php //include viewPath('accounting/customer_credit_memo_modal'); ?>
-<?php include viewPath('accounting/customer_delayed_charge_modal'); ?>
-<div></div>
+        <?php include viewPath('accounting/customer_receive_payment_modal');?>
+        <?php include viewPath('accounting/estimate_one_modal'); ?>
+        <?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
+        <?php //include viewPath('accounting/customer_credit_memo_modal');?>
+        <?php include viewPath('accounting/customer_delayed_charge_modal'); ?>
+        <div></div>
 
-<script src="<?php echo $url->assets ?>js/all_sales.js"></script>
+        <script src="<?php echo $url->assets ?>js/all_sales.js"></script>
 
-<script>
-    $("document").ready(function () {
+        <script>
+            $("document").ready(function() {
 
-      $("#all_sales_table").dataTable({
-        "searching": true
-      });
+                // $("#all_sales_table").dataTable({
+                //     "searching": true
+                // });
 
-      var table = $('#all_sales_table').DataTable();
+                var table = $('#all_sales_table').DataTable();
 
-      $("#filterTable_filter.dataTables_filter").append($("#categoryFilter"));
-      
-      var categoryIndex = 0;
-      $("#all_sales_table th").each(function (i) {
-        if ($($(this)).html() == "Type") {
-          categoryIndex = i; return false;
-        }
-      });
+                // $("#filterTable_filter.dataTables_filter").append($("#categoryFilter"));
 
-      $.fn.dataTable.ext.search.push(
-        function (settings, data, dataIndex) {
-          var selectedItem = $('#categoryFilter').val()
-          var category = data[categoryIndex];
-          if (selectedItem === "" || category.includes(selectedItem)) {
-            return true;
-          }
-          return false;
-        }
-      );
+                // var categoryIndex = 0;
+                // $("#all_sales_table th").each(function(i) {
+                //     if ($($(this)).html() == "Type") {
+                //         categoryIndex = i;
+                //         return false;
+                //     }
+                // });
 
-      $("#categoryFilter").change(function (e) {
-        table.draw();
-      });
+                // $.fn.dataTable.ext.search.push(
+                //     function(settings, data, dataIndex) {
+                //         var selectedItem = $('#categoryFilter').val()
+                //         var category = data[categoryIndex];
+                //         if (selectedItem === "" || category.includes(selectedItem)) {
+                //             return true;
+                //         }
+                //         return false;
+                //     }
+                // );
 
-      table.draw();
-    });
-</script>
+                // $("#categoryFilter").change(function(e) {
+                //     table.draw();
+                // });
 
-<script>
-    // $("document").ready(function () {
-
-    //   $("#all_sales_table").dataTable({
-    //     "searching": true
-    //   });
-
-    //   var table = $('#all_sales_table').DataTable();
-
-    //   $("#filterTable_filter.dataTables_filter").append($("#categoryFiltertop"));
-      
-    //   var categoryIndex = 0;
-    //   $("#all_sales_table th").each(function (i) {
-    //     if ($($(this)).html() == "Type") {
-    //       categoryIndex = i; return false;
-    //     }
-    //   });
-
-    //   $.fn.dataTable.ext.search.push(
-    //     function (settings, data, dataIndex) {
-    //       var selectedItem = $('#categoryFiltertop').val()
-    //       var category = data[categoryIndex];
-    //       if (selectedItem === "" || category.includes(selectedItem)) {
-    //         return true;
-    //       }
-    //       return false;
-    //     }
-    //   );
-
-    // //   $("#categoryFiltertop").change(function (e) {
-    // //     table.draw();
-    // //   });
-
-    // $("#categoryFiltertop").click(function () {
-    //     table.draw();
-    // });
-
-    //   table.draw();
-    // });
-
-    
-$(".update_est_status").click(function() {
-
-var id = $(".estID").val();
-var est_status = $(".est_status").val();
-
-// alert(id);
-
-$.ajax({
-  url:"<?php echo base_url(); ?>accounting/save_update_estimate_status",
-  type: "POST",
-  data: {id : id, est_status : est_status },
-  success: function(dataResult){
-      // $('#table').html(dataResult); 
-      // alert('success')
-      console.log(dataResult);
-      sucess("Data Updated Successfully!");
-     
-  },
-      error: function(response){
-      alert('Error'+response);
-
-      }
-});
-
-
-});
-
-
-    function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
+                table.draw();
             });
-        }
+        </script>
+
+        <script>
+            // $("document").ready(function () {
+
+            //   $("#all_sales_table").dataTable({
+            //     "searching": true
+            //   });
+
+            //   var table = $('#all_sales_table').DataTable();
+
+            //   $("#filterTable_filter.dataTables_filter").append($("#categoryFiltertop"));
+
+            //   var categoryIndex = 0;
+            //   $("#all_sales_table th").each(function (i) {
+            //     if ($($(this)).html() == "Type") {
+            //       categoryIndex = i; return false;
+            //     }
+            //   });
+
+            //   $.fn.dataTable.ext.search.push(
+            //     function (settings, data, dataIndex) {
+            //       var selectedItem = $('#categoryFiltertop').val()
+            //       var category = data[categoryIndex];
+            //       if (selectedItem === "" || category.includes(selectedItem)) {
+            //         return true;
+            //       }
+            //       return false;
+            //     }
+            //   );
+
+            // //   $("#categoryFiltertop").change(function (e) {
+            // //     table.draw();
+            // //   });
+
+            // $("#categoryFiltertop").click(function () {
+            //     table.draw();
+            // });
+
+            //   table.draw();
+            // });
 
 
-$(document).on('click touchstart','.send_est_cust',function(){
+            $(".update_est_status").click(function() {
 
-var email = $(".custEmail").val();
-var subject = $(".custsubject").val();
-var message = $(".custmessage").val();
-var custname = $(".custname").val();
-// alert(wo_id);
+                var id = $(".estID").val();
+                var est_status = $(".est_status").val();
 
-var r = confirm("Send this to customer?");
+                // alert(id);
 
-if (r == true) {
+                $.ajax({
+                    url: "<?php echo base_url(); ?>accounting/save_update_estimate_status",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        est_status: est_status
+                    },
+                    success: function(dataResult) {
+                        // $('#table').html(dataResult); 
+                        // alert('success')
+                        console.log(dataResult);
+                        sucess("Data Updated Successfully!");
 
-	$.ajax({
-	type : 'POST',
-	url : "<?php echo base_url(); ?>accounting/send_estimates_customer",
-	data : {email : email, subject : subject, message : message, custname : custname},
-	success: function(result){
-		sucess("Email Sent!");
-		// alert('Email Successfully!');
-	},
-	error: function () {
-      alert("An error has occurred");
-    },
+                    },
+                    error: function(response) {
+                        alert('Error' + response);
 
-	});
-
-	} 
-// else 
-// {
-// 	alert('no');
-// }
-
-});
-
-$(document).on('click touchstart','.send_est_cust_sr',function(){
-
-var email = $(".custEmail_sr").val();
-var subject = $(".custsubject_sr").val();
-var message = $(".custmessage_sr").val();
-var custname = $(".custname_sr").val();
-// alert(wo_id);
-
-var r = confirm("Send this to customer?");
-
-if (r == true) {
-
-	$.ajax({
-	type : 'POST',
-	url : "<?php echo base_url(); ?>accounting/send_estimates_customer_sr",
-	data : {email : email, subject : subject, message : message, custname : custname},
-	success: function(result){
-		sucess("Email Sent!");
-		// alert('Email Successfully!');
-	},
-	error: function () {
-      alert("An error has occurred");
-    },
-
-	});
-
-	} 
-// else 
-// {
-// 	alert('no');
-// }
-
-});
-
-$(document).on('click touchstart','.send_est_cust',function(){
-
-var email = $(".custEmail").val();
-var subject = $(".custsubject").val();
-var message = $(".custmessage").val();
-var custname = $(".custname").val();
-// alert(wo_id);
-
-var r = confirm("Send this to customer?");
-
-if (r == true) {
-
-	$.ajax({
-	type : 'POST',
-	url : "<?php echo base_url(); ?>accounting/send_estimates_customer",
-	data : {email : email, subject : subject, message : message, custname : custname},
-	success: function(result){
-		sucess("Email Sent!");
-		// alert('Email Successfully!');
-	},
-	error: function () {
-      alert("An error has occurred");
-    },
-
-	});
-
-	} 
-// else 
-// {
-// 	alert('no');
-// }
-
-});
-
-$(document).on('click touchstart','.send_est_cust_sr',function(){
-
-var email = $(".custEmail_sr").val();
-var subject = $(".custsubject_sr").val();
-var message = $(".custmessage_sr").val();
-var custname = $(".custname_sr").val();
-// alert(wo_id);
-
-var r = confirm("Send this to customer?");
-
-if (r == true) {
-
-	$.ajax({
-	type : 'POST',
-	url : "<?php echo base_url(); ?>accounting/send_estimates_customer_sr",
-	data : {email : email, subject : subject, message : message, custname : custname},
-	success: function(result){
-		sucess("Email Sent!");
-		// alert('Email Successfully!');
-	},
-	error: function () {
-      alert("An error has occurred");
-    },
-
-	});
-
-	} 
-// else 
-// {
-// 	alert('no');
-// }
-
-});
-
-$(document).on('click touchstart','.send_estimates_customer_cm',function(){
-
-var email = $(".custEmail_sr").val();
-var subject = $(".custsubject_sr").val();
-var message = $(".custmessage_sr").val();
-var custname = $(".custname_sr").val();
-// alert(wo_id);
-
-var r = confirm("Send this to customer?");
-
-if (r == true) {
-
-	$.ajax({
-	type : 'POST',
-	url : "<?php echo base_url(); ?>accounting/send_estimates_customer_cm",
-	data : {email : email, subject : subject, message : message, custname : custname},
-	success: function(result){
-		sucess("Email Sent!");
-		// alert('Email Successfully!');
-	},
-	error: function () {
-      alert("An error has occurred");
-    },
-
-	});
-
-	} 
-// else 
-// {
-// 	alert('no');
-// }
-
-});
+                    }
+                });
 
 
+            });
 
-</script>sendESTemail_cm
+
+            function sucess(information, $id) {
+                Swal.fire({
+                    title: 'Good job!',
+                    text: information,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {
+                        location.reload();
+                    }
+                });
+            }
+
+
+            $(document).on('click touchstart', '.send_est_cust', function() {
+
+                var email = $(".custEmail").val();
+                var subject = $(".custsubject").val();
+                var message = $(".custmessage").val();
+                var custname = $(".custname").val();
+                // alert(wo_id);
+
+                var r = confirm("Send this to customer?");
+
+                if (r == true) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>accounting/send_estimates_customer",
+                        data: {
+                            email: email,
+                            subject: subject,
+                            message: message,
+                            custname: custname
+                        },
+                        success: function(result) {
+                            sucess("Email Sent!");
+                            // alert('Email Successfully!');
+                        },
+                        error: function() {
+                            alert("An error has occurred");
+                        },
+
+                    });
+
+                }
+                // else 
+                // {
+                // 	alert('no');
+                // }
+
+            });
+
+            $(document).on('click touchstart', '.send_est_cust_sr', function() {
+
+                var email = $(".custEmail_sr").val();
+                var subject = $(".custsubject_sr").val();
+                var message = $(".custmessage_sr").val();
+                var custname = $(".custname_sr").val();
+                // alert(wo_id);
+
+                var r = confirm("Send this to customer?");
+
+                if (r == true) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>accounting/send_estimates_customer_sr",
+                        data: {
+                            email: email,
+                            subject: subject,
+                            message: message,
+                            custname: custname
+                        },
+                        success: function(result) {
+                            sucess("Email Sent!");
+                            // alert('Email Successfully!');
+                        },
+                        error: function() {
+                            alert("An error has occurred");
+                        },
+
+                    });
+
+                }
+                // else 
+                // {
+                // 	alert('no');
+                // }
+
+            });
+
+            $(document).on('click touchstart', '.send_est_cust', function() {
+
+                var email = $(".custEmail").val();
+                var subject = $(".custsubject").val();
+                var message = $(".custmessage").val();
+                var custname = $(".custname").val();
+                // alert(wo_id);
+
+                var r = confirm("Send this to customer?");
+
+                if (r == true) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>accounting/send_estimates_customer",
+                        data: {
+                            email: email,
+                            subject: subject,
+                            message: message,
+                            custname: custname
+                        },
+                        success: function(result) {
+                            sucess("Email Sent!");
+                            // alert('Email Successfully!');
+                        },
+                        error: function() {
+                            alert("An error has occurred");
+                        },
+
+                    });
+
+                }
+                // else 
+                // {
+                // 	alert('no');
+                // }
+
+            });
+
+            $(document).on('click touchstart', '.send_est_cust_sr', function() {
+
+                var email = $(".custEmail_sr").val();
+                var subject = $(".custsubject_sr").val();
+                var message = $(".custmessage_sr").val();
+                var custname = $(".custname_sr").val();
+                // alert(wo_id);
+
+                var r = confirm("Send this to customer?");
+
+                if (r == true) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>accounting/send_estimates_customer_sr",
+                        data: {
+                            email: email,
+                            subject: subject,
+                            message: message,
+                            custname: custname
+                        },
+                        success: function(result) {
+                            sucess("Email Sent!");
+                            // alert('Email Successfully!');
+                        },
+                        error: function() {
+                            alert("An error has occurred");
+                        },
+
+                    });
+
+                }
+                // else 
+                // {
+                // 	alert('no');
+                // }
+
+            });
+
+            $(document).on('click touchstart', '.send_estimates_customer_cm', function() {
+
+                var email = $(".custEmail_sr").val();
+                var subject = $(".custsubject_sr").val();
+                var message = $(".custmessage_sr").val();
+                var custname = $(".custname_sr").val();
+                // alert(wo_id);
+
+                var r = confirm("Send this to customer?");
+
+                if (r == true) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url(); ?>accounting/send_estimates_customer_cm",
+                        data: {
+                            email: email,
+                            subject: subject,
+                            message: message,
+                            custname: custname
+                        },
+                        success: function(result) {
+                            sucess("Email Sent!");
+                            // alert('Email Successfully!');
+                        },
+                        error: function() {
+                            alert("An error has occurred");
+                        },
+
+                    });
+
+                }
+                // else 
+                // {
+                // 	alert('no');
+                // }
+
+            });
+        </script>sendESTemail_cm

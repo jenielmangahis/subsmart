@@ -6,7 +6,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Journal Entry #<?php echo $journal_no; ?></h4>
+                    <h4 class="modal-title">Journal Entry #<?=$journal_no?></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -18,13 +18,13 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="journalDate">Journal Date</label>
-                                                <input type="text" class="form-control date" name="journal_date" id="journalDate" value="<?php echo date('m/d/Y') ?>"/>
+                                                <input type="text" class="form-control date" name="journal_date" id="journalDate" value="<?=$journal_date?>"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="journalNo">Journal No</label>
-                                                <input type="number" name="journal_no" id="journalNo" class="form-control" min="<?php echo $journal_no; ?>" value="<?php echo $journal_no; ?>" required>
+                                                <input type="number" name="journal_no" id="journalNo" class="form-control" min="<?=$journal_no?>" value="<?=$journal_no?>" required>
                                             </div>
                                         </div>
                                     </div>

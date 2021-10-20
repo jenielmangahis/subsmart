@@ -382,6 +382,7 @@ $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payme
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
+$route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';

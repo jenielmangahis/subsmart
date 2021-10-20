@@ -29,7 +29,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#" class="dropdown-item disabled">Export rules</a></li>
+                                        <li><a href="#" class="dropdown-item" id="exportRules">Export rules</a></li>
                                         <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#importRules">Import rules</a></li>
                                     </ul>
                                 </div>
@@ -38,44 +38,6 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                 <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:28px;margin-top:28px;">
                 The more you uses your bank rules, the better it gets at categorizing. After a while, it can even scan transactions and add details like payees. Step 1: Create a bank rule. Go to the Banking menu or Transactions menu. Then select the Rules tab. Select New rule. Enter a name in the Rule field. From the drop-down, select Money in or Money out.  Simply acknowledge and our accounting platform will remember your selection for that particular entry for the next time.  Saving you time and money.
                 </div>
-                <!--                        DataTables-->
-                        <!-- <table id="rules_table" class="table table-striped table-bordered" style="width:100%">
-                            <thead>
-                            <tr>
-                                <th><input type="checkbox"></th>
-                                <th>Priority <i class="fa fa-question-circle"></i></th>
-                                <th>Rule Name</th>
-                                <th>Conditions</th>
-                                <th>Settings</th>
-                                <th>Auto-ad</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody class="displayRules">
-                            <?php foreach ($rules as $rule): ?>
-                            <tr>
-                                <td><input type="checkbox" value="<?php echo $rule->id; ?>"></td>
-                                <td><?php echo $rule->rules_name; ?></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td><?php echo ($rule->auto == 1) ? "Auto" : " "; ?></td>
-                                <td></td>
-                                <td>
-                                    <a href="<?php echo site_url() ?>accounting/edit_rules?id=<?php echo $rule->id; ?>" style="color: #0b97c4;">View/Edit</a>&nbsp;
-                                    <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
-                                        <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="#" id="deleteRules" data-id="<?php echo $rule->id; ?>">Delete</a></li>
-                                        </ul>
-                                    </div>&nbsp;
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                            </tbody>
-                        </table> -->
-
                         <div class="dropdown rulesDropdown d-none" id="batchActions">
                             <button
                                 class="btn dropdown-toggle rulesDropdown__btn"

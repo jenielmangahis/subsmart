@@ -922,29 +922,94 @@ $(document).on('click', '#registers-table tbody tr', function() {
 
 $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction', function() {
     var row = $('#registers-table tbody tr.editting');
-    var data = $('#registers').DataTable().row(row).data();
-
+    var data = $('#registers-table').DataTable().row(row).data();
+    var transactionType = data.type.replaceAll(' ', '-').toLowerCase();
     switch(data.type) {
-        default :
-            // $.get('/accounting/vendors/view-expense/'+data.id, function(res) {
-            //     if ($('div#modal-container').length > 0) {
-            //         $('div#modal-container').html(res);
-            //     } else {
-            //         $('body').append(`
-            //             <div id="modal-container"> 
-            //                 ${res}
-            //             </div>
-            //         `);
-            //     }
-        
-            //     initModalFields('expenseModal', data);
-        
-            //     $('#expenseModal #payee').trigger('change');
-        
-            //     $('#expenseModal').modal('show');
-            // });
+        case 'CC Expense' :
+            transactionType = 'expense';
+        break;
+        case 'CC Bill Payment' :
+            transactionType = 'bill-payment';
         break;
     }
+    data.type = transactionType;
+
+    $.get(`/accounting/chart-of-accounts/view-transaction/${transactionType}/${data.id}`, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        switch(transactionType) {
+            case 'expense' :
+                initModalFields('expenseModal', data);
+
+                $('#expenseModal #payee').trigger('change');
+
+                $('#expenseModal').modal('show');
+            break;
+            case 'check' :
+                initModalFields('checkModal', data);
+
+                $('#checkModal #payee').trigger('change');
+        
+                $('#checkModal').modal('show');
+            break;
+            case 'journal-entry' :
+
+            break;
+            case 'bill' :
+                initModalFields('billModal', data);
+
+                $('#billModal').modal('show');
+            break;
+            case 'cc-credit' :
+                initModalFields('creditCardCreditModal', data);
+
+                $('#creditCardCreditModal').modal('show');
+            break;
+            case 'vendor-credit' :
+                initModalFields('vendorCreditModal', data);
+
+                $('#vendorCreditModal').modal('show');
+            break;
+            case 'bill-payment' :
+                $('#billPaymentModal #vendor').trigger('change');
+
+                initModalFields('billPaymentModal', data);
+        
+                initBillsTable(data);
+        
+                $('#billPaymentModal .dropdown-menu').on('click', function(e) {
+                    e.stopPropagation();
+                });
+        
+                $('#billPaymentModal').modal('show');
+            break;
+            case 'transfer' :
+
+            break;
+            case 'deposit' :
+
+            break;
+            case 'inventory-qty-adjust' :
+
+            break;
+            case 'inventory-starting-value' :
+
+            break;
+            case 'credit-card-payment' :
+                initModalFields('payDownCreditModal', data);
+
+                $('#payDownCreditModal').modal('show');
+            break;
+        }
+    });
 });
 
 $(document).on('click', '#registers-table tbody tr.action-row #delete-transaction', function() {

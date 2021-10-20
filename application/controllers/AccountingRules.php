@@ -45,6 +45,12 @@ class AccountingRules extends MY_Controller
 
     public function apiGetRules()
     {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getRules()]);
+    }
+
+    private function getRules()
+    {
         $this->db->where('user_id', logged('id'));
         $this->db->order_by('priority', 'ASC');
         $rules = $this->db->get('accounting_rules')->result();
@@ -57,8 +63,7 @@ class AccountingRules extends MY_Controller
             $rule->assignments = $this->db->get('accounting_rule_assignments')->result();
         }
 
-        header('content-type: application/json');
-        echo json_encode(['data' => $rules]);
+        return $rules;
     }
 
     public function apiEditRule($id)
@@ -212,5 +217,71 @@ class AccountingRules extends MY_Controller
 
         header('content-type: application/json');
         echo json_encode(['data' => $rule]);
+    }
+
+    public function apiExportRules()
+    {
+        $storePath = FCPATH . 'uploads/rulesxlsx/';
+        if (!file_exists($storePath)) {
+            mkdir($storePath, 0777, true);
+        }
+
+        $rules = $this->getRules();
+        $results = [];
+
+        foreach ($rules as $rule) {
+            $result = [];
+            $result['name'] = $rule->rules_name;
+            $conditions = [];
+            $actions = [];
+
+            foreach ($rule->conditions as $condition) {
+                $conditions[] = [
+                    'type' => $condition->description,
+                    'equation' => $condition->contain,
+                    'value' => $condition->comment,
+                ];
+            }
+
+            foreach ($rule->assignments as $assignment) {
+                $actions[] = [
+                    'type' => $assignment->type,
+                    'percentage' => $assignment->percentage,
+                    'value' => $assignment->value,
+                ];
+            }
+
+            $result['conditions'] = json_encode($conditions);
+            $result['actions'] = json_encode($actions);
+            $results[] = $result;
+        }
+
+        require_once FCPATH . 'packages/xlsxwriter/xlsxwriter.class.php';
+        $fileName = md5(uniqid(logged('id'), true)) . '.xlsx';
+        $filePath = $storePath . '/' . $fileName;
+        $sheetname = 'Worksheet';
+        $header = [
+            'Rule Name' => 'string',
+            'Rule Conditions' => 'string',
+            'Rule Outputs' => 'string',
+        ];
+
+        $writer = new XLSXWriter();
+        $writer->writeSheetHeader($sheetname, $header);
+        $writer->writeSheet($results, $sheetname);
+        $writer->writeToFile($filePath);
+
+        if (file_exists($filePath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            unlink($filePath);
+            exit;
+        }
     }
 }
