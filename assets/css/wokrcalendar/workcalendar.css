@@ -460,5 +460,9 @@ a.btn-gcustom i {
 .modal-xl {
     max-width: 81% !important ;
 }
+.popover-body, .popover-header{
+    background: #32243d;
+    color: #ffffff !important;
+}
 
 /*Checkout*/

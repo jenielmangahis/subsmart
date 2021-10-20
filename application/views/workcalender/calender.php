@@ -379,10 +379,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> When</label>
                       <div class="row g-3">
                         <div class="col-sm-8">
-                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date" placeholder="Date" aria-label="Date">
+                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" data-content="Appointment Date">
                         </div>
                         <div class="col-sm-4">
-                          <input type="text" name="appointment_time" class="form-control appointment-time" placeholder="Time" aria-label="Time">
+                          <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Appointment Time">
                         </div>
                       </div>
                   </div>  
@@ -390,7 +390,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-address-card-o"></i> Which Employee</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                          <select name="appointment_user_id" id="appointment-user" class="form-control"></select>
+                            <span id="add-employee-popover"
+                              data-content="Assign employee that will handle the appointment"
+                              data-original-title="Which Employee"
+                              data-placement="right"
+                              data-trigger="hover"
+                              data-container="body">
+                            <select name="appointment_user_id" id="appointment-user" class="form-control"></select>
+                            </span>
                         </div>
                       </div>
                   </div> 
@@ -398,7 +405,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-user"></i> Which Customer</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
+                          <span id="add-customer-popover"
+                              data-content="Pick customer from the list which the appointment will be set"
+                              data-original-title="Which Customer"
+                              data-placement="right"
+                              data-trigger="hover"
+                              data-container="body">
                           <select name="appointment_customer_id" id="appointment-customer" class="form-control"></select>
+                          </span>
                         </div>
                       </div>
                   </div> 
@@ -406,7 +420,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-list"></i> Appointment Type</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                          <select name="appointment_type" id="appointment-type form-control" class="form-control" style="border:solid 1px rgba(0,0,0,0.35);">
+                          <select name="appointment_type" id="appointment-type" class="form-control field-popover" style="border:solid 1px rgba(0,0,0,0.35);" data-trigger="hover" data-original-title="Appointment Type" data-container="body" data-placement="right" data-content="Select what kind of appointment will this be">
                             <?php $start = 0; ?>
                             <?php foreach($optionAppointmentTypes as $key => $value){ ?>
                                 <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
@@ -419,7 +433,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-tag"></i> Tags</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                          <select name="appointment_tags[]" id="appointment-tags" multiple="multiple" class="form-control"></select>
+                            <span id="add-tag-popover"
+                              data-content="Pick a tags that will describe this appointment"
+                              data-original-title="Tags"
+                              data-placement="right"
+                              data-trigger="hover"
+                              data-container="body">
+                            <select name="appointment_tags[]" id="appointment-tags" multiple="multiple" class="form-control"></select>
+                            </span>
                         </div>
                       </div>
                   </div>                 
@@ -1798,8 +1819,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                }
             });
         }, 800);
-
-
     });
 
+    $('.field-popover').popover();
+    $('#add-employee-popover').popover();
+    $('#add-customer-popover').popover();
+    $('#add-tag-popover').popover();
 </script>
+

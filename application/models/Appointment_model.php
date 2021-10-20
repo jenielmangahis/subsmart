@@ -62,6 +62,10 @@ class Appointment_model extends MY_Model
     public function isPaid(){
         return 1;
     }
+
+    public function isConvergePayment(){
+        return 'converge';
+    }
 }
 
 /* End of file Appointment_model.php */

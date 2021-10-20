@@ -133,7 +133,7 @@ vertical-align: middle;
 }
 .widget-header h3{
   display: inline-block;
-  width: 92%;
+  width: 90%;
 }
 .btn-c-payment, .btn-c-back{
   margin: 0 auto;
@@ -214,7 +214,7 @@ vertical-align: middle;
           
           <div class="widget-header">          
             <h3><i class="fa fa-tag"></i> Items</h3>
-            <a href="javascript:;" class="btn btn-sm btn-primary btn-checkout-add-item">
+            <a href="javascript:;" class="btn btn-sm btn-primary btn-checkout-add-item" style="display: inline-block;">
               <i class="fa fa-plus"></i> Add Item
             </a>
           </div>
@@ -245,7 +245,7 @@ vertical-align: middle;
                       <input type="text" class="form-control item-discount" value="<?= number_format($item->discount_amount,2); ?>" name="discount[]" placeholder="Item Discount">
                     </td>
                     <td class="td-actions">
-                      <?php if( $start == 1 ){ ?>
+                      <?php if( $row > 1 ){ ?>
                         <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a>
                       <?php } ?>
                     </td>
@@ -308,16 +308,17 @@ vertical-align: middle;
       <!-- Converge form -->
       <div class="checkout-converge-form" style="display: none;">
           <h3><i class="fa fa-credit-card"></i> Converge Payment</h3>
-          <div id="credit_card" style="margin-top: 49px;">
-            <div class="row form_line">
-                <div class="col-md-2">
-                    Card Number
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="card_number" id="cardnumber" value="" required/>
-                </div>
-            </div>
-            <form id="frm-converge">
+          <div id="credit_card" style="margin-top: 49px;">            
+            <form id="frm-converge-payment">
+              <input type="hidden" id="converge-checkout-aid" name="converge_checkout_aid" value="<?= $appointment->id; ?>">
+              <div class="row form_line">
+                  <div class="col-md-2">
+                      Card Number
+                  </div>
+                  <div class="col-md-8">
+                      <input type="text" class="form-control" name="card_number" id="cardnumber" value="" required/>
+                  </div>
+              </div>
               <div class="row form_line">
                   <div class="col-md-2">
                       <label for="">Expiration 
@@ -325,7 +326,7 @@ vertical-align: middle;
                   <div class="col-md-8">
                       <div class="row">
                           <div class="col-md-4">
-                              <select id="exp_month" name="exp_month" class="form-control exp_month" required>
+                              <select id="exp_month" name="exp_month" class="form-control exp_month" style="border:solid 1px rgba(0,0,0,0.35);" required>
                                   <option  value="">Month</option>
                                   <option  value="01">01</option>
                                   <option  value="02">02</option>
@@ -342,7 +343,7 @@ vertical-align: middle;
                               </select>
                           </div>
                           <div class="col-md-4">
-                              <select id="exp_year" name="exp_year" class="form-control exp_year" required>
+                              <select id="exp_year" name="exp_year" class="form-control exp_year" style="border:solid 1px rgba(0,0,0,0.35);" required>
                                   <option  value="">Year</option>
                                   <option  value="2021">2021</option>
                                   <option  value="2022">2022</option>
@@ -363,8 +364,16 @@ vertical-align: middle;
                       </div>
                   </div>
               </div>
+              <div class="row form_line">
+                  <div class="col-md-2">
+                      Total Amount
+                  </div>
+                  <div class="col-md-8">
+                      <input type="text" class="form-control" name="converge_amount_receive" id="converge-amount-received" value="<?= number_format($total_amount, 2); ?>" required/>
+                  </div>
+              </div>
               <div class="converge-form-button" style="margin-top:52px;">
-                <button type="submit" class="btn btn-primary btn-converge-pay" style="display: inline-block;">SUBMIT</button>              
+                <button type="submit" class="btn btn-primary btn-converge-payment" style="display: inline-block;">SUBMIT</button>              
                 <a class="btn btn-primary btn-choose-gateway" data-type="converge" href="javascript:void(0);" style="display: inline-block;">SELECT DIFFERENT PAYMENT GATEWAY</a>
               </div>
             </form>
@@ -484,6 +493,7 @@ $(function(){
     $(".c-total-price").text(parseFloat(total_price).toFixed(2));
     $(".c-total-discount").text(parseFloat(total_discount).toFixed(2));
     $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
+    $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
   }
 
   function validateNumber(event) {
@@ -556,6 +566,7 @@ $(function(){
   $(".btn-c-back").click(function(){
     $(".btn-c-back").fadeOut(function(){
       $(".btn-c-payment").fadeIn();
+      $(".btn-c-payment").html('PROCEED TO PAYMENT');
     });
     $(".checkout-step2").fadeOut(function(){
       $(".checkout-step1").fadeIn();
@@ -589,41 +600,82 @@ $(function(){
   $("#frm-cash-payment").submit(function(e){
     e.preventDefault();    
     var url = base_url + 'calendar/_appointment_cash_checkout';
-        $(".btn-cash-payment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-        setTimeout(function () {
-            $.ajax({
-               type: "POST",
-               url: url,
-               data: $("#frm-cash-payment").serialize(),
-               dataType: 'json',
-               success: function(o)
-               {
-                  if( o.is_success ){
-                    $("#modal-checkout-appointment").modal('hide');
-                      Swal.fire({
-                          title: 'Success',
-                          text: 'Appointment was successfully updated.',
-                          icon: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#32243d',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                      }).then((result) => {
-                          if (result.value) {
-                            reload_calendar();
-                          }
-                      });
-                  }else{
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Cannot update appointment.',
-                      text: o.msg
-                    });
-                  }
-                  $(".btn-cash-payment").html("SUBMIT");
-               }
-            });
-        }, 1000);        
+    $(".btn-cash-payment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data: $("#frm-cash-payment").serialize(),
+           dataType: 'json',
+           success: function(o)
+           {
+              if( o.is_success ){
+                $("#modal-checkout-appointment").modal('hide');
+                  Swal.fire({
+                      title: 'Success',
+                      text: 'Appointment was successfully updated.',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                  }).then((result) => {
+                      if (result.value) {
+                        reload_calendar();
+                      }
+                  });
+              }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cannot update appointment.',
+                  text: o.msg
+                });
+              }
+              $(".btn-cash-payment").html("SUBMIT");
+           }
+        });
+    }, 1000);        
+  });
+
+  $("#frm-converge-payment").submit(function(e){
+    e.preventDefault();
+    var url = base_url + 'calendar/_appointment_converge_checkout';
+    $(".btn-converge-payment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data: $("#frm-converge-payment").serialize(),
+           dataType: 'json',
+           success: function(o)
+           {
+              if( o.is_success ){
+                $("#modal-checkout-appointment").modal('hide');
+                  Swal.fire({
+                      title: 'Success',
+                      text: 'Appointment was successfully updated.',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                  }).then((result) => {
+                      if (result.value) {
+                        reload_calendar();
+                      }
+                  });
+              }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cannot update appointment.',
+                  text: o.msg
+                });
+              }
+              $(".btn-converge-payment").html("SUBMIT");
+           }
+        });
+    }, 1000);
+
   });
 
 });

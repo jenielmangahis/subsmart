@@ -2094,7 +2094,7 @@ class Workcalender extends MY_Controller
             }else{
                 $data_appointment = [
                     'payment_gateway' => $this->Appointment_model->isCashPayment(),
-                    'date_paid' => date("H:i:s", strtotime($post['cash_date_received'])),
+                    'date_paid' => date("Y-m-d", strtotime($post['cash_date_received'])),
                     'amount_received' => $post['cash_amount_receive'],
                     'is_paid' => $this->Appointment_model->isPaid()              
                 ];
@@ -2111,10 +2111,120 @@ class Workcalender extends MY_Controller
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message
+            'msg' => $message
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_appointment_converge_checkout()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('AppointmentItem_model');
+        $this->load->model('AcsProfile_model');
+
+        $post       = $this->input->post();
+        $cid        = logged('company_id');
+        $is_success = false;
+        $message    = 'Cannot find appointment';
+
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['converge_checkout_aid'], $cid);
+        if( $appointment ) {
+            if( $post['converge_amount_receive'] <= 0 ){
+                $message = 'Please enter amount received';
+            }else{
+                $customer = $this->AcsProfile_model->getByProfId($appointment->prof_id);
+                if( $customer ){
+                    $converge_data = [
+                        'amount' => $post['converge_amount_receive'],
+                        'card_number' => $post['card_number'],
+                        'exp_month' => $post['exp_month'],
+                        'exp_year' => $post['exp_year'],
+                        'card_cvc' => $post['cvc'],
+                        'address' => $customer->mail_add,
+                        'zip' => $customer->zip_code
+                    ];
+                    $result = $this->converge_send_sale($converge_data);
+                    if ($result['is_success']) {
+                        $data_appointment = [
+                            'payment_gateway' => $this->Appointment_model->isConvergePayment(),
+                            'date_paid' => date("Y-m-d"),
+                            'amount_received' => $post['converge_amount_receive'],
+                            'is_paid' => $this->Appointment_model->isPaid()              
+                        ];
+
+                        $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                        $is_success = true;
+                        $message = '';
+                    }else{
+                        $message = 'Cannot process payment';
+                        $message .= "\n" . $result['msg'];
+                    }
+                }else{
+                    $message = 'Cannot find customer';
+                }
+            }  
+        } else {
+            $message = 'Cannot find data';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function converge_send_sale($data)
+    {
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $comp_id = logged('company_id');
+        $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
+        if ($convergeCred) {
+            $exp_year = date("m/d/" . $data['exp_year']);
+            $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));
+            /*$converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => $convergeCred->converge_merchant_id,
+                'user_id' => $convergeCred->converge_merchant_user_id,
+                'pin' => $convergeCred->converge_merchant_pin,
+                'demo' => false,
+            ]);*/
+            $converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => CONVERGE_MERCHANTID,
+                'user_id' => CONVERGE_MERCHANTUSERID,
+                'pin' => CONVERGE_MERCHANTPIN,
+                'demo' => false,
+            ]);
+            $createSale = $converge->request('ccsale', [
+                'ssl_card_number' => $data['card_number'],
+                'ssl_exp_date' => $exp_date,
+                'ssl_cvv2cvc2' => $data['card_cvc'],
+                'ssl_amount' => $data['amount'],
+                'ssl_avs_address' => $data['address'],
+                'ssl_avs_zip' => $data['zip'],
+            ]);
+
+            if ($createSale['success'] == 1) {
+                $is_success = true;
+                $msg = '';
+            } else {
+                $is_success = false;
+                $msg = $createSale['errorMessage'];
+            }
+        } else {
+            $msg = 'Converge account not found';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 }
 
