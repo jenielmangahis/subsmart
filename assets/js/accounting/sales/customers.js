@@ -8,13 +8,9 @@ $('#customers_table1').DataTable({
 });
 $(document).on('change', '#checkbox-all-action', function() {
     if ($("#checkbox-all-action").is(':checked')) {
-        for (var i = 0; i < customer_length; i++) {
-            $("input[name='checkbox" + i + "']").prop("checked", true);
-        }
+        $("#customers_table tbody tr>td>input[type='checkbox']").prop("checked", true);
     } else {
-        for (var i = 0; i < customer_length; i++) {
-            $("input[name='checkbox" + i + "']").prop("checked", false);
-        }
+        $("#customers_table tbody tr>td>input[type='checkbox']").prop("checked", false);
     }
 });
 

@@ -382,6 +382,7 @@ $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payme
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
+$route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
@@ -754,6 +755,8 @@ $route['calendar/_update_appointment'] = 'Workcalender/ajax_update_appointment';
 $route['calendar/_delete_appointment'] = 'Workcalender/ajax_delete_appointment';
 $route['calendar/_appointment_checkout'] = 'Workcalender/ajax_checkout_appointment';
 $route['calendar/_save_checkout_items'] = 'Workcalender/ajax_save_checkout_items';
+$route['calendar/_appointment_cash_checkout'] = 'Workcalender/ajax_appointment_cash_checkout';
+$route['calendar/_appointment_converge_checkout'] = 'Workcalender/ajax_appointment_converge_checkout';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

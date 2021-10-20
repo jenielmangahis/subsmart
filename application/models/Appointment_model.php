@@ -54,6 +54,18 @@ class Appointment_model extends MY_Model
 
         return $options;
     }
+
+    public function isCashPayment(){
+        return 'cash';
+    }
+
+    public function isPaid(){
+        return 1;
+    }
+
+    public function isConvergePayment(){
+        return 'converge';
+    }
 }
 
 /* End of file Appointment_model.php */

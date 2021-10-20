@@ -656,8 +656,9 @@ class Job extends MY_Controller
 
         $is_success = false;
         $msg = '';
-
-        $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId();
+        
+        $comp_id = logged('company_id');
+        $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($comp_id);
         if ($convergeCred) {
             $exp_year = date("m/d/" . $data['exp_year']);
             $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));

@@ -239,7 +239,9 @@ class Accounting extends MY_Controller
             // for some reason the oldest version is the only one that
             // works while implementing this. not sure why though.
             // https://cdn.datatables.net/rowreorder/
-            'https://cdn.datatables.net/rowreorder/1.0.0/js/dataTables.rowReorder.min.js'
+            'https://cdn.datatables.net/rowreorder/1.0.0/js/dataTables.rowReorder.min.js',
+
+            'assets/js/accounting/banking/rules/libs/download/download.min.js',
         ]);
 
         $this->load->view('accounting/rules', $this->page_data);
@@ -386,6 +388,12 @@ class Accounting extends MY_Controller
     }
     public function allsales()
     {
+        add_css(array(
+            "assets/css/accounting/all_sales.css",
+        ));
+        add_footer_js(array(
+            "assets/js/accounting/sales/all_sales.js"
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Sales";
         $this->load->view('accounting/all_sales', $this->page_data);
@@ -10433,5 +10441,22 @@ class Accounting extends MY_Controller
         $this->session->set_flashdata('alert', 'Successfully sent to Customer.');
 
         echo json_encode($json_data);
+    }
+    public function filter_all_sales()
+    {
+        $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
+        $this->page_data['OpenInvoices'] = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
+        $this->page_data['InvOverdue'] = $this->invoice_model->InvOverdue(logged('company_id'));
+        $this->page_data['getAllInvPaid'] = $this->invoice_model->getAllInvPaid(logged('company_id'));
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist(logged('company_id'));
+        $this->page_data['estimates'] = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
+        $this->page_data['sales_receipts'] = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
+        $this->page_data['credit_memo'] = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
+        $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['statements'] = $this->accounting_statements_model->getAllComp(logged('company_id'));
+        $this->page_data['rpayments'] = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
+        $this->page_data['checks'] = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        var_dump($this->input->post());
     }
 }
