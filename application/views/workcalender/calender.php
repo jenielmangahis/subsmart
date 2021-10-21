@@ -470,10 +470,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
                 <div class="view-appointment-container"></div>
             </div>
-            <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                                    
+            <div class="modal-footer custom-modal-footer view-appointment-actions" style="margin-top:-2.5rem;display: none;">                                                    
                 <a class="btn btn-primary btn-edit-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-pencil"></i> Edit</a>                
                 <a class="btn btn-danger btn-checkout-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-check"></i> Check out</a>                
+                <a class="btn btn-primary btn-payment-details-appointment" href="javascript:void(0);" style="display: none;"><i class="fa fa-list"></i> Payment Details</a>
                 <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
+            </div>
+      </div>
+  </div>
+</div>
+
+<!-- MODAL VIEW APPOINTMENT PAYMENT DETAILS -->
+<div class="modal fade modal-enhanced" id="modal-view-appointment-payment-details" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment Payment Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                <div class="view-appointment-payment-details-container"></div>
+            </div>
+            <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
+                <button type="button" style="" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
       </div>
   </div>
@@ -902,6 +923,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     function render_calender(calendarEl, timeZoneSelectorEl, events) {
         var bc_events_url    = base_url + "calendar/_get_main_calendar_events";
         var bc_resources_url = base_url + "calendar/_get_main_calendar_resources";
+        var bc_resource_users_url    = base_url + "calendar/_get_main_calendar_resource_users";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -1063,7 +1085,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 headerContent: 'Employees'
               }
             ],
-            resources: <?php echo json_encode($resources_users); ?>,
+            resources: {
+                url: bc_resource_users_url,
+                method: 'POST'
+            },
             events: {
               url: bc_events_url,
               method: 'POST'
@@ -1713,6 +1738,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var url = base_url + 'calendar/_view_appointment';
 
         $("#modal-view-appointment").modal('show');
+        $(".view-appointment-actions").hide();
+        $(".btn-checkout-appointment").show();
+        $(".btn-edit-appointment").show();
+        $(".btn-payment-details-appointment").hide();
+
         $(".view-appointment-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
             $.ajax({
@@ -1829,5 +1859,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('#add-employee-popover').popover();
     $('#add-customer-popover').popover();
     $('#add-tag-popover').popover();
+
+    $(".btn-payment-details-appointment").click(function(){
+        $("#modal-view-appointment-payment-details").modal('show');
+        $("#modal-view-appointment").modal('show');
+    });
 </script>
 

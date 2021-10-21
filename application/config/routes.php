@@ -757,6 +757,7 @@ $route['calendar/_appointment_checkout'] = 'Workcalender/ajax_checkout_appointme
 $route['calendar/_save_checkout_items'] = 'Workcalender/ajax_save_checkout_items';
 $route['calendar/_appointment_cash_checkout'] = 'Workcalender/ajax_appointment_cash_checkout';
 $route['calendar/_appointment_converge_checkout'] = 'Workcalender/ajax_appointment_converge_checkout';
+$route['calendar/_get_main_calendar_resource_users'] = 'Workcalender/main_calendar_resource_users';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

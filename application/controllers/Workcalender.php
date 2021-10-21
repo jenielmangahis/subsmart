@@ -899,7 +899,7 @@ class Workcalender extends MY_Controller
 
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';
-            $resources_user_events[$inc]['resourceId'] = 'appointment' . $a->user_id;
+            $resources_user_events[$inc]['resourceId'] = 'user' . $a->user_id;
             $resources_user_events[$inc]['title'] = 'Appointment : ' . date('Y-m-d g:i A', strtotime($a->appointment_date . " " . $a->appointment_time));
             $resources_user_events[$inc]['customHtml'] = $custom_html;
             $resources_user_events[$inc]['start'] = $start_date_time;
@@ -1883,12 +1883,23 @@ class Workcalender extends MY_Controller
     public function ajax_view_appointment()
     {
         $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
 
         $post = $this->input->post();
         $company_id  = logged('company_id');
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $company_id);
         $optionAppointmentType = $this->Appointment_model->optionAppointmentType();
+        $tags = $this->EventTags_model->getAllByCompanyId($company_id, array());  
 
+        $a_tags = array();
+        $selected_tags = explode(",", $appointment->tag_ids);
+        foreach($tags as $t){
+            if( in_array($t->id, $selected_tags) ){
+                $a_tags[$t->id] = ['name' => $t->name, 'icon' => $t->marker_icon, 'is_marker_icon_default_list' => $t->is_marker_icon_default_list, 'cid' => $t->company_id];
+            }
+        }
+
+        $this->page_data['a_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
         $this->page_data['optionAppointmentType'] = $optionAppointmentType;
         $this->load->view('workcalender/ajax_load_view_appointment', $this->page_data);
@@ -2226,6 +2237,70 @@ class Workcalender extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
+    }
+
+    public function main_calendar_resource_users()
+    {
+        $company_id = logged('company_id');
+        if ($role == 2 || $role == 3) {
+            $get_users  = $this->Users_model->getAllUsers();
+            $get_recent_users = $this->Users_model->getAllRecentUsers();
+        } else {
+            $get_users  = $this->Users_model->getUsers();
+            $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id);
+        }
+
+        $resources_users = array();
+        $resources_user_events = array();
+
+        if (!empty($get_users)) {
+            $inc = 0;
+            $default_imp_img = base_url('uploads/users/default.png');
+            foreach ($get_users as $get_user) {
+                $default_imp_img = userProfileImage($get_user->id);
+
+                /*if( $get_user->profile_img != null ) {
+                        $default_imp_img = base_url('uploads/users/'.$get_user->profile_img ."." . $get_user->img_type );
+                } else {
+                    $default_imp_img = base_url('uploads/users/default.png');
+                }*/
+
+                $resources_users[$inc]['id'] = "user" . $get_user->id;
+                $resources_users[$inc]['building'] = 'Employee';
+                $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
+                $resources_users[$inc]['imageurl'] = $default_imp_img;
+                $inc++;
+            }
+        }
+
+        if (!empty($events)) {
+            $inc = 0;
+            foreach ($events as $event) {
+                if ($event->employee_id > 0) {
+                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                    $resources_user_events[$inc]['resourceId'] = $event->employee_id;
+                    $resources_user_events[$inc]['title'] = $event->event_description;
+                    $resources_user_events[$inc]['start'] = $start_date_time;
+                    $resources_user_events[$inc]['end'] = $start_date_end;
+                    $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                    $inc++;
+                } elseif ($event->employee_id == 0) {
+                    foreach ($get_users as $get_user) {
+                        $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
+                        $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
+                        $resources_user_events[$inc]['resourceId'] = $get_user->id;
+                        $resources_user_events[$inc]['title'] = $event->event_description;
+                        $resources_user_events[$inc]['start'] = $start_date_time;
+                        $resources_user_events[$inc]['end'] = $start_date_end;
+                        $resources_user_events[$inc]['eventColor'] = $event->event_color;
+                        $inc++;
+                    }
+                }
+            }
+        }
+
+        echo json_encode($resources_users);
     }
 }
 
