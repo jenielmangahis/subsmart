@@ -6743,4 +6743,48 @@ class Accounting_modals extends MY_Controller
 
         redirect($_SERVER['HTTP_REFERER']);
     }
+
+    public function get_transaction_attachments($transactionType, $transactionId)
+    {
+        switch ($transactionType) {
+            case 'expense':
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+            break;
+            case 'check':
+                $transaction = $this->vendors_model->get_check_by_id($transactionId);
+            break;
+            case 'bill':
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+            break;
+            case 'purchase-order':
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+            break;
+            case 'vendor-credit':
+                $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+            break;
+            case 'credit-card-payment':
+                $transaction = $this->vendors_model->get_credit_card_payment_by_id($transactionId);
+            break;
+            case 'credit-card-credit':
+                $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+            break;
+            case 'bill-payment':
+                $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
+            break;
+            case 'journal' :
+                $transaction = $this->accounting_journal_entries_model->getById($transactionId);
+            break;
+        }
+
+        $attachments = json_decode($transaction->attachments, true);
+
+        $attached = [];
+        if ($attachments !== null && count($attachments) > 0) {
+            foreach ($attachments as $attachment) {
+                $attached[] = $this->accounting_attachments_model->getById($attachment);
+            }
+        }
+
+        echo json_encode($attached);
+    }
 }

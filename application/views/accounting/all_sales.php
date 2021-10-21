@@ -499,7 +499,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <option>Last month</option>
                                             <option>Last quarter</option>
                                             <option>Last year</option>
-                                            <option>Last 365 days</option>
+                                            <option selected>Last 365 days</option>
+                                            <option >Custom</option>
                                         </select>
                                     </div>
                                 </div>
@@ -509,7 +510,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="label">
                                             From
                                         </div>
-                                        <input type="date" class="form-control required" required="" name="filter_from">
+                                        <input type="date" class="form-control required" required="" name="filter_date_from">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -517,7 +518,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="label">
                                             To
                                         </div>
-                                        <input type="date" class="form-control required" required="" name="filter_to">
+                                        <input type="date" class="form-control required" required="" name="filter_date_to">
                                     </div>
                                 </div>
                             </div>
@@ -4622,7 +4623,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         <?php include viewPath('accounting/customer_receive_payment_modal');?>
         <?php include viewPath('accounting/estimate_one_modal'); ?>
-        <?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
         <?php //include viewPath('accounting/customer_credit_memo_modal');?>
         <?php include viewPath('accounting/customer_delayed_charge_modal'); ?>
         <div></div>
@@ -4636,7 +4636,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 //     "searching": true
                 // });
 
-                var table = $('#all_sales_table').DataTable();
+                // var table = $('#all_sales_table').DataTable();
 
                 // $("#filterTable_filter.dataTables_filter").append($("#categoryFilter"));
 
@@ -4663,7 +4663,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 //     table.draw();
                 // });
 
-                table.draw();
+                // table.draw();
             });
         </script>
 

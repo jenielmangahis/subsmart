@@ -3,7 +3,9 @@ $("#addsalesreceiptModal form").submit(function(event) {
 });
 $(document).on("click", "#addsalesreceiptModal form button[type='submit']", function(event) {
     var submit_type = $(this).attr("data-submit-type");
+    console.log("pumasok");
     save_sales_receipt(submit_type, this);
+
 });
 $(document).on("click", "#addsalesreceiptModal .modal-footer-check  #closeCheckModal", function() {
     $("#addsalesreceiptModal").modal('hide');
@@ -20,6 +22,7 @@ function save_sales_receipt(submit_type, element) {
             empty_flds++;
         }
     });
+    console.log(empty_flds);
     if (empty_flds == 0) {
 
         $("#addsalesreceiptModal .error-message-section").hide();

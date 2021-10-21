@@ -340,6 +340,7 @@ $route['accounting/get-sales-tax-category-details/(:any)'] = 'accounting_modals/
 $route['accounting/ajax-add-item-category']['post'] = 'accounting_modals/ajax_add_item_category';
 $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting_modals/adjust_starting_value_form/$1';
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting_modals/adjust_starting_value/$1';
+$route['accounting/get-transaction-attachments/(:any)/(:any)'] = 'accounting_modals/get_transaction_attachments/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -496,7 +497,6 @@ $route['accounting/vendors/(:any)/load-transactions']['post'] = 'accounting_cont
 $route['accounting/vendors/update-transaction-category']['post'] = 'accounting_controllers/vendors/update_transaction_category';
 $route['accounting/vendors/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/vendors/delete_transaction/$1/$2';
 $route['accounting/vendors/view-expense/(:any)'] = 'accounting_controllers/vendors/view_expense/$1';
-$route['accounting/vendors/get-transaction-attachments/(:any)/(:any)'] = 'accounting_controllers/vendors/get_transaction_attachments/$1/$2';
 $route['accounting/vendors/view-check/(:any)'] = 'accounting_controllers/vendors/view_check/$1';
 $route['accounting/vendors/view-bill/(:any)'] = 'accounting_controllers/vendors/view_bill/$1';
 $route['accounting/vendors/view-purchase-order/(:any)'] = 'accounting_controllers/vendors/view_purchase_order/$1';

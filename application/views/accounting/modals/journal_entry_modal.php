@@ -59,69 +59,47 @@
                                                                 </td>
                                                                 <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                             </tr>
+                                                            <?php $count = 1; ?>
+                                                            <?php if(isset($entries) && count($entries) > 0) : ?>
+                                                                <?php foreach($entries as $entry) : ?>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td><?=$count?></td>
+                                                                        <td>
+                                                                            <select name="journal_entry_accounts[]" class="form-control">
+                                                                                <option value="<?=$entry->account_id?>"><?=$entry->account->name?></option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td><input type="number" name="debits[]" class="form-control text-right" step="0.01" value="<?=$entry->debit !== "0" ? number_format(floatval($entry->debit), 2, '.', ',') : ""?>"></td>
+                                                                        <td><input type="number" name="credits[]" class="form-control text-right" step="0.01" value="<?=$entry->credit !== "0" ? number_format(floatval($entry->credit), 2, '.', ',') : ""?>"></td>
+                                                                        <td><input type="text" name="descriptions[]" class="form-control" value="<?=$entry->description?>"></td>
+                                                                        <td>
+                                                                            <select name="names[]" class="form-control">
+                                                                                <?php if(!is_null($entry->name_id)) : ?>
+                                                                                <option value="<?=$entry->name_key.'-'.$entry->name_id?>"><?=$entry->name?></option>
+                                                                                <?php endif; ?>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                    </tr>
+                                                                    <?php $count++; ?>
+                                                                <?php endforeach; ?>
+                                                            <?php endif; ?>
+                                                            <?php do {?>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td><?=$count?></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                </tr>
+                                                            <?php $count++; } while ($count <= 8) ?>
                                                             <tr>
                                                                 <td></td>
                                                                 <td>2</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>3</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>4</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>5</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>6</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>7</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>8</td>
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>

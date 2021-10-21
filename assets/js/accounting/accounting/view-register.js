@@ -960,8 +960,17 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
         
                 $('#checkModal').modal('show');
             break;
-            case 'journal-entry' :
+            case 'journal' :
+                rowCount = 8;
+                rowInputs = $('#journalEntryModal table tbody tr:first-child()').html();
+                blankRow = $('#journalEntryModal table tbody tr:last-child()').html();
 
+                $('#journalEntryModal table.clickable tbody tr:first-child()').remove();
+                $('#journalEntryModal table tbody tr:last-child()').remove();
+
+                initModalFields('journalEntryModal', data);
+
+                $('#journalEntryModal').modal('show');
             break;
             case 'bill' :
                 initModalFields('billModal', data);

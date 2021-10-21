@@ -62,9 +62,32 @@ class Api extends MYF_Controller
 
         $input = $this->input->post();
         if($input){
-            $input['user_id'] = logged('id');
             if(empty($is_exist)){
+                $input['company_id'] = $comp_id;
                 $this->general_model->add_($input, 'accounting_bank_accounts');
+                echo "1";
+            }
+        }
+    }
+
+    public function on_save_stripe_crendetials()
+    {
+        $comp_id = logged('company_id');
+        $check_user= array(
+            'table' => 'accounting_bank_accounts',
+            'where' => array('company_id' => $comp_id,),
+            'select' => 'id',
+        );
+        $is_exist = $this->general_model->get_data_with_param($check_user);
+
+        $input = $this->input->post();
+        if($input){
+            if(empty($is_exist)){
+                $input['company_id'] = $comp_id;
+                $this->general_model->add_($input, 'accounting_bank_accounts');
+                echo "1";
+            }else{
+                $this->general_model->update_with_key($input,$is_exist->id, 'accounting_bank_accounts');
                 echo "1";
             }
         }

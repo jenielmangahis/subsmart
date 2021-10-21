@@ -13,9 +13,9 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ||
     </td>
     <td><?php  echo date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->due_date)); ?>
     </td>
-    <td><?php echo $inv->balance; ?>
+    <td><?php echo number_format($inv->balance, 2); ?>
     </td>
-    <td><?php echo $inv->total_due; ?>
+    <td><?php echo number_format($inv->total_due, 2); ?>
     </td>
     <td><?php echo $inv->INV_status; ?>
     </td>
@@ -131,9 +131,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 <tr id="estimates_rows">
     <td><input type="checkbox"></td>
     <td>
-        <div class="table-nowrap">
             <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
-        </div>
     </td>
     <td>
         <?php echo 'Estimate'; ?>
@@ -156,10 +154,10 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
     </td>
     <td>
         <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
-        $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
+        $<?php echo number_format(unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'], 2); ?>
         <?php } ?>
     </td>
-    <td><?php echo $estimate->grand_total; ?>
+    <td><?php echo number_format($estimate->grand_total, 2); ?>
     </td>
     <td>
 
@@ -283,14 +281,12 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 }?>
 
 <?php
-if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ) {
+if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Money received" ) {
     foreach ($sales_receipts as $salesReceipts) { ?>
 <tr id="sales_receipt_rows">
     <td><input type="checkbox"></td>
     <td>
-        <div class="table-nowrap">
-            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($salesReceipts->sales_receipt_date)) ?>
-        </div>
+            <?php echo  date('m/d/Y', strtotime($salesReceipts->sales_receipt_date)) ?>
     </td>
     <td>
         <?php echo 'Sales Receipt'; ?>
@@ -312,7 +308,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ) 
     <td>
         <!-- na -->
     </td>
-    <td><?php echo $salesReceipts->grand_total; ?>
+    <td><?php echo number_format($salesReceipts->grand_total, 2); ?>
     </td>
     <td>
         <?php
@@ -395,9 +391,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 <tr>
     <td><input type="checkbox"></td>
     <td>
-        <div class="table-nowrap">
             <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
-        </div>
     </td>
     <td>
         <?php echo 'Credit Memo'; ?>
@@ -419,7 +413,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
     <td>
         <!-- na -->
     </td>
-    <td><?php echo $credit->grand_total; ?>
+    <td><?php echo number_format($credit->grand_total, 2); ?>
     </td>
     <td>
         <?php
@@ -492,9 +486,7 @@ if ($filter_type == "All transactions"  || $filter_type == "All plus deposits" |
 <tr>
     <td><input type="checkbox"></td>
     <td>
-        <div class="table-nowrap">
             <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
-        </div>
     </td>
     <td>
         <?php echo 'Statements'; ?>
@@ -516,7 +508,7 @@ if ($filter_type == "All transactions"  || $filter_type == "All plus deposits" |
     <td>
         <!-- na -->
     </td>
-    <td><?php echo $statement->balance; ?>
+    <td><?php echo number_format($statement->balance, 2); ?>
     </td>
     <td>
         <?php
@@ -557,9 +549,8 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 <tr>
     <td><input type="checkbox"></td>
     <td>
-        <div class="table-nowrap">
-            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($rpayment->payment_date)) ?>
-        </div>
+            <?php echo  date('m/d/Y', strtotime($rpayment->payment_date)) ?>
+        
     </td>
     <td>
         <?php echo 'Payment'; ?>
@@ -581,7 +572,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
     <td>
         <!-- na -->
     </td>
-    <td><?php echo $rpayment->amount; ?>
+    <td><?php echo number_format($rpayment->amount, 2); ?>
     </td>
     <td>
         <?php
@@ -621,9 +612,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 <tr>
     <td><input type="checkbox"></td>
     <td>
-        <div class="table-nowrap">
             <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
-        </div>
     </td>
     <td>
         <?php echo 'Check'; ?>
@@ -671,7 +660,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
     <td>
         <!-- na -->
     </td>
-    <td><?php echo $check->total_amount; ?>
+    <td><?php echo number_format($check->total_amount, 2); ?>
     </td>
     <td>
         <?php
