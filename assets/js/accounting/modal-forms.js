@@ -400,9 +400,16 @@ $(function() {
             }
 
             if ($('div#modal-container table:not(#category-details-table, #item-details-table)').length > 0) {
-                rowCount = $('div#modal-container table tbody tr').length;
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();
-                blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+                if(modal_element === '#journalEntryModal') {
+                    blankRow = $('#journalEntryModal table tbody tr:last-child()').html();
+                } else {
+                    blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
+                }
+
+                $('#journalEntryModal table.clickable tbody tr:first-child()').remove();
+                $('#journalEntryModal table tbody tr:last-child()').remove();
+                rowCount = $('div#modal-container table tbody tr').length;
 
                 $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);
                 $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
@@ -5824,17 +5831,16 @@ const initModalFields = (modalName, data = {}) => {
             addRemoveLinks: true,
             init: function() {
                 if(!$.isEmptyObject(data)) {
-                    $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(attachments) {
+                    $.getJSON('/accounting/get-transaction-attachments/'+transactionType+'/'+data.id, function(attachments) {
                         if(attachments.length > 0) {
                             $.each(attachments, function(index, val) {
-                                $('#${modalName}').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+                                $(`#${modalName}`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
 
                                 modalAttachmentId.push(val.id);
                                 var mockFile = {
                                     name: `${val.uploaded_name}.${val.file_extension}`,
                                     size: parseInt(val.size),
                                     dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
-                                    // size: val.size / 1000000,
                                     accepted: true
                                 };
                                 viewExpenseAtta.emit("addedfile", mockFile);

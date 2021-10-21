@@ -14,6 +14,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.bank-img-container img{
 		width:auto !important;
 	}
+    .btn {
+        border-radius: 0 !important;
+    }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">
@@ -23,10 +29,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
 
-                <div style="background-color:white;height:80%;padding:2%;margin-top:1.3%;">
+                <div class="card">
                 <!-- <h3 style="font-family: Sarabun, sans-serif">&nbsp;Bank and Credit Cards</h3> -->
                     <div class="col-sm-12">
                           <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Bank and Credit Cards</h3>
+                    </div>
+                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:28px;margin-top:13px;">
+                        When you connect an account, accounting will automatically downloads and categorizes bank and credit card transactions for you. It enters the details so you don't have to enter transactions manually.  All you have to do is approve the work.
                     </div>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-4">
@@ -43,70 +52,69 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                     </div>
                     <div class="col-md-4" style="position: relative;display: inline-block;vertical-align: text-bottom;">
-                        <div class="dropdown bank-account-picker" style="vertical-align: text-bottom;">
-                            <button class="btn btn-default" type="button" data-toggle="dropdown" style="text-decoration: none; color: #393a3d;font-size: 18px;background-color: transparent;border: 0;">
-                                <div class="account-logo">
-                                    <div class="hi">
-                                        <i class="fa fa-credit-card"></i>
-                                    </div>
-                                </div>
-                                Corporate Account (XXXXXX 5850) <i class="fa fa-chevron-down"></i>
-                            </button>
-                            <ul class="dropdown-menu bank-account-dd">
-                                <li class="bank-account-view">
-                                    <div class="account-logo">
-                                        <div class="hi">
-                                            <i class="fa fa-credit-card"></i>
-                                        </div>
-                                    </div>
-                                    <div class="subcolumn expand">
-                                        <div class="subrow space-between">
-                                            <div class="account-name">
-                                                Region Bank - Corporate Account (XXXXXX 5850)
-                                            </div>
-                                        </div>
-                                        <div class="subrow">
-                                            <div>
-                                                <div class="bank-balance-text">
-                                                    Bank balance:&nbsp;<span>6,041.11</span>$
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="subrow">
-                                            <div>
-                                                <div class="num-transaction-text">
-                                                    10&nbsp;Transactions
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="subcontent pull-right">
-                                            Updated 1 day ago
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+
                     </div>
                     <div class="col-md-4" style="text-align: right">
                         <div style="float: right;position: relative;display: inline-block; margin-left: 10px">
                             <a href="<?= base_url('accounting/bank_connect') ?>">
-                                <button class="btn btn-success"  style="border-radius: 20px 20px 20px 20px;">Add account</button>
+                                <button class="btn btn-primary"><i class="fa fa-plus fa-sm" style="margin-left:10px;"></i> Add account</button>
                             </a>
                         </div>
-                        <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                            <button type="button" class="btn btn-default"  style="border-radius: 20px 0 0 20px">Update</button>
-                            <button class="btn btn-default" type="button" data-toggle="dropdown" style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                <span class="fa fa-caret-down"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" data-toggle="modal" data-target="#fileUpload">File Upload</a></li>
-                                <li><a href="#">Order Checks</a></li>
+                        <div class="dropdown dropdown-btn text-center" style="float: right;position: relative;display: inline-block; margin-left: 10px">
+                            <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                <span class="btn-label">Actions <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                <li role="presentation">
+                                    <a href="" class="editJobTypeBtn editItemBtn">
+                                        <span class="fa fa-file"></span> File Upload
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="editItemBtn">
+                                        <span class="fa fa-money"></span> Order Checks
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="editItemBtn">
+                                        <span class="fa fa-bank"></span> Go to Bank Register
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="editItemBtn">
+                                        <span class="fa fa-print"></span> Print
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="editItemBtn">
+                                        <span class="fa fa-download"></span> Export to Excel
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="editItemBtn">
+                                        <span class="fa fa-cogs"></span> Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="" class="editItemBtn">
+                                        <span class="fa fa-bank"></span> Test Payment
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown dropdown-btn text-center" style="float: right;position: relative;display: inline-block; margin-left: 10px">
+                            <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                <span class="btn-label"><i class="fa fa-credit-card"></i> Accounts <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                <li role="separator" class="divider"></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:28px;margin-top:13px;">
-                When you connect an account, accounting will automatically downloads and categorizes bank and credit card transactions for you. It enters the details so you don't have to enter transactions manually.  All you have to do is approve the work.
-                </div>
+
                 <!-- <br> -->
                 <div class="row align-items-center">
                     <div class="col-md-12">
@@ -123,13 +131,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <li class="nav-item">
                                         <a class="nav-link banking-sub-tab" data-toggle="tab" href="#excluded">Excluded</a>
                                     </li>
-                                </ul>
-                            </div>
-                            <div class="rb-02">
-                                <ul class="nav nav-tabs">
-                                    <li class="nav-item"><a href="#"  data-toggle="modal" data-target="#takeAtour"><i class="fa fa-map-signs" style="margin-right: 10px"></i>Take a tour</a></li>
-                                    <li class="nav-item">|</li>
-                                    <li class="nav-item"><a href="#">Go to Register</a></li>
                                 </ul>
                             </div>
                         </div>

@@ -402,7 +402,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>
                   </div> 
                   <div class="form-group">
-                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-user"></i> Which Customer</label>
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-user"></i> 
+                      Which Customer
+                      <a href="javascript:void(0);" class="btn-ql-customer" data-modal="modal-create-appointment" style="float: right; color:rgb(255,129,89); font-size: 15px;"><i class="fa fa-plus"></i> Add New Customer</a>
+                      </label>
                       <div class="row g-3">
                         <div class="col-sm-12">
                           <span id="add-customer-popover"
@@ -710,6 +713,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </style>
 <!-- page wrapper end -->
+<?php include viewPath('includes/quick_launch_modals'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.js"></script>
 <script type="text/javascript" src="<?php echo $url->assets ?>/js/tooltip.min.js"></script>

@@ -71,3 +71,8 @@
     background-image: none;
     background-color: #108000;
 }
+
+.dataTables_wrapper .dataTables_filter input {
+    visibility: visible;
+    position: relative;
+}

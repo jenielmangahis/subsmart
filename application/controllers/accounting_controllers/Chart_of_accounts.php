@@ -3400,7 +3400,7 @@ class Chart_of_accounts extends MY_Controller {
                 $this->view_bill_payment($transactionId);
             break;
             case 'transfer' :
-
+                $this->view_transfer($transactionId);
             break;
             case 'deposit' :
 
@@ -3569,9 +3569,34 @@ class Chart_of_accounts extends MY_Controller {
         $journalEntry = $this->accounting_journal_entries_model->getById($journalId);
         $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
 
+        foreach($entries as $key => $entry) {
+            $entries[$key]->account = $this->chart_of_accounts_model->getById($entry->account_id);
+
+            switch($entry->name_key) {
+                case 'customer' :
+                    $customer = $this->chart_of_accounts_model->get_by_id($entry->name_id);
+                    $entry[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                break;
+                case 'vendor' :
+                    $vendor = $this->vendors_model->get_vendor_by_id($entry->name_id);
+                    $entry[$key]->name = $vendor->display_name;
+                break;
+                case 'employee' :
+                    $employee = $this->users_model->getUser($entry->name_id);
+                    $entry[$key]->name = $employee->FName . ' ' . $employee->LName;
+                break;
+            }
+        }
+
         $this->page_data['journal_no'] = $journalEntry->journal_no;
         $this->page_data['journal_date'] = date("m/d/Y", strtotime($journalEntry->journal_date));
+        $this->page_data['entries'] = $entries;
 
         $this->load->view("accounting/modals/journal_entry_modal", $this->page_data);
+    }
+
+    public function view_transfer($transferId)
+    {
+
     }
 }

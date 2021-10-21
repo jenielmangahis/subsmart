@@ -161,7 +161,7 @@
                                                <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="fdx-entity-container click-stripe">
-                                                            <a href="javascript:void;">
+                                                            <a href="javascript:void(0)">
                                                                 <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
                                                                     <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                         <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
@@ -335,7 +335,6 @@
                                 <div class="container modal-container stripe-container" style="display:none">
                                     <div class="row justify-content-md-center align-items-center pt-3">
                                             <div class="col-md-5 col-sm-6 col-xs-12">
-                                                <div class="header-modal text-center"><h3>Sign In to account</h3></div>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="fdx-entity-container">
@@ -356,21 +355,22 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <i class="fa fa-info-circle fa-lg"></i>
-                                                    <span>Looking to connect Stripe payments? For right now, we can only connect with a Stripe Corporate Card.</span>
-                                                </div>
-                                                <div class="row">
-                                                    <i class="fa fa-info-circle fa-lg"></i>
-                                                    <b>Start by selecting the Stripe Corporate Credit Card accounts you want to connect with Intuit, the makers of QuickBooks Online Edition.</b>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-md-center align-items-center pb-5">
-                                            <div class="col-md-3 col-sm-4 col-xs-12">
-                                                <button type="button" class="btn btn-default btn-block close-stripe-container">Back</button>
-                                                <button type="button" class="btn btn-success btn-block" id="open_stripe">Continue</button>
-
+                                                <form method="post" id="stripe_form">
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Publish Key</b></label><br>
+                                                        <input type="text" class="form-control" name="stripe_publish_key" id="" required="" >
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <label for=""><b>Secret Key</b></label><br>
+                                                        <input type="text" class="form-control" name="stripe_secret_key" id="" required="" >
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="modal-footer close-modal-footer">
+                                                            <button type="button" class="btn btn-default btn-block close-stripe-container">Back</button>
+                                                            <button type="submit" class="btn btn-success btn-block" id="">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                 </div>
@@ -522,6 +522,28 @@
                     }
                     document.getElementById('overlay').style.display = "none";
                     $('.paypal-container').hide();
+                    $('.accounts-list').show();
+                }
+            });
+        });
+
+        $("#stripe_form").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url:  "<?=base_url()?>api/on_save_stripe_crendetials",
+                data: form.serialize(), // serializes the form's elements.
+                beforeSend: function() {
+                    $("#overlay_message").text('Saving Stripe Credentials...');
+                    document.getElementById('overlay').style.display = "flex";
+                },
+                success: function (data) {
+                    if(data === "1"){
+                        nsmartrac_alert('Nice!','Stripe Crendentials Saved!','success');
+                    }
+                    document.getElementById('overlay').style.display = "none";
+                    $('.stripe-container').hide();
                     $('.accounts-list').show();
                 }
             });
