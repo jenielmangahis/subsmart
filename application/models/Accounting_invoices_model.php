@@ -398,4 +398,41 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->query($sql);
         return $query->row();
     }
+    // for all sales queries
+    public function get_filtered_invoices($where)
+    {
+        $sql="SELECT *, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status FROM invoices JOIN acs_profile ON invoices.customer_id = acs_profile.prof_id WHERE ".$where;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_filtered_estimates($where)
+    {
+        $sql="SELECT * FROM estimates WHERE ".$where;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_filtered_sales_receipt($where)
+    {
+        $sql="SELECT * FROM accounting_sales_receipt JOIN acs_profile ON accounting_sales_receipt.customer_id  = acs_profile.prof_id WHERE ".$where;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_filtered_credit_memo($where)
+    {
+        $sql="SELECT * FROM accounting_credit_memo JOIN acs_profile ON accounting_credit_memo.customer_id  = acs_profile.prof_id WHERE ".$where;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_filtered_credit_statements($where)
+    {
+        $sql="SELECT * FROM accounting_statements JOIN accounting_statement_customers ON accounting_statements.id  = accounting_statement_customers.statement_id WHERE ".$where;
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
+    public function get_filtered_credit_receive_payment($where)
+    {
+        $sql="SELECT * FROM accounting_receive_payment WHERE ".$where." ORDER BY id ASC";
+        $query = $this->db->query($sql);
+        return $query->result();
+    }
 }
