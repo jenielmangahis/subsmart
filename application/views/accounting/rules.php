@@ -30,7 +30,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                         <li><a href="#" class="dropdown-item" id="exportRules">Export rules</a></li>
-                                        <li><a href="#" class="dropdown-item" data-toggle="modal" data-target="#importRules">Import rules</a></li>
+                                        <li><a href="#" class="dropdown-item" id="importRulesLink">Import rules</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -393,39 +393,170 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
         </div>
     </div>
 <!--    end of modal-->
+
     <div class="full-screen-modal">
-        <!--Modal for file upload-->
         <div id="importRules" class="modal fade modal-fluid" role="dialog">
             <div class="modal-dialog">
-                <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4>Import rules</h4>
                         <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                     </div>
                     <div class="modal-body">
-                        <div class="progressSection">
 
-                        </div>
-                        <div class="uploadList">
-                            <div class="step-title">Upload list of rules</div>
-                            <div class="sub-title">Please select the rules list you exported from your other company.</div>
-                            <div class="instruction">Select the file to upload</div>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
-                                <label class="custom-file-label" for="customFile">No file selected</label>
+                        <div class="progressSection">
+                            <div class="bs-stepper" id="importRulesStepper">
+                                <div class="bs-stepper-header" role="tablist">
+                                    <div class="step" data-target="#stepper-upload-list">
+                                        <button type="button" class="step-trigger" role="tab" aria-controls="stepper-upload-list" id="stepper-upload-list-trigger">
+                                            <span class="bs-stepper-circle">1</span>
+                                            <span class="bs-stepper-label">Upload List</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="line"></div>
+
+                                    <div class="step" data-target="#stepper-select-rules">
+                                        <button type="button" class="step-trigger" role="tab" aria-controls="stepper-select-rules" id="stepper-select-rules-trigger">
+                                            <span class="bs-stepper-circle">2</span>
+                                            <span class="bs-stepper-label">Select Rules</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="line"></div>
+
+                                    <div class="step" data-target="#stepper-set-rule-details">
+                                        <button type="button" class="step-trigger" role="tab" aria-controls="stepper-set-rule-details" id="stepper-set-rule-details-trigger">
+                                            <span class="bs-stepper-circle">3</span>
+                                            <span class="bs-stepper-label">Set Rule Details</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="line"></div>
+
+                                    <div class="step" data-target="#stepper-finish">
+                                        <button type="button" class="step-trigger" role="tab" aria-controls="stepper-finish" id="stepper-finish-trigger">
+                                            <span class="bs-stepper-circle">4</span>
+                                            <span class="bs-stepper-label">Finish</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="bs-stepper-content">
+                                    <div id="stepper-upload-list" class="content" role="tabpanel" aria-labelledby="stepper-upload-list-trigger">
+                                        <div class="stepperError">
+                                            <div class="stepperError__header">
+                                                <i class="fa fa-exclamation-circle" class="stepperError__icon"></i>
+                                                <div class="stepperError__title">Something’s not quite right</div>
+                                            </div>
+                                            <div class="stepperError__body">
+                                                Sorry, this isn’t the correct file type. You can only import a file that was exported from the Rules page in your other company.
+                                            </div>
+                                        </div>
+
+                                        <div class="uploadList">
+                                            <div class="step-title">Upload list of rules</div>
+                                            <div class="sub-title">Please select the rules list you exported from your other company.</div>
+                                            <div class="instruction">Select the file to upload</div>
+
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="stepRulesFile" accept=".xls,.xlsx">
+                                                <label class="custom-file-label" for="stepRulesFile">No file selected</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="stepper-select-rules" class="content" role="tabpanel" aria-labelledby="stepper-select-rules-trigger">
+                                        <div class="uploadList">
+                                            <div class="step-title">Select rules to import</div>
+
+                                            <table id="stepRulesTable" class="table table-striped table-bordered rulesTable">
+                                                <thead class="rulesTable__head">
+                                                    <tr>
+                                                        <th>
+                                                            <input type="checkbox" class="rulesTable__checkbox rulesTable__checkbox--primary"/>
+                                                        </th>
+                                                        <th>Rule Name</th>
+                                                        <th>For</th>
+                                                        <th>Conditions</th>
+                                                        <th>Settings</th>
+                                                        <th>Auto-add</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div id="stepper-set-rule-details" class="content" role="tabpanel" aria-labelledby="stepper-set-rule-details-trigger">
+                                        <div class="uploadList">
+                                            <div class="step-title">Select rule details</div>
+
+                                            <div class="stepRuleDetails">
+                                                <div class="stepRuleDetails__column">
+                                                    <div class="stepRuleDetails__title">Import Rule Details</div>
+                                                    <div class="stepRuleDetails__group">
+                                                        <div class="stepRuleDetails__label">Payees</div>
+                                                        <div class="stepRuleDetails__value">ABI</div>
+                                                    </div>
+                                                    <div class="stepRuleDetails__group">
+                                                        <div class="stepRuleDetails__label">Categories</div>
+                                                        <div class="stepRuleDetails__value">Accounting</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="stepRuleDetails__icon">
+                                                    <i class="fa fa-arrow-circle-right"></i>
+                                                </div>
+
+                                                <div class="stepRuleDetails__column">
+                                                    <div class="stepRuleDetails__title">Import Rule Details</div>
+                                                    <div class="stepRuleDetails__group">
+                                                        <select class="form-control select2-rules-payee">
+                                                            <option></option>
+                                                            <option>Abacus Accounting</option>
+                                                            <option>Absolute Power</option>
+                                                            <option>ADSC</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="stepRuleDetails__group">
+                                                        <select class="form-control select2-rules-category" required>
+                                                            <option></option>
+                                                            <option disabled>&plus; Add new</option>
+                                                            <option>Advertising</option>
+                                                            <option>Bad Debts</option>
+                                                            <option>Bank Charges</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="stepper-finish" class="content" role="tabpanel" aria-labelledby="stepper-finish-trigger">
+                                        <div class="uploadList">
+                                            <div class="stepperSuccess">
+                                                <div class="stepperSuccess__inner">
+                                                    <i class="fa fa-check-circle stepperSuccess__icon"></i>
+                                                    <div class="stepperSuccess__body">
+                                                        <span class="stepperSuccess__count">1</span> rule was successfully imported!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer-importRules">
-                        <button class="btn btn-default" style="float: left;">Cancel</button>
-                        <button class="btn btn-success" style="float: right;">Next</button>
+                        <button class="btn btn-default" style="float: left;" id="importRulesCancel">Cancel</button>
+                        <button class="btn btn-success" style="float: right;" id="importRulesNext">Next</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+
 <!--    end of modal-->
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>
     <!-- page wrapper end -->

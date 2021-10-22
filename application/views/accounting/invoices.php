@@ -2,163 +2,179 @@
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
-.tooltip_ {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
+    .tooltip_ {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
 
-.tooltip_ .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -60px;
-}
+    .tooltip_ .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
 
-.tooltip_:hover .tooltiptext {
-  visibility: visible;
-}
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+    }
 
-.filtering {
-  display: inline-block;
-}
+    .tooltip_:hover .tooltiptext {
+        visibility: visible;
+    }
 
-.StepProgress {
-  position: relative;
-  padding-left: 45px;
-  list-style: none;
-}
-.StepProgress::before {
-  display: inline-block;
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 15px;
-  width: 10px;
-  height: 100%;
-  border-left: 2px solid #CCC;
-}
-.StepProgress-item {
-  position: relative;
-  counter-increment: list;
-}
-.StepProgress-item:not(:last-child) {
-  padding-bottom: 20px;
-}
-.StepProgress-item::before {
-  display: inline-block;
-  content: '';
-  position: absolute;
-  left: -30px;
-  height: 100%;
-  width: 10px;
-}
-.StepProgress-item::after {
-  content: '';
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  left: -37px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #CCC;
-  border-radius: 50%;
-  background-color: #FFF;
-}
-.StepProgress-item.is-done::before {
-  border-left: 2px solid green;
-}
-.StepProgress-item.is-done::after {
-  content: "";
-  font-size: 10px;
-  color: #FFF;
-  text-align: center;
-  border: 2px solid green;
-  background-color: green;
-}
-.StepProgress-item.current::before {
-  border-left: 2px solid green;
-}
-.StepProgress-item.current::after {
-  content: counter(list);
-  padding-top: 1px;
-  width: 19px;
-  height: 18px;
-  top: -4px;
-  left: -40px;
-  font-size: 14px;
-  text-align: center;
-  color: green;
-  border: 2px solid green;
-  background-color: white;
-}
-.StepProgress strong {
-  display: block;
-}
+    .filtering {
+        display: inline-block;
+    }
 
-/* section{
+    .StepProgress {
+        position: relative;
+        padding-left: 45px;
+        list-style: none;
+    }
+
+    .StepProgress::before {
+        display: inline-block;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 15px;
+        width: 10px;
+        height: 100%;
+        border-left: 2px solid #CCC;
+    }
+
+    .StepProgress-item {
+        position: relative;
+        counter-increment: list;
+    }
+
+    .StepProgress-item:not(:last-child) {
+        padding-bottom: 20px;
+    }
+
+    .StepProgress-item::before {
+        display: inline-block;
+        content: '';
+        position: absolute;
+        left: -30px;
+        height: 100%;
+        width: 10px;
+    }
+
+    .StepProgress-item::after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 0;
+        left: -37px;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #CCC;
+        border-radius: 50%;
+        background-color: #FFF;
+    }
+
+    .StepProgress-item.is-done::before {
+        border-left: 2px solid green;
+    }
+
+    .StepProgress-item.is-done::after {
+        content: "";
+        font-size: 10px;
+        color: #FFF;
+        text-align: center;
+        border: 2px solid green;
+        background-color: green;
+    }
+
+    .StepProgress-item.current::before {
+        border-left: 2px solid green;
+    }
+
+    .StepProgress-item.current::after {
+        content: counter(list);
+        padding-top: 1px;
+        width: 19px;
+        height: 18px;
+        top: -4px;
+        left: -40px;
+        font-size: 14px;
+        text-align: center;
+        color: green;
+        border: 2px solid green;
+        background-color: white;
+    }
+
+    .StepProgress strong {
+        display: block;
+    }
+
+    /* section{
 	padding: 60px 0;
 } */
 
-#accordion-style-1 h1,
-#accordion-style-1 a{
-    color:#007b5e;
-}
-#accordion-style-1 .btn-link {
-    font-weight: 400;
-    color: #007b5e;
-    background-color: transparent;
-    text-decoration: none !important;
-    font-size: 16px;
-    font-weight: bold;
-	padding-left: 25px;
-}
+    #accordion-style-1 h1,
+    #accordion-style-1 a {
+        color: #007b5e;
+    }
 
-#accordion-style-1 .card-body {
-    border-top: 2px solid #007b5e;
-}
+    #accordion-style-1 .btn-link {
+        font-weight: 400;
+        color: #007b5e;
+        background-color: transparent;
+        text-decoration: none !important;
+        font-size: 16px;
+        font-weight: bold;
+        padding-left: 25px;
+    }
 
-#accordion-style-1 .card-header .btn.collapsed .fa.main{
-	display:none;
-}
+    #accordion-style-1 .card-body {
+        border-top: 2px solid #007b5e;
+    }
 
-#accordion-style-1 .card-header .btn .fa.main{
-	background: #007b5e;
-    padding: 13px 11px;
-    color: #ffffff;
-    width: 35px;
-    height: 41px;
-    position: absolute;
-    left: -1px;
-    top: 10px;
-    border-top-right-radius: 7px;
-    border-bottom-right-radius: 7px;
-	display:block;
-}
-.card {
-    padding: 0px !important;
-    color: black;
-    margin-bottom: 0px !important;
-}
-.card:hover{
-    padding: 0px !important;
-    color: blue;
-}
-.btn:hover, .btn:focus, .btn.focus {
-    color: #000;
-    text-decoration: none;
-    border: 1px solid transparent;
-    box-shadow: none;
-}
+    #accordion-style-1 .card-header .btn.collapsed .fa.main {
+        display: none;
+    }
+
+    #accordion-style-1 .card-header .btn .fa.main {
+        background: #007b5e;
+        padding: 13px 11px;
+        color: #ffffff;
+        width: 35px;
+        height: 41px;
+        position: absolute;
+        left: -1px;
+        top: 10px;
+        border-top-right-radius: 7px;
+        border-bottom-right-radius: 7px;
+        display: block;
+    }
+
+    .card {
+        padding: 0px !important;
+        color: black;
+        margin-bottom: 0px !important;
+    }
+
+    .card:hover {
+        padding: 0px !important;
+        color: blue;
+    }
+
+    .btn:hover,
+    .btn:focus,
+    .btn.focus {
+        color: #000;
+        text-decoration: none;
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
@@ -214,8 +230,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-sm-12 mt-1">
                                 <div class="progress" style="height:30px">
-                                    <div class="progress-bar bg-secondary w-50" style="background-color:#ff8000 !important;"></div>
-                                    <div class="progress-bar bg-dark  w-50" style="background-color:#d4d7dc !important;"></div>
+                                    <div class="progress-bar bg-secondary w-50"
+                                        style="background-color:#ff8000 !important;"></div>
+                                    <div class="progress-bar bg-dark  w-50"
+                                        style="background-color:#d4d7dc !important;"></div>
                                 </div>
                             </div>
                         </div>
@@ -238,7 +256,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                             <div class="col-sm-12 mt-1">
                                 <div class="progress" style="height:30px">
-                                    <div class="progress-bar bg-success w-50" style="background-color:#2ca01c !important;"></div>
+                                    <div class="progress-bar bg-success w-50"
+                                        style="background-color:#2ca01c !important;"></div>
                                     <div class="progress-bar bg-info  w-50"></div>
                                 </div>
                             </div>
@@ -246,11 +265,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
                 <div class="row mt-5">
-                    <div class="">
-                        <div class="filtering" style="padding: 0 20px 0 0;">
+                    <div class="invoices-page-section">
+                        <!-- <div class="filtering" style="padding: 0 20px 0 0;">
                             <select class="form-control" style="width:180px; border-radius:60px;">
                                 <option>Batch Actions</option>
                             </select>
+                        </div> -->
+                        <div class="filtering" style="padding: 0 20px 0 0;">
+                            <div class="by-batch-btn">
+                                <button class="btn btn-default" type="button" data-toggle="dropdown">
+                                    Batch action <span class="fa fa-caret-down"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right by-batch-btn" role="menu">
+                                    <li class="print-transaction-btn disabled">
+                                        <a href="#">Print transactions</a>
+                                    </li>
+                                    <li class="print-packaging-slip-btn disabled">
+                                        <a href="#">Print packaging slip</a>
+                                    </li>
+                                    <li class="send-transaction-btn disabled">
+                                        <a href="#">Send transactions</a>
+                                    </li>
+                                    <li class="send-reminder-btn disabled">
+                                        <a href="#">Send reminder</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="filtering" style="padding: 0 10px 0 0;">
                             Status <br>
@@ -296,418 +335,442 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <form style="display: inline-flex;" class="form-inline form-search"
                                         name="form-search"
                                         action="<?php echo base_url('invoice') ?>"
-                                        method="get">
-                                        <div class="form-group" style="margin:0 !important;">
-                                            <span>Search:</span> &nbsp;
-                                            <input style="height:auto !important; font-size: 14px; margin-right:10px;"
-                                                class="form-control form-control-md" name="search"
-                                                value="<?php echo (!empty($search)) ? $search : '' ?>"
-                                                type="text" placeholder="Search...">
-                                            <button class="btn btn-default btn-md" type="submit"><span
-                                                    class="fa fa-search"></span></button>
-                                            <?php if (!empty($search)) { ?>
-                                            <a class="btn btn-default btn-md ml-2"
-                                                href="<?php echo base_url('invoice') ?>"><span
-                                                    class="fa fa-times"></span></a>
-                                            <?php } ?>
-                                        </div>
-                                    </form>
-                                    <div class="dropdown dropdown-inline margin-right-sec ml-2"><a
-                                            class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                            aria-expanded="true"
-                                            href="<?php echo base_url('customer') ?>">Source
-                                            <span class="caret"></span></a>
-                                        <ul class="dropdown-menu  btn-block" role="menu">
-                                            <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo base_url('customer') ?>">Source</a>
-                                            </li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo base_url('customer?type=residential') ?>">Facebook</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <span>Sort:</span> &nbsp;
-                                    <div class="dropdown dropdown-inline">
-                                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                            aria-expanded="false"
-                                            href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=created_at-asc') : base_url('invoice?order=created_at-asc') ?>">
-                                            Newest First
-                                            <span class="caret"></span></a>
-                                        <ul class="dropdown-menu  btn-block" role="menu">
-                                            <li class="active" role="presentation">
-                                                <a role="menuitem" tabindex="-1"
-                                                    href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=created_at-desc') : base_url('invoice?order=created_at-desc') ?>">
-                                                    Newest First</a>
-                                            </li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=created_at-asc') : base_url('invoice?order=created_at-asc') ?>">
-                                                    Oldest First</a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=last-invoice_number-asc') : base_url('invoice?order=last-invoice_number-asc') ?>">Number:
-                                                    Asc</a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=last-invoice_number-desc') : base_url('invoice?order=last-invoice_number-desc') ?>">Number:
-                                                    Desc</a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=amount-asc') : base_url('invoice?order=amount-desc') ?>">Amount:
-                                                    Lowest</a></li>
-                                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                    href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=amount-desc') : base_url('invoice?order=amount-asc') ?>">Amount:
-                                                    Highest</a></li>
-                                        </ul>
-                                    </div>
-                                </div> -->
-                            </div>
+                                method="get">
+                                <div class="form-group" style="margin:0 !important;">
+                                    <span>Search:</span> &nbsp;
+                                    <input style="height:auto !important; font-size: 14px; margin-right:10px;"
+                                        class="form-control form-control-md" name="search"
+                                        value="<?php echo (!empty($search)) ? $search : '' ?>"
+                                        type="text" placeholder="Search...">
+                                    <button class="btn btn-default btn-md" type="submit"><span
+                                            class="fa fa-search"></span></button>
+                                    <?php if (!empty($search)) { ?>
+                                    <a class="btn btn-default btn-md ml-2"
+                                        href="<?php echo base_url('invoice') ?>"><span
+                                            class="fa fa-times"></span></a>
+                                    <?php } ?>
+                                </div>
+                                </form>
+                                <div class="dropdown dropdown-inline margin-right-sec ml-2"><a
+                                        class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                        aria-expanded="true"
+                                        href="<?php echo base_url('customer') ?>">Source
+                                        <span class="caret"></span></a>
+                                    <ul class="dropdown-menu  btn-block" role="menu">
+                                        <li class="active" role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo base_url('customer') ?>">Source</a>
+                                        </li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo base_url('customer?type=residential') ?>">Facebook</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span>Sort:</span> &nbsp;
+                                <div class="dropdown dropdown-inline">
+                                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                        aria-expanded="false"
+                                        href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=created_at-asc') : base_url('invoice?order=created_at-asc') ?>">
+                                        Newest First
+                                        <span class="caret"></span></a>
+                                    <ul class="dropdown-menu  btn-block" role="menu">
+                                        <li class="active" role="presentation">
+                                            <a role="menuitem" tabindex="-1"
+                                                href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=created_at-desc') : base_url('invoice?order=created_at-desc') ?>">
+                                                Newest First</a>
+                                        </li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=created_at-asc') : base_url('invoice?order=created_at-asc') ?>">
+                                                Oldest First</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=last-invoice_number-asc') : base_url('invoice?order=last-invoice_number-asc') ?>">Number:
+                                                Asc</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=last-invoice_number-desc') : base_url('invoice?order=last-invoice_number-desc') ?>">Number:
+                                                Desc</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=amount-asc') : base_url('invoice?order=amount-desc') ?>">Amount:
+                                                Lowest</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                href="<?php echo (!empty($type)) ? base_url('invoice?type=' . $type . '&order=amount-desc') : base_url('invoice?order=amount-asc') ?>">Amount:
+                                                Highest</a></li>
+                                    </ul>
+                                </div>
+                            </div> -->
                         </div>
+                    </div>
 
-                        <!-- <div class="card-body" style="padding-bottom:0px;">
+                    <!-- <div class="card-body" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-md-12 summary">
                                     <div class="summary-item">
                                         <div class="summary-item-label">THIS YEAR</div>
                                         <div class="summary-item-value" id="total_this_year">$<?php echo get_invoice_amount('year') ?>
-                    </div>
                 </div>
-                <div class="summary-item">
-                    <div class="summary-item-label">PENDING</div>
-                    <div class="summary-item-value" id="pending_total">$<?php echo get_invoice_amount('pending') ?>
-                    </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-item-label">PENDING</div>
+                <div class="summary-item-value" id="pending_total">$<?php echo get_invoice_amount('pending') ?>
                 </div>
-                <div class="summary-item">
-                    <div class="summary-item-label">PAID</div>
-                    <div class="summary-item-value" id="paid_total">$<?php echo get_invoice_amount('paid') ?>
-                    </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-item-label">PAID</div>
+                <div class="summary-item-value" id="paid_total">$<?php echo get_invoice_amount('paid') ?>
                 </div>
             </div>
         </div>
-    </div> -->
-
-    <div class="tabs">
-        <ul class="clearfix work__order mobile-invoice-ul" id="myTab" role="tablist">
-            <li <?php echo ((empty($tab)) || $tab == 1) ? "class='active'" : "" ?>>
-                <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                    href="<?php echo base_url('invoice') ?>"
-                    role="tab" aria-controls="profile" aria-selected="false">All
-                    (<?php echo get_invoice_count(1) ?>)</a>
-            </li>
-            <li <?php echo ((!empty($tab)) && $tab == 2) ? "class='active'" : "" ?>>
-                <a class="nav-link" id="profile-tab" data-toggle="tab2"
-                    href="<?php echo base_url('invoice/tab/2') ?>"
-                    role="tab" aria-controls="profile" aria-selected="false">Due
-                    (<?php echo get_invoice_count(2) ?>)</a>
-            </li>
-            <li <?php echo ((!empty($tab)) && $tab == 3) ? "class='active'" : "" ?>>
-                <a class="nav-link" id="profile-tab" data-toggle="tab3"
-                    href="<?php echo base_url('invoice/tab/3') ?>"
-                    role="tab" aria-controls="profile" aria-selected="false">Overdue
-                    (<?php echo get_invoice_count(3) ?>)</a>
-            </li>
-            <li <?php echo ((!empty($tab)) && $tab == 4) ? "class='active'" : "" ?>>
-                <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                    href="<?php echo base_url('invoice/tab/4') ?>"
-                    role="tab" aria-controls="profile" aria-selected="false">Partially Paid
-                    (<?php echo get_invoice_count(4) ?>)</a>
-            </li>
-            <li <?php echo ((!empty($tab)) && $tab == 5) ? "class='active'" : "" ?>>
-                <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                    href="<?php echo base_url('invoice/tab/5') ?>"
-                    role="tab" aria-controls="profile" aria-selected="false">Paid
-                    (<?php echo get_invoice_count(5) ?>)</a>
-            </li>
-            <li <?php echo ((!empty($tab)) && $tab == 6) ? "class='active'" : "" ?>>
-                <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                    href="<?php echo base_url('invoice/tab/6') ?>"
-                    role="tab" aria-controls="profile" aria-selected="false">Draft
-                    (<?php echo get_invoice_count(6) ?>)</a>
-            </li>
-        </ul>
     </div>
+</div> -->
 
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+<div class="tabs">
+    <ul class="clearfix work__order mobile-invoice-ul" id="myTab" role="tablist">
+        <li <?php echo ((empty($tab)) || $tab == 1) ? "class='active'" : "" ?>>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1"
+                href="<?php echo base_url('invoice') ?>"
+                role="tab" aria-controls="profile" aria-selected="false">All
+                (<?php echo get_invoice_count(1) ?>)</a>
+        </li>
+        <li <?php echo ((!empty($tab)) && $tab == 2) ? "class='active'" : "" ?>>
+            <a class="nav-link" id="profile-tab" data-toggle="tab2"
+                href="<?php echo base_url('invoice/tab/2') ?>"
+                role="tab" aria-controls="profile" aria-selected="false">Due
+                (<?php echo get_invoice_count(2) ?>)</a>
+        </li>
+        <li <?php echo ((!empty($tab)) && $tab == 3) ? "class='active'" : "" ?>>
+            <a class="nav-link" id="profile-tab" data-toggle="tab3"
+                href="<?php echo base_url('invoice/tab/3') ?>"
+                role="tab" aria-controls="profile" aria-selected="false">Overdue
+                (<?php echo get_invoice_count(3) ?>)</a>
+        </li>
+        <li <?php echo ((!empty($tab)) && $tab == 4) ? "class='active'" : "" ?>>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1"
+                href="<?php echo base_url('invoice/tab/4') ?>"
+                role="tab" aria-controls="profile" aria-selected="false">Partially Paid
+                (<?php echo get_invoice_count(4) ?>)</a>
+        </li>
+        <li <?php echo ((!empty($tab)) && $tab == 5) ? "class='active'" : "" ?>>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1"
+                href="<?php echo base_url('invoice/tab/5') ?>"
+                role="tab" aria-controls="profile" aria-selected="false">Paid
+                (<?php echo get_invoice_count(5) ?>)</a>
+        </li>
+        <li <?php echo ((!empty($tab)) && $tab == 6) ? "class='active'" : "" ?>>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1"
+                href="<?php echo base_url('invoice/tab/6') ?>"
+                role="tab" aria-controls="profile" aria-selected="false">Draft
+                (<?php echo get_invoice_count(6) ?>)</a>
+        </li>
+    </ul>
+</div>
 
-            <?php if (!empty($invoices)) { ?>
-            <table class="table table-hover table-to-list" data-id="work_orders">
-                <thead>
-                    <tr>
-                        <th>
-                            <!-- <div class="checkbox checkbox-sm select-all-checkbox">
+<div class="tab-content invoices-page-section" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+
+        <?php if (!empty($invoices)) { ?>
+        <table class="table table-hover table-to-list" data-id="work_orders">
+            <thead>
+                <tr>
+                    <th>
+                        <!-- <div class="checkbox checkbox-sm select-all-checkbox">
                             <div class="table-name">
                                 <div class="checkbox checkbox-sm select-all-checkbox"> -->
-                                    <input type="checkbox" name="id_selector" value="0" id="select-all"
-                                        class="select-all">
-                                    <!-- <label for="select-all">Invoice#</label>
+                        <!-- <input type="checkbox" name="id_selector" value="0" id="select-all" class="select-all"> -->
+                        <!-- <label for="select-all">Invoice#</label>
                                 </div>
 
                             </div> -->
-                        </th>
-                        <th></th>
-                        <th>Date</th>
-                        <th>Invoice No.</th>
-                        <!-- <th>Date Due</th> -->
-                        <th style="width:30%;">Job & Customer</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th class="text-right">Action</th>
-                    </tr>
-                </thead>
+                        <div class="form-check">
+                            <div class="checkbox checkbox-sec ">
+                                <input type="checkbox" name="id_selector" id="select-all" class="select-all">
+                                <label for="select-all"><span></span></label>
+                            </div>
+                        </div>
+                    </th>
+                    <th></th>
+                    <th>Date</th>
+                    <th>Invoice No.</th>
+                    <!-- <th>Date Due</th> -->
+                    <th style="width:30%;">Job & Customer</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                </tr>
+            </thead>
 
-                <tbody>
+            <tbody>
 
-                    <?php foreach ($invoices as $invoice) { ?>
-                    <tr>
-                        <td>
-                            <!-- <div class="table-name">
+                <?php foreach ($invoices as $invoice) { ?>
+                <tr>
+                    <td>
+                        <!-- <div class="table-name">
                                 <div class="checkbox checkbox-sm"> -->
-                                    <input type="checkbox"
-                                        name="id[<?php echo $invoice->id ?>]"
-                                        value="<?php echo $invoice->id ?>"
-                                        class="select-one"
-                                        id="invoice_id_<?php echo $invoice->id ?>">
-                                <!-- </div>
+                        <!-- <input type="checkbox"
+                            name="id[<?php echo $invoice->id ?>]"
+                            value="<?php echo $invoice->id ?>"
+                            class="select-one"
+                            id="invoice_id_<?php echo $invoice->id ?>"> -->
+                        <!-- </div>
                             </div> -->
-                        </td>
-                        <td><div class="tooltip_"><a href="#" alt="Reccuring Invoice"><i class="fa fa-refresh" aria-hidden="true"></i></a><span class="tooltiptext">Reccuring Invoice</span></div></td>
 
-                        <td>
-                            <div class="table-nowrap">
-                                <label for=""><?php echo get_format_date($invoice->date_issued) ?></label>
+                        <div class="form-check">
+                            <div class="checkbox checkbox-sec ">
+                                <input type="checkbox"
+                                    name="id[<?php echo $invoice->id ?>]"
+                                    value="<?php echo $invoice->id ?>"
+                                    class="select-one"
+                                    id="invoice_id_<?php echo $invoice->id ?>">
+                                <label for="invoice_id_<?php echo $invoice->id ?>"><span></span></label>
                             </div>
-                        </td>
-                        <td>
-                            <label for="invoice_id_<?php echo $invoice->id ?>">
-                                <!-- <a class="a-default" href="<?php //echo base_url('invoice/genview/' . $invoice->id) ?>"><?php //echo $invoice->invoice_number ?></a> -->
-                                <a class="a-default" href="#" id="inv_number_details" inv-no="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"><?php echo $invoice->invoice_number ?> </a>
-                            </label>
-                        </td>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="tooltip_"><a href="#" alt="Reccuring Invoice"><i class="fa fa-refresh"
+                                    aria-hidden="true"></i></a><span class="tooltiptext">Reccuring Invoice</span></div>
+                    </td>
 
-                        <!-- <td>
-                            <div class="table-nowrap">
-                                <label for=""><?php //echo get_format_date($invoice->due_date) ?></label>
-                            </div>
-                        </td> -->
-                        <td>
-                            <div class="table-nowrap">
-                                <p class="mb-0"> <label for=""><?php echo $invoice->first_name.' '. $invoice->last_name; ?></label>
-                                </p>
-                                <label
-                                    for="customer_id_<?php echo $invoice->customer_id ?>">
-                                    <a
-                                        href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>"><?php echo $invoice->job_name ?></a>
-                                </label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="table-nowrap">
-                                <label for="">$<?php echo number_format($invoice->grand_total,2); ?>
-                                </label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="table-nowrap">
-                                <label><?php echo $invoice->INV_status ?></label>
-                            </div>
-                        </td>
-                        <td class="text-right">
-                            <div class="dropdown dropdown-btn open">
-                                <?php if($invoice->INV_status == 'Paid'){ ?>
-                                    <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
-                                <?php }else{ ?>
-                                    <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>" style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; 
-                                    <!-- <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>  -->
-                                    <a href="" style="color:#3a96d2;font-weight:bold;" class="first-option customer_receive_payment_btn" data-customer-id="<?=$invoice->customer_id?>">Receive payment </a>
-                                    &emsp;
-                                <?php } ?>
+                    <td>
+                        <div class="table-nowrap">
+                            <label for=""><?php echo get_format_date($invoice->date_issued) ?></label>
+                        </div>
+                    </td>
+                    <td>
+                        <label
+                            for="invoice_id_<?php echo $invoice->id ?>">
+                            <!-- <a class="a-default" href="<?php //echo base_url('invoice/genview/' . $invoice->id)?>"><?php //echo $invoice->invoice_number?></a> -->
+                            <a class="a-default" href="#" id="inv_number_details"
+                                inv-no="<?php echo $invoice->invoice_number ?>"
+                                data-id="<?php echo $invoice->id ?>"><?php echo $invoice->invoice_number ?> </a>
+                        </label>
+                    </td>
 
-                                <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
-                                    data-toggle="dropdown" aria-expanded="true">
-                                    <span class="btn-label"></span>
-                                    <span class="caret-holder">
-                                        <span class="caret"></span>
-                                    </span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                    aria-labelledby="dropdown-edit">
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1"
-                                            href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">
-                                            <span class="fa fa-envelope-o icon"></span> Send Invoice</a>
-                                    </li>
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1"
-                                            href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>">
-                                            <span class="fa fa-pencil-square-o icon"></span>
-                                            Edit
-                                        </a>
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1"
-                                            href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">
-                                            <span class="fa fa-file-text-o icon"></span>
-                                            View Invoice
-                                        </a>
-                                    </li>
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1"
-                                            href="<?php echo base_url('invoice/genview/' . $invoice->id) . "?do=payment_add" ?>">
-                                            <span class="fa fa-usd icon"></span>
-                                            Record Invoice
-                                        </a>
-                                    </li>
-                                    <li role="presentation">
-                                        <!-- <a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"
+                    <!-- <td>
+                            <div class="table-nowrap">
+                                <label for=""><?php //echo get_format_date($invoice->due_date)?></label>
+    </div>
+    </td> -->
+    <td>
+        <div class="table-nowrap">
+            <p class="mb-0"> <label for=""><?php echo $invoice->first_name.' '. $invoice->last_name; ?></label>
+            </p>
+            <label
+                for="customer_id_<?php echo $invoice->customer_id ?>">
+                <a
+                    href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>"><?php echo $invoice->job_name ?></a>
+            </label>
+        </div>
+    </td>
+    <td>
+        <div class="table-nowrap">
+            <label for="">$<?php echo number_format($invoice->grand_total, 2); ?>
+            </label>
+        </div>
+    </td>
+    <td>
+        <div class="table-nowrap">
+            <label><?php echo $invoice->INV_status ?></label>
+        </div>
+    </td>
+    <td class="text-right">
+        <div class="dropdown dropdown-btn open">
+            <?php if ($invoice->INV_status == 'Paid') { ?>
+            <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>"
+                style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a
+                href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"
+                style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
+            <?php } else { ?>
+            <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>"
+                style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp;
+            <!-- <a href="#" style="color:#3a96d2;" data-toggle="modal" data-target="#addreceivepaymentModal">Receive payment</a>  -->
+            <a href="" style="color:#3a96d2;font-weight:bold;" class="first-option customer_receive_payment_btn"
+                data-customer-id="<?=$invoice->customer_id?>">Receive
+                payment </a>
+            &emsp;
+            <?php } ?>
+
+            <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+                data-toggle="dropdown" aria-expanded="true">
+                <span class="btn-label"></span>
+                <span class="caret-holder">
+                    <span class="caret"></span>
+                </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">
+                        <span class="fa fa-envelope-o icon"></span> Send Invoice</a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>">
+                        <span class="fa fa-pencil-square-o icon"></span>
+                        Edit
+                    </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">
+                        <span class="fa fa-file-text-o icon"></span>
+                        View Invoice
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('invoice/genview/' . $invoice->id) . "?do=payment_add" ?>">
+                        <span class="fa fa-usd icon"></span>
+                        Record Invoice
+                    </a>
+                </li>
+                <li role="presentation">
+                    <!-- <a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"
                                             href="javascript:void(0)" data-toggle="modal"
                                             data-target="#convertToWorkOrder"
                                             data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                                            data-id="<?php echo $invoice->id ?>">
-                                            <span class="fa fa-file-text-o icon"></span> Convert to Work Order
-                                        </a> -->
-                                        <a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
-                                                                               data-convert-to-invoice-modal="open"
-                                                                               data-id="<?php echo $invoice->id ?>"
-                                                                               data-invoice-number="<?php echo $invoice->invoice_number ?>">
-                                                                    <span class="fa fa-file-text-o icon"></span> Convert to Work Order
-                                                                </a>
-                                    </li>
-                                    <li role="presentation">
-                                        <a role="menuitem" class="openCloneInvoice" tabindex="-1"
-                                            href="javascript:void(0)" data-toggle="modal" data-target="#cloneModal"
-                                            data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                                            data-id="<?php echo $invoice->id ?>">
-                                            <span class="fa fa-files-o icon"></span> Clone Invoice
-                                        </a>
-                                    </li>
-                                    <li class="share-invoice-link-btn"
-                                        data-invoice-id="<?=$invoice->id?>">
-                                        <a role="menuitem" tabindex="-1" href="javascript:void(0)">
-                                        <span class="fa fa-share icon" aria-hidden="true"></span>
-                                            Share invoice link
-                                        </a>
-                                    </li>
-                                    <li role="presentation">
-                                        <a role="menuitem" class="openDeleteInvoice" tabindex="-1"
-                                            href="javascript:void(0)"
-                                            data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                                            data-id="<?php echo $invoice->id ?>"
-                                            id="deleteInvoiceBtnNew">
-                                            <span class="fa fa-trash-o icon"></span> Delete Invoice
-                                        </a>
-                                        <!-- <a href="#" work-id="<?php //echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete </a> -->
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                            href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>"><span
-                                                class="fa fa-file-pdf-o icon"></span> Invoice PDF</a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                            href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"><span
-                                                class="fa fa-print icon"></span> Print Invoice</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-            <div class="modal in" id="convertToWorkOrder" tabindex="-1" role="dialog">
-                <div class="modal-dialog" style="max-width:600px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title">Convert Invoice To Work Order</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="validation-error" style="display: none;"></div>
-                            <form name="convert-to-work-order-modal-form">
-                                <p>
-                                    You are going create a new work order based on <b>Invoice# <span
-                                            id='workOrderInvoiceId'"></span></b>.<br>
+                    data-id="<?php echo $invoice->id ?>">
+                    <span class="fa fa-file-text-o icon"></span> Convert to Work Order
+                    </a> -->
+                    <a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
+                        data-convert-to-invoice-modal="open"
+                        data-id="<?php echo $invoice->id ?>"
+                        data-invoice-number="<?php echo $invoice->invoice_number ?>">
+                        <span class="fa fa-file-text-o icon"></span> Convert to Work Order
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" class="openCloneInvoice" tabindex="-1" href="javascript:void(0)"
+                        data-toggle="modal" data-target="#cloneModal"
+                        data-invoice-number="<?php echo $invoice->invoice_number ?>"
+                        data-id="<?php echo $invoice->id ?>">
+                        <span class="fa fa-files-o icon"></span> Clone Invoice
+                    </a>
+                </li>
+                <li class="share-invoice-link-btn"
+                    data-invoice-id="<?=$invoice->id?>">
+                    <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                        <span class="fa fa-share icon" aria-hidden="true"></span>
+                        Share invoice link
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)"
+                        data-invoice-number="<?php echo $invoice->invoice_number ?>"
+                        data-id="<?php echo $invoice->id ?>"
+                        id="deleteInvoiceBtnNew">
+                        <span class="fa fa-trash-o icon"></span> Delete Invoice
+                    </a>
+                    <!-- <a href="#" work-id="<?php //echo $workorder->id;?>"
+                    id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete </a> -->
+                </li>
+                <li role="separator" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>"><span
+                            class="fa fa-file-pdf-o icon"></span> Invoice PDF</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1"
+                        href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"><span
+                            class="fa fa-print icon"></span> Print Invoice</a></li>
+            </ul>
+        </div>
+    </td>
+    </tr>
+    <?php } ?>
+    </tbody>
+    </table>
+    <div class="modal in" id="convertToWorkOrder" tabindex="-1" role="dialog">
+        <div class="modal-dialog" style="max-width:600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Convert Invoice To Work Order</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="validation-error" style="display: none;"></div>
+                    <form name="convert-to-work-order-modal-form">
+                        <p>
+                            You are going create a new work order based on <b>Invoice# <span id='workOrderInvoiceId'"></span></b>.<br>
                                                             The invoice items (e.g. materials, labour) will be copied to this work order.<br>
                                                             You can always edit/delete work order items as you need.
                                                         </p>
                                                     </form>
                                                 </div>
                                                 <div class=" modal-footer">
-                                            <button class="btn btn-default" type="button"
-                                                data-dismiss="modal">Close</button>
-                                            <button class="btn btn-primary" type="button"
-                                                data-convert-to-work-order-modal="submit">Convert To Work Order</button>
-                        </div>
-                    </div>
+                                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary" type="button"
+                                        data-convert-to-work-order-modal="submit">Convert To Work Order</button>
                 </div>
             </div>
-            <div class="modal in" id="cloneModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" style="max-width:600px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title">Clone Invoice</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="validation-error" style="display: none;"></div>
-                            <form name="clone-modal-form">
-                                <p>
-                                    You are going create a new invoice based on Invoice# <span
-                                        id='cloneInvoiceId'></span>.<br>
-                                    The new invoice will contain the same items (e.g. materials, labour) and you
-                                    will be able to edit and remove the invoice items as you need.
-                                </p>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                            <a href="#" id="cloneInvoiceBtn">
-                                <button class="btn btn-primary" type="button" data-clone-modal="submit">Clone
-                                    Invoice</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal in" id="cancelModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" style="max-width:600px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title">Delete Invoice</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="validation-error" style="display: none;"></div>
-                            <form name="cancel-modal-form">
-                                <p>
-                                    Are you sure you want to delete the <span class="bold">Invoice# <span
-                                            id='deleteInvoiceId'></span></span>?
-                                </p>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                            <a href="#" id="deleteInvoiceBtn">
-                                <button class="btn btn-primary" type="button" data-cancel-modal="submit">Yes, Delete
-                                    Invoice</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php } else { ?>
-            <div class="page-empty-container">
-                <h5 class="page-empty-header">There are no invoices</h5>
-                <p class="text-ter margin-bottom">Manage your invoice.</p>
-
-            </div>
-            <?php } ?>
         </div>
-        <!-- </div> -->
-        <!-- </div> -->
     </div>
+    <div class="modal in" id="cloneModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" style="max-width:600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Clone Invoice</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="validation-error" style="display: none;"></div>
+                    <form name="clone-modal-form">
+                        <p>
+                            You are going create a new invoice based on Invoice# <span id='cloneInvoiceId'></span>.<br>
+                            The new invoice will contain the same items (e.g. materials, labour) and you
+                            will be able to edit and remove the invoice items as you need.
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <a href="#" id="cloneInvoiceBtn">
+                        <button class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                            Invoice</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal in" id="cancelModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" style="max-width:600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Delete Invoice</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="validation-error" style="display: none;"></div>
+                    <form name="cancel-modal-form">
+                        <p>
+                            Are you sure you want to delete the <span class="bold">Invoice# <span
+                                    id='deleteInvoiceId'></span></span>?
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <a href="#" id="deleteInvoiceBtn">
+                        <button class="btn btn-primary" type="button" data-cancel-modal="submit">Yes, Delete
+                            Invoice</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php } else { ?>
+    <div class="page-empty-container">
+        <h5 class="page-empty-header">There are no invoices</h5>
+        <p class="text-ter margin-bottom">Manage your invoice.</p>
+
+    </div>
+    <?php } ?>
+</div>
+<!-- </div> -->
+<!-- </div> -->
+</div>
 </div>
 </div>
 <!-- end row -->
@@ -721,38 +784,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 
-                            <!--    Modal for creating rules-->
-                            <div class="modal-right-side">
-								<div class="modal right fade" id="type-selection-modal" tabindex="" role="dialog"
-									aria-labelledby="myModalLabel2">
-									<div class="modal-dialog" role="document" style="width: 25%">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h3 class="modal-title" id="myModalLabel2"><span id="inv_modal_invNo" style="align:center;"><span>
-												</h3>
-												<button type="button" class="close" data-dismiss="modal"
-													aria-label="Close"><span aria-hidden="true">&times;</span></button>
-											</div>
-											<div class="modal-body p-0">
-												<div class="row" style="padding:5%;">
-                                                    <div class="col-md-12">
-                                                        <i class="fa fa-check-square" style="font-size:24px;color:#108000;"></i> Paid (Deposited)
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <br>
-                                                        Total
-                                                        <h2>$ <span id="billing_total"><span></h2>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <h6>Invoice date</h6>
-                                                        <span id="billing_in_date"><span>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <h6>Due date</h6>
-                                                        <span id="billing_due_date"><span>
-                                                    </div>
-                                                </div>
-                                                <!-- <hr>
+<!--    Modal for creating rules-->
+<div class="modal-right-side">
+    <div class="modal right fade" id="type-selection-modal" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal-dialog" role="document" style="width: 25%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="myModalLabel2"><span id="inv_modal_invNo" style="align:center;"><span>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row" style="padding:5%;">
+                        <div class="col-md-12">
+                            <i class="fa fa-check-square" style="font-size:24px;color:#108000;"></i> Paid (Deposited)
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            Total
+                            <h2>$ <span id="billing_total"><span></h2>
+                        </div>
+                        <div class="col-md-12">
+                            <h6>Invoice date</h6>
+                            <span id="billing_in_date"><span>
+                        </div>
+                        <div class="col-md-12">
+                            <h6>Due date</h6>
+                            <span id="billing_due_date"><span>
+                        </div>
+                    </div>
+                    <!-- <hr>
                                                 <div class="row" style="padding:1% 5% 1% 5%;">
                                                     <div class="col-md-12">
                                                         <span style="font-size:18px;color:gray;">90 Works (Panama City)</span>
@@ -764,8 +826,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <ul class="StepProgress">
                                                     <li class="StepProgress-item is-done"><strong>Opened</strong>4/8/2021</li>
                                                     <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li> -->
-                                                    <!-- <li class="StepProgress-item current"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li> -->
-                                                    <!-- <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
+                    <!-- <li class="StepProgress-item current"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li> -->
+                    <!-- <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #INV-000000002</a></li>
                                                     <li class="StepProgress-item is-done"><strong>Deposited</strong></li>
                                                     </ul>
                                                 </div>
@@ -778,7 +840,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <hr> -->
 
-                                            <!-- <div id="accordion">
+                    <!-- <div id="accordion">
                                                 <div class="card">
                                                     <div class="card-header" id="headingOne">
                                                     <h5 class="mb-0">
@@ -828,107 +890,134 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
 
 											</div> -->
-                                            <section>
-                                                <div class="row">
-                                                    <!-- <div class="col-12">
+                    <section>
+                        <div class="row">
+                            <!-- <div class="col-12">
                                                         <h1 class="text-green mb-4 text-center"></h1>
                                                     </div> -->
-                                                    <div class="col-md-12">
-                                                        <div class="accordion" id="accordionExample">
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingTwo">
-                                                                    <h5 class="mb-0">
-                                                                <button class="btn btn-link collapsed btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                <span style="font-size:18px;color:gray;" id="billing_city"></span> City <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
-                                                                </button>
-                                                                </h5>
-                                                                </div>
-                                                                <div id="collapseTwo" class="collapse fade" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        <b>Billing address</b> <br>
-                                                                        <span id="billingName"></span> <br>
-                                                                        <span id="billing_address"></span> <br>
-                                                                        <!-- Panama City, FL  32405 <br> -->
-                                                                        <br>
-                                                                        <span id="billing_customer_email"></span><br>
-                                                                        Phone:	<span id="billing_customer_phone"></span> <br>
+                            <div class="col-md-12">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="headingTwo">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed btn-block text-left" type="button"
+                                                    data-toggle="collapse" data-target="#collapseTwo"
+                                                    aria-expanded="false" aria-controls="collapseTwo">
+                                                    <span style="font-size:18px;color:gray;" id="billing_city"></span>
+                                                    City <i class='fas fa-angle-right'
+                                                        style='font-size:24px;color:gray;float:right;'></i>
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse fade" aria-labelledby="headingTwo"
+                                            data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <b>Billing address</b> <br>
+                                                <span id="billingName"></span> <br>
+                                                <span id="billing_address"></span> <br>
+                                                <!-- Panama City, FL  32405 <br> -->
+                                                <br>
+                                                <span id="billing_customer_email"></span><br>
+                                                Phone: <span id="billing_customer_phone"></span> <br>
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingOne">
-                                                                    <h5 class="mb-0">
-                                                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                        <span style="font-size:18px;color:gray;">Invoice activity</span>  <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
-                                                                </button>
-                                                            </h5>
-                                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" id="headingOne">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link btn-block text-left" type="button"
+                                                    data-toggle="collapse" data-target="#collapseOne"
+                                                    aria-expanded="true" aria-controls="collapseOne">
+                                                    <span style="font-size:18px;color:gray;">Invoice activity</span> <i
+                                                        class='fas fa-angle-right'
+                                                        style='font-size:24px;color:gray;float:right;'></i>
+                                                </button>
+                                            </h5>
+                                        </div>
 
-                                                                <div id="collapseOne" class="collapse show fade" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        <div class="wrapper">
-                                                                            <ul class="StepProgress" style="margin-top:-100px;">
-                                                                                <li class="StepProgress-item is-done"><strong>Opened</strong>4/8/2021</li>
-                                                                                <li class="StepProgress-item is-done"><strong>Sent</strong>4/9/2021</li> 
-                                                                                <li class="StepProgress-item is-done"><strong>Viewed</strong>4/10/2021</li> 
-                                                                                <li class="StepProgress-item is-done"><strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a href="#">View payment #<span id="inv_modal_invNo2" style="align:center;"><span></a></li>
-                                                                                <li class="StepProgress-item is-done"><strong>Deposited</strong></li>
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card">
-                                                                <div class="card-header" id="headingThree">
-                                                                    <h5 class="mb-0">
-                                                                <button class="btn btn-link collapsed btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                                    <span style="font-size:18px;color:gray;">Product and services</span>  <i class='fas fa-angle-right' style='font-size:24px;color:gray;float:right;'></i>
-                                                                </button>
-                                                            </h5>
-                                                                </div>
-                                                                <div id="collapseThree" class="collapse fade" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                                                    <div class="card-body">
-                                                                        <div id="billing_items"></div>
-                                                                        <a href="#" style="color:blue;text-decoration: underline;"><u>More details</u></a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>	
+                                        <div id="collapseOne" class="collapse show fade" aria-labelledby="headingOne"
+                                            data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="wrapper">
+                                                    <ul class="StepProgress" style="margin-top:-100px;">
+                                                        <li class="StepProgress-item is-done">
+                                                            <strong>Opened</strong>4/8/2021
+                                                        </li>
+                                                        <li class="StepProgress-item is-done">
+                                                            <strong>Sent</strong>4/9/2021
+                                                        </li>
+                                                        <li class="StepProgress-item is-done">
+                                                            <strong>Viewed</strong>4/10/2021
+                                                        </li>
+                                                        <li class="StepProgress-item is-done">
+                                                            <strong>Paid</strong>4/19/2021 | Check <br>$2,211.98 <br> <a
+                                                                href="#">View payment #<span id="inv_modal_invNo2"
+                                                                    style="align:center;"><span></a>
+                                                        </li>
+                                                        <li class="StepProgress-item is-done"><strong>Deposited</strong>
+                                                        </li>
+                                                    </ul>
                                                 </div>
-                                            </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" id="headingThree">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed btn-block text-left" type="button"
+                                                    data-toggle="collapse" data-target="#collapseThree"
+                                                    aria-expanded="false" aria-controls="collapseThree">
+                                                    <span style="font-size:18px;color:gray;">Product and services</span>
+                                                    <i class='fas fa-angle-right'
+                                                        style='font-size:24px;color:gray;float:right;'></i>
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapseThree" class="collapse fade" aria-labelledby="headingThree"
+                                            data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div id="billing_items"></div>
+                                                <a href="#" style="color:blue;text-decoration: underline;"><u>More
+                                                        details</u></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
 
-										</div>
-									</div>
-								</div>
-							</div>
-							<!--    end of modal-->
-						</div>
-
-    <div id="share-link-modal">
-        <div class="the-modal-body">
-            <div class="title">Share invoice link</div>
-            <div class="the-content">
-                <p> Enable your customers to pay, print and download this invoice</p>
-                <div class="form-group">
-                    <div class="label">
-                        Copy and share link through email or SMS
-                    </div>
-                    <input type="text" class="form-control " name="shared_invoice_link">
                 </div>
-            </div>
-            <div class="btns">
-                <button class="btn btn-default float-left cancel-btn" type="button">
-                    Cancel
-                </button>
-                <button class="btn btn-success float-right copy-btn" type="button">
-                    Copy link and close
-                </button>
             </div>
         </div>
     </div>
+    <!--    end of modal-->
+</div>
+
+<div id="share-link-modal">
+    <div class="the-modal-body">
+        <div class="title">Share invoice link</div>
+        <div class="the-content">
+            <p> Enable your customers to pay, print and download this invoice</p>
+            <div class="form-group">
+                <div class="label">
+                    Copy and share link through email or SMS
+                </div>
+                <input type="text" class="form-control " name="shared_invoice_link">
+            </div>
+        </div>
+        <div class="btns">
+            <button class="btn btn-default float-left cancel-btn" type="button">
+                Cancel
+            </button>
+            <button class="btn btn-success float-right copy-btn" type="button">
+                Copy link and close
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- Modal for add account-->
 <div class="full-screen-modal">
@@ -1092,103 +1181,109 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!--end of modal-->
 </div>
 
-<script src="<?php echo $url->assets ?>js/accounting/sales/customer_includes/customer_single_modal.js"></script>
+<script
+    src="<?php echo $url->assets ?>js/accounting/sales/customer_includes/customer_single_modal.js">
+</script>
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 
 <?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
-// $(document).on('click','#delete_workorder',function(){
-//     // alert('test');
-    
-// });
+    // $(document).on('click','#delete_workorder',function(){
+    //     // alert('test');
 
-// function myFunction() {
-// $('#delete_workorder').on('click', function(){
-$(document).on('click touchstart','#deleteInvoiceBtnNew',function(){
+    // });
 
-    var id = $(this).attr('data-id');
-    // alert(id);
-  
-  var r = confirm("Are you sure you want to delete this Invoice?");
+    // function myFunction() {
+    // $('#delete_workorder').on('click', function(){
+    $(document).on('click touchstart', '#deleteInvoiceBtnNew', function() {
 
-  if (r == true) {
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>invoice/deleteInvoiceBtnNew",
-    data : {id: id},
-    success: function(result){
-        // $('#res').html('Signature Uploaded successfully');
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
+        var id = $(this).attr('data-id');
+        // alert(id);
 
-        // location.reload();
-        sucess("Data Deleted Successfully!");
-    },
-    });
-  }
+        var r = confirm("Are you sure you want to delete this Invoice?");
 
-});
+        if (r == true) {
+            $.ajax({
+                type: 'POST',
+                url: "<?php echo base_url(); ?>invoice/deleteInvoiceBtnNew",
+                data: {
+                    id: id
+                },
+                success: function(result) {
+                    // $('#res').html('Signature Uploaded successfully');
+                    // if (confirm('Some message')) {
+                    //     alert('Thanks for confirming');
+                    // } else {
+                    //     alert('Why did you press cancel? You should have confirmed');
+                    // }
 
-$(document).on('click touchstart','#inv_number_details',function(){
-
-var id = $(this).attr('data-id');
-var inv_no = $(this).attr('inv-no');
-
-
-$('#type-selection-modal').modal('show');
-$('#inv_modal_invNo').text(inv_no);
-$('#inv_modal_invNo2').text(inv_no);
-
-// alert(id);
-
-    $.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>accounting/inv_number_details",
-    data : { id: id },
-    dataType: 'json',
-    success: function(response){
-        console.log('test '+ response['invoices'].customer_id);
-        console.log('test 2 '+ response['customers'].first_name);
-
-        var fullname = response['customers'].first_name + ' ' + response['customers'].last_name;
-
-        // result['invoices'].billingName
-        $('#billingName').text(fullname);
-        $('#billing_address').text(response['invoices'].billing_address);
-        $('#billing_customer_email').text(response['invoices'].customer_email);
-
-        if(response['customers'].phone_h == '')
-        {
-            var phone = response['customers'].phone_m;
-        }else{
-            var phone = response['customers'].phone_h;
+                    // location.reload();
+                    sucess("Data Deleted Successfully!");
+                },
+            });
         }
 
-        $('#billing_customer_phone').text(phone);
+    });
 
-        $('#billing_total').text(response['invoices'].grand_total);
-        $('#billing_in_date').text(response['invoices'].date_issued);
-        $('#billing_due_date').text(response['invoices'].due_date);
+    $(document).on('click touchstart', '#inv_number_details', function() {
 
-        $('#billing_city').text(response['customers'].city);
+        var id = $(this).attr('data-id');
+        var inv_no = $(this).attr('inv-no');
 
-        
+
+        $('#type-selection-modal').modal('show');
+        $('#inv_modal_invNo').text(inv_no);
+        $('#inv_modal_invNo2').text(inv_no);
+
+        // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url(); ?>accounting/inv_number_details",
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('test ' + response['invoices'].customer_id);
+                console.log('test 2 ' + response['customers'].first_name);
+
+                var fullname = response['customers'].first_name + ' ' + response['customers']
+                    .last_name;
+
+                // result['invoices'].billingName
+                $('#billingName').text(fullname);
+                $('#billing_address').text(response['invoices'].billing_address);
+                $('#billing_customer_email').text(response['invoices'].customer_email);
+
+                if (response['customers'].phone_h == '') {
+                    var phone = response['customers'].phone_m;
+                } else {
+                    var phone = response['customers'].phone_h;
+                }
+
+                $('#billing_customer_phone').text(phone);
+
+                $('#billing_total').text(response['invoices'].grand_total);
+                $('#billing_in_date').text(response['invoices'].date_issued);
+                $('#billing_due_date').text(response['invoices'].due_date);
+
+                $('#billing_city').text(response['customers'].city);
+
+
                 var inputs = "";
-                    $.each(response['items'], function (i, v) {
-                        inputs += v.title ;
-        
-                        console.log('test 3 '+ v.title);
+                $.each(response['items'], function(i, v) {
+                    inputs += v.title;
+
+                    console.log('test 3 ' + v.title);
 
                     markup2 = "<table><tr width=\"10%\" id=\"sss\">" +
                         // "<tr>"+
-                            "<td></td>"+
-                            "<td>"+ v.title +"</td>"+
-                            "<td>"+ v.quantity +"</td>"+
-                            "<td>"+ v.iCost +"</td>"+
+                        "<td></td>" +
+                        "<td>" + v.title + "</td>" +
+                        "<td>" + v.quantity + "</td>" +
+                        "<td>" + v.iCost + "</td>" +
                         "</tr></table>";
                     sulod = $("#billing_items");
                     sulod.append(markup2);
@@ -1196,50 +1291,51 @@ $('#inv_modal_invNo2').text(inv_no);
                 });
 
 
-        // if (confirm('Some message')) {
-        //     alert('Thanks for confirming');
-        // } else {
-        //     alert('Why did you press cancel? You should have confirmed');
-        // }
+                // if (confirm('Some message')) {
+                //     alert('Thanks for confirming');
+                // } else {
+                //     alert('Why did you press cancel? You should have confirmed');
+                // }
 
-        // location.reload();
-        // sucess("Data Deleted Successfully!");
-    },
+                // location.reload();
+                // sucess("Data Deleted Successfully!");
+            },
+        });
     });
-});
 
 
-function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
+    function sucess(information, $id) {
+        Swal.fire({
+            title: 'Good job!',
+            text: information,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                location.reload();
+            }
+        });
+    }
 </script>
 
 <script>
     $(document).on("click", ".share-invoice-link-btn", function(event) {
         // alert('test');
-    $.ajax({
-        url: baseURL + "/accounting/generate_share_invoice_link",
-        type: "POST",
-        dataType: "json",
-        data: {
-            invoice_id: $(this).attr("data-invoice-id")
-        },
-        success: function(data) {
-            $("div#share-link-modal").fadeIn();
-            $('div#share-link-modal .the-modal-body .form-group input[name="shared_invoice_link"]').val(data.shared_link);
-        },
+        $.ajax({
+            url: baseURL + "/accounting/generate_share_invoice_link",
+            type: "POST",
+            dataType: "json",
+            data: {
+                invoice_id: $(this).attr("data-invoice-id")
+            },
+            success: function(data) {
+                $("div#share-link-modal").fadeIn();
+                $('div#share-link-modal .the-modal-body .form-group input[name="shared_invoice_link"]')
+                    .val(data.shared_link);
+            },
+        });
     });
-});
 </script>

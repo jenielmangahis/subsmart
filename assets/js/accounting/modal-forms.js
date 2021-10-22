@@ -401,14 +401,15 @@ $(function() {
 
             if ($('div#modal-container table:not(#category-details-table, #item-details-table)').length > 0) {
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();
-                if(modal_element === '#journalEntryModal') {
-                    blankRow = $('#journalEntryModal table tbody tr:last-child()').html();
+                if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
+                    blankRow = $('div#modal-container table tbody tr:last-child()').html();
+
+                    $('div#modal-container table.clickable tbody tr:first-child()').remove();
+                    $('div#modal-container table tbody tr:last-child()').remove();
                 } else {
                     blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
                 }
 
-                $('#journalEntryModal table.clickable tbody tr:first-child()').remove();
-                $('#journalEntryModal table tbody tr:last-child()').remove();
                 rowCount = $('div#modal-container table tbody tr').length;
 
                 $('div#modal-container table.clickable tbody tr:first-child()').html(blankRow);

@@ -19,7 +19,11 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transfer_from_account">Transfer Funds From</label>
-                                                <select name="transfer_from_account" id="transfer_from_account" class="form-control" required></select>
+                                                <select name="transfer_from_account" id="transfer_from_account" class="form-control" required>
+                                                    <?php if(isset($transfer)) : ?>
+                                                    <option value="<?=$transfer->transfer_from->id?>"><?=$transfer->transfer_from->name?></option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -35,7 +39,11 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transfer_to_account">Transfer Funds To</label>
-                                                <select name="transfer_to_account" id="transfer_to_account" class="form-control" required></select>
+                                                <select name="transfer_to_account" id="transfer_to_account" class="form-control" required>
+                                                    <?php if(isset($transfer)) : ?>
+                                                    <option value="<?=$transfer->transfer_to->id?>"><?=$transfer->transfer_to->name?></option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -51,14 +59,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferAmount">Transfer Amount</label>
-                                                <input type="number" name="transfer_amount" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
+                                                <input type="number" name="transfer_amount" value="<?=number_format(floatval($transfer->transfer_amount), 2, '.', ',')?>" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="date">Date</label>
-                                                <input type="text" class="form-control date" name="date" id="date" value="<?php echo date('m/d/Y') ?>"/>
+                                                <input type="text" class="form-control date" name="date" id="date" value="<?=!isset($transfer) ? date('m/d/Y') : date('m/d/Y', strtotime($transfer->transfer_date))?>"/>
                                             </div>
                                         </div>
                                     </div>
@@ -67,7 +75,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="form-control"></textarea>
+                                                <textarea name="memo" id="memo" class="form-control"><?=$transfer->transfer_memo?></textarea>
                                             </div>
                                         </div>
                                     </div>

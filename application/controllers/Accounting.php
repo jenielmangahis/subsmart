@@ -242,7 +242,10 @@ class Accounting extends MY_Controller
         $this->page_data['rules'] = $this->rules_model->getRules();
         add_css([
             'assets/css/accounting/banking/rules/rules.css',
-            'https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css'
+            'https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css',
+
+            // stepper
+            'https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.min.css',
         ]);
         add_footer_js([
             'assets/js/accounting/banking/rules/rules.js',
@@ -250,7 +253,12 @@ class Accounting extends MY_Controller
             // for some reason the oldest version is the only one that
             // works while implementing this. not sure why though.
             // https://cdn.datatables.net/rowreorder/
-            'https://cdn.datatables.net/rowreorder/1.0.0/js/dataTables.rowReorder.min.js'
+            'https://cdn.datatables.net/rowreorder/1.0.0/js/dataTables.rowReorder.min.js',
+
+            'assets/js/accounting/banking/rules/libs/download/download.min.js',
+
+            // stepper
+            'https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js',
         ]);
 
         $this->load->view('accounting/rules', $this->page_data);
@@ -415,22 +423,10 @@ class Accounting extends MY_Controller
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             "assets/css/accounting/customers.css",
-            // "assets/css/accounting/accounting_includes/create_statement_modal.css",
-            // "assets/css/accounting/accounting_includes/time_activity.css",
-            // "assets/css/accounting/accounting_includes/create_invoice.css",
-            // "assets/css/accounting/accounting_includes/customer_types.css",
-            // "assets/css/accounting/accounting_includes/customer_single_modal.css",
+            "assets/css/accounting/invoices_page.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
-            // "assets/js/accounting/sales/customer_includes/send_reminder.js",
-            // "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
-            // "assets/js/accounting/sales/customer_includes/create_estimate.js",
-            // "assets/js/accounting/sales/customer_includes/time_activity.js",
-            // "assets/js/accounting/sales/customer_includes/create_invoice.js",
-            // "assets/js/accounting/sales/customer_includes/customer_types.js",
-            // "assets/js/accounting/sales/customer_includes/export_table.js",
-            // "assets/js/accounting/sales/customer_includes/customer_single_modal.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
 
@@ -4340,20 +4336,15 @@ class Accounting extends MY_Controller
 
                 $i = 0;
                 foreach ($a as $row) {
-                    $data['item'] = $item_names[$i];
-                    $data['item_type'] = $item_type[$i];
-                    $data['type'] = 'Sales Receipt';
-                    $data['type_id'] = $addQuery;
+                    $data['	items_id'] = $a[$i];
                     //  $data['package_id ']    = $packageID[$i];
                     $data['qty'] = $quantity[$i];
                     $data['cost'] = $price[$i];
                     $data['tax'] = $h[$i];
                     $data['discount'] = $discount[$i];
                     $data['total'] = $total[$i];
-                    $data['status'] = '1';
-                    $data['created_at'] = date("Y-m-d H:i:s");
-                    $data['updated_at'] = date("Y-m-d H:i:s");
-                    $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                    $data['sales_receipt_id'] = $addQuery;
+                    $this->accounting_sales_receipt_model->additem_details($data);
                     $i++;
                 }
 
@@ -4520,20 +4511,15 @@ class Accounting extends MY_Controller
 
             $i = 0;
             foreach ($a as $row) {
-                $data['item'] = $item_names[$i];
-                $data['item_type'] = $item_type[$i];
-                $data['type'] = 'Sales Receipt';
-                $data['type_id'] = $sales_receipt_id;
+                $data['	items_id'] = $a[$i];
                 //  $data['package_id ']    = $packageID[$i];
                 $data['qty'] = $quantity[$i];
                 $data['cost'] = $price[$i];
                 $data['tax'] = $h[$i];
                 $data['discount'] = $discount[$i];
                 $data['total'] = $total[$i];
-                $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $data['sales_receipt_id'] = $sales_receipt_id;
+                $this->accounting_sales_receipt_model->additem_details($data);
                 $i++;
             }
             $customer_id = $this->input->post('customer_id');
@@ -10455,121 +10441,123 @@ class Accounting extends MY_Controller
         
         //scripts for invoices
         $where=" invoices.company_id =".logged("company_id");
-        if($this->input->post("filter_status") == "Open"){
+        if ($this->input->post("filter_status") == "Open") {
             $where.=" AND (invoices.status!='Draft' AND invoices.status!='Declined' AND invoices.status!='Paid')";
-        }elseif($this->input->post("filter_status") == "Overdue"){
+        } elseif ($this->input->post("filter_status") == "Overdue") {
             $where.=" AND (invoices.status='Due' AND invoices.status='Overdue') ";
-        }elseif($this->input->post("filter_status") == "Paid"){
+        } elseif ($this->input->post("filter_status") == "Paid") {
             $where.=" AND invoices.status='Paid' ";
-        }elseif($this->input->post("filter_status") == "Pending"){
+        } elseif ($this->input->post("filter_status") == "Pending") {
             $where.=" AND invoices.status='Submitted' ";
-        }elseif($this->input->post("filter_status") == "Accepted"){
+        } elseif ($this->input->post("filter_status") == "Accepted") {
             $where.=" AND invoices.status='Approved' ";
-        }elseif($this->input->post("filter_status") == "Closed"){ 
+        } elseif ($this->input->post("filter_status") == "Closed") {
             $where.=" AND invoices.status='Closed' ";
-        }elseif($this->input->post("filter_status") == "Rejected"){
+        } elseif ($this->input->post("filter_status") == "Rejected") {
             $where.=" AND invoices.status='Declined' ";
-        }elseif($this->input->post("filter_status") == "Expired"){
+        } elseif ($this->input->post("filter_status") == "Expired") {
             $where.=" AND invoices.status='Expired' ";
         }
-        if($this->input->post("filter_date") != "All dates"){
-            if($this->input->post("filter_date") == "Last 365 days"){
-                $where.=" AND (invoices.date_issued >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."')";
-            }else{
-                $where.=" AND (invoices.date_issued >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."' AND invoices.date_issued <= '".date("Y-m-d",strtotime($this->input->post("filter_date_to")))."')";
+        if ($this->input->post("filter_date") != "All dates") {
+            if ($this->input->post("filter_date") == "Last 365 days") {
+                $where.=" AND (invoices.date_issued >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."')";
+            } else {
+                $where.=" AND (invoices.date_issued >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."' AND invoices.date_issued <= '".date("Y-m-d", strtotime($this->input->post("filter_date_to")))."')";
             }
         }
-        if($this->input->post("filter_customer") != "all"){
+        if ($this->input->post("filter_customer") != "all") {
             $where.=" AND invoices.customer_id = ".$this->input->post("filter_customer");
         }
         $this->page_data['invoices']=$this->accounting_invoices_model->get_filtered_invoices($where);
         
         //scripts for estimates
         $where=" company_id =".logged("company_id");
-        if($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses"){
+        if ($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses") {
             $where.=" AND (status!='Draft' AND status!='Declined By Customer' AND status!='Lost')";
-        }elseif($this->input->post("filter_status") == "Overdue"){
+        } elseif ($this->input->post("filter_status") == "Overdue") {
             $where.=" AND (status='Overdue') ";
-        }elseif($this->input->post("filter_status") == "Paid"){
+        } elseif ($this->input->post("filter_status") == "Paid") {
             $where.=" AND status='Paid' ";
-        }elseif($this->input->post("filter_status") == "Pending"){
+        } elseif ($this->input->post("filter_status") == "Pending") {
             $where.=" AND status='Submitted' ";
-        }elseif($this->input->post("filter_status") == "Accepted"){
+        } elseif ($this->input->post("filter_status") == "Accepted") {
             $where.=" AND (status='Accepted' AND status='Invoiced')";
-        }elseif($this->input->post("filter_status") == "Closed"){ 
+        } elseif ($this->input->post("filter_status") == "Closed") {
             $where.=" AND status='Closed' ";
-        }elseif($this->input->post("filter_status") == "Rejected"){
+        } elseif ($this->input->post("filter_status") == "Rejected") {
             $where.=" AND status='Declined By Customer' ";
-        }elseif($this->input->post("filter_status") == "Expired"){
+        } elseif ($this->input->post("filter_status") == "Expired") {
             $where.=" AND status='Lost' ";
         }
-        if($this->input->post("filter_date") != "All dates"){
-            if($this->input->post("filter_date") == "Last 365 days"){
-                $where.=" AND (estimate_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."')";
-            }else{
-                $where.=" AND (estimate_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."' AND estimate_date <= '".date("Y-m-d",strtotime($this->input->post("filter_date_to")))."')";
+        if ($this->input->post("filter_date") != "All dates") {
+            if ($this->input->post("filter_date") == "Last 365 days") {
+                $where.=" AND (estimate_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."')";
+            } else {
+                $where.=" AND (estimate_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."' AND estimate_date <= '".date("Y-m-d", strtotime($this->input->post("filter_date_to")))."')";
             }
         }
-        if($this->input->post("filter_customer") != "all"){
+        if ($this->input->post("filter_customer") != "all") {
             $where.=" AND customer_id = ".$this->input->post("filter_customer");
         }
         $this->page_data['estimates'] = $this->accounting_invoices_model->get_filtered_estimates($where);
 
         //scripts for sales_receipts
         $where=" accounting_sales_receipt.company_id =".logged("company_id");
-        if($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses"){
+        if ($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Overdue"){
+        } elseif ($this->input->post("filter_status") == "Overdue") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Paid"){
+        } elseif ($this->input->post("filter_status") == "Paid") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Pending"){
+        } elseif ($this->input->post("filter_status") == "Pending") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Accepted"){
+        } elseif ($this->input->post("filter_status") == "Accepted") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Closed"){ 
+        } elseif ($this->input->post("filter_status") == "Closed") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Rejected"){
+        } elseif ($this->input->post("filter_status") == "Rejected") {
             $where.=" AND accounting_sales_receipt.status=1 ";
-        }elseif($this->input->post("filter_status") == "Expired"){
+        } elseif ($this->input->post("filter_status") == "Expired") {
             $where.=" AND accounting_sales_receipt.status=1 ";
         }
-        if($this->input->post("filter_date") != "All dates"){
-            if($this->input->post("filter_date") == "Last 365 days"){
-                $where.=" AND (accounting_sales_receipt.sales_receipt_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."')";
-            }else{
-                $where.=" AND (accounting_sales_receipt.sales_receipt_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."' AND accounting_sales_receipt.sales_receipt_date <= '".date("Y-m-d",strtotime($this->input->post("filter_date_to")))."')";
+        if ($this->input->post("filter_date") != "All dates") {
+            if ($this->input->post("filter_date") == "Last 365 days") {
+                $where.=" AND (accounting_sales_receipt.sales_receipt_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."')";
+            } else {
+                $where.=" AND (accounting_sales_receipt.sales_receipt_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."' AND accounting_sales_receipt.sales_receipt_date <= '".date("Y-m-d", strtotime($this->input->post("filter_date_to")))."')";
             }
-        }if($this->input->post("filter_customer") != "all"){
+        }
+        if ($this->input->post("filter_customer") != "all") {
             $where.=" AND accounting_sales_receipt.customer_id = ".$this->input->post("filter_customer");
         }
         $this->page_data['sales_receipts'] = $this->accounting_invoices_model->get_filtered_sales_receipt($where);
         //scripts for credit_memo
         $where=" accounting_credit_memo.company_id =".logged("company_id");
-        if($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses"){
+        if ($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Overdue"){
+        } elseif ($this->input->post("filter_status") == "Overdue") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Paid"){
+        } elseif ($this->input->post("filter_status") == "Paid") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Pending"){
+        } elseif ($this->input->post("filter_status") == "Pending") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Accepted"){
+        } elseif ($this->input->post("filter_status") == "Accepted") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Closed"){ 
+        } elseif ($this->input->post("filter_status") == "Closed") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Rejected"){
+        } elseif ($this->input->post("filter_status") == "Rejected") {
             $where.=" AND accounting_credit_memo.status=1 ";
-        }elseif($this->input->post("filter_status") == "Expired"){
+        } elseif ($this->input->post("filter_status") == "Expired") {
             $where.=" AND accounting_credit_memo.status=1 ";
         }
-        if($this->input->post("filter_date") != "All dates"){
-            if($this->input->post("filter_date") == "Last 365 days"){
-                $where.=" AND (accounting_credit_memo.credit_memo_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."')";
-            }else{
-                $where.=" AND (accounting_credit_memo.credit_memo_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."' AND accounting_credit_memo.credit_memo_date <= '".date("Y-m-d",strtotime($this->input->post("filter_date_to")))."')";
+        if ($this->input->post("filter_date") != "All dates") {
+            if ($this->input->post("filter_date") == "Last 365 days") {
+                $where.=" AND (accounting_credit_memo.credit_memo_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."')";
+            } else {
+                $where.=" AND (accounting_credit_memo.credit_memo_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."' AND accounting_credit_memo.credit_memo_date <= '".date("Y-m-d", strtotime($this->input->post("filter_date_to")))."')";
             }
-        }if($this->input->post("filter_customer") != "all"){
+        }
+        if ($this->input->post("filter_customer") != "all") {
             $where.=" AND accounting_credit_memo.customer_id = ".$this->input->post("filter_customer");
         }
 
@@ -10578,30 +10566,31 @@ class Accounting extends MY_Controller
 
         //scripts for credit_memo
         $where=" accounting_statements.company_id =".logged("company_id");
-        if($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses"){
+        if ($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Overdue"){
+        } elseif ($this->input->post("filter_status") == "Overdue") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Paid"){
+        } elseif ($this->input->post("filter_status") == "Paid") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Pending"){
+        } elseif ($this->input->post("filter_status") == "Pending") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Accepted"){
+        } elseif ($this->input->post("filter_status") == "Accepted") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Closed"){ 
+        } elseif ($this->input->post("filter_status") == "Closed") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Rejected"){
+        } elseif ($this->input->post("filter_status") == "Rejected") {
             $where.=" AND accounting_statements.status=1 ";
-        }elseif($this->input->post("filter_status") == "Expired"){
+        } elseif ($this->input->post("filter_status") == "Expired") {
             $where.=" AND accounting_statements.status=1 ";
         }
-        if($this->input->post("filter_date") != "All dates"){
-            if($this->input->post("filter_date") == "Last 365 days"){
-                $where.=" AND (accounting_statements.statement_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."')";
-            }else{
-                $where.=" AND (accounting_statements.statement_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."' AND accounting_statements.statement_date <= '".date("Y-m-d",strtotime($this->input->post("filter_date_to")))."')";
+        if ($this->input->post("filter_date") != "All dates") {
+            if ($this->input->post("filter_date") == "Last 365 days") {
+                $where.=" AND (accounting_statements.statement_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."')";
+            } else {
+                $where.=" AND (accounting_statements.statement_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."' AND accounting_statements.statement_date <= '".date("Y-m-d", strtotime($this->input->post("filter_date_to")))."')";
             }
-        }if($this->input->post("filter_customer") != "all"){
+        }
+        if ($this->input->post("filter_customer") != "all") {
             $where.=" AND accounting_statements.customer_id = ".$this->input->post("filter_customer");
         }
 
@@ -10609,30 +10598,31 @@ class Accounting extends MY_Controller
 
         //scripts for rpayments
         $where="company_id =".logged("company_id");
-        if($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses"){
+        if ($this->input->post("filter_status") == "Open" || $this->input->post("filter_status") == "All statuses") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Overdue"){
+        } elseif ($this->input->post("filter_status") == "Overdue") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Paid"){
+        } elseif ($this->input->post("filter_status") == "Paid") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Pending"){
+        } elseif ($this->input->post("filter_status") == "Pending") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Accepted"){
+        } elseif ($this->input->post("filter_status") == "Accepted") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Closed"){ 
+        } elseif ($this->input->post("filter_status") == "Closed") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Rejected"){
+        } elseif ($this->input->post("filter_status") == "Rejected") {
             $where.=" AND status=1 ";
-        }elseif($this->input->post("filter_status") == "Expired"){
+        } elseif ($this->input->post("filter_status") == "Expired") {
             $where.=" AND status=1 ";
         }
-        if($this->input->post("filter_date") != "All dates"){
-            if($this->input->post("filter_date") == "Last 365 days"){
-                $where.=" AND (payment_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."')";
-            }else{
-                $where.=" AND (payment_date >= '".date("Y-m-d",strtotime($this->input->post("filter_date_from")))."' AND payment_date <= '".date("Y-m-d",strtotime($this->input->post("filter_date_to")))."')";
+        if ($this->input->post("filter_date") != "All dates") {
+            if ($this->input->post("filter_date") == "Last 365 days") {
+                $where.=" AND (payment_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."')";
+            } else {
+                $where.=" AND (payment_date >= '".date("Y-m-d", strtotime($this->input->post("filter_date_from")))."' AND payment_date <= '".date("Y-m-d", strtotime($this->input->post("filter_date_to")))."')";
             }
-        }if($this->input->post("filter_customer") != "all"){
+        }
+        if ($this->input->post("filter_customer") != "all") {
             $where.=" AND customer_id = ".$this->input->post("filter_customer");
         }
 
