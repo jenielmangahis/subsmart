@@ -252,7 +252,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     ?>
                 <tr>
                     <td style="text-align: left;">
-                        <?=$item->item?>
+                        <?=$item->title?>
                     </td>
                     <td>
                         <?=$item->qty?>

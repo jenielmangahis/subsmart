@@ -136,7 +136,7 @@
                                         <div class="col-md-12 mt-3">
                                             <div class="form-group w-25">
                                                 <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="form-control"></textarea>
+                                                <textarea name="memo" id="memo" class="form-control"><?=$journal_entry->memo?></textarea>
                                             </div>
                                         </div>
 

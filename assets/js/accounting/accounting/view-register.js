@@ -1001,10 +1001,20 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
                 $('#billPaymentModal').modal('show');
             break;
             case 'transfer' :
+                initModalFields('transferModal', data);
 
+                $('#transferModal #transfer_from_account').trigger('change');
+                $('#transferModal #transfer_to_account').trigger('change');
+
+                $('#transferModal').modal('show');
             break;
             case 'deposit' :
+                initModalFields('depositModal', data);
 
+                $('#depositModal table.clickable tbody tr:first-child()').remove();
+                $('#depositModal table tbody tr:last-child()').remove();
+
+                $('#depositModal').modal('show');
             break;
             case 'inventory-qty-adjust' :
 

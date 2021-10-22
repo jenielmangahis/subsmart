@@ -80,13 +80,13 @@ class Accounting_sales_receipt_model extends MY_Model
     public function get_sales_receipt_items($sales_receipt_id)
     {
         $this->db->reset_query();
-        $query = $this->db->query("SELECT * FROM item_details WHERE type='Sales Receipt' and type_id = ".$sales_receipt_id);
+        $query = $this->db->query("SELECT *,sales_receipt_items.cost AS sri_cost FROM sales_receipt_items JOIN items ON sales_receipt_items.items_id = items.id WHERE  sales_receipt_items.	sales_receipt_id= ".$sales_receipt_id);
         return $query->result();
     }
-    public function delete_sales_receipt_items($sales_receipt_id)
-    {
-        $this->db->delete('item_details', array('type_id' => $sales_receipt_id,'type'=>'Sales Receipt'));
-    }
+    // public function delete_sales_receipt_items($sales_receipt_id)
+    // {
+    //     $this->db->delete('item_details', array('type_id' => $sales_receipt_id,'type'=>'Sales Receipt'));
+    // }
     public function get_sales_receipt_recurring($sales_receipt_id)
     {
         $this->db->select('*');
@@ -174,8 +174,8 @@ class Accounting_sales_receipt_model extends MY_Model
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
-    // public function delete_sales_receipt_items($sales_receipt_id)
-    // {
-    //     $this->db->delete('sales_receipt_items', array('sales_receipt_id' => $sales_receipt_id));
-    // }
+    public function delete_sales_receipt_items($sales_receipt_id)
+    {
+        $this->db->delete('sales_receipt_items', array('sales_receipt_id' => $sales_receipt_id));
+    }
 }

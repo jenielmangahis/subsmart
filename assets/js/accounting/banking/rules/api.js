@@ -97,3 +97,19 @@ export async function exportRules() {
   const blob = await response.blob();
   download(blob, filename, "application/octet-stream");
 }
+
+export async function parseFile(file) {
+  const formData = new FormData();
+  formData.append("files[]", file);
+
+  const endpoint = `${window.prefixURL}/AccountingRules/apiPrepare`;
+  const response = await fetch(endpoint, {
+    method: "POST",
+    body: formData,
+    headers: {
+      accept: "application/json",
+    },
+  });
+
+  return response.json();
+}

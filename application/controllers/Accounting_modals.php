@@ -6774,6 +6774,12 @@ class Accounting_modals extends MY_Controller
             case 'journal' :
                 $transaction = $this->accounting_journal_entries_model->getById($transactionId);
             break;
+            case 'transfer' :
+                $transaction = $this->accounting_transfer_funds_model->getById($transactionId);
+            break;
+            case 'deposit' :
+                $transaction = $this->accounting_bank_deposit_model->getById($transactionId);
+            break;
         }
 
         $attachments = json_decode($transaction->attachments, true);

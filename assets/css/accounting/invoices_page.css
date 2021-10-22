@@ -1,0 +1,38 @@
+.invoices-page-section button.btn.btn-default {
+    font-size: 13px;
+    padding: 10px 25px;
+    font-weight: 700;
+    border: solid 3px #6B6C72;
+    height: auto;
+    color: #393A3D;
+    width: 180px;
+}
+
+.invoices-page-section .by-batch-btn .dropdown-menu li {
+    padding: 5px 0;
+}
+
+.invoices-page-section .by-batch-btn .dropdown-menu li:hover,
+.invoices-page-section .by-batch-btn .dropdown-menu li:hover a {
+    color: #2CA01C;
+    background-color: #ECEDF1;
+    cursor: pointer;
+}
+
+.invoices-page-section .by-batch-btn .dropdown-menu li a {
+    font-size: 13px;
+    color: #2C2C2C;
+    font-weight: lighter;
+}
+
+.invoices-page-section table tr .form-check {
+    width: 50px;
+}
+
+.invoices-page-section table tr .form-check .checkbox-sec {
+    margin: 0;
+}
+
+.invoices-page-section table tr th {
+    font-weight: bold;
+}
