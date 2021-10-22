@@ -712,3 +712,8 @@ div#addsalesreceiptModal form .item-totals span.clarification {
     z-index: 1;
     position: absolute;
 }
+
+.modal-backdrop.fade.show.modal-stack {
+    width: 100%;
+    height: 100%;
+}

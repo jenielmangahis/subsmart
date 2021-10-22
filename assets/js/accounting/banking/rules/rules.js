@@ -189,6 +189,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  setupImportRulesForm();
+
   $("#createRules").on("hidden.bs.modal", () => {
     window.resetRuleForm();
   });
@@ -332,4 +334,94 @@ window.resetRuleForm = () => {
 
     $condition.remove();
   }
+};
+
+window.setupImportRulesForm = async () => {
+  const api = await import("./api.js");
+  const { RulesImportTable } = await import("./RulesImportTable.js");
+
+  const $error = document.querySelector(".stepperError");
+  const $stepper = document.getElementById("importRulesStepper");
+  const $importLink = document.getElementById("importRulesLink");
+  const $importModal = document.getElementById("importRules");
+  const $importNext = document.getElementById("importRulesNext");
+  const $stepRulesFile = document.getElementById("stepRulesFile");
+  const $cancelBtn = document.getElementById("importRulesCancel");
+  const $table = document.getElementById("stepRulesTable");
+
+  const handleCheckboxChange = () => {
+    $importNext.disabled = !$table.querySelector(".rulesTable__row--selected");
+  };
+
+  const resetForm = () => {
+    stepper.reset();
+    data = null;
+    $stepRulesFile.value = null;
+    $stepRulesFile.nextElementSibling.textContent = "No file selected";
+    $importNext.disabled = true;
+    $($error).hide();
+  };
+
+  const table = new RulesImportTable($($table));
+  table.onCheckboxChange = handleCheckboxChange;
+  const stepper = new Stepper($stepper);
+  let data = null;
+
+  resetForm();
+
+  $importLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    $($importModal).modal("show");
+  });
+
+  $importNext.addEventListener("click", () => {
+    if (stepper._currentIndex === 0) {
+      if (data === null) {
+        return;
+      }
+    }
+
+    if (stepper._currentIndex === 1) {
+      if (!$table.querySelector(".rulesTable__row--selected")) {
+        return;
+      }
+    }
+
+    stepper.next();
+  });
+
+  $stepRulesFile.addEventListener("change", async function (event) {
+    const [file] = this.files;
+    const { name: fileName } = file;
+    this.nextElementSibling.textContent = fileName;
+
+    const response = await api.parseFile(file);
+
+    if (!response.success) {
+      $($error).show();
+      return;
+    }
+
+    data = response.data;
+    $importNext.disabled = false;
+    $($error).hide();
+  });
+
+  $stepper.addEventListener("shown.bs-stepper", function (event) {
+    const { indexStep: step } = event.detail;
+
+    if (step !== 1) {
+      return;
+    }
+
+    table.render(data);
+  });
+
+  $($importModal).on("hidden.bs.modal", () => {
+    resetForm();
+  });
+
+  $cancelBtn.addEventListener("click", () => {
+    $($importModal).modal("hide");
+  });
 };

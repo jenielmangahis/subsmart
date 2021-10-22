@@ -255,18 +255,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $tax =0;
                 $discount =0;
                 foreach ($items as $item) {
-                    $subtotal+=$item->qty*$item->cost;
+                    $subtotal+=$item->qty*$item->sri_cost;
                     $tax+=(float)$item->tax;
                     $discount+=$item->discount; ?>
                 <tr>
                     <td style="text-align: left;">
-                        <?=$item->item?>
+                        <?=$item->title?>
                     </td>
                     <td>
                         <?=$item->qty?>
                     </td>
                     <td>
-                        <?=number_format($item->cost, 2)?>
+                        <?=number_format($item->sri_cost, 2)?>
                     </td>
                     <td>
                         <?=number_format($item->total, 2)?>

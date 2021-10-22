@@ -284,4 +284,56 @@ class AccountingRules extends MY_Controller
             exit;
         }
     }
+
+    public function apiPrepare()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $files = $_FILES['files'];
+        $count = count($files['name']);
+
+        if ($count !== 1) {
+            echo json_encode(['success' => false, 'message' => 'No file']);
+            return;
+        }
+
+        require_once FCPATH . 'packages/simplexlsx/src/SimpleXLSX.php';
+
+        $file = $files['tmp_name'][0];
+        $xlsx = new SimpleXLSX($file);
+        if (!$xlsx->success()) {
+            echo json_encode(['success' => false, 'message' => 'Parsing failed']);
+            return;
+        }
+
+        $headers = [];
+        $rows = [];
+
+        foreach ($xlsx->rows() as $key => $row) {
+            if ($key === 0) {
+                $headers = $row;
+                continue;
+            }
+
+            $rows[] = array_combine($headers, $row);
+        }
+
+        $validHeaders = [
+            'Rule Name',
+            'Rule Conditions',
+            'Rule Outputs',
+        ];
+
+        if ($headers !== $validHeaders) {
+            echo json_encode(['success' => false, 'message' => 'Invalid format']);
+            return;
+        }
+
+        echo json_encode(['success' => true, 'data' => $rows]);
+    }
 }

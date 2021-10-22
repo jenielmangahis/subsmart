@@ -3403,7 +3403,7 @@ class Chart_of_accounts extends MY_Controller {
                 $this->view_transfer($transactionId);
             break;
             case 'deposit' :
-
+                $this->view_deposit($transactionId);
             break;
             case 'inventory-qty-adjust' :
 
@@ -3574,7 +3574,7 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($entry->name_key) {
                 case 'customer' :
-                    $customer = $this->chart_of_accounts_model->get_by_id($entry->name_id);
+                    $customer = $this->accounting_customers_model->get_by_id($entry->name_id);
                     $entry[$key]->name = $customer->first_name . ' ' . $customer->last_name;
                 break;
                 case 'vendor' :
@@ -3591,12 +3591,57 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['journal_no'] = $journalEntry->journal_no;
         $this->page_data['journal_date'] = date("m/d/Y", strtotime($journalEntry->journal_date));
         $this->page_data['entries'] = $entries;
+        $this->page_data['journal_entry'] = $journalEntry;
 
         $this->load->view("accounting/modals/journal_entry_modal", $this->page_data);
     }
 
-    public function view_transfer($transferId)
+    private function view_transfer($transferId)
     {
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $transfer->transfer_from = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+        $transfer->transfer_to = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
 
+        $this->page_data['transfer'] = $transfer;
+        $this->load->view("accounting/modals/transfer_modal", $this->page_data);
+    }
+
+    private function view_deposit($depositId)
+    {
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $account = $this->chart_of_accounts_model->getById($deposit->account_id);
+        $balance = '$'.number_format(floatval($account->balance), 2, '.', ',');
+        $balance = str_replace('$-', '-$', $balance);
+        $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+        $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+        foreach($funds as $key => $fund) {
+            $funds[$key]->account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+            switch($fund->received_from_key) {
+                case 'customer' :
+                    $customer = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                    $funds[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                break;
+                case 'vendor' :
+                    $vendor = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                    $funds[$key]->name = $vendor->display_name;
+                break;
+                case 'employee' :
+                    $employee = $this->users_model->getUser($fund->received_from_id);
+                    $funds[$key]->name = $employee->FName . ' ' . $employee->LName;
+                break;
+            }
+
+            $funds[$key]->payment = $this->accounting_payment_methods_model->getById($fund->payment_method);
+        }
+
+        $this->page_data['deposit'] = $deposit;
+        $this->page_data['funds'] = $funds;
+        $this->page_data['account'] = $account;
+        $this->page_data['balance'] = $balance;
+        $this->page_data['cash_back_account'] = $cashBackAccount;
+
+        $this->load->view("accounting/modals/bank_deposit_modal", $this->page_data);
     }
 }
