@@ -924,6 +924,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var bc_events_url    = base_url + "calendar/_get_main_calendar_events";
         var bc_resources_url = base_url + "calendar/_get_main_calendar_resources";
         var bc_resource_users_url    = base_url + "calendar/_get_main_calendar_resource_users";
+        var scrollTime = moment().format("HH") + ":00:00";
 
         calendar = new FullCalendar.Calendar(calendarEl, {
            schedulerLicenseKey: '0531798248-fcs-1598103289',
@@ -932,14 +933,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           },
           themeSystem : 'bootstrap',
           eventDisplay: 'block',
+          contentHeight: 750,
           views: {
             employeeTimeline: {
-              type: 'resourceTimelineDay',
-              buttonText: 'Employee'
+              type: 'resourceTimeGridDay',
+              buttonText: 'Employee',
+              allDaySlot: false,
+              nowIndicator: true,
+              slotDuration: '00:15',
+              slotLabelInterval : '01:00',
+              scrollTime: scrollTime
             },
             dayView: {
               type: 'timeGridDay',
-              buttonText: 'Day'
+              nowIndicator: true,
+              allDaySlot: false,
+              buttonText: 'Day',
+              slotDuration: '00:15',
+              slotLabelInterval : '01:00'
             },
             monthView: {
               type: 'dayGridMonth',
@@ -947,22 +958,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             },
             weekView: {
               type: 'timeGridWeek',
-              buttonText: 'Week'
+              buttonText: 'Week',
+              allDaySlot: false,
+              slotDuration: '00:15',
+              slotLabelInterval : '01:00'
             },
             listView: {
               type: 'listWeek',
               buttonText: 'List'
             },
             threeDaysView: {
-              type: 'timeGrid',
+              type: 'resourceTimeGrid',                
+              //type: 'timeGrid',
+              datesAboveResources: true,
+              allDaySlot: false,
               slotLabelFormat: [
                 { hour: 'numeric', minute: 'numeric', meridiem: true }
               ],
+              nowIndicator: true,
               expandRows: true,
               buttonText: '3 days',
               duration: { days: 3 },              
               slotDuration: '00:15',
-              slotLabelInterval : '01:00'
+              slotLabelInterval : '01:00',
+              scrollTime: scrollTime
             },
             displayEventEnd: true,
             allDaySlot: false,

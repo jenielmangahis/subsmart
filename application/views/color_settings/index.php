@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-sm-6 right dashboard-container-1">
                             <div class="text-right">
-                                <a class="btn btn-info" href="<?php echo base_url('color_settings/add_new_color_setting'); ?>"><i class="fa fa-file"></i> Add New</a>
+                                <a class="btn btn-primary" href="<?php echo base_url('color_settings/add_new_color_setting'); ?>"><i class="fa fa-file"></i> Add New</a>
                             </div>
                         </div>
                       </div>
