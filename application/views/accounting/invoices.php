@@ -273,45 +273,50 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div> -->
                         <div class="filtering" style="padding: 0 20px 0 0;">
                             <div class="by-batch-btn">
-                                <button class="btn btn-default" type="button" data-toggle="dropdown">
+                                <button class="btn btn-default disabled" type="button" data-toggle="dropdown">
                                     Batch action <span class="fa fa-caret-down"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right by-batch-btn" role="menu">
                                     <li class="print-transaction-btn disabled">
-                                        <a href="#">Print transactions</a>
+                                        <a href="#">Send</a>
                                     </li>
                                     <li class="print-packaging-slip-btn disabled">
-                                        <a href="#">Print packaging slip</a>
+                                        <a href="#">Send reminder</a>
                                     </li>
                                     <li class="send-transaction-btn disabled">
-                                        <a href="#">Send transactions</a>
+                                        <a href="#">Print</a>
                                     </li>
                                     <li class="send-reminder-btn disabled">
-                                        <a href="#">Send reminder</a>
+                                        <a href="#">Delete</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="filtering" style="padding: 0 10px 0 0;">
                             Status <br>
-                            <select class="form-control" style="width:180px;">
+                            <select class="form-control status" style="width:180px;">
                                 <option>All</option>
-                                <option>Needs Attention</option>
+                                <option>Draft</option>
+                                <option>Partially Paid</option>
+                                <option>Paid</option>
+                                <option>Due</option>
                                 <option>Overdue</option>
-                                <option>Not Due</option>
-                                <option>Not Deposited</option>
-                                <option>Deposited</option>
+                                <option>Submitted</option>
+                                <option>Approved</option>
+                                <option>Declined</option>
+                                <option>Schedule</option>
                             </select>
                         </div>
                         <div class="filtering">
                             Date <br>
-                            <select class="form-control" style="width:180px;">
+                            <select class="form-control date_range" style="width:180px;">
                                 <option>This month</option>
                                 <option>Last month</option>
                                 <option>Last 3 month</option>
                                 <option>Last 6 month</option>
                                 <option>Last 12 month</option>
                                 <option>Year to date</option>
-                                <option>2020</option>
+                                <option><?=date("Y")-1?>
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -462,11 +467,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </ul>
 </div>
 
-<div class="tab-content invoices-page-section" id="myTabContent">
+<div class="tab-content invoices-page-section invoices-page-section" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
 
         <?php if (!empty($invoices)) { ?>
-        <table class="table table-hover table-to-list" data-id="work_orders">
+        <table class="table table-hover table-to-list invoices-table" data-id="work_orders">
             <thead>
                 <tr>
                     <th>
@@ -505,9 +510,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="checkbox checkbox-sm"> -->
                         <!-- <input type="checkbox"
                             name="id[<?php echo $invoice->id ?>]"
-                            value="<?php echo $invoice->id ?>"
-                            class="select-one"
-                            id="invoice_id_<?php echo $invoice->id ?>"> -->
+                        value="<?php echo $invoice->id ?>"
+                        class="select-one"
+                        id="invoice_id_<?php echo $invoice->id ?>">
+                        -->
                         <!-- </div>
                             </div> -->
 
@@ -518,7 +524,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     value="<?php echo $invoice->id ?>"
                                     class="select-one"
                                     id="invoice_id_<?php echo $invoice->id ?>">
-                                <label for="invoice_id_<?php echo $invoice->id ?>"><span></span></label>
+                                <label
+                                    for="invoice_id_<?php echo $invoice->id ?>"><span></span></label>
                             </div>
                         </div>
                     </td>

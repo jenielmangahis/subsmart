@@ -21,7 +21,7 @@ export class RulesImportTable {
         return "Money out";
       },
       conditions: (_, __, row) => {
-        const conditionsArray = JSON.parse(row["Rule Conditions"]);
+        const conditionsArray = row["Rule Conditions"];
         const conditions = conditionsArray.map((condition) => {
           const { type, equation, value } = condition;
           const text = `${type} ${equation.toLowerCase()} "${value}"`;
@@ -36,7 +36,7 @@ export class RulesImportTable {
         `;
       },
       settings: (_, __, row) => {
-        const assignmentsArray = JSON.parse(row["Rule Conditions"]);
+        const assignmentsArray = row["Rule Outputs"];
         const assignments = assignmentsArray.map((assignment) => {
           const { type, value } = assignment;
           const text = `Set ${type} to "${value}"`;
@@ -103,6 +103,8 @@ export class RulesImportTable {
         },
       ],
     });
+
+    this.table = table;
 
     table.on("click", "th .rulesTable__checkbox", (event) => {
       const isChecked = event.target.checked;

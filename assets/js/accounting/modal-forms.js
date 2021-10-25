@@ -5748,7 +5748,7 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
     }
 
-    if($(`#${modalName} select`).length > 0) {
+    if($(`#${modalName} select`).length > 0) { //
         $(`#${modalName} select`).each(function() {
             var type = $(this).attr('id');
             if (type === undefined) {
@@ -6160,7 +6160,7 @@ const showBalance = (el) => {
 }
 
 const initAccountModal = () => {
-    $('#modal-container #account-modal select').each(function() {
+$('#modal-container #account-modal select').each(function() {
         var id = $(this).attr('id').replaceAll('_', '-');
         switch (id) {
             case 'account-type':

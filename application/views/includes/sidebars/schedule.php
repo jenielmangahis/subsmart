@@ -66,6 +66,11 @@
                 <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Event Types
             </a>
         </li>
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'appointment_types')  ? "active" : ""; ?>">
+            <a href="<?php echo base_url('appointment_types/index') ?>" title="Appointment Types">
+                <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Appointment Types
+            </a>
+        </li>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'color_settings')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('color_settings/index') ?>" title="Color Settings">
                 <span class="fa fa-gear"></span><span class="left-sidebar-badge"></span>Color Settings

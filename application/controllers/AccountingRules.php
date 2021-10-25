@@ -5,6 +5,8 @@ class AccountingRules extends MY_Controller
 {
     public function apiSaveRule()
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -23,7 +25,18 @@ class AccountingRules extends MY_Controller
         $maxPrio = $this->db->get('accounting_rules')->row();
         $payload['priority'] = is_null($maxPrio->value) ? 0 : ((int) $maxPrio->value) + 1;
 
-        $this->db->insert('accounting_rules', $payload);
+        $this->db->db_debug = false;
+        $savedRule = $this->db->insert('accounting_rules', $payload);
+
+        if (!$savedRule) {
+            $error = $this->db->error();
+            echo json_encode([
+                'success' => false,
+                'message' => $error['code'] === 1062 ? 'Duplicate name.' : 'Something went wrong.',
+            ]);
+            return;
+        }
+
         $this->db->where('id', $this->db->insert_id());
         $newRule = $this->db->get('accounting_rules')->row();
 
@@ -39,7 +52,6 @@ class AccountingRules extends MY_Controller
         }, $assignments);
         $this->db->insert_batch('accounting_rule_assignments', $assignments);
 
-        header('content-type: application/json');
         echo json_encode(['data' => $newRule]);
     }
 
@@ -182,6 +194,10 @@ class AccountingRules extends MY_Controller
         $updates = [];
         foreach ($rules as $key => $rule) {
             $updates[] = ['id' => $rule->id, 'priority' => $key];
+        }
+
+        if (count($updates) <= 0) {
+            return [];
         }
 
         $this->db->update_batch('accounting_rules', $updates, 'id');
@@ -330,10 +346,115 @@ class AccountingRules extends MY_Controller
         ];
 
         if ($headers !== $validHeaders) {
-            echo json_encode(['success' => false, 'message' => 'Invalid format']);
+            echo json_encode(['success' => false, 'message' => 'Invalid header format']);
             return;
         }
 
-        echo json_encode(['success' => true, 'data' => $rows]);
+        $rowsDecoded = [];
+        $hasError = false;
+        foreach ($rows as $row) {
+            if ($hasError) {
+                break;
+            }
+
+            $conditions = [];
+            if (!empty($row['Rule Conditions'])) {
+                $conditions = json_decode($row['Rule Conditions']);
+
+                if (is_null($conditions)) {
+                    $hasError = true;
+                }
+            }
+
+            $outputs = [];
+            if (!empty($row['Rule Outputs'])) {
+                $outputs = json_decode($row['Rule Outputs']);
+
+                if (is_null($outputs)) {
+                    $hasError = true;
+                }
+            }
+
+            $row['Rule Conditions'] = $conditions;
+            $row['Rule Outputs'] = $outputs;
+            array_push($rowsDecoded, $row);
+        }
+
+        if ($hasError) {
+            echo json_encode(['success' => false, 'message' => 'Invalid row format']);
+            return;
+        }
+
+        echo json_encode(['success' => true, 'data' => $rowsDecoded]);
+    }
+
+    public function apiImportRules()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['rules' => $rules] = $payload;
+
+        $failed = [];
+        $success = [];
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->select_max('priority', 'value');
+        $maxPrio = $this->db->get('accounting_rules')->row();
+        $maxPrio = is_null($maxPrio->value) ? 0 : ((int) $maxPrio->value) + 1;
+
+        $this->db->db_debug = false;
+
+        foreach ($rules as $rule) {
+            $newRule = $this->db->insert('accounting_rules', [
+                'user_id' => logged('id'),
+                'rules_name' => $rule['Rule Name'],
+                'priority' => $maxPrio,
+            ]);
+
+            if (!$newRule) {
+                $failed[] = $rule;
+                continue;
+            }
+
+            $maxPrio += 1;
+            $success[] = $rule;
+            $newRuleId = $this->db->insert_id();
+
+            if (array_key_exists('Rule Conditions', $rule) && is_array($rule['Rule Conditions'])) {
+                $conditions = array_map(function ($condition) use ($newRuleId) {
+                    return [
+                        'rule_id' => $newRuleId,
+                        'description' => $condition['type'],
+                        'contain' => $condition['equation'],
+                        'comment' => $condition['value'],
+                    ];
+                }, $rule['Rule Conditions']);
+
+                if (count($conditions) > 0) {
+                    $this->db->insert_batch('accounting_rules_conditions', $conditions);
+                }
+            }
+
+            if (array_key_exists('Rule Outputs', $rule) && is_array($rule['Rule Outputs'])) {
+                $assignments = array_map(function ($assignment) use ($newRuleId) {
+                    return [
+                        'rule_id' => $newRuleId,
+                        'type' => $assignment['type'],
+                        'value' => $assignment['value'],
+                        'percentage' => $assignment['percentage'],
+                    ];
+                }, $rule['Rule Outputs']);
+
+                if (count($conditions) > 0) {
+                    $this->db->insert_batch('accounting_rule_assignments', $assignments);
+                }
+            }
+        }
+
+        echo json_encode(['failed' => $failed, 'success' => $success]);
     }
 }

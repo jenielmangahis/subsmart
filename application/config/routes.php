@@ -384,6 +384,7 @@ $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payme
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
+$route['accounting/filter/invoices-page'] = 'accounting/invoices_page_filter';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
@@ -758,6 +759,7 @@ $route['calendar/_appointment_checkout'] = 'Workcalender/ajax_checkout_appointme
 $route['calendar/_save_checkout_items'] = 'Workcalender/ajax_save_checkout_items';
 $route['calendar/_appointment_cash_checkout'] = 'Workcalender/ajax_appointment_cash_checkout';
 $route['calendar/_appointment_converge_checkout'] = 'Workcalender/ajax_appointment_converge_checkout';
+$route['calendar/_get_main_calendar_resource_users'] = 'Workcalender/main_calendar_resource_users';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
@@ -1057,3 +1059,8 @@ $route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
 
 //Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
+
+//Appointment Types
+$route['appointment_types/index'] = 'Appointment_Types/index';
+$route['appointment_types/add_new_type'] = 'Appointment_Types/add_new_type';
+$route['appointment_types/create_appointment_type'] = 'Appointment_Types/create_appointment_type';

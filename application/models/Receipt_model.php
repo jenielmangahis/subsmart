@@ -18,15 +18,15 @@ class Receipt_model extends MY_Model
 
         if ($qry->num_rows() == 1){
             $data = array(
-                'document_type' => $new_data['document_type'],
-                'payee_id' => $new_data['payee_id'],
-                'bank_account' => $new_data['bank_account'],
-                'transaction_date' => $new_data['transaction_date'],
-                'category' => $new_data['category'],
-                'description' => $new_data['description'],
-                'total_amount' => $new_data['total_amount'],
-                'memo' => $new_data['memo'],
-                'ref_number' => $new_data['ref_number']
+                'document_type'     => $new_data['document_type'],
+                'payee_id'          => $new_data['payee_id'],
+                'bank_account'      => $new_data['bank_account'],
+                'transaction_date'  => $new_data['transaction_date'],
+                'category'          => $new_data['category'],
+                'description'       => $new_data['description'],
+                'total_amount'      => $new_data['total_amount'],
+                'memo'              => $new_data['memo'],
+                'ref_number'        => $new_data['ref_number']
             );
             $this->db->where('id',$new_data['receipt_id']);
             $this->db->update('accounting_receipts',$data);

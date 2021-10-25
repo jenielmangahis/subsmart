@@ -36,3 +36,15 @@
 .invoices-page-section table tr th {
     font-weight: bold;
 }
+
+.invoices-page-section ul.by-batch-btn li.print-transaction-btn.disabled,
+.invoices-page-section ul.by-batch-btn li.print-transaction-btn.disabled a,
+.invoices-page-section ul.by-batch-btn li.print-packaging-slip-btn.disabled,
+.invoices-page-section ul.by-batch-btn li.print-packaging-slip-btn.disabled a,
+.invoices-page-section ul.by-batch-btn li.send-transaction-btn.disabled,
+.invoices-page-section ul.by-batch-btn li.send-transaction-btn.disabled a,
+.invoices-page-section ul.by-batch-btn li.send-reminder-btn.disabled,
+.invoices-page-section ul.by-batch-btn li.send-reminder-btn.disabled a {
+    cursor: default;
+    color: #A0A09F;
+}

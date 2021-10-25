@@ -324,9 +324,13 @@ class Items_model extends MY_Model
 
     public function getItemQuantityAdjustments($item_id, $location_id)
     {
-        $this->db->where('product_id', $item_id);
-        $this->db->where('location_id', $location_id);
-        $query = $this->db->get('accounting_inventory_qty_adjustment_items');
+        $this->db->select('accounting_inventory_qty_adjustment_items.*');
+        $this->db->from('accounting_inventory_qty_adjustment_items');
+        $this->db->where('accounting_inventory_qty_adjustment_items.product_id', $item_id);
+        $this->db->where('accounting_inventory_qty_adjustment_items.location_id', $location_id);
+        $this->db->where('accounting_inventory_qty_adjustments.status !=', 0);
+        $this->db->join('accounting_inventory_qty_adjustments', 'accounting_inventory_qty_adjustments.id = accounting_inventory_qty_adjustment_items.adjustment_id');
+        $query = $this->db->get();
 
         return $query->result();
     }

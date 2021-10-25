@@ -7,7 +7,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Inventory Starting Value <span>#START</span></h4>
+                    <h4 class="modal-title">Inventory Starting Value <span>#<?=!isset($adjustment) ? 'START' : $adjustment->ref_no?></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -21,7 +21,16 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">VALUE</h6>
-                                            <h2 class="text-right total-value">$0.00</h2>
+                                            <h2 class="text-right total-value">
+                                                <?php if(isset($adjustment)) : 
+                                                    $total = '$'.number_format(floatval($adjustment->total_amount), 2, '.', ',');
+                                                    $total = str_replace('$-', '-$', $total);
+                                                ?>
+                                                <?=$total?>
+                                                <?php else : ?>
+                                                $0.00
+                                                <?php endif; ?>
+                                            </h2>
                                         </div>
                                     </div>
 
@@ -31,26 +40,26 @@
                                             <select name="location" id="location" class="form-control">
                                                 <option disabled selected>&nbsp;</option>
                                                 <?php foreach($locations as $location) : ?>
-                                                    <option value="<?=$location['id']?>" data-initial_qty="<?=$location['initial_qty']?>"><?=$location['name']?></option>
+                                                    <option value="<?=$location['id']?>" data-initial_qty="<?=$location['initial_qty']?>" <?=isset($adjustment) && $location['id'] === $adjustment->location_id ? 'selected' : ''?>><?=$location['name']?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="initialQty">Initial quantity on hand</label>
-                                                <input type="number" name="initial_qty_on_hand" id="initialQty" class="form-control text-right">
+                                                <input type="number" name="initial_qty_on_hand" id="initialQty" class="form-control text-right" <?=isset($adjustment) ? 'value="'.$adjustment->initial_qty.'"' : ''?>>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="asOfDate">As of date</label>
-                                                <input type="text" name="as_of_date" id="asOfDate" class="form-control" value="<?=!is_null($accountingDetails) ? date('m/d/Y', strtotime($accountingDetails->as_of_date)) : date('m/d/Y')?>">
+                                                <input type="text" name="as_of_date" id="asOfDate" class="form-control date" value="<?=!isset($adjustment) ? !is_null($accountingDetails) ? date('m/d/Y', strtotime($accountingDetails->as_of_date)) : date('m/d/Y') : date('m/d/Y', strtotime($adjustment->as_of_date))?>">
                                             </div>
                                         </div>
                                         <div class="col-md-2 offset-md-4">
                                             <div class="form-group">
                                                 <label for="refNo">Reference no.</label>
-                                                <input type="text" name="ref_no" id="refNo" class="form-control" value="START">
+                                                <input type="text" name="ref_no" id="refNo" class="form-control" value="<?=isset($adjustment) ? $adjustment->ref_no : 'START'?>">
                                             </div>
                                         </div>
                                     </div>
@@ -59,7 +68,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="initialCost">Initial cost</label>
-                                                <input type="number" step="0.01" name="initial_cost" id="initialCost" value="<?=$item->cost?>" class="form-control text" onchange="convertToDecimal(this)">
+                                                <input type="number" step="0.01" name="initial_cost" id="initialCost" value="<?=!isset($adjustment) ? $item->cost : number_format(floatval($adjustment->initial_cost), 2, '.', ',')?>" class="form-control text" onchange="convertToDecimal(this)">
                                             </div>
                                         </div>
                                     </div>
@@ -77,7 +86,11 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="invAdjustmentAcc">Inventory adjustment account</label>
-                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control" required></select>
+                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control" required>
+                                                    <?php if(isset($adjustment)) : ?>
+                                                        <option value="<?=$adjustment->account->id?>"><?=$adjustment->account->name?></option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -86,7 +99,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="form-control"><?=$item->title?> - Opening inventory and value</textarea>
+                                                <textarea name="memo" id="memo" class="form-control"><?=isset($adjustment) ? $adjustment->memo : $item->title.' - Opening inventory and value'?></textarea>
                                             </div>
                                         </div>
                                     </div>

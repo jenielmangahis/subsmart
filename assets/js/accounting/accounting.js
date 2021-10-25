@@ -2238,8 +2238,9 @@ $(document).on('click','#addCategorySaved',function () {
 Dropzone.autoDiscover = false;
 $(document).ready(function () {
     var fname;
+    var site_url = jQuery("#siteurl").val();
     var receiptDropzone = new Dropzone('div#receiptDZ', {
-        url:'/accounting/uploadReceiptImage',
+        url: site_url +'/accounting/uploadReceiptImage',
         acceptedFiles: "image/*",
         addRemoveLinks:true,
         init: function() {
@@ -2266,8 +2267,9 @@ $(document).ready(function () {
 // Get Receipt data
 $(document).on('click','#updateReceipt',function () {
     var id = $(this).attr('data-id');
+    var site_url = jQuery("#siteurl").val();
     $.ajax({
-        url:"/accounting/getReceiptData",
+        url: site_url +"/accounting/getReceiptData",
         type:"POST",
         data:{id:id},
         dataType:"json",

@@ -113,3 +113,17 @@ export async function parseFile(file) {
 
   return response.json();
 }
+
+export async function apiImportRules(payload) {
+  const endpoint = `${window.prefixURL}/AccountingRules/apiImportRules`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}

@@ -813,7 +813,7 @@ class Chart_of_accounts extends MY_Controller {
             $transaction = [
                 'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
-                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
+                'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
@@ -873,7 +873,7 @@ class Chart_of_accounts extends MY_Controller {
             $transaction = [
                 'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
-                'ref_no' => $check->to_print === "1" ? "To print" : $check->check_no === null ? '' : $check->check_no,
+                'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
@@ -1291,7 +1291,9 @@ class Chart_of_accounts extends MY_Controller {
         foreach($deposits as $deposit) {
             $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
 
-            if(count($funds) > 1 || $deposit->cash_back_amount !== "" && $deposit->cash_back_account_id !== "" && !is_null($deposit->cash_back_amount) && !is_null($deposit->cash_back_account_id)) { 
+            if($accountId === $deposit->cash_back_account_id) {
+                $account = $this->chart_of_accounts_model->getName($deposit->account_id);
+            } else if(count($funds) > 1 || $deposit->cash_back_amount !== "" && $deposit->cash_back_account_id !== "" && !is_null($deposit->cash_back_amount) && !is_null($deposit->cash_back_account_id)) { 
                 $account = '-Split-';
             } else {
                 $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
@@ -1318,18 +1320,34 @@ class Chart_of_accounts extends MY_Controller {
                 case 'Credit Card' :
                     $transaction['charge'] = '';
                     $transaction['payment'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+
+                    if($accountId === $deposit->cash_back_account_id) {
+                        $transaction['payment'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                    }
                 break;
                 case 'Asset' :
                     $transaction['increase'] = '';
                     $transaction['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+
+                    if($accountId === $deposit->cash_back_account_id) {
+                        $transaction['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                    }
                 break;
                 case 'Liability' :
                     $transaction['increase'] = '';
                     $transaction['decrease'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+
+                    if($accountId === $deposit->cash_back_account_id) {
+                        $transaction['decrease'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                    }
                 break;
                 default :
                     $transaction['payment'] = '';
                     $transaction['deposit'] = number_format(floatval($deposit->total_amount), 2, '.', ',');
+
+                    if($accountId === $deposit->cash_back_account_id) {
+                        $transaction['deposit'] = number_format(floatval($deposit->cash_back_amount), 2, '.', ',');
+                    }
                 break;
             }
 
@@ -1995,7 +2013,7 @@ class Chart_of_accounts extends MY_Controller {
                 $transaction = [
                     'id' => $billPayment->id,
                     'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
-                    'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : $billPayment->check_no === null ? '' : $billPayment->check_no,
+                    'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : ($billPayment->check_no === null ? '' : $billPayment->check_no),
                     'type' => 'Bill Payment',
                     'payee_type' => 'vendor',
                     'payee_id' => $billPayment->payee_id,
@@ -2720,7 +2738,7 @@ class Chart_of_accounts extends MY_Controller {
             case 'inventory-qty-adjust' :
                 $delete = $this->delete_qty_adjustment($transactionId);
             break;
-            case 'credit-card-payment':
+            case 'credit-card-pmt':
                 $delete = $this->delete_cc_payment($transactionId);
             break;
         }
@@ -3059,7 +3077,6 @@ class Chart_of_accounts extends MY_Controller {
         $bankAccBal = number_format($bankAccBal, 2, '.', ',');
 
         $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $bankAccBal]);
-
 
         $update = $this->vendors_model->update_credit_card_payment($ccPaymentId, ['status' => 0]);
 
@@ -3406,10 +3423,13 @@ class Chart_of_accounts extends MY_Controller {
                 $this->view_deposit($transactionId);
             break;
             case 'inventory-qty-adjust' :
-
+                $this->view_qty_adjustment($transactionId);
             break;
             case 'credit-card-payment':
                 $this->view_cc_payment($transactionId);
+            break;
+            case 'inventory-starting-value' :
+                $this->view_starting_value_adjustment($transactionId);
             break;
         }
     }
@@ -3643,5 +3663,40 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['cash_back_account'] = $cashBackAccount;
 
         $this->load->view("accounting/modals/bank_deposit_modal", $this->page_data);
+    }
+
+    private function view_qty_adjustment($adjustmentId)
+    {
+        $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($adjustmentId);
+        $adjustment->account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+        $adjustedProds = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+
+        foreach($adjustedProds as $key => $adjustedProd) {
+            $adjustedProds[$key]->product = $this->items_model->getItemById($adjustedProd->product_id)[0];
+            $adjustedProds[$key]->location = $this->items_model->getItemLocation($adjustedProd->location_id, $adjustedProd->product_id);
+        }
+
+        $this->page_data['adjustment_no'] = $adjustment->adjustment_no;
+        $this->page_data['adjustment'] = $adjustment;
+        $this->page_data['adjustedProds'] = $adjustedProds;
+
+        $this->load->view("accounting/modals/inventory_qty_modal", $this->page_data);
+    }
+
+    private function view_starting_value_adjustment($adjustmentId)
+    {
+        $adjustment = $this->starting_value_model->get_by_id($adjustmentId);
+        $adjustment->account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
+        $item = $this->items_model->getItemById($adjustment->item_id)[0];
+        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+        $this->page_data['item'] = $item;
+        $this->page_data['accountingDetails'] = $itemAccDetails;
+        $this->page_data['invAssetAcc'] = $invAssetAcc;
+        $this->page_data['locations'] = $this->items_model->getLocationByItemId($item->id);
+        $this->page_data['adjustment'] = $adjustment;
+
+        $this->load->view('accounting/modals/adjust_starting_value', $this->page_data);
     }
 }

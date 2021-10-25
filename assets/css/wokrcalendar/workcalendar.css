@@ -457,6 +457,13 @@ a.btn-gcustom i {
 .fc-timegrid-event, .fc-media-screen .fc-timegrid-event-harness{
   max-height: 38px;
 }
+.fc-view-harness{
+    overflow-x: scroll;
+}
+.fc-timegrid{
+    width: 3000px;
+}
+/*Checkout*/
 .modal-xl {
     max-width: 81% !important ;
 }

@@ -233,7 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     <select
                                         name="trans_type"
                                         class="form-control"
-                                        data-type="assignment.transaction_type"
+                                        data-type="assignments.transaction_type"
                                     >
                                         <option selected>Expenses</option>
                                         <option>Transfer</option>
@@ -248,15 +248,15 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 name="category[]"
                                                 id="mainCategory"
                                                 class="form-control select2-rules-category"
-                                                data-type="assignment.category"
+                                                data-type="assignments.category"
                                                 data-main-category="true"
                                                 required
                                             >
-                                                <option></option>
+                                                <!-- <option></option>
                                                 <option disabled>&plus; Add new</option>
                                                 <option>Advertising</option>
                                                 <option>Bad Debts</option>
-                                                <option>Bank Charges</option>
+                                                <option>Bank Charges</option> -->
                                             </select>
                                         </div>
                                         <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
@@ -275,7 +275,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     name="percentage[]"
                                                     class="form-control"
                                                     style="width: 205px"
-                                                    data-type="assignment.category_percent"
+                                                    data-type="assignments.category_percent"
                                                     required
                                                 >
                                             </div>
@@ -285,7 +285,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     <select
                                                         name="category[]"
                                                         class="form-control select2-rules-category"
-                                                        data-type="assignment.category"
+                                                        data-type="assignments.category"
                                                         required
                                                     >
                                                         <option></option>
@@ -309,7 +309,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     name="percentage[]"
                                                     class="form-control"
                                                     style="width: 205px"
-                                                    data-type="assignment.category_percent"
+                                                    data-type="assignments.category_percent"
                                                     required
                                                 >
                                             </div>
@@ -319,7 +319,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     <select
                                                         name="category[]"
                                                         class="form-control select2-rules-category"
-                                                        data-type="assignment.category"
+                                                        data-type="assignments.category"
                                                         required
                                                     >
                                                         <option></option>
@@ -342,12 +342,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <select
                                             name="payee"
                                             class="form-control select2-rules-payee"
-                                            data-type="assignment.payee"
+                                            data-type="assignments.payee"
                                         >
-                                            <option></option>
+                                            <!-- <option></option>
                                             <option>Abacus Accounting</option>
                                             <option>Absolute Power</option>
-                                            <option>ADSC</option>
+                                            <option>ADSC</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -359,7 +359,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         rows="5"
                                         placeholder="Enter Text"
                                         style="resize: none;"
-                                        data-type="assignment.memo"
+                                        data-type="assignments.memo"
                                     ></textarea>
                                 </div>
                                 <div style="margin-top: 15px;">
@@ -509,22 +509,19 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 </div>
 
                                                 <div class="stepRuleDetails__column">
-                                                    <div class="stepRuleDetails__title">Import Rule Details</div>
+                                                    <div class="stepRuleDetails__title">Company Details</div>
                                                     <div class="stepRuleDetails__group">
-                                                        <select class="form-control select2-rules-payee">
-                                                            <option></option>
-                                                            <option>Abacus Accounting</option>
-                                                            <option>Absolute Power</option>
-                                                            <option>ADSC</option>
+                                                        <select
+                                                            id="importRulesPayee"
+                                                            class="form-control select2-rules-payee"
+                                                        >
                                                         </select>
                                                     </div>
                                                     <div class="stepRuleDetails__group">
-                                                        <select class="form-control select2-rules-category" required>
-                                                            <option></option>
-                                                            <option disabled>&plus; Add new</option>
-                                                            <option>Advertising</option>
-                                                            <option>Bad Debts</option>
-                                                            <option>Bank Charges</option>
+                                                        <select
+                                                            id="importRulesCategory"
+                                                            class="form-control select2-rules-category"
+                                                        >
                                                         </select>
                                                     </div>
                                                 </div>
@@ -534,11 +531,21 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 
                                     <div id="stepper-finish" class="content" role="tabpanel" aria-labelledby="stepper-finish-trigger">
                                         <div class="uploadList">
-                                            <div class="stepperSuccess">
-                                                <div class="stepperSuccess__inner">
-                                                    <i class="fa fa-check-circle stepperSuccess__icon"></i>
-                                                    <div class="stepperSuccess__body">
-                                                        <span class="stepperSuccess__count">1</span> rule was successfully imported!
+                                            <div class="stepperCompleteWrapper">
+                                                <div class="stepperComplete">
+                                                    <div class="stepperComplete__inner">
+                                                        <i class="fa fa-check-circle stepperComplete__icon"></i>
+                                                        <div class="stepperComplete__body">
+                                                            <span class="stepperComplete__count">0</span> rule was successfully imported.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="stepperComplete stepperComplete--error">
+                                                    <div class="stepperComplete__inner">
+                                                        <i class="fa fa-exclamation-circle stepperComplete__icon"></i>
+                                                        <div class="stepperComplete__body">
+                                                            <span class="stepperComplete__count">0</span> rule was not imported.
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -557,6 +564,9 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
         </div>
     </div>
 
+    <div id="modal-container">
+        <div class="full-screen-modal"></div>
+    </div>
 <!--    end of modal-->
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>
     <!-- page wrapper end -->

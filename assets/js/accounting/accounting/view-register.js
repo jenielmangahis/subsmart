@@ -831,14 +831,16 @@ $(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', fun
 
 $(document).on('click', '#registers-table tbody tr', function() {
     if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1 && !$(this).hasClass('action-row') && $(this).find('td.dataTables_empty').length < 1) {
+        var row = $(this);
+        var rowData = $('#registers-table').DataTable().row(row).data();
         if($('#registers-table tbody tr.editting').length > 0) {
             $('#registers-table tbody tr.editting').next().find('#cancel-edit').trigger('click');
         }
 
         $(this).addClass('editting');
         var colCount = $(this).children('td').length;
-        var row = '<tr class="action-row">';
-        row += `<td colspan="${colCount}">
+        var actionRow = '<tr class="action-row">';
+        actionRow += `<td colspan="${colCount}">
             <div class="row">
                 <div class="col-6 d-flex align-items-center">
                     <h6 class="m-0">
@@ -846,58 +848,111 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     </h6>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-success float-right">Save</button>
+                    <button class="btn btn-success float-right" id="save-transaction">Save</button>
                     <button class="btn btn-transparent float-right mr-1" id="cancel-edit">Cancel</button>
                     <button class="btn btn-transparent float-right mr-1" id="edit-transaction">Edit</button>
                     <button class="btn btn-transparent float-right mr-1" id="delete-transaction">Delete</button>
                 </div>
             </div>
         </td>`;
-        row += '</tr>';
+        actionRow += '</tr>';
 
-        $(row).insertAfter(this);
+        $(actionRow).insertAfter(this);
+
+        if(rowData.type === 'Inventory Starting Value') {
+            $('#registers-table tbody tr.action-row #delete-transaction').remove();
+        } else if(rowData.type === 'Inventory Qty Adjust') {
+            $('#registers-table tbody tr.action-row #save-transaction').remove();
+        }
+
+        var noAttachments = [
+            'Inventory Starting Value',
+            'Inventory Qty Adjust',
+            'Credit Card Pmt'
+        ];
+
+        if(noAttachments.includes(rowData.type)) {
+            $('#registers-table tbody tr.action-row h6').remove();
+        }
+
         $(this).children('td').each(function() {
             var current = $(this).html();
 
             switch(columns[$(this).index()].name) {
                 case 'date' :
                     $(this).html(`<input type="text" class="form-control" value="${current}">`);
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill') {
+                        $(this).find('input').prop('disabled', true);
+                    }
+
                     $(this).find('input').datepicker({
                         uiLibrary: 'bootstrap'
                     });
                 break;
                 case 'ref_no' :
-                    $(this).html(`<input type="text" class="form-control" value="${current}">`);
+                    $(this).html(`<input type="text" class="form-control" value="${current}" placeholder="Ref No.">`);
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Credit Card Pmt' || rowData.type === 'Transfer' || rowData.type === 'Deposit' ||
+                        rowData.type === 'Expense' && rowData.payment === '' || rowData.type === 'Check' && rowData.payment === '' || rowData.type === 'Bill' ||
+                        rowData.type === 'Vendor Credit' || rowData.type === 'CC-Credit'
+                    ) {
+                        $(this).find('input').prop('disabled', true);
+                    }
                 break;
                 case 'type' :
                     $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
-
-                    if(current === 'Inventory Starting Value') {
-                        $('#registers-table tbody tr.action-row #delete-transaction').remove();
-                    }
                 break;
                 case 'payee' :
-                    var rowData = $('#registers-table').DataTable().row($(this)).data();
-                    $(this).html(`<select class="form-control"><option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option></select>`);
-                    $(this).find('select').select2();
+                    $(this).html(`<select class="form-control"></select>`);
+                    if(current !== "") {
+                        $(this).find('select').append(`<option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option>`);
+                    }
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Transfer' || rowData.type === 'Credit Card Pmt' ||
+                        rowData.type === 'Bill Payment'
+                    ) {
+                        $(this).find('select').prop('disabled', true);
+                    }
+                    $(this).find('select').select2({
+                        placeholder: 'Payee'
+                    });
                 break;
                 case 'account' :
-                    var rowData = $('#registers-table').DataTable().row($(this)).data();
                     $(this).html(`<select class="form-control" ${current === '-Split-' ? 'disabled' : ''}><option value="">${current}</option></select>`);
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Expense' && rowData.payment === '' || rowData.type === 'Check' && rowData.payment === '' ||
+                        rowData.type === 'Bill' || rowData.type === 'Bill Payment' || rowData.type === 'Vendor Credit' || rowData.type === 'CC-Credit'
+                    ) {
+                        $(this).find('select').prop('disabled', true);
+                    }
                     $(this).find('select').select2();
                 break;
+                case 'memo' :
+                    $(this).html(`<input type="text" class="form-control" value="${current}" placeholder="Memo">`);
+
+                    if(rowData.type === 'Inventory Qty Adjust') {
+                        $(this).find('input').prop('disabled', true);
+                    }
+                break;
                 case 'payment' :
-                    if(current === '') {
+                    if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
                     } else {
-                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '').replaceAll('-$', '')}">`);
+                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '').replaceAll('-$', '')}" placeholder="Payment">`);
+                    }
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
+                        $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'deposit' :
-                    if(current === '') {
+                    if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Deposit" disabled>`);
                     } else {
-                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}">`);
+                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
+                    }
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit') {
+                        $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'reconcile_status' :
@@ -923,7 +978,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
 $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction', function() {
     var row = $('#registers-table tbody tr.editting');
     var data = $('#registers-table').DataTable().row(row).data();
-    var transactionType = data.type.replaceAll(' ', '-').toLowerCase();
+    var transactionType = data.type;
     switch(data.type) {
         case 'CC Expense' :
             transactionType = 'expense';
@@ -932,6 +987,7 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
             transactionType = 'bill-payment';
         break;
     }
+    transactionType = transactionType.replaceAll(' ', '-').toLowerCase();
     data.type = transactionType;
 
     $.get(`/accounting/chart-of-accounts/view-transaction/${transactionType}/${data.id}`, function(res) {
@@ -1017,10 +1073,21 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
                 $('#depositModal').modal('show');
             break;
             case 'inventory-qty-adjust' :
+                rowInputs = $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html();
+                blankRow = $('#inventoryModal table#inventory-adjustments-table tbody tr:nth-child(2)').html();
+                rowCount = $('#inventoryModal table#inventory-adjustments-table tbody tr').length;
 
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child()').html(blankRow);
+                $('#inventoryModal table#inventory-adjustments-table tbody tr:first-child() td:nth-child(2)').html(1);
+
+                initModalFields('inventoryModal', data);
+
+                $('#inventoryModal').modal('show');
             break;
             case 'inventory-starting-value' :
+                initModalFields('adjust-starting-value-modal', data);
 
+		        $('#adjust-starting-value-modal').modal('show');
             break;
             case 'credit-card-payment' :
                 initModalFields('payDownCreditModal', data);

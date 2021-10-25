@@ -1,11 +1,35 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+    /* #thumbwrap {
+	position:relative;
+	margin:75px auto;
+	width:252px; height:252px;
+} */
+    .thumb img { 
+	border:1px solid #000;
+	margin:3px;
+	float:left;
+}
+.thumb span { 
+	position:absolute;
+	visibility:hidden;
+}
+    .thumb:hover, .thumb:hover span { 
+	visibility:visible;
+	top:0; left:250px; 
+	z-index:1;
+    /* height:500px;
+    width:500px; */
+}
+</style>
 <div class="wrapper" role="wrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box mx-4">
+
                     <div class="col-lg-6 px-0">
 						<h3>Receipts</h3>
 					</div>
@@ -17,6 +41,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
                         </div>
                     </div>
+
+                    
+                
+                    <center><?php if ($this->session->flashdata('receipt_updated')){?>
+                        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <?php echo $this->session->flashdata('receipt_updated');?>
+                        </div>
+                    <?php }elseif ($this->session->flashdata('receipt_updateFailed')){?>
+                    <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <?php echo $this->session->flashdata('receipt_updateFailed');?>
+                    </div>
+                    <?php }?></center>
                     
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
                         This is Receipts gold band 
@@ -31,6 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <span style="font-size: 16px;color: #909194">Drag and drop files here or</span>
                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                     </div>
+                                    <input type="hidden" id="siteurl" value="<?php echo base_url(); ?>">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -180,14 +219,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach ($receipts as $receipt): ?>
                                         <tr class="receiptRow">
                                             <td><input type="checkbox" value="<?php echo $receipt->id;?>"></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><img src="<?php echo base_url('uploads/accounting/').$receipt->receipt_img; ?>" alt="Image" height="100" width="100"></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>" height="100" width="100">
+                                        
+                                                <div id="thumbwrap">
+                                                    <a class="thumb" href="#"><img src="<?php echo base_url('uploads/accounting/').$receipt->receipt_img; ?>" alt="" alt="Image" height="100" width="100">
+                                                    <span><img src="<?php echo base_url('uploads/accounting/').$receipt->receipt_img; ?>" alt="" height="400" width="400"></span></a> 
+                                                </div>
+                                            </td>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->transaction_date == null || $receipt->transaction_date == "0000-00-00")?"Not found": $receipt->transaction_date; ?></td>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->description == null)?"Not found" : $receipt->description; ?></td>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->payee_id == 0)?"Not found": $receipt->payee_id ?></td>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->total_amount == null || $receipt->total_amount == 0.00)?"Not found" : $receipt->total_amount; ?></td>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->category == null)?"Not found":$receipt->category; ?></td>
                                             <td>
-                                                <a href="#" style="display: inline" data-toggle="modal" data-target="#receiptModal">Review</a>&nbsp;
+                                                <a id="updateReceipt" href="#" style="display: inline" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>&nbsp;
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
@@ -249,7 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <i class="fa fa-times fa-lg" data-dismiss="modal"></i>
                     </div>
                     <form action="<?php echo site_url()?>accounting/updateReceipt" method="post">
-                    <div class="modal-body">
+                    <div class="modal-body" id="first_step_receipt">
                         <div class="row" style="margin-bottom: 100px">
                             <div class="col-md-7">
                                 <div class="viewer-backdrop-container">
@@ -270,8 +315,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <span>Document Type</span>
                                             <input type="hidden" name="receipt_id" id="receipt_id">
                                             <select name="document_type" id="documentType" class="form-control">
-                                                <option>Receipt</option>
-                                                <option>Bill</option>
+                                                <option value="Receipt">Receipt</option>
+                                                <option value="Bill">Bill</option>
                                             </select>
                                         </div>
                                         <hr>
@@ -279,24 +324,188 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="payeeID">Payee</label>
                                             <select name="payee_id" id="payeeID" class="form-control select2">
                                                 <option disabled selected value="default">Select payee (optional)</option>
-                                                <option disabled>&plus;&nbsp;Add new</option>
+                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
                                                 <option value="1">Betty Fuller</option>
                                                 <option value="2">Brian Boyden</option>
                                                 <option value="3">Ken Curry</option>
                                                 <option value="4">Mary Brown</option>
-                                                <option value="5">Patricia Motes</option>
+                                                <option value="5">Patricia Motes</option> -->
+                                                <!-- <option value="" disabled="" selected>Payee</option> -->
+                                                <option value="fa fa-plus">&#xf067; Add new</option>
+                                                <?php
+                                                foreach($this->AccountingVendors_model->select() as $ro)
+                                                {
+                                                ?>
+                                                <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
+                                                <?php
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="bank_account">Bank/Credit Account</label>
                                             <select name="bank_account" id="bank_account" class="form-control select2">
                                                 <option disabled selected value="default">Select an account</option>
+                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
+                                                <option>Billable Expenses</option>
+                                                <option>Gross Receipt</option>
+                                                <option>Guardian</option>
+                                                <option>Mary Brown</option>
+                                                <option>Sales</option> -->
+                                                <?php
+                                                    $i=1;
+                                                    foreach($this->chart_of_accounts_model->select() as $row)
+                                                    {
+                                                        ?>
+                                                        <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                                        <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                                                    <?php
+                                                    $i++;
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Payment Date</label>
+                                            <input type="date" name="transaction_date" id="paymentDate" class="form-control" placeholder="Select a date">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="category">Account/Category</label>
+                                            <select name="category" id="category" class="form-control select2">
+                                                <option disabled selected value="default">Select a category</option>
                                                 <option disabled>&plus;&nbsp;Add new</option>
+                                                <option>Commissions & Fees</option>
                                                 <option>Billable Expenses</option>
                                                 <option>Gross Receipt</option>
                                                 <option>Guardian</option>
                                                 <option>Mary Brown</option>
                                                 <option>Sales</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Description</label>
+                                            <input type="text" name="description" id="description" class="form-control" placeholder="Enter a description">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Total amount (Inclusive of tax)*</label>
+                                            <input type="text" name="total_amount" id="totalAmount" class="form-control" placeholder="Enter amount">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Memo</label>
+                                            <textarea name="memo" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <a href="#" style="font-weight: bolder;color: color: #0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
+                                        </div>
+                                        <div class="form-group" id="refNumber" style="display: none">
+                                            <label for="refNumber">Ref no.</label>
+                                            <input type="text" name="ref_number" id="refNumber" class="form-control">
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer-uploadedReceipt">
+                        <button type="button" data-dismiss="" class="btn btn-default btn-leftSide">Cancel</button>
+                        <button class="btn btn-default btn-leftSide" style="margin-left: 10px">Delete this receipt</button>
+                        <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
+                            <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px">Save and next</button>
+                            <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
+                                <span class="fa fa-caret-down"></span></button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" class="dropdown-item">Save and close</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="full-screen-modal">
+        <!--Modal for file upload-->
+        <div id="nextreceiptModal" class="modal fade modal-fluid" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Upload receipt</h2>
+                        <i class="fa fa-times fa-lg" data-dismiss="modal"></i>
+                    </div>
+                    <form action="<?php echo site_url()?>accounting/nextupdateReceipt" method="post">
+                    <div class="modal-body" id="first_step_receipt">
+                        <div class="row" style="margin-bottom: 100px">
+                            <div class="col-md-7">
+                                <div class="viewer-backdrop-container">
+                                    <div class="viewer-backdrop">
+                                        <input type="hidden" id="base_url" value="<?php echo base_url()?>uploads/accounting/">
+                                        <img src="" id="receiptImage" alt="Image">
+                                    </div>
+                                    <div class="label-imageContainer" style="margin-top: 15px;">
+                                        <span>Added 5:57 PM 07/06/2020</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="receiptDetailsContainer">
+                                    <div class="step-header">No matches found</div>
+                                    <div class="step-header-text">Create a new expense for this receipt. If a matching transaction comes into QuickBooks later, we’ll mark it as a match.</div>
+                                        <div class="form-group form-element">
+                                            <span>Document Type</span>
+                                            <input type="hidden" name="receipt_id" id="receipt_id">
+                                            <select name="document_type" id="documentType" class="form-control">
+                                                <option value="Receipt">Receipt</option>
+                                                <option value="Bill">Bill</option>
+                                            </select>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group">
+                                            <label for="payeeID">Payee</label>
+                                            <select name="payee_id" id="payeeID" class="form-control select2">
+                                                <option disabled selected value="default">Select payee (optional)</option>
+                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
+                                                <option value="1">Betty Fuller</option>
+                                                <option value="2">Brian Boyden</option>
+                                                <option value="3">Ken Curry</option>
+                                                <option value="4">Mary Brown</option>
+                                                <option value="5">Patricia Motes</option> -->
+                                                <!-- <option value="" disabled="" selected>Payee</option> -->
+                                                <option value="fa fa-plus">&#xf067; Add new</option>
+                                                <?php
+                                                foreach($this->AccountingVendors_model->select() as $ro)
+                                                {
+                                                ?>
+                                                <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bank_account">Bank/Credit Account</label>
+                                            <select name="bank_account" id="bank_account" class="form-control select2">
+                                                <option disabled selected value="default">Select an account</option>
+                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
+                                                <option>Billable Expenses</option>
+                                                <option>Gross Receipt</option>
+                                                <option>Guardian</option>
+                                                <option>Mary Brown</option>
+                                                <option>Sales</option> -->
+                                                <?php
+                                                    $i=1;
+                                                    foreach($this->chart_of_accounts_model->select() as $row)
+                                                    {
+                                                        ?>
+                                                        <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
+                                                        <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
+                                                    <?php
+                                                    $i++;
+                                                    }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -358,17 +567,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
-    <?php if ($this->session->flashdata('receipt_updated')){?>
-        <div class="alert alert-success alert-dismissible col-md-4" role="alert">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <?php echo $this->session->flashdata('receipt_updated');?>
-        </div>
-    <?php }elseif ($this->session->flashdata('receipt_updateFailed')){?>
-    <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <?php echo $this->session->flashdata('receipt_updateFailed');?>
-    </div>
-    <?php }?>
+    
     <!--    end of modal-->
 	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
@@ -398,6 +597,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('#toggleRefNumber').click(function () {
        $('#refNumber').toggle();
     });
+</script>
+
+<script>
+$(".save_next").click(function () {
+    $('#nextreceiptModal').modal('toggle');
+});
 </script>
 
 
