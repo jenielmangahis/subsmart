@@ -336,6 +336,29 @@ class Items extends MY_Controller
 
         $this->load->view('items/print/list', $this->page_data);
     }
+
+    public function ajax_get_item_details()
+    {
+        $this->load->model('Items_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $item = $this->Items_model->getCompanyItemById($company_id, $post['itemid']);
+
+        if( $item ){
+            $is_exists = true;
+            $json_data = [
+                'is_exists' => true,
+                'item_name' => $item->title,
+                'item_id' => $item->id,
+                'item_price' => $item->price
+            ];
+        }else{
+            $json_data = ['is_exists' => false];
+        }
+
+        echo json_encode($json_data);
+    }
 }
 
 

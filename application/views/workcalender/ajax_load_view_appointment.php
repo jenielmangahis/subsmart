@@ -87,7 +87,7 @@
     <span class="v-appointment-date"><?= date("l, F D, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
   </div>
   <div class="col-md-12">
-    <span class="v-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $optionAppointmentType[$appointment->appointment_type]; ?></span>
+    <span class="v-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $appointment->appointment_type; ?></span>
   </div>
   <div class="col-md-12">
     <span class="v-appointment-tags"><i class="fa fa-tag"></i> Tags : </span>

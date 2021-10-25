@@ -1,6 +1,15 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.modal.fade {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.fade {
+  opacity: 0;
+}
+</style>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.css" />
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
@@ -423,10 +432,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-list"></i> Appointment Type</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                          <select name="appointment_type" id="appointment-type" class="form-control field-popover" style="border:solid 1px rgba(0,0,0,0.35);" data-trigger="hover" data-original-title="Appointment Type" data-container="body" data-placement="right" data-content="Select what kind of appointment will this be">
+                          <select name="appointment_type_id" id="appointment-type" class="form-control field-popover" style="border:solid 1px rgba(0,0,0,0.35);" data-trigger="hover" data-original-title="Appointment Type" data-container="body" data-placement="right" data-content="Select what kind of appointment will this be">
                             <?php $start = 0; ?>
-                            <?php foreach($optionAppointmentTypes as $key => $value){ ?>
-                                <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                            <?php foreach($appointmentTypes as $a){ ?>
+                                <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
                             <?php $start++;} ?>
                           </select>
                         </div>
@@ -696,6 +705,23 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
 
     </div>
+</div>
+
+<!-- MODAL SELECT ITEM -->
+<div class="modal fade modal-enhanced" id="modal-checkout-items" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width:664px;">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" style="color:#ffffff;">Select Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" style="color:#ffffff;">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;margin-bottom: 0px;">
+                <div class="select-checkout-item"></div>
+            </div>
+      </div>
+  </div>
 </div>
 
 <div id="modalEditEvent" class="modal fade" role="dialog" style="">

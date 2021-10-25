@@ -471,5 +471,8 @@ a.btn-gcustom i {
     background: #32243d;
     color: #ffffff !important;
 }
+.event-caption{
+  font-size: 15px;
+}
 
 /*Checkout*/

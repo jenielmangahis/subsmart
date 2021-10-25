@@ -33,9 +33,9 @@
     <label for="" style="width:100%;text-align: left;"><i class="fa fa-list"></i> Appointment Type</label>
     <div class="row g-3">
       <div class="col-sm-12">
-        <select name="appointment_type" id="appointment-type form-control" class="form-control" style="border:solid 1px rgba(0,0,0,0.35);">
-          <?php foreach($optionAppointmentTypes as $key => $value){ ?>
-              <option <?= $appointment->appointment_type == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+        <select name="appointment_type_id" id="appointment-type form-control" class="form-control" style="border:solid 1px rgba(0,0,0,0.35);">
+          <?php foreach($appointmentTypes as $a){ ?>
+              <option <?= $appointment->appointment_type_id == $a->id ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
           <?php } ?>
         </select>
       </div>

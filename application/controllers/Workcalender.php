@@ -47,10 +47,11 @@ class Workcalender extends MY_Controller
         $this->hasAccessModule(4); 
         $this->load->model('Event_model', 'event_model');
         $this->load->model('Appointment_model');
+        $this->load->model('AppointmentType_model');
 
         $role = logged('role');
-        if ($role == 2 || $role == 3) {
-            $company_id = logged('company_id');
+        $company_id = logged('company_id');
+        if ($role == 2 || $role == 3) {           
             $events = $this->event_model->getAllByCompany($company_id);
         }
         if ($role == 4) {
@@ -319,7 +320,7 @@ class Workcalender extends MY_Controller
 
         $this->load->model('Users_model', 'user_model');
 
-        $this->page_data['optionAppointmentTypes'] = $this->Appointment_model->optionAppointmentType();
+        $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
         $this->page_data['settings'] = $settings;
         $this->page_data['enabled_calendar'] = $enabled_calendar;
         $this->page_data['enabled_mini_calendar'] = $enabled_mini_calendar;
@@ -895,7 +896,7 @@ class Workcalender extends MY_Controller
             $start_date_end  = $start_date_time;
             $backgroundColor = "#38a4f8";
 
-            $custom_html = date("F j, Y, g:i a", strtotime($a->appointment_date . " " . $a->appointment_time)) . "<br /><small>" . $a->customer_name . " - " . $a->appointment_type . "</small>";
+            $custom_html = "<i class='fa fa-user'></i> <small class='event-caption'>" . $a->customer_name . " - " . $a->appointment_type . "</small><br /><i class='fa fa-list'></i> <small class='event-caption'>" . $a->appointment_type . "</small>";
 
             $resources_user_events[$inc]['eventId'] = $a->id;
             $resources_user_events[$inc]['eventType'] = 'appointments';
@@ -1847,7 +1848,7 @@ class Workcalender extends MY_Controller
         $is_success = false;
         $message    = 'Cannot create appointment';
 
-        if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type'] != '') {
+        if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
 
             $data_appointment = [
                 'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
@@ -1859,7 +1860,7 @@ class Workcalender extends MY_Controller
                 'total_item_price' => 0,
                 'total_item_discount' => 0,
                 'total_amount' => 0,
-                'appointment_type' => $post['appointment_type'],
+                'appointment_type_id' => $post['appointment_type_id'],
                 'created' => date("Y-m-d H:i:s")
             ];
 
@@ -1888,7 +1889,6 @@ class Workcalender extends MY_Controller
         $post = $this->input->post();
         $company_id  = logged('company_id');
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $company_id);
-        $optionAppointmentType = $this->Appointment_model->optionAppointmentType();
         $tags = $this->EventTags_model->getAllByCompanyId($company_id, array());  
 
         $a_tags = array();
@@ -1901,20 +1901,20 @@ class Workcalender extends MY_Controller
 
         $this->page_data['a_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
-        $this->page_data['optionAppointmentType'] = $optionAppointmentType;
         $this->load->view('workcalender/ajax_load_view_appointment', $this->page_data);
     }
 
     public function ajax_edit_appointment()
     {
         $this->load->model('Appointment_model');
+        $this->load->model('AppointmentType_model');
         $this->load->model('EventTags_model');
 
         $post = $this->input->post();
         $cid  = logged('company_id');
         $tags = $this->EventTags_model->getAllByCompanyId($cid, array());
-        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
-        $optionAppointmentTypes = $this->Appointment_model->optionAppointmentType();
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);        
+        $appointmentTypes = $this->AppointmentType_model->getAllByCompany($cid, true);
 
         $a_tags = array();
         $selected_tags = explode(",", $appointment->tag_ids);
@@ -1926,7 +1926,7 @@ class Workcalender extends MY_Controller
 
         $this->page_data['a_selected_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
-        $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
+        $this->page_data['appointmentTypes'] = $appointmentTypes;
         $this->load->view('workcalender/ajax_edit_appointment', $this->page_data);
     }
 
@@ -1942,7 +1942,7 @@ class Workcalender extends MY_Controller
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
 
         if( $appointment ){
-            if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type'] != '') {
+            if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] > 0) {
 
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
@@ -1950,7 +1950,7 @@ class Workcalender extends MY_Controller
                     'user_id' => $post['appointment_user_id'],
                     'prof_id' => $post['appointment_customer_id'],
                     'tag_ids' => implode(",", $post['appointment_tags']),
-                    'appointment_type' => $post['appointment_type']
+                    'appointment_type_id' => $post['appointment_type_id']
                 ];
 
                 $this->Appointment_model->update($appointment->id, $data_appointment);
@@ -1962,8 +1962,6 @@ class Workcalender extends MY_Controller
                 $message = 'Required fields cannot be empty';
             }
         }
-
-        
 
         $json_data = [
             'is_success' => $is_success,
@@ -2301,6 +2299,19 @@ class Workcalender extends MY_Controller
         }
 
         echo json_encode($resources_users);
+    }
+
+    public function ajax_load_checkout_item_list()
+    {
+        $this->load->model('Items_model');
+
+        $cid   = logged('company_id');
+        $filters[] = ['field' => 'type', 'value' => 'product'];
+        $filters[] = ['field' => 'type', 'value' => 'service'];
+        $items = $this->Items_model->getByCompanyId($cid, $filters);
+        
+        $this->page_data['items'] = $items;
+        $this->load->view('workcalender/ajax_load_checkout_item_list', $this->page_data);
     }
 }
 
