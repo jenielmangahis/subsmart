@@ -1,9 +1,9 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+defined('BASEPATH') or exit('No direct script access allowed');?>
+<?php include viewPath('includes/header');?>
 <div class="wrapper" role="wrapper">
-    <?php /*include viewPath('includes/sidebars/accounting/taxes');*/ ?>
-    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+    <?php /*include viewPath('includes/sidebars/accounting/taxes');*/?>
+    <?php include viewPath('includes/sidebars/accounting/accounting');?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
@@ -56,7 +56,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="reci-block">
-                    <h3>Review your sales tax <button type="button" class="close" data-dismiss="modal">&times;</button></h3>   
+                    <h3>Review your sales tax <button type="button" class="close" data-dismiss="modal">&times;</button></h3>
 
                     <div class="tax-invoice-box">
                         <div class="tax-block">
@@ -129,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="reci-block">
-                    <h3>Review your sales tax <button type="button" class="close" data-dismiss="modal">&times;</button></h3>   
+                    <h3>Review your sales tax <button type="button" class="close" data-dismiss="modal">&times;</button></h3>
 
                     <div class="sale-tax-wrp">
                         <h4>File your sales tax</h4>
@@ -220,7 +220,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </ul>
             </div>
         </div>
-        
+
         <div class="tab-content">
             <div class="tab-pane active" id="tax1">
                 <div class="tax-iner-wrp">
@@ -580,7 +580,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-5">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -596,12 +596,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                 </div>
             </div>
-        </div>
+    </div>
     </section>
-    <!-- End Taxs -->   
+    <!-- End Taxs -->
             <!-- end row -->
             <div class="row">
-                
+
             </div>
             <!-- end row -->
         </div>
@@ -609,4 +609,4 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer');?>

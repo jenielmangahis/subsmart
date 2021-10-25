@@ -66,6 +66,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
+            "assets/css/accounting/sidebar_new_modal/refund_receipt.css",
         ));
 
         add_footer_js(array(
@@ -427,6 +428,7 @@ class Accounting extends MY_Controller
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
+            "assets/js/accounting/sales/invoices_page.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
 
@@ -2288,7 +2290,7 @@ class Accounting extends MY_Controller
         if (!empty($_FILES)) {
             $config = array(
                 'upload_path' => './uploads/accounting/',
-                'allowed_types' => 'gif|jpg|png|jpeg',
+                'allowed_types' => 'gif|jpg|png|jpeg|pdf',
                 'overwrite' => true,
                 'max_size' => '5000',
                 'max_height' => '0',
@@ -2358,6 +2360,7 @@ class Accounting extends MY_Controller
             'ref_number' => $this->input->post('ref_number')
         );
         $update = $this->receipt_model->updateReceipt($new_data);
+        // dd($update);
         if ($update == true) {
             $this->session->set_flashdata('receipt_updated', 'Receipt updated.');
             redirect('accounting/receipts');
@@ -10706,5 +10709,45 @@ class Accounting extends MY_Controller
                 return false;
             }
         }
+    }
+    public function invoices_page_filter()
+    {
+        $the_html_tbody="";
+        $status = $this->input->post("status");
+        $date_range = $this->input->post("date_range");
+        if ($date_range == "This month") {
+            $start_date = date("Y-m-01");
+            $end_date = date("Y-m-d");
+        } elseif ($date_range == "Last month") {
+            $start_date = date("Y-m-d", strtotime("first day of previous month"));
+            $end_date = date("Y-m-d", strtotime("last day of previous month"));
+        } elseif ($date_range == "Last 3 month") {
+            $start_date = date("Y-m-d", strtotime("-3 month"));
+            $end_date = date("Y-m-d");
+        } elseif ($date_range == "Last 6 month") {
+            $start_date = date("Y-m-d", strtotime("-6 month"));
+            $end_date = date("Y-m-d");
+        } elseif ($date_range == "Last 12 month") {
+            $start_date = date("Y-m-d", strtotime("-12 month"));
+            $end_date = date("Y-m-d");
+        } elseif ($date_range == "Year to date") {
+            $start_date = date("Y-01-01");
+            $end_date = date("Y-m-d");
+        } else {
+            $start_date = $date_range."-01-01";
+            $end_date = $date_range."-12-31";
+        }
+        if($status != "All"){
+            $status="AND invoices.status = '".$status."'";
+        }else{
+            $status = "";
+        }
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        
+        $this->page_data['invoices'] = $this->accounting_invoices_model->get_filtered_invoices($where);
+        $the_html_tbody.=$this->load->view('accounting/invoices_page_includes/invoices_page_table_filteres', $this->page_data, true);
+        $data = new stdClass();
+        $data->the_html_tbody = $the_html_tbody;
+        echo json_encode($data);
     }
 }

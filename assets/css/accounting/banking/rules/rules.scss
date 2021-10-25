@@ -412,12 +412,22 @@ $colorError: #d52b1e;
   }
 }
 
-.stepperSuccess {
+.stepperComplete {
   --color: #28a745;
-  min-height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &--error {
+    --color: #e33d43;
+  }
+
+  &Wrapper {
+    min-height: 500px;
+    display: grid;
+    place-content: center;
+    row-gap: 1rem;
+  }
 
   &__inner {
     display: grid;

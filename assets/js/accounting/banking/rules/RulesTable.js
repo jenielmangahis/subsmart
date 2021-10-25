@@ -282,7 +282,10 @@ export class RulesTable {
       const tableData = table.data().toArray();
       const updates = tableData.map(({ id, priority }) => ({ id, priority }));
 
-      await this.api.editRulePriorities(updates);
+      if (updates.length > 1) {
+        await this.api.editRulePriorities(updates);
+      }
+
       isReordering = false;
     });
   }

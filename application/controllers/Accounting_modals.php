@@ -108,27 +108,8 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['balance'] = '$0.00';
                 break;
                 case 'inventory_qty_modal':
-                    $accounts = $this->chart_of_accounts_model->select();
-                    $accountTypes = $this->account_model->getAccounts();
-
-                    $bankAccounts = [];
-                    foreach ($accountTypes as $accType) {
-                        $accName = strtolower($accType->account_name);
-
-                        foreach ($accounts as $account) {
-                            if ($account->account_id === $accType->id) {
-                                $bankAccounts[$accType->account_name][] = [
-                                    'value' => $accName.'-'.$account->id,
-                                    'text' => $account->name,
-                                ];
-                            }
-                        }
-                    }
-
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
-                    $this->page_data['accounts'] = $bankAccounts;
-                    $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => 'product', 'status' => [1]]);
                 break;
                 case 'payroll_modal':
                     $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
@@ -1258,7 +1239,7 @@ class Accounting_modals extends MY_Controller
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
                         'recurring_type' => $data['recurring_type'],
-                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? ($data['days_in_advance'] !== '' ? $data['days_in_advance'] : null) : null,
                         'txn_type' => 'transfer',
                         'txn_id' => $transferId,
                         'recurring_interval' => $data['recurring_interval'],
@@ -1292,7 +1273,6 @@ class Accounting_modals extends MY_Controller
     private function pay_down_credit_card($data, $files)
     {
         $this->form_validation->set_rules('credit_card_account', 'Credit Card', 'required');
-        $this->form_validation->set_rules('payee', 'Payee', 'required');
         $this->form_validation->set_rules('amount', 'Amount', 'required');
         $this->form_validation->set_rules('payment_date', 'Date of Payment', 'required');
         $this->form_validation->set_rules('bank_account', 'Date of Payment', 'required');
@@ -1316,9 +1296,7 @@ class Accounting_modals extends MY_Controller
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
+                'status' => 1
             ];
 
             $payDownId = $this->accounting_pay_down_credit_card_model->create($insertData);
@@ -1519,7 +1497,7 @@ class Accounting_modals extends MY_Controller
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
                         'recurring_type' => $data['recurring_type'],
-                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? ($data['days_in_advance'] !== '' ? $data['days_in_advance'] : null) : null,
                         'txn_type' => 'journal entry',
                         'txn_id' => $entryId,
                         'recurring_interval' => $data['recurring_interval'],
@@ -1828,9 +1806,7 @@ class Accounting_modals extends MY_Controller
                     'memo' => $data['memo'],
                     'total_amount' => $total,
                     'created_by' => logged('id'),
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
+                    'status' => 1
                 ];
 
                 $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($adjustmentData);
@@ -2911,7 +2887,7 @@ class Accounting_modals extends MY_Controller
                 'bank_account_id' => $data['bank_account'],
                 'mailing_address' => nl2br($data['mailing_address']),
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
+                'check_no' => isset($data['print_later']) ? null : ($data['check_no'] === '' ? null : $data['check_no']),
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
@@ -5530,11 +5506,19 @@ class Accounting_modals extends MY_Controller
             if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);
                 if ($stripos !== false) {
-                    $searched = substr($vendor->display_name, $stripos, strlen($search));
-                    $choices['results'][] = [
-                        'id' => 'vendor-'.$vendor->id,
-                        'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
-                    ];
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                        $searched = substr($vendor->display_name, $stripos, strlen($search));
+                        $choices['results'][] = [
+                            'id' => 'vendor-'.$vendor->id,
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
+                        ];
+                    } else {
+                        $searched = substr($vendor->display_name, $stripos, strlen($search));
+                        $choices['results'][] = [
+                            'id' => $vendor->id,
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $vendor->display_name)
+                        ];
+                    }
                 }
             } else {
                 if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
@@ -6385,9 +6369,9 @@ class Accounting_modals extends MY_Controller
             'company_id' => getLoggedCompanyID(),
             'name' => $post['name'],
             'type' => $post['payment_term_type'],
-            'net_due_days' => $post['payment_term_type'] === "1" ? $post['net_due_days'] === "" ? 0 : $post['net_due_days'] : null,
-            'day_of_month_due' => $post['payment_term_type'] === "2" ? $post['day_of_month_due'] === "" ? 0 : $post['day_of_month_due'] : null,
-            'minimum_days_to_pay' => $post['payment_term_type'] === "2" ? $post['minimum_days_to_pay'] === "" ? 0 : $post['minimum_days_to_pay'] : null,
+            'net_due_days' => $post['payment_term_type'] === "1" ? ($post['net_due_days'] === "" ? 0 : $post['net_due_days']) : null,
+            'day_of_month_due' => $post['payment_term_type'] === "2" ? ($post['day_of_month_due'] === "" ? 0 : $post['day_of_month_due']) : null,
+            'minimum_days_to_pay' => $post['payment_term_type'] === "2" ? ($post['minimum_days_to_pay'] === "" ? 0 : $post['minimum_days_to_pay']) : null,
             'discount_days' => 0,
             'status' => 1
         ];

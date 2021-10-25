@@ -4,6 +4,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   const api = await import("./api.js");
   const utils = await import("./utils.js");
 
+  utils.initSelect({
+    $select: $("#mainCategory"),
+    field: "bank-account",
+  });
+  utils.initSelect({
+    $select: $('[data-type="assignment.payee"]'),
+    field: "payee",
+  });
+
   const $newRuleButton = document.getElementById("newRuleButton");
   $newRuleButton.addEventListener("click", () => {
     window.openRuleForm();
@@ -30,14 +39,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const $addRuleForm = document.getElementById("addRuleForm");
   const $addRuleBtn = $addRuleForm.querySelector("[data-action=save]");
-
-  const getFormElementValue = ($element) => {
-    if ($element.type === "checkbox") {
-      return $element.checked;
-    }
-
-    return $element.value;
-  };
 
   function isEmpty(string) {
     // https://stackoverflow.com/a/3261380/8062659
@@ -95,7 +96,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      if (!dataType.startsWith("assignment.")) {
+      if (!dataType.startsWith("assignments.")) {
         payload[dataType] = value;
         return;
       }
@@ -158,11 +159,19 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
     const _payload = { ...payload, conditions, assignments };
+    let response = null;
+
     if (ruleId === null) {
-      await api.saveRule(_payload);
+      response = await api.saveRule(_payload);
     } else {
-      await api.editRule(ruleId, _payload);
+      response = await api.editRule(ruleId, _payload);
     }
+
+    if (response.success === false) {
+      alert(response.message || "Something went wrong.");
+      return;
+    }
+
     window.location.reload();
   });
 
@@ -247,7 +256,7 @@ window.openRuleForm = async (data = null) => {
 
     if (key === "assignments" && isNonEmptyArray) {
       value.forEach((assignment) => {
-        const $input = $addRuleForm.querySelector(`[data-type='assignment.${assignment.type}']`); // prettier-ignore
+        const $input = $addRuleForm.querySelector(`[data-type='assignments.${assignment.type}']`); // prettier-ignore
         if ($input) {
           $input.value = assignment.value;
           $input.setAttribute("data-id", assignment.id);
@@ -302,10 +311,13 @@ window.resetRuleForm = () => {
     }
 
     const $firstOption = $element.querySelector("option");
-    const firstOptionValue = $firstOption.textContent;
-    $element.value = firstOptionValue;
+    if ($firstOption) {
+      const firstOptionValue = $firstOption.textContent;
+      $element.value = firstOptionValue;
+    }
+
     if ($element.classList.contains("select2-hidden-accessible")) {
-      $($element).val(firstOptionValue).trigger("change");
+      $($element).val("").trigger("change");
     }
   }
 
@@ -338,6 +350,7 @@ window.resetRuleForm = () => {
 
 window.setupImportRulesForm = async () => {
   const api = await import("./api.js");
+  const utils = await import("./utils.js");
   const { RulesImportTable } = await import("./RulesImportTable.js");
 
   const $error = document.querySelector(".stepperError");
@@ -348,6 +361,11 @@ window.setupImportRulesForm = async () => {
   const $stepRulesFile = document.getElementById("stepRulesFile");
   const $cancelBtn = document.getElementById("importRulesCancel");
   const $table = document.getElementById("stepRulesTable");
+  const $payee = document.getElementById("importRulesPayee");
+  const $category = document.getElementById("importRulesCategory");
+
+  utils.initSelect({ $select: $($payee), field: "payee" });
+  utils.initSelect({ $select: $($category), field: "bank-account" });
 
   const handleCheckboxChange = () => {
     $importNext.disabled = !$table.querySelector(".rulesTable__row--selected");
@@ -356,16 +374,42 @@ window.setupImportRulesForm = async () => {
   const resetForm = () => {
     stepper.reset();
     data = null;
+    importResponse = null;
     $stepRulesFile.value = null;
     $stepRulesFile.nextElementSibling.textContent = "No file selected";
     $importNext.disabled = true;
     $($error).hide();
+    $($payee).val("").trigger("change");
+    $($category).val("").trigger("change");
+  };
+
+  const setupFinishMessage = ({ success, failed }) => {
+    const $success = document.querySelector(".stepperComplete");
+    const $failed = document.querySelector(".stepperComplete--error");
+
+    const getCountElement = ($parent) => {
+      return $parent.querySelector(".stepperComplete__count");
+    };
+
+    $($success).hide();
+    $($failed).hide();
+
+    if (success.length > 0) {
+      $($success).show();
+      getCountElement($success).textContent = success.length;
+    }
+
+    if (failed.length > 0) {
+      $($failed).show();
+      getCountElement($failed).textContent = failed.length;
+    }
   };
 
   const table = new RulesImportTable($($table));
   table.onCheckboxChange = handleCheckboxChange;
   const stepper = new Stepper($stepper);
   let data = null;
+  let importResponse = null;
 
   resetForm();
 
@@ -374,7 +418,7 @@ window.setupImportRulesForm = async () => {
     $($importModal).modal("show");
   });
 
-  $importNext.addEventListener("click", () => {
+  $importNext.addEventListener("click", async () => {
     if (stepper._currentIndex === 0) {
       if (data === null) {
         return;
@@ -385,6 +429,49 @@ window.setupImportRulesForm = async () => {
       if (!$table.querySelector(".rulesTable__row--selected")) {
         return;
       }
+    }
+
+    if (stepper._currentIndex === 2) {
+      let selected = $.map(
+        table.table.rows(".rulesTable__row--selected").data(),
+        (item) => item
+      );
+
+      if (selected.length === 0) {
+        return;
+      }
+
+      const category = getFormElementValue($category);
+      const payee = getFormElementValue($payee);
+
+      selected = selected.map((item) => {
+        return {
+          ...item,
+          ["Rule Outputs"]: [
+            ...item["Rule Outputs"],
+            {
+              type: "category",
+              value: category,
+              percentage: null,
+            },
+            {
+              type: "payee",
+              value: payee,
+              percentage: null,
+            },
+          ],
+        };
+      });
+
+      $importNext.disabled = true;
+      importResponse = await api.apiImportRules({ rules: selected });
+      setupFinishMessage(importResponse);
+      $importNext.disabled = false;
+    }
+
+    if (stepper._currentIndex === 3) {
+      window.location.reload();
+      return;
     }
 
     stepper.next();
@@ -424,4 +511,18 @@ window.setupImportRulesForm = async () => {
   $cancelBtn.addEventListener("click", () => {
     $($importModal).modal("hide");
   });
+};
+
+window.getFormElementValue = ($element) => {
+  if ($element.type === "checkbox") {
+    return $element.checked;
+  }
+
+  if ($($element).hasClass("select2-hidden-accessible")) {
+    const data = $($element).select2("data");
+    const value = data.find(({ id }) => id === $element.value);
+    return value ? value.text : "";
+  }
+
+  return $element.value;
 };

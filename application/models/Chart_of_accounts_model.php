@@ -404,6 +404,8 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->or_where('cash_back_account_id', $accountId);
+		$this->db->where('status !=', 0);
 		$query = $this->db->get('accounting_bank_deposit');
 		return $query->result();
 	}

@@ -150,15 +150,15 @@
                                                             <?php endif; ?>
                                                             <?php do {?>
                                                                 <tr>
-                                                                <td></td>
-                                                                <td><?=$count?></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                                                    <td></td>
+                                                                    <td><?=$count?></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                 </tr>
                                                             <?php $count++; } while ($count <= 2) ?>
                                                             <tr>
@@ -213,7 +213,7 @@
                                                     <div class="form-group">
                                                         <label for="cashBackTarget">Cash back goes to</label>
                                                         <select name="cash_back_account" id="cash_back_account" class="form-control" required>
-                                                            <?php if(isset($deposit)) : ?>
+                                                            <?php if(isset($deposit) && !is_null($cash_back_account)) : ?>
                                                             <option value="<?=$cash_back_account->id?>"><?=$cash_back_account->name?></option>
                                                             <?php endif; ?>
                                                         </select>

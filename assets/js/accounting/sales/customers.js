@@ -126,7 +126,7 @@ $(document).on("click", ".created-sales-receipt", function(event) {
     });
 });
 
-$(document).on('change', 'input[type=checkbox]', function() {
+$(document).on('change', '#customers_table input[type=checkbox]', function() {
     if (!$(this).is(':checked')) {
         $("#checkbox-all-action").prop("checked", false);
     }
