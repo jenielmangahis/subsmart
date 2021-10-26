@@ -8,7 +8,7 @@ class Appointment_Types extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-        $this->hasAccessModule(4); 
+	$this->hasAccessModule(4); 
 
 		$this->load->model('AppointmentType_model');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
@@ -22,9 +22,9 @@ class Appointment_Types extends MY_Controller {
 	{
 
 		$user_id = logged('id');        
-        $company_id = logged('company_id');
+		$company_id = logged('company_id');
 
-		$appointmentTypes = $this->AppointmentType_model->getAllByCompany($company_id);
+		$appointmentTypes = $this->AppointmentType_model->getAllByCompany($company_id, false);
 
 		$this->page_data['appointmentTypes'] = $appointmentTypes;
 		$this->load->view('appointment_types/index', $this->page_data);
@@ -38,87 +38,87 @@ class Appointment_Types extends MY_Controller {
 	public function create_appointment_type()
 	{
 
-        $user_id = logged('id');
-        $post    = $this->input->post();
+	$user_id = logged('id');
+	$post    = $this->input->post();
 
-        if( $post['appointment_type_name'] != '' ){
-        	$data_appointment_type = [        		
-                'company_id' => logged('company_id'),
-        		'name' => $post['appointment_type_name'],
-        		'created' => date("Y-m-d H:i:s")
-        	];
+	if( $post['appointment_type_name'] != '' ){
+		$data_appointment_type = [        		
+	        'company_id' => logged('company_id'),
+			'name' => $post['appointment_type_name'],
+			'created' => date("Y-m-d H:i:s")
+		];
 
-        	$appointmentType = $this->AppointmentType_model->create($data_appointment_type);
-        	if( $appointmentType > 0 ){
+		$appointmentType = $this->AppointmentType_model->create($data_appointment_type);
+		if( $appointmentType > 0 ){
 
-        		$this->session->set_flashdata('message', 'Add new appointment type was successful');
-        		$this->session->set_flashdata('alert_class', 'alert-success');
+			$this->session->set_flashdata('message', 'Add new appointment type was successful');
+			$this->session->set_flashdata('alert_class', 'alert-success');
 
-        		redirect('appointment_types/index');
+			redirect('appointment_types/index');
 
-        	}else{
-        		$this->session->set_flashdata('message', 'Cannot save data.');
-        		$this->session->set_flashdata('alert_class', 'alert-danger');
+		}else{
+			$this->session->set_flashdata('message', 'Cannot save data.');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
 
-        		redirect('appointment_types/index');
-        	}
+			redirect('appointment_types/index');
+		}
 
-        }else{
-        	$this->session->set_flashdata('message', 'Please specify name');
-        	$this->session->set_flashdata('alert_class', 'alert-danger');
+	}else{
+		$this->session->set_flashdata('message', 'Please specify name');
+		$this->session->set_flashdata('alert_class', 'alert-danger');
 
-        	redirect('appointment_types/index');        	
-        }
+		redirect('appointment_types/index');        	
+	}
 	}
 
 	public function edit_type( $appointment_type_id )
 	{
 
 		$company_id      = logged('company_id');
-        $appointmentType = $this->AppointmentType_model->getByIdAndCompanyId($appointment_type_id, $company_id);
-        if( $appointmentType ){
-        	$this->page_data['appointmentType'] = $appointmentType;
+	$appointmentType = $this->AppointmentType_model->getByIdAndCompanyId($appointment_type_id, $company_id);
+	if( $appointmentType ){
+		$this->page_data['appointmentType'] = $appointmentType;
 			$this->load->view('appointment_types/edit', $this->page_data);
-        }else{
-        	$this->session->set_flashdata('message', 'Cannot find data');
-        	$this->session->set_flashdata('alert_class', 'alert-danger');
-        	redirect('appointment_types/index');   
-        }
+	}else{
+		$this->session->set_flashdata('message', 'Cannot find data');
+		$this->session->set_flashdata('alert_class', 'alert-danger');
+		redirect('appointment_types/index');   
+	}
 	}
 
 	public function update_appointment_type()
 	{
 		$post       = $this->input->post();
 		$company_id = logged('company_id');
-        if( $post['appointment_type_name'] != '' ){
+	if( $post['appointment_type_name'] != '' ){
 
-        	$appointmentType = $this->AppointmentType_model->getByIdAndCompanyId($post['aid'], $company_id);
-        	if( $appointmentType ){
-        		$data = [
-        			'name' => $post['appointment_type_name']        			
-        		];
+		$appointmentType = $this->AppointmentType_model->getByIdAndCompanyId($post['aid'], $company_id);
+		if( $appointmentType ){
+			$data = [
+				'name' => $post['appointment_type_name']        			
+			];
 
-        		$this->AppointmentType_model->update($post['aid'], $data);
+			$this->AppointmentType_model->update($post['aid'], $data);
 
-        		$this->session->set_flashdata('message', 'Color setting was successful updated');
-        		$this->session->set_flashdata('alert_class', 'alert-success');
+			$this->session->set_flashdata('message', 'Color setting was successful updated');
+			$this->session->set_flashdata('alert_class', 'alert-success');
 
-        		redirect('appointment_types/index');
+			redirect('appointment_types/index');
 
-        	}else{
-        		$this->session->set_flashdata('message', 'Record not found.');
-        		$this->session->set_flashdata('alert_class', 'alert-danger');
+		}else{
+			$this->session->set_flashdata('message', 'Record not found.');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
 
-        		redirect('appointment_types/index');
-        	}
+			redirect('appointment_types/index');
+		}
 
-        }else{
-        	$this->session->set_flashdata('message', 'Please specify name');
-        	$this->session->set_flashdata('alert_class', 'alert-danger');
+	}else{
+		$this->session->set_flashdata('message', 'Please specify name');
+		$this->session->set_flashdata('alert_class', 'alert-danger');
 
-        	redirect('appointment_types/edit/'.$post['aid']);
+		redirect('appointment_types/edit/'.$post['aid']);
 
-        }
+	}
 	}
 
 	public function delete_appointment_type()
@@ -133,9 +133,9 @@ class Appointment_Types extends MY_Controller {
 			$this->session->set_flashdata('alert_class', 'alert-success');
 		}else{
 			$this->session->set_flashdata('message', 'Record not found.');
-    		$this->session->set_flashdata('alert_class', 'alert-danger');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
 
-    		
+			
 		}
 
 		redirect('appointment_types/index');
