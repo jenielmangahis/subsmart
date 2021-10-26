@@ -2043,12 +2043,14 @@ class Workcalender extends MY_Controller
             $total_discount = 0;
             $total_items    = 0;
 
-            foreach( $post['items'] as $key => $value ){
+            foreach( $post['item_id'] as $key => $value ){
                 if( isset($post['price'][$key]) && isset($post['discount'][$key]) ){
                     $data_item = [
                         'appointment_id' => $appointment->id,
-                        'item_name' => $value,
+                        'item_id' => $value,
+                        'item_name' => $post['item_name'][$key],
                         'item_price' => $post['price'][$key],
+                        'qty' => $post['qty'][$key],
                         'discount_amount' => $post['discount'][$key],
                         'created' => date("Y-m-d H:i:s")
                     ];
@@ -2266,35 +2268,9 @@ class Workcalender extends MY_Controller
                 $resources_users[$inc]['id'] = "user" . $get_user->id;
                 $resources_users[$inc]['building'] = 'Employee';
                 $resources_users[$inc]['title'] = "#" . $get_user->id . " " . $get_user->FName . " " . $get_user->LName;
+                $resources_users[$inc]['employee_name'] = $get_user->FName . " " . $get_user->LName;
                 $resources_users[$inc]['imageurl'] = $default_imp_img;
                 $inc++;
-            }
-        }
-
-        if (!empty($events)) {
-            $inc = 0;
-            foreach ($events as $event) {
-                if ($event->employee_id > 0) {
-                    $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                    $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                    $resources_user_events[$inc]['resourceId'] = $event->employee_id;
-                    $resources_user_events[$inc]['title'] = $event->event_description;
-                    $resources_user_events[$inc]['start'] = $start_date_time;
-                    $resources_user_events[$inc]['end'] = $start_date_end;
-                    $resources_user_events[$inc]['eventColor'] = $event->event_color;
-                    $inc++;
-                } elseif ($event->employee_id == 0) {
-                    foreach ($get_users as $get_user) {
-                        $start_date_time = date('Y-m-d H:i:s', strtotime($event->start_date . " " . $event->start_time));
-                        $start_date_end  = date('Y-m-d H:i:s', strtotime($event->end_date . " " . $event->end_time));
-                        $resources_user_events[$inc]['resourceId'] = $get_user->id;
-                        $resources_user_events[$inc]['title'] = $event->event_description;
-                        $resources_user_events[$inc]['start'] = $start_date_time;
-                        $resources_user_events[$inc]['end'] = $start_date_end;
-                        $resources_user_events[$inc]['eventColor'] = $event->event_color;
-                        $inc++;
-                    }
-                }
             }
         }
 

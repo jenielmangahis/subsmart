@@ -1015,11 +1015,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           },          
           selectable: true,
           select: function(info) {
-            //console.log(info);
+            console.log(info);
             //alert('selected ' + info.startStr + ' to ' + info.endStr);
+            let result = info.hasOwnProperty('resource');
+            if( result ){
+                var user_id = info.resource._resource.id;
+                user_id     = user_id.replace("user", "");
+                var user_name = info.resource._resource.extendedProps.employee_name;
+            }else{
+                var user_id = 0;
+                var user_name = '';
+            }
+            
+            
+            if( user_id > 0 ){
+                var $newOption = $("<option selected='selected'></option>").val(user_id).text(user_name) 
+                $("#appointment-user").append($newOption).trigger('change');
+            }else{
+                $("#appointment-user").empty().trigger('change');
+            }            
+            
             $(".appointment-date").val(moment(info.startStr).format('dddd, MMMM DD, YYYY'));
-            $(".appointment-time").val(moment(info.startStr).format('hh:mm A'));
-            $("#appointment-user").empty().trigger('change');
+            $(".appointment-time").val(moment(info.startStr).format('hh:mm A'));            
             $("#appointment-customer").empty().trigger('change');
             $("#appointment-tags").empty().trigger('change');
             $("#modal-create-appointment").modal('show');
@@ -1909,5 +1926,80 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $("#modal-view-appointment-payment-details").modal('show');
         $("#modal-view-appointment").modal('show');
     });
+
+    $(document).on('click', '.btn-add-item-row', function(){
+        var url = base_url + 'items/_get_item_details';    
+        var itemid = $(this).attr('data-id');
+
+        $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        $.ajax({
+           type: "POST",
+           url: url,
+           data: {itemid:itemid},
+           dataType: 'json',
+           success: function(o)
+           {
+              if( o.is_exists ){
+                var item_price = parseFloat(o.item_price);
+                var append_row = '<tr style="background: none !important;"><td style="width:65%;"><input type="text" class="form-control" name="item_name[]" placeholder="Item Name" value="'+o.item_name+'"><input type="hidden" name="item_id[]" value="'+o.item_id+'" /></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price" value="'+item_price.toFixed(2)+'"></td><td><input type="text" class="form-control item-qty" name="qty[]" placeholder="Item Quantity" value="1"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount" value="0"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
+
+                $(".tbl-items tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
+                c_compute_totals();
+
+              }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cannot find item.',
+                  text: o.msg
+                });
+              }    
+
+              $(".btn-add-item-row").html('<i class="fa fa-plus"></i>');
+              $("#modal-checkout-items").modal('hide');
+           }
+        });
+      });
+
+    function c_compute_totals(){
+        var total_price    = 0;
+        var total_discount = 0;
+        var total_amount   = 0;
+        var total_tax = 0;
+        var total_qty = 0;
+
+        $('#frm-checkout-items .form-control').each(function(){
+          var $el = $(this); // element we're testing
+          var n   = parseFloat($el.val());
+
+          if( $el.hasClass('item-price') ){        
+            if ($.isNumeric(n)){
+              var item_qty = parseFloat($el.closest('tr').find('.item-qty').val());
+              if( item_qty > 0 ){
+                total_price  = total_price + (parseFloat($el.val()) * item_qty);
+              }else{
+                total_price  = total_price + 0;
+              }
+            }
+          }
+
+          if( $el.hasClass('item-discount') ){        
+            if ($.isNumeric(n)){
+              total_discount = total_discount + parseFloat($el.val());
+            }
+          }
+        });
+
+        total_amount = (parseFloat(total_price) - parseFloat(total_discount)) + parseFloat(total_tax);
+        if( total_amount < 0 ){
+            total_amount = 0;
+        }
+
+        $(".c-total-amount").text(parseFloat(total_amount).toFixed(2));
+        $(".c-total-price").text(parseFloat(total_price).toFixed(2));
+        $(".c-total-discount").text(parseFloat(total_discount).toFixed(2));
+        $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
+        $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
+      }
 </script>
 
