@@ -108,11 +108,23 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function getByCompanyId($company_id)
+   public function getByCompanyId($company_id, $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        if( $filters ){
+            $count = 1;
+            foreach( $filters as $value ){
+                if( $count == 1 ){
+                    $this->db->where($value['field'], $value['value']);
+                }else{
+                    $this->db->or_where($value['field'], $value['value']);
+                }
+                $count++;
+            }
+        }
+
         $query = $this->db->get();
         return $query->result();
     }

@@ -419,14 +419,10 @@ $(function() {
             if (vendorModals.includes(modal_element)) {
                 rowCount = 2;
                 catDetailsInputs = $(`${modal_element} table#category-details-table tbody tr:first-child()`).html();
-                catDetailsBlank = $(`${modal_element} table#category-details-table tbody tr:nth-child(2)`).html();
+                catDetailsBlank = $(`${modal_element} table#category-details-table tbody tr:last-child()`).html();
 
-                $(`${modal_element} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-                $(`${modal_element} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-
-                if ($(`${modal_element} table#category-details-table tbody tr`).length > 2) {
-                    $(`${modal_element} table#category-details-table tbody tr:first-child()`).remove();
-                }
+                $(`${modal_element} table#category-details-table tbody tr:first-child()`).remove();
+                $(`${modal_element} table#category-details-table tbody tr:last-child()`).remove();
             }
 
             if (modal_element === '#printChecksModal') {
@@ -1695,8 +1691,9 @@ $(function() {
         var amount = parseFloat(parseFloat(price) * parseInt(quantity)).toFixed(2);
         var taxAmount = parseFloat(taxPercentage) * amount / 100;
         var total = parseFloat(parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount)).toFixed(2);
+        total = '$'+total;
 
-        $(this).parent().parent().find('td span.row-total').html(total);
+        $(this).parent().parent().find('td span.row-total').html(total.replace('$-', '-$'));
         computeTransactionTotal();
     });
 
@@ -1753,7 +1750,7 @@ $(function() {
                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
-                    <td>$<span class="row-total">0.00</span></td>
+                    <td><span class="row-total">$0.00</span></td>
                     <td class="text-right">0</td>
                     <td>
                         <div class="d-flex align-items-center justify-content-center">
@@ -1771,7 +1768,7 @@ $(function() {
                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
-                    <td>$<span class="row-total">0.00</span></td>
+                    <td><span class="row-total">$0.00</span></td>
                     <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                 `;
             }
@@ -1804,6 +1801,14 @@ $(function() {
         var quantity = $(this).find('option:selected')[0].dataset.quantity;
 
         $(this).parent().parent().find('input[name="quantity[]"]').attr('max', quantity);
+    });
+
+    $(document).on('change', '#billModal #bill_no', function() {
+        if ($(this).val() !== "") {
+            $('#billModal .modal-title span').html('#' + $(this).val());
+        } else {
+            $('#billModal .modal-title span').html('');
+        }
     });
 
     $(document).on('change', '#billModal #terms', function() {
@@ -2392,6 +2397,8 @@ $(function() {
                                 var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
                             }
 
+                            var itemTotal = '$'+parseFloat(item.total).toFixed(2);
+
                             $('#modal-container .modal table#item-details-table tbody').append(`
                                 <tr>
                                     <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
@@ -2401,7 +2408,7 @@ $(function() {
                                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
                                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
                                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                                    <td>$<span class="row-total">${parseFloat(item.total).toFixed(2)}</span></td>
+                                    <td><span class="row-total">${itemTotal.replace('$-', '-$')}</span></td>
                                     ${link}
                                     <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                 </tr>
@@ -3188,7 +3195,7 @@ $(function() {
         $('#modal-container .modal textarea').val('');
         $('#modal-container .modal .dropzone .dz-preview').remove();
         $('#modal-container .modal #item-details-table tbody tr').remove();
-        $('#modal-container .modal .transaction-total-amount').html('0.00');
+        $('#modal-container .modal .transaction-total-amount').html('$0.00');
 
         modalAttachmentId = [];
         modalAttachedFiles = [];
@@ -4960,7 +4967,7 @@ const submitModalForm = (event, el) => {
         });
     } else if(vendorModals.includes(modalId)) {
         var count = 0;
-        var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+        var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
         data.append('total_amount', totalAmount);
 
         $(`${modalId} table#category-details-table tbody tr`).each(function() {
@@ -4985,17 +4992,17 @@ const submitModalForm = (event, el) => {
         count = 0;
         $(`${modalId} table#item-details-table tbody tr`).each(function() {
             if(count === 0) {
-                data.set('item_total[]', $(this).find('td span.row-total').html());
+                data.set('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
                 data.set('item_linked[]', $(this).find('i.fa.fa-link').length > 0);
             } else {
-                data.append('item_total[]', $(this).find('td span.row-total').html());
+                data.append('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
                 data.append('item_linked[]', $(this).find('i.fa.fa-link').length > 0);
             }
 
             count++;
         });
     } else if(modalId === '#payBillsModal') {
-        var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+        var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
         data.append('total', totalAmount);
 
         $(`${modalId} #bills-table tbody tr`).each(function() {
@@ -5458,12 +5465,13 @@ const computeTransactionTotal = () => {
     });
 
     $('#modal-container table#item-details-table tbody tr td span.row-total').each(function() {
-        var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html()).toFixed(2);
+        var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html().replace('$', '')).toFixed(2);
 
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    $('#modal-container .transaction-total-amount').html(parseFloat(total).toFixed(2));
+    total = '$'+parseFloat(total).toFixed(2);
+    $('#modal-container .transaction-total-amount').html(total.replace('$-', '-$'));
 }
 
 const loadBills = () => {
@@ -5590,7 +5598,8 @@ const computeBillsPaymentTotal = () => {
         }
     });
 
-    $('#payBillsModal span.transaction-total-amount').html(parseFloat(total).toFixed(2));
+    total = '$'+parseFloat(total).toFixed(2);
+    $('#payBillsModal span.transaction-total-amount').html(total.replace('$-', '-$'));
 }
 
 const updateTransaction = (event, el) => {
@@ -5599,7 +5608,7 @@ const updateTransaction = (event, el) => {
     var data = new FormData(document.getElementById($(el).attr('id')));
     var modalId = '#'+$(el).children().attr('id');
 
-    var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+    var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
     data.append('total_amount', totalAmount);
 
     if($(`${modalId} table#category-details-table`).length > 0) {
@@ -5622,9 +5631,9 @@ const updateTransaction = (event, el) => {
     if($(`${modalId} table#item-details-table`).length > 0) {
         $(`${modalId} table#item-details-table tbody tr`).each(function() {
             if(data.has('item_total[]') === false) {
-                data.set('item_total[]', $(this).find('td span.row-total').html());
+                data.set('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
             } else {
-                data.append('item_total[]', $(this).find('td span.row-total').html());
+                data.append('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
             }
         });
     }
@@ -5739,13 +5748,9 @@ const initModalFields = (modalName, data = {}) => {
         rowCount = 2;
         catDetailsInputs = $(`#${modalName} table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#${modalName} table#category-details-table tbody tr:last-child`).html();
-    }
 
-    if($(`#${modalName} table#category-details-table tbody tr`).length === 2) {
-        $(`#${modalName} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#${modalName} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-    } else {
         $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
+        $(`#${modalName} table#category-details-table tbody tr:last-child()`).remove();
     }
 
     if($(`#${modalName} select`).length > 0) { //
@@ -6109,7 +6114,7 @@ const savePayBills = (e) => {
     $('#modal-container form#modal-form').submit();
 
     $('#payBillsModal #bills-table').DataTable().ajax.reload(null, true);
-    $('#payBillsModal .transaction-total-amount').html('0.00');
+    $('#payBillsModal .transaction-total-amount').html('$0.00');
 }
 
 const savePrintPayBills = (e) => {

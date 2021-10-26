@@ -156,6 +156,7 @@ vertical-align: middle;
     margin-bottom: 7px;
     margin-top: 8px;
 }
+
 </style>
 <?php if( $appointment ){ ?>
 <?php 
@@ -189,7 +190,7 @@ vertical-align: middle;
         <div class="col">
           <h3 class="c-appointment-header"><b>Client</b></h3>
           <h3 class="c-appointment-customer"><b><?= $appointment->customer_name; ?></b></h3>
-          <span class="c-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $optionAppointmentTypes[$appointment->appointment_type]; ?></span><br />
+          <span class="c-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $appointment->appointment_type; ?></span><br />
           <span class="c-appointment-phone"><i class="fa fa-phone"> Phone : </i> <?= $c_phone; ?> / </span>
           <span class="c-appointment-email"><i class="fa fa-envelope"> Email :</i> <?= $c_email; ?></span><br />
           <span class="c-appointment-date-time"><i class="fa fa-clock-o"></i> <?= date("g:i A",strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?> - <i class="fa fa-calendar"></i> <?= date("l, F D, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
@@ -214,7 +215,7 @@ vertical-align: middle;
           
           <div class="widget-header">          
             <h3><i class="fa fa-tag"></i> Items</h3>
-            <a href="javascript:;" class="btn btn-sm btn-primary btn-checkout-add-item" style="display: inline-block;">
+            <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-checkout-select-item" style="display: inline-block;">
               <i class="fa fa-plus"></i> Add Item
             </a>
           </div>
@@ -242,6 +243,9 @@ vertical-align: middle;
                       <input type="text" class="form-control item-price" value="<?= number_format($item->item_price,2); ?>" name="price[]" placeholder="Item Price">
                     </td>
                     <td>
+                      <input type="text" class="form-control item-qty" value="<?= number_format($item->qty,2); ?>" name="qty[]" placeholder="Quantity">
+                    </td>
+                    <td>
                       <input type="text" class="form-control item-discount" value="<?= number_format($item->discount_amount,2); ?>" name="discount[]" placeholder="Item Discount">
                     </td>
                     <td class="td-actions">
@@ -258,6 +262,9 @@ vertical-align: middle;
                     </td>
                     <td>
                       <input type="text" class="form-control item-price" name="price[]" placeholder="Item Price">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control item-qty" name="qty[]" placeholder="Quantity">
                     </td>
                     <td>
                       <input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount">
@@ -678,5 +685,58 @@ $(function(){
 
   });
 
+  $(".btn-checkout-select-item").click(function(){
+    var url = base_url + 'calendar/_load_item_list';
+    $(".select-checkout-item").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+    $("#modal-checkout-items").modal('show');
+
+
+    setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           success: function(o)
+           {
+              $(".select-checkout-item").html(o);
+           }
+        });
+    }, 1000);
+
+  });
+
+  $(document).on('click', '.btn-add-item-row', function(){
+    var url = base_url + 'items/_get_item_details';    
+    var itemid = $(this).attr('data-id');
+
+    $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+    $.ajax({
+       type: "POST",
+       url: url,
+       data: {itemid:itemid},
+       dataType: 'json',
+       success: function(o)
+       {
+          if( o.is_exists ){
+            var item_price = parseFloat(o.item_price);
+            var append_row = '<tr style="background: none !important;"><td style="width:60%;"><input type="text" class="form-control" name="" placeholder="Item Name" value="'+o.item_name+'"><input type="hidden" name="items[]" value="'+o.item_id+'" /></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price" value="'+item_price.toFixed(2)+'"></td><td><input type="text" class="form-control item-qty" name="qty[]" placeholder="Item Quantity" value="1"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
+
+            $(".tbl-items tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
+            c_compute_totals();
+
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'Cannot find item.',
+              text: o.msg
+            });
+          }    
+
+          $(".btn-add-item-row").html('<i class="fa fa-plus"></i>');
+          $("#modal-checkout-items").modal('hide');
+       }
+    });
+  });
 });
 </script>

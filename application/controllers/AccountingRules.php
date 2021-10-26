@@ -31,6 +31,7 @@ class AccountingRules extends MY_Controller
         if (!$savedRule) {
             $error = $this->db->error();
             echo json_encode([
+                'error' => $error,
                 'success' => false,
                 'message' => $error['code'] === 1062 ? 'Duplicate name.' : 'Something went wrong.',
             ]);
@@ -80,12 +81,25 @@ class AccountingRules extends MY_Controller
 
     public function apiEditRule($id)
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
+
+        if (!array_key_exists('conditions', $payload) &&
+            !array_key_exists('conditions', $payload)) {
+            $this->db->where('id', $id);
+            $this->db->update('accounting_rules', $payload);
+
+            $this->db->where('id', $id);
+            $record = $this->db->get('accounting_rules')->row();
+            echo json_encode(['data' => $record]);
+            return;
+        }
 
         // Remove unsupported columns on `accounting_rules` table.
         ['conditions' => $conditions, 'assignments' => $assignments] = $payload;
@@ -124,8 +138,6 @@ class AccountingRules extends MY_Controller
 
         $this->db->where('id', $id);
         $record = $this->db->get('accounting_rules')->row();
-
-        header('content-type: application/json');
         echo json_encode(['data' => $record]);
     }
 

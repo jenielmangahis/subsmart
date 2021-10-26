@@ -259,7 +259,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                 <option>Bank Charges</option> -->
                                             </select>
                                         </div>
-                                        <span class="action-label" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
+                                        <span class="action-label d-none" style="margin-left: 5px;"><a href="#" id="btnAddSplit" style="color: #0b62a4;">Add split</a></span>
                                     </div>
                                     <!--Add Split Div-->
                                     <div class="add-split-container">
@@ -359,7 +359,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         rows="5"
                                         placeholder="Enter Text"
                                         style="resize: none;"
-                                        data-type="assignments.memo"
+                                        data-type="memo"
                                     ></textarea>
                                 </div>
                                 <div style="margin-top: 15px;">

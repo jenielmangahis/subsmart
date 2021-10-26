@@ -760,6 +760,7 @@ $route['calendar/_save_checkout_items'] = 'Workcalender/ajax_save_checkout_items
 $route['calendar/_appointment_cash_checkout'] = 'Workcalender/ajax_appointment_cash_checkout';
 $route['calendar/_appointment_converge_checkout'] = 'Workcalender/ajax_appointment_converge_checkout';
 $route['calendar/_get_main_calendar_resource_users'] = 'Workcalender/main_calendar_resource_users';
+$route['calendar/_load_item_list'] = 'Workcalender/ajax_load_checkout_item_list';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
@@ -1064,3 +1065,8 @@ $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
 $route['appointment_types/index'] = 'Appointment_Types/index';
 $route['appointment_types/add_new_type'] = 'Appointment_Types/add_new_type';
 $route['appointment_types/create_appointment_type'] = 'Appointment_Types/create_appointment_type';
+$route['appointment_types/edit/(:num)'] = 'Appointment_Types/edit_type/$1';
+$route['appointment_types/update_appointment_type'] = 'Appointment_Types/update_appointment_type';
+$route['appointment_types/delete'] = 'Appointment_Types/delete_appointment_type';
+
+$route['items/_get_item_details'] = 'Items/ajax_get_item_details';
