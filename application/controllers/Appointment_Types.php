@@ -24,7 +24,7 @@ class Appointment_Types extends MY_Controller {
 		$user_id = logged('id');        
 		$company_id = logged('company_id');
 
-		$appointmentTypes = $this->AppointmentType_model->getAllByCompany($company_id, false);
+		$appointmentTypes = $this->AppointmentType_model->getAllByCompany($company_id, true);
 
 		$this->page_data['appointmentTypes'] = $appointmentTypes;
 		$this->load->view('appointment_types/index', $this->page_data);
