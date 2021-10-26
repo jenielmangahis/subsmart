@@ -889,7 +889,7 @@ class Workcalender extends MY_Controller
         }
 
         //Appointments
-        $appointments = $this->Appointment_model->getAllByCompany($company_id);
+        $appointments = $this->Appointment_model->getAllNotWaitListByCompany($company_id);
         foreach ($appointments as $a) {
             $starttime = $a->appointment_date . " " . $a->appointment_time;
             $start_date_time = date('Y-m-d\TH:i:s', strtotime($a->appointment_date . " " . $a->appointment_time));
@@ -1746,16 +1746,49 @@ class Workcalender extends MY_Controller
         }        
 
         if( $post['event_type'] == 'jobs' ){
-            $jobs_data = [
-                'start_date' => $new_start_date,
-                'end_date' => $new_end_date
-            ];
+            if( $post['user_id'] > 0 ){
+                $jobs_data = [
+                    'start_date' => $new_start_date,
+                    'end_date' => $new_end_date,
+                    'employee_id' => $post['user_id']
+                ];
+            }else{
+                $jobs_data = [
+                    'start_date' => $new_start_date,
+                    'end_date' => $new_end_date
+                ];
+            }
+            
             $this->general->update_with_key_field($jobs_data, $post['event_id'], 'jobs', 'id');
+        }elseif( $post['event_type'] == 'appointments' ){
+            $new_appointment_time = date("H:i:s",strtotime($post['start_date']));
+            if( $post['user_id'] > 0 ){
+                $appointment_data = [
+                    'appointment_date' => $new_start_date,
+                    'appointment_time' => $new_appointment_time,
+                    'user_id' => $post['user_id']
+                ];
+            }else{
+                $appointment_data = [
+                    'appointment_date' => $new_start_date,
+                    'appointment_time' => $new_appointment_time
+                ];
+            }
+            $this->general->update_with_key_field($appointment_data, $post['event_id'], 'appointments', 'id');
         }else{
-            $events_data = [
-                'start_date' => $new_start_date,
-                'end_date' => $new_end_date
-            ];
+            if( $post['user_id'] > 0 ){
+                $events_data = [
+                    'start_date' => $new_start_date,
+                    'end_date' => $new_end_date,
+                    'employee_id' => $post['user_id']
+                ];
+            }else{
+                $events_data = [
+                    'start_date' => $new_start_date,
+                    'end_date' => $new_end_date
+                ];
+            }
+            
             $this->general->update_with_key_field($events_data, $post['event_id'], 'events', 'id');
         }
     }
@@ -1861,6 +1894,52 @@ class Workcalender extends MY_Controller
                 'total_item_discount' => 0,
                 'total_amount' => 0,
                 'appointment_type_id' => $post['appointment_type_id'],
+                'is_paid' => 0,
+                'is_wait_list' => 0,
+                'created' => date("Y-m-d H:i:s")
+            ];
+
+            $this->Appointment_model->create($data_appointment);
+
+            $is_success = true;
+            $message    = '';
+
+        } else {
+            $message = 'Required fields cannot be empty';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_create_appointment_wait_list()
+    {
+        $this->load->model('Appointment_model');
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $is_success = false;
+        $message    = 'Cannot create appointment';
+
+        if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
+
+            $data_appointment = [
+                'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
+                'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
+                'user_id' => 0,
+                'prof_id' => $post['appointment_customer_id'],
+                'company_id' => $company_id,
+                'tag_ids' => '',
+                'total_item_price' => 0,
+                'total_item_discount' => 0,
+                'total_amount' => 0,
+                'appointment_type_id' => $post['appointment_type_id'],
+                'is_paid' => 0,
+                'is_wait_list' => 1,
                 'created' => date("Y-m-d H:i:s")
             ];
 
@@ -2288,6 +2367,43 @@ class Workcalender extends MY_Controller
         
         $this->page_data['items'] = $items;
         $this->load->view('workcalender/ajax_load_checkout_item_list', $this->page_data);
+    }
+
+    public function ajax_load_wait_list()
+    {
+        $this->load->model('Appointment_model');
+        
+        $cid   = logged('company_id');
+        $waitList = $this->Appointment_model->getAllCompanyWaitList($cid);
+        
+        $this->page_data['waitList'] = $waitList;
+        $this->load->view('workcalender/ajax_load_wait_list', $this->page_data);
+    }
+
+    public function ajax_load_edit_wait_list()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('AppointmentType_model');
+        $this->load->model('EventTags_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $tags = $this->EventTags_model->getAllByCompanyId($cid, array());
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);        
+        $appointmentTypes = $this->AppointmentType_model->getAllByCompany($cid, true);
+
+        $a_tags = array();
+        $selected_tags = explode(",", $appointment->tag_ids);
+        foreach($tags as $t){
+            if( in_array($t->id, $selected_tags) ){
+                $a_tags[$t->id] = $t->name;
+            }
+        }
+
+        $this->page_data['a_selected_tags'] = $a_tags;
+        $this->page_data['appointment'] = $appointment;
+        $this->page_data['appointmentTypes'] = $appointmentTypes;
+        $this->load->view('workcalender/ajax_edit_appointment_wait_list', $this->page_data);
     }
 }
 

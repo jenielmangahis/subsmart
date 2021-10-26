@@ -226,7 +226,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
-                    <h4  class="right-filter-header"><a class="btn-mini-calendar" href="javascript:void(0);"><i class="fa fa-minus cmini-icon icon-plus-cz"></i></a> <span class="pl-1">MINI CALENDAR</span></h4>
+                    <a class="btn-mini-calendar" href="javascript:void(0);"><h4  class="right-filter-header"><i class="fa fa-minus cmini-icon icon-plus-cz"></i><span class="pl-1">MINI CALENDAR</span></h4></a>
                     <div class="min-calendar-container">
                       <div id="right-calendar"></div>
                     </div>
@@ -245,7 +245,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </ul>
                 </div> -->
                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header"><a class="btn-calendar-list" href="javascript:void(0);"><i class="fa fa-plus clist-icon icon-plus-cz"></i></a> <span class="pl-1">CALENDARS</span></h4>
+                    <a class="btn-calendar-list" href="javascript:void(0);"><h4  class="right-filter-header"><i class="fa fa-plus clist-icon icon-plus-cz"></i><span class="pl-1">CALENDARS</span></h4></a>
                     <div class="public-calendar-list" style="display: none;">
                     <?php if(!empty($calendar_list)){ ?>
                       <p style="font-size: 13px;text-align: left;">Which calendar entries do you wish to show</p>
@@ -299,8 +299,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <?php } ?>
                     </div>
                 </div>
-                 <div class="col-12" style="margin-top: 15px;">
-                    <h4  class="right-filter-header"><a class="btn-contacts-list" href="javascript:void(0);"><i class="fa fa-plus contact-list-icon icon-plus-cz"></i></a><span class="pl-1">RECENT CONTACTS</span></h4>
+                <div class="col-12" style="margin-top: 15px;">
+                    <a class="btn-contacts-list" href="javascript:void(0);"><h4  class="right-filter-header"><i class="fa fa-plus contact-list-icon icon-plus-cz"></i><span class="pl-1">RECENT CONTACTS</span></h4></a>
 
                     <div class="recent-contacts-container" style="display: none;">
                       <ul class="list-group">
@@ -338,6 +338,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
                     </ul>
+                    </div>
+                </div>
+
+                <div class="col-12" style="margin-top: 15px;">
+                    <a class="btn-wait-list" href="javascript:void(0);"><h4  class="right-filter-header"><i class="fa fa-plus wait-list-icon icon-plus-cz"></i><span class="pl-1">WAIT LIST</span></h4></a>
+
+                    <div class="wait-list-container" style="display: none;">
+                        <a class="btn btn-sm btn-primary float-right btn-add-wait-list" href="javascript:void(0);">Add Wait List</a>
+                        <div class="clear"></div>
+                        <div class="wait-list"></div>
                     </div>
                 </div>
             </div>
@@ -388,7 +398,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> When</label>
                       <div class="row g-3">
                         <div class="col-sm-8">
-                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" data-content="Appointment Date">
+                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" autocomplete="off" data-content="Appointment Date">
                         </div>
                         <div class="col-sm-4">
                           <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Appointment Time">
@@ -399,7 +409,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-address-card-o"></i> Which Employee</label>
                       <div class="row g-3">
                         <div class="col-sm-12">
-                            <span id="add-employee-popover"
+                            <span id="wait-list-add-employee-popover"
                               data-content="Assign employee that will handle the appointment"
                               data-original-title="Which Employee"
                               data-placement="right"
@@ -466,6 +476,100 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   </div>
 </div>
 
+<!-- MODAL CREATE WAIT LIST -->
+<div class="modal fade modal-enhanced" id="modal-create-wait-list" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Create Wait List</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+              </button>
+          </div>
+            <form id="frm-create-appointment-wait-list" method="post">
+                <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> Preferred Date</label>
+                      <div class="row g-3">
+                        <div class="col-sm-8">
+                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" autocomplete="off" data-content="Your Preferred Appointment Date">
+                        </div>
+                        <div class="col-sm-4">
+                          <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Your Preferred Appointment Time">
+                        </div>
+                      </div>
+                  </div>  
+                  <!-- <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-address-card-o"></i> Preferred Employee</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                            <span id="add-employee-popover"
+                              data-content="Your preferred employee that will assign to this appointment"
+                              data-original-title="Which Employee"
+                              data-placement="right"
+                              data-trigger="hover"
+                              data-container="body">
+                            <select name="appointment_user_id" id="wait-list-appointment-user" class="form-control"></select>
+                            </span>
+                        </div>
+                      </div>
+                  </div> --> 
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-user"></i> 
+                      Which Customer
+                      <a href="javascript:void(0);" class="btn-ql-customer" data-modal="modal-create-appointment" style="float: right; color:rgb(255,129,89); font-size: 15px;"><i class="fa fa-plus"></i> Add New Customer</a>
+                      </label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                          <span id="wait-list-add-customer-popover"
+                              data-content="Pick customer from the list which the appointment will be set"
+                              data-original-title="Which Customer"
+                              data-placement="right"
+                              data-trigger="hover"
+                              data-container="body">
+                          <select name="appointment_customer_id" id="wait-list-appointment-customer" class="form-control"></select>
+                          </span>
+                        </div>
+                      </div>
+                  </div> 
+                  <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-list"></i> Appointment Type</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                          <select name="appointment_type_id" id="appointment-type" class="form-control field-popover" style="border:solid 1px rgba(0,0,0,0.35);" data-trigger="hover" data-original-title="Appointment Type" data-container="body" data-placement="right" data-content="Select what kind of appointment will this be">
+                            <?php $start = 0; ?>
+                            <?php foreach($appointmentTypes as $a){ ?>
+                                <option <?= $start == 0 ? 'selected="selected"' : ''; ?> value="<?= $a->id; ?>"><?= $a->name; ?></option>
+                            <?php $start++;} ?>
+                          </select>
+                        </div>
+                      </div>
+                  </div>  
+                  <!-- <div class="form-group">
+                      <label for="" style="width:100%;text-align: left;"><i class="fa fa-tag"></i> Tags</label>
+                      <div class="row g-3">
+                        <div class="col-sm-12">
+                            <span id="wait-list-add-tag-popover"
+                              data-content="Pick a tags that will describe this appointment"
+                              data-original-title="Tags"
+                              data-placement="right"
+                              data-trigger="hover"
+                              data-container="body">
+                            <select name="appointment_tags[]" id="wait-list-appointment-tags" multiple="multiple" class="form-control"></select>
+                            </span>
+                        </div>
+                      </div>
+                  </div>  -->                
+                </div>
+                <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
+                  <button type="button" style="" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary btn-create-appointment-wait-list" name="action" value="create_appointment">Save</button>
+                </div>
+            </form>
+      </div>
+  </div>
+</div>
+
 <!-- MODAL VIEW APPOINTMENT -->
 <div class="modal fade modal-enhanced" id="modal-view-appointment" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -483,6 +587,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <a class="btn btn-primary btn-edit-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-pencil"></i> Edit</a>                
                 <a class="btn btn-danger btn-checkout-appointment" data-id="" href="javascript:void(0);"><i class="fa fa-check"></i> Check out</a>                
                 <a class="btn btn-primary btn-payment-details-appointment" href="javascript:void(0);" style="display: none;"><i class="fa fa-list"></i> Payment Details</a>
+                <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
+            </div>
+      </div>
+  </div>
+</div>
+
+<!-- MODAL WAIT LIST SET AN APPOINTMENT -->
+<div class="modal fade modal-enhanced" id="modal-edit-wait-list" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Wait List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                <div class="view-wait-list-container"></div>
+            </div>
+            <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
+                <button type="submit" class="btn btn-primary btn-create-appointment-wait-list" name="action" value="create_appointment">Update</button>                     
+                <button type="submit" class="btn btn-primary btn-create-appointment-wait-list" name="action" value="create_appointment">Set as Appointment</button>
                 <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
             </div>
       </div>
@@ -1015,7 +1141,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           },          
           selectable: true,
           select: function(info) {
-            console.log(info);
+            //console.log(info);
             //alert('selected ' + info.startStr + ' to ' + info.endStr);
             let result = info.hasOwnProperty('resource');
             if( result ){
@@ -1059,31 +1185,46 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           defaultDate: "<?php echo date('Y-m-d'); ?>",
           editable: true,
           eventDrop: function(info) {
-              //console.log(info.event);
+              console.log(info);
               //alert(info.event.extendedProps.eventType);
               //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
+
+                let result = info.hasOwnProperty('newResource');
+                if( result ){
+                    var user_id = info.newResource._resource.id;
+                    user_id     = user_id.replace("user", "");
+                }else{
+                    var user_id = 0;
+                }
+
               if( info.event.extendedProps.eventType != 'google_events' ){
-                var start_date = info.event.start.toDateString();
-                var end_date   = info.event.end.toDateString();
+                var start_date = moment(info.event.start).format('dddd, MMMM DD, YYYY HH:mm:ss');
+                if( info.event.end !== null ){
+                  var end_date = moment(info.event.end).format('dddd, MMMM DD, YYYY HH:mm:ss');
+                }else{
+                  var end_date    = start_date;
+                }
+                
                 var event_id   = info.event.extendedProps.eventId;
                 var event_type = info.event.extendedProps.eventType;
                 var url        = base_url + 'calendar/_update_drop_event';
+                
                 $.ajax({
                    type: "POST",
                    url: url,
-                   data: {event_id:event_id,event_type:event_type,start_date:start_date,end_date:end_date},
+                   data: {event_id:event_id,event_type:event_type,start_date:start_date,end_date:end_date,user_id:user_id},
                    dataType: 'json',
                    success: function(o)
                    {
 
                    }
                 });
-              }else{
-                var start_date  = info.event.start.toDateString();
+              }else{                
+                var start_date = moment(info.event.start).format('dddd, MMMM DD, YYYY');
                 if( info.event.end !== null ){
-                  var end_date    = info.event.end.toDateString();  
+                  var end_date = moment(info.event.end).format('dddd, MMMM DD, YYYY');
                 }else{
-                  var end_date    = info.event.start.toDateString();
+                  var end_date    = start_date;
                 }
                 
                 var event_id    = info.event.extendedProps.geventID;
@@ -1234,6 +1375,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       $(".recent-contacts-container").slideUp();
       $(".contact-list-icon").removeClass("fa-minus");
       $(".contact-list-icon").addClass("fa-plus");
+    }
+  });
+
+  $(".btn-wait-list").click(function(){
+    if( $(".wait-list-icon").hasClass("fa-plus") ){
+      $(".wait-list-container").slideDown();
+      $(".wait-list-icon").removeClass("fa-plus");
+      $(".wait-list-icon").addClass("fa-minus");
+    }else{
+      $(".wait-list-container").slideUp();
+      $(".wait-list-icon").removeClass("fa-minus");
+      $(".wait-list-icon").addClass("fa-plus");
     }
   });
 
@@ -1510,6 +1663,43 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           templateSelection: formatRepoSelectionUser
     });
 
+    $('#wait-list-appointment-user').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            formatResult: function(item){ 
+                //console.log(item);
+                return '<div>'+item.FName + ' ' + item.LName +'<br /><small>'+item.email+'</small></div>';
+            },
+            cache: true
+          },
+          placeholder: 'Select User',
+          minimumInputLength: 0,
+          templateResult: formatRepoUser,
+          templateSelection: formatRepoSelectionUser
+    });
+
     $('#appointment-customer').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer',
@@ -1543,7 +1733,73 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           templateSelection: formatRepoCustomerSelection
     });
 
+    $('#wait-list-appointment-customer').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select Customer',
+          minimumInputLength: 0,
+          templateResult: formatRepoCustomer,
+          templateSelection: formatRepoCustomerSelection
+    });
+
     $('#appointment-tags').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_event_tags',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            },
+            processResults: function (data, params) {
+              // parse the results into the format expected by Select2
+              // since we are using custom formatting functions we do not need to
+              // alter the remote JSON data, except to indicate that infinite
+              // scrolling can be used
+              params.page = params.page || 1;
+
+              return {
+                results: data,
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+              };
+            },
+            cache: true
+          },
+          placeholder: 'Select Tags',
+          minimumInputLength: 0,
+          templateResult: formatRepoTag,
+          templateSelection: formatRepoTagSelection
+    });
+
+    $('#wait-list-appointment-tags').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_event_tags',
             dataType: 'json',
@@ -1754,6 +2010,49 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }, 1000);
     });
 
+    $("#frm-create-appointment-wait-list").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'calendar/_create_appointment_wait_list';
+        $(".btn-create-appointment-wait-list").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#frm-create-appointment-wait-list").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      $("#modal-create-appointment").modal('hide');
+                      Swal.fire({
+                          title: 'Success',
+                          text: 'Appointment wait list was successfully created.',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                            $("#modal-create-wait-list").modal('hide');
+                            load_wait_list();
+                          }
+                      });
+                  }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot save data.',
+                        text: o.msg
+                      });
+                  }
+
+                  $(".btn-create-appointment-wait-list").html('Schedule');
+               }
+            });
+        }, 1000);
+    });
+
     $("#frm-update-appointment").submit(function(e){
         e.preventDefault();
 
@@ -1894,6 +2193,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }, 800);
     });
 
+    function load_wait_list(){
+        var url = base_url + 'calendar/_load_wait_list';
+        $(".wait-list").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,               
+               success: function(o)
+               {
+
+                    $('.wait-list').hide().html(o).fadeIn(800);
+               }
+            });
+        }, 800);
+    }
+
+    load_wait_list();
+
     $(".btn-checkout-appointment").click(function(){
         var appointment_id = $(this).attr('data-id');
 
@@ -1921,6 +2238,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('#add-employee-popover').popover();
     $('#add-customer-popover').popover();
     $('#add-tag-popover').popover();
+    $('#wait-list-add-employee-popover').popover();
+    $('#wait-list-add-customer-popover').popover();
+    $('#wait-list-add-tag-popover').popover();
 
     $(".btn-payment-details-appointment").click(function(){
         $("#modal-view-appointment-payment-details").modal('show');
@@ -2001,5 +2321,30 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
         $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
       }
+
+      $(".btn-add-wait-list").click(function(){
+        $("#modal-create-wait-list").modal('show');
+      });
+
+      $(document).on('click', '.btn-edit-waitlist', function(){
+        var appointment_id = $(this).attr('data-id');
+        var url = base_url + 'calendar/_load_edit_wait_list';    
+
+        $("#modal-edit-wait-list").modal('show');
+
+        $(".view-wait-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {
+
+                $('.view-wait-list-container').hide().html(o).fadeIn(800);
+               }
+            });
+        }, 800);
+      });
 </script>
 

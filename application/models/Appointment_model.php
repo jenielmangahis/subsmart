@@ -30,6 +30,25 @@ class Appointment_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllNotWaitListByCompany($company_id)
+    {
+        $where = array(
+            'appointments.company_id'    => $company_id,
+            'is_wait_list' => 0
+          );
+
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
+        $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     
+        $this->db->join('users', 'appointments.user_id = users.id','left');     
+        $this->db->where($where);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getByIdAndCompanyId($id, $company_id)
     {
         $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
@@ -66,6 +85,25 @@ class Appointment_model extends MY_Model
 
     public function isConvergePayment(){
         return 'converge';
+    }
+
+    public function getAllCompanyWaitList($company_id)
+    {
+        $where = array(
+            'appointments.company_id'    => $company_id,
+            'is_wait_list' => 1
+          );
+
+        $this->db->select('appointments.*, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer_name, CONCAT(users.FName, " ", users.LName)AS employee_name, appointment_types.name AS appointment_type');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'appointments.prof_id = acs_profile.prof_id','left');     
+        $this->db->join('appointment_types', 'appointments.appointment_type_id = appointment_types.id','left');     
+        $this->db->join('users', 'appointments.user_id = users.id','left');     
+        $this->db->where($where);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 

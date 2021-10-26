@@ -473,3 +473,20 @@ a.btn-gcustom i {
   font-size: 15px;
 }
 /*Checkout*/
+
+/*Waitlist*/
+.list-wait-list li{
+  list-style: none;
+  margin: 0px;
+  padding: 10px;
+  display: block;
+  width: 100%;
+}
+.list-wait-list{
+  text-align: left;
+  margin-left: 0px;
+  margin-top: 13px;
+}
+.list-wait-list li { background: #ffffff; }
+.list-wait-list li:nth-child(odd) { background: #bdbdbd; }
+/**/
