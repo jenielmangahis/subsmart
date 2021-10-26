@@ -4,7 +4,6 @@
         padding: 20px;
         margin-bottom: 0px;
         color: #45a73c;
-        /*border-bottom: 1px solid #ccc;*/
     }
     div[role="wrapper"] .navbar-side {
         background-color: #32243d;
@@ -46,7 +45,6 @@
                 <span class="fa fa-calendar" style="margin-right:5px;"></span><span class="total-schedule left-sidebar-badge"></span> Schedule <?php echo $userid; ?>
             </a>
         </li>
-        <?php // additional menus for Schedule ?>
         <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'taskhub')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('taskhub') ?>" title="Taskhub">
                 <span class="fa fa-clipboard" style="margin-right:4px;"></span><span class="total-taskhub left-sidebar-badge"></span> TaskHub
