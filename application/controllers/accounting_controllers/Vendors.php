@@ -1666,9 +1666,8 @@ class Vendors extends MY_Controller
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
 
-        $this->load->view('accounting/vendors/view_expense', $this->page_data);
+        $this->load->view("accounting/modals/expense_modal", $this->page_data);
     }
 
     public function view_check($checkId)
@@ -1693,7 +1692,7 @@ class Vendors extends MY_Controller
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view('accounting/vendors/view_check', $this->page_data);
+        $this->load->view("accounting/modals/check_modal", $this->page_data);
     }
 
     public function view_bill($billId)
@@ -1717,15 +1716,17 @@ class Vendors extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
         $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
 
+        $totalPayment = '$'.$totalPayment;
+        $totalPayment = str_replace('$-', '-$', $totalPayment);
         $this->page_data['bill_payments'] = $billPayments;
-        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['total_payment'] = $totalPayment;
         $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
         $this->page_data['bill'] = $bill;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
         $this->page_data['term'] = $term;
 
-        $this->load->view('accounting/vendors/view_bill', $this->page_data);
+        $this->load->view("accounting/modals/bill_modal", $this->page_data);
     }
 
     public function view_purchase_order($purchOrderId)

@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     field: "bank-account",
   });
   utils.initSelect({
-    $select: $('[data-type="assignment.payee"]'),
+    $select: $('[data-type="assignments.payee"]'),
     field: "payee",
   });
 
@@ -277,7 +277,7 @@ window.openRuleForm = async (data = null) => {
     }
 
     if ($input.matches('[type="checkbox"]')) {
-      $input.checked = value == 0;
+      $input.checked = value == 1;
     } else {
       $input.value = value;
     }

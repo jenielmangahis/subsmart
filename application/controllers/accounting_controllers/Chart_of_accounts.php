@@ -3456,7 +3456,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view('accounting/vendors/view_expense', $this->page_data);
+        $this->load->view("accounting/modals/expense_modal", $this->page_data);
     }
 
     private function view_check($checkId)
@@ -3481,7 +3481,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view('accounting/vendors/view_check', $this->page_data);
+        $this->load->view("accounting/modals/check_modal", $this->page_data);
     }
 
     private function view_bill($billId)
@@ -3513,7 +3513,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['items'] = $items;
         $this->page_data['term'] = $term;
 
-        $this->load->view('accounting/vendors/view_bill', $this->page_data);
+        $this->load->view("accounting/modals/bill_modal", $this->page_data);
     }
 
     private function view_vendor_credit($vendorCreditId)

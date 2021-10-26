@@ -103,7 +103,11 @@ export class RulesTable {
           </span>
         `;
       },
-      autoAdd: () => {
+      autoAdd: (_, __, row) => {
+        if (row.auto != 1) {
+          return "";
+        }
+
         return `
           <div class="rulesTable__autoAdd">
             <button class="rulesTable__autoAddBtn">
@@ -145,7 +149,11 @@ export class RulesTable {
     };
 
     const table = this.$table.DataTable({
-      searching: true,
+      filter: true,
+      language: {
+        search: '<div class="icon"><i class="fa fa-search"></i></div>',
+        searchPlaceholder: "Search by name or conditions",
+      },
       rowReorder: {
         snapX: true,
         dataSrc: "priority",
@@ -174,6 +182,7 @@ export class RulesTable {
           render: columns.priority,
         },
         {
+          filter: true,
           sortable: false,
           orderable: true,
           render: columns.name,
@@ -184,6 +193,7 @@ export class RulesTable {
           render: columns.appliedTo,
         },
         {
+          filter: true,
           sortable: false,
           orderable: true,
           render: columns.conditions,
