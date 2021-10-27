@@ -72,6 +72,7 @@ class Accounting extends MY_Controller
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/accounting.js",
+            "assets/js/accounting/sidebar_new_modal/refund_receipt.js",
             "assets/js/accounting/modal-forms.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
@@ -10737,9 +10738,9 @@ class Accounting extends MY_Controller
             $start_date = $date_range."-01-01";
             $end_date = $date_range."-12-31";
         }
-        if($status != "All"){
+        if ($status != "All") {
             $status="AND invoices.status = '".$status."'";
-        }else{
+        } else {
             $status = "";
         }
         $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;

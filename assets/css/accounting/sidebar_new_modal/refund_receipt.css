@@ -1,31 +1,31 @@
-#addrefundreceiptModal {
+#add_refund_receipt_Modal {
     color: #333333;
 }
 
-#addrefundreceiptModal .middle-links a {
+#add_refund_receipt_Modal .middle-links a {
     color: #ffffff;
     font-size: 12px;
 }
 
-#addrefundreceiptModal #grand_total_sr_t {
+#add_refund_receipt_Modal #grand_total_sr_t {
     font-size: 100px;
 }
 
-#addrefundreceiptModal form .faded-info {
+#add_refund_receipt_Modal form .faded-info {
     font-style: italic;
     color: #333333b3;
 }
 
-#addrefundreceiptModal form textarea {
+#add_refund_receipt_Modal form textarea {
     resize: none;
 }
 
-#addrefundreceiptModal select,
-#addrefundreceiptModal input[type="text"],
-#addrefundreceiptModal input[type="email"],
-#addrefundreceiptModal input[type="number"],
-#addrefundreceiptModal input[type="date"],
-#addrefundreceiptModal textarea {
+#add_refund_receipt_Modal select,
+#add_refund_receipt_Modal input[type="text"],
+#add_refund_receipt_Modal input[type="email"],
+#add_refund_receipt_Modal input[type="number"],
+#add_refund_receipt_Modal input[type="date"],
+#add_refund_receipt_Modal textarea {
     font-size: 12px;
     font-weight: lighter;
     padding: 8px;
@@ -36,7 +36,7 @@
     resize: none;
 }
 
-#addrefundreceiptModal select {
+#add_refund_receipt_Modal select {
     display: block!important;
     visibility: visible;
     clip: auto!important;
@@ -46,13 +46,13 @@
     width: 100%!important;
 }
 
-#addrefundreceiptModal form .select2 {
+#add_refund_receipt_Modal form .select2 {
     display: none;
 }
 
-#addrefundreceiptModal input:focus,
-#addrefundreceiptModal select:focus,
-#addrefundreceiptModal textarea:focus {
+#add_refund_receipt_Modal input:focus,
+#add_refund_receipt_Modal select:focus,
+#add_refund_receipt_Modal textarea:focus {
     border-color: rgba(126, 239, 104, 0.8)!important;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
     outline: 0 none;
@@ -61,26 +61,26 @@
     font-style: normal;
 }
 
-div#addrefundreceiptModal {
+div#add_refund_receipt_Modal {
     font-size: 12px;
 }
 
-#addrefundreceiptModal #add_another_items {
+#add_refund_receipt_Modal #add_another_items {
     font: 12px;
 }
 
-#addrefundreceiptModal .modal-footer-check {
+#add_refund_receipt_Modal .modal-footer-check {
     left: 0;
 }
 
-#addrefundreceiptModal .modal-footer-check button {
+#add_refund_receipt_Modal .modal-footer-check button {
     font-size: 12px;
     height: auto;
     padding: 5px 10px;
 }
 
-#addrefundreceiptModal .modal-footer-check button[data-submit-type='save-preview'],
-#addrefundreceiptModal .modal-footer-check button[data-toggle='dropdown'] {
+#add_refund_receipt_Modal .modal-footer-check button[data-submit-type='save-preview'],
+#add_refund_receipt_Modal .modal-footer-check button[data-toggle='dropdown'] {
     background-image: none;
     background-color: #2CA01C;
     color: #FFFFFF;
@@ -93,24 +93,24 @@ div#addrefundreceiptModal {
     margin-right: -5px;
 }
 
-#addrefundreceiptModal .modal-footer-check button[data-submit-type='save-preview']:hover,
-#addrefundreceiptModal .modal-footer-check button[data-toggle='dropdown']:hover {
+#add_refund_receipt_Modal .modal-footer-check button[data-submit-type='save-preview']:hover,
+#add_refund_receipt_Modal .modal-footer-check button[data-toggle='dropdown']:hover {
     background-image: none;
     background-color: #108000;
 }
 
-#addrefundreceiptModal .modal-footer-check .submit-submenu>li:hover,
+#add_refund_receipt_Modal .modal-footer-check .submit-submenu>li:hover,
 #sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li:hover {
     background-color: #ECEDF1;
     color: #008A00;
 }
 
-#addrefundreceiptModal .modal-footer-check .submit-submenu>li button,
+#add_refund_receipt_Modal .modal-footer-check .submit-submenu>li button,
 #sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li button {
     color: #333333;
 }
 
-#addrefundreceiptModal .modal-footer-check button.cancel-button {
+#add_refund_receipt_Modal .modal-footer-check button.cancel-button {
     background-color: transparent;
     background: transparent;
     font-size: 13px;
@@ -122,119 +122,119 @@ div#addrefundreceiptModal {
     font-weight: 700;
 }
 
-#addrefundreceiptModal .modal-footer-check button.cancel-button:hover {
+#add_refund_receipt_Modal .modal-footer-check button.cancel-button:hover {
     background-color: #2A2B2D;
 }
 
-#addrefundreceiptModal .modal-title,
-#addrefundreceiptModal .modal-title a {
+#add_refund_receipt_Modal .modal-title,
+#add_refund_receipt_Modal .modal-title a {
     font-weight: 700;
     color: #333333;
 }
 
-#addrefundreceiptModal .recurring-form-part .recurring-title {
+#add_refund_receipt_Modal .recurring-form-part .recurring-title {
     font-size: 20px;
 }
 
-#addrefundreceiptModal .recurring-form-part .recurring-type {
+#add_refund_receipt_Modal .recurring-form-part .recurring-type {
     width: 30%;
     float: left;
     top: 0;
 }
 
-#addrefundreceiptModal .recurring-form-part .recuring-label-type {
+#add_refund_receipt_Modal .recurring-form-part .recuring-label-type {
     width: 56px;
     padding: 10px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part .recuring-label-recurring-days-in-advance {
+#add_refund_receipt_Modal .recurring-form-part .recuring-label-recurring-days-in-advance {
     width: 110px;
     padding: 10px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part .recurring-days-in-advance {
+#add_refund_receipt_Modal .recurring-form-part .recurring-days-in-advance {
     width: 50px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below {
+#add_refund_receipt_Modal .recurring-form-part.below {
     border-bottom: solid 1px #D4D7DC;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .monthly .label-1 {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .monthly .label-1 {
     width: 35px;
     padding: 10px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-day {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .monthly .monthly-day {
     width: 120px;
     float: left;
     padding-left: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-day-of-week {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .monthly .monthly-day-of-week {
     width: 100px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .monthly .label-2 {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .monthly .label-2 {
     padding: 10px;
     width: 70px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-months {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .monthly .monthly-months {
     float: left;
     width: 50px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .monthly .label-3 {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .monthly .label-3 {
     float: left;
     padding: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part {
     position: relative;
     width: auto;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part {
     position: relative;
     width: auto;
     float: left;
     border-right: solid 1px #D4D7DC;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-1,
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-2,
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-3 {
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-1,
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-2,
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-3 {
     float: left;
     padding: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-2 select {
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-2 select {
     width: 80px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-3 .by-end-date {
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-3 .by-end-date {
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences {
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences {
     float: left;
     padding-left: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences input {
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences input {
     float: left;
     width: 50px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences .label {
+#add_refund_receipt_Modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences .label {
     float: left;
     padding: 10px;
 }
@@ -244,72 +244,72 @@ div#addrefundreceiptModal {
     padding-bottom: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .daily .daily-days {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .daily .daily-days {
     float: left;
     width: 50px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .daily .label-1,
-#addrefundreceiptModal .recurring-form-part.below .interval-part .daily .label-2 {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .daily .label-1,
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .daily .label-2 {
     padding: 10px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .weekly .label-1,
-#addrefundreceiptModal .recurring-form-part.below .interval-part .weekly .label-2 {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .weekly .label-1,
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .weekly .label-2 {
     padding: 10px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .weekly .weekly-every {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .weekly .weekly-every {
     float: left;
     width: 50px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .weekly .weekly-weeks-on {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .weekly .weekly-weeks-on {
     float: left;
     width: 100px;
     padding-right: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .yearly .label-1 {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .yearly .label-1 {
     padding: 10px;
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .yearly .yearly-day {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .yearly .yearly-day {
     float: left;
     padding-right: 10px;
     padding-left: 2px;
     width: 80px;
 }
 
-#addrefundreceiptModal .recurring-form-part.below .interval-part .yearly .yearly-month {
+#add_refund_receipt_Modal .recurring-form-part.below .interval-part .yearly .yearly-month {
     float: left;
 }
 
-#addrefundreceiptModal .recurring-form-part .reminder-type .label-1,
-#addrefundreceiptModal .recurring-form-part .reminder-type .label-2 {
+#add_refund_receipt_Modal .recurring-form-part .reminder-type .label-1,
+#add_refund_receipt_Modal .recurring-form-part .reminder-type .label-2 {
     float: left;
     padding: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part .reminder-type .remind-days-before {
+#add_refund_receipt_Modal .recurring-form-part .reminder-type .remind-days-before {
     float: left;
     width: 50px;
 }
 
-#addrefundreceiptModal .recurring-form-part .unschedule-type .label-1 {
+#add_refund_receipt_Modal .recurring-form-part .unschedule-type .label-1 {
     float: left;
     width: 300px;
     padding-left: 10px;
 }
 
-#addrefundreceiptModal .recurring-form-part {
+#add_refund_receipt_Modal .recurring-form-part {
     display: none;
 }
 
-#addrefundreceiptModal .modal-footer-check .middle-links {
+#add_refund_receipt_Modal .modal-footer-check .middle-links {
     width: 50%;
     float: left;
     text-align: right;
@@ -319,32 +319,32 @@ div#addrefundreceiptModal {
     padding-bottom: 10px;
 }
 
-#addrefundreceiptModal .modal-footer-check .middle-links.end {
+#add_refund_receipt_Modal .modal-footer-check .middle-links.end {
     text-align: left;
     border-left: solid 1px #6A6B70;
 }
 
-#addrefundreceiptModal .modal-footer-check .middle-links:hover {
+#add_refund_receipt_Modal .modal-footer-check .middle-links:hover {
     text-shadow: 0 10px 20px #fff;
 }
 
-#addrefundreceiptModal .customer-info.recurring-customer-info {
+#add_refund_receipt_Modal .customer-info.recurring-customer-info {
     border-top: solid 1px #D4D7DC;
     border-bottom: solid 1px #D4D7DC;
     margin-top: 10px;
     padding: 0 5px;
 }
 
-#addrefundreceiptModal .customer-info.recurring-customer-info .divided {
+#add_refund_receipt_Modal .customer-info.recurring-customer-info .divided {
     border-right: solid 1px #D4D7DC;
     padding: 10px;
 }
 
-#addrefundreceiptModal .customer-info.recurring-customer-info .option-part {
+#add_refund_receipt_Modal .customer-info.recurring-customer-info .option-part {
     padding: 10px;
 }
 
-#addrefundreceiptModal .hidden {
+#add_refund_receipt_Modal .hidden {
     visibility: hidden;
 }
 
@@ -357,7 +357,7 @@ div#sales_receipt_pdf_preview_modal {
     width: 90%;
 }
 
-#addrefundreceiptModal .pint-preview-option-section {
+#add_refund_receipt_Modal .pint-preview-option-section {
     position: absolute;
     z-index: 1;
     top: -100px;
@@ -371,32 +371,32 @@ div#sales_receipt_pdf_preview_modal {
     display: none;
 }
 
-#addrefundreceiptModal .pint-preview-option-section ul li a {
+#add_refund_receipt_Modal .pint-preview-option-section ul li a {
     color: #000;
 }
 
-#addrefundreceiptModal .pint-preview-option-section ul li:hover {
+#add_refund_receipt_Modal .pint-preview-option-section ul li:hover {
     background-color: #299A1C;
     color: #fff;
 }
 
-#addrefundreceiptModal form label {
+#add_refund_receipt_Modal form label {
     font-size: 12px;
 }
 
-#addrefundreceiptModal .pint-preview-option-section ul li:hover a {
+#add_refund_receipt_Modal .pint-preview-option-section ul li:hover a {
     color: #fff;
 }
 
-#addrefundreceiptModal .pint-preview-option-section ul li {
+#add_refund_receipt_Modal .pint-preview-option-section ul li {
     padding: 10px;
 }
 
-#addrefundreceiptModal .modal-footer-check .middle-links {
+#add_refund_receipt_Modal .modal-footer-check .middle-links {
     position: relative;
 }
 
-#addrefundreceiptModal .modal-footer-check .pint-preview-option-section .anchor-holder {
+#add_refund_receipt_Modal .modal-footer-check .pint-preview-option-section .anchor-holder {
     position: absolute;
     z-index: 1;
     width: 20px;
@@ -560,19 +560,19 @@ div#saved-notification-modal-section {
     display: none;
 }
 
-#addrefundreceiptModal form .ship-to-section {
+#add_refund_receipt_Modal form .ship-to-section {
     display: none;
 }
 
-#addrefundreceiptModal form .padding-top-70 {
+#add_refund_receipt_Modal form .padding-top-70 {
     padding-top: 70px;
 }
 
-#addrefundreceiptModal form .padding-top-140 {
+#add_refund_receipt_Modal form .padding-top-140 {
     padding-top: 140px;
 }
 
-#addrefundreceiptModal form .ship-to-btn {
+#add_refund_receipt_Modal form .ship-to-btn {
     padding: 10px 0;
     font-size: 13px;
     font-weight: 600;
@@ -581,44 +581,40 @@ div#saved-notification-modal-section {
     margin-bottom: 10px;
 }
 
-#addrefundreceiptModal form .form-group {
+#add_refund_receipt_Modal form .form-group {
     padding: 5px 0;
 }
 
-#addrefundreceiptModal form .payment_method_information {
-    padding-top: 20px;
-}
-
-#addrefundreceiptModal form .payment_method_information .row {
+#add_refund_receipt_Modal form .payment_method_information .row {
     margin: 0;
 }
 
-#addrefundreceiptModal form .payment_method_information .form-group {
+#add_refund_receipt_Modal form .payment_method_information .form-group {
     padding: 5px
 }
 
-#addrefundreceiptModal form .white-section {
+#add_refund_receipt_Modal form .white-section {
     background: #fff;
     padding: 20px 30px;
 }
 
-#addrefundreceiptModal.modal .modal-body {
+#add_refund_receipt_Modal.modal .modal-body {
     padding-bottom: 0;
 }
 
-#addrefundreceiptModal form .manage-tags {
+#add_refund_receipt_Modal form .manage-tags {
     font-size: 12px;
     color: #0E7EC8;
     cursor: pointer;
 }
 
-#addrefundreceiptModal form .cc-bcc-btn {
+#add_refund_receipt_Modal form .cc-bcc-btn {
     font-size: 12px;
     color: #0E7EC8;
     cursor: pointer;
 }
 
-div#addrefundreceiptModal form .default-button {
+div#add_refund_receipt_Modal form .default-button {
     font-size: 13px;
     font-weight: 100;
     border: solid 1px #8E9095;
@@ -629,39 +625,39 @@ div#addrefundreceiptModal form .default-button {
     color: #333333;
 }
 
-div#addrefundreceiptModal form .default-button:hover {
+div#add_refund_receipt_Modal form .default-button:hover {
     background: rgba(107, 108, 114, .25);
     color: #393a3d;
 }
 
-div#addrefundreceiptModal form .item-buttons {
+div#add_refund_receipt_Modal form .item-buttons {
     padding: 15px 0;
     margin-bottom: 10px;
 }
 
-div#addrefundreceiptModal form .table tbody tr td.item-action {
+div#add_refund_receipt_Modal form .table tbody tr td.item-action {
     text-align: center;
     font-size: 18px;
 }
 
-div#addrefundreceiptModal form .table tbody {
+div#add_refund_receipt_Modal form .table tbody {
     border-bottom: solid 2px #C7C7C7;
 }
 
-div#addrefundreceiptModal form .table tbody td:first-child,
-div#addrefundreceiptModal form .table tbody td:last-child,
-div#addrefundreceiptModal form .table thead th:first-child,
-div#addrefundreceiptModal form .table thead th:last-child {
+div#add_refund_receipt_Modal form .table tbody td:first-child,
+div#add_refund_receipt_Modal form .table tbody td:last-child,
+div#add_refund_receipt_Modal form .table thead th:first-child,
+div#add_refund_receipt_Modal form .table thead th:last-child {
     border-left: none;
     border-right: none;
 }
 
-div#addrefundreceiptModal form .table tbody td {
+div#add_refund_receipt_Modal form .table tbody td {
     border-left: dotted 1px #C7C7C7;
     border-right: dotted 1px #C7C7C7;
 }
 
-div#addrefundreceiptModal form .table thead th {
+div#add_refund_receipt_Modal form .table thead th {
     border-top: none;
     border-left: solid 1px #C7C7C7;
     border-right: solid 1px #C7C7C7;
@@ -670,67 +666,67 @@ div#addrefundreceiptModal form .table thead th {
     text-transform: uppercase;
 }
 
-div#addrefundreceiptModal form .item-totals .label,
-div#addrefundreceiptModal form .item-totals .amount {
+div#add_refund_receipt_Modal form .item-totals .label,
+div#add_refund_receipt_Modal form .item-totals .amount {
     float: left;
     text-align: right;
     font-size: 17px;
     font-weight: 600;
 }
 
-div#addrefundreceiptModal form .item-totals div {
+div#add_refund_receipt_Modal form .item-totals div {
     padding: 3px 0;
 }
 
-div#addrefundreceiptModal form .item-totals .label {
+div#add_refund_receipt_Modal form .item-totals .label {
     width: 50%;
 }
 
-div#addrefundreceiptModal form .item-totals .amount {
+div#add_refund_receipt_Modal form .item-totals .amount {
     width: 50%;
 }
 
-div#addrefundreceiptModal form .item-totals .amount .grand-total {
+div#add_refund_receipt_Modal form .item-totals .amount .grand-total {
     padding-top: 10px;
     font-size: 30px;
     font-weight: 700;
 }
 
-div#addrefundreceiptModal form .item-totals .label .taxable-sub {
+div#add_refund_receipt_Modal form .item-totals .label .taxable-sub {
     font-size: 12px;
 }
 
-div#addrefundreceiptModal form .item-totals .label .taxable-sub span {
+div#add_refund_receipt_Modal form .item-totals .label .taxable-sub span {
     font-size: 17px;
     font-weight: 600;
 }
 
-div#addrefundreceiptModal form .table tbody tr td.item-action a {
+div#add_refund_receipt_Modal form .table tbody tr td.item-action a {
     color: #999999;
 }
 
-div#addrefundreceiptModal form .item-totals input[name="adjustment_value"] {
+div#add_refund_receipt_Modal form .item-totals input[name="adjustment_value"] {
     width: 100px!important;
     margin-left: 10px;
     text-align: right;
     border: 1px dashed #d1d1d1!important;
 }
 
-div#addrefundreceiptModal form .item-totals input[name="shipping"] {
+div#add_refund_receipt_Modal form .item-totals input[name="shipping"] {
     width: 100px !important;
     margin-left: 10px;
     text-align: right;
     border: 1px dashed #d1d1d1!important;
 }
 
-div#addrefundreceiptModal form .item-totals input[name="adjustment_name"] {
+div#add_refund_receipt_Modal form .item-totals input[name="adjustment_name"] {
     width: 150px!important;
     text-align: right;
     border: 1px dashed #d1d1d1!important;
 }
 
-div#addrefundreceiptModal form .item-totals input[name="adjustment_name"]:focus,
-div#addrefundreceiptModal form .item-totals input[name="adjustment_value"]:focus {
+div#add_refund_receipt_Modal form .item-totals input[name="adjustment_name"]:focus,
+div#add_refund_receipt_Modal form .item-totals input[name="adjustment_value"]:focus {
     border-color: rgba(126, 239, 104, 0.8)!important;
     box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
     outline: 0 none;
@@ -739,45 +735,45 @@ div#addrefundreceiptModal form .item-totals input[name="adjustment_value"]:focus
     font-style: normal;
 }
 
-div#addrefundreceiptModal form .item-totals span.clarification {
+div#add_refund_receipt_Modal form .item-totals span.clarification {
     right: -20px;
     z-index: 1;
     position: absolute;
 }
 
-div#addrefundreceiptModal form .white-section .form-check label {
+div#add_refund_receipt_Modal form .white-section .form-check label {
     font-size: 15px;
 }
 
-#addrefundreceiptModal table tr td {
+#add_refund_receipt_Modal table tr td {
     position: relative;
     font-size: 12px;
 }
 
-#addrefundreceiptModal table .suggestions li:hover {
+#add_refund_receipt_Modal table .suggestions li:hover {
     background: #2ca01cd4;
     color: #fff;
 }
 
-#addrefundreceiptModal table .suggestions li {
+#add_refund_receipt_Modal table .suggestions li {
     border-bottom: solid 1px #DEE2E6;
     font-size: 12px;
 }
 
-#addrefundreceiptModal table .suggestions {
+#add_refund_receipt_Modal table .suggestions {
     width: 100%;
     box-shadow: 3px 6px 20px #2829294d;
     max-height: 300px;
     overflow: auto;
 }
 
-#addrefundreceiptModal form .attachement-file-section {
+#add_refund_receipt_Modal form .attachement-file-section {
     border: dashed 4px #EAF3EE;
     padding: 10px;
     margin: 20px 0;
 }
 
-#addrefundreceiptModal form .attachement-file-section .label {
+#add_refund_receipt_Modal form .attachement-file-section .label {
     margin-top: -24px;
     margin-bottom: 10px;
     background: #fff;
@@ -788,7 +784,7 @@ div#addrefundreceiptModal form .white-section .form-check label {
     font-weight: 700;
 }
 
-#addrefundreceiptModal form .attachement-file-section button.attachment-btn {
+#add_refund_receipt_Modal form .attachement-file-section button.attachment-btn {
     background: #2CA01C;
     color: #fff;
     font-size: 13px;
@@ -799,15 +795,15 @@ div#addrefundreceiptModal form .white-section .form-check label {
     margin: 10px;
 }
 
-#addrefundreceiptModal form .attachement-file-section input[name='attachment-file'] {
+#add_refund_receipt_Modal form .attachement-file-section input[name='attachment-file'] {
     display: none;
 }
 
-#addrefundreceiptModal form .attachement-viewer {
+#add_refund_receipt_Modal form .attachement-viewer {
     display: flow-root;
 }
 
-#addrefundreceiptModal form .attachement-file-section .attachement-viewer img {
+#add_refund_receipt_Modal form .attachement-file-section .attachement-viewer img {
     float: left;
     width: 109px;
     padding: 3px;
@@ -815,11 +811,11 @@ div#addrefundreceiptModal form .white-section .form-check label {
     margin: 3px;
 }
 
-#addrefundreceiptModal form .attachement-file-section button.attachment-btn:hover {
+#add_refund_receipt_Modal form .attachement-file-section button.attachment-btn:hover {
     background: #238a15;
 }
 
-div#addrefundreceiptModal form .sub-option {
+div#add_refund_receipt_Modal form .sub-option {
     position: absolute;
     z-index: 1;
     right: 0;
@@ -834,31 +830,31 @@ div#addrefundreceiptModal form .sub-option {
     display: none;
 }
 
-div#addrefundreceiptModal form .sub-option ul li {
+div#add_refund_receipt_Modal form .sub-option ul li {
     padding: 10px;
     width: 100%;
     cursor: pointer;
 }
 
-div#addrefundreceiptModal form .sub-option ul li:hover,
-div#addrefundreceiptModal form .sub-option ul li:hover button {
+div#add_refund_receipt_Modal form .sub-option ul li:hover,
+div#add_refund_receipt_Modal form .sub-option ul li:hover button {
     background: #ECEEF1;
     color: #2BA01D;
 }
 
-div#addrefundreceiptModal form .sub-option ul li button {
+div#add_refund_receipt_Modal form .sub-option ul li button {
     height: auto;
     background: transparent;
     border: none;
 }
 
-div#addrefundreceiptModal form .sub-option ul li:hover,
-div#addrefundreceiptModal form .sub-option ul li:hover button {
+div#add_refund_receipt_Modal form .sub-option ul li:hover,
+div#add_refund_receipt_Modal form .sub-option ul li:hover button {
     background: #ECEEF1;
     color: #2BA01D;
 }
 
-div#addrefundreceiptModal form .btn-save-new {
+div#add_refund_receipt_Modal form .btn-save-new {
     background-image: none;
     background-color: #2CA01C;
     color: #FFFFFF;
@@ -872,12 +868,12 @@ div#addrefundreceiptModal form .btn-save-new {
     margin-right: -5px;
 }
 
-div#addrefundreceiptModal form .btn-save-new:hover {
+div#add_refund_receipt_Modal form .btn-save-new:hover {
     background-image: none;
     background-color: #108000;
 }
 
-div#addrefundreceiptModal form .btn-save-dropdown {
+div#add_refund_receipt_Modal form .btn-save-dropdown {
     background-image: none;
     background-color: #2CA01C;
     color: #FFFFFF;
@@ -890,12 +886,12 @@ div#addrefundreceiptModal form .btn-save-dropdown {
     border: solid 1px #2CA01C;
 }
 
-div#addrefundreceiptModal form .btn-save-dropdown:hover,
-div#addrefundreceiptModal form .btn-save-new :hover {
+div#add_refund_receipt_Modal form .btn-save-dropdown:hover,
+div#add_refund_receipt_Modal form .btn-save-new :hover {
     background-color: #108000;
 }
 
-#addrefundreceiptModal .modal-footer-check .middle-links {
+#add_refund_receipt_Modal .modal-footer-check .middle-links {
     width: 50%;
     float: left;
     text-align: right;
@@ -906,14 +902,14 @@ div#addrefundreceiptModal form .btn-save-new :hover {
     position: relative;
 }
 
-#addrefundreceiptModal .modal-footer-check .middle-links:hover {
+#add_refund_receipt_Modal .modal-footer-check .middle-links:hover {
     text-shadow: 0 10px 20px #fff;
 }
 
-#addrefundreceiptModal .pint-pries-option-section {
+#add_refund_receipt_Modal .pint-pries-option-section {
     position: absolute;
     z-index: 1;
-    top: -100px;
+    top: -62px;
     background: #ffff;
     right: 0;
     color: #000;
@@ -924,29 +920,29 @@ div#addrefundreceiptModal form .btn-save-new :hover {
     display: none;
 }
 
-#addrefundreceiptModal .middle-links a {
+#add_refund_receipt_Modal .middle-links a {
     color: #ffffff;
     font-size: 12px;
 }
 
-#addrefundreceiptModal .pint-pries-option-section ul li {
+#add_refund_receipt_Modal .pint-pries-option-section ul li {
     padding: 10px;
 }
 
-#addrefundreceiptModal .pint-pries-option-section ul li:hover {
+#add_refund_receipt_Modal .pint-pries-option-section ul li:hover {
     background-color: #299A1C;
     color: #fff;
 }
 
-#addrefundreceiptModal .pint-pries-option-section ul li:hover a {
+#add_refund_receipt_Modal .pint-pries-option-section ul li:hover a {
     color: #fff;
 }
 
-#addrefundreceiptModal .pint-pries-option-section ul li a {
+#add_refund_receipt_Modal .pint-pries-option-section ul li a {
     color: #000;
 }
 
-#addrefundreceiptModal .modal-footer-check .pint-pries-option-section .anchor-holder {
+#add_refund_receipt_Modal .modal-footer-check .pint-pries-option-section .anchor-holder {
     position: absolute;
     z-index: 1;
     width: 20px;
@@ -954,7 +950,58 @@ div#addrefundreceiptModal form .btn-save-new :hover {
     left: 50px;
 }
 
-#addsalesreceiptModal .modal-footer-check .middle-links.end {
+#add_refund_receipt_Modal .modal-footer-check .middle-links.end {
     text-align: left;
     border-left: solid 1px #6A6B70;
+}
+
+#add_refund_receipt_Modal form .email-cc-bcc-section {
+    position: relative;
+    float: right;
+}
+
+#add_refund_receipt_Modal form .email-cc-bcc-panel {
+    position: absolute;
+    background: #fff;
+    padding: 10px;
+    z-index: 1;
+    right: -70%;
+    top: 25px;
+    width: 300px;
+    border: solid 1px #BABEC5;
+    border-radius: 3px;
+    box-shadow: 3px 6px 20px #282929;
+}
+
+.form-group .label {
+    font-weight: 700;
+}
+
+#add_refund_receipt_Modal form .email-cc-bcc-panel .form-group {
+    margin-bottom: 0px!important;
+}
+
+.form-group .label .faded-info,
+.form-group .label a {
+    font-weight: lighter;
+}
+
+#add_refund_receipt_Modal .email-cc-bcc-panel .anchor-holder {
+    position: absolute;
+    top: -14px;
+    width: 20px;
+    right: 35px;
+}
+
+#add_refund_receipt_Modal .email-cc-bcc-panel button,
+#add_refund_receipt_Modal .email-cc-bcc-panel button:hover {
+    width: 100%;
+    margin: 10px 0;
+    height: auto;
+    border: 3px solid #363636;
+    padding: 4px;
+}
+
+#add_refund_receipt_Modal .email-cc-bcc-panel button:hover {
+    background-color: #ccc;
 }

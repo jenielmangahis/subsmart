@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">TOTAL PAYMENT AMOUNT</h6>
-                                            <h2 class="text-right">$<span class="transaction-total-amount">0.00</span></h2>
+                                            <h2 class="text-right"><span class="transaction-total-amount">$0.00</span></h2>
                                         </div>
                                     </div>
 

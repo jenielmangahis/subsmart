@@ -17,6 +17,7 @@ $(document).ready(function() {
     $("div#customer_receive_payment_modal .payment_method_information").html("");
     $("div#addsalesreceiptModal .payment_method_information").html("");
     $("div#create_estimate_modal .payment_method_information").html("");
+    $("div#add_refund_receipt_Modal .payment_method_information").html("");
 });
 
 $('#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-1 .datepicker').datepicker({

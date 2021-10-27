@@ -12,6 +12,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     $select: $('[data-type="assignments.payee"]'),
     field: "payee",
   });
+  utils.initSelect({
+    $select: $("#accountingRulesTags"),
+    field: "tags",
+  });
 
   const $newRuleButton = document.getElementById("newRuleButton");
   $newRuleButton.addEventListener("click", () => {
@@ -96,6 +100,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
+      if (dataType === "tags") {
+        payload[dataType] = value.map(({ id }) => id);
+        return;
+      }
+
       if (!dataType.startsWith("assignments.")) {
         payload[dataType] = value;
         return;
@@ -130,6 +139,10 @@ window.addEventListener("DOMContentLoaded", async () => {
       } else {
         if ($dataType.closest(".add-split-section")) {
           return;
+        }
+
+        if (["category", "payee", "tags"].includes(assignmentType)) {
+          assignment.value = assignment.value.map(({ id }) => id);
         }
       }
 
@@ -519,9 +532,7 @@ window.getFormElementValue = ($element) => {
   }
 
   if ($($element).hasClass("select2-hidden-accessible")) {
-    const data = $($element).select2("data");
-    const value = data.find(({ id }) => id === $element.value);
-    return value ? value.text : "";
+    return $($element).select2("data");
   }
 
   return $element.value;

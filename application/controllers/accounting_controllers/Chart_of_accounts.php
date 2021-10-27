@@ -3527,7 +3527,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
 
-        $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
+        $this->load->view("accounting/modals/vendor_credit_modal", $this->page_data);
     }
 
     private function view_cc_payment($ccPaymentId)
@@ -3561,7 +3561,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['items'] = $items;
         $this->page_data['balance'] = $selectedBalance;
 
-        $this->load->view('accounting/vendors/view_credit_card_credit', $this->page_data);
+        $this->load->view("accounting/modals/credit_card_credit_modal", $this->page_data);
     }
 
     private function view_bill_payment($billPaymentId, $vendorId)
