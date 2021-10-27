@@ -5,7 +5,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 .modal.fade {
   background: rgba(0, 0, 0, 0.5);
 }
-
 .modal-backdrop.fade {
   opacity: 0;
 }
@@ -51,9 +50,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <?php
                                             }
-                                        } else {
-                                            // Remove UI Improvement task echo "No Workorders";
-                                        }
+                                        } 
                                     ?>
                                 </div>
                                 <div class="card-body col-12 pt-0 pl-0 pr-0" style="text-align: left;">
@@ -354,8 +351,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
         <?php //} ?>
     </div>
-
-
 </div>
 <!-- end container-fluid -->
 </div>
