@@ -1803,6 +1803,14 @@ $(function() {
         $(this).parent().parent().find('input[name="quantity[]"]').attr('max', quantity);
     });
 
+    $(document).on('change', '#vendorCreditModal #ref_no', function() {
+        if ($(this).val() !== "") {
+            $('#vendorCreditModal .modal-title span').html('#' + $(this).val());
+        } else {
+            $('#vendorCreditModal .modal-title span').html('');
+        }
+    });
+
     $(document).on('change', '#billModal #bill_no', function() {
         if ($(this).val() !== "") {
             $('#billModal .modal-title span').html('#' + $(this).val());
@@ -4060,7 +4068,14 @@ $(function() {
                     var name = res.payee.first_name + ' ' + res.payee.last_name;
                 }
 
-                dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+                if (dropdownEl === null && $("#accountingRulesPageWrapper")) {
+                    // for accounting rules page
+                    $("[data-type='assignments.payee']").append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+                }
+
+                if (dropdownEl !== null) {
+                    dropdownEl.append(`<option value="${data.get('payee_type')+'-'+res.payee.id}" selected>${name}</option>`);
+                }
 
                 $('#modal-container #add-payee-modal').modal('hide');
             }
@@ -4371,7 +4386,14 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container #new-vendor-modal .cancel-add-vendor', function(e) {
-        dropdownEl.val('').trigger('change');
+        if (dropdownEl === null && $("#accountingRulesPageWrapper")) {
+            // for accounting rules page
+            $("[data-type='assignments.payee']").val('').trigger('change');
+        }
+
+        if (dropdownEl !== null) {
+            dropdownEl.val('').trigger('change');
+        }
 
         $('#modal-container #new-vendor-modal').modal('hide');
     });

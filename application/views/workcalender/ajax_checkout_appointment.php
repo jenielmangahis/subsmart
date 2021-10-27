@@ -214,15 +214,27 @@ vertical-align: middle;
         <div class="col" style="margin-top:21px;">
           
           <div class="widget-header">          
-            <h3><i class="fa fa-tag"></i> Items</h3>
-            <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-checkout-select-item" style="display: inline-block;">
-              <i class="fa fa-plus"></i> Add Item
-            </a>
+            <h3 style="width:100%;">
+              <i class="fa fa-tag"></i> Items
+              <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-checkout-select-item" style="float: right;">
+                <i class="fa fa-plus"></i> Add Item
+              </a>
+            </h3>
+            
           </div>
           <div class="widget-content">
             <form id="frm-checkout-items" method="post">
             <input type="hidden" name="aid" value="<?= $appointment->id; ?>">
-            <table class="table table-borderless tbl-items" style="border: none;">            
+            <table class="table table-borderless tbl-items" style="border: none;">     
+              <thead>
+                  <tr>
+                      <th style="width: 65%;text-align: left;">Item Name</th>
+                      <th style="width: 10%;text-align: left;">Item Price</th>
+                      <th style="width: 10%;">Quantity</th>
+                      <th style="width: 10%;">Discount</th>
+                      <th style="width: 5%;"></th>
+                  </tr>
+              </thead>       
               <tbody>
                 <?php 
                   $total_items = 0;
@@ -232,12 +244,13 @@ vertical-align: middle;
                 <?php if( $appointmentItems ){ ?>
                   <?php $row = 1; foreach($appointmentItems as $item){ ?>
                   <?php 
-                    $total_items += $item->item_price;
+                    $total_items += $item->item_price * $item->qty;
                     $total_discount += $item->discount_amount;
                   ?>
                   <tr style="background: none !important;">
-                    <td style="width:60%;">
-                      <input type="text" class="form-control" value="<?= $item->item_name; ?>" name="items[]" placeholder="Item Name">
+                    <td style="width:65%;">
+                      <input type="text" class="form-control" value="<?= $item->item_name; ?>" name="item_name[]" placeholder="Item Name">
+                      <input type="hidden" class="form-control" value="<?= $item->item_id; ?>" name="item_id[]" placeholder="Item Name">
                     </td>
                     <td>
                       <input type="text" class="form-control item-price" value="<?= number_format($item->item_price,2); ?>" name="price[]" placeholder="Item Price">
@@ -249,30 +262,12 @@ vertical-align: middle;
                       <input type="text" class="form-control item-discount" value="<?= number_format($item->discount_amount,2); ?>" name="discount[]" placeholder="Item Discount">
                     </td>
                     <td class="td-actions">
-                      <?php if( $row > 1 ){ ?>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a>
-                      <?php } ?>
+                      <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a>
                     </td>
                   </tr>
                   <?php $row++;} ?>
-                <?php }else{ ?>
-                  <tr style="background: none !important;">
-                    <td style="width:60%;">
-                      <input type="text" class="form-control" name="items[]" placeholder="Item Name">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control item-price" name="price[]" placeholder="Item Price">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control item-qty" name="qty[]" placeholder="Quantity">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount">
-                    </td>
-                    <td class="td-actions"></td>
-                  </tr>
                 <?php } ?>
-                <?php $total_amount = $total_items + $total_tax - $total_discount; ?>              
+                <?php $total_amount = ($total_items + $total_tax) - $total_discount; ?>              
                 </tbody>
             </table>
             </form>
@@ -407,7 +402,7 @@ vertical-align: middle;
                     Date Received
                 </div>
                 <div class="col-md-8">
-                    <input type="text" class="form-control checkout-datepicker" name="cash_date_received" id="cash-date-received" value="<?= date("Y-m-d"); ?>" required/>
+                    <input type="text" class="form-control checkout-datepicker" name="cash_date_received" id="cash-date-received" value="<?= date("m/d/Y"); ?>" required/>
                 </div>
             </div>
             <div class="converge-form-button" style="margin-top:52px;">
@@ -471,38 +466,6 @@ $(function(){
     //c_compute_totals();
   });
 
-  function c_compute_totals(){
-    var total_price    = 0;
-    var total_discount = 0;
-    var total_amount   = 0;
-    var total_tax = 0;
-
-    $('#frm-checkout-items .form-control').each(function(){
-      var $el = $(this); // element we're testing
-      var n   = parseFloat($el.val());
-
-      if( $el.hasClass('item-price') ){        
-        if ($.isNumeric(n)){
-          total_price = total_price + parseFloat($el.val());
-        }
-      }
-
-      if( $el.hasClass('item-discount') ){        
-        if ($.isNumeric(n)){
-          total_discount = total_discount + parseFloat($el.val());
-        }
-      }
-    });
-
-    total_amount = (parseFloat(total_price) - parseFloat(total_discount)) + parseFloat(total_tax);
-
-    $(".c-total-amount").text(parseFloat(total_amount).toFixed(2));
-    $(".c-total-price").text(parseFloat(total_price).toFixed(2));
-    $(".c-total-discount").text(parseFloat(total_discount).toFixed(2));
-    $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
-    $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
-  }
-
   function validateNumber(event) {
       var key = window.event ? event.keyCode : event.which;
       if (event.keyCode === 8 || event.keyCode === 46) {
@@ -541,6 +504,21 @@ $(function(){
   });
 
   $(document).on('keyup', '.item-discount', function(event){
+    c_compute_totals();
+  });
+
+  $(document).on('keypress', '.item-qty', function(event){
+    var key = window.event ? event.keyCode : event.which;
+    if (event.keyCode === 8 || event.keyCode === 46) {
+        return true;
+    } else if ( key < 48 || key > 57 ) {
+        return false;
+    } else {
+        return true;
+    }
+  });
+
+  $(document).on('keyup', '.item-qty', function(event){
     c_compute_totals();
   });
 
@@ -600,7 +578,7 @@ $(function(){
   });
 
   $('.checkout-datepicker').datepicker({
-      format: 'yyyy-mm-dd',      
+      format: 'mm/dd/yyyy',      
       autoclose: true,
   });
 
@@ -703,40 +681,6 @@ $(function(){
         });
     }, 1000);
 
-  });
-
-  $(document).on('click', '.btn-add-item-row', function(){
-    var url = base_url + 'items/_get_item_details';    
-    var itemid = $(this).attr('data-id');
-
-    $(this).html('<span class="spinner-border spinner-border-sm m-0"></span>');
-
-    $.ajax({
-       type: "POST",
-       url: url,
-       data: {itemid:itemid},
-       dataType: 'json',
-       success: function(o)
-       {
-          if( o.is_exists ){
-            var item_price = parseFloat(o.item_price);
-            var append_row = '<tr style="background: none !important;"><td style="width:60%;"><input type="text" class="form-control" name="" placeholder="Item Name" value="'+o.item_name+'"><input type="hidden" name="items[]" value="'+o.item_id+'" /></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price" value="'+item_price.toFixed(2)+'"></td><td><input type="text" class="form-control item-qty" name="qty[]" placeholder="Item Quantity" value="1"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
-
-            $(".tbl-items tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
-            c_compute_totals();
-
-          }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'Cannot find item.',
-              text: o.msg
-            });
-          }    
-
-          $(".btn-add-item-row").html('<i class="fa fa-plus"></i>');
-          $("#modal-checkout-items").modal('hide');
-       }
-    });
   });
 });
 </script>

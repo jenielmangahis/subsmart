@@ -103,7 +103,6 @@ a.top-1 {
 .hide{
     display: none;
 }
-
 /*Tooltip*/
 .tooltip-table td{
   text-align: left;
@@ -446,7 +445,6 @@ a.btn-gcustom i {
 .select2-container--default .select2-selection--single .select2-selection__rendered { 
     border: solid 1px rgba(0,0,0,0.35);
 }
-
 #modal-create-appointment label {
     font-size: 17px !important;
 }
@@ -474,5 +472,21 @@ a.btn-gcustom i {
 .event-caption{
   font-size: 15px;
 }
-
 /*Checkout*/
+
+/*Waitlist*/
+.list-wait-list li{
+  list-style: none;
+  margin: 0px;
+  padding: 10px;
+  display: block;
+  width: 100%;
+}
+.list-wait-list{
+  text-align: left;
+  margin-left: 0px;
+  margin-top: 13px;
+}
+.list-wait-list li { background: #ffffff; }
+.list-wait-list li:nth-child(odd) { background: #bdbdbd; }
+/**/

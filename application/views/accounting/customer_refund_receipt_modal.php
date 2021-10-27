@@ -1,6 +1,6 @@
 <!-- Modal for add account-->
 <div class="full-screen-modal">
-    <div id="add_refund_receipt_Modal" class="modal fade modal-fluid" role="dialog">
+    <div id="addrefundreceiptModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">

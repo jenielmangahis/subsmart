@@ -45,10 +45,14 @@ class AccountingRules extends MY_Controller
             $condition['rule_id'] = $newRule->id;
             return $condition;
         }, $conditions);
-        $this->db->insert_batch('accounting_rules_conditions', $conditions);
+        $this->db->insert_batch('accounting_rule_conditions', $conditions);
 
         $assignments = array_map(function ($assignment) use ($newRule) {
             $assignment['rule_id'] = $newRule->id;
+            if (is_array($assignment['value'])) {
+                $assignment['value'] = implode(',', $assignment['value']);
+            }
+
             return $assignment;
         }, $assignments);
         $this->db->insert_batch('accounting_rule_assignments', $assignments);
@@ -70,7 +74,7 @@ class AccountingRules extends MY_Controller
 
         foreach ($rules as $rule) {
             $this->db->where('rule_id', $rule->id);
-            $rule->conditions = $this->db->get('accounting_rules_conditions')->result();
+            $rule->conditions = $this->db->get('accounting_rule_conditions')->result();
 
             $this->db->where('rule_id', $rule->id);
             $rule->assignments = $this->db->get('accounting_rule_assignments')->result();
@@ -110,6 +114,10 @@ class AccountingRules extends MY_Controller
             $default = ['new' => [], 'existing' => []];
             return array_reduce($data, function ($carry, $currData) use ($id) {
                 $currData['rule_id'] = $id;
+                if (array_key_exists('value', $currData) && is_array($currData['value'])) {
+                    $currData['value'] = implode(',', $currData['value']);
+                }
+
                 $hasId = array_key_exists('id', $currData);
                 $carry[$hasId ? 'existing' : 'new'][] = $currData;
                 return $carry;
@@ -123,10 +131,10 @@ class AccountingRules extends MY_Controller
         ['new' => $newAssignments, 'existing' => $existingAssignments] = $separate($assignments);
 
         if (!empty($newConditions)) {
-            $this->db->insert_batch('accounting_rules_conditions', $newConditions);
+            $this->db->insert_batch('accounting_rule_conditions', $newConditions);
         }
         if (!empty($existingConditions)) {
-            $this->db->update_batch('accounting_rules_conditions', $existingConditions, 'id');
+            $this->db->update_batch('accounting_rule_conditions', $existingConditions, 'id');
         }
 
         if (!empty($newAssignments)) {
@@ -237,7 +245,7 @@ class AccountingRules extends MY_Controller
 
         if (!is_null($rule)) {
             $this->db->where('rule_id', $rule->id);
-            $rule->conditions = $this->db->get('accounting_rules_conditions')->result();
+            $rule->conditions = $this->db->get('accounting_rule_conditions')->result();
 
             $this->db->where('rule_id', $rule->id);
             $rule->assignments = $this->db->get('accounting_rule_assignments')->result();
@@ -447,7 +455,7 @@ class AccountingRules extends MY_Controller
                 }, $rule['Rule Conditions']);
 
                 if (count($conditions) > 0) {
-                    $this->db->insert_batch('accounting_rules_conditions', $conditions);
+                    $this->db->insert_batch('accounting_rule_conditions', $conditions);
                 }
             }
 

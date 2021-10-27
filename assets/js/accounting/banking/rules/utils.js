@@ -22,6 +22,18 @@ export function initSelect(options = null) {
   const { $select, field } = options;
   const modal = "expenseModal";
 
+  if (field === "tags") {
+    $select.select2({
+      placeholder: "Start typing to add a tag",
+      allowClear: true,
+      ajax: {
+        url: "/accounting/get-job-tags",
+        dataType: "json",
+      },
+    });
+    return;
+  }
+
   const formatResult = (optionElement) => {
     var searchField = $(".select2-search__field");
     var text = optionElement.text;
@@ -60,6 +72,21 @@ export function initSelect(options = null) {
   $select.on("change", function () {
     if ($(this).val() !== "add-new") {
       return;
+    }
+
+    if (field === "payee") {
+      $.get("/accounting/get-add-payee-modal/payee", function (result) {
+        $modalContainer.parent().append(result);
+        $("#modal-container #add-payee-modal select").select2({
+          minimumResultsForSearch: -1,
+          dropdownParent: $("#modal-container #add-payee-modal"),
+        });
+
+        $("#modal-container #add-payee-modal").modal({
+          backdrop: "static",
+          keyboard: false,
+        });
+      });
     }
 
     if (field === "bank-account") {

@@ -503,7 +503,7 @@ Alarm Direct, Inc</textarea>
                             <div id="check_area" style="display:none;">
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Check Number</label>
+                                        <label for="label">Check Number</label>
                                         <input type="text" class="form-control" name="check_number" id="check_number" />
                                     </div>
                                     <div class="form-group col-md-4">
@@ -919,7 +919,6 @@ Alarm Direct, Inc</textarea>
                                         style="display: none;">Cancel</button>
                                     <button class="btn btn-dark cancel-button" id="clearsalereceipt"
                                         type="button">Clear</button>
-
                                 </div>
                                 <div class="col-md-5" align="center">
                                     <div class="middle-links">

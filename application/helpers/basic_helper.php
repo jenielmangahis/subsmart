@@ -862,7 +862,7 @@ if (!function_exists('getLoggedIsPlanActive')) {
         $user = $CI->session->userdata('logged');
 
         if (!is_null($user)) {
-            return (object) $user->is_plan_active;
+            return ((object) $user)->is_plan_active;
         }
     }
 }

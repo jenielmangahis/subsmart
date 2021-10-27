@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');?>
 <?php include viewPath('includes/header');?>
-<div class="wrapper" role="wrapper">
+<div class="wrapper" role="wrapper" id="accountingRulesPageWrapper">
     <!-- page wrapper start -->
     <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="container-fluid" style="background-color:white;">
@@ -348,6 +348,19 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             <option>Abacus Accounting</option>
                                             <option>Absolute Power</option>
                                             <option>ADSC</option> -->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="action-section">
+                                    <span class="action-label">Tags</span>
+                                    <div style="width: 220px;display: inline-block;">
+                                        <select
+                                            id="accountingRulesTags"
+                                            name="tags"
+                                            class="form-control"
+                                            data-type="assignments.tags"
+                                            multiple="multiple"
+                                        >
                                         </select>
                                     </div>
                                 </div>

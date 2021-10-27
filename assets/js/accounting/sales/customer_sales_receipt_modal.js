@@ -629,7 +629,6 @@ $(document).on("change", "#addsalesreceiptModal  .items-section table td input",
     $(this).parent("td").parent("tr").find("input[name='total[]']").val(total);
     console.log($(this).parent("td").parent("tr").find("input[name='total[]']").val());
     compute_grand_total_sales_receipt();
-
 });
 
 
