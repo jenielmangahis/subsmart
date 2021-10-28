@@ -100,13 +100,13 @@ div#add_refund_receipt_Modal {
 }
 
 #add_refund_receipt_Modal .modal-footer-check .submit-submenu>li:hover,
-#sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li:hover {
+#refund_receipt_pdf_preview_modal .modal-footer .submit-submenu>li:hover {
     background-color: #ECEDF1;
     color: #008A00;
 }
 
 #add_refund_receipt_Modal .modal-footer-check .submit-submenu>li button,
-#sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li button {
+#refund_receipt_pdf_preview_modal .modal-footer .submit-submenu>li button {
     color: #333333;
 }
 
@@ -348,7 +348,7 @@ div#add_refund_receipt_Modal {
     visibility: hidden;
 }
 
-div#sales_receipt_pdf_preview_modal {
+div#refund_receipt_pdf_preview_modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -435,44 +435,59 @@ div#saved-notification-modal-section {
     font-weight: 100;
 }
 
-#sales_receipt_pdf_preview_modal .pdf-print-preview,
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview {
+#refund_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown'],
+#refund_receipt_pdf_preview_modal .modal-footer button[data-submit-type='send-new'] {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 13px;
+    border-radius: 28px 0 0 28px;
+    padding: 5px 15px;
+    height: auto;
+    border: solid 1px #2CA01C;
+    margin-right: -5px;
+}
+
+#refund_receipt_pdf_preview_modal .pdf-print-preview,
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview {
     height: 65vh;
 }
 
-#sales_receipt_pdf_preview_modal .pdf-print-preview iframe,
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview iframe {
+#refund_receipt_pdf_preview_modal .pdf-print-preview iframe,
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview iframe {
     width: 100%;
     height: 100%;
     border: none;
 }
 
-#sales_receipt_pdf_preview_modal h5.modal-title {
+#refund_receipt_pdf_preview_modal h5.modal-title {
     font-weight: 600;
     color: #393A3D;
     font-size: 20px;
 }
 
-#sales_receipt_pdf_preview_modal .modal-body p {
+#refund_receipt_pdf_preview_modal .modal-body p {
     font-size: 14px;
     font-weight: 100;
     color: #393A3D;
 }
 
-#sales_receipt_pdf_preview_modal .modal-body h3 {
+#refund_receipt_pdf_preview_modal .modal-body h3 {
     font-size: 20px;
     color: #393A3D;
 }
 
-#sales_receipt_pdf_preview_modal .modal-body p a:hover {
+#refund_receipt_pdf_preview_modal .modal-body p a:hover {
     text-decoration: underline;
 }
 
-#sales_receipt_pdf_preview_modal .modal-body p a {
+#refund_receipt_pdf_preview_modal .modal-body p a {
     color: #0379C6;
 }
 
-#sales_receipt_pdf_preview_modal .download-button {
+#refund_receipt_pdf_preview_modal .download-button {
     background-color: transparent;
     background: transparent;
     font-size: 13px;
@@ -484,7 +499,7 @@ div#saved-notification-modal-section {
     font-weight: 700;
 }
 
-#sales_receipt_pdf_preview_modal .cancel-button {
+#refund_receipt_pdf_preview_modal .cancel-button {
     background-color: transparent;
     background: transparent;
     font-size: 13px;
@@ -498,7 +513,7 @@ div#saved-notification-modal-section {
     left: 2rem;
 }
 
-#sales_receipt_pdf_preview_modal .print-button {
+#refund_receipt_pdf_preview_modal .print-button {
     background-color: #2CA01C;
     font-size: 13px;
     color: #fff;
@@ -509,8 +524,8 @@ div#saved-notification-modal-section {
     font-weight: 700;
 }
 
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea,
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input {
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea,
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input {
     padding: 10px;
     width: 100%;
     border: solid 1px #BABEC5;
@@ -520,8 +535,8 @@ div#saved-notification-modal-section {
     resize: none;
 }
 
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input:focus,
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea:focus {
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input:focus,
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea:focus {
     border-color: rgba(126, 239, 104, 0.8);
     box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
     outline: 0 none;
@@ -530,7 +545,7 @@ div#saved-notification-modal-section {
     font-style: normal;
 }
 
-#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input[type="email"] {
+#refund_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input[type="email"] {
     border: none;
     border-color: none;
     box-shadow: none;

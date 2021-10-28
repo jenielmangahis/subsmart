@@ -450,7 +450,7 @@ $colorError: #d52b1e;
   #rulesTable_filter {
     & label {
       position: relative;
-      min-width: 300px;
+      min-width: 280px;
       height: 40px;
       display: flex;
       align-items: center;
@@ -476,6 +476,13 @@ $colorError: #d52b1e;
       padding-right: 30px;
       padding-left: 8px;
       visibility: visible;
+      outline: 0;
     }
   }
+}
+
+.select2-selection--multiple {
+  height: 45px !important;
+  border: 2px solid #e0e0e0 !important;
+  min-width: unset !important;
 }

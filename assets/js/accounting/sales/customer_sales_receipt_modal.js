@@ -307,6 +307,15 @@ $(document).on("click", "#sales_receipt_pdf_preview_modal form#send_sales_receip
 
                         $("#loader-modal").hide();
                     },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Something went wrong!",
+                            html: "Please try again later.",
+                            icon: "error",
+                        });
+                    }
                 });
             }
         });

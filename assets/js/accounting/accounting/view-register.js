@@ -1089,7 +1089,7 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
 
 		        $('#adjust-starting-value-modal').modal('show');
             break;
-            case 'credit-card-payment' :
+            case 'credit-card-pmt' :
                 initModalFields('payDownCreditModal', data);
 
                 $('#payDownCreditModal').modal('show');

@@ -232,10 +232,42 @@ class Accounting extends MY_Controller
             'where' => array('company_id' => $comp_id,),
             'select' => '*',
         );
-        $this->page_data['account '] = $this->general_model->get_data_with_param($get_company_account);
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
+
+        $get_company_banking_payment = array(
+            'table' => 'banking_payments',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['banking_payments'] = $this->general_model->get_data_with_param($get_company_banking_payment);
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/banking', $this->page_data);
+    }
+
+    public function test_payment()
+    {
+        $comp_id = logged('company_id');
+        $get_company_account = array(
+            'table' => 'accounting_bank_accounts',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account,false);
+        $this->load->view('accounting/banking/test_payment', $this->page_data);
+    }
+
+    public function onSaveBakingPayment()
+    {
+        $banking_payments_data = array(
+            'company_id' =>logged('company_id'),
+            'description' => $_POST['description'],
+            'payee' => $_POST['payee'],
+            'amount' => $_POST['amount'],
+            'assign_to' => $_POST['assign_to'],
+            'is_paid' => 1,
+        );
+        $this->general->add_($banking_payments_data,'banking_payments');
     }
 
     public function rules()
@@ -270,6 +302,7 @@ class Accounting extends MY_Controller
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
+        $this->page_data['receipts_two'] = $this->receipt_model->getReceipt_two();
         $this->load->view('accounting/receipts', $this->page_data);
     }
 
@@ -2349,16 +2382,16 @@ class Accounting extends MY_Controller
     public function updateReceipt()
     {
         $new_data = array(
-            'receipt_id' => $this->input->post('receipt_id'),
-            'document_type' => $this->input->post('document_type'),
-            'payee_id' => $this->input->post('payee_id'),
-            'bank_account' => $this->input->post('bank_account'),
-            'transaction_date' => $this->input->post('transaction_date'),
-            'category' => $this->input->post('category'),
-            'description' => $this->input->post('description'),
-            'total_amount' => $this->input->post('total_amount'),
-            'memo' => $this->input->post('memo'),
-            'ref_number' => $this->input->post('ref_number')
+            'receipt_id'            => $this->input->post('receipt_id'),
+            'document_type'         => $this->input->post('document_type'),
+            'payee_id'              => $this->input->post('payee_id'),
+            'bank_account'          => $this->input->post('bank_account'),
+            'transaction_date'      => $this->input->post('transaction_date'),
+            'category'              => $this->input->post('category'),
+            'description'           => $this->input->post('description'),
+            'total_amount'          => $this->input->post('total_amount'),
+            'memo'                  => $this->input->post('memo'),
+            'ref_number'            => $this->input->post('ref_number')
         );
         $update = $this->receipt_model->updateReceipt($new_data);
         // dd($update);
@@ -2368,6 +2401,76 @@ class Accounting extends MY_Controller
         } else {
             $this->session->set_flashdata('receipt_updateFailed', 'Something is wrong in the process.');
             redirect('accounting/receipts');
+        }
+    }
+
+    public function receipt_create_expense()
+    {
+        $rID  = $this->input->post('rID');
+
+        $receipts = $this->receipt_model->getReceiptBYID($rID);
+
+        $transaction = array(
+            'type'          => 'Expense',
+            'total'         => $receipts->total_amount,
+            'date_created'  => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+        $fquery = $this->expenses_model->addtransaction($transaction);
+
+        $new_data = array(
+            'transaction_id'    => $fquery,
+            'vendor_id'         => $this->input->post('vendor_id'),
+            'payment_account'   => $this->input->post('payment_account'),
+            'payment_date'      => $receipts->transaction_date,
+            'payment_method'    => $this->input->post('payment_method'),
+            'ref_number'        => $receipts->ref_number,
+            // 'permit_number'     => $this->input->post('permit_num'),
+            'memo'              => $receipts->memo,
+            'amount'            => $receipts->total_amount,
+            'attachments'       => 'test',
+            'status'            => 1,
+            'created_by'        => logged('id'),
+            'created_at'        => date("Y-m-d H:i:s"),
+            'updated_at'        => date("Y-m-d H:i:s")
+        );
+        $query = $this->expenses_model->addExpense($new_data);
+
+        if ($query > 0) {
+            $i = 0;
+            foreach ($a as $row) {
+                $data['category']       = $a[$i];
+                $data['description']    = $b[$i];
+                $data['amount']         = $e[$i];
+                $data['ven_type']       = '1';
+                $data['ven_type_id']    = $query;
+                $data['status']         = '1';
+                $data['created_at']     = date("Y-m-d H:i:s");
+                $data['updated_at']     = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_credit_card_model->createCreditCardDetails($data);
+                $i++;
+            }
+
+            $aa = $this->input->post('category');
+            $bb = $this->input->post('description');
+            $cc = $this->input->post('amount');
+
+            $f = 0;
+            foreach ($aa as $row2) {
+                $data2['category']      = $aa[$f];
+                $data2['description']   = $bb[$f];
+                $data2['amount']        = $cc[$f];
+                $data2['type']          = 'Expense';
+                $data2['type_id']       = $query;
+                $data2['status']        = '1';
+                $data2['created_at']    = date("Y-m-d H:i:s");
+                $data2['updated_at']    = date("Y-m-d H:i:s");
+                $addQuery3 = $this->expenses_model->saveItems($data2);
+                $f++;
+            }
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
         }
     }
 
@@ -4561,18 +4664,88 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-
-    public function addRefundReceipt()
+    public function updateRefundReceipt()
     {
+        $refund_receipt_id = $this->input->post('current_refund_recept_number');
+        $recurring_already = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refund_receipt_id);
+        $recurringId = $recurring_already->recurring_id;
+        if ($this->input->post("recurring_selected") == 1) {
+            $days_in_advance = null;
+            $recurring_month = null;
+            $recurring_week = null;
+            $recurring_day = null;
+            $recurr_every = null;
+            if ($this->input->post("recurring-type") == "Schedule") {
+                $days_in_advance = $this->input->post("recurring-days-in-advance");
+            } elseif ($this->input->post("recurring-type") == "Reminder") {
+                $days_in_advance = $this->input->post("remind-days-before");
+            }
+            if ($this->input->post("recurring-interval") == "Daily") {
+                $recurr_every = $this->input->post("daily-days");
+            } elseif ($this->input->post("recurring-interval") == "Weekly") {
+                $recurr_every = $this->input->post("weekly-every");
+                $recurring_day = $this->input->post("weekly-weeks-on");
+            } elseif ($this->input->post("recurring-interval") == "Monthly") {
+                $recurring_month = $this->input->post("recurring-interval");
+                $recurring_week = $this->input->post("monthly-week-order");
+                $recurring_day = $this->input->post("monthly-day-of-the-week");
+                $recurr_every = $this->input->post("monthly-months");
+            } elseif ($this->input->post("recurring-interval") == "Yearly") {
+                $recurring_month = $this->input->post("yearly-month");
+                $recurring_day = $this->input->post("yearly-day");
+            }
+            $recurring_data = array(
+                    'company_id' => logged('company_id'),
+                    'customer_id' => $this->input->post("customer_id"),
+                    'template_name' => $this->input->post("recurring-template-name"),
+                    'recurring_type' => $this->input->post("recurring-type"),
+                    'days_in_advance' => $days_in_advance,
+                    'txn_type' => "Refund Receipt",
+                    'txn_id' => $refund_receipt_id,
+                    'recurring_interval' => $this->input->post("recurring-interval"),
+                    'recurring_month' => $recurring_month,
+                    'recurring_week' => $recurring_week,
+                    'recurring_day' => $recurring_day,
+                    'recurr_every' => $recurr_every,
+                    'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                    'end_type' => $this->input->post("recurring-end-type"),
+                    'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                    'max_occurences' => $this->input->post("after-occurrences"),
+                    'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                );
+            if ($recurring_already->recurring_id != null) {
+                $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurring_already->recurring_id, $recurring_data);
+            } else {
+                $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
+            }
+        } else {
+            if ($recurring_already->recurring_id != null) {
+                $this->accounting_recurring_transactions_model->delete($recurring_already->recurring_id);
+                $recurringId = null;
+            }
+        }
+        $refund_receipt_details_old = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($refund_receipt_id);
+        if ($refund_receipt_details_old->attachments != $this->input->post("attachement-filenames")) {
+            $old_attachments = explode(",", $refund_receipt_details_old->attachments);
+            for ($i = 0; $i < count($old_attachments); $i++) {
+                if ($old_attachments[$i] != "") {
+                    if (file_exists(("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]))) {
+                        unlink("uploads/accounting/attachments/final-attachments/" . $old_attachments[$i]);
+                    }
+                }
+            }
+        }
         $company_id = getLoggedCompanyID();
         $user_id = getLoggedUserID();
-
-        $product = json_encode($this->input->post('phone'));
-
+        $customer_id = $this->input->post('customer_id');
         $new_data = array(
+            'recurring_id' => $recurringId,
             'customer_id' => $this->input->post('customer_id'),
-            'email' => $this->input->post('email'),
-            'refund_receipt_date' => $this->input->post('receipt_date'),
+            'email' => $this->input->post('customer_email'),
+            'refund_receipt_date' => $this->input->post('refund_date'),
             'billing_address' => $this->input->post('billing_address'),
             'location_sale' => $this->input->post('location_scale'),
             'payment_method' => $this->input->post('payment_method'),
@@ -4594,250 +4767,470 @@ class Accounting extends MY_Controller
             'adjustment_name' => $this->input->post('adjustment_name'),
             'adjustment_value' => $this->input->post('adjustment_value'),
             'grand_total' => $this->input->post('grand_total'),
-
             'created_by' => logged('id'),
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
+            'date_modified' => date("Y-m-d H:i:s"),
+            'cc_email' => $this->input->post('email-cc'),
+            'bcc_email' => $this->input->post('email-bcc')
         );
 
-        $addQuery = $this->accounting_refund_receipt_model->createRefundReceipts($new_data);
+        $updateQuery = $this->accounting_refund_receipt_model->updateRefundReceipt($refund_receipt_id, $new_data);
+        $file_names = explode(",", $this->input->post("attachement-filenames"));
+        for ($i = 0; $i < count($file_names); $i++) {
+            if ($file_names[$i] != "") {
+                $source = "uploads/accounting/attachments/forms/" . $file_names[$i];
+                $destination = "uploads/accounting/attachments/final-attachments/" . $file_names[$i];
 
-        if ($this->input->post('payment_method') == 'Cash') {
-            $payment_data = array(
+                if (file_exists($source)) {
+                    copy($source, $destination);
+                    unlink($source);
+                }
+            }
+        }
+        if ($updateQuery) {
+            $this->accounting_refund_receipt_model->delete_refund_receipt_items($refund_receipt_id);
+            $a = $this->input->post('item_ids');
+            //  $packageID  = $this->input->post('packageID');
+            $quantity = $this->input->post('quantity');
+            $price = $this->input->post('price');
+            $h = $this->input->post('tax');
+            $discount = $this->input->post('discount');
+            $total = $this->input->post('total');
+            $item_names = $this->input->post('items');
+            $item_type = $this->input->post('item_type');
+
+            $i = 0;
+            foreach ($a as $row) {
+                $data['items_id'] = $a[$i];
+                //  $data['package_id ']    = $packageID[$i];
+                $data['qty'] = $quantity[$i];
+                $data['cost'] = $price[$i];
+                $data['tax'] = $h[$i];
+                $data['discount'] = $discount[$i];
+                $data['total'] = $total[$i];
+                $data['refund_receipt_id'] = $refund_receipt_id;
+                $this->accounting_refund_receipt_model->additem_details($data);
+                $i++;
+            }
+            $refund_receipt_file_name = 'refund_receipt_' . $refund_receipt_id . ".pdf";
+            $this->create_pdf_refund_receipt($refund_receipt_file_name, $customer_id, $refund_receipt_id, "print_refund_receipt");
+
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+            $data = new stdClass();
+            if ($this->input->post("submit_type") == "save-send") {
+                $data->email_sending_status = "updated receipt has been sent";
+            }
+            $data->business_name = $customer_info->business_name;
+            $data->customer_email = $this->input->post('customer_email');
+            $data->customer_full_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+            $data->file_location = base_url("assets/pdf/" . $refund_receipt_file_name);
+            $data->count_save = 1;
+            $data->refund_receipt_id = $refund_receipt_id;
+            echo json_encode($data);
+        } else {
+            echo json_encode(0);
+        }
+    }
+    public function addRefundReceipt()
+    {
+        if ($this->input->post('current_refund_recept_number') != "") {
+            $this->updateRefundReceipt();
+        } else {
+            $recurringId = null;
+            if ($this->input->post("recurring_selected") == 1) {
+                $days_in_advance = null;
+                $recurring_month = null;
+                $recurring_week = null;
+                $recurring_day = null;
+                $recurr_every = null;
+                if ($this->input->post("recurring-type") == "Schedule") {
+                    $days_in_advance = $this->input->post("recurring-days-in-advance");
+                } elseif ($this->input->post("recurring-type") == "Reminder") {
+                    $days_in_advance = $this->input->post("remind-days-before");
+                }
+                if ($this->input->post("recurring-interval") == "Daily") {
+                    $recurr_every = $this->input->post("daily-days");
+                } elseif ($this->input->post("recurring-interval") == "Weekly") {
+                    $recurr_every = $this->input->post("weekly-every");
+                    $recurring_day = $this->input->post("weekly-weeks-on");
+                } elseif ($this->input->post("recurring-interval") == "Monthly") {
+                    $recurring_month = $this->input->post("recurring-interval");
+                    $recurring_week = $this->input->post("monthly-week-order");
+                    $recurring_day = $this->input->post("monthly-day-of-the-week");
+                    $recurr_every = $this->input->post("monthly-months");
+                } elseif ($this->input->post("recurring-interval") == "Yearly") {
+                    $recurring_month = $this->input->post("yearly-month");
+                    $recurring_day = $this->input->post("yearly-day");
+                }
+                $recurring_data = array(
+                    'company_id' => logged('company_id'),
+                    'template_name' => $this->input->post("recurring-template-name"),
+                    'recurring_type' => $this->input->post("recurring-type"),
+                    'days_in_advance' => $days_in_advance,
+                    'txn_type' => $days_in_advance,
+                    'txn_id' => $days_in_advance,
+                    'recurring_interval' => $this->input->post("recurring-interval"),
+                    'recurring_month' => $recurring_month,
+                    'recurring_week' => $recurring_week,
+                    'recurring_day' => $recurring_day,
+                    'recurr_every' => $recurr_every,
+                    'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                    'end_type' => $this->input->post("recurring-end-type"),
+                    'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                    'max_occurences' => $this->input->post("after-occurrences"),
+                    'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                );
+                $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
+            }
+            $company_id = getLoggedCompanyID();
+            $user_id = getLoggedUserID();
+            $customer_id = $this->input->post('customer_id');
+            $new_data = array(
+            'recurring_id' => $recurringId,
+            'customer_id' => $this->input->post('customer_id'),
+            'email' => $this->input->post('customer_email'),
+            'refund_receipt_date' => $this->input->post('refund_date'),
+            'billing_address' => $this->input->post('billing_address'),
+            'location_sale' => $this->input->post('location_scale'),
+            'payment_method' => $this->input->post('payment_method'),
+            'refund_form' => $this->input->post('refund_form'),
+            'tags' => $this->input->post('tags'),
+            // 'total_amount' => $this->input->post('total_amount'),
+            'message_refund' => $this->input->post('message_refund'),
+            'message_statement' => $this->input->post('mess_statement'),
+            // 'tax_rate' => $this->input->post('tax_rate'),
+            'shipping' => $this->input->post('shipping'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'testing 2',
+            'status' => 1,
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+
+            'subtotal' => $this->input->post('subtotal'),
+            'taxes' => $this->input->post('taxes'),
+            'adjustment_name' => $this->input->post('adjustment_name'),
+            'adjustment_value' => $this->input->post('adjustment_value'),
+            'grand_total' => $this->input->post('grand_total'),
+            'created_by' => logged('id'),
+            'date_modified' => date("Y-m-d H:i:s"),
+            'cc_email' => $this->input->post('email-cc'),
+            'bcc_email' => $this->input->post('email-bcc')
+        );
+            $addQuery = $this->accounting_refund_receipt_model->createRefundReceipts($new_data);
+
+            $new_recurring_data = array(
+                'txn_type' => "Refund Receipt",
+                'txn_id' => $addQuery,
+                'customer_id' => $customer_id
+            );
+            $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurringId, $new_recurring_data);
+
+            if ($this->input->post('payment_method') == 'Cash') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'is_collected' => '1',
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Check') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Check') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'check_number' => $this->input->post('check_number'),
                 'routing_number' => $this->input->post('routing_number'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Credit Card') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Credit Card') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'credit_number' => $this->input->post('credit_number'),
                 'credit_expiry' => $this->input->post('credit_expiry'),
                 'credit_cvc' => $this->input->post('credit_cvc'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Debit Card') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Debit Card') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'credit_number' => $this->input->post('debit_credit_number'),
                 'credit_expiry' => $this->input->post('debit_credit_expiry'),
                 'credit_cvc' => $this->input->post('debit_credit_cvc'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'ACH') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'ACH') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'routing_number' => $this->input->post('ach_routing_number'),
                 'account_number' => $this->input->post('ach_account_number'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Venmo') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Venmo') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('account_credentials'),
                 'account_note' => $this->input->post('account_note'),
                 'confirmation' => $this->input->post('confirmation'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Paypal') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Paypal') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('paypal_account_credentials'),
                 'account_note' => $this->input->post('paypal_account_note'),
                 'confirmation' => $this->input->post('paypal_confirmation'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Square') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Square') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('square_account_credentials'),
                 'account_note' => $this->input->post('square_account_note'),
                 'confirmation' => $this->input->post('square_confirmation'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Warranty Work') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Warranty Work') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('warranty_account_credentials'),
                 'account_note' => $this->input->post('warranty_account_note'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Home Owner Financing') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Home Owner Financing') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('home_account_credentials'),
                 'account_note' => $this->input->post('home_account_note'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'e-Transfer') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'e-Transfer') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('e_account_credentials'),
                 'account_note' => $this->input->post('e_account_note'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Other Credit Card Professor') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Other Credit Card Professor') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'credit_number' => $this->input->post('other_credit_number'),
                 'credit_expiry' => $this->input->post('other_credit_expiry'),
                 'credit_cvc' => $this->input->post('other_credit_cvc'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        } elseif ($this->input->post('payment_method') == 'Other Payment Type') {
-            $payment_data = array(
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
+            } elseif ($this->input->post('payment_method') == 'Other Payment Type') {
+                $payment_data = array(
 
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('other_payment_account_credentials'),
                 'account_note' => $this->input->post('other_payment_account_note'),
-                'work_order_id' => $addQuery,
+                'transaction_type' => "Sales Receipt",
+                'transaction_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
-        }
-
-        // $path = './assets/files/'.$company_id;
-        // $companypath = $path . '/company';
-        // if(!is_dir($path)){
-        // if(is_writeable('./assets/files/')){
-        //     if(mkdir($path,0755,TRUE)){
-        //     echo "Created $path";
-        //     if(mkdir($companypath,0755,TRUE)){
-        //         echo "Created $companypath";
-        //     } else {
-        //         echo "Failed to create $companypath";
-        //     }
-        //     } else {
-        //     echo "Failed to create $path";
-        //     }
-
-        // } else {
-        //     echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
-        //     $stat = stat($path);
-        //     print_r(posix_getpwuid($stat['uid']));
-
-        //     chmod($path, 0755); // trying to change permissions
-        //     //chown($path, $stat['uid']);
-        // }
-
-        // } else {
-        // echo 'directory already exists.';
-        // }
-
-        if ($addQuery > 0) {
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
-            $d = $this->input->post('quantity');
-            $f = $this->input->post('price');
-            $g = $this->input->post('discount');
-            $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
-
-            $i = 0;
-            foreach ($a as $row) {
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                $data['qty'] = $d[$i];
-                $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
-                $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Refund Receipt';
-                $data['type_id'] = $addQuery;
-                // $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
-                $i++;
+                $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             }
 
-            redirect('accounting/banking');
-        } else {
-            echo json_encode(0);
-            // print_r($file_put_contents);die;
+            // $path = './assets/files/'.$company_id;
+            // $companypath = $path . '/company';
+            // if(!is_dir($path)){
+            // if(is_writeable('./assets/files/')){
+            //     if(mkdir($path,0755,TRUE)){
+            //     echo "Created $path";
+            //     if(mkdir($companypath,0755,TRUE)){
+            //         echo "Created $companypath";
+            //     } else {
+            //         echo "Failed to create $companypath";
+            //     }
+            //     } else {
+            //     echo "Failed to create $path";
+            //     }
+
+            // } else {
+            //     echo 'PHP does not have the privileges to modify "./assets/files/" directory.';
+            //     $stat = stat($path);
+            //     print_r(posix_getpwuid($stat['uid']));
+
+            //     chmod($path, 0755); // trying to change permissions
+            //     //chown($path, $stat['uid']);
+            // }
+
+            // } else {
+            // echo 'directory already exists.';
+            // }
+
+            if ($addQuery > 0) {
+                $a = $this->input->post('item_ids');
+                //  $packageID  = $this->input->post('packageID');
+                $quantity = $this->input->post('quantity');
+                $price = $this->input->post('price');
+                $h = $this->input->post('tax');
+                $discount = $this->input->post('discount');
+                $total = $this->input->post('total');
+                $item_names = $this->input->post('items');
+                $item_type = $this->input->post('item_type');
+
+                $i = 0;
+                foreach ($a as $row) {
+                    $data['items_id'] = $a[$i];
+                    //  $data['package_id ']    = $packageID[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['discount'] = $discount[$i];
+                    $data['total'] = $total[$i];
+                    $data['refund_receipt_id'] = $addQuery;
+                    $this->accounting_refund_receipt_model->additem_details($data);
+                    $i++;
+                }
+                $refund_receipt_file_name = 'refund_receipt_' . $addQuery . ".pdf";
+                $this->create_pdf_refund_receipt($refund_receipt_file_name, $customer_id, $addQuery, "print_refund_receipt");
+
+                $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+                $data = new stdClass();
+                if ($this->input->post("submit_type") == "save-send") {
+                    $data->email_sending_status = "updated receipt has been sent";
+                }
+                $data->business_name = $customer_info->business_name;
+                $data->customer_email = $this->input->post('customer_email');
+                $data->customer_full_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $data->file_location = base_url("assets/pdf/" . $refund_receipt_file_name);
+                $data->count_save = 1;
+                $data->refund_receipt_id = $addQuery;
+                echo json_encode($data);
+            }
         }
+    }
+    public function create_pdf_refund_receipt($file_name, $customer_id, $refund_number, $action = "")
+    {
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $refund_receipt_info = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refund_number);
+        $refund_receipt_items = $this->accounting_refund_receipt_model->get_refund_receipt_items($refund_number);
+        $data = array(
+            'business_name' => $customer_info->business_name,
+            'business_address_street' => $refund_receipt_info->location_scale,
+            'business_address_state' => "",
+            'business_contact_number' => $customer_info->business_phone,
+            'business_email' => $customer_info->business_email,
+            'business_logo' => $customer_info->business_id . "/" . $customer_info->business_image,
+            'refund_number' => $refund_receipt_info->id,
+            'adjustment_name' => $refund_receipt_info->adjustment_name,
+            'adjustment_value' => $refund_receipt_info->adjustment_value,
+            'receipt_date' => $refund_receipt_info->date_created,
+            'customer_full_name' => $customer_info->first_name . ' ' . $customer_info->last_name,
+            'customer_adress_street' => $refund_receipt_info->billing_address,
+            'customer_address_state' => '',
+            'items' => $refund_receipt_items,
+        );
+        if ($action == "download_print_refund_receipt") {
+            $this->pdf->load_view("accounting/customer_includes/refund_receipt/refund_receipt_to_pdf", $data, $file_name, "P");
+        } elseif ($action == "print_refund_receipt") {
+            $this->pdf->save_pdf("accounting/customer_includes/refund_receipt/refund_receipt_to_pdf", $data, $file_name, "P");
+        }
+    }
+    public function view_print_refund_receipt()
+    {
+        $action = $this->input->post("action");
+        if ($action == "print_packaging_slip") {
+            $file_name = 'packaging_slip_' . $this->input->post("refund_number") . ".pdf";
+        } else {
+            $file_name = 'refund_receipt_' . $this->input->post("refund_number") . ".pdf";
+        }
+        $customer_id = $this->input->post("customer_id");
+        $refund_number = $this->input->post("refund_number");
+
+        $this->create_pdf_refund_receipt($file_name, $customer_id, $refund_number, $action);
+
+        $data = new stdClass();
+        $data->file_location = base_url("assets/pdf/" . $file_name);
+        echo json_encode($data);
     }
 
     public function addDelayedCredit()
@@ -5851,34 +6244,34 @@ class Accounting extends MY_Controller
         $fquery = $this->expenses_model->addtransaction($transaction);
 
         $new_data = array(
-            'transaction_id' => $fquery,
-            'vendor_id' => $this->input->post('vendor_id'),
-            'payment_account' => $this->input->post('payment_account'),
-            'payment_date' => $this->input->post('payment_date'),
-            'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('ref_num'),
-            'permit_number' => $this->input->post('permit_num'),
-            'memo' => $this->input->post('memo'),
-            'amount' => $this->input->post('total_amount'),
-            'attachments' => 'test',
-            'status' => 1,
-            'created_by' => logged('id'),
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
+            'transaction_id'        => $fquery,
+            'vendor_id'             => $this->input->post('vendor_id'),
+            'payment_account'       => $this->input->post('payment_account'),
+            'payment_date'          => $this->input->post('payment_date'),
+            'payment_method'        => $this->input->post('payment_method'),
+            'ref_number'            => $this->input->post('ref_num'),
+            'permit_number'         => $this->input->post('permit_num'),
+            'memo'                  => $this->input->post('memo'),
+            'amount'                => $this->input->post('total_amount'),
+            'attachments'           => 'test',
+            'status'                => 1,
+            'created_by'            => logged('id'),
+            'created_at'            => date("Y-m-d H:i:s"),
+            'updated_at'            => date("Y-m-d H:i:s")
         );
         $query = $this->expenses_model->addExpense($new_data);
 
         if ($query > 0) {
             $i = 0;
             foreach ($a as $row) {
-                $data['category'] = $a[$i];
-                $data['description'] = $b[$i];
-                $data['amount'] = $e[$i];
-                $data['ven_type'] = '1';
-                $data['ven_type_id'] = $query;
-                $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
+                $data['category']       = $a[$i];
+                $data['description']    = $b[$i];
+                $data['amount']         = $e[$i];
+                $data['ven_type']       = '1';
+                $data['ven_type_id']    = $query;
+                $data['status']         = '1';
+                $data['created_at']     = date("Y-m-d H:i:s");
+                $data['updated_at']     = date("Y-m-d H:i:s");
                 $addQuery2 = $this->accounting_credit_card_model->createCreditCardDetails($data);
                 $i++;
             }
@@ -5889,14 +6282,14 @@ class Accounting extends MY_Controller
 
             $f = 0;
             foreach ($aa as $row2) {
-                $data2['category'] = $aa[$f];
-                $data2['description'] = $bb[$f];
-                $data2['amount'] = $cc[$f];
-                $data2['type'] = 'Expense';
-                $data2['type_id'] = $query;
-                $data2['status'] = '1';
-                $data2['created_at'] = date("Y-m-d H:i:s");
-                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $data2['category']      = $aa[$f];
+                $data2['description']   = $bb[$f];
+                $data2['amount']        = $cc[$f];
+                $data2['type']          = 'Expense';
+                $data2['type_id']       = $query;
+                $data2['status']        = '1';
+                $data2['created_at']    = date("Y-m-d H:i:s");
+                $data2['updated_at']    = date("Y-m-d H:i:s");
                 $addQuery3 = $this->expenses_model->saveItems($data2);
                 $f++;
             }
@@ -5911,43 +6304,43 @@ class Accounting extends MY_Controller
     public function addInvoiceNew()
     {
         $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),
-            'customer_email' => $this->input->post('customer_email'),
-            'online_payments' => $this->input->post('online_payments'),
-            'billing_address' => $this->input->post('billing_address'),
-            'shipping_to_address' => $this->input->post('shipping_to_address'),
-            'ship_via' => $this->input->post('ship_via'),
-            'shipping_date' => $this->input->post('shipping_date'),
-            'tracking_number' => $this->input->post('tracking_number'),
-            'terms' => $this->input->post('terms'),
-            'invoice_date' => $this->input->post('invoice_date'),
-            'due_date' => $this->input->post('due_date'),
-            'location_scale' => $this->input->post('location_scale'),
-            'message_on_invoice' => $this->input->post('message_on_invoice'),
-            'message_on_statement' => $this->input->post('message_on_statement'),
-            // 'attachments' => $this->input->post('file_name'),
-            'attachments' => 'test',
-            'status' => 1,
-            'created_by' => logged('id'),
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
+            'customer_id'           => $this->input->post('customer_id'),
+            'customer_email'        => $this->input->post('customer_email'),
+            'online_payments'       => $this->input->post('online_payments'),
+            'billing_address'       => $this->input->post('billing_address'),
+            'shipping_to_address'   => $this->input->post('shipping_to_address'),
+            'ship_via'              => $this->input->post('ship_via'),
+            'shipping_date'         => $this->input->post('shipping_date'),
+            'tracking_number'       => $this->input->post('tracking_number'),
+            'terms'                 => $this->input->post('terms'),
+            'invoice_date'          => $this->input->post('invoice_date'),
+            'due_date'              => $this->input->post('due_date'),
+            'location_scale'        => $this->input->post('location_scale'),
+            'message_on_invoice'    => $this->input->post('message_on_invoice'),
+            'message_on_statement'  => $this->input->post('message_on_statement'),
+            // 'attachments'        => $this->input->post('file_name'),
+            'attachments'           => 'test',
+            'status'                => 1,
+            'created_by'            => logged('id'),
+            'created_at'            => date("Y-m-d H:i:s"),
+            'updated_at'            => date("Y-m-d H:i:s")
         );
 
         $addQuery = $this->accounting_invoices_model->createInvoice($new_data);
         if ($addQuery > 0) {
             //echo json_encode($addQuery);
             $new_data2 = array(
-                'product_services' => $this->input->post('prod'),
-                'description' => $this->input->post('desc'),
-                'qty' => $this->input->post('qty'),
-                'rate' => $this->input->post('rate'),
-                'amount' => $this->input->post('amount'),
-                'tax' => $this->input->post('tax'),
-                'type' => '1',
-                'type_id' => $addQuery,
-                'status' => '1',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
+                'product_services'      => $this->input->post('prod'),
+                'description'           => $this->input->post('desc'),
+                'qty'                   => $this->input->post('qty'),
+                'rate'                  => $this->input->post('rate'),
+                'amount'                => $this->input->post('amount'),
+                'tax'                   => $this->input->post('tax'),
+                'type'                  => '1',
+                'type_id'               => $addQuery,
+                'status'                => '1',
+                'created_at'            => date("Y-m-d H:i:s"),
+                'updated_at'            => date("Y-m-d H:i:s")
             );
             // $a['aa'] = $this->input->post('prod');
             // $b['bb'] = $this->input->post('desc');
@@ -5961,17 +6354,17 @@ class Accounting extends MY_Controller
 
             $i = 0;
             foreach ($a as $row) {
-                $data['product_services'] = $a[$i];
-                $data['description'] = $b[$i];
-                $data['qty'] = $c[$i];
-                $data['rate'] = $d[$i];
-                $data['amount'] = $e[$i];
-                $data['tax'] = $f[$i];
-                $data['type'] = '1';
-                $data['type_id'] = $addQuery;
-                $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
+                $data['product_services']   = $a[$i];
+                $data['description']        = $b[$i];
+                $data['qty']                = $c[$i];
+                $data['rate']               = $d[$i];
+                $data['amount']             = $e[$i];
+                $data['tax']                = $f[$i];
+                $data['type']               = '1';
+                $data['type_id']            = $addQuery;
+                $data['status']             = '1';
+                $data['created_at']         = date("Y-m-d H:i:s");
+                $data['updated_at']         = date("Y-m-d H:i:s");
                 $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
                 $i++;
             }
@@ -8379,6 +8772,29 @@ class Accounting extends MY_Controller
             redirect('accounting');
         }
     }
+    public function download_refund_receipt($refund_receipt_id = null, $action = "")
+    {
+        if ($refund_receipt_id != null) {
+            if ($action == "download_print_refund_receipt") {
+                $file_name = 'refund_receipt_' . $refund_receipt_id . ".pdf";
+            } else {
+                $file_name = "";
+            }
+            if ($file_name != "") {
+                $refund_receipt_details = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refund_receipt_id);
+                if ($refund_receipt_details) {
+                    $customer_id = $refund_receipt_details->customer_id;
+                    $this->create_pdf_refund_receipt($file_name, $customer_id, $refund_receipt_id, $action);
+                } else {
+                    redirect('accounting');
+                }
+            } else {
+                redirect('accounting');
+            }
+        } else {
+            redirect('accounting');
+        }
+    }
 
     public function sales_receipt_send_email()
     {
@@ -8435,6 +8851,73 @@ class Accounting extends MY_Controller
 
                 $mail->Body = 'Receive Payment.';
                 $content = $this->load->view('accounting/customer_includes/sales_receipt/sales_receipt_send_email', $this->page_data, true);
+                $mail->MsgHTML($content);
+                $mail->addAddress($customer_email);
+                if (!$mail->Send()) {
+                    $data->status = "Message could not be sent. <br> " . 'Mailer Error: ' . $mail->ErrorInfo;
+                    exit;
+                } else {
+                    $data->status = "success";
+                }
+            }
+        } else {
+            $data->status = "data invalid";
+        }
+        echo json_encode($data);
+    }
+    public function refund_receipt_send_email()
+    {
+        $refund_receipt_id = $this->input->post("refund_receipt_id");
+        $customer_email = $this->input->post("email");
+        $data = new stdClass();
+        if ($refund_receipt_id != "") {
+            $refund_receipt_details = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($refund_receipt_id);
+            if ($refund_receipt_details) {
+                $customer_id = $refund_receipt_details->customer_id;
+                $refund_receipt_file_name = 'refund_receipt_' . $refund_receipt_id . ".pdf";
+
+                $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+                $server = MAIL_SERVER;
+                $port = MAIL_PORT;
+                $username = MAIL_USERNAME;
+                $password = MAIL_PASSWORD;
+                $from = MAIL_FROM;
+                $subject = $this->input->post("subject");
+
+                $mail = new PHPMailer(true);
+                $mail->isSMTP();
+                $mail->getSMTPInstance()->Timelimit = 5;
+                $mail->Host = $server;
+                $mail->SMTPAuth = true;
+                $mail->Username = $username;
+                $mail->Password = $password;
+                $mail->SMTPSecure = 'ssl';
+                $mail->Timeout = 10; // seconds
+                $mail->Port = $port;
+                $mail->From = $from;
+                $mail->FromName = 'nSmarTrac';
+                $mail->Subject = $subject;
+
+                //get job data
+
+                $this->page_data['company_name'] = $customer_info->business_name;
+                $this->page_data['customer_name'] = $customer_info->first_name . " " . $customer_info->last_name;
+                $this->page_data['refund_receipt_file_name'] = base_url("assets/pdf/" . $refund_receipt_file_name);
+                $this->page_data['has_logo'] = false;
+                $this->page_data['email_body'] = $this->input->post("body");
+                $this->page_data['refund_receipt_id'] = $refund_receipt_id;
+                // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+                $mail->IsHTML(true);
+                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+                $filePath = base_url() . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image;
+                if (@getimagesize($filePath)) {
+                    $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/' . $customer_info->business_id . '/' . $customer_info->business_image, 'company_logo', $customer_info->business_image);
+                    $this->page_data['has_logo'] = true;
+                }
+
+                $mail->Body = 'Receive Payment.';
+                $content = $this->load->view('accounting/customer_includes/refund_receipt/refund_receipt_send_email', $this->page_data, true);
                 $mail->MsgHTML($content);
                 $mail->addAddress($customer_email);
                 if (!$mail->Send()) {

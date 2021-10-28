@@ -346,29 +346,33 @@ function save_refund_receipt(submit_type, element) {
             if (result.value) {
                 $("#loader-modal").show();
                 $.ajax({
-                    url: baseURL + "/accounting/add_refund_receipt",
+                    url: baseURL + "/accounting/addRefundReceipt",
                     type: "POST",
                     dataType: "json",
                     data: $("#add_refund_receipt_Modal form").serialize(),
                     success: function(data) {
+                        console.log(data);
                         if (data.count_save > 0) {
                             if (submit_type == "save-send") {
-                                $('#sales_receipt_pdf_preview_modal').modal('show');
-                                $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').show();
-                                $('#sales_receipt_pdf_preview_modal .pdf_preview_section').hide();
-                                $('#sales_receipt_pdf_preview_modal .modal-title').html("Send email");
-                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="sales_receipt_id"]').val(data.sales_receipt_id);
-                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="email"]').val(data.customer_email);
-                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="subject"]').val("Sales Receipt " + data.sales_receipt_id + " from " + data.business_name);
-                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt textarea[name="body"]').val(`Dear ` + data.customer_full_name + `,
+                                $('#refund_receipt_pdf_preview_modal').html($('#sales_receipt_pdf_preview_modal').html());
+                                $('#refund_receipt_pdf_preview_modal form#send_sales_receipt').attr("id", "refund_sales_receipt");
+                                $('#refund_receipt_pdf_preview_modal').modal('show');
+                                $('#refund_receipt_pdf_preview_modal .send_sales_receipt_section').show();
+                                $('#refund_receipt_pdf_preview_modal .pdf_preview_section').hide();
+                                $('#refund_receipt_pdf_preview_modal .modal-title').html("Send email");
+                                $('#refund_receipt_pdf_preview_modal form#refund_sales_receipt input[name="sales_receipt_id"]').attr("name", "refund_receipt_id");
+                                $('#refund_receipt_pdf_preview_modal form#refund_sales_receipt input[name="refund_receipt_id"]').val(data.refund_receipt_id);
+                                $('#refund_receipt_pdf_preview_modal form#refund_sales_receipt input[name="email"]').val(data.customer_email);
+                                $('#refund_receipt_pdf_preview_modal form#refund_sales_receipt input[name="subject"]').val("Refund Receipt " + data.refund_receipt_id + " from " + data.business_name);
+                                $('#refund_receipt_pdf_preview_modal form#refund_sales_receipt textarea[name="body"]').val(`Dear ` + data.customer_full_name + `,
 
-Please review the sales receipt below.
+Please review the refund receipt below.
 We appreciate it very much.
                             
 Thanks for your business!
 ` + data.business_name);
-                                $("#sales_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section .download-button").attr('href', data.file_location);
-                                $("#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview").html(
+                                $("#refund_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section .download-button").attr('href', data.file_location);
+                                $("#refund_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview").html(
                                     '<iframe src="' + data.file_location + '"></iframe>');
 
                                 // Swal.fire({
@@ -383,10 +387,10 @@ Thanks for your business!
                                 $("#saved-notification-modal-section .body").slideDown("slow");
                                 setTimeout(function() { $("#saved-notification-modal-section").fadeOut(); }, 2000);
                             }
-                            $("#add_refund_receipt_Modal form input[name='current_sales_recept_number']").val(data.sales_receipt_id);
-                            $("#add_refund_receipt_Modal .modal-title .sales_receipt_number").html("#" + data.sales_receipt_id);
-                            $("#create_invoice_modal form .attachement-file-section input[name='attachment-file']").val("");
-                            $("#create_invoice_modal form .attachement-file-section input[name='attachement-filenames']").val("");
+                            $("#add_refund_receipt_Modal form input[name='current_refund_recept_number']").val(data.refund_receipt_id);
+                            $("#add_refund_receipt_Modal .modal-title .refund_receipt_number").html("#" + data.refund_receipt_id);
+                            $("#add_refund_receipt_Modal form .attachement-file-section input[name='attachment-file']").val("");
+                            $("#add_refund_receipt_Modal form .attachement-file-section input[name='attachement-filenames']").val("");
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,
@@ -397,15 +401,15 @@ Thanks for your business!
                             });
                         }
                         if (submit_type == "save-new") {
-                            $("#create_invoice_modal form .attachement-file-section input[name='attachment-file']").val("");
-                            $("#create_invoice_modal form .attachement-file-section input[name='attachement-filenames']").val("");
-                            upload_attachment("#create_invoice_modal form");
+                            $("#add_refund_receipt_Modal form .attachement-file-section input[name='attachment-file']").val("");
+                            $("#add_refund_receipt_Modal form .attachement-file-section input[name='attachement-filenames']").val("");
+                            upload_attachment("#add_refund_receipt_Modal form");
                             $('#add_refund_receipt_Modal form').trigger("reset");
-                            $("#add_refund_receipt_Modal .modal-title .sales_receipt_number").html("");
+                            $("#add_refund_receipt_Modal .modal-title .refund_receipt_number").html("");
                         } else if (submit_type == "save-close") {
                             $("#add_refund_receipt_Modal").modal('hide');
                             $('#add_refund_receipt_Modal form').trigger("reset");
-                            $("#add_refund_receipt_Modal .modal-title .sales_receipt_number").html("");
+                            $("#add_refund_receipt_Modal .modal-title .refund_receipt_number").html("");
                         }
                         $("#loader-modal").hide();
                     },
@@ -416,8 +420,133 @@ Thanks for your business!
         $("#add_refund_receipt_Modal .error-message-section").show();
     }
 }
+$(document).on("click", "#add_refund_receipt_Modal .pint-pries-option-section .print-preview", function(event) {
+    event.preventDefault();
+    refund_receipt_generate_pdf("print_refund_receipt");
+});
 
+function refund_receipt_generate_pdf(action = "") {
+    var empty_flds = 0;
+    $("#add_refund_receipt_Modal form .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+    if (empty_flds == 0) {
 
+        $("#loader-modal").show();
+        $("#add_refund_receipt_Modal .error-message-section").hide();
+        $('#sales_receipt_pdf_preview_modal').modal('show');
+        $.ajax({
+            url: baseURL + "/accounting/addRefundReceipt",
+            type: "POST",
+            dataType: "json",
+            data: $("#add_refund_receipt_Modal form").serialize(),
+            success: function(data) {
+
+                if ($("#add_refund_receipt_Modal form input[name='current_refund_recept_number']").val() == "") {
+                    $("#saved-notification-modal-section").fadeIn();
+                    $("#saved-notification-modal-section .body").slideDown("slow");
+                    setTimeout(function() { $("#saved-notification-modal-section").fadeOut(); }, 2000);
+                }
+                $("#add_refund_receipt_Modal form input[name='current_refund_recept_number']").val(data.refund_receipt_id);
+                $("#add_refund_receipt_Modal .modal-title .refund_receipt_number").html("#" + data.refund_receipt_id);
+
+                $.ajax({
+                    url: baseURL + "/accounting/view_print_refund_receipt",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        refund_number: $("#add_refund_receipt_Modal form input[name='current_refund_recept_number']").val(),
+                        customer_id: $("#add_refund_receipt_Modal form select[name='customer_id']").val(),
+                        action: action
+                    },
+                    success: function(data2) {
+
+                        $("#loader-modal").hide();
+                        $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').hide();
+                        $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
+                            '<iframe src="' + data2.file_location + '"></iframe>');
+                        $("#sales_receipt_pdf_preview_modal .pdf_preview_section .print-button").attr("href", data2.file_location);
+                        $("#sales_receipt_pdf_preview_modal .pdf_preview_section .download-button").attr("href", baseURL + "accounting/download_refund_receipt/" + $("#add_refund_receipt_Modal form input[name='current_refund_recept_number']").val() + "/download_" + action);
+                    },
+                });
+            },
+        });
+    } else {
+        $("#add_refund_receipt_Modal .error-message-section").show();
+    }
+}
+$(document).on("click", "#refund_receipt_pdf_preview_modal form button[type='submit']", function(event) {
+    var send_type = $(this).attr("data-submit-type");
+    var empty_flds = 0;
+    var refund_receipt_id = $("#refund_receipt_pdf_preview_modal form input[name='refund_receipt_id']").val();
+    var email = $("#refund_receipt_pdf_preview_modal form input[name='email']").val();
+    var body = $("#refund_receipt_pdf_preview_modal form textarea[name='body']").val();
+    var subject = $("#refund_receipt_pdf_preview_modal form input[name='subject']").val();
+    $("#refund_receipt_pdf_preview_modal form .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+    if (empty_flds == 0) {
+        event.preventDefault();
+        $("#loader-modal").show();
+        Swal.fire({
+            title: "Send?",
+            html: "Are you sure you want to send this?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/message.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Send now",
+        }).then((result) => {
+            if (result.value) {
+                var sender = "refund_receipt_send_email";
+                $.ajax({
+                    url: baseURL + "/accounting/" + sender,
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        refund_receipt_id: refund_receipt_id,
+                        email: email,
+                        body: body,
+                        subject: subject
+                    },
+                    success: function(data) {
+                        if (data.status == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Messages sent!",
+                                icon: "success",
+                            });
+                            if (send_type == "send-new") {
+                                $('#refund_receipt_pdf_preview_modal').modal('hide');
+                            } else {
+                                $('#refund_receipt_pdf_preview_modal').modal('hide');
+                                $('#add_refund_receipt_Modal').modal('hide');
+                            }
+                            $('#add_refund_receipt_Modal form').trigger("reset");
+                            $("#add_refund_receipt_Modal .modal-title .sales_receipt_number").html("");
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "Unable to send the reminder.<br>" + data.error,
+                                icon: "error",
+                            });
+                        }
+
+                        $("#loader-modal").hide();
+                    },
+                });
+            }
+        });
+    }
+});
 
 $(document).on("change", "div#add_refund_receipt_Modal form select[name='payment_method']", function(event) {
     $("div#add_refund_receipt_Modal .payment_method_information").html("");

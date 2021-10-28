@@ -62,7 +62,7 @@ export class RulesTable {
         return '<input type="checkbox" class="rulesTable__checkbox" />';
       },
       priority: (_, __, row) => {
-        return Number(row.priority) + 1;
+        return row.priority;
       },
       name: (_, __, row) => {
         return row.rules_name;

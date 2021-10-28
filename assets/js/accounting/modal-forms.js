@@ -3173,6 +3173,7 @@ $(function() {
         e.preventDefault();
 
         submitType = $(this).attr('id');
+
         $('#modal-container form#modal-form').submit();
     });
 
@@ -4944,6 +4945,7 @@ const showApplyButton = () => {
     $('div#statementModal div.modal-body div.card-body div.row:last-child()').addClass('hide');
 }
 
+//
 const submitModalForm = (event, el) => {
     event.preventDefault();
 
@@ -5628,61 +5630,132 @@ const updateTransaction = (event, el) => {
     event.preventDefault();
 
     var data = new FormData(document.getElementById($(el).attr('id')));
+    data.set('save_method', submitType);
     var modalId = '#'+$(el).children().attr('id');
+    if($(el).children().attr('id') === 'payrollModal' || $(el).children().attr('id') === 'commission-payroll-modal' || $(el).children().attr('id') === 'bonus-payroll-modal') {
+        data = payrollFormData;
+    } else if(modalId === '#weeklyTimesheetModal') {
+        data.delete('sunday_hours[]');
+        data.delete('monday_hours[]');
+        data.delete('tuesday_hours[]');
+        data.delete('wednesday_hours[]');
+        data.delete('thursday_hours[]');
+        data.delete('friday_hours[]');
+        data.delete('saturday_hours[]');
 
-    var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
-    data.append('total_amount', totalAmount);
+        $('#weeklyTimesheetModal #timesheet-table tbody tr').each(function() {
+            var customer = $(this).find('select[name="customer[]"]').val();
+            if(customer !== "" && customer !== null) {
+                var hours = {
+                    'sunday' : $('#weeklyTimesheetModal #show_sunday').prop('checked') ? $(this).find('[name="sunday_hours[]"]').val() : null,
+                    'monday' : $('#weeklyTimesheetModal #show_monday').prop('checked') ? $(this).find('[name="monday_hours[]"]').val() : null,
+                    'tuesday' : $('#weeklyTimesheetModal #show_tuesday').prop('checked') ? $(this).find('[name="tuesday_hours[]"]').val() : null,
+                    'wednesday' : $('#weeklyTimesheetModal #show_wednesday').prop('checked') ? $(this).find('[name="wednesday_hours[]"]').val() : null,
+                    'thursday' : $('#weeklyTimesheetModal #show_thursday').prop('checked') ? $(this).find('[name="thursday_hours[]"]').val() : null,
+                    'friday' : $('#weeklyTimesheetModal #show_friday').prop('checked') ? $(this).find('[name="friday_hours[]"]').val() : null,
+                    'saturday' : $('#weeklyTimesheetModal #show_saturday').prop('checked') ? $(this).find('[name="saturday_hours[]"]').val() : null,
+                };
 
-    if($(`${modalId} table#category-details-table`).length > 0) {
-        $(`${modalId} table#category-details-table tbody tr`).each(function() {
-            var billable = $(this).find('input[name="category_billable[]"]');
-            var tax = $(this).find('input[name="category_tax[]"]');
-    
-            if(billable.length > 0 && tax.length > 0) {
-                if(data.has('category_billable[]') === false) {
-                    data.set('category_billable[]', billable.prop('checked') ? "1" : "0");
-                    data.set('category_tax[]', tax.prop('checked') ? "1" : "0");
+                if(data.has('hours[]')) {
+                    data.append('hours[]', JSON.stringify(hours));
+                    data.append('billable[]', $(this).find('[name="billable[]"]').prop('checked') ? 1 : null);
+                    data.append('hourly_rate[]', $(this).find('[name="billable[]"]').prop('checked') ? $(this).find('[name="hourly_rate[]"]').val() : null);
+                    data.append('taxable[]', $(this).find('[name="billable[]"]').prop('checked') && $(this).find('[name="taxable[]"]').prop('checked') ? 1 : null);
                 } else {
-                    data.append('category_billable[]', billable.prop('checked') ? "1" : "0");
-                    data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
+                    data.set('hours[]', JSON.stringify(hours));
+                    data.set('billable[]', $(this).find('[name="billable[]"]').prop('checked') ? 1 : null);
+                    data.set('hourly_rate[]', $(this).find('[name="billable[]"]').prop('checked') ? $(this).find('[name="hourly_rate[]"]').val() : null);
+                    data.set('taxable[]', $(this).find('[name="billable[]"]').prop('checked') && $(this).find('[name="taxable[]"]').prop('checked') ? 1 : null);
                 }
             }
         });
-    }
+    } else if(vendorModals.includes(modalId)) {
+        var count = 0;
+        var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+        data.append('total_amount', totalAmount);
 
-    if($(`${modalId} table#item-details-table`).length > 0) {
+        $(`${modalId} table#category-details-table tbody tr`).each(function() {
+            var billable = $(this).find('input[name="category_billable[]"]');
+            var tax = $(this).find('input[name="category_tax[]"]');
+
+            if(billable.length > 0 && tax.length > 0) {
+                if(count === 0) {
+                    data.set('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.set('category_tax[]', tax.prop('checked') ? "1" : "0");
+                    data.set('category_linked[]', $(this).find('i.fa.fa-link').length > 0);
+                } else {
+                    data.append('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
+                    data.append('category_linked[]', $(this).find('i.fa.fa-link').length > 0);
+                }
+            }
+
+            count++;
+        });
+
+        count = 0;
         $(`${modalId} table#item-details-table tbody tr`).each(function() {
-            if(data.has('item_total[]') === false) {
+            if(count === 0) {
                 data.set('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
+                data.set('item_linked[]', $(this).find('i.fa.fa-link').length > 0);
             } else {
                 data.append('item_total[]', $(this).find('td span.row-total').html().replace('$', ''));
+                data.append('item_linked[]', $(this).find('i.fa.fa-link').length > 0);
+            }
+
+            count++;
+        });
+    } else if(modalId === '#payBillsModal') {
+        var totalAmount = $(`${modalId} span.transaction-total-amount`).html().replace('$', '');
+        data.append('total', totalAmount);
+
+        $(`${modalId} #bills-table tbody tr`).each(function() {
+            var checkbox = $(this).find('td:first-child input');
+            var payee = $(this).find('td:nth-child(2) input').val();
+            var credit_applied =  $(this).find('input.credit-applied').length > 0 ? $(this).find('input.credit-applied').val() : 0.00;
+            var payment_amount =  $(this).find('input.payment-amount').val();
+            var total_amount = parseFloat(parseFloat(credit_applied) + parseFloat(payment_amount)).toFixed(2);
+
+            if(checkbox.prop('checked')) {
+                if(data.has('bills[]') === false) {
+                    data.set('bills[]', checkbox.val());
+                    data.set('payee[]', payee);
+                    data.set('credit_applied[]', credit_applied);
+                    data.set('payment_amount[]', payment_amount);
+                    data.set('total_amount[]', total_amount);
+                } else {
+                    data.append('bills[]', checkbox.val());
+                    data.append('payee[]', payee);
+                    data.append('credit_applied[]', credit_applied);
+                    data.append('payment_amount[]', payment_amount);
+                    data.append('total_amount[]', total_amount);
+                }
             }
         });
-    }
+    } else if(modalId === '#billPaymentModal') {
+        data.delete('bills[]');
+        data.delete('credits[]');
 
-    if(modalId === '#billPaymentModal') {
-        data.delete('bill_payment[]');
-        data.delete('credit_payment[]');
         $(`${modalId} #bills-table tbody tr`).each(function() {
             if($(this).find('input[type="checkbox"]').prop('checked')) {
-                if(data.has('bills[]')) {
-                    data.append('bills[]', $(this).find('input[type="checkbox"]').val());
-                    data.append('bill_payment[]', $(this).find('input[name="bill_payment[]"]').val());
-                } else {
+                if(data.has('bills[]') === false) {
                     data.set('bills[]', $(this).find('input[type="checkbox"]').val());
                     data.set('bill_payment[]', $(this).find('input[name="bill_payment[]"]').val());
+                } else {
+                    data.append('bills[]', $(this).find('input[type="checkbox"]').val());
+                    data.append('bill_payment[]', $(this).find('input[name="bill_payment[]"]').val());
                 }
             }
         });
 
         $(`${modalId} #vendor-credits-table tbody tr`).each(function() {
             if($(this).find('input[type="checkbox"]').prop('checked')) {
-                if(data.has('credits[]')) {
-                    data.append('credits[]', $(this).find('input[type="checkbox"]').val());
-                    data.append('credit_payment[]', $(this).find('input[name="credit_payment[]"]').val());
-                } else {
+                if(data.has('credits[]') === false) {
                     data.set('credits[]', $(this).find('input[type="checkbox"]').val());
                     data.set('credit_payment[]', $(this).find('input[name="credit_payment[]"]').val());
+                } else {
+                    data.append('credits[]', $(this).find('input[type="checkbox"]').val());
+                    data.append('credit_payment[]', $(this).find('input[name="credit_payment[]"]').val());
                 }
             }
         });
@@ -5698,8 +5771,22 @@ const updateTransaction = (event, el) => {
             var res = JSON.parse(result);
 
             if(res.success === true) {
+                if(submitType === 'save-and-close') {
+                    $(el).children().modal('hide');
+                }
+
+                if(submitType === 'save' && modalId !== '#payBillsModal') {
+                    if($('#modal-container .modal .modal-body .card-body').find('input[name="transaction_id"]').length === 0) {
+                        $('#modal-container .modal .modal-body .card-body').children('.row:first-child').prepend(`<input type="hidden" name="transaction_id" id="transaction_id" value="${res.data}">`);
+                    }
+                }
+
+                if(submitType === 'save-and-print' && modalId === '#weeklyTimesheetModal') {
+                    printTimesheet(res.data);
+                }
+
+                submitType = '';
                 $('#transactions-table').DataTable().ajax.reload();
-                $(el).children().modal('hide');
             }
 
             toast(res.success, res.message);

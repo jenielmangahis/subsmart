@@ -80,6 +80,75 @@ class AccountingRules extends MY_Controller
             $rule->assignments = $this->db->get('accounting_rule_assignments')->result();
         }
 
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->select(['name', 'id']);
+        $banks = $this->db->get('accounting_chart_of_accounts')->result();
+
+        foreach ($rules as $rule) {
+            if (!$rule->assignments) {
+                continue;
+            }
+
+            foreach ($rule->assignments as $assignment) {
+                if (!in_array($assignment->type, ['category', 'payee', 'tags'])) {
+                    continue;
+                }
+
+                if ($assignment->type === 'category') {
+                    foreach ($banks as $bank) {
+                        if ($bank->id === $assignment->value) {
+                            $assignment->__select2_values = [
+                                [
+                                    'text' => $bank->name,
+                                    'value' => $assignment->value,
+                                ],
+                            ];
+                        }
+                    }
+                }
+
+                if ($assignment->type === 'payee') {
+                    [$type, $payeeId] = explode('-', $assignment->value);
+
+                    $value = null;
+
+                    if ($type === 'vendor') {
+                        $this->db->where('id', $payeeId);
+                        $this->db->select(['f_name', 'l_name']);
+                        $result = $this->db->get('accounting_vendors')->row();
+                        $value = $result->f_name . ' ' . $result->l_name;
+                    }
+
+                    if ($type === 'employee') {
+                        $this->db->where('id', $payeeId);
+                        $this->db->select(['FName', 'LName']);
+                        $result = $this->db->get('users')->row();
+                        $value = $result->FName . ' ' . $result->LName;
+                    }
+
+                    if ($value) {
+                        $assignment->__select2_values = [
+                            [
+                                'text' => $value,
+                                'value' => $assignment->value,
+                            ],
+                        ];
+                    }
+                }
+
+                if ($assignment->type === 'tags') {
+                    $tagIds = explode(',', $assignment->value);
+                    $this->db->where_in('id', $tagIds);
+                    $this->db->select(['name AS text', 'id AS value']);
+                    $tags = $this->db->get('job_tags')->result();
+
+                    if ($tags) {
+                        $assignment->__select2_values = $tags;
+                    }
+                }
+            }
+        }
+
         return $rules;
     }
 
@@ -424,7 +493,7 @@ class AccountingRules extends MY_Controller
         $this->db->where('user_id', logged('id'));
         $this->db->select_max('priority', 'value');
         $maxPrio = $this->db->get('accounting_rules')->row();
-        $maxPrio = is_null($maxPrio->value) ? 0 : ((int) $maxPrio->value) + 1;
+        $maxPrio = is_null($maxPrio->value) ? 1 : ((int) $maxPrio->value) + 1;
 
         $this->db->db_debug = false;
 

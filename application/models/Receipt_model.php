@@ -9,8 +9,20 @@ class Receipt_model extends MY_Model
     }
 
     public function getReceipt(){
-        $qry = $this->db->get('accounting_receipts');
-        return $qry->result();
+        // $qry = $this->db->get('accounting_receipts');
+        // return $qry->result();
+        $where = array(
+            'to_expense'       => '0',
+          );
+
+
+        $this->db->select('*');
+
+        $this->db->from('accounting_receipts');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
     }
 
     public function updateReceipt($new_data){
@@ -26,7 +38,8 @@ class Receipt_model extends MY_Model
                 'description'       => $new_data['description'],
                 'total_amount'      => $new_data['total_amount'],
                 'memo'              => $new_data['memo'],
-                'ref_number'        => $new_data['ref_number']
+                'ref_number'        => $new_data['ref_number'],
+                'for_expense'       => '1'
             );
             $this->db->where('id',$new_data['receipt_id']);
             $this->db->update('accounting_receipts',$data);
@@ -42,5 +55,32 @@ class Receipt_model extends MY_Model
             $this->db->where('id',$id);
             $this->db->delete('accounting_receipts');
         }
+    }
+
+    public function getReceipt_two(){
+        // $qry = $this->db->get('accounting_receipts');
+        // return $qry->result();
+
+        $where = array(
+            'to_expense'       => '1',
+          );
+
+
+        $this->db->select('*');
+
+        $this->db->from('accounting_receipts');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getReceiptBYID($id)
+    {
+        $this->db->select('*');
+        $this->db->from('accounting_receipts');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
     }
 }
