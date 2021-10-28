@@ -3425,7 +3425,7 @@ class Chart_of_accounts extends MY_Controller {
             case 'inventory-qty-adjust' :
                 $this->view_qty_adjustment($transactionId);
             break;
-            case 'credit-card-payment':
+            case 'credit-card-pmt':
                 $this->view_cc_payment($transactionId);
             break;
             case 'inventory-starting-value' :
@@ -3536,7 +3536,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $this->page_data['ccPayment'] = $ccPayment;
 
-        $this->load->view('accounting/vendors/view_credit_card_payment', $this->page_data);
+        $this->load->view("accounting/modals/pay_down_credit_card_modal", $this->page_data);
     }
 
     private function view_cc_credit($ccCreditId)

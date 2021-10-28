@@ -20,7 +20,112 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+    label>input {
+        visibility: visible !important;
+        position: inherit !important;
+    }
 </style>
+<style>
+    .fdx-entity-container-button:hover {
+        border-color: #45a73c !important;
+        border:  2px;
+        border-style: solid;
+    }
+
+    .fdx-entity-container {
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: center;
+        max-width: 98%;
+    }
+    .fdx-provider-logo-wrapper-small {
+        width: 50px;
+        height: 50px;
+    }
+    .fdx-entity-container-button {
+        position: relative;
+        margin-bottom: 12px;
+        padding: 12px;
+        width: 500px;
+        height: 74px;
+        display: flex;
+        justify-content: space-around;
+        border-radius: 8px;
+        border: 1px solid #eaecee;
+        box-sizing: border-box;
+        box-shadow: 0px 1px 8px rgb(0 0 0 / 8%);
+        cursor: pointer;
+        background-color: transparent;
+    }
+    .fdx-provider-logo-container-small {
+        min-width: 48px;
+        min-height: 48px;
+        width: 48px;
+        height: 48px;
+    }
+    .fdx-recommended-entity-desc-container {
+        height: 40px;
+        display: flex;
+        -moz-align-items: flex-start;
+        align-items: flex-start;
+        justify-content: center;
+        -moz-flex-direction: column;
+        flex-direction: column;
+        margin: auto 100px;
+        box-sizing: border-box;
+        overflow: hidden;
+        flex: 1 1;
+    }
+    .fdx-recommended-entity-name {
+        width: 100%;
+        height: 24px;
+        font-weight: 600;
+        font-size: 16px;
+        padding-bottom: 4px;
+        -webkit-margin-before: 0;
+        margin-block-start: 0;
+        -webkit-margin-after: 0;
+        margin-block-end: 0;
+        text-align: left;
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: inherit;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+    .fdx-recommended-entity-desc {
+        min-height: 18px;
+        font-size: 12px;
+        -webkit-margin-before: 0px;
+        margin-block-start: 0px;
+        -webkit-margin-after: 0px;
+        margin-block-end: 0px;
+        text-align: left;
+        color: #6b6c72;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 400;
+        cursor: inherit;
+    }
+    .fdx-provider-logo {
+        width: 100%;
+        height: auto;
+    }
+    .fdx img {
+        border: 0;
+    }
+    .fdx img {
+        background: transparent !important;
+    }
+    .fdx-provider-logo-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
@@ -96,7 +201,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="" class="editItemBtn">
+                                    <a href="<?= base_url('accounting/test_payment') ?>" >
                                         <span class="fa fa-bank"></span> Test Payment
                                     </a>
                                 </li>
@@ -109,6 +214,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <span class="btn-label"><i class="fa fa-credit-card"></i> Accounts <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                    <?php if($accounts->stripe_publish_key !== NULL): ?>
+                                        <li>
+                                            <div class="card">
+                                                <div class="col-sm-12">
+                                                    <div class="fdx-entity-container click-paypal">
+                                                        <div class="fdx-provider-logo-container">
+                                                            <div class="fdx-provider-logo-wrapper">
+                                                                <img style="width: 50px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/stripe.png') ?>" title="Stripe" alt="Stripe">
+                                                            </div>
+                                                        </div>
+                                                        <div class="fdx-recommended-entity-desc-container">
+                                                            <label class="fdx-recommended-entity-name" title="Stripe">Stripe Corporate Credit Card</label>
+                                                            <label class="fdx-recommended-entity-desc">stripe.com</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php if($accounts->paypal_client_id !== NULL): ?>
+                                    <li>
+                                        <div class="card">
+                                            <div class="col-sm-12">
+                                                <div class="fdx-entity-container click-paypal">
+                                                    <div class="fdx-provider-logo-container">
+                                                        <div class="fdx-provider-logo-wrapper">
+                                                            <img style="width: 50px;" class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/paypal.png') ?>" title="Paypal" alt="Paypal">
+                                                        </div>
+                                                    </div>
+                                                    <div class="fdx-recommended-entity-desc-container">
+                                                        <label class="fdx-recommended-entity-name" title="Paypal">Paypal</label>
+                                                        <label class="fdx-recommended-entity-desc">It's popular in your area</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php endif; ?>
                                 <li role="separator" class="divider"></li>
                             </ul>
                         </div>
@@ -137,136 +280,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane active" id="forReview" style="background: #ffffff; padding: 10px">
-                                <div class="dropdown" style="position: relative;display: inline-block;margin: 15px 10px 10px 10px;">
-                                    <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
-                                        Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#" class="dropdown-item disabled">Accept selected</a></li>
-                                        <li><a href="#" class="dropdown-item disabled" >Excluded selected</a></li>
-                                        <li><a href="#" class="dropdown-item disabled" >Modify selected</a></li>
-                                    </ul>
-                                </div>
-                                <div class="filterFunnel">
-                                    <a href="#" data-toggle="dropdown"><i class="fa fa-filter fa-2x">&nbsp;<i class="fa fa-caret-down"></i></i></a>
-                                    <ul class="dropdown-menu">
-                                        <li style="padding:30px">
-                                            <form action="" method="" class="">
-                                                <div>
-                                                    <div style="width: 180px;position:relative; display: inline-block;">
-                                                        <label for="type">Dates</label>
-                                                        <select name="type" id="type" class="form-control" >
-                                                            <option value="">All dates</option>
-                                                            <option value="">Customs</option>
-                                                            <option value="">Today</option>
-                                                            <option value="">Yesterday</option>
-                                                            <option value="">This week</option>
-                                                            <option value="">This month</option>
-                                                            <option value="">This quarter</option>
-                                                            <option value="">This year</option>
-                                                            <option value="">Last month</option>
-                                                            <option value="">Last quarter</option>
-                                                            <option value="">Last year</option>
-                                                        </select>
-                                                    </div>
-                                                    <div style="position: relative; display: inline-block;width: 120px;">
-                                                        <label for="">From</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div style="position:relative; display: inline-block;margin-left: 10px;width: 120px;">
-                                                        <label for="">To</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top: 20px">
-                                                    <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
-                                                    <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
-                                                </div>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <span style="display: inline-block;margin-left: 10px;">All</span>
-                                <div class="sortAll">
-                                    All(19)
-                                </div>
-                                <div class="sortRecognized">
-                                    Recognized(3)
-                                </div>
-                                <div class="icon-settings-container" style="margin-top: 45px">
-                                    <i class="fa fa-print"></i>
-                                    <i class="fa fa-upload"></i>
-                                    <i class="fa fa-cog"></i>
-                                </div>
-                                <table id="forReview_table" class="table table-striped table-bordered" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th><input type="checkbox" class=""></th>
-                                    <th>Date</th>
-                                    <th>Description</th>
-                                    <th>Payee</th>
-                                    <th>Category or Match</th>
-                                    <th>Spent</th>
-                                    <th>Received</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><input type="checkbox"></td>
-                                    <td>06/29/2020</td>
-                                    <td>CHECK #2701</td>
-                                    <td>Mike Bell Jr</td>
-                                    <td></td>
-                                    <td>$320</td>
-                                    <td></td>
-                                    <td><a href="#collapseOne" class="accordion-toggle collapsed" id="accordion1" data-toggle="collapse" data-parent="#accordion1" >View</a></td>
-                                </tr>
-                                <tr class="hide-table-padding collapse in p-3" id="collapseOne" >
-                                    <td></td>
-                                    <td colspan="6">
-                                        <div>
-                                            <div class="row">
-                                                <div class="col-md-8">
-                                                    <label class="radio-inline"><input type="radio" name="optradio" checked>Add</label>
-                                                    <label class="radio-inline"><input type="radio" name="optradio">Match</label>
-                                                    <label class="radio-inline"><input type="radio" name="optradio">Record transfer</label>
-                                                    <a href="#">Not sure?</a>
-                                                </div>
-                                            </div>
-                                            <div class="row" style="margin-top: 20px;">
-                                                <div class="col-md-6" style="border-right: 1px solid #8d9096;">
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="optradio" checked> Check 2716 07/13/2020 $300.00 Frank Gianino</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="optradio"> Check 2685 06/15/2020 $300.00 Kyle Nguyen</label>
-                                                    </div>
-                                                    <div class="radio ">
-                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
-                                                    </div>
-                                                    <div class="radio">
-                                                        <label><input type="radio" name="optradio"> Check 2711 07/06/2020 $300.00 Mike Bell Jr</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-5" style="vertical-align: middle;">
-                                                    <button class="btn btn-default btn-findOthersRecords">Find other records</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                </tbody>
+                                <table id="forReview_table" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" class=""></th>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Payee</th>
+                                            <th>Amount</th>
+                                            <th>Assign To</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($banking_payments as $payment) : ?>
+                                            <tr>
+                                                <td></td>
+                                                <td ><?=date_format(date_create($payment->date_paid), "m/d/Y"); ?></td>
+                                                <td ><?= $payment->description ?></td>
+                                                <td ><?= $payment->payee ?></td>
+                                                <td >$<?= $payment->amount ?></td>
+                                                <td ><?= $payment->assign_to ?></td>
+                                                <td ></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="reviewed" style="background: #ffffff; padding: 10px">
@@ -655,11 +693,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
     // DataTable JS
     $(document).ready(function() {
-        //$('#addAccountModal').modal('show');
-
         $('#forReview_table').DataTable({
-            "paging": false,
-            "filter":false
+            "paging": true,
+            "filter":true,
+            "searching": true,
+            "lengthChange": true,
+            "pageLength": 10,
+            "order": [],
         });
     } );
     $(document).ready(function() {
@@ -678,8 +718,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     });
     // Expand row table
     $(document).ready(function () {
-        $(document).on("click","#btnView",function () {
-            $(this).parents('tr').after();
-        });
+
     });
 </script>

@@ -274,7 +274,12 @@ window.openRuleForm = async (data = null) => {
           $input.value = assignment.value;
           $input.setAttribute("data-id", assignment.id);
           if ($input.classList.contains("select2-hidden-accessible")) {
-            $($input).val(assignment.value).trigger("change");
+            if (Array.isArray(assignment.__select2_values)) {
+              assignment.__select2_values.forEach((item) => {
+                const $option = `<option value="${item.value}" selected="selected">${item.text}</option>`;
+                $($input).append($option);
+              });
+            }
           }
         }
       });
@@ -313,24 +318,26 @@ window.resetRuleForm = () => {
     const $element = $dataTypes[index];
     $element.classList.remove("inputError");
 
-    if ($element.type === "checkbox") {
-      $element.checked = false;
-      continue;
-    }
+    let isSelectInput = false;
 
-    if ($element.type !== "select-one") {
-      $element.value = "";
-      continue;
-    }
-
+    // handle normal select elements
     const $firstOption = $element.querySelector("option");
     if ($firstOption) {
       const firstOptionValue = $firstOption.textContent;
       $element.value = firstOptionValue;
+      isSelectInput = true;
     }
 
+    // handle select2 elements
     if ($element.classList.contains("select2-hidden-accessible")) {
       $($element).val("").trigger("change");
+      isSelectInput = true;
+    }
+
+    if (!isSelectInput) {
+      // fallback for checkbox, input, radios, textareas and etc.
+      $element.checked = false;
+      $element.value = "";
     }
   }
 

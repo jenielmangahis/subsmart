@@ -1,3 +1,6 @@
+<div class="modal  fade modal-fluid" tabindex="-1" role="dialog" id="refund_receipt_pdf_preview_modal">
+
+</div>
 <div class="full-screen-modal">
     <div id="add_refund_receipt_Modal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
@@ -6,7 +9,7 @@
                 <div class="modal-header">
                     <div class="modal-title">
                         <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                        Refund Receipt <span class="invoice_number"></span>
+                        Refund Receipt <span class="refund_receipt_number"></span>
                     </div>
                     <button type="button" class="close" id="closeModalExpense" data-dismiss="modal"
                         aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
@@ -15,7 +18,7 @@
                     action="<?php echo site_url() ?>accounting/addSalesReceipt"
                     method="post">
                     <input type="text" style="display: none;" value="" name="recurring_selected">
-                    <input type="text" style="display: none;" value="" name="current_sales_recept_number">
+                    <input type="text" style="display: none;" value="" name="current_refund_recept_number">
                     <input type="text" style="display: none;" value="" name="submit_type">
                     <input type="text" style="display: none;" value="0" name="grand_total">
                     <input type="text" style="display: none;" value="0" name="subtotal">
@@ -431,12 +434,12 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <div class="label">Refund form</div>
-                                            <select name="refund_from" id="payment_method"
+                                            <select name="refund_form" 
                                                 class="form-control custom-select required" required>
-                                                <option value="">A</option>
-                                                <option value="">B</option>
-                                                <option value="">C</option>
-                                                <option value="">D</option>
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                                <option value="C">C</option>
+                                                <option value="D">D</option>
                                             </select>
                                         </div>
                                     </div>
@@ -739,7 +742,7 @@
                                         <tbody>
                                             <tr class="item">
                                                 <td>
-                                                    <input type="text" style="display: none;" name="itemid[]">
+                                                    <input type="text" style="display: none;" name="item_ids[]">
                                                     <input type="text" class="form-control required" required=""
                                                         name="items[]" autocomplete="off">
                                                     <ul class="suggestions"></ul>
@@ -797,12 +800,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="label">Message displayed on refund receipt</div>
-                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control"
+                                    <textarea name="message_refund" cols="40" rows="2" class="form-control"
                                         spellcheck="false"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <div class="label">Message displayed on statement</div>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"
+                                    <textarea name="mess_statement" cols="40" rows="2" class="form-control"
                                         spellcheck="false"></textarea>
                                 </div>
                             </div>

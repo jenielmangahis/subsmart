@@ -3,7 +3,7 @@
 <?php if(!isset($bill)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/vendors/<?=$bill->vendor_id?>/update-transaction/bill/<?=$bill->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/bill/<?=$bill->id?>">
 <?php endif; ?>
     <div id="billModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">

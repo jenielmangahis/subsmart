@@ -128,6 +128,9 @@
         justify-content: center;
         margin: auto;
     }
+    .disableds{
+        background-color: #1b1e21;
+    }
 </style>
 <div id="overlay">
     <div>
@@ -180,7 +183,7 @@
                                                     <div class="col-md-12">
                                                         <div class="fdx-entity-container">
                                                             <a href="#">
-                                                                <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                                <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                     <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                         <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                             <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/citibank.png') ?>" title="CitiBusiness" alt="CitiBusiness">
@@ -197,9 +200,9 @@
                                                     </div>
 
                                                    <div class="col-md-12">
-                                                       <div class="fdx-entity-container">
+                                                       <div class="fdx-entity-container ">
                                                            <a href="#">
-                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/bank_america.png') ?>" title="Bank Of America" alt="Bank Of America">
@@ -218,7 +221,7 @@
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container">
                                                            <a href="#">
-                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" title="Capital One" alt="Capital One">
@@ -237,7 +240,7 @@
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container">
                                                            <a href="#">
-                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/pncbank_pms_c.png') ?>" title="PNC Bank" alt="PNC Bank">
@@ -276,7 +279,7 @@
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
                                                            <a href="#">
-                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/chase.jpg') ?>" title="Paypal" alt="Paypal">
@@ -294,7 +297,7 @@
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
                                                            <a href="#">
-                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/Wells_Fargo.png') ?>" title="Wells Fargo" alt="Wells Fargo">
@@ -312,7 +315,7 @@
                                                    <div class="col-md-12">
                                                        <div class="fdx-entity-container" id="fdx-entity-row-num-1-0">
                                                            <a href="#">
-                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f">
+                                                               <button tabindex="0" class="fdx-entity-container-button" data-di-id="di-id-e786b9cc-bb63c05f" disabled>
                                                                    <div class="fdx-provider-logo-container fdx-provider-logo-container-small fdx-provider-logo-container-fade fdx-provider-image-loaded fdx-provider-logo-container-outline">
                                                                        <div class="fdx-provider-logo-wrapper fdx-provider-logo-wrapper-small fdx-provider-logo-wrapper-circular fdx-reimagine-entity-logo">
                                                                            <img class="fdx-provider-logo" src="<?php echo base_url('assets/img/accounting/us-bank-logo-vector.png') ?>" title="US Bank" alt="US Bank">
@@ -410,7 +413,7 @@
                                             <div class="col-md-12">
                                                 <div class="modal-footer close-modal-footer">
                                                     <button type="button" class="btn btn-default btn-block close-paypal-container">Back</button>
-                                                    <button type="submit" class="btn btn-success btn-block" id="open_stripe">Save</button>
+                                                    <button type="submit" class="btn btn-success btn-block">Save</button>
                                                 </div>
                                             </div>
                                         </form>

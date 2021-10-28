@@ -62,14 +62,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="row align-items-center mt-3">
                     <div class="col-md-12 px-0">
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <div id="receiptDZ" class="dropzone" style="border: 2px dashed gray;background: #fff;">
                                     <div class="dz-message" style="margin: 20px;">
-                                        <i class="fa fa-cloud-upload fa-2x" style="display: block;color: #909194;"></i>
-                                        <span style="font-size: 16px;color: #909194">Drag and drop files here or</span>
-                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                        <!-- <span style="font-size: 16px;color: #909194">Drag and drop files here or</span> -->
+                                        <!-- <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a> -->
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <i class="fa fa-cloud-upload fa-2x" style="display: block;color: #909194;"></i>
+                                            </div>
+                                            <div class="col-sm-10" style="font-size:16px;">
+                                                <strong><span>Upload from computer</span></strong> <br>
+                                                <span>Select files or drag and drop</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <input type="hidden" id="siteurl" value="<?php echo base_url(); ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="border: 2px solid #d4d7dc;padding: 10px 10px 10px 10px;width: 100%;height: 100%">
+                                    <div class="row" align="center">
+                                        <div class="col-sm-12"><img src="data:image/png;base64,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" alt="Email" height="" width="" style="display: inline-block;width: 51px;height: 51px;margin: 13px 12px 0;">
+
+                                        <br><br><b>Upload from Google Drive</b>  <br>   
+                                        <span>Access your Google account</span>
+                                        </div>
+                                        <!-- <div class="col-sm-6">Email your receipts and bills, and we’ll create transactions from them. Ask your master admin to set up receipt forwarding.</div> -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -232,11 +252,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->total_amount == null || $receipt->total_amount == 0.00)?"Not found" : $receipt->total_amount; ?></td>
                                             <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->category == null)?"Not found":$receipt->category; ?></td>
                                             <td>
-                                                <a id="updateReceipt" href="#" style="display: inline" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>&nbsp;
+                                                <?php if($receipt->for_expense == 0){ ?>
+                                                    <a id="updateReceipt" href="#" style="display: inline;color:#0077c5;font-weight:bold;" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>
+                                                <?php }else{ ?>
+                                                    <a id="createExpense" href="#" style="display: inline;color:#0077c5;font-weight:bold;" data-id="<?php echo $receipt->id;?>">Create Expense</a>
+                                                <?php } ?>
+                                                    
+                                                    &nbsp;
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         <li><a href="#" type="submit" id="deleteReceipt" data-id="<?php echo $receipt->id;?>">Delete</a></li>
+                                                        <?php if($receipt->for_expense == 1){ ?>
+                                                            <a id="updateReceipt" href="#" style="display: inline" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>
+                                                        <?php } ?>
                                                     </ul>
                                                 </div>&nbsp;
                                             </td>
@@ -259,7 +288,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
+                                        <!-- <tr>
                                             <td><input type="checkbox"></td>
                                             <td>06/29/2020</td>
                                             <td>CHECK #2701 2701</td>
@@ -267,7 +296,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td></td>
                                             <td></td>
                                             <td><a href="">View</a></td>
+                                        </tr> -->
+                                        <?php foreach ($receipts_two as $receipt_t): ?>
+                                        <tr class="receiptRow">
+                                            <td><input type="checkbox" value="<?php echo $receipt_t->id;?>"></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>" height="100" width="100">
+                                        
+                                                <div id="thumbwrap">
+                                                    <a class="thumb" href="#"><img src="<?php echo base_url('uploads/accounting/').$receipt_t->receipt_img; ?>" alt="" alt="Image" height="100" width="100">
+                                                    <span><img src="<?php echo base_url('uploads/accounting/').$receipt_t->receipt_img; ?>" alt="" height="400" width="400"></span></a> 
+                                                </div>
+                                            </td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->transaction_date == null || $receipt_t->transaction_date == "0000-00-00")?"Not found": $receipt_t->transaction_date; ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->description == null)?"Not found" : $receipt->description; ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->total_amount == null || $receipt_t->total_amount == 0.00)?"Not found" : $receipt_t->total_amount; ?></td>
+                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->category == null)?"Not found":$receipt_t->category; ?></td>
+                                            <td>
+                                                <a id="updateReceipt" href="#" style="display: inline;color:#0077c5;font-weight:bold;" data-id="<?php echo $receipt_t->id;?>" data-toggle="modal" data-target="#receiptModal">Undo add</a> &nbsp;
+                                            </td>
                                         </tr>
+                                        <?php endforeach; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -602,6 +650,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(".save_next").click(function () {
     $('#nextreceiptModal').modal('toggle');
+});
+</script>
+
+<script>
+$("#createExpense").click(function () {
+    var rID = $(this).attr('data-id');
+
+    $.ajax({
+        type : 'POST',
+        url : "<?php echo base_url(); ?>accounting/receipt_create_expense",
+        data : {rID: rID },
+        dataType: 'json',
+        success: function(response){
+
+        },
+    });
+
+    $(".createPackage").modal("hide");
+
 });
 </script>
 

@@ -1284,8 +1284,6 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            $bankAccount = explode('-', $data['bank_account']);
-
             $insertData = [
                 'company_id' => logged('company_id'),
                 'credit_card_id' => $data['credit_card_account'],
@@ -6776,5 +6774,1167 @@ class Accounting_modals extends MY_Controller
         }
 
         echo json_encode($attached);
+    }
+
+    public function update_transaction($transactionType, $transactionId)
+    {
+        $data = $this->input->post();
+
+        switch ($transactionType) {
+            case 'expense':
+                $return = $this->update_expense($transactionId, $data);
+            break;
+            case 'check':
+                $return = $this->update_check($transactionId, $data);
+            break;
+            case 'bill':
+                $return = $this->update_bill($transactionId, $data);
+            break;
+            case 'purchase-order':
+                $return = $this->update_purchase_order($transactionId, $data);
+            break;
+            case 'vendor-credit':
+                $return = $this->update_vendor_credit($transactionId, $data);
+            break;
+            case 'credit-card-credit':
+                $return = $this->update_credit_card_credit($transactionId, $data);
+            break;
+            case 'bill-payment':
+                $return = $this->update_bill_payment($transactionId, $data);
+            break;
+            case 'credit-card-payment' :
+                $return = $this->update_cc_payment($transactionId, $data);
+            break;
+        }
+
+        echo json_encode($return);
+    }
+
+    private function update_expense($expenseId, $data)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $payee = explode('-', $data['payee']);
+        $expenseData = [
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'payment_account_id' => $data['expense_payment_account'],
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'payment_method_id' => $data['payment_method'],
+            'ref_no' => $data['ref_no'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'total_amount' => $data['total_amount'],
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_expense($expenseId, $expenseData);
+
+        if ($update) {
+            if ($data['expense_payment_account'] !== $expense->payment_account_id) {
+                $newPaymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
+                $newPaymentAccType = $this->account_model->getById($newPaymentAcc->account_id);
+                if ($newPaymentAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($newPaymentAcc->balance) + floatval($data['total_amount']);
+                } else {
+                    $newBalance = floatval($newPaymentAcc->balance) - floatval($data['total_amount']);
+                }
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $newPaymentAccData = [
+                    'id' => $newPaymentAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($newPaymentAccData);
+    
+                $oldPaymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+                $oldPaymentAccType = $this->account_model->getById($oldPaymentAcc->account_id);
+                if ($oldPaymentAccType->account_name === 'Credit Card') {
+                    $revertBalance = floatval($oldPaymentAcc->balance) - floatval($expense->total_amount);
+                } else {
+                    $revertBalance = floatval($oldPaymentAcc->balance) + floatval($expense->total_amount);
+                }
+                $revertBalance = number_format($revertBalance, 2, '.', ',');
+    
+                $oldPaymentAccData = [
+                    'id' => $oldPaymentAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $revertBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($oldPaymentAccData);
+            }
+    
+            if ($data['total_amount'] !== $expense->total_amount && $data['expense_payment_account'] === $expense->payment_account_id) {
+                $paymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
+                $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+                $newBalance = $newBalance + floatval($data['total_amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $paymentAccData = [
+                    'id' => $paymentAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($paymentAccData);
+            }
+    
+            $this->update_categories('Expense', $expenseId, $data);
+            $this->update_items('Expense', $expenseId, $data);
+        }
+
+        return [
+            'data' => $expenseId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function update_check($checkId, $data)
+    {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+        $payee = explode('-', $data['payee']);
+
+        $checkData = [
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'bank_account_id' => $data['bank_account'],
+            'mailing_address' => nl2br($data['mailing_address']),
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
+            'to_print' => $data['print_later'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'total_amount' => $data['total_amount'],
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_check($checkId, $checkData);
+
+        if ($update) {
+            if (!is_null($checkData['check_no']) && !is_null($check->check_no)) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $checkId,
+                    'payment_account_id' => $checkData['bank_account_id'],
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->accounting_assigned_checks_model->update_check_no($assignCheck);
+            } elseif (is_null($check->check_no) && !is_null($checkData['check_no'])) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $checkId,
+                    'payment_account_id' => $checkData['bank_account_id'],
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+            } elseif (!is_null($check->check_no) && is_null($checkData['check_no'])) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $checkId,
+                    'payment_account_id' => $checkData['bank_account_id']
+                ];
+
+                $this->accounting_assigned_checks_model->unassign_check_no($assignCheck);
+            }
+
+            if ($data['bank_account'] !== $check->bank_account_id) {
+                $newBankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                $newBankAccType = $this->account_model->getById($newBankAcc->account_id);
+                if ($newBankAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($newBankAcc->balance) + floatval($data['total_amount']);
+                } else {
+                    $newBalance = floatval($newBankAcc->balance) - floatval($data['total_amount']);
+                }
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $newBankAccData = [
+                    'id' => $newBankAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($newBankAccData);
+    
+                $oldBankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+                $oldBankAccType = $this->account_model->getById($oldBankAcc->account_id);
+                if ($oldBankAccType->account_name === 'Credit Card') {
+                    $revertBalance = floatval($oldBankAcc->balance) - floatval($check->total_amount);
+                } else {
+                    $revertBalance = floatval($oldBankAcc->balance) + floatval($check->total_amount);
+                }
+                $revertBalance = number_format($revertBalance, 2, '.', ',');
+    
+                $oldBankAccData = [
+                    'id' => $oldBankAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $revertBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($oldBankAccData);
+            }
+    
+            if ($data['total_amount'] !== $check->total_amount && $data['bank_account'] === $check->bank_account_id) {
+                $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                $newBalance = floatval($bankAcc->balance) - floatval($check->total_amount);
+                $newBalance = $newBalance + floatval($data['total_amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $bankAccData = [
+                    'id' => $bankAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($bankAccData);
+            }
+    
+            $this->update_categories('Check', $checkId, $data);
+            $this->update_items('Check', $checkId, $data);
+        }
+
+        return [
+            'data' => $checkId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function update_bill($billId, $data)
+    {
+        $billData = [
+            'vendor_id' => $data['vendor_id'],
+            'mailing_address' => $data['mailing_address'],
+            'term_id' => $data['term_id'],
+            'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
+            'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+            'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'remaining_balance' => $data['total_amount'],
+            'total_amount' => $data['total_amount'],
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_bill($billId, $billData);
+
+        if ($update) {
+            $this->update_categories('Bill', $billId, $data);
+            $this->update_items('Bill', $billId, $data);
+        }
+
+        return [
+            'data' => $billId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function update_purchase_order($purchaseOrderId, $data)
+    {
+        $purchOrder = [
+            'vendor_id' => $data['vendor_id'],
+            'email' => $data['email'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'mailing_address' => nl2br($data['mailing_address']),
+            'customer_id' => $data['customer'],
+            'shipping_address' => nl2br($data['shipping_address']),
+            'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
+            'ship_via' => $data['ship_via'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'message_to_vendor' => $data['message_to_vendor'],
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'total_amount' => $data['total_amount'],
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_purchase_order($purchaseOrderId, $purchOrder);
+
+        if ($update) {
+            $this->update_categories('Purchase Order', $purchaseOrderId, $data);
+            $this->update_items('Purchase Order', $purchaseOrderId, $data);
+        }
+
+        return [
+            'data' => $purchaseOrderId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function update_vendor_credit($vendorCreditId, $data)
+    {
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vCredit = [
+            'vendor_id' => $data['vendor_id'],
+            'mailing_address' => $data['mailing_address'],
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'ref_no' => $data['ref_no'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'total_amount' => $data['total_amount'],
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_vendor_credit($vendorCreditId, $vCredit);
+
+        if ($update) {
+            if ($data['vendor_id'] !== $vendorCredit->vendor_id) {
+                $newVendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+
+                if ($newVendor->vendor_credits === null & $newVendor->vendor_credits === "") {
+                    $vendorCredits = floatval($data['total_amount']);
+                } else {
+                    $vendorCredits = floatval($data['total_amount']) + floatval($newVendor->vendor_credits);
+                }
+
+                $vendorData = [
+                    'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+                ];
+
+                $this->vendors_model->updateVendor($newVendor->id, $vendorData);
+
+                $oldVendor = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
+
+                if ($oldVendor->vendor_credits === null & $oldVendor->vendor_credits === "") {
+                    $vendorCredits = floatval($data['total_amount']);
+                } else {
+                    $vendorCredits = floatval($oldVendor->vendor_credits) - floatval($vendorCredit->total_amount);
+                }
+
+                $vendorData = [
+                    'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+                ];
+
+                $this->vendors_model->updateVendor($oldVendor->id, $vendorData);
+            }
+
+            if ($data['total_amount'] !== $vendorCredit->total_amount && $data['vendor_id'] === $vendorCredit->vendor_id) {
+                $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+
+                $vendorCredits = floatval($vendor->vendor_credits) - floatval($vendorCredit->total_amount);
+                $vendorCredits = $vendorCredits + floatval($data['total_amount']);
+
+                $vendorData = [
+                    'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+                ];
+
+                $this->vendors_model->updateVendor($vendor->id, $vendorData);
+            }
+
+            $this->update_categories('Vendor Credit', $vendorCreditId, $data);
+            $this->update_items('Vendor Credit', $vendorCreditId, $data);
+        }
+
+        return [
+            'data' => $vendorCreditId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function update_credit_card_credit($ccCreditId, $data)
+    {
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $payee = explode('-', $data['payee']);
+
+        $creditData = [
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'bank_credit_account_id' => $data['bank_credit_account'],
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'total_amount' => $data['total_amount'],
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_credit_card_credit($ccCreditId, $creditData);
+
+        if ($update) {
+            if ($data['bank_credit_account'] !== $ccCredit->bank_credit_account_id) {
+                $newAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
+                $newBalance = floatval($newAcc->balance) - floatval($data['total_amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $newAccData = [
+                    'id' => $newAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($newAccData);
+    
+                $oldAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+                $revertBalance = floatval($oldAcc->balance) + floatval($ccCredit->total_amount);
+                $revertBalance = number_format($revertBalance, 2, '.', ',');
+    
+                $oldAccData = [
+                    'id' => $oldAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $revertBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($oldAccData);
+            }
+    
+            if ($data['total_amount'] !== $ccCredit->total_amount && $data['bank_credit_account'] === $ccCredit->bank_credit_account_id) {
+                $bankAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
+                $newBalance = floatval($bankAcc->balance) + floatval($ccCredit->total_amount);
+                $newBalance = $newBalance - floatval($data['total_amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                $bankAccData = [
+                    'id' => $bankAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+    
+                $this->chart_of_accounts_model->updateBalance($bankAccData);
+            }
+    
+            $this->update_categories('Credit Card Credit', $ccCreditId, $data);
+            $this->update_items('Credit Card Credit', $ccCreditId, $data);
+        }
+
+        return [
+            'data' => $ccCreditId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function revert_bill_payment($billPaymentId)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $appliedCredits = json_decode($billPayment->vendor_credits_applied, true);
+        $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+
+        if(!is_null($appliedCredits)) {
+            foreach ($appliedCredits as $creditId => $amount) {
+                $amount = floatval($amount);
+    
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditId);
+                $balance = floatval($vCredit->remaining_balance);
+                $remainingBal = $balance + $amount;
+    
+                $vCreditData = [
+                    'status' => 1,
+                    'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $vendorData = [
+                    'vendor_credits' => floatval($payee->vendor_credits) + $amount,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                $this->vendors_model->updateVendor($payee->id, $vendorData);
+            }
+        }
+
+        $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
+
+        foreach ($paymentItems as $paymentItem) {
+            $bill = $this->expenses_model->get_bill_data($paymentItem->bill_id);
+
+            $remainingBal = floatval($bill->remaining_balance) + floatval($paymentItem->total_amount);
+            $billData = [
+                'status' => 1,
+                'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->expenses_model->update_bill_data($bill->id, $billData);
+        }
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+        if ($paymentAccType->account_name === 'Credit Card') {
+            $newBalance = floatval($paymentAcc->balance) - floatval($billPayment->total_amount);
+        } else {
+            $newBalance = floatval($paymentAcc->balance) + floatval($billPayment->total_amount);
+        }
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+    }
+
+    public function update_bill_payment($billPaymentId, $data)
+    {
+        $this->revert_bill_payment($billPaymentId);
+        if(!is_null($data['credits'])) {
+            foreach ($data['credits'] as $key => $id) {
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($id);
+                $balance = floatval($vCredit->remaining_balance);
+                $subtracted = floatval($data['credit_payment'][$key]);
+                $remainingBal = $balance - $subtracted;
+    
+                $vCreditData = [
+                    'status' => $remainingBal === 0.00 ? 2 : 1,
+                    'remaining_balance' => $remainingBal,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+            }
+
+            $appliedVCredits = [];
+            foreach ($data['credit_payment'] as $key => $amount) {
+                $appliedVCredits[$data['credits'][$key]] = floatval($amount);
+            }
+        }
+
+        $this->vendors_model->delete_bill_payment_items($billPaymentId);
+
+        $billPayment = [
+            'payment_account_id' => $data['payment_account'],
+            'mailing_address' => nl2br($data['mailing_address']),
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'check_no' => is_null($data['print_later']) ? $data['ref_no'] : null,
+            'to_print_check_no' => $data['print_later'],
+            'total_amount' => $data['total_amount'],
+            'vendor_credits_applied' => isset($appliedVCredits) && count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
+            'status' => 1,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPayment);
+
+        if ($update) {
+            $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+            if ($paymentAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
+            } else {
+                $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $paymentAccData = [
+                'id' => $paymentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+            $paymentItems = [];
+            foreach ($data['bills'] as $index => $bill) {
+                $paymentItems[] = [
+                    'bill_payment_id' => $billPaymentId,
+                    'bill_id' => $bill,
+                    'credit_applied_amount' => null,
+                    'payment_amount' => null,
+                    'total_amount' => $data['bill_payment'][$index]
+                ];
+
+                $bill = $this->expenses_model->get_bill_data($bill);
+
+                if (floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
+                    $billData = [
+                        'remaining_balance' => 0.00,
+                        'status' => 2,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+                } else {
+                    $remainingBal = floatval($bill->remaining_balance) - floatval($data['bill_payment'][$index]);
+                    $billData = [
+                        'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+                }
+
+                $this->expenses_model->update_bill_data($bill->id, $billData);
+            }
+
+            $this->expenses_model->insert_bill_payment_items($paymentItems);
+        }
+
+        return [
+            'data' => $billPaymentId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function update_categories($transactionType, $transactionId, $data)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+
+        if ($data['expense_account'] !== null) {
+            foreach ($data['expense_account'] as $index => $value) {
+                $categoryDetails = [
+                    'expense_account_id' => $value,
+                    'category' => $data['category'][$index],
+                    'description' => $data['description'][$index],
+                    'amount' => $data['category_amount'][$index],
+                    'billable' => $data['category_billable'][$index],
+                    'markup_percentage' => $data['category_markup'][$index],
+                    'tax' => $data['category_tax'][$index],
+                    'customer_id' => $data['category_customer'][$index],
+                ];
+
+                if (!is_null($categories[$index])) {
+                    $this->vendors_model->update_transaction_category_details($categories[$index]->id, $categoryDetails);
+                } else {
+                    $categoryDetails['transaction_type'] = $transactionType;
+                    $categoryDetails['transaction_id'] = $transactionId;
+
+                    $details = [
+                        $categoryDetails
+                    ];
+
+                    $this->expenses_model->insert_vendor_transaction_categories($details);
+                }
+
+                if ($value !== $categories[$index]->expense_account_id) {
+                    $newCat = $this->chart_of_accounts_model->getById($value);
+                    $newCatType = $this->account_model->getById($newCat->account_id);
+                    $oldCat = $this->chart_of_accounts_model->getById($categories[$index]->expense_account_id);
+                    $oldCatType = $this->account_model->getById($oldCat->account_id);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            }
+                        break;
+                        case 'Check':
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            }
+                        break;
+                        case 'Bill':
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            }
+                        break;
+                        case 'Vendor Credit':
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            }
+                        break;
+                        case 'Credit Card Credit':
+                            if ($newCatType->account_name === 'Credit Card') {
+                                $newBalance = floatval($newCat->balance) + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($newCat->balance) - floatval($data['category_amount'][$index]);
+                            }
+
+                            if ($oldCatType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($oldCat->balance) - floatval($categories[$index]->amount);
+                            } else {
+                                $revertBalance = floatval($oldCat->balance) + floatval($categories[$index]->amount);
+                            }
+                        break;
+                    }
+        
+                    if ($transactionType !== 'Purchase Order') {
+                        $newCatData = [
+                            'id' => $newCat->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => number_format($newBalance, 2, '.', ',')
+                        ];
+
+                        $oldCatData = [
+                            'id' => $oldCat->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => number_format($revertBalance, 2, '.', ',')
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($newCatData);
+                        $this->chart_of_accounts_model->updateBalance($oldCatData);
+                    }
+                }
+
+                if ($data['category_amount'][$index] !== $categories[$index]->amount && $value === $categories[$index]->expense_account_id) {
+                    $catAcc = $this->chart_of_accounts_model->getById($value);
+                    $catAccType = $this->account_model->getById($catAcc->account_id);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            }
+                        break;
+                        case 'Check':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            }
+                        break;
+                        case 'Bill':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            }
+                        break;
+                        case 'Vendor Credit':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            }
+                        break;
+                        case 'Credit Card Credit':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($catAcc->balance) - floatval($categories[$index]->amount);
+                                $newBalance = $newBalance + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($catAcc->balance) + floatval($categories[$index]->amount);
+                                $newBalance = $newBalance - floatval($data['category_amount'][$index]);
+                            }
+                        break;
+                    }
+        
+                    $catAccData = [
+                        'id' => $catAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => number_format($newBalance, 2, '.', ',')
+                    ];
+        
+                    $this->chart_of_accounts_model->updateBalance($catAccData);
+                }
+            }
+        }
+
+        if (count($categories) > 0) {
+            foreach ($categories as $index => $category) {
+                if ($data['expense_account'] === null || $data['expense_account'][$index] === null) {
+                    $catAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                    $catAccType = $this->account_model->getById($catAcc->account_id);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            }
+                        break;
+                        case 'Check':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            }
+                        break;
+                        case 'Bill':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            }
+                        break;
+                        case 'Vendor Credit':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            }
+                        break;
+                        case 'Credit Card Credit':
+                            if ($catAccType->account_name === 'Credit Card') {
+                                $revertBalance = floatval($catAcc->balance) - floatval($category->amount);
+                            } else {
+                                $revertBalance = floatval($catAcc->balance) + floatval($category->amount);
+                            }
+                        break;
+                    }
+
+                    $revertBalance = number_format($revertBalance, 2, '.', ',');
+
+                    $catAccData = [
+                        'id' => $catAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $revertBalance
+                    ];
+        
+                    $this->chart_of_accounts_model->updateBalance($catAccData);
+
+                    $this->vendors_model->delete_transaction_category($category->id, $transactionType);
+                }
+            }
+        }
+    }
+
+    private function update_items($transactionType, $transactionId, $data)
+    {
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        if ($data['item'] !== null) {
+            foreach ($data['item'] as $index => $value) {
+                $itemDetails = [
+                    'item_id' => $value,
+                    'location_id' => $data['location'][$index],
+                    'quantity' => $data['quantity'][$index],
+                    'rate' => $data['item_amount'][$index],
+                    'discount' => $data['discount'][$index],
+                    'tax' => $data['item_tax'][$index],
+                    'total' => $data['item_total'][$index]
+                ];
+
+                if (!is_null($items[$index])) {
+                    $this->vendors_model->update_transaction_item($items[$index]->id, $itemDetails);
+                } else {
+                    $itemDetails['transaction_type'] = $transactionType;
+                    $itemDetails['transaction_id'] = $transactionId;
+
+                    $details = [
+                        $itemDetails
+                    ];
+
+                    $this->expenses_model->insert_vendor_transaction_items($details);
+                }
+
+                if ($items[$index]->location_id !== $data['location'][$index]) {
+                    $newLoc = $this->items_model->getItemLocation($data['location'][$index], $value);
+                    $oldLoc = $this->items_model->getItemLocation($categories[$index]->location_id, $categories[$index]->item_id);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            $newQty = intval($newLoc->qty) + intval($data['quantity'][$index]);
+                            $oldQty = intval($oldLoc->qty) - intval($categories[$index]->quantity);
+                        break;
+                        case 'Check':
+                            $newQty = intval($newLoc->qty) + intval($data['quantity'][$index]);
+                            $oldQty = intval($oldLoc->qty) - intval($categories[$index]->quantity);
+                        break;
+                        case 'Bill':
+                            $newQty = intval($newLoc->qty) + intval($data['quantity'][$index]);
+                            $oldQty = intval($oldLoc->qty) - intval($categories[$index]->quantity);
+                        break;
+                        case 'Purchase Order':
+                            $newItemDet = $this->items_model->getItemAccountingDetails($value);
+                            $oldItemDet = $this->items_model->getItemAccountingDetails($items[$index]->item_id);
+
+                            $newQty = intval($newItemDet->qty_po) + intval($data['quantity'][$index]);
+                            $oldQty = intval($oldItemDet->qty_po) - intval($categories[$index]->quantity);
+
+                            $this->items_model->updateItemAccountingDetails(['qty_po' => $newQty], $value);
+                            $this->items_model->updateItemAccountingDetails(['qty_po' => $oldQty], $oldItemDet->id);
+                        break;
+                        case 'Vendor Credit':
+                            $newQty = intval($newLoc->qty) - intval($data['quantity'][$index]);
+                            $oldQty = intval($oldLoc->qty) + intval($categories[$index]->quantity);
+                        break;
+                        case 'Credit Card Credit':
+                            $newQty = intval($newLoc->qty) - intval($data['quantity'][$index]);
+                            $oldQty = intval($oldLoc->qty) + intval($categories[$index]->quantity);
+                        break;
+                    }
+
+                    if ($transactionType !== 'Purchase Order') {
+                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                        $this->items_model->updateLocationQty($categories[$index]->location_id, $categories[$index]->item_id, $oldQty);
+                    }
+                }
+
+                if ($items[$index]->item_id !== $value) {
+                    $newItem = $this->items_model->getItemAccountingDetails($value);
+                    $oldItem = $this->items_model->getItemAccountingDetails($value);
+
+                    $newInvAssetAcc = $this->chart_of_accounts_model->getById($newItem->inv_asset_acc_id);
+                    $oldInvAssetAcc = $this->chart_of_accounts_model->getById($oldItem->inv_asset_acc_id);
+
+                    $newBalance = floatval($newInvAssetAcc->balance);
+                    $oldBalance = floatval($oldInvAssetAcc->balance);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            $newBalance = floatval($newInvAssetAcc->balance) + floatval($data['item_total'][$index]);
+                            $oldBalance = floatval($oldInvAssetAcc->balance) - floatval($categories[$index]->total);
+                        break;
+                        case 'Check':
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
+                            $oldBalance = floatval($oldInvAssetAcc->balance) - floatval($categories[$index]->total);
+                        break;
+                        case 'Bill':
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
+                            $oldBalance = floatval($oldInvAssetAcc->balance) - floatval($categories[$index]->total);
+                        break;
+                        case 'Vendor Credit':
+                            $newBalance = floatval($data['item_amount'][$index]) - 5.00;
+                            $newBalance = floatval($invAssetAcc->balance) + $newBalance;
+                            $oldBalance = floatval($categories[$index]->total) - 5.00;
+                            $oldBalance = floatval($oldInvAssetAcc->balance) - $oldBalance;
+                        break;
+                        case 'Credit Card Credit':
+                            $newBalance = floatval($data['item_amount'][$index]) - 5.00;
+                            $newBalance = floatval($invAssetAcc->balance) + $newBalance;
+                            $oldBalance = floatval($categories[$index]->total) - 5.00;
+                            $oldBalance = floatval($oldInvAssetAcc->balance) - $oldBalance;
+                        break;
+                    }
+
+                    $newInvAssetAccData = [
+                        'id' => $newInvAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => number_format($newBalance, 2, '.', ',')
+                    ];
+
+                    $oldInvAssetAccData = [
+                        'id' => $oldInvAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => number_format($oldBalance, 2, '.', ',')
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($newInvAssetAccData);
+                    $this->chart_of_accounts_model->updateBalance($oldInvAssetAccData);
+                }
+
+                if ($data['item_total'][$index] !== $items[$index]->total && $value === $items[$index]->item_id) {
+                    $item = $this->items_model->getItemAccountingDetails($value);
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($item->inv_asset_acc_id);
+
+                    $newBalance = floatval($invAssetAcc->balance);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
+                            $newBalance = $newBalance + floatval($data['item_total'][$index]);
+                        break;
+                        case 'Check':
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
+                            $newBalance = $newBalance + floatval($data['item_total'][$index]);
+                        break;
+                        case 'Bill':
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
+                            $newBalance = $newBalance + floatval($data['item_total'][$index]);
+                        break;
+                        case 'Vendor Credit':
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
+                            $totalAmount = floatval($data['item_amount'][$index]) - 5.00;
+                            $newBalance = $newBalance + $totalAmount;
+                        break;
+                        case 'Credit Card Credit':
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
+                            $totalAmount = floatval($data['item_amount'][$index]) - 5.00;
+                            $newBalance = $newBalance + $totalAmount;
+                        break;
+                    }
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => number_format($newBalance, 2, '.', ',')
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
+            }
+        }
+
+        if (count($items) > 0) {
+            foreach ($items as $index => $item) {
+                if ($data['item'] === null || $data['item'][$index] === null) {
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+                    $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+                    switch ($transactionType) {
+                        case 'Expense':
+                            $newQty = intval($location->qty) - intval($item->quantity);
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                        break;
+                        case 'Check':
+                            $newQty = intval($location->qty) - intval($item->quantity);
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                        break;
+                        case 'Bill':
+                            $newQty = intval($location->qty) - intval($item->quantity);
+                            $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                        break;
+                        case 'Purchase Order':
+                            $newQty = intval($itemAccDetails->qty_po) - intval($item->quantity);
+
+                            $this->items_model->updateItemAccountingDetails(['qty_po' => $newQty], $item->item_id);
+                        break;
+                        case 'Vendor Credit':
+                            $newQty = intval($location->qty) + intval($item->quantity);
+                            $newBalance = floatval($item->total) - 5.00;
+                            $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                        break;
+                        case 'Credit Card Credit':
+                            $newQty = intval($location->qty) + intval($item->quantity);
+                            $newBalance = floatval($item->total) - 5.00;
+                            $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                        break;
+                    }
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => number_format($newBalance, 2, '.', ',')
+                    ];
+
+                    if ($transactionType !== 'Purchase Order') {
+                        $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                    }
+
+                    $this->vendors_model->delete_transaction_item($item->id, $transactionType);
+                }
+            }
+        }
+    }
+    
+    private function update_cc_payment($paymentId, $data)
+    {
+        $this->form_validation->set_rules('credit_card_account', 'Credit Card', 'required');
+        $this->form_validation->set_rules('amount', 'Amount', 'required');
+        $this->form_validation->set_rules('payment_date', 'Date of Payment', 'required');
+        $this->form_validation->set_rules('bank_account', 'Date of Payment', 'required');
+
+        $return = [];
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $updateData = [
+                'credit_card_id' => $data['credit_card_account'],
+                'payee_id' => $data['payee'],
+                'amount' => $data['amount'],
+                'date' => date('Y-m-d', strtotime($data['payment_date'])),
+                'bank_account_id' => $data['bank_account'],
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            ];
+
+            $update = $this->accounting_pay_down_credit_card_model->update($paymentId, $updateData);
+
+            if ($update) {
+                $payment = $this->accounting_pay_down_credit_card_model->get_by_id($paymentId);
+
+                // REVERT OLD
+                if(!is_null($payment->attachments) && $payment->attachments !== "") {
+                    foreach($payment->attachments as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) - 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $oldCreditAcc = $this->chart_of_accounts_model->getById($payment->credit_card_id);
+
+                $newBalance = floatval($oldCreditAcc->balance) + floatval($payment->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $this->chart_of_accounts_model->updateBalance(['id' => $oldCreditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+                $oldBank = $this->chart_of_accounts_model->getById($payment->bank_account_id);
+
+                $newBalance = floatval($oldBank->balance) + floatval($payment->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $this->chart_of_accounts_model->updateBalance(['id' => $oldBank->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+                // NEW
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $creditAcc = $this->chart_of_accounts_model->getById($data['credit_card_account']);
+
+                $newBalance = floatval($creditAcc->balance) - floatval($data['amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+                $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+
+                $newBalance = floatval($bankAcc->balance) - floatval($data['amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+            }
+
+            $return['data'] = $update;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Payment Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
     }
 }
