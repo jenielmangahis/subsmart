@@ -5866,22 +5866,13 @@ const initModalFields = (modalName, data = {}) => {
         $(`#${modalName} select`).each(function() {
             var type = $(this).attr('id');
             if (type === undefined) {
-                
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
             } else {
                 type = type.replaceAll('_', '-');
-            }
 
-            var type = $(this).attr('id');
-            if (type === undefined) {
-                type = $(this).attr('name').includes('expense_account[]') ? 'expense-account' : type;
-                type = $(this).attr('name').includes('category_customer[]') ? 'customer' : type;
-                type = $(this).attr('name').includes('category[]') === false ? $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-') : '';
-            } else {
-                type = type.replaceAll('_', '-');
-            }
-
-            if(type === 'category-customer') {
-                type = 'customer';
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
             }
 
             if (dropdownFields.includes(type)) {

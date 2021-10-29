@@ -144,7 +144,7 @@
                             <li><a href="#" class="ajax-" data-toggle="modal"
                                     data-target="#add_refund_receipt_Modal">Refund receipt</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal"
-                                    data-target="#adddelayedcreditModal">Delayed credit</a></li>
+                                    data-target="#delayed_credit_modal">Delayed credit</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal" data-target="#create_charge_modal">Delayed
                                     charge</a></li>
                         </ul>
@@ -232,8 +232,9 @@
 <?php include viewPath('accounting/customer_estimate_modal'); ?>
 <?php //include viewPath('accounting/customer_credit_memo_modal');?>
 <?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
-<?php include viewPath('accounting/customer_refund_receipt_modal'); ?>
-<?php include viewPath('accounting/customer_delayed_credit_modal'); ?>
+<?php include viewPath('accounting/customer_includes/refund_receipt/refund_receipt'); ?>
+<?php include viewPath('accounting/customer_includes/delayed_credit/delayed_credit_modal'); ?>
+<?php //include viewPath('accounting/customer_delayed_credit_modal');?>
 <?php include viewPath('accounting/customer_delayed_charge_modal'); ?>
 
 <!-- vendors -->

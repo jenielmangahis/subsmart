@@ -66,18 +66,20 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
-            "assets/css/accounting/sidebar_new_modal/refund_receipt.css",
+            "assets/css/accounting/accounting_includes/refund_receipt_modal.css",
+            "assets/css/accounting/accounting_includes/delayed_credit_modal.css",
         ));
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/accounting.js",
-            "assets/js/accounting/sidebar_new_modal/refund_receipt.js",
             "assets/js/accounting/modal-forms.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
-            "assets/js/accounting/sales/customer_includes/create_charge.js"
+            "assets/js/accounting/sales/customer_includes/create_charge.js",
+            "assets/js/accounting/sales/customer_includes/refund_receipt_modal.js",
+            "assets/js/accounting/sales/customer_includes/delayed_credit_modal.js",
         ));
 
         $this->page_data['menu_name'] =
@@ -253,7 +255,7 @@ class Accounting extends MY_Controller
             'where' => array('company_id' => $comp_id,),
             'select' => '*',
         );
-        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account,false);
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
         $this->load->view('accounting/banking/test_payment', $this->page_data);
     }
 
@@ -267,7 +269,7 @@ class Accounting extends MY_Controller
             'assign_to' => $_POST['assign_to'],
             'is_paid' => 1,
         );
-        $this->general->add_($banking_payments_data,'banking_payments');
+        $this->general->add_($banking_payments_data, 'banking_payments');
     }
 
     public function rules()
