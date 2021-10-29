@@ -1539,8 +1539,14 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     $account = $this->chart_of_accounts_model->getById($value);
-                    $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
-                    $newBalance = floatval($account->balance) + floatval($data['debits'][$key]);
+                    if($account->account_id !== "7") {
+                        $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
+                        $newBalance = $newBalance + floatval($data['debits'][$key]);
+                    } else {
+                        $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
+                        $newBalance = $newBalance - floatval($data['debits'][$key]);
+                    }
+
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
                     $accountData = [
@@ -6811,6 +6817,12 @@ class Accounting_modals extends MY_Controller
             case 'transfer' :
                 $return = $this->update_transfer($transactionId, $data);
             break;
+            case 'journal' :
+                $return = $this->update_journal($transactionId, $data);
+            break;
+            case 'inventory-qty-adjust' :
+                $return = $this->update_quantity_adjustment($transactionId, $data);
+            break;
         }
 
         echo json_encode($return);
@@ -8330,6 +8342,312 @@ class Accounting_modals extends MY_Controller
             }
 
             $return['data'] = $transferId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+        }
+
+        return $return;
+    }
+
+    private function update_journal($journalId, $data)
+    {
+        if (isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('journal_date', 'Date', 'required');
+            $this->form_validation->set_rules('journal_no', 'Journal No.', 'required');
+        }
+
+        $totalDebit = array_sum(array_map(function ($item) {
+            return $item;
+        }, $data['debits']));
+
+        $totalCredit = array_sum(array_map(function ($item) {
+            return $item;
+        }, $data['credits']));
+
+        $return = [];
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (isset($data['journal_entry_accounts']) && count($data['journal_entry_accounts']) < 2 || !isset($data['journal_entry_accounts'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'You must fill out at least two detail lines.';
+        } elseif ($totalDebit !== $totalCredit) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please balance debits and credits.';
+        } else {
+            $journalData = [
+                'journal_no' => (!isset($data['template_name'])) ? $data['journal_no'] : null,
+                'journal_date' => (!isset($data['template_name'])) ? date('Y-m-d', strtotime($data['journal_date'])) : null,
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'recurring' => isset($data['template_name']) ? 1 : 0
+            ];
+
+            $update = $this->accounting_journal_entries_model->update($journalId, $journalData);
+
+            if ($update) {
+                // if (isset($data['template_name'])) {
+                //     $recurringData = [
+                //         'company_id' => getLoggedCompanyID(),
+                //         'template_name' => $data['template_name'],
+                //         'recurring_type' => $data['recurring_type'],
+                //         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? ($data['days_in_advance'] !== '' ? $data['days_in_advance'] : null) : null,
+                //         'txn_type' => 'journal entry',
+                //         'txn_id' => $journalId,
+                //         'recurring_interval' => $data['recurring_interval'],
+                //         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                //         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                //         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                //         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                //         'end_type' => $data['end_type'],
+                //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                //         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                //         'status' => 1
+                //     ];
+    
+                //     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                // }
+
+                $journal = $this->accounting_journal_entries_model->getById($journalId);
+
+                // REVERT OLD
+                if(!is_null($transfer->attachments) && $transfer->attachments !== "") {
+                    foreach(json_decode($transfer->attachments, true) as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) - 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $entries = $this->accounting_journal_entries_model->getEntries($journalId);
+                foreach($entries as $entry) {
+                    $account = $this->chart_of_accounts_model->getById($entry->account_id);
+
+                    if($account->account_id !== "7") {
+                        $newBalance = floatval($account->balance) + floatval($entry->credit);
+                        $newBalance = $newBalance - floatval($entry->debit);
+                    } else {
+                        $newBalance = floatval($account->balance) - floatval($entry->credit);
+                        $newBalance = $newBalance + floatval($entry->debit);
+                    }
+                    
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accountData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($accountData);
+                }
+
+                $this->accounting_journal_entries_model->deleteEntries($journalId);
+
+                // NEW
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $entryItems = [];
+                foreach ($data['journal_entry_accounts'] as $key => $value) {
+                    $name = explode('-', $data['names'][$key]);
+    
+                    $entryItems[] = [
+                        'journal_entry_id' => $journalId,
+                        'account_id' => $value,
+                        'debit' => $data['debits'][$key],
+                        'credit' => $data['credits'][$key],
+                        'description' => $data['descriptions'][$key],
+                        'name_key' => $name[0],
+                        'name_id' => $name[1]
+                    ];
+
+                    if(!is_null($entries[$key])) {
+                        $entryItems[$key]['created_at'] = $entries[$key]->created_at;
+                    }
+
+                    $account = $this->chart_of_accounts_model->getById($value);
+                    if($account->account_id !== "7") {
+                        $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
+                        $newBalance = $newBalance + floatval($data['debits'][$key]);
+                    } else {
+                        $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
+                        $newBalance = $newBalance - floatval($data['debits'][$key]);
+                    }
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $accountData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($accountData);
+                }
+
+                $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+            }
+
+            $return['data'] = $journalId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+        }
+
+        return $return;
+    }
+
+    private function update_quantity_adjustment($adjustmentId, $data)
+    {
+        $this->form_validation->set_rules('adjustment_date', 'Date', 'required');
+        $this->form_validation->set_rules('reference_no', 'Reference No.', 'required');
+        $this->form_validation->set_rules('inventory_adj_account', 'Inventory Adjustment Account', 'required');
+
+        if (isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty']) && isset($data['location'])) {
+            $this->form_validation->set_rules('product[]', 'Product', 'required');
+            $this->form_validation->set_rules('location[]', 'Location', 'required');
+            $this->form_validation->set_rules('new_qty[]', 'New Quantity', 'required');
+            $this->form_validation->set_rules('change_in_qty[]', 'Change in Quantity', 'required');
+        }
+
+        $return = [];
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one inventory item.';
+        } else {
+            $total = 0.00;
+            foreach ($data['product'] as $key => $value) {
+                $item = $this->items_model->getItemById($value)[0];
+                $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+
+                if(!is_null($startingValAdj)) {
+                    $total += floatval($data['change_in_qty'][$key]) * floatval($startingValAdj->initial_cost);
+                } else {
+                    $total += floatval($data['change_in_qty'][$key]) *  floatval($item->cost);
+                }
+            }
+
+            $data['transaction_id'] = $adjustmentId;
+            $revert = $this->revert_inventory_qty_adjustment($data);
+
+            if ($revert) {
+                $adjustmentData = [
+                    'adjustment_no' => $data['reference_no'],
+                    'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                    'inventory_adjustment_account_id' => $adjustmentAcc[1],
+                    'inventory_adjustment_account_key' => $adjustmentAcc[0],
+                    'memo' => $data['memo'],
+                    'total_amount' => $total,
+                ];
+
+                $update = $this->accounting_inventory_qty_adjustments_model->update($adjustmentId, $adjustmentData);
+
+                if ($update) {
+                    $adjustmentProducts = [];
+                    $locationData = [];
+                    foreach ($data['product'] as $key => $value) {
+                        $adjustmentProducts[] = [
+                            'adjustment_id' => $adjustmentId,
+                            'product_id' => $value,
+                            'location_id' => $data['location'][$key],
+                            'new_quantity' => $data['new_qty'][$key],
+                            'change_in_quantity' => $data['change_in_qty'][$key]
+                        ];
+    
+                        $locationData[] = [
+                            'id' => $data['location'][$key],
+                            'qty' => $data['new_qty'][$key]
+                        ];
+    
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                        $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+                        $item = $this->items_model->getItemById($value)[0];
+    
+                        if(!is_null($startingValAdj)) {
+                            $amount = floatval($data['change_in_qty'][$key]) * floatval($startingValAdj->initial_cost);
+                        } else {
+                            $amount = floatval($data['change_in_qty'][$key]) *  floatval($item->cost);
+                        }
+    
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $newBalance = floatval($invAssetAcc->balance) + $amount;
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                        $invAssetAccData = [
+                            'id' => $invAssetAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+    
+                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                    }
+    
+                    $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
+                    $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
+    
+                    $adjustmentAcc = $this->chart_of_accounts_model->getById($data['inventory_adj_account']);
+                    $newBalance = floatval($adjustmentAcc->balance) - $total;
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                    $adjustmentAccData = [
+                        'id' => $adjustmentAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+    
+                    $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+                }
+            }
+
+            $return['data'] = $adjustmentId;
             $return['success'] = $update ? true : false;
             $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
         }
