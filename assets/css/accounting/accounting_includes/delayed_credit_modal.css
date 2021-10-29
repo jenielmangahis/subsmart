@@ -1,0 +1,519 @@
+#delayed_credit_modal .middle-links a {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+#delayed_credit_modal form {
+    font-size: 12px;
+}
+
+#delayed_credit_modal form textarea {
+    resize: none;
+}
+
+#delayed_credit_modal select,
+#delayed_credit_modal input[type="text"],
+#delayed_credit_modal input[type="email"],
+#delayed_credit_modal input[type="number"],
+#delayed_credit_modal input[type="date"],
+#delayed_credit_modal textarea {
+    font-size: 12px;
+    font-weight: lighter;
+    padding: 8px;
+    height: auto;
+    border: solid 1px #BABEC5!important;
+    border-radius: 2px;
+    width: 100%;
+    resize: none;
+    color: #404040;
+}
+
+#delayed_credit_modal select {
+    display: block!important;
+    visibility: visible;
+    clip: auto!important;
+    position: inherit!important;
+    height: auto!important;
+    padding: 8px!important;
+    width: 100%!important;
+}
+
+#delayed_credit_modal form .select2 {
+    display: none;
+}
+
+#delayed_credit_modal .delayed_charge_date {
+    margin-top: 30px;
+}
+
+#delayed_credit_modal .tags {
+    margin-top: 30px;
+}
+
+#delayed_credit_modal .tags a.manage-tags {
+    color: #3491D0;
+    font-weight: lighter;
+    font-size: 12px;
+}
+
+#delayed_credit_modal input[name="delayed_charge_date"] {
+    width: 200px;
+}
+
+div#delayed_credit_modal .default-button {
+    font-size: 13px;
+    font-weight: 100;
+    border: solid 1px #8E9095;
+    padding: 2px 20px;
+    background: transparent;
+    border-radius: 5px;
+    height: auto;
+    margin-top: 15px;
+}
+
+div#delayed_credit_modal .default-button:hover {
+    background: rgba(107, 108, 114, .25);
+    color: #393a3d;
+}
+
+div#delayed_credit_modal .item-totals {
+    width: 300px;
+    float: right;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 0;
+    color: #333333;
+}
+
+div#delayed_credit_modal .item-totals .label {
+    width: 100px;
+    float: left;
+}
+
+div#delayed_credit_modal .item-totals .amount {
+    float: right;
+}
+
+#delayed_credit_modal input:focus,
+#delayed_credit_modal textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+#delayed_credit_modal input:focus,
+#delayed_credit_modal textarea:focus div#delayed_credit_modal {
+    font-size: 12px;
+}
+
+#delayed_credit_modal #add_another_items {
+    font: 12px;
+}
+
+#delayed_credit_modal .modal-footer-check {
+    left: 0;
+}
+
+#delayed_credit_modal .modal-footer-check button {
+    font-size: 12px;
+    height: auto;
+    padding: 5px 10px;
+}
+
+#delayed_credit_modal .modal-footer-check button[data-submit-type='save-new'],
+#delayed_credit_modal .modal-footer-check button[data-toggle='dropdown'] {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 13px;
+    border-radius: 28px 0 0 28px;
+    padding: 5px 15px;
+    height: auto;
+    border: solid 1px #2CA01C;
+    margin-right: -5px;
+}
+
+#delayed_credit_modal .modal-footer-check button[data-submit-type='save-new']:hover,
+#delayed_credit_modal .modal-footer-check button[data-toggle='dropdown']:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+#delayed_credit_modal .modal-footer-check .submit-submenu>li:hover {
+    background-color: #ECEDF1;
+    color: #008A00!important;
+}
+
+#delayed_credit_modal .modal-footer-check .submit-submenu>li button {
+    color: #333333;
+}
+
+#delayed_credit_modal .modal-footer-check button.cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #ffffff;
+    border: solid 1px #6A6C71;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#delayed_credit_modal .modal-footer-check button.cancel-button:hover {
+    background-color: #2A2B2D;
+}
+
+#delayed_credit_modal .modal-title,
+#delayed_credit_modal .modal-title a {
+    font-weight: 700;
+    color: #333333;
+}
+
+#delayed_credit_modal .recurring-form-part .recurring-title {
+    font-size: 20px;
+}
+
+#delayed_credit_modal .recurring-form-part .recurring-type {
+    width: 30%;
+    float: left;
+    top: 0;
+}
+
+#delayed_credit_modal .recurring-form-part .recuring-label-type {
+    width: 56px;
+    padding: 10px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part .recuring-label-recurring-days-in-advance {
+    width: 110px;
+    padding: 10px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part .recurring-days-in-advance {
+    width: 50px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below {
+    border-bottom: solid 1px #D4D7DC;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .monthly .label-1 {
+    width: 35px;
+    padding: 10px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .monthly .monthly-day {
+    width: 120px;
+    float: left;
+    padding-left: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .monthly .monthly-day-of-week {
+    width: 100px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .monthly .label-2 {
+    padding: 10px;
+    width: 70px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .monthly .monthly-months {
+    float: left;
+    width: 50px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .monthly .label-3 {
+    float: left;
+    padding: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part {
+    position: relative;
+    width: auto;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part {
+    position: relative;
+    width: auto;
+    float: left;
+    border-right: solid 1px #D4D7DC;
+}
+
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-1,
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-2,
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-3 {
+    float: left;
+    padding: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-2 select {
+    width: 80px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-3 .by-end-date {
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences {
+    float: left;
+    padding-left: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences input {
+    float: left;
+    width: 50px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences .label {
+    float: left;
+    padding: 10px;
+}
+
+.padding-tb-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .daily .daily-days {
+    float: left;
+    width: 50px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .daily .label-1,
+#delayed_credit_modal .recurring-form-part.below .interval-part .daily .label-2 {
+    padding: 10px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .weekly .label-1,
+#delayed_credit_modal .recurring-form-part.below .interval-part .weekly .label-2 {
+    padding: 10px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .weekly .weekly-every {
+    float: left;
+    width: 50px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .weekly .weekly-weeks-on {
+    float: left;
+    width: 100px;
+    padding-right: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .yearly .label-1 {
+    padding: 10px;
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .yearly .yearly-day {
+    float: left;
+    padding-right: 10px;
+    padding-left: 2px;
+    width: 80px;
+}
+
+#delayed_credit_modal .recurring-form-part.below .interval-part .yearly .yearly-month {
+    float: left;
+}
+
+#delayed_credit_modal .recurring-form-part .reminder-type .label-1,
+#delayed_credit_modal .recurring-form-part .reminder-type .label-2 {
+    float: left;
+    padding: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part .reminder-type .remind-days-before {
+    float: left;
+    width: 50px;
+}
+
+#delayed_credit_modal .recurring-form-part .unschedule-type .label-1 {
+    float: left;
+    width: 300px;
+    padding-left: 10px;
+}
+
+#delayed_credit_modal .recurring-form-part {
+    display: none;
+}
+
+#delayed_credit_modal .modal-footer-check .middle-links {
+    width: 50%;
+    float: left;
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#delayed_credit_modal .modal-footer-check .middle-links:hover {
+    text-shadow: 0 10px 20px #fff;
+}
+
+#delayed_credit_modal .customer-info.recurring-customer-info {
+    border-top: solid 1px #D4D7DC;
+    border-bottom: solid 1px #D4D7DC;
+    margin-top: 10px;
+    padding: 0 5px;
+}
+
+#delayed_credit_modal .customer-info.recurring-customer-info .divided {
+    border-right: solid 1px #D4D7DC;
+    padding: 10px;
+}
+
+#delayed_credit_modal .customer-info.recurring-customer-info .option-part {
+    padding: 10px;
+}
+
+#delayed_credit_modal .hidden {
+    visibility: hidden;
+}
+
+#delayed_credit_modal .pint-pries-option-section {
+    position: absolute;
+    z-index: 1;
+    top: -100px;
+    background: #ffff;
+    right: 0;
+    color: #000;
+    text-align: left;
+    padding: 10px 0;
+    border: solid 1px #D4D7DC;
+    border-radius: 2px;
+    display: none;
+}
+
+#delayed_credit_modal .pint-pries-option-section ul li a {
+    color: #000;
+}
+
+#delayed_credit_modal .pint-pries-option-section ul li:hover {
+    background-color: #299A1C;
+    color: #fff;
+}
+
+#delayed_credit_modal form label {
+    font-size: 12px;
+}
+
+#delayed_credit_modal .pint-pries-option-section ul li:hover a {
+    color: #fff;
+}
+
+#delayed_credit_modal .pint-pries-option-section ul li {
+    padding: 10px;
+}
+
+#delayed_credit_modal .modal-footer-check .middle-links {
+    position: relative;
+}
+
+#delayed_credit_modal .modal-footer-check .pint-pries-option-section .anchor-holder {
+    position: absolute;
+    z-index: 1;
+    width: 20px;
+    bottom: -13px;
+    left: 50px;
+}
+
+#delayed_credit_modal table tr th {
+    font-size: 14px;
+}
+
+#delayed_credit_modal table tr td {
+    position: relative;
+    font-size: 12px;
+}
+
+#delayed_credit_modal table .suggestions {
+    width: 100%;
+    box-shadow: 3px 6px 20px #2829294d;
+    max-height: 300px;
+    overflow: auto;
+}
+
+#delayed_credit_modal table .suggestions li {
+    border-bottom: solid 1px #DEE2E6;
+    font-size: 12px;
+}
+
+#delayed_credit_modal table .suggestions li:hover {
+    background: #2ca01cd4;
+    color: #fff;
+}
+
+#delayed_credit_modal .table>thead>tr>th {
+    font-weight: 700;
+}
+
+#delayed_credit_modal .table tbody tr td.item-action {
+    text-align: center;
+    font-size: 18px;
+}
+
+#delayed_credit_modal form .attachement-file-section {
+    border: dashed 4px #EAF3EE;
+    padding: 10px;
+    margin: 20px 0;
+    background-color: #fff;
+}
+
+#delayed_credit_modal form .attachement-file-section .label {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    background: #fff;
+    position: absolute;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+#delayed_credit_modal form .attachement-file-section button.attachment-btn {
+    background: #2CA01C;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 36px;
+    height: auto;
+    border: none;
+    margin: 10px;
+    margin-top: 30px;
+}
+
+#delayed_credit_modal form .attachement-file-section input[name='attachment-file'] {
+    display: none;
+}
+
+#delayed_credit_modal form .attachement-viewer {
+    display: flow-root;
+}
+
+#delayed_credit_modal form .attachement-file-section .attachement-viewer img {
+    float: left;
+    width: 109px;
+    padding: 3px;
+    border: solid 1px #EAF3EE;
+    margin: 3px;
+}
+
+#delayed_credit_modal form .attachement-file-section button.attachment-btn:hover {
+    background: #238a15;
+}

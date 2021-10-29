@@ -3,7 +3,7 @@
 <?php if(!isset($deposit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/credit-card-payment/<?=$ccPayment->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/deposit/<?=$deposit->id?>">
 <?php endif; ?>
     <div id="depositModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
@@ -232,7 +232,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackAmount">Cash back amount</label>
-                                                        <input type="number" name="cash_back_amount" value="<?=number_format(floatval($deposit->cash_back_amount), 2, '.', ',')?>" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
+                                                        <input type="number" name="cash_back_amount" value="<?=isset($deposit) ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
                                                     </div>
                                                 </div>
                                             </div>

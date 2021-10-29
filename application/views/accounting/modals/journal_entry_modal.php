@@ -1,6 +1,10 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
+<?php if(!isset($journal_entry)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
+<?php else : ?>
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/journal/<?=$journal_entry->id?>">
+<?php endif; ?>
     <div id="journalEntryModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->

@@ -1,6 +1,10 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
+<?php if(!isset($transfer)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
+<?php else : ?>
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/transfer/<?=$transfer->id?>">
+<?php endif; ?>
     <div id="transferModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -59,7 +63,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group w-50">
                                                 <label for="transferAmount">Transfer Amount</label>
-                                                <input type="number" name="transfer_amount" value="<?=number_format(floatval($transfer->transfer_amount), 2, '.', ',')?>" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
+                                                <input type="number" name="transfer_amount" value="<?=isset($transfer) ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : ''?>" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control text-right" required>
                                             </div>
                                         </div>
 

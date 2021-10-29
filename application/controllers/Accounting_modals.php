@@ -1567,7 +1567,7 @@ class Accounting_modals extends MY_Controller
     {
         $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
 
-        if ($data['cash_back_amount'] !== "") {
+        if ($data['cash_back_amount'] !== "" && $data['cash_back_amount'] !== "0.00") {
             $this->form_validation->set_rules('cash_back_account', 'Cash back account', 'required|differs[bank_account]');
         }
 
@@ -6805,6 +6805,12 @@ class Accounting_modals extends MY_Controller
             case 'credit-card-payment' :
                 $return = $this->update_cc_payment($transactionId, $data);
             break;
+            case 'deposit' :
+                $return = $this->update_deposit($transactionId, $data);
+            break;
+            case 'transfer' :
+                $return = $this->update_transfer($transactionId, $data);
+            break;
         }
 
         echo json_encode($return);
@@ -7862,6 +7868,8 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
+            $payment = $this->accounting_pay_down_credit_card_model->get_by_id($paymentId);
+
             $updateData = [
                 'credit_card_id' => $data['credit_card_account'],
                 'payee_id' => $data['payee'],
@@ -7875,11 +7883,9 @@ class Accounting_modals extends MY_Controller
             $update = $this->accounting_pay_down_credit_card_model->update($paymentId, $updateData);
 
             if ($update) {
-                $payment = $this->accounting_pay_down_credit_card_model->get_by_id($paymentId);
-
                 // REVERT OLD
                 if(!is_null($payment->attachments) && $payment->attachments !== "") {
-                    foreach($payment->attachments as $attachmentId) {
+                    foreach(json_decode($payment->attachments, true) as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) - 1
@@ -7930,9 +7936,402 @@ class Accounting_modals extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
             }
 
-            $return['data'] = $update;
+            $return['data'] = $paymentId;
             $return['success'] = $update ? true : false;
-            $return['message'] = $update ? 'Payment Successful!' : 'An unexpected error occured!';
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+        }
+
+        return $return;
+    }
+
+    private function update_deposit($depositId, $data)
+    {
+        $this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
+
+        if ($data['cash_back_amount'] !== "") {
+            $this->form_validation->set_rules('cash_back_account', 'Cash back account', 'required|differs[bank_account]');
+        }
+
+        if (isset($data['funds_account']) && isset($data['amount'])) {
+            $this->form_validation->set_rules('funds_account[]', 'Account', 'required');
+            $this->form_validation->set_rules('amount[]', 'Amount', 'required');
+        }
+
+        if (!isset($data['template_name'])) {
+            $this->form_validation->set_rules('date', 'Date', 'required');
+        } else {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        }
+
+        $return = [];
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } elseif (!isset($data['account']) && !isset($data['amount'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+
+            $totalAmount = array_sum(array_map(function ($item) {
+                return floatval($item);
+            }, $data['amount']));
+
+            $totalAmount = $totalAmount - floatval($data['cash_back_amount']);
+
+            $depositData = [
+                'company_id' => logged('company_id'),
+                'account_id' => $data['bank_account'],
+                'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'total_amount' => number_format($totalAmount, 2, '.', ','),
+                'cash_back_account_id' => $data['cash_back_account'],
+                'cash_back_memo' => $data['cash_back_memo'],
+                'cash_back_amount' => $data['cash_back_amount'],
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'recurring' => isset($data['template_name']) ? 1 : 0,
+            ];
+
+            $update = $this->accounting_bank_deposit_model->update($depositId, $depositData);
+
+            if ($update > 0) {
+                // if (isset($data['template_name'])) {
+                //     $recurringData = [
+                //         'company_id' => getLoggedCompanyID(),
+                //         'template_name' => $data['template_name'],
+                //         'recurring_type' => $data['recurring_type'],
+                //         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                //         'txn_type' => 'deposit',
+                //         'txn_id' => $depositId,
+                //         'recurring_interval' => $data['recurring_interval'],
+                //         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                //         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                //         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                //         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                //         'end_type' => $data['end_type'],
+                //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                //         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                //         'status' => 1
+                //     ];
+    
+                //     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                // }
+
+                // REVERT OLD
+                if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
+                    foreach(json_decode($deposit->attachments, true) as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) - 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
+                foreach($funds as $fund) {
+                    $account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+                    $accountBalance = $account->account_id !== "7" ? floatval($account->balance) + floatval($fund->amount) : floatval($account->balance) - floatval($fund->amount);
+                    $accountBalance = number_format($accountBalance, 2, '.', ',');
+                    $accountData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $accountBalance
+                    ];
+                    $this->chart_of_accounts_model->updateBalance($accountData);
+                }
+
+                $this->accounting_bank_deposit_model->deleteFunds($depositId);
+
+                // NEW
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $fundsData = [];
+                foreach ($data['funds_account'] as $key => $value) {
+                    $receivedFrom = explode('-', $data['received_from'][$key]);
+
+                    $fundsData[] =[
+                        'bank_deposit_id' => $depositId,
+                        'received_from_key' => $receivedFrom[0],
+                        'received_from_id' => $receivedFrom[1],
+                        'received_from_account_id' => $value,
+                        'description' => $data['description'][$key],
+                        'payment_method' => $data['payment_method'][$key],
+                        'ref_no' => $data['reference_no'][$key],
+                        'amount' => $data['amount'][$key]
+                    ];
+
+                    if(!is_null($funds[$key])) {
+                        $fundsData[$key]['created_at'] = $funds[$key]->created_at;
+                    }
+
+                    if (!isset($data['template_name'])) {
+                        $account = $this->chart_of_accounts_model->getById($value);
+
+                        $accountBalance = $account->account_id !== "7" ? floatval($account->balance) - floatval($data['amount'][$key]) : floatval($account->balance) + floatval($data['amount'][$key]);
+                        $accountBalance = number_format($accountBalance, 2, '.', ',');
+                        $accountData = [
+                            'id' => $value,
+                            'company_id' => logged('company_id'),
+                            'balance' => $accountBalance
+                        ];
+                        $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
+                    }
+                }
+
+                $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+
+                if (!isset($data['template_name'])) {
+                    // OLD
+                    $oldDepositAcc = $this->chart_of_accounts_model->getById($deposit->account_id);
+                    $oldAccData = [
+                        'id' => $oldDepositAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval($oldDepositAcc->balance) - floatval($deposit->total_amount)
+                    ];
+                    $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+                    if ($deposit->cash_back_amount !== "" && !is_null($deposit->cash_back_amount)) {
+                        $oldCashBackAcc = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+                        $oldCashBackAccData = [
+                            'id' => $oldCashBackAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $oldCashBackAcc->account_id !== "7" ? floatval($oldCashBackAcc->balance) - floatval($deposit->cash_back_amount) : floatval($oldCashBackAcc->balance) + floatval($deposit->cash_back_amount)
+                        ];
+
+                        $cashBack = $this->chart_of_accounts_model->updateBalance($oldCashBackAccData);
+                    }
+
+                    // NEW
+                    $depositToAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                    $depositData = [
+                        'id' => $depositToAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval($depositToAcc->balance) + floatval($totalAmount)
+                    ];
+                    $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+                    if ($data['cash_back_amount'] !== "") {
+                        $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
+                        $cashBackData = [
+                            'id' => $cashBackAccount->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($data['cash_back_amount']) : floatval($cashBackAccount->balance) - floatval($data['cash_back_amount'])
+                        ];
+
+                        $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+                    }
+                }
+            }
+
+            $return['data'] = $depositId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+        }
+
+        return $return;
+    }
+
+    private function update_transfer($transferId, $data)
+    {
+        $this->form_validation->set_rules('transfer_from_account', 'Transfer From Account', 'required');
+        $this->form_validation->set_rules('transfer_to_account', 'Transfer To Account', 'required|differs[transfer_from_account]');
+        $this->form_validation->set_rules('transfer_amount', 'Amount', 'required');
+
+        if (isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('date', 'Date', 'required|date');
+        }
+
+        $return = [];
+
+        if ($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+
+            $transferData = [
+                'transfer_from_account_id' => $data['transfer_from_account'],
+                'transfer_to_account_id' => $data['transfer_to_account'],
+                'transfer_amount' => $data['transfer_amount'],
+                'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
+                'transfer_memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'recurring' => isset($data['template_name']) ? 1 : 0,
+            ];
+
+            $update = $this->accounting_transfer_funds_model->update($transferId, $transferData);
+
+            if ($update) {
+                // REVERT OLD
+                if(!is_null($transfer->attachments) && $transfer->attachments !== "") {
+                    foreach(json_decode($transfer->attachments, true) as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) - 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $oldTransferFrom = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+                $oldTransferTo = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+                $oldTransferFromBal = $oldTransferFrom->account_id !== "7" ? floatval($oldTransferFrom->balance) + floatval($transfer->transfer_amount) : floatval($oldTransferFrom->balance) - floatval($transfer->transfer_amount);
+                $oldTransferToBal = $oldTransferTo->account_id !== "7" ? floatval($oldTransferTo->balance) - floatval($transfer->transfer_amount) : floatval($oldTransferTo->balance) + floatval($transfer->transfer_amount);
+
+                $oldTransferFromBal = number_format($oldTransferFromBal, 2, '.', ',');
+                $oldTransferToBal = number_format($oldTransferToBal, 2, '.', ',');
+
+                $oldTransferFromData = [
+                    'id' => $oldTransferFrom->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $oldTransferFromBal
+                ];
+                $oldTransferToData = [
+                    'id' => $oldTransferTo->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $oldTransferToBal
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($oldTransferFromData);
+                $this->chart_of_accounts_model->updateBalance($oldTransferToData);
+
+                // NEW
+                $transferFromAcc = $this->chart_of_accounts_model->getById($data['transfer_from_account']);
+                $transferToAcc = $this->chart_of_accounts_model->getById($data['transfer_to_account']);
+
+                $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($data['transfer_amount']) : floatval($transferFromAcc->balance) + floatval($data['transfer_amount']);
+                $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($data['transfer_amount']) : floatval($transferToAcc->balance) - floatval($data['transfer_amount']);
+
+                $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+                $transferToBal = number_format($transferToBal, 2, '.', ',');
+
+                $transferFromAccData = [
+                    'id' => $transferFromAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $transferFromBal
+                ];
+                $transferToAccData = [
+                    'id' => $transferToAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $transferToBal
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+                $this->chart_of_accounts_model->updateBalance($transferToAccData);
+
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                // if (isset($data['template_name'])) {
+                //     $recurringData = [
+                //         'company_id' => getLoggedCompanyID(),
+                //         'template_name' => $data['template_name'],
+                //         'recurring_type' => $data['recurring_type'],
+                //         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? ($data['days_in_advance'] !== '' ? $data['days_in_advance'] : null) : null,
+                //         'txn_type' => 'transfer',
+                //         'txn_id' => $transferId,
+                //         'recurring_interval' => $data['recurring_interval'],
+                //         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                //         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                //         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                //         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                //         'end_type' => $data['end_type'],
+                //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                //         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                //         'status' => 1
+                //     ];
+    
+                //     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+    
+                //     $return['data'] = $transferId;
+                //     $return['success'] = $transferId && $recurringId ? true : false;
+                //     $return['message'] = $transferId && $recurringId ? 'Template saved!' : 'An unexpected error occured!';
+                // }
+            }
+
+            $return['data'] = $transferId;
+            $return['success'] = $update ? true : false;
+            $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
         }
 
         return $return;

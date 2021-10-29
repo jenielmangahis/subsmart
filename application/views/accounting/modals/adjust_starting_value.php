@@ -1,6 +1,10 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
+<?php if(!isset($adjustment)) : ?>
 <form action="/accounting/adjust-starting-value/<?=$item->id?>" method="post" id="modal-form">
+<?php else : ?>
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/inventory-qty-adjust/<?=$adjustment->id?>">
+<?php endif; ?>
 <!-- <form onsubmit="submitModalForm(event, this)" id="modal-form"> -->
     <div id="adjust-starting-value-modal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
