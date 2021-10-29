@@ -9,6 +9,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
   opacity: 0;
 }
 </style>
+<style>
+  .hoverEffect {
+    font-size: 29px;
+    position: absolute;
+    margin: 30px 55px;
+    cursor: pointer;
+}
+</style>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.css" />
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
@@ -598,14 +606,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                   <span aria-hidden="true">×</span>
                 </button>
             </div>
+            <form id="frm-update-appointment-wait-list" method="post">
             <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
                 <div class="view-wait-list-container"></div>
             </div>
             <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
                 <button type="submit" class="btn btn-primary btn-create-appointment-wait-list" name="action" value="create_appointment">Update</button>                     
-                <button type="submit" class="btn btn-primary btn-create-appointment-wait-list" name="action" value="create_appointment">Set as Appointment</button>
+                <button type="submit" class="btn btn-primary btn-create-appointment-wait-list field-popover" name="action" value="create_appointment" data-trigger="hover" data-original-title="Set as Appointment" data-container="body" data-placement="top" data-content="Will move wait list to calendar">Set as Appointment</button>
                 <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
             </div>
+            </form>
       </div>
   </div>
 </div>
@@ -1133,7 +1143,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             displayEventEnd: true,
             allDaySlot: false,
             //timeFormat: 'h(:mm)a'
-          },          
+          }, 
+          dayCellDidMount(arg) {
+           arg.isDisabled = true; // Cell disabled, like invalid range, not work why ?
+           console.log("CELL", arg);
+          },               
           selectable: true,
           select: function(info) {
             //console.log(info);
@@ -2341,5 +2355,48 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
         }, 800);
       });
+
+      $("#frm-update-appointment-wait-list").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'calendar/_create_appointment_wait_list';
+        $(".btn-create-appointment-wait-list").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#frm-create-appointment-wait-list").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      $("#modal-create-appointment").modal('hide');
+                      Swal.fire({
+                          title: 'Success',
+                          text: 'Appointment wait list was successfully created.',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                            $("#modal-create-wait-list").modal('hide');
+                            load_wait_list();
+                          }
+                      });
+                  }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot save data.',
+                        text: o.msg
+                      });
+                  }
+
+                  $(".btn-create-appointment-wait-list").html('Schedule');
+               }
+            });
+        }, 1000);
+    });
 </script>
 
