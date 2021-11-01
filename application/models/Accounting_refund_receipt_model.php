@@ -47,23 +47,24 @@ class Accounting_refund_receipt_model extends MY_Model
         $query = $this->db->get_where('accounting_refund_receipt', array('id' => $id));
         return $query->result();
     }
-	public function getRefundReceiptDetails_by_id($id)
+    public function getRefundReceiptDetails_by_id($id)
     {
         $query = $this->db->get_where('accounting_refund_receipt', array('id' => $id));
         return $query->row();
     }
-	public function additem_details($data)
+    public function additem_details($data)
     {
         $query = $this->db->insert('refund_receipt_items', $data);
         $insert_id = $this->db->insert_id();
         return  $insert_id;
-    }public function get_refund_receipt_items($refund_receipt_id)
+    }
+    public function get_refund_receipt_items($refund_receipt_id)
     {
         $this->db->reset_query();
         $query = $this->db->query("SELECT *,refund_receipt_items.cost AS sri_cost FROM refund_receipt_items JOIN items ON refund_receipt_items.items_id = items.id WHERE  refund_receipt_items.refund_receipt_id= ".$refund_receipt_id);
         return $query->result();
     }
-	public function delete_refund_receipt_items($refund_receipt_id)
+    public function delete_refund_receipt_items($refund_receipt_id)
     {
         $this->db->delete('refund_receipt_items', array('refund_receipt_id' => $refund_receipt_id));
     }

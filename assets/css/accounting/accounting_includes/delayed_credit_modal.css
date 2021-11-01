@@ -42,7 +42,7 @@
     display: none;
 }
 
-#delayed_credit_modal .delayed_charge_date {
+#delayed_credit_modal .delayed_credit_date {
     margin-top: 30px;
 }
 
@@ -56,7 +56,7 @@
     font-size: 12px;
 }
 
-#delayed_credit_modal input[name="delayed_charge_date"] {
+#delayed_credit_modal input[name="delayed_credit_date"] {
     width: 200px;
 }
 

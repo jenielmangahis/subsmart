@@ -279,10 +279,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="delayed_charge_date">
+                                <div class="delayed_credit_date">
                                     <div class="form-group">
                                         <label for="job_type">Delayed Charge date</label>
-                                        <input type="date" class="form-control" name="delayed_charge_date" required />
+                                        <input type="date" class="form-control required" name="delayed_credit_date" required />
                                     </div>
                                 </div>
                             </div>

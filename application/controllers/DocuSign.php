@@ -552,7 +552,7 @@ class DocuSign extends MY_Controller
         $count = count($files['name']);
 
         for ($i = 0; $i < $count; $i++) {
-            if ($files['size'][$i] <= self::ONE_MB * 8) {
+            if ($files['size'][$i] <= self::ONE_MB * 20) {
                 continue;
             }
 

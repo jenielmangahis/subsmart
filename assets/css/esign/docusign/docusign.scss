@@ -103,6 +103,12 @@ body {
   margin-top: 80px;
   margin-bottom: 50px;
 
+  [data-field-type="date-signed"],
+  .text {
+    font-family: monospace;
+    font-size: #{em(12)};
+  }
+
   input,
   select {
     font-size: #{em(12)};
@@ -323,6 +329,21 @@ body {
 
 .fillAndSign__signatureDraw {
   max-height: #{em(40)};
+}
+
+.fillAndSign__signatureContainer {
+  position: relative;
+}
+
+.fillAndSign__signatureDrawDate {
+  position: absolute;
+  width: max-content;
+  font-size: 9px !important;
+  background-color: #333;
+  color: #fff;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .docusignField__checkbox,

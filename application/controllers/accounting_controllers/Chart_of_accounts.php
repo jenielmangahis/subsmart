@@ -1856,8 +1856,8 @@ class Chart_of_accounts extends MY_Controller {
 
             switch($accType) {
                 case 'Credit Card' :
-                    $transaction['charge'] = '';
-                    $transaction['payment'] = number_format(floatval($deposit), 2, '.', ',');
+                    $transaction['charge'] = number_format(floatval($deposit), 2, '.', ',');
+                    $transaction['payment'] = '';
                 break;
                 case 'Asset' :
                     $transaction['increase'] = '';
@@ -1868,8 +1868,8 @@ class Chart_of_accounts extends MY_Controller {
                     $transaction['decrease'] = number_format(floatval($deposit), 2, '.', ',');
                 break;
                 default :
-                    $transaction['payment'] = '';
-                    $transaction['deposit'] = number_format(floatval($deposit), 2, '.', ',');
+                    $transaction['payment'] = number_format(floatval($deposit), 2, '.', ',');
+                    $transaction['deposit'] = '';
                 break;
             }
 
@@ -3673,7 +3673,7 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($adjustedProds as $key => $adjustedProd) {
             $adjustedProds[$key]->product = $this->items_model->getItemById($adjustedProd->product_id)[0];
-            $adjustedProds[$key]->location = $this->items_model->getItemLocation($adjustedProd->location_id, $adjustedProd->product_id);
+            $adjustedProds[$key]->locations = $this->items_model->getLocationByItemId($adjustedProd->product_id);
         }
 
         $this->page_data['adjustment_no'] = $adjustment->adjustment_no;

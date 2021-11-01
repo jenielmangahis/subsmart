@@ -44,6 +44,12 @@ class Accounting_delayed_charge_model extends MY_Model {
     }
 	public function delete_delayed_charge_items($delayed_charge_id)
 	{
-		$this->db->delete('item_details', array('type_id' => $delayed_charge_id,'type'=>'Delayed Charge'));
+		$this->db->delete('accounting_delayed_charge_items', array('delayed_charge_id'=>$delayed_charge_id));
 	}
+	public function additem_details($data)
+    {
+        $this->db->insert('accounting_delayed_charge_items', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
 }
