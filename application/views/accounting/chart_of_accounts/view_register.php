@@ -79,7 +79,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <button type="button" class="btn btn-success float-right">Reconcile</button>
                                     <div class="float-right text-right mr-3">
                                         <p class="m-0">ENDING BALANCE</p>
-                                        <h3 style="margin: 0 !important;">$<?=number_format(floatval($account->balance), 2, '.', ',')?></h3>
+                                        <h3 style="margin: 0 !important;">
+                                            <?php
+                                                $balance = '$'.number_format(floatval($account->balance), 2, '.', ',');
+                                                $balance = str_replace('$-', '-$', $balance);
+                                                echo $balance;
+                                            ?>
+                                        </h3>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">

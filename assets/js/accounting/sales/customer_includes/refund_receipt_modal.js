@@ -783,3 +783,10 @@ $(document).on("change", "div#add_refund_receipt_Modal form select[name='payment
         $('#other_payment_area').show();
     }
 });
+$(document).on("click", "#add_refund_receipt_Modal form .attachement-file-section button.attachment-btn", function(event) {
+    // $(this).preventDefault();
+    $("#add_refund_receipt_Modal form input[name='attachment-file']").trigger('click');
+});
+$(document).on("change", "#add_refund_receipt_Modal form input[name='attachment-file']", function(event) {
+    upload_attachment("#add_refund_receipt_Modal form");
+});

@@ -909,7 +909,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                         $(this).find('select').append(`<option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option>`);
                     }
                     if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Transfer' || rowData.type === 'Credit Card Pmt' ||
-                        rowData.type === 'Bill Payment'
+                        rowData.type === 'Bill Payment' || rowData.type === 'Inventory Starting Value'
                     ) {
                         $(this).find('select').prop('disabled', true);
                     }
@@ -978,6 +978,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
 $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction', function() {
     var row = $('#registers-table tbody tr.editting');
     var data = $('#registers-table').DataTable().row(row).data();
+    var displayedType = data.type;
     var transactionType = data.type;
     switch(data.type) {
         case 'CC Expense' :
@@ -1096,6 +1097,8 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
             break;
         }
     });
+
+    data.type = displayedType;
 });
 
 $(document).on('click', '#registers-table tbody tr.action-row #delete-transaction', function() {

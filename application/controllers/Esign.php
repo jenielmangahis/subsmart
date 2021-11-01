@@ -211,6 +211,7 @@ class Esign extends MY_Controller {
 		$isTemplate = array_key_exists('template_id', $queries);
 		$isSelfSigning = array_key_exists('signing_id', $queries);
 
+		$this->page_data['is_self_signing'] = false;
 		if ($isSelfSigning) {
 			$this->page_data['file_id'] = $queries['signing_id'];
 			$this->page_data['is_self_signing'] = true;

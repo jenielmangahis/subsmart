@@ -376,9 +376,13 @@ $(document).ready(function () {
 
   const views = [...$navItems].map((item) => {
     const navItemLink = $(item).find("a").attr("href");
-    const urlParams = new URLSearchParams(new URL(navItemLink).search);
-    if (!urlParams.has("view")) return null;
-    return urlParams.get("view").toLowerCase();
+    try {
+      const urlParams = new URLSearchParams(new URL(navItemLink).search);
+      if (!urlParams.has("view")) return null;
+      return urlParams.get("view").toLowerCase();
+    } catch (error) {
+      return null;
+    }
   });
 
   const [defaultView] = views.filter(Boolean);

@@ -1762,6 +1762,18 @@ class Accounting_modals extends MY_Controller
 
         $delete = $this->accounting_inventory_qty_adjustments_model->delete_adjustment_products($adjustment->id);
 
+        $adjustmentAcc = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+        $newBalance = floatval($adjustmentAcc->balance) + floatval($adjustment->total_amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $adjustmentAccData = [
+            'id' => $adjustmentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
         return $delete;
     }
 
@@ -1823,8 +1835,7 @@ class Accounting_modals extends MY_Controller
                     $adjustmentData = [
                         'adjustment_no' => $data['reference_no'],
                         'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                        'inventory_adjustment_account_id' => $adjustmentAcc[1],
-                        'inventory_adjustment_account_key' => $adjustmentAcc[0],
+                        'inventory_adjustment_account_id' => $data['inventory_adj_account'],
                         'memo' => $data['memo'],
                         'total_amount' => $total,
                         'created_by' => logged('id'),
@@ -6647,7 +6658,6 @@ class Accounting_modals extends MY_Controller
         $startingValAdjustment = $this->starting_value_model->get_by_item_id($item_id);
 
         $startValueAdjData = [
-            'company_id' => logged('company_id'),
             'item_id' => $item_id,
             'ref_no' => $this->input->post('ref_no'),
             'location_id' => $this->input->post('location'),
@@ -6657,35 +6667,68 @@ class Accounting_modals extends MY_Controller
             'inv_adj_account' => $this->input->post('inventory_adj_account'),
             'memo' => $this->input->post('memo'),
             'total_amount' => floatval($this->input->post('initial_qty_on_hand')) * floatval($this->input->post('initial_cost')),
-            'status' => 1
         ];
 
-        $itemData = [
-            'cost' => $startValueAdjData['initial_cost']
-        ];
+        if(!is_null($startingValAdjustment)) {
+            // REVERT PREVIOUS ADJUSTMENT
+            $locationId = $startingValAdjustment->location_id;
+            $location = $this->items_model->getItemLocation($locationId, $item_id);
+            $quantity = intval($location->qty) - intval($startingValAdjustment->initial_qty);
+            $quantity = intval($location->initial_qty) + $quantity;
+            $locationDetails = [
+                'qty' => $quantity
+            ];
 
-        $accDetails = [
-            'as_of_date' => $startValueAdjData['as_of_date']
-        ];
+            $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
+            $updateLocation = $this->items_model->updateLocationDetails($locationDetails, $condition);
+
+            $adjustmentAcc = $this->chart_of_accounts_model->getById($startingValAdjustment->inv_adj_account);
+            $newBalance = floatval($adjustmentAcc->balance) + floatval($startingValAdjustment->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $adjustmentAccData = [
+                'id' => $adjustmentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+            $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
+            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+            $newBalance = floatval($invAssetAcc->balance) - floatval($startingValAdjustment->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $invAssetAccData = [
+                'id' => $invAssetAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+        }
+
+        // $itemData = [
+        //     'cost' => $startValueAdjData['initial_cost']
+        // ];
+
+        // $accDetails = [
+        //     'as_of_date' => $startValueAdjData['as_of_date']
+        // ];
 
         $locationId = $startValueAdjData['location_id'];
-        $locationAdjustments = $this->items_model->getItemQuantityAdjustments($item_id, $locationId);
+        $location = $this->items_model->getItemLocation($locationId, $item_id);
+        $quantity = intval($location->qty) - intval($location->initial_qty);
+        $quantity = intval($startValueAdjData['initial_qty']) + $quantity;
         $locationDetails = [
-            'initial_qty' => $startValueAdjData['initial_qty']
+            'qty' => $quantity
         ];
-        $quantity = intval($startValueAdjData['initial_qty']);
-        if (!empty($locationAdjustments)) {
-            foreach ($locationAdjustments as $adj) {
-                $quantity = $quantity + intval($adj->change_in_quantity);
-            }
-        }
-        $locationDetails['qty'] = $quantity;
 
         // Update item initial cost in items
-        $updateItem = $this->items_model->update($itemData, ['id' => $item_id, 'company_id' => logged('company_id')]);
+        // $updateItem = $this->items_model->update($itemData, ['id' => $item_id, 'company_id' => logged('company_id')]);
 
         // Update item as of date in item_accounting_details table
-        $updateAccDetails = $this->items_model->updateItemAccountingDetails($accDetails, $item_id);
+        // $updateAccDetails = $this->items_model->updateItemAccountingDetails($accDetails, $item_id);
 
         // Update initial quantity and quantity of item in items_has_storage_loc table
         $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
@@ -6718,6 +6761,8 @@ class Accounting_modals extends MY_Controller
 
         // Insert starting value adjustment record
         if(is_null($startingValAdjustment)) {
+            $startingValueAdjData['company_id'] = logged('company_id');
+            $startingValueAdjData['status'] = 1;
             $sql = $this->starting_value_model->create($startValueAdjData);
         } else {
             $sql = $this->starting_value_model->update($startingValAdjustment->id, $startValueAdjData);
@@ -6822,6 +6867,9 @@ class Accounting_modals extends MY_Controller
             break;
             case 'inventory-qty-adjust' :
                 $return = $this->update_quantity_adjustment($transactionId, $data);
+            break;
+            case 'inventory-starting-value' :
+                $return = $this->update_starting_value_adjustment($transactionId, $data);
             break;
         }
 
@@ -8552,6 +8600,12 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('change_in_qty[]', 'Change in Quantity', 'required');
         }
 
+        if(isset($data['adjusted_product'])) {
+            $this->form_validation->set_rules('adjusted_product[]', 'Adjusted Product', 'required');
+            $this->form_validation->set_rules('adjusted_location[]', 'Adjusted Location', 'required');
+            $this->form_validation->set_rules('adjusted_change_in_qty[]', 'Adjusted Change in Quantity', 'required');
+        }
+
         $return = [];
 
         if ($this->form_validation->run() === false) {
@@ -8575,6 +8629,17 @@ class Accounting_modals extends MY_Controller
                 }
             }
 
+            foreach($data['adjusted_product'] as $key => $value) {
+                $item = $this->items_model->getItemById($value)[0];
+                $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+
+                if(!is_null($startingValAdj)) {
+                    $total += floatval($data['adjusted_change_in_qty'][$key]) * floatval($startingValAdj->initial_cost);
+                } else {
+                    $total += floatval($data['adjusted_change_in_qty'][$key]) *  floatval($item->cost);
+                }
+            }
+
             $data['transaction_id'] = $adjustmentId;
             $revert = $this->revert_inventory_qty_adjustment($data);
 
@@ -8582,8 +8647,7 @@ class Accounting_modals extends MY_Controller
                 $adjustmentData = [
                     'adjustment_no' => $data['reference_no'],
                     'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                    'inventory_adjustment_account_id' => $adjustmentAcc[1],
-                    'inventory_adjustment_account_key' => $adjustmentAcc[0],
+                    'inventory_adjustment_account_id' => $data['inventory_adj_account'],
                     'memo' => $data['memo'],
                     'total_amount' => $total,
                 ];
@@ -8629,6 +8693,45 @@ class Accounting_modals extends MY_Controller
     
                         $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                     }
+
+                    $adjustedProducts = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustmentId);
+                    foreach($data['adjusted_product'] as $key => $value) {
+                        $adjustmentProducts[] = [
+                            'adjustment_id' => $adjustmentId,
+                            'product_id' => $value,
+                            'location_id' => $data['location'][$key],
+                            'new_quantity' => $data['new_qty'][$key],
+                            'change_in_quantity' => $data['change_in_qty'][$key]
+                        ];
+
+                        $location = $this->items_model->getItemLocation($data['adjusted_location'][$key], $value);
+                        $locationData[] = [
+                            'id' => $data['adjusted_location'][$key],
+                            'qty' => intval($location->qty) + intval($data['adjusted_change_in_qty'][$key])
+                        ];
+
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                        $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+                        $item = $this->items_model->getItemById($value)[0];
+    
+                        if(!is_null($startingValAdj)) {
+                            $amount = floatval($data['change_in_qty'][$key]) * floatval($startingValAdj->initial_cost);
+                        } else {
+                            $amount = floatval($data['change_in_qty'][$key]) *  floatval($item->cost);
+                        }
+    
+                        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                        $newBalance = floatval($invAssetAcc->balance) + $amount;
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+    
+                        $invAssetAccData = [
+                            'id' => $invAssetAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+    
+                        $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                    }
     
                     $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
                     $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
@@ -8651,6 +8754,107 @@ class Accounting_modals extends MY_Controller
             $return['success'] = $update ? true : false;
             $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
         }
+
+        return $return;
+    }
+
+    private function update_starting_value_adjustment($adjustmentId, $data)
+    {
+        $startingValAdjustment = $this->starting_value_model->get_by_id($adjustmentId);
+
+        $startValueAdjData = [
+            'ref_no' => $this->input->post('ref_no'),
+            'location_id' => $this->input->post('location'),
+            'initial_qty' => $this->input->post('initial_qty_on_hand'),
+            'as_of_date' => date('Y-m-d', strtotime($this->input->post('as_of_date'))),
+            'initial_cost' => $this->input->post('initial_cost'),
+            'inv_adj_account' => $this->input->post('inventory_adj_account'),
+            'memo' => $this->input->post('memo'),
+            'total_amount' => floatval($this->input->post('initial_qty_on_hand')) * floatval($this->input->post('initial_cost')),
+        ];
+
+        $update = $this->starting_value_model->update($startingValAdjustment->id, $startValueAdjData);
+
+        if($update) {
+            // REVERT PREVIOUS ADJUSTMENT
+            $locationId = $startingValAdjustment->location_id;
+            $location = $this->items_model->getItemLocation($locationId, $item_id);
+            $quantity = intval($location->qty) - intval($startingValAdjustment->initial_qty);
+            $quantity = intval($location->initial_qty) + $quantity;
+            $locationDetails = [
+                'qty' => $quantity
+            ];
+
+            $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
+            $updateLocation = $this->items_model->updateLocationDetails($locationDetails, $condition);
+
+            $adjustmentAcc = $this->chart_of_accounts_model->getById($startingValAdjustment->inv_adj_account);
+            $newBalance = floatval($adjustmentAcc->balance) + floatval($startingValAdjustment->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $adjustmentAccData = [
+                'id' => $adjustmentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+            $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
+            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+            $newBalance = floatval($invAssetAcc->balance) - floatval($startingValAdjustment->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $invAssetAccData = [
+                'id' => $invAssetAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+            // MAKE THE ADJUSTMENT UPDATE
+            $locationId = $startValueAdjData['location_id'];
+            $location = $this->items_model->getItemLocation($locationId, $item_id);
+            $quantity = intval($location->qty) - intval($location->initial_qty);
+            $quantity = intval($startValueAdjData['initial_qty']) + $quantity;
+            $locationDetails = [
+                'qty' => $quantity
+            ];
+
+            // Update initial quantity and quantity of item in items_has_storage_loc table
+            $condition = ['id' => $locationId, 'item_id' => $item_id, 'company_id' => logged('company_id')];
+            $updateLocation = $this->items_model->updateLocationDetails($locationDetails, $condition);
+
+            $adjustmentAcc = $this->chart_of_accounts_model->getById($startValueAdjData['inv_adj_account']);
+            $newBalance = floatval($adjustmentAcc->balance) - $startValueAdjData['total_amount'];
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $adjustmentAccData = [
+                'id' => $adjustmentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+            $itemAccDetails = $this->items_model->getItemAccountingDetails($item_id);
+            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+            $newBalance = floatval($invAssetAcc->balance) + $startValueAdjData['total_amount'];
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $invAssetAccData = [
+                'id' => $invAssetAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+        }
+
+        $return['data'] = $adjustmentId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
 
         return $return;
     }

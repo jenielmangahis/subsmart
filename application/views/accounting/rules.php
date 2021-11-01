@@ -181,7 +181,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             </div>
                             <div class="form-group">
                                 <div class="addCondition-container">
-                                    <div id="addCondition">
+                                    <div id="addCondition" class="addCondition">
                                         <div class="tab-select">
                                             <input type="hidden" id="counterCondition" value="1">
                                             <select

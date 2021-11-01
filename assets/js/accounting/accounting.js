@@ -26,16 +26,30 @@ $(document).ready(function () {
         $('.addCondition-container').children($('.deleteCondition').show());
         var $target = $('html,body');
         $target.animate({scrollTop: $target.height()}, 1000);
+
         var row = $('#addCondition').clone(true);
         row.find("[data-type='conditions.comment']").val("");
         row.find("#conID").val("");
         row.removeAttr("data-id");
         row.appendTo('.addCondition-container');
+        row.find(".inputError").removeClass("inputError");
+
+        const $descriptionSelect = row.find("[data-type='conditions.description']").get(0);
+        if (!$descriptionSelect) return;
+        if (typeof window.addConditionSelectListener !== "function") return;
+        window.addConditionSelectListener($descriptionSelect);
     });
     //Remove added condition
     $(document).on("click","#btnDeleteCondition",function (e) {
         e.preventDefault();
-        $("#addCondition").remove();
+
+        const $target = e.target;
+        const $parent = $target.closest(".addCondition");
+
+        if ($parent) {
+            $parent.remove();
+        }
+
         var check_count = jQuery("div[id='addCondition']").length;
         var counter = $('#counterCondition').val();
         if (check_count == counter){

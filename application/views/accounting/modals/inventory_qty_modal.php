@@ -77,7 +77,7 @@
                                                                         </td>
                                                                         <td></td>
                                                                         <td>
-                                                                            <select name="location[]" class="form-control"></select>
+                                                                            <select name="location[]" class="form-control" required></select>
                                                                         </td>
                                                                         <td></td>
                                                                         <td><input type="number" name="new_qty[]" class="form-control text-right" required></td>
@@ -133,10 +133,22 @@
                                                                     <?php foreach($adjustedProds as $adjustedProd) : ?>
                                                                     <tr>
                                                                         <td><?=$count?></td>
-                                                                        <td><?=$adjustedProd->product->title?></td>
+                                                                        <td>
+                                                                            <select name="adjusted_product[]" class="form-control" required>
+                                                                                <option value="<?=$adjustedProd->product_id?>"><?=$adjustedProd->product->title?></option>
+                                                                            </select>
+                                                                        </td>
                                                                         <td><?=$adjustedProd->product->description?></td>
-                                                                        <td><?=$adjustedProd->location->name?></td>
-                                                                        <td><?=$adjustedProd->change_in_quantity?></td>
+                                                                        <td>
+                                                                            <select name="adjusted_location[]" class="form-control" required>
+                                                                                <?php foreach($adjustedProd->locations as $location) : ?>
+                                                                                    <option value="<?=$location['id']?>" <?=$location['id'] === $adjustedProd->location_id ? 'selected' : ''?>><?=$location['name']?></option>
+                                                                                <?php endforeach; ?>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="number" name="adjusted_change_in_qty[]" class="form-control text-right" value="<?=$adjustedProd->change_in_quantity?>" required>
+                                                                        </td>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
                                                                     <?php $count++; endforeach; ?>
