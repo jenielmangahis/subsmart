@@ -51,7 +51,7 @@
         </li>
     </ul>
 </div>
-<div class="row" id="dashboard_buttons">
+<div class="row nsm-page-buttons">
     <div class="col-12 grid-mb text-end">
         <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
             <i class='bx bx-fw bx-user-plus'></i> Add Customer

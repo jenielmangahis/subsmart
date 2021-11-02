@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class DocuSign extends MY_Controller
+class DocuSign extends MYF_Controller
 {
     const ONE_MB = 1048576;
     private $password = 'Riwb5moQi%S@$c8ZM3dq';
@@ -447,6 +447,12 @@ class DocuSign extends MY_Controller
             if ($nextRecipient['role'] === 'Needs to Sign') {
                 $this->sendEnvelope($envelope, $nextRecipient);
             }
+        } else {
+            // Document is completed.
+            $this->db->where('docfile_id', $documentId);
+            $this->db->order_by('id', 'asc');
+            $allRecipients = $this->db->get('user_docfile_recipients')->result_array();
+            $this->sendCompletedNotice($envelope, $allRecipients);
         }
 
         echo json_encode([
@@ -454,6 +460,44 @@ class DocuSign extends MY_Controller
             'next_recipient' => $nextRecipient,
             'has_user' => logged('id') !== false,
         ]);
+    }
+
+    private function sendCompletedNotice(array $envelope, array $recipients)
+    {
+        $mail = getMailInstance(['subject' => $envelope['subject']]);
+        $templatePath = VIEWPATH . 'esign/docusign/email/completed.html';
+        $template = file_get_contents($templatePath);
+
+        $errors = [];
+        foreach ($recipients as $recipient) {
+            var_dump($recipient['id']);
+
+            $message = json_encode([
+                'recipient_id' => $recipient['id'],
+                'document_id' => $envelope['id'],
+                'is_self_signed' => false,
+            ]);
+            $hash = encrypt($message, $this->password);
+            $companyLogo = $this->getCompanyProfile();
+
+            $data = [
+                '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
+                '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
+            ];
+
+            $message = strtr($template, $data);
+
+            $mail->MsgHTML($message);
+            $mail->addAddress($recipient['email']);
+            $isSent = $mail->send();
+            $mail->ClearAllRecipients();
+
+            if (!$isSent) {
+                $errors[$recipient['id']] = $mail->ErrorInfo;
+            }
+        }
+
+        return ['errors' => $errors];
     }
 
     public function apiUploadAttachment()

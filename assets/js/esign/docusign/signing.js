@@ -674,6 +674,7 @@ function Signing(hash) {
       recipient_id,
       field_id: id,
       value,
+      created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     };
 
     const response = await fetch(`${prefixURL}/DocuSign/apiStoreFieldValue`, {
@@ -758,7 +759,7 @@ function Signing(hash) {
       const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
       await Promise.all(promises);
 
-      const time = moment().format("MM/DD/YYYY HH:mm:ss");
+      const time = moment().format("MM/DD/YYYY hh:mm A");
       const html = `
         <div class="fillAndSign__signatureContainer">
           <img class="fillAndSign__signatureDraw" src="${signatureDataUrl}"/>

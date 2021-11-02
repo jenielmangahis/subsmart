@@ -1,3 +1,13 @@
+<?php
+if ($this->session->userdata('usertimezone') == null) {
+    $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
+    $_SESSION['offset_zone'] = json_decode(get_cookie('logged'))->offset_zone;
+    if ($this->session->userdata('usertimezone') == null) {
+        $_SESSION['usertimezone'] = "UTC";
+        $_SESSION['offset_zone'] = "GMT";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,44 +43,44 @@
                 <a href="javascript:void(0);" class="sidebar-toggler">
                     <i class='bx bx-fw bx-menu-alt-left'></i>
                 </a>
-                <a class="nsm-logo-link" href="<?= base_url("dashboard_v2") ?>">
+                <a class="nsm-logo-link" href="<?= base_url("dashboard") ?>">
                     <img class="nsm-logo" src="<?= base_url("assets/images/v2/logo.png") ?>">
                 </a>
             </div>
 
             <ul class="nsm-sidebar-menu">
-                <li class="active selected">
+                <li class="<?php if($page->title == 'Dashboard'): echo 'selected '; endif; if($page->parent == 'Dashboard'): echo 'active'; endif; ?>">
                     <a href="<?= base_url("dashboard") ?>">
-                        <i class='bx bx-fw bx-tachometer'></i> Dashboard
-                        <!-- <i class='bx bx-fw bx-chevron-down list-dropdown-icon'></i> -->
+                        <i class='bx bx-fw bx-tachometer'></i> Dashboard 
+                        <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li>
+                        <li class="<?php if($page->title == 'SMS'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("sms") ?>">
                                 <i class='bx bx-fw bx-message-square-dots'></i> SMS
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Calls and Logs'): echo 'selected'; endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-phone-call'></i> Calls and Logs
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Smart Zoom'): echo 'selected'; endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-square-rounded'></i> Smart Zoom
                             </a>
                         </li>
-                        <li>
-                            <a href="#">
+                        <li class="<?php if($page->title == 'Inbox'): echo 'selected'; endif; ?>">
+                            <a href="<?= base_url("inbox") ?>">
                                 <i class='bx bx-fw bxs-inbox'></i> Inbox
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Sent'): echo 'selected'; endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-paper-plane'></i> Sent
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Support'): echo 'selected'; endif; ?>">
                             <a href="#">
                                 <i class='bx bx-fw bx-support'></i> Support
                             </a>
@@ -78,16 +88,16 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="<?= base_url("dashboard_v2") ?>">
+                    <a href="<?= base_url("workcalender") ?>">
                         <i class='bx bx-fw bx-calendar'></i> Calendar
                     </a>
                 </li>
-                <li>
+                <li class="<?php if($page->parent == 'Sales'): echo 'active'; endif; ?>">
                     <a href="#">
                         <i class='bx bx-fw bx-line-chart'></i> Sales <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                        <li>
+                        <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("events") ?>">
                                 <i class='bx bx-fw bx-calendar-event'></i> Events
                             </a>
@@ -266,7 +276,13 @@
                 </div>
                 <div class="nsm-page-title">
                     <h4><?= $page->title ?></h4>
+                    <?php 
+                    if($page->title == 'Dashboard'):
+                    ?>
                     <span>Welcome <?php echo getLoggedName(); ?>!</span>
+                    <?php
+                    endif;
+                    ?>
                 </div>
                 <div class="nsm-nav-items">
                     <ul>
@@ -310,7 +326,14 @@
                             $overtime_status = 1;
                             // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
                             // $getTimeZone = json_decode($ipInfo);
-                            $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
+
+                            try{
+                                $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
+                            }
+                            catch (Exception $e) {
+                                header("Location: ".base_url()."/logout");
+                            }
+
                             $checkin_date_time = "";
                             $attendance_status = 0;
                             $overtime_status_acknowledgement = 0;

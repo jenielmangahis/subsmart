@@ -496,7 +496,6 @@ $(document).ready(function() {
         $(".ts_schedule").datepicker();
     }
     catch(err){
-        console.log(err);
     }
 
     $(document).on("change", "#to_date_logs", function() {
@@ -516,7 +515,6 @@ $(document).ready(function() {
             $("#my-attendance-logs").DataTable().destroy(); 
         }
         catch(err){
-            console.log(err);
         }
 
         $.ajax({
@@ -539,7 +537,6 @@ $(document).ready(function() {
                     });
                 }
                 catch(err){
-                    console.log(err);
                 }
             },
         });
@@ -889,7 +886,7 @@ $(document).ready(function() {
             data: { attn_id: attn_id },
             success: function(data) {
                 $("#overtime_status_acknowledgement").val(data.overtime_status);
-                console.log(data.overtime_status);
+
                 let startdate = $("#clockedin_date_time").val();
                 let anntendance_status = $("#attendance_status").val();
                 let overtime_status = $("#overtime_status_acknowledgement").val();

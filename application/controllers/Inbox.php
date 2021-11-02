@@ -1,16 +1,16 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH.'controllers/Widgets.php';
 
-class Sms extends Widgets {
+class Inbox extends Widgets {
 
     public function __construct() {
         parent::__construct();
         $this->checkLogin();
-		$this->page_data['page']->title = 'SMS';
+		$this->page_data['page']->title = 'Inbox';
         $this->page_data['page']->parent = 'Dashboard';
     }
 
     public function index() {
-        $this->load->view('v2/pages/sms.php', $this->page_data);
+        $this->load->view('v2/pages/inbox.php', $this->page_data);
     }
 }

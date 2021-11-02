@@ -670,16 +670,21 @@ class Chart_of_accounts extends MY_Controller {
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
+            $account = $this->account_col($expense->id, 'Expense');
+
             if($paymentAccType->account_name === 'Credit Card') {
                 $transaction = [
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => false,
                     'type' => 'CC Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
-                    'account' => $this->account_col($expense->id, 'Expense'),
+                    'payee_disabled' => false,
+                    'account' => $account,
+                    'account_disabled' => $account !== '-Split-',
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -738,11 +743,14 @@ class Chart_of_accounts extends MY_Controller {
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => true,
                     'type' => 'CC Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
+                    'payee_disabled' => false,
                     'account' => $paymentAcc->name,
+                    'account_disabled' => true,
                     'memo' => $expense->memo,
                     'payment' => '',
                     'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
@@ -810,15 +818,20 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $account = $this->account_col($check->id, 'Check');
+
             $transaction = [
                 'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
+                'ref_no_disabled' => false,
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
                 'payee' => $payeeName,
-                'account' => $this->account_col($check->id, 'Check'),
+                'payee_disabled' => false,
+                'account' => $account,
+                'account_disabled' => $account !== '-Split-',
                 'memo' => $check->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -874,11 +887,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
+                'ref_no_disabled' => true,
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
                 'payee' => $payeeName,
+                'payee_disabled' => false,
                 'account' => $this->chart_of_accounts_model->getName($check->bank_account_id),
+                'account_disabled' => true,
                 'memo' => $check->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -934,11 +950,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $journalEntry->id,
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
                 'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
+                'ref_no_disabled' => false,
                 'type' => 'Journal',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => false,
                 'account' => '-Split-',
+                'account_disabled' => true,
                 'memo' => $journalEntry->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -996,11 +1015,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $bill->id,
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'ref_no' => $bill->bill_no === null ? '' : $bill->bill_no,
+                'ref_no_disabled' => true,
                 'type' => 'Bill',
                 'payee_type' => 'vendor',
                 'payee_id' => $bill->vendor_id,
                 'payee' => $payeeName,
+                'payee_disabled' => false,
                 'account' => 'Accounts Payable',
+                'account_disabled' => true,
                 'memo' => $bill->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1065,15 +1087,20 @@ class Chart_of_accounts extends MY_Controller {
                 break;
             }
 
+            $account = $this->account_col($ccCredit->id, 'Credit Card Credit');
+
             $data[] = [
                 'id' => $ccCredit->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
+                'ref_no_disabled' => false,
                 'type' => 'CC-Credit',
                 'payee_type' => $ccCredit->payee_type,
                 'payee_id' => $ccCredit->payee_id,
                 'payee' => $payeeName,
-                'account' => $this->account_col($ccCredit->id, 'Credit Card Credit'),
+                'payee_disabled' => false,
+                'account' => $account,
+                'account_disabled' => $account !== '-Split-',
                 'memo' => $ccCredit->memo,
                 'payment' => number_format(floatval($ccCredit->total_amount), 2, '.', ','),
                 'charge' => '',
@@ -1110,11 +1137,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $ccCredit->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
+                'ref_no_disabled' => true,
                 'type' => 'CC-Credit',
                 'payee_type' => $ccCredit->payee_type,
                 'payee_id' => $ccCredit->payee_id,
                 'payee' => $payeeName,
+                'payee_disabled' => false,
                 'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
+                'account_disabled' => true,
                 'memo' => $ccCredit->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1165,18 +1195,21 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($vendorCredits as $vendorCredit) {
             $vCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCredit->transaction_id);
-            $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
+            $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
             $payeeName = $payee->display_name;
 
             $transaction = [
                 'id' => $vCredit->id,
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'ref_no' => $vCredit->ref_no === null ? '' : $vCredit->ref_no,
+                'ref_no_disabled' => true,
                 'type' => 'Vendor Credit',
                 'payee_type' => 'vendor',
                 'payee_id' => $vendorCredit->payee_id,
                 'payee' => $payeeName,
+                'payee_disabled' => false,
                 'account' => 'Accounts Payable',
+                'account_disabled' => true,
                 'memo' => $vCredit->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1235,11 +1268,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $transfer->id,
                 'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
                 'ref_no' => '',
+                'ref_no_disabled' => true,
                 'type' => 'Transfer',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => true,
                 'account' => $transferAcc,
+                'account_disabled' => false,
                 'memo' => $transfer->transfer_memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1293,20 +1329,30 @@ class Chart_of_accounts extends MY_Controller {
 
             if($accountId === $deposit->cash_back_account_id) {
                 $account = $this->chart_of_accounts_model->getName($deposit->account_id);
+                $accountDisabled = true;
+                $accountFieldName = '';
             } else if(count($funds) > 1 || $deposit->cash_back_amount !== "" && $deposit->cash_back_account_id !== "" && !is_null($deposit->cash_back_amount) && !is_null($deposit->cash_back_account_id)) { 
                 $account = '-Split-';
+                $accountFieldName = '';
+                $accountDisabled = true;
             } else {
                 $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                $accountFieldName = 'funds_account';
+                $accountDisabled = false;
             }
             $transaction = [
                 'id' => $deposit->id,
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'ref_no' => '',
+                'ref_no_disabled' => true,
                 'type' => 'Deposit',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => true,
                 'account' => $account,
+                'account_field_name' => $accountFieldName,
+                'account_disabled' => $accountDisabled,
                 'memo' => $deposit->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1362,12 +1408,15 @@ class Chart_of_accounts extends MY_Controller {
             $transaction = [
                 'id' => $dep->id,
                 'date' => date("m/d/Y", strtotime($dep->date)),
-                'ref_no' => '',
+                'ref_no' => $depFund->ref_no,
+                'ref_no_disabled' => false,
                 'type' => 'Deposit',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => true,
                 'account' => $this->chart_of_accounts_model->getName($dep->account_id),
+                'account_disabled' => true,
                 'memo' => $dep->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1436,16 +1485,21 @@ class Chart_of_accounts extends MY_Controller {
             $paymentAccountType = $this->account_model->getById($paymentAcc->account_id);
             $detailType = $this->account_detail_model->getById($paymentAcc->acc_detail_id);
 
+            $account = $this->account_col($expense->id, 'Expense');
+
             if($paymentAccountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
                 $transaction = [
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => false,
                     'type' => 'Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
-                    'account' => $this->account_col($expense->id, 'Expense'),
+                    'payee_disabled' => false,
+                    'account' => $account,
+                    'account_disabled' => $account !== '-Split-',
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -1506,11 +1560,14 @@ class Chart_of_accounts extends MY_Controller {
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => true,
                     'type' => 'Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
+                    'payee_disabled' => true,
                     'account' => $account->name,
+                    'account_disabled' => true,
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -1579,11 +1636,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $invQtyAdj->id,
                 'date' => date("m/d/Y", strtotime($invQtyAdj->adjustment_date)),
                 'ref_no' => $invQtyAdj->adjustment_no === null ? '' : $invQtyAdj->adjustment_no,
+                'ref_no_disabled' => true,
                 'type' => 'Inventory Qty Adjust',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => true,
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
+                'account_disabled' => true,
                 'memo' => $invQtyAdj->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1705,16 +1765,21 @@ class Chart_of_accounts extends MY_Controller {
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
+            $account = $this->account_col($expense->id, 'Expense');
+
             if($paymentAccType->account_name !== 'Credit Card') {
                 $transaction = [
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => false,
                     'type' => 'Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
-                    'account' => $this->account_col($expense->id, 'Expense'),
+                    'payee_disabled' => false,
+                    'account' => $account,
+                    'account_disabled' => $account !== '-Split-',
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -1774,11 +1839,14 @@ class Chart_of_accounts extends MY_Controller {
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => true,
                     'type' => 'Expense',
                     'payee_type' => $expense->payee_type,
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
-                    'account' => $account->name,
+                    'payee_disabled' => false,
+                    'account' => $paymentAcc->name,
+                    'account_disabled' => true,
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -1838,11 +1906,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $adjustment->id,
                 'date' => date("m/d/Y", strtotime($adjustment->as_of_date)),
                 'ref_no' => $adjustment->ref_no === null ? '' : $adjustment->ref_no,
+                'ref_no_disabled' => false,
                 'type' => 'Inventory Starting Value',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => true,
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
+                'account_disabled' => false,
                 'memo' => $adjustment->memo,
                 'payment' => '',
                 'deposit' => number_format(floatval($deposit), 2, '.', ','),
@@ -1888,11 +1959,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $adjusted->id,
                 'date' => date("m/d/Y", strtotime($adjusted->as_of_date)),
                 'ref_no' => $adjusted->ref_no === null ? '' : $adjusted->ref_no,
+                'ref_no_disabled' => true,
                 'type' => 'Inventory Starting Value',
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'payee_disabled' => true,
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
+                'account_disabled' => true,
                 'memo' => $adjusted->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -1951,11 +2025,14 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $ccPayment->id,
                 'date' => date("m/d/Y", strtotime($ccPayment->date)),
                 'ref_no' => '',
+                'ref_no_disabled' => true,
                 'type' => 'Credit Card Pmt',
                 'payee_type' => 'vendor',
                 'payee_id' => $ccPayment->payee_id,
                 'payee' => $payeeName,
+                'payee_disabled' => true,
                 'account' => $account,
+                'account_disabled' => false,
                 'memo' => $ccPayment->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -2014,11 +2091,14 @@ class Chart_of_accounts extends MY_Controller {
                     'id' => $billPayment->id,
                     'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
                     'ref_no' => $billPayment->to_print_check_no === "1" ? "To print" : ($billPayment->check_no === null ? '' : $billPayment->check_no),
+                    'ref_no_disabled' => false,
                     'type' => 'Bill Payment',
                     'payee_type' => 'vendor',
                     'payee_id' => $billPayment->payee_id,
                     'payee' => $payee->display_name,
+                    'payee_disabled' => true,
                     'account' => 'Accounts Payable',
+                    'account_disabled' => true,
                     'memo' => $billPayment->memo,
                     'payment' => number_format(floatval($billPayment->total_amount), 2, '.', ','),
                     'deposit' => '',
