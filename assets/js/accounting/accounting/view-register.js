@@ -829,6 +829,10 @@ $(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', fun
     }
 });
 
+$(document).on('click', '#registers-table tbody tr.action-row #save-transaction', function() {
+    var data = new FormData();
+});
+
 $(document).on('click', '#registers-table tbody tr', function() {
     if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1 && !$(this).hasClass('action-row') && $(this).find('td.dataTables_empty').length < 1) {
         var row = $(this);
@@ -893,10 +897,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'ref_no' :
                     $(this).html(`<input type="text" class="form-control" value="${current}" placeholder="Ref No.">`);
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Credit Card Pmt' || rowData.type === 'Transfer' || rowData.type === 'Deposit' ||
-                        rowData.type === 'Expense' && rowData.payment === '' || rowData.type === 'Check' && rowData.payment === '' || rowData.type === 'Bill' ||
-                        rowData.type === 'Vendor Credit' || rowData.type === 'CC-Credit'
-                    ) {
+                    if(rowData.ref_no_disabled === true) {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
@@ -908,9 +909,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     if(current !== "") {
                         $(this).find('select').append(`<option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option>`);
                     }
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Transfer' || rowData.type === 'Credit Card Pmt' ||
-                        rowData.type === 'Bill Payment' || rowData.type === 'Inventory Starting Value'
-                    ) {
+                    if(rowData.payee_disabled === true) {
                         $(this).find('select').prop('disabled', true);
                     }
                     $(this).find('select').select2({
@@ -919,9 +918,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
                 case 'account' :
                     $(this).html(`<select class="form-control" ${current === '-Split-' ? 'disabled' : ''}><option value="">${current}</option></select>`);
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Expense' && rowData.payment === '' || rowData.type === 'Check' && rowData.payment === '' ||
-                        rowData.type === 'Bill' || rowData.type === 'Bill Payment' || rowData.type === 'Vendor Credit' || rowData.type === 'CC-Credit'
-                    ) {
+                    if(rowData.account_disabled === true) {
                         $(this).find('select').prop('disabled', true);
                     }
                     $(this).find('select').select2();
@@ -937,7 +934,18 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
                     } else {
-                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '').replaceAll('-$', '')}" placeholder="Payment">`);
+                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
+                    }
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
+                        $(this).find('input').prop('disabled', true);
+                    }
+                break;
+                case 'charge' :
+                    if(current === '' && rowData.type !== 'Journal') {
+                        $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Charge" disabled>`);
+                    } else {
+                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
                     }
 
                     if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {

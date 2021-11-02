@@ -59,7 +59,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-12">
-                        <input type="text" placeholder="Title" id="feedSubject" class="form-control mb-2" required />
+                        <input type="text" placeholder="Title" id="feedSubject" class="nsm-field form-control mb-2" required />
                         <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Message" required></textarea>
                     </div>
                 </div>

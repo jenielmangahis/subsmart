@@ -17,7 +17,7 @@
                             <?php if(isset($check)) : ?>
                                 <?php if(is_null($check->to_print) && $check->check_no !== "" && !is_null($check->check_no)) : ?>
                                     #<?=$check->check_no?>
-                                <?php else if(!is_null($check->to_print)) : ?>
+                                <?php elseif(!is_null($check->to_print)) : ?>
                                     #To Print
                                 <?php endif; ?>
                             <?php endif; ?>

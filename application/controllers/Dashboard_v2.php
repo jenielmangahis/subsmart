@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 require APPPATH.'controllers/Widgets.php';
 
-class Dashboard extends Widgets {
+class Dashboard_v2 extends Widgets {
 
     public function __construct() {
         parent::__construct();

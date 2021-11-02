@@ -2,15 +2,13 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Events extends MY_Controller
+class Events_v2 extends MY_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
         $this->checkLogin();
-		$this->page_data['page']->title = 'Events';
-        $this->page_data['page']->parent = 'Sales';
         $this->hasAccessModule(4);
         //$this->load->library('paypal_lib');
         $this->load->model('Event_model', 'event_model');
@@ -30,7 +28,7 @@ class Events extends MY_Controller
     public function index() {
         $this->page_data['events'] = $this->event_model->get_all_events();
         $this->page_data['title'] = 'Events';
-        $this->load->view('v2/pages/events/list', $this->page_data);
+        $this->load->view('events/list', $this->page_data);
     }
 
     public function new_event($id=null) {
@@ -355,10 +353,8 @@ class Events extends MY_Controller
                 'ordering' => 'DESC',
             ),
         );
-		$this->page_data['page']->title = 'Event Tags';
-        $this->page_data['page']->parent = 'Sales';
         $this->page_data['event_tags'] = $this->general->get_data_with_param($get_job_settings);
-        $this->load->view('v2/pages/events/event_tags', $this->page_data);
+        $this->load->view('events/event_tags', $this->page_data);
     }
 
     public function event_types() {

@@ -11,8 +11,16 @@
 }
 
 @media (min-width: 768px){
-    #dashboard_buttons{
-        display: flex;
+    .row.nsm-page-buttons{
+        display: flex !important;
+    }
+
+    .nsm-page-buttons{
+        display: block !important;
+    }
+    
+    .page-button-container{
+        display: inline-block !important;
     }
     
     .nsm-fab-container{
@@ -21,6 +29,11 @@
     
     .nsm-nav{
         margin-bottom: 3.5em;
+    }
+
+    .nsm-table thead tr:not(.nsm-row-collapse) td:not(.show),
+    .nsm-table tbody tr:not(.nsm-row-collapse) td:not(.show){
+        display: table-cell;
     }
 }
 
@@ -100,6 +113,22 @@
 
     .nsm-counter .bx{
         font-size: 1.5em;
+    }
+
+    .nsm-page{
+        flex-wrap: wrap;
+    }
+
+    .nsm-page > .nsm-page-nav{
+        max-width: 100%;
+    }
+
+    .nsm-page > .nsm-page-nav > ul li{
+        display: inline-block;
+    }
+
+    .nsm-page > .nsm-page-nav > ul{
+        text-align: center;
     }
 }
 

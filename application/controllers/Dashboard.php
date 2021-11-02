@@ -6,6 +6,8 @@ class Dashboard extends Widgets {
     public function __construct() {
         parent::__construct();
         $this->checkLogin();
+		$this->page_data['page']->title = 'Dashboard';
+        $this->page_data['page']->parent = 'Dashboard';
         $this->load->library('wizardlib');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Users_model', 'user_model');
