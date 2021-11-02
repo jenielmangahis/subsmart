@@ -764,6 +764,9 @@ $route['calendar/_load_item_list'] = 'Workcalender/ajax_load_checkout_item_list'
 $route['calendar/_create_appointment_wait_list'] = 'Workcalender/ajax_create_appointment_wait_list';
 $route['calendar/_load_wait_list'] = 'Workcalender/ajax_load_wait_list';
 $route['calendar/_load_edit_wait_list'] = 'Workcalender/ajax_load_edit_wait_list';
+$route['calendar/_update_appointment_wait_list'] = 'Workcalender/ajax_update_appointment_waitlist';
+$route['calendar/_view_appointment_payment_details'] = 'Workcalender/ajax_view_appointment_payment_details';
+$route['calendar/_update_calendar_drop_waitlist'] = 'Workcalender/ajax_update_calendar_drop_waitlist';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
