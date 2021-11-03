@@ -271,6 +271,18 @@ class Expenses_model extends MY_Model
         return $qry->result();
     }
 
+    public function getExpenseByComp($comp_id){
+        // $qry = $this->db->get('accounting_expense');
+        // return $qry->result();
+
+        $this->db->select('*');
+        $this->db->from('accounting_expense');
+        // $this->db->where('company_id', $comp_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function addtransaction($new_data){
         $vendor = $this->db->insert('accounting_expense_transaction', $new_data);
         $insert_id = $this->db->insert_id();

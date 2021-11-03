@@ -2050,6 +2050,56 @@ class Workcalender extends MY_Controller
         echo json_encode($json_data);
     }
 
+    public function ajax_update_appointment_waitlist()
+    {
+        $this->load->model('Appointment_model');
+
+        $is_success = false;
+        $message    = 'Cannot find waitlist';
+        $is_wait_list = 0;
+
+        $post       = $this->input->post();
+        $cid = logged('company_id');
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['wid'], $cid);
+
+        if( $appointment ){
+            if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] > 0) {
+                if( $post['appointment_tags'] != '' ){
+                    $a_tags = implode($post['appointment_tags']);
+                }else{
+                    $a_tags = '';
+                }
+
+                $data_appointment = [
+                    'is_wait_list' => $post['is_wait_list'],
+                    'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
+                    'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
+                    'user_id' => $post['appointment_user_id'],
+                    'prof_id' => $post['appointment_customer_id'],
+                    'tag_ids' => $a_tags,
+                    'appointment_type_id' => $post['appointment_type_id']
+                ];
+
+                $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                $is_success = true;
+                $message    = '';
+                $is_wait_list = $post['is_wait_list'];
+
+            } else {
+                $message = 'Required fields cannot be empty';
+            }
+        }
+
+        $json_data = [
+            'is_wait_list' => $is_wait_list,
+            'is_success' => $is_success,
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
+    }
+
     public function ajax_delete_appointment()
     {
         $this->load->model('Appointment_model');
@@ -2102,6 +2152,35 @@ class Workcalender extends MY_Controller
         $this->page_data['appointmentItems'] = $appointmentItems;
         $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
         $this->load->view('workcalender/ajax_checkout_appointment', $this->page_data);
+    }
+
+    public function ajax_view_appointment_payment_details()
+    {
+        $this->load->model('Appointment_model');
+        $this->load->model('EventTags_model');
+        $this->load->model('AppointmentItem_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $tags = $this->EventTags_model->getAllByCompanyId($cid, array());
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['appointment_id'], $cid);
+        $optionAppointmentTypes = $this->Appointment_model->optionAppointmentType();
+
+        $a_tags = array();
+        $selected_tags = explode(",", $appointment->tag_ids);
+        foreach($tags as $t){
+            if( in_array($t->id, $selected_tags) ){
+                $a_tags[$t->id] = $t->name;
+            }
+        }
+
+        $appointmentItems = $this->AppointmentItem_model->getAllByAppointmentId($appointment->id);
+
+        $this->page_data['a_selected_tags'] = $a_tags;
+        $this->page_data['appointment'] = $appointment;
+        $this->page_data['appointmentItems'] = $appointmentItems;
+        $this->page_data['optionAppointmentTypes'] = $optionAppointmentTypes;
+        $this->load->view('workcalender/ajax_view_appointment_payment_details', $this->page_data);
     }
 
     public function ajax_save_checkout_items()
@@ -2404,6 +2483,13 @@ class Workcalender extends MY_Controller
         $this->page_data['appointment'] = $appointment;
         $this->page_data['appointmentTypes'] = $appointmentTypes;
         $this->load->view('workcalender/ajax_edit_appointment_wait_list', $this->page_data);
+    }
+
+    public function ajax_update_calendar_drop_waitlist()
+    {
+        $post = $this->input->post();
+        $cid  = logged('company_id');        
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['wid'], $cid);     
     }
 }
 

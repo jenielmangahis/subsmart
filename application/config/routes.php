@@ -434,6 +434,7 @@ $route['accounting/chart-of-accounts/view-register/(:any)/print-transactions']['
 $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post'] = 'accounting_controllers/chart_of_accounts/export_transactions/$1';
 $route['accounting/chart-of-accounts/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/chart_of_accounts/delete_transaction/$1/$2';
 $route['accounting/chart-of-accounts/view-transaction/(:any)/(:any)'] = 'accounting_controllers/chart_of_accounts/view_transaction/$1/$2';
+$route['accounting/chart-of-accounts/(:any)/save-transaction/(:any)']['post'] = 'accounting_controllers/chart_of_accounts/save_transaction/$1/$2';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';
@@ -764,6 +765,9 @@ $route['calendar/_load_item_list'] = 'Workcalender/ajax_load_checkout_item_list'
 $route['calendar/_create_appointment_wait_list'] = 'Workcalender/ajax_create_appointment_wait_list';
 $route['calendar/_load_wait_list'] = 'Workcalender/ajax_load_wait_list';
 $route['calendar/_load_edit_wait_list'] = 'Workcalender/ajax_load_edit_wait_list';
+$route['calendar/_update_appointment_wait_list'] = 'Workcalender/ajax_update_appointment_waitlist';
+$route['calendar/_view_appointment_payment_details'] = 'Workcalender/ajax_view_appointment_payment_details';
+$route['calendar/_update_calendar_drop_waitlist'] = 'Workcalender/ajax_update_calendar_drop_waitlist';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

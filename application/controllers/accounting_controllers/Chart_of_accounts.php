@@ -683,8 +683,9 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
                     'payee_disabled' => false,
-                    'account' => $account,
-                    'account_disabled' => $account !== '-Split-',
+                    'account_id' => $account['id'],
+                    'account' => $account['name'],
+                    'account_disabled' => $account['disabled'],
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -749,6 +750,7 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
                     'payee_disabled' => false,
+                    'account_id' => $paymentAcc->id,
                     'account' => $paymentAcc->name,
                     'account_disabled' => true,
                     'memo' => $expense->memo,
@@ -830,8 +832,9 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $check->payee_id,
                 'payee' => $payeeName,
                 'payee_disabled' => false,
-                'account' => $account,
-                'account_disabled' => $account !== '-Split-',
+                'account_id' => $account['id'],
+                'account' => $account['name'],
+                'account_disabled' => $account['disabled'],
                 'memo' => $check->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -893,6 +896,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $check->payee_id,
                 'payee' => $payeeName,
                 'payee_disabled' => false,
+                'account_id' => $check->bank_account_id,
                 'account' => $this->chart_of_accounts_model->getName($check->bank_account_id),
                 'account_disabled' => true,
                 'memo' => $check->memo,
@@ -946,15 +950,30 @@ class Chart_of_accounts extends MY_Controller {
         foreach($journalEntries as $journalEntryItem) {
             $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id);
 
+            switch($journalEntryItem->name_key) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($journalEntryItem->name_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($journalEntryItem->name_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($journalEntryItem->name_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
             $transaction = [
                 'id' => $journalEntry->id,
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
                 'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
                 'ref_no_disabled' => false,
                 'type' => 'Journal',
-                'payee_type' => '',
-                'payee_id' => '',
-                'payee' => '',
+                'payee_type' => $journalEntryItem->name_key,
+                'payee_id' => $journalEntryItem->name_id,
+                'payee' => $payeeName,
                 'payee_disabled' => false,
                 'account' => '-Split-',
                 'account_disabled' => true,
@@ -1021,6 +1040,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $bill->vendor_id,
                 'payee' => $payeeName,
                 'payee_disabled' => false,
+                'account_id' => '',
                 'account' => 'Accounts Payable',
                 'account_disabled' => true,
                 'memo' => $bill->memo,
@@ -1099,8 +1119,9 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $ccCredit->payee_id,
                 'payee' => $payeeName,
                 'payee_disabled' => false,
-                'account' => $account,
-                'account_disabled' => $account !== '-Split-',
+                'account_id' => $account['id'],
+                'account' => $account['name'],
+                'account_disabled' => $account['disabled'],
                 'memo' => $ccCredit->memo,
                 'payment' => number_format(floatval($ccCredit->total_amount), 2, '.', ','),
                 'charge' => '',
@@ -1143,6 +1164,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $ccCredit->payee_id,
                 'payee' => $payeeName,
                 'payee_disabled' => false,
+                'account_id' => $ccCredit->bank_credit_account_id,
                 'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
                 'account_disabled' => true,
                 'memo' => $ccCredit->memo,
@@ -1208,6 +1230,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $vendorCredit->payee_id,
                 'payee' => $payeeName,
                 'payee_disabled' => false,
+                'account_id' => '',
                 'account' => 'Accounts Payable',
                 'account_disabled' => true,
                 'memo' => $vCredit->memo,
@@ -1261,8 +1284,10 @@ class Chart_of_accounts extends MY_Controller {
         foreach($transfers as $transfer) {
             if($transfer->transfer_from_account_id === $accountId) {
                 $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_to_account_id);
+                $account_id = $transfer->transfer_to_account_id;
             } else {
                 $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
+                $account_id = $transfer->transfer_from_account_id;
             }
             $transaction = [
                 'id' => $transfer->id,
@@ -1274,6 +1299,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
+                'account_id' => $account_id,
                 'account' => $transferAcc,
                 'account_disabled' => false,
                 'memo' => $transfer->transfer_memo,
@@ -1331,12 +1357,15 @@ class Chart_of_accounts extends MY_Controller {
                 $account = $this->chart_of_accounts_model->getName($deposit->account_id);
                 $accountDisabled = true;
                 $accountFieldName = '';
+                $account_id = $deposit->account_id;
             } else if(count($funds) > 1 || $deposit->cash_back_amount !== "" && $deposit->cash_back_account_id !== "" && !is_null($deposit->cash_back_amount) && !is_null($deposit->cash_back_account_id)) { 
                 $account = '-Split-';
                 $accountFieldName = '';
                 $accountDisabled = true;
+                $account_id = null;
             } else {
                 $account = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                $account_id = $funds[0]->received_from_account_id;
                 $accountFieldName = 'funds_account';
                 $accountDisabled = false;
             }
@@ -1350,6 +1379,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
+                'account_id' => $accound_id,
                 'account' => $account,
                 'account_field_name' => $accountFieldName,
                 'account_disabled' => $accountDisabled,
@@ -1415,6 +1445,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
+                'account_id' => $dep->account_id,
                 'account' => $this->chart_of_accounts_model->getName($dep->account_id),
                 'account_disabled' => true,
                 'memo' => $dep->memo,
@@ -1498,8 +1529,9 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
                     'payee_disabled' => false,
-                    'account' => $account,
-                    'account_disabled' => $account !== '-Split-',
+                    'account_id' => $account['id'],
+                    'account' => $account['name'],
+                    'account_disabled' => $account['disabled'],
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -1566,6 +1598,7 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
                     'payee_disabled' => true,
+                    'account_id' => $account->id,
                     'account' => $account->name,
                     'account_disabled' => true,
                     'memo' => $expense->memo,
@@ -1642,6 +1675,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
+                'account_id' => $invQtyAdj->inventory_adjustment_account_id,
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
                 'account_disabled' => true,
                 'memo' => $invQtyAdj->memo,
@@ -1697,6 +1731,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_type' => '',
                 'payee_id' => '',
                 'payee' => '',
+                'account_id' => $invQtyAdj->inventory_adjustment_account_id,
                 'account' => $this->chart_of_accounts_model->getName($invQtyAdj->inventory_adjustment_account_id),
                 'memo' => $invQtyAdj->memo,
                 'reconcile_status' => '',
@@ -1778,8 +1813,9 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
                     'payee_disabled' => false,
-                    'account' => $account,
-                    'account_disabled' => $account !== '-Split-',
+                    'account_id' => $account['id'],
+                    'account' => $account['name'],
+                    'account_disabled' => $account['disabled'],
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
@@ -1845,6 +1881,7 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $expense->payee_id,
                     'payee' => $payeeName,
                     'payee_disabled' => false,
+                    'account_id' => $paymentAcc->id,
                     'account' => $paymentAcc->name,
                     'account_disabled' => true,
                     'memo' => $expense->memo,
@@ -1912,6 +1949,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
+                'account_id' => $invAssetAcc,
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
                 'account_disabled' => false,
                 'memo' => $adjustment->memo,
@@ -1965,6 +2003,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => '',
                 'payee' => '',
                 'payee_disabled' => true,
+                'account_id' => $invAssetAcc,
                 'account' => $this->chart_of_accounts_model->getName($invAssetAcc),
                 'account_disabled' => true,
                 'memo' => $adjusted->memo,
@@ -2020,6 +2059,8 @@ class Chart_of_accounts extends MY_Controller {
             $payeeName = !is_null($payee) ? $payee->display_name : "";
 
             $account = $ccPayment->credit_card_id === $accountId ? $this->chart_of_accounts_model->getName($ccPayment->bank_account_id) : $this->chart_of_accounts_model->getName($ccPayment->credit_card_id);
+            $account_id = $ccPayment->credit_card_id === $accountId ? $ccPayment->bank_account_id : $ccPayment->credit_card_id;
+            $accountFieldName = $ccPayment->credit_card_id === $accountId ? 'bank-account' : 'credit-card-account';
 
             $transaction = [
                 'id' => $ccPayment->id,
@@ -2031,8 +2072,10 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_id' => $ccPayment->payee_id,
                 'payee' => $payeeName,
                 'payee_disabled' => true,
+                'account_id' => $account_id,
                 'account' => $account,
                 'account_disabled' => false,
+                'account_field' => $accountFieldName,
                 'memo' => $ccPayment->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -2097,6 +2140,7 @@ class Chart_of_accounts extends MY_Controller {
                     'payee_id' => $billPayment->payee_id,
                     'payee' => $payee->display_name,
                     'payee_disabled' => true,
+                    'account_id' => '',
                     'account' => 'Accounts Payable',
                     'account_disabled' => true,
                     'memo' => $billPayment->memo,
@@ -2144,18 +2188,25 @@ class Chart_of_accounts extends MY_Controller {
         $totalCount = count($categories) + count($items);
 
         if ($totalCount > 1) {
-            $category = '-Split-';
+            $category = [
+                'id' => null,
+                'name' => '-Split-',
+                'disabled' => true
+            ];
         } else {
             if ($totalCount === 1) {
+                $category = [];
                 if (count($categories) === 1 && count($items) === 0) {
-                    $expenseAcc = $categories[0]->expense_account_id;
+                    $category['id'] = $categories[0]->expense_account_id;
+                    $category['disabled'] = false;
                 } else {
                     $itemId = $items[0]->item_id;
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                    $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                    $category['id'] = $itemAccDetails->inv_asset_acc_id;
+                    $category['disabled'] = true;
                 }
 
-                $category = $this->chart_of_accounts_model->getName($expenseAcc);
+                $category['name'] = $this->chart_of_accounts_model->getName($expenseAcc);
             }
         }
 
@@ -3778,5 +3829,11 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['adjustment'] = $adjustment;
 
         $this->load->view('accounting/modals/adjust_starting_value', $this->page_data);
+    }
+
+    public function save_transaction($accountId, $transactionId)
+    {
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        dd($this->input->post());
     }
 }

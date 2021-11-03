@@ -16,8 +16,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     margin: 30px 55px;
     cursor: pointer;
 }
+.bs-popover-top .arrow:after, .bs-popover-top .arrow:before {
+  border-top-color: #32243D !important;
+}
+.bs-popover-bottom .arrow:after, .bs-popover-bottom .arrow:before {
+  border-bottom-color: #32243D !important;
+}
 </style>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -227,7 +234,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
         </div>
         <?php //if( !$is_mobile ){ ?>
-        <div class="col-12 col-md-3 mt-40 right-col pl-1" style="background-color: #ffffff;overflow-y: scroll;overflow-x: hidden;height: max-content;display: block !important;padding-bottom: 20px;">
+        <div class="col-12 col-md-3 mt-40 right-col pl-1" style="background-color: #ffffff;display: block !important;padding-bottom: 20px;">
             <div class="row" style="padding:10px;">
                 <div class="col-12">
                     <div class="right-calendar-loading"></div>
@@ -601,19 +608,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Wait List</h5>
+                <h5 class="modal-title">Update Wait List</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
             </div>
             <form id="frm-update-appointment-wait-list" method="post">
+            <input type="hidden" name="wid" value="" id="wid">
             <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
                 <div class="view-wait-list-container"></div>
             </div>
             <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">
-                <button type="submit" class="btn btn-primary btn-create-appointment-wait-list" name="action" value="create_appointment">Update</button>                     
-                <button type="submit" class="btn btn-primary btn-create-appointment-wait-list field-popover" name="action" value="create_appointment" data-trigger="hover" data-original-title="Set as Appointment" data-container="body" data-placement="top" data-content="Will move wait list to calendar">Set as Appointment</button>
-                <a class="btn btn-danger btn-delete-appointment" href="javascript:void(0);" data-id=""><i class="fa fa-trash"></i> Delete</a>
+                <button type="submit" class="btn btn-primary btn-update-appointment-wait-list" name="action" value="update_appointment">Update</button>      
+                <a class="btn btn-primary btn-set-as-appointment field-popover" href="javascript:void(0);" data-trigger="hover" data-original-title="Set as Appointment" data-container="body" data-placement="top" data-content="Will move wait list to calendar"><i class="fa fa-calendar"></i> Set as Appointment</a>
+                <a class="btn btn-danger btn-delete-appointment-waitlist" href="javascript:void(0);"><i class="fa fa-trash"></i> Delete</a>
             </div>
             </form>
       </div>
@@ -622,8 +630,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <!-- MODAL VIEW APPOINTMENT PAYMENT DETAILS -->
 <div class="modal fade modal-enhanced" id="modal-view-appointment-payment-details" role="dialog" aria-labelledby="addLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width: 964px;">
             <div class="modal-header">
                 <h5 class="modal-title">Appointment Payment Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -894,7 +902,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/quick_launch_modals'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.js"></script>
-<script type="text/javascript" src="<?php echo $url->assets ?>/js/tooltip.min.js"></script>
+<script src='https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js'></script>
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
 <script>
     var calendar;
 
@@ -959,7 +968,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             },
             success: function (response) {
 
-                console.log(response);
+                //console.log(response);
 
                 // $('.tiva-events-calendar > .events-calendar-bar').append(response);
 
@@ -1100,7 +1109,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               slotDuration: '00:15',
               slotLabelInterval : '01:00',
               scrollTime: scrollTime
-            },
+            },            
             dayView: {
               type: 'timeGridDay',
               nowIndicator: true,
@@ -1144,10 +1153,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             allDaySlot: false,
             //timeFormat: 'h(:mm)a'
           }, 
-          dayCellDidMount(arg) {
-           arg.isDisabled = true; // Cell disabled, like invalid range, not work why ?
-           console.log("CELL", arg);
-          },               
+          dayCellDidMount(info) {
+           $(info.el).find('.fc-daygrid-day-top').popover({               
+               placement: 'top',
+               trigger: 'hover',
+               container: 'body',
+               html:true,
+               content: '<i class="fa fa-plus"></i> Create an Appointment',
+           });
+
+           $('.fc-timegrid-slot:before').popover({               
+               placement: 'left',
+               trigger: 'hover',
+               container: 'body',
+               html:true,
+               content: '<i class="fa fa-plus"></i> Create an Appointment',
+           });
+          },   
+
           selectable: true,
           select: function(info) {
             //console.log(info);
@@ -1177,6 +1200,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $("#modal-create-appointment").modal('show');
           },
           slotEventOverlap: false,
+          /*dayCellDidMount: function(info) {
+                info.el.prepend("test");
+          },*/
+          /*dayRender: function (date, cell) {
+              cell.append("<span class='hoverEffect' style='display:none;'>+</span>");
+              cell.mouseenter(function() {
+                  cell.find(".hoverEffect").show();
+                  cell.css("background", "rgba(0,0,0,.1)");
+              }).mouseleave(function() {
+                  $(".hoverEffect").hide();
+                  cell.removeAttr('style');
+              });
+          },*/
           resourceLabelDidMount: function(info) {
             //console.log(info);
             let img = document.createElement('img');
@@ -1193,13 +1229,39 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               },*/
           defaultDate: "<?php echo date('Y-m-d'); ?>",
           editable: true,
+          droppable: true, // this allows things to be dropped onto the calendar
+          drop: function(arg) {
+           console.log(arg);
+           console.log(arg.draggedEl.dataset.event);
+
+           var url = base_url + "calendar/_update_calendar_drop_waitlist";
+           var wid = arg.draggedEl.dataset.event;
+           $.ajax({
+               type: "POST",
+               url: url,
+               data: {wid:wid},
+               dataType: 'json',
+               success: function(o)
+               {
+                 if( o.is_success == false ){
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'This calendar is read-only. Cannot change start and end date.',
+                    text: o.msg
+                  });
+                  //arg.draggedEl.parentNode.removeChild(arg.draggedEl);                  
+                 }
+               }
+            });
+
+          },
           eventDrop: function(info) {
               console.log(info);
               //alert(info.event.extendedProps.eventType);
               //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
 
                 let result = info.hasOwnProperty('newResource');
-                if( result ){
+                if( result.newResource != null ){
                     var user_id = info.newResource._resource.id;
                     user_id     = user_id.replace("user", "");
                 }else{
@@ -2019,6 +2081,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         }, 1000);
     });
 
+    $(".btn-set-as-appointment").click(function(){
+        Swal.fire({
+          title: 'Move selected wait list to calendar?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Set as Appointment',
+          confirmButtonColor: '#32243d'
+        }).then((result) => {          
+          if (result.isConfirmed) {
+            $("#w_is_wait_list").val(0);
+            $("#frm-update-appointment-wait-list").submit();
+          } 
+        });
+    });
+
     $("#frm-create-appointment-wait-list").submit(function(e){
         e.preventDefault();
 
@@ -2124,12 +2201,60 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     $(".btn-edit-appointment").attr("data-id", appointment_id);
                     $(".btn-delete-appointment").attr("data-id", appointment_id);
                     $(".btn-checkout-appointment").attr("data-id", appointment_id);
+                    $(".btn-payment-details-appointment").attr("data-id", appointment_id);
                     
                     $('.view-appointment-container').hide().html(o).fadeIn(800);
                }
             });
         }, 800);
     }
+
+    $(".btn-delete-appointment-waitlist").click(function(){
+        Swal.fire({
+          title: 'Do you want to delete selected wait list?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Delete',
+          confirmButtonColor: '#ec4561'
+        }).then((result) => {          
+          if (result.isConfirmed) {
+            var url = base_url + 'calendar/_delete_appointment';
+            var appointment_id = $(this).attr('data-id');
+
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: 'json',
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {     
+                    if( o.is_success ){
+                        Swal.fire({
+                          title: 'Success',
+                          text: 'Wait list was successfully deleted.',
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          if (result.value) {
+                            load_wait_list();
+                          }
+                        });
+                        $("#modal-edit-wait-list").modal('hide');
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot find data.',
+                            text: o.msg
+                        });
+                    }            
+               }
+            });
+          } 
+        });
+    });
 
     $(".btn-delete-appointment").click(function(){
         Swal.fire({
@@ -2175,7 +2300,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                }
             });
           } 
-        })
+        });
     });
 
     $(".btn-edit-appointment").click(function(){
@@ -2252,8 +2377,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     $('#wait-list-add-tag-popover').popover();
 
     $(".btn-payment-details-appointment").click(function(){
+        var appointment_id = $(this).attr('data-id');
+        var url = base_url + 'calendar/_view_appointment_payment_details';
+
         $("#modal-view-appointment-payment-details").modal('show');
-        $("#modal-view-appointment").modal('show');
+        $(".view-appointment-payment-details-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {appointment_id:appointment_id},
+               success: function(o)
+               {
+
+                    $('.view-appointment-payment-details-container').hide().html(o).fadeIn(800);
+               }
+            });
+        }, 800);
     });
 
     $(document).on('click', '.btn-add-item-row', function(){
@@ -2349,7 +2490,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                data: {appointment_id:appointment_id},
                success: function(o)
                {
-
+                $("#wid").val(appointment_id);
+                $(".btn-delete-appointment-waitlist").attr("data-id", appointment_id);
                 $('.view-wait-list-container').hide().html(o).fadeIn(800);
                }
             });
@@ -2359,33 +2501,44 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
       $("#frm-update-appointment-wait-list").submit(function(e){
         e.preventDefault();
 
-        var url = base_url + 'calendar/_create_appointment_wait_list';
-        $(".btn-create-appointment-wait-list").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        var url = base_url + 'calendar/_update_appointment_wait_list';
+        if( $("#w_is_wait_list").val() == 0 ){
+            $(".btn-set-as-appointment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        }else{
+            $(".btn-update-appointment-wait-list").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        }
+        
         setTimeout(function () {
             $.ajax({
                type: "POST",
                url: url,
                dataType: "json",
-               data: $("#frm-create-appointment-wait-list").serialize(),
+               data: $("#frm-update-appointment-wait-list").serialize(),
                success: function(o)
                {
-                  if( o.is_success ){
-                      $("#modal-create-appointment").modal('hide');
+                  if( o.is_success ){ 
+                      if( o.is_wait_list == 0 ){
+                        var swal_text = "Wait list was successfully moved to calendar."; 
+                      }else{
+                        var swal_text = "Appointment wait list was successfully updated.";
+                      }
+
+                      $("#modal-edit-wait-list").modal('hide');                     
                       Swal.fire({
                           title: 'Success',
-                          text: 'Appointment wait list was successfully created.',
+                          text: swal_text,
                           icon: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#32243d',
                           cancelButtonColor: '#d33',
                           confirmButtonText: 'Ok'
                       }).then((result) => {
-                          if (result.value) {
-                            $("#modal-create-wait-list").modal('hide');
+                          if (result.value) {                            
                             load_wait_list();
                           }
                       });
                   }else{
+                      $("#w_is_wait_list").val(0);
                       Swal.fire({
                         icon: 'error',
                         title: 'Cannot save data.',
@@ -2393,7 +2546,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       });
                   }
 
-                  $(".btn-create-appointment-wait-list").html('Schedule');
+                  $(".btn-set-as-appointment").html('<i class="fa fa-calendar"></i>  Set as Appointment');
+                  $(".btn-update-appointment-wait-list").html('Update');
                }
             });
         }, 1000);

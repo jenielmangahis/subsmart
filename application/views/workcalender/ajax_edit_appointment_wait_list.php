@@ -1,3 +1,4 @@
+<input type="hidden" name="is_wait_list" id="w_is_wait_list" value="<?= $appointment->is_wait_list; ?>">
 <div class="form-group">
     <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> When</label>
     <div class="row g-3">

@@ -394,7 +394,7 @@ $(document).ready(function () {
     view = defaultView;
   }
 
-  $("#currentView").text(view);
+  $("#currentView").text(view.split("_").join(" "));
 
   $navItems.each(function (_, navItem) {
     const $navItem = $(navItem);

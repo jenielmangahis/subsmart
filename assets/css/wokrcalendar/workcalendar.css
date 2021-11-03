@@ -119,7 +119,7 @@ a.top-1 {
 }
 .calendar-tooltip .popper,.calendar-tooltip .tooltip {
   position: absolute;
-  z-index: 9999;
+  /*z-index: 9999;*/
   background: #0B92FB;
   color: #ffffff;
   width: auto;
@@ -487,6 +487,6 @@ a.btn-gcustom i {
   margin-left: 0px;
   margin-top: 13px;
 }
-.list-wait-list li { background: #ffffff; }
-.list-wait-list li:nth-child(odd) { background: #bdbdbd; }
+/*.list-wait-list li { background: #ffffff; }
+.list-wait-list li:nth-child(odd) { background: #bdbdbd; }*/
 /**/
