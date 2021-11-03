@@ -487,6 +487,12 @@ a.btn-gcustom i {
   margin-left: 0px;
   margin-top: 13px;
 }
+.multiselect {
+  text-align: left !important;
+}
+.multiselect:hover {
+  color: #000000 !important;
+}
 /*.list-wait-list li { background: #ffffff; }
 .list-wait-list li:nth-child(odd) { background: #bdbdbd; }*/
 /**/

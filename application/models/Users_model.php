@@ -139,6 +139,10 @@ class Users_model extends MY_Model
                 $this->db->like('FName', $filters['search'], 'both');
                 $this->db->or_like('LName', $filters['search'], 'both');
             }
+
+            if( $filters['eids'] != '' ){
+                $this->db->where_in('id', $filters['eids']);                
+            }
         }
         $query = $this->db->get();
         return $query->result();

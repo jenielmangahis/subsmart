@@ -101,8 +101,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                               <?php if (!empty($users)) { ?>
                                               <div class="stcs-3-full left">
                                                   <div class="select-group">
-                                                      <select class="form-control custom-select" id="select-employee">
-                                                          <option value="0">All Employees</option>
+                                                      <select class="form-control custom-select" id="select-employee" multiple="multiple">
+                                                          <!-- <option value="0">All Employees</option> -->
                                                           <?php foreach ($users as $user) { ?>
                                                               <option value="<?php echo $user->id ?>"><?php echo $user->FName ?> <?php echo $user->LName ?></option>
                                                           <?php } ?>
@@ -1024,14 +1024,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
         // filter calender events by emloyess
         $(document).on('change', '#select-employee', function (e) {
-
+            var url = base_url + 'calendar/_update_employee_filter';
             // $('#frm_calender_filter_events').submit();
 
-            $("#calendar").css('opacity', '.5');
-            $("#calendar").attr('disabled', true);
+            //$("#calendar").css('opacity', '.5');
+            //$("#calendar").attr('disabled', true);
+
+            var eids = $(this).val();
+            $.ajax({
+               type: "POST",
+               url: url,
+               data: {eids:eids},
+               dataType: 'json',
+               success: function(o)
+               {
+                 reload_calendar();
+               }
+            });
 
 
-            jQuery.ajax({
+            /*jQuery.ajax({
+                //url: base_url + 'event/filter_events/',
                 url: base_url + 'event/filter_events/',
                 type: 'post',
                 // dataType: 'json',
@@ -1053,8 +1066,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                     render_calender(calendarEl, timeZoneSelectorEl, JSON.parse(response));
                 }
-            });
+            });*/
         });
+
+        $('#select-employee').multiselect({
+            enableFiltering: true,
+            includeSelectAllOption: true,
+            buttonWidth: '480px',
+            selectAllValue: 'multiselect-all',
+        });
+
+        multiselect_selectAll($('#select-employee'));
+        function multiselect_selectAll($el) {
+            $('option', $el).each(function(element) {
+              $el.multiselect('select', $(this).val());
+            });
+        }
 
         // $(document).on('submit', '#frm_calender_filter_events', function(e) {
 
@@ -1100,6 +1127,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           themeSystem : 'bootstrap',
           eventDisplay: 'block',
           contentHeight: 750,
+          initialView: 'threeDaysView',
           views: {
             employeeTimeline: {
               type: 'resourceTimeGridDay',
@@ -1170,7 +1198,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                content: '<i class="fa fa-plus"></i> Create an Appointment',
            });
           },   
-
           selectable: true,
           select: function(info) {
             //console.log(info);
@@ -1231,29 +1258,51 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
           editable: true,
           droppable: true, // this allows things to be dropped onto the calendar
           drop: function(arg) {
-           console.log(arg);
-           console.log(arg.draggedEl.dataset.event);
+           //console.log(arg);
+           //console.log(arg.draggedEl.dataset.event);
 
-           var url = base_url + "calendar/_update_calendar_drop_waitlist";
-           var wid = arg.draggedEl.dataset.event;
-           $.ajax({
+           var url  = base_url + "calendar/_update_calendar_drop_waitlist";
+           var wid  = arg.draggedEl.dataset.event;
+           var start_date = moment(arg.date).format('dddd, MMMM DD, YYYY hh:mm A');
+           var user_id = 0;
+
+            if(arg.hasOwnProperty('resource')){
+                if( arg.resource != null ){
+                    var user_id = arg.resource._resource.id;
+                    user_id     = user_id.replace("user", "");
+                }
+            }
+
+            $.ajax({
                type: "POST",
                url: url,
-               data: {wid:wid},
+               data: {wid:wid, start_date:start_date, user_id:user_id},
                dataType: 'json',
                success: function(o)
                {
-                 if( o.is_success == false ){
+                 if( o.is_error == 1 ){
                   Swal.fire({
                     icon: 'error',
-                    title: 'This calendar is read-only. Cannot change start and end date.',
+                    title: 'Cannot update wait list',
                     text: o.msg
                   });
                   //arg.draggedEl.parentNode.removeChild(arg.draggedEl);                  
+                 }else{
+                    Swal.fire({
+                      title: 'Success',
+                      text: 'Appointment was successfully created.',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                    });
+
+                    reload_calendar();
+                    load_wait_list();
                  }
                }
             });
-
           },
           eventDrop: function(info) {
               console.log(info);

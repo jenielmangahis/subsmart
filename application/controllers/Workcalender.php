@@ -49,6 +49,15 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
 
+        add_css(array(
+            'assets/css/bootstrap-multiselect.min.css',
+        ));
+
+        add_footer_js(array(
+            'assets/js/bootstrap-multiselect.min.js',
+        ));
+
+
         $role = logged('role');
         $company_id = logged('company_id');
         if ($role == 2 || $role == 3) {           
@@ -59,6 +68,7 @@ class Workcalender extends MY_Controller
         }
 
         $this->page_data['events'] = array();
+        $this->session->set_userdata('calendar_filter_eids', 'multiselect-all');
 
         // setting of the calender
         $calender_settings = get_setting(DB_SETTINGS_TABLE_KEY_SCHEDULE);
@@ -2400,12 +2410,12 @@ class Workcalender extends MY_Controller
     public function main_calendar_resource_users()
     {
         $company_id = logged('company_id');
-        if ($role == 2 || $role == 3) {
-            $get_users  = $this->Users_model->getAllUsers();
-            $get_recent_users = $this->Users_model->getAllRecentUsers();
-        } else {
-            $get_users  = $this->Users_model->getUsers();
-            $get_recent_users = $this->Users_model->getAllUsersByCompany($company_id);
+        $calendar_filter_eids = $this->session->userdata('calendar_filter_eids');        
+        if( $calendar_filter_eids == 'multiselect-all' || $calendar_filter_eids == null ){
+            $get_users  = $this->Users_model->getCompanyUsers($company_id, null);
+        }else{            
+            $filters['eids'] = $calendar_filter_eids;
+            $get_users  = $this->Users_model->getCompanyUsers($company_id, $filters);
         }
 
         $resources_users = array();
@@ -2487,9 +2497,65 @@ class Workcalender extends MY_Controller
 
     public function ajax_update_calendar_drop_waitlist()
     {
+        $this->load->model('Appointment_model');
+
+        $is_error = 1;
+        $msg = 'Cannot find data';
+
         $post = $this->input->post();
         $cid  = logged('company_id');        
-        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['wid'], $cid);     
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['wid'], $cid); 
+        if( $appointment ){
+            if( $appointment->user_id > 0 ){
+                $user_id = $appointment->user_id;
+                if( $post['user_id'] > 0 ){
+                    $user_id = $post['user_id'];
+                }
+
+                $data_appointment = [
+                    'appointment_date' => date("Y-m-d",strtotime($post['start_date'])),
+                    'appointment_time' => date("H:i:s", strtotime($post['start_date'])),
+                    'user_id' => $user_id,
+                    'is_wait_list' => 0
+                ];
+
+                $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                $is_error = 0;
+                $msg = '';
+
+            }else{
+                if( $post['user_id'] > 0 ){
+                    $data_appointment = [
+                        'appointment_date' => date("Y-m-d",strtotime($post['start_date'])),
+                        'appointment_time' => date("H:i:s", strtotime($post['start_date'])),
+                        'user_id' => $post['user_id'],
+                        'is_wait_list' => 0
+                    ];
+
+                    $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                    $is_error = 0;
+                    $msg = '';
+                }else{
+                    $msg = 'Please assign an employee. You can do this by clicking edit wait list or drop the wait list in employee column in calendar.';    
+                }
+            }
+        }    
+
+        $json_data = ['is_error' => $is_error, 'msg' => $msg];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_calendar_employee_filter()
+    {
+        $post = $this->input->post();
+        $this->session->set_userdata('calendar_filter_eids', $post['eids']);
+
+        $json_data = ['is_error' => 0, 'msg' => ''];
+
+        echo json_encode($json_data);
     }
 }
 
