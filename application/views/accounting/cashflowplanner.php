@@ -75,13 +75,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
  {
 	height:350px !important;
  }
+
+ /* Style the tab */
+.tab {
+  overflow: hidden;
+  /* border: 1px solid #ccc;
+  background-color: #f1f1f1; */
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css"> -->
 
 <script type="text/javascript" id="js">
-    var tableRows = document.getElementsByTagName('tr');
-    console.dir(tableRows);
+    // var tableRows = document.getElementsByTagName('tr');
+    // console.dir(tableRows);
 </script>
 
 <div class="wrapper" role="wrapper">
@@ -136,203 +172,270 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div style="border:solid gray 1px;padding:1%;width:100%;color:black;">
                         <a href="#" style="color:blue;float:right;"><h5>Update</h5></a>
                         <h5>Overdue Transactions</h5>
-                        You have 130 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.
+                        You have 8 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.
                     </div>
 					<br><br>
 					<div class="row pb-2">
-						<div class="col-md-12 banking-tab-container">
-							<a href="#"
+						<div class="col-md-8 banking-tab-container">
+							<!-- <a href="#"
 								class="banking-tab" id="moneyall">All</a>
 							<a href="#"
 								class="banking-tab" id="moneyin">Money in</a>
 							<a href="#"
-								class="banking-tab" id="moneyout">Money out</a>
+								class="banking-tab" id="moneyout">Money out</a> -->
+							<div class="tab">
+								<button class="tablinks active" onclick="openCity(event, 'London')">All</button>
+								<button class="tablinks" onclick="openCity(event, 'Paris')">Money in</button>
+								<button class="tablinks" onclick="openCity(event, 'Tokyo')">Money out</button>
+							</div>
+						</div>
+						<div class="col-md-4 banking-tab-container" align="right">
+							<a href="<?php echo base_url('accounting/cashflowPDF/') ?>"
+								class="banking-tab btn btn-primary" id="moneyall" style="color:white;">Export as PDF</a>
+							<button class="banking-tab btn btn-success cfp_add_item" style="color:white;">Add item</button>
+						</div>
+					</div>
+
+					<div style="background-color:#f4f5f8;padding:1.5%;display:none;" id="cfp_add_item_area">
+						<div class="row">
+							<div class="col-md-3">
+								<input type="date" name="item_date" class="form-control">
+							</div>
+							<div class="col-md-6 input-group" style="">
+								<input type="text" name="item_desc" class="form-control" style="width: 65%;" placeholder="Merchant name"> &nbsp;&nbsp;&nbsp;
+								<input type="text" name="item_amt" class="form-control" style="width: 30%;" placeholder="$0.00">
+							</div>
+							<div class="col-md-2">
+								<label>Planned</label>
+							</div>
+							<div class="col-md-1" align="right">
+								<button" style="font-size:20px;" class="close_add_item">X</button>
+							</div>
+						</div>
+
+						<hr>
+
+						<div class="row">
+							<div class="col-md-3">
+								<div class="row">
+									<div class="col-md-6">
+										<input type="radio" name="item_type" class="form-control_" checked> &nbsp; <label>Money in</label>
+										<!-- <input type="radio" name="item_type" class="form-control"> <label>Money out</label> -->
+									</div>
+									<div class="col-md-6">
+										One-time &nbsp; <input type="radio" name="item_type" class="form-control_"> &nbsp; <label> Repeating</label>
+									</div>
+								</div><br>
+								<div class="row">
+									<div class="col-md-6">
+										<input type="radio" name="item_type" class="form-control_"> &nbsp; <label>Money out</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-9" align="right">
+								<a href="#" class="btn btn-success"> Save </a>
+							</div>
 						</div>
 					</div>
 					<br><br>
-					<table class="table" id="cashflowtransactions">
-						<thead>
-							<th>DATE</th>
-							<th>DESCRIPTION</th>
-							<th>AMOUNT</th>
-							<th>TYPE</th>
-						</thead>
-						<tbody>
-							<!-- <tr>
-								<td>08/30/2021</td>
-								<td>Amazon</td>
-								<td>$100.00</td>
-								<td>Invoice</td>
-							</tr> -->
-							<?php foreach ($invoices as $inv):?>
-                            <tr class="moneyin">
-                                <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?> </td>
-                                <td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?> </td>
-                                <td><?php echo $inv->balance; ?> </td>
-                                <td><?php echo 'Invoice'; ?></td>
-                            </tr>
-							<?php endforeach; ?>
-							<?php foreach ($estimates as $estimate) { ?>
-                            <tr id="estimates_rows" class="moneyin">
-                                <td>
-                                    <div class="table-nowrap">
-                                        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div><a href="#"><?php if (empty($estimate->job_name)){ } else {  echo 'Job name: '.$estimate->job_name; } ?></a>
-                                    </div>
-                                    <a
-                                        href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                                        <?php echo get_customer_by_id($estimate->customer_id)->first_name .' '. get_customer_by_id($estimate->customer_id)->last_name ?>
-                                    </a>
-                                </td>
-                                <td><?php echo $estimate->grand_total; ?>
-                                </td>
-                                <td>
-                                    <?php echo 'Estimate'; ?>
-                                </td>
-							</tr>
-							<?php } //print_r($sales_receipts);?>
 
-							<?php foreach ($sales_receipts as $salesReceipts) { ?>
-							<tr id="sales_receipt_rows" class="moneyin">
-								<td>
-									<div class="table-nowrap">
-										<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($salesReceipts->sales_receipt_date)) ?>
-									</div>
-								</td>
-								<td>
-									<a
-										href="<?php echo base_url('customer/view/' . $salesReceipts->customer_id) ?>">
-										<?php echo get_customer_by_id($salesReceipts->customer_id)->first_name .' '. get_customer_by_id($salesReceipts->customer_id)->last_name ?>
-									</a>
-								</td>
-								<td><?php echo $salesReceipts->grand_total; ?>
-								</td>
-								<td>
-									<?php echo 'Sales Receipt'; ?>
-								</td>
-							</tr>
-							<?php } //print_r($sales_receipts);?>
-							<?php foreach ($credit_memo as $credit) { ?>
-							<tr>
-								<td>
-									<div class="table-nowrap">
-										<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
-									</div>
-								</td>
-								<td>
-									<a
-										href="<?php echo base_url('customer/view/' . $credit->customer_id) ?>">
-										<?php echo get_customer_by_id($credit->customer_id)->first_name .' '. get_customer_by_id($credit->customer_id)->last_name ?>
-									</a>
-								</td>
-								<td><?php echo $credit->grand_total; ?>
-								</td>
-								<td>
-									<?php echo 'Credit Memo'; ?>
-								</td>
-							</tr>
-							<?php } //print_r($sales_receipts);?>
-
-							<?php foreach ($statements as $statement) { ?>
-							<tr>
-								<td>
-									<div class="table-nowrap">
-										<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
-									</div>
-								</td>
-								<td>
-									<a
-										href="<?php echo base_url('customer/view/' . $statement->customer_id) ?>">
-										<?php echo get_customer_by_id($statement->customer_id)->first_name .' '. get_customer_by_id($statement->customer_id)->last_name ?>
-									</a>
-								</td>
-								<td><?php echo $statement->balance; ?>
-								</td>
-								<td>
-									<?php echo 'Statements'; ?>
-								</td>
-							</tr>
-							<?php } //print_r($sales_receipts);?>
-
-							<?php foreach ($rpayments as $rpayment) { ?>
-							<tr class="moneyout">
-								<td>
-									<div class="table-nowrap">
-										<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($rpayment->payment_date)) ?>
-									</div>
-								</td>
-								<td>
-									<a
-										href="<?php echo base_url('customer/view/' . $rpayment->customer_id) ?>">
-										<?php echo get_customer_by_id($rpayment->customer_id)->first_name .' '. get_customer_by_id($rpayment->customer_id)->last_name ?>
-									</a>
-								</td>
-								<td><?php echo $rpayment->amount; ?>
-								</td>
-								<td>
-									<?php echo 'Payment'; ?>
-								</td>
+					<div id="London" class="tabcontent" style="display: block;">
+						<table class="table" id="cashflowtransactions">
+							<thead>
+								<th>DATE</th>
+								<th>DESCRIPTION</th>
+								<th>AMOUNT</th>
+								<th>TYPE</th>
+							</thead>
+							<tbody>
+								<!-- <tr>
+									<td>08/30/2021</td>
+									<td>Amazon</td>
+									<td>$100.00</td>
+									<td>Invoice</td>
+								</tr> -->
+								<?php foreach ($invoices as $inv):?>
+								<tr class="moneyin">
+									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?> </td>
+									<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?> </td>
+									<td><?php echo $inv->grand_total; ?> </td>
+									<td><?php echo 'Invoice'; ?></td>
 								</tr>
-								<?php } //print_r($sales_receipts);?>
+								<?php endforeach; ?>
 
-								<?php foreach ($checks as $check) { ?>
+									<?php foreach ($checks as $check) { ?>
+									<tr>
+										<td>
+											<div class="table-nowrap">
+												<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
+											</div>
+										</td>
+										<td>
+									<!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)?>"> -->
+									<?php
+
+																		switch ($check->payee_type) {
+																			case 'vendor':
+																				$vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
+																				// echo $vendor->display_name;
+																				print_r('test'.$vendor);
+																			break;
+																			case 'customer':
+																				$customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+																				echo $customer->first_name . ' ' . $customer->last_name;
+																			break;
+																			case 'employee':
+																				$employee = $this->users_model->getUser($check->payee_id);
+																				echo $employee->FName . ' ' . $employee->LName;
+																			break;
+																		}
+																		
+																		?>
+									<!-- </a> -->
+								</td>
+								<td><?php echo $check->total_amount; ?>
+								</td>
+										<td>
+											<?php echo 'Check'; ?>
+										</td>
+						</td>
+						</tr>
+						<?php } //print_r($sales_receipts);?>
+								<!-- <tr>
+									<td>08/30/2021</td>
+									<td>Loucelle Emperio</td>
+									<td>$200.00</td>
+									<td>Check</td>
+								</tr>
 								<tr>
-									<td>
-										<div class="table-nowrap">
-											<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
-										</div>
-									</td>
-									<td>
-								<!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)?>">
-								-->
-								<?php
+									<td>08/30/2021</td>
+									<td>Brannon Nguyen</td>
+									<td>$500.00</td>
+									<td>Invoice</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
 
-																	switch ($check->payee_type) {
-																		case 'vendor':
-																			$vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
-																			// echo $vendor->display_name;
-																			print_r('test'.$vendor);
-																		break;
-																		case 'customer':
-																			$customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
-																			echo $customer->first_name . ' ' . $customer->last_name;
-																		break;
-																		case 'employee':
-																			$employee = $this->users_model->getUser($check->payee_id);
-																			echo $employee->FName . ' ' . $employee->LName;
-																		break;
-																	}
-																	
-																	?>
-								<!-- </a> -->
-							</td>
-							<td><?php echo $check->total_amount; ?>
-							</td>
-									<td>
-										<?php echo 'Check'; ?>
-									</td>
-					</td>
-					</tr>
-					<?php } //print_r($sales_receipts);?>
-							<!-- <tr>
-								<td>08/30/2021</td>
-								<td>Loucelle Emperio</td>
-								<td>$200.00</td>
-								<td>Check</td>
-							</tr>
-							<tr>
-								<td>08/30/2021</td>
-								<td>Brannon Nguyen</td>
-								<td>$500.00</td>
-								<td>Invoice</td>
-							</tr> -->
-						</tbody>
-					</table>
+					<div id="Paris" class="tabcontent">
+						<table class="table" id="cashflowtransactions">
+							<thead>
+								<th>DATE</th>
+								<th>DESCRIPTION</th>
+								<th>AMOUNT</th>
+								<th>TYPE</th>
+							</thead>
+							<tbody>
+								<!-- <tr>
+									<td>08/30/2021</td>
+									<td>Amazon</td>
+									<td>$100.00</td>
+									<td>Invoice</td>
+								</tr> -->
+								<?php foreach ($invoices as $inv):?>
+								<tr class="moneyin">
+									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?> </td>
+									<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?> </td>
+									<td><?php echo $inv->grand_total; ?> </td>
+									<td><?php echo 'Invoice'; ?></td>
+								</tr>
+								<?php endforeach; ?>
+								<!-- <tr>
+									<td>08/30/2021</td>
+									<td>Loucelle Emperio</td>
+									<td>$200.00</td>
+									<td>Check</td>
+								</tr>
+								<tr>
+									<td>08/30/2021</td>
+									<td>Brannon Nguyen</td>
+									<td>$500.00</td>
+									<td>Invoice</td>
+								</tr> -->
+							</tbody>
+						</table>
 
-                </div>
+                	</div>
+				</div>
+
+				<div id="Tokyo" class="tabcontent">
+				<table class="table" id="cashflowtransactions">
+							<thead>
+								<th>DATE</th>
+								<th>DESCRIPTION</th>
+								<th>AMOUNT</th>
+								<th>TYPE</th>
+							</thead>
+							<tbody>
+								<!-- <tr>
+									<td>08/30/2021</td>
+									<td>Amazon</td>
+									<td>$100.00</td>
+									<td>Invoice</td>
+								</tr> -->
+
+									<?php foreach ($checks as $check) { ?>
+									<tr>
+										<td>
+											<div class="table-nowrap">
+												<?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
+											</div>
+										</td>
+										<td>
+									<!-- <a href="<?php //echo base_url('customer/view/' . $rpayment->customer_id)?>"> -->
+									<?php
+
+																		switch ($check->payee_type) {
+																			case 'vendor':
+																				$vendor = $this->vendors_model->get_vendor_by_id($check->payee_id);
+																				// echo $vendor->display_name;
+																				print_r('test'.$vendor);
+																			break;
+																			case 'customer':
+																				$customer = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+																				echo $customer->first_name . ' ' . $customer->last_name;
+																			break;
+																			case 'employee':
+																				$employee = $this->users_model->getUser($check->payee_id);
+																				echo $employee->FName . ' ' . $employee->LName;
+																			break;
+																		}
+																		
+																		?>
+									<!-- </a> -->
+								</td>
+								<td><?php echo $check->total_amount; ?>
+								</td>
+										<td>
+											<?php echo 'Check'; ?>
+										</td>
+						</td>
+						</tr>
+						<?php } //print_r($sales_receipts);?>
+
+								<?php foreach ($expenses as $exp):?>
+								<tr class="moneyin">
+									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($exp->payment_date)); ?> </td>
+									<td><?php echo get_customer_by_id($exp->vendor_id)->first_name .' '. get_customer_by_id($exp->vendor_id)->last_name ?> </td>
+									<td><?php echo $exp->amount; ?> </td>
+									<td><?php echo 'Expense'; ?></td>
+								</tr>
+								<?php endforeach; ?>
+								<!-- <tr>
+									<td>08/30/2021</td>
+									<td>Loucelle Emperio</td>
+									<td>$200.00</td>
+									<td>Check</td>
+								</tr>
+								<tr>
+									<td>08/30/2021</td>
+									<td>Brannon Nguyen</td>
+									<td>$500.00</td>
+									<td>Invoice</td>
+								</tr> -->
+							</tbody>
+						</table>
+				</div>
             </div>
             <!-- end row -->
             <div class="row"></div>
@@ -682,9 +785,10 @@ jQuery(document).ready(function() {
 </script>
 
 <script>
+	var tableRows = document.getElementsByTagName('tr');
             //get all buttons
             var moneyin = document.getElementById('moneyin');
-            console.log(moneyin);
+            // console.log(moneyin);
             var moneyout = document.getElementById('moneyout');
 			var moneyall = document.getElementById('moneyall');
 
@@ -717,3 +821,35 @@ jQuery(document).ready(function() {
 
 
       </script>
+<script>
+function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+
+<script>
+$(".close_add_item").click(function() {
+  $('#cfp_add_item_area').hide();
+});
+
+$(".cfp_add_item").click(function() {
+  $('#cfp_add_item_area').show();
+});
+</script>

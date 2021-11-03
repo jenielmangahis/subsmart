@@ -170,6 +170,38 @@ class DocuSign extends MYF_Controller
     public function apiManage($view)
     {
         $view = strtolower($view);
+        $documents = $this->getManageData($view);
+        $data = [];
+
+        foreach ($documents as $document) {
+            if ($view === 'deleted') {
+                $trashedAt = strtotime($document->trashed_at);
+                $timeDiff = strtotime('now') - $trashedAt;
+                $isMoreThan24Hours = $timeDiff > 86400;
+
+                if ($isMoreThan24Hours) {
+                    $this->db->where('id', $document->id);
+                    $this->db->update('user_docfile', ['status' => 'Deleted']);
+                    continue;
+                }
+            }
+
+            $this->db->where('docfile_id', $document->id);
+            $document->recipients = $this->db->get('user_docfile_recipients')->result();
+            array_push($data, $document);
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $data, 'view' => $view]);
+    }
+
+    private function getManageData($view)
+    {
+        $view = strtolower($view);
+
+        if ($view === 'action_required') {
+            return $this->getActionRequired();
+        }
 
         $this->db->where('user_id', logged('id'));
         switch ($view) {
@@ -197,29 +229,7 @@ class DocuSign extends MYF_Controller
                 $this->db->where('status !=', 'Deleted');
         }
 
-        $documents = $this->db->get('user_docfile')->result();
-        $data = [];
-
-        foreach ($documents as $document) {
-            if ($view === 'deleted') {
-                $trashedAt = strtotime($document->trashed_at);
-                $timeDiff = strtotime('now') - $trashedAt;
-                $isMoreThan24Hours = $timeDiff > 86400;
-
-                if ($isMoreThan24Hours) {
-                    $this->db->where('id', $document->id);
-                    $this->db->update('user_docfile', ['status' => 'Deleted']);
-                    continue;
-                }
-            }
-
-            $this->db->where('docfile_id', $document->id);
-            $document->recipients = $this->db->get('user_docfile_recipients')->result();
-            array_push($data, $document);
-        }
-
-        header('content-type: application/json');
-        echo json_encode(['data' => $data, 'view' => $view]);
+        return $this->db->get('user_docfile')->result();
     }
 
     public function apiTrash($documentId)
@@ -1696,6 +1706,33 @@ SQL;
         }
 
         return null;
+    }
+
+    public function apiGetActionRequired()
+    {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getActionRequired()]);
+    }
+
+    private function getActionRequired()
+    {
+        $this->db->where('id', logged('id'));
+        $this->db->select(['email']);
+        $user = $this->db->get('users')->row();
+        $currUserEmail = $user->email;
+
+        $query = <<<SQL
+        SELECT `user_docfile_recipients`.`docfile_id` FROM `user_docfile_recipients`
+        LEFT JOIN `user_docfile` ON `user_docfile`.`id` = `user_docfile_recipients`.`docfile_id`
+        WHERE `user_docfile`.`user_id` = ? AND `user_docfile_recipients`.`email` = ? AND
+        `user_docfile_recipients`.`sent_at` IS NOT NULL AND `user_docfile_recipients`.`completed_at` IS NULL
+SQL;
+
+        $results = $this->db->query($query, [logged('id'), $currUserEmail])->result();
+        $docfileIds = array_map(function ($result) {return $result->docfile_id;}, $results);
+
+        $this->db->where_in('id', $docfileIds);
+        return $this->db->get('user_docfile')->result();
     }
 }
 
