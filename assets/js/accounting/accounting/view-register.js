@@ -831,6 +831,31 @@ $(document).on('click', '#registers-table tbody tr.action-row #cancel-edit', fun
 
 $(document).on('click', '#registers-table tbody tr.action-row #save-transaction', function() {
     var data = new FormData();
+    var row = $('#registers-table tbody tr.editting');
+    var rowData = $('#registers-table').DataTable().row(row).data();
+
+    $('#registers-table tbody tr.editting td').each(function() {
+        if($(this).find('select').length === 0) {
+            var field = $(this).find('input');
+        } else {
+            var field = $(this).find('select');
+        }
+
+        if(field.length > 0) {
+            data.set(field.attr('name'), field.val());
+        }
+    });
+
+    $.ajax({
+        url: '/accounting/chart-of-accounts/'+accountId+'/save-transaction/'+rowData.id,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+
+        }
+    });
 });
 
 $(document).on('click', '#registers-table tbody tr', function() {
@@ -884,7 +909,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
 
             switch(columns[$(this).index()].name) {
                 case 'date' :
-                    $(this).html(`<input type="text" class="form-control" value="${current}">`);
+                    $(this).html(`<input type="text" name="date" class="form-control" value="${current}">`);
 
                     if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill') {
                         $(this).find('input').prop('disabled', true);
@@ -895,36 +920,124 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     });
                 break;
                 case 'ref_no' :
-                    $(this).html(`<input type="text" class="form-control" value="${current}" placeholder="Ref No.">`);
+                    $(this).html(`<input type="text" name="ref_no" class="form-control" value="${current}" placeholder="Ref No.">`);
 
                     if(rowData.ref_no_disabled === true) {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'type' :
-                    $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
+                    $(this).html(`<input type="text" name="type" class="form-control" value="${current}" disabled>`);
                 break;
                 case 'payee' :
-                    $(this).html(`<select class="form-control"></select>`);
+                    $(this).html(`<select class="form-control" name="payee"></select>`);
                     if(current !== "") {
                         $(this).find('select').append(`<option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option>`);
                     }
                     if(rowData.payee_disabled === true) {
                         $(this).find('select').prop('disabled', true);
+                        $(this).find('select').select2({
+                            placeholder: 'Payee'
+                        });
+                    } else {
+                        switch(rowData.type) {
+                            case 'Expense' :
+                                var fieldName = 'payee';
+                                var modalName = 'expenseModal';
+                            break;
+                            case 'CC Expense' :
+                                var fieldName = 'payee';
+                                var modalName = 'expenseModal';
+                            break;
+                            case 'Check' :
+                                var fieldName = 'payee';
+                                var modalName = 'checkModal';
+                            break;
+                            case 'Bill' :
+                                var fieldName = 'vendor';
+                                var modalName = 'billModal';
+                            break;
+                            case 'Vendor Credit' :
+                                var fieldName = 'vendor';
+                                var modalName = 'vendorCreditModal';
+                            break;
+                            case 'CC-Credit' :
+                                var fieldName = 'payee';
+                                var modalName = 'creditCardCreditModal';
+                            break;
+                            case 'Journal' :
+                                var fieldName = 'names';
+                                var modalName = 'journalEntryModal';
+                            break;
+                        }
+                        $(this).find('select').select2({
+                            placeholder: 'Payee',
+                            ajax: {
+                                url: '/accounting/get-dropdown-choices',
+                                dataType: 'json',
+                                data: function(params) {
+                                    var query = {
+                                        search: params.term,
+                                        type: 'public',
+                                        field: fieldName,
+                                        modal: modalName
+                                    }
+    
+                                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                                    return query;
+                                }
+                            },
+                            templateResult: formatResult,
+                            templateSelection: optionSelect
+                        });
                     }
-                    $(this).find('select').select2({
-                        placeholder: 'Payee'
-                    });
                 break;
                 case 'account' :
-                    $(this).html(`<select class="form-control" ${current === '-Split-' ? 'disabled' : ''}><option value="">${current}</option></select>`);
+                    $(this).html(`<select class="form-control" name="account" ${current === '-Split-' ? 'disabled' : ''}><option value="${rowData.account_id}">${current}</option></select>`);
                     if(rowData.account_disabled === true) {
                         $(this).find('select').prop('disabled', true);
+                        $(this).find('select').select2({
+                            placeholder: 'Account'
+                        });
+                    } else {
+                        switch(rowData.type) {
+                            case 'Transfer' :
+                                var fieldName = 'transfer-account';
+                                var modalName = 'transferModal';
+                            break;
+                            case 'Credit Card Pmt' :
+                                var fieldName = rowData.account_field;
+                                var modalName = 'payDownCreditModal';
+                            break;
+                            case 'Inventory Starting Value' :
+                                var fieldName = 'inventory-adj-account';
+                                var modalName = 'adjust-starting-value-modal';
+                            break;
+                        }
+                        $(this).find('select').select2({
+                            placeholder: 'Payee',
+                            ajax: {
+                                url: '/accounting/get-dropdown-choices',
+                                dataType: 'json',
+                                data: function(params) {
+                                    var query = {
+                                        search: params.term,
+                                        type: 'public',
+                                        field: fieldName,
+                                        modal: modalName
+                                    }
+    
+                                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                                    return query;
+                                }
+                            },
+                            templateResult: formatResult,
+                            templateSelection: optionSelect
+                        });
                     }
-                    $(this).find('select').select2();
                 break;
                 case 'memo' :
-                    $(this).html(`<input type="text" class="form-control" value="${current}" placeholder="Memo">`);
+                    $(this).html(`<input type="text" name="memo" class="form-control" value="${current}" placeholder="Memo">`);
 
                     if(rowData.type === 'Inventory Qty Adjust') {
                         $(this).find('input').prop('disabled', true);
@@ -932,9 +1045,9 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
                 case 'payment' :
                     if(current === '' && rowData.type !== 'Journal') {
-                        $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
+                        $(this).html(`<input type="number" name="payment" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
                     } else {
-                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
+                        $(this).html(`<input type="number" name="payment" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
                     }
 
                     if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
@@ -943,9 +1056,9 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
                 case 'charge' :
                     if(current === '' && rowData.type !== 'Journal') {
-                        $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Charge" disabled>`);
+                        $(this).html(`<input type="number" name="charge" class="form-control font-italic" value="" placeholder="Charge" disabled>`);
                     } else {
-                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
+                        $(this).html(`<input type="number" name="charge" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
                     }
 
                     if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
@@ -954,9 +1067,31 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 break;
                 case 'deposit' :
                     if(current === '' && rowData.type !== 'Journal') {
-                        $(this).html(`<input type="number" class="form-control font-italic" value="" placeholder="Deposit" disabled>`);
+                        $(this).html(`<input type="number" name="deposit" class="form-control font-italic" value="" placeholder="Deposit" disabled>`);
                     } else {
-                        $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
+                        $(this).html(`<input type="number" name="deposit" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
+                    }
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit') {
+                        $(this).find('input').prop('disabled', true);
+                    }
+                break;
+                case 'increase' :
+                    if(current === '' && rowData.type !== 'Journal') {
+                        $(this).html(`<input type="number" name="increase" class="form-control font-italic" value="" placeholder="Increase" disabled>`);
+                    } else {
+                        $(this).html(`<input type="number" name="increase" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Increase">`);
+                    }
+
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
+                        $(this).find('input').prop('disabled', true);
+                    }
+                break;
+                case 'decrease' :
+                    if(current === '' && rowData.type !== 'Journal') {
+                        $(this).html(`<input type="number" name="decrease" class="form-control font-italic" value="" placeholder="Decrease" disabled>`);
+                    } else {
+                        $(this).html(`<input type="number" name="decrease" class="form-control text-right" value="${current.replaceAll('$', '')}" placeholder="Decrease">`);
                     }
 
                     if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit') {
@@ -970,13 +1105,13 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     $(this).html('');
                 break;
                 case 'attachments' :
-                    $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
+                    $(this).html(`<input type="text" name="attachments_count" class="form-control" value="${current}" disabled>`);
                 break;
                 case 'tax' :
                     $(this).html('');
                 break;
                 case 'balance' :
-                    $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" disabled>`);
+                    $(this).html(`<input type="number" name="balance" class="form-control text-right" value="${current.replaceAll('$', '')}" disabled>`);
                 break;
             }
         });

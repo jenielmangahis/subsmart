@@ -10976,6 +10976,7 @@ class Accounting extends MY_Controller
         $this->page_data['statements'] = $this->accounting_statements_model->getAllComp(logged('company_id'));
         $this->page_data['rpayments'] = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
         $this->page_data['checks'] = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        $this->page_data['expenses'] = $this->expenses_model->getExpenseByComp(logged('company_id'));
 
         $this->load->view('accounting/cashflowplanner', $this->page_data);
     }
@@ -11522,5 +11523,21 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->the_html_tbody = $the_html_tbody;
         echo json_encode($data);
+    }
+
+    public function cashflowPDF()
+    {
+
+        $data = array(
+            // 'header'                            => $workData->header,
+            
+            // 'source' => $source
+        );
+
+            
+        $filename = "cashflow-report";
+        $this->load->library('pdf');
+
+        $this->pdf->load_view('accounting/cashflow_pdf_template', $data, $filename, "portrait");
     }
 }
