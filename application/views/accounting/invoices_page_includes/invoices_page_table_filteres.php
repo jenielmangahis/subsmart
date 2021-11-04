@@ -1,6 +1,8 @@
 <?php
 if ($invoices!=null) {
-    foreach ($invoices as $invoice) { ?>
+    foreach ($invoices as $invoice) { 
+        
+        ?>
 <tr>
     <td>
         <div class="form-check">
@@ -9,7 +11,13 @@ if ($invoices!=null) {
                     name="id[<?php echo $invoice->id ?>]"
                     value="<?php echo $invoice->id ?>"
                     class="select-one"
-                    id="invoice_id_<?php echo $invoice->id ?>">
+                    id="invoice_id_<?php echo $invoice->id ?>"
+                    data-status="<?=$invoice->INV_status?>"
+                    data-customer-id="<?=$invoice->customer_id?>"
+                    data-invoice-id="<?=$invoice->id?>"
+                    data-company-id="<?=$invoice->company_id?>"
+                    data-invoice-number = "<?=$invoice->invoice_number?>"
+                    >
                 <label
                     for="invoice_id_<?php echo $invoice->id ?>"><span></span></label>
             </div>

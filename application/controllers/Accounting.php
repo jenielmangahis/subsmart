@@ -11527,7 +11527,6 @@ class Accounting extends MY_Controller
 
     public function cashflowPDF()
     {
-
         $data = array(
             // 'header'                            => $workData->header,
             
@@ -11539,5 +11538,111 @@ class Accounting extends MY_Controller
         $this->load->library('pdf');
 
         $this->pdf->load_view('accounting/cashflow_pdf_template', $data, $filename, "portrait");
+    }
+    public function get_info_for_send_invoice_reminder()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $user_info = $this->users_model->getUserById(logged("id"));
+
+        $invoice = get_invoice_by_id($invoice_id);
+        $user = get_user_by_id(logged('id'));
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['user'] = $user;
+        // $this->page_data['items'] = $user;
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($invoice_id);
+        $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($invoice_id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['user'] = $user;
+        }
+        $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+        $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+        $filename = "nSmarTrac_invoice_".$invoice_id;
+        $this->load->library('pdf');
+        $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
+
+        $data = new stdClass();
+        $data->business_name = $customer_info->business_name;
+        $data->business_email = $customer_info->business_email;
+        $data->acs_email = $customer_info->acs_email;
+        $data->firstname = $customer_info->first_name;
+        $data->lastname = $customer_info->last_name;
+        $data->user_email = $user_info->email;
+        $data->filelocation = base_url("assets/pdf/".$filename."") ;
+        echo json_encode($data);
+    }
+    public function send_invoice_reminder()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $to = $this->input->post("to");
+        $from = $this->input->post("from");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("email-body");
+        $cc = $this->input->post("cc");
+        $bcc = $this->input->post("bcc");
+
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        // $from = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPDebug = 0;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . "nSmarTrac_invoice_".$invoice_id);
+        $content = $this->load->view('accounting/invoices_page_includes/send_reminder_email_layout', $this->page_data, true);
+
+        $mail->MsgHTML($content);
+
+        $data = new stdClass();
+        try {
+            $mail->addAddress($to);
+            $mail->addAddress('webtestcustomer@nsmartrac.com');
+            $bccs = explode(",", $bcc);
+            for ($i=0; $i < count($bccs);$i++) {
+                if ($bccs[$i]!="") {
+                    $mail->addBcc($bccs[$i]);
+                }
+            }
+            $ccs = explode(",", $cc);
+            for ($i=0; $i < count($ccs);$i++) {
+                if ($ccs[$i]!="") {
+                    $mail->addCc($ccs[$i]);
+                }
+            }
+            
+            $mail->Send();
+            $data->status = "success";
+        } catch (Exception $e) {
+            $data->error = 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+        }
+        echo json_encode($data);
     }
 }

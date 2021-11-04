@@ -386,6 +386,8 @@ $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
 $route['accounting/filter/invoices-page'] = 'accounting/invoices_page_filter';
+$route['invoice-page/get/send-invoice-reminder'] = 'accounting/get_info_for_send_invoice_reminder';
+$route['invoice-page/send/send-invoice-reminder'] = 'accounting/send_invoice_reminder';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';

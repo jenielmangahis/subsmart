@@ -238,7 +238,6 @@ class Users_model extends MY_Model
     }
 
 
-
     public function getUser($user_id)
     {
         $parent_id = getLoggedUserID();

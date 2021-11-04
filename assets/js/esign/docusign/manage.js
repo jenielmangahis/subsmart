@@ -121,6 +121,14 @@ const columns = {
     `;
   },
   manage: function (_, _, row) {
+    if (row.signing_url) {
+      return `
+        <a href="${row.signing_url}" class="btn btn-sm btn-primary" style="color:#fff;">
+          Continue Signing
+        </a>
+      `;
+    }
+
     const menu = {};
     const { status } = row;
 

@@ -279,13 +279,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <li class="print-transaction-btn disabled">
                                         <a href="#">Send</a>
                                     </li>
-                                    <li class="print-packaging-slip-btn disabled">
+                                    <li class="send-reminder-btn disabled">
                                         <a href="#">Send reminder</a>
                                     </li>
                                     <li class="send-transaction-btn disabled">
                                         <a href="#">Print</a>
                                     </li>
-                                    <li class="send-reminder-btn disabled">
+                                    <li class="delete-btn disabled">
                                         <a href="#">Delete</a>
                                     </li>
                                 </ul>
@@ -1187,7 +1187,82 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
     <!--end of modal-->
 </div>
+<div id="invoice-reminder-modal">
+    <div class="the-modal-body">
+        <h1 class="the-title">Send Invoice <span class="invoice-number"></span></h1>
+        <div class="the-close">x</div>
+        <div class="the-class-content">
+            <form action="#" id="invoice-reminder">
+                <input type="text" name="invoice_id" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="from">From</label>
+                            <select name="from" class="required" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="from">To <span class="cc-bcc">Cc/Bcc</span></label>
+                            <input type="email" name="to" placeholder="Separate multiple emails with commas"
+                                class="required" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" name="send_me_copy">
+                            <label for="send_me_copy" data-user-email="">Send me a copy</label>
+                        </div>
+                        <div class="cc-bcc-section" style="display: none;">
+                            <div class="form-group">
+                                <label for="from">Cc</label>
+                                <input type="email" name="cc" placeholder="Separate multiple emails with commas">
+                            </div>
+                            <div class="form-group">
+                                <label for="from">Bcc</label>
+                                <input type="email" name="bcc" placeholder="Separate multiple emails with commas">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="from">Subject</label>
+                            <input type="text" name="subject" value="Reminder: Your payment to ADI is due"
+                                class="required" required>
+                        </div>
+                        <div class="attachment">
+                            <i class="fa fa-paperclip" aria-hidden="true"></i> Invoice PDF
+                        </div>
 
+                        <div class="form-group">
+                            <label for="email-body">Email body</label>
+                            <textarea name="email-body" cols="30" rows="10" class="required" required>Dear Betty Fuller,
+
+We're sending a reminder to let you know that invoice [Invoice No.] has not been paid. If you already paid this invoice or have any questions, let us know!
+
+Have a great day!
+ADI
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pdf-frame">
+                            <iframe
+                                src="<?=base_url('assets/pdf/INV-000000011_portalappinv.pdf#toolbar=0')?>"
+                                class="the-file" frameborder="0"></iframe>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="the-modal-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="the-close">Cancel</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success float-right the-submit">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script
     src="<?php echo $url->assets ?>js/accounting/sales/customer_includes/customer_single_modal.js">
 </script>
