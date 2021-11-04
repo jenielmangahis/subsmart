@@ -8,6 +8,11 @@
     width: 180px;
 }
 
+.invoices-page-section button.btn.btn-default.disabled {
+    cursor: auto;
+    background: none!important;
+}
+
 .invoices-page-section .by-batch-btn .dropdown-menu li {
     padding: 5px 0;
 }
@@ -47,4 +52,154 @@
 .invoices-page-section ul.by-batch-btn li.send-reminder-btn.disabled a {
     cursor: default;
     color: #A0A09F;
+}
+
+div#invoice-reminder-modal {
+    position: fixed;
+    top: 0;
+    z-index: 1059;
+    width: 100%;
+    height: 100%;
+    background: #00000082;
+    color: #393A3D;
+    display: none;
+}
+
+#invoice-reminder-modal .the-modal-body {
+    background: #ffffff;
+    width: 900px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+#invoice-reminder-modal .the-modal-body div.the-close {
+    position: absolute;
+    right: 30px;
+    top: 5px;
+    font-size: 20px;
+    padding: 10px;
+    color: #8D9096;
+    cursor: pointer;
+}
+
+#invoice-reminder-modal .the-modal-footer {
+    padding-top: 30px;
+}
+
+#invoice-reminder-modal .the-modal-footer button.the-close:hover {
+    color: #0378C5;
+    text-decoration: underline;
+}
+
+#invoice-reminder-modal .the-modal-footer button.the-close {
+    background: none;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    color: #0378C5;
+    margin-left: 50px;
+    height: auto;
+}
+
+#invoice-reminder-modal .the-modal-footer button.the-submit:hover {
+    color: #ffffff;
+    border: none;
+}
+
+#invoice-reminder-modal .the-modal-footer button.the-submit {
+    border: none;
+    padding: 5px 20px;
+    height: auto;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#invoice-reminder-modal .the-modal-body .the-close:hover {
+    color: #000;
+}
+
+#invoice-reminder-modal .the-modal-body form {
+    padding: 10px 0;
+}
+
+#invoice-reminder-modal .the-modal-body form .form-group {
+    margin-bottom: 0!important;
+    padding: 5px 0;
+}
+
+#invoice-reminder-modal .form-group label {
+    width: 90px;
+    font-size: 14px;
+}
+
+#invoice-reminder-modal .form-group label span.cc-bcc {
+    font-size: 12px;
+    color: #2282C9;
+    cursor: pointer;
+}
+
+#invoice-reminder-modal .form-group label span.cc-bcc:hover {
+    text-decoration: underline;
+}
+
+#invoice-reminder-modal .form-group input,
+#invoice-reminder-modal .form-group select,
+#invoice-reminder-modal .form-group textarea {
+    padding: 10px;
+    width: 300px;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
+}
+
+#invoice-reminder-modal .pdf-frame iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#invoice-reminder-modal .pdf-frame {
+    height: 100%;
+    width: 100%;
+}
+
+#invoice-reminder-modal .form-group label[for="email-body"] {
+    position: absolute;
+}
+
+#invoice-reminder-modal .form-group textarea[name='email-body'] {
+    margin-left: 90px;
+}
+
+#invoice-reminder-modal .form-group input:focus,
+#invoice-reminder-modal .form-group textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+#invoice-reminder-modal .form-group input[name="send_me_copy"] {
+    width: auto;
+    margin-left: 90px;
+    padding-left: 10px;
+}
+
+#invoice-reminder-modal .form-group label[for='send_me_copy'] {
+    width: auto;
+}
+
+#invoice-reminder-modal .the-modal-body form div.attachment {
+    padding-left: 90px;
+    font-size: 14px;
+    font-weight: 700;
 }

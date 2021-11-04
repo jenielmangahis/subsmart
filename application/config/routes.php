@@ -386,6 +386,8 @@ $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 $route['accounting/filter/all-sales'] = 'accounting/filter_all_sales';
 $route['accounting/filter/invoices-page'] = 'accounting/invoices_page_filter';
+$route['invoice-page/get/send-invoice-reminder'] = 'accounting/get_info_for_send_invoice_reminder';
+$route['invoice-page/send/send-invoice-reminder'] = 'accounting/send_invoice_reminder';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
@@ -768,6 +770,7 @@ $route['calendar/_load_edit_wait_list'] = 'Workcalender/ajax_load_edit_wait_list
 $route['calendar/_update_appointment_wait_list'] = 'Workcalender/ajax_update_appointment_waitlist';
 $route['calendar/_view_appointment_payment_details'] = 'Workcalender/ajax_view_appointment_payment_details';
 $route['calendar/_update_calendar_drop_waitlist'] = 'Workcalender/ajax_update_calendar_drop_waitlist';
+$route['calendar/_update_employee_filter'] = 'Workcalender/ajax_update_calendar_employee_filter';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

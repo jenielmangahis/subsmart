@@ -23,6 +23,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_payment_methods_model');
+        $this->load->model('accounting_pay_down_credit_card_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -3834,6 +3835,190 @@ class Chart_of_accounts extends MY_Controller {
     public function save_transaction($accountId, $transactionId)
     {
         $account = $this->chart_of_accounts_model->getById($accountId);
-        dd($this->input->post());
+        $post = $this->input->post();
+
+        switch($post['type']) {
+            case 'Credit Card Pmt' :
+                $return = $this->save_cc_payment($accountId, $transactionId, $post);
+            break;
+            case 'Inventory Starting Value' :
+
+            break;
+            case 'Journal' :
+
+            break;
+            case 'Transfer' :
+                $return = $this->save_transfer($accountId, $transactionId, $post);
+            break;
+            case 'Deposit' :
+
+            break;
+            case 'CC-Credit' :
+
+            break;
+            case 'Vendor Credit' :
+
+            break;
+            case 'Bill Payment' :
+
+            break;
+            case 'Bill' :
+
+            break;
+            case 'Check' :
+
+            break;
+            case 'Expense' :
+
+            break;
+        }
+
+        echo json_encode($return);
+    }
+
+    private function save_cc_payment($accountId, $paymentId, $data)
+    {
+        $payment = $this->accounting_pay_down_credit_card_model->get_by_id($paymentId);
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        $updateData = [
+            'credit_card_id' => $data['credit_card_account'] !== null ? $data['credit_card_account'] : $payment->credit_card_id,
+            'amount' => $amount,
+            'date' => date('Y-m-d', strtotime($data['date'])),
+            'bank_account_id' => $data['bank_account'] !== null ? $data['bank_account'] : $payment->bank_account_id,
+            'memo' => $data['memo']
+        ];
+
+        $update = $this->accounting_pay_down_credit_card_model->update($paymentId, $updateData);
+
+        if ($update) {
+            // REVERT OLD
+            $oldCreditAcc = $this->chart_of_accounts_model->getById($payment->credit_card_id);
+
+            $newBalance = floatval($oldCreditAcc->balance) + floatval($payment->amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $oldCreditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+            $oldBank = $this->chart_of_accounts_model->getById($payment->bank_account_id);
+
+            $newBalance = floatval($oldBank->balance) + floatval($payment->amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $oldBank->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+            // NEW
+            $creditAcc = $this->chart_of_accounts_model->getById($updateData['credit_card_id']);
+
+            $newBalance = floatval($creditAcc->balance) - floatval($updateData['amount']);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+            $bankAcc = $this->chart_of_accounts_model->getById($updateData['bank_account_id']);
+
+            $newBalance = floatval($bankAcc->balance) - floatval($updateData['amount']);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+        }
+
+        $return = [
+            'data' => $paymentId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+
+        return $return;
+    }
+
+    private function save_transfer($accountId, $transferId, $data)
+    {
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        $transferData = [
+            'transfer_from_account_id' => $accountId === $transfer->transfer_to_account_id ? $data['transfer_account'] : $transfer->transfer_from_account_id,
+            'transfer_to_account_id' => $accountId === $transfer->transfer_from_account_id ? $data['transfer_account'] : $transfer->transfer_to_account_id,
+            'transfer_amount' => $amount,
+            'transfer_date' => date('Y-m-d', strtotime($data['date'])),
+            'transfer_memo' => $data['memo']
+        ];
+
+        $update = $this->accounting_transfer_funds_model->update($transferId, $transferData);
+
+        if ($update) {
+            // REVERT OLD
+            $oldTransferFrom = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+            $oldTransferTo = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+            $oldTransferFromBal = $oldTransferFrom->account_id !== "7" ? floatval($oldTransferFrom->balance) + floatval($transfer->transfer_amount) : floatval($oldTransferFrom->balance) - floatval($transfer->transfer_amount);
+            $oldTransferToBal = $oldTransferTo->account_id !== "7" ? floatval($oldTransferTo->balance) - floatval($transfer->transfer_amount) : floatval($oldTransferTo->balance) + floatval($transfer->transfer_amount);
+
+            $oldTransferFromBal = number_format($oldTransferFromBal, 2, '.', ',');
+            $oldTransferToBal = number_format($oldTransferToBal, 2, '.', ',');
+
+            $oldTransferFromData = [
+                'id' => $oldTransferFrom->id,
+                'company_id' => logged('company_id'),
+                'balance' => $oldTransferFromBal
+            ];
+            $oldTransferToData = [
+                'id' => $oldTransferTo->id,
+                'company_id' => logged('company_id'),
+                'balance' => $oldTransferToBal
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($oldTransferFromData);
+            $this->chart_of_accounts_model->updateBalance($oldTransferToData);
+
+            // NEW
+            $transferFromAcc = $this->chart_of_accounts_model->getById($transferData['transfer_from_account_id']);
+            $transferToAcc = $this->chart_of_accounts_model->getById($transferData['transfer_to_account_id']);
+
+            $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($transferData['transfer_amount']) : floatval($transferFromAcc->balance) + floatval($transferData['transfer_amount']);
+            $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($transferData['transfer_amount']) : floatval($transferToAcc->balance) - floatval($transferData['transfer_amount']);
+
+            $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+            $transferToBal = number_format($transferToBal, 2, '.', ',');
+
+            $transferFromAccData = [
+                'id' => $transferFromAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $transferFromBal
+            ];
+            $transferToAccData = [
+                'id' => $transferToAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $transferToBal
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+            $this->chart_of_accounts_model->updateBalance($transferToAccData);
+        }
+
+        $return['data'] = $transferId;
+        $return['success'] = $update ? true : false;
+        $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
     }
 }

@@ -191,6 +191,25 @@ class DocuSign extends MYF_Controller
             array_push($data, $document);
         }
 
+        if ($view === 'action_required') {
+            foreach ($data as $document) {
+                $recipientId = null;
+                foreach ($document->recipients as $recipient) {
+                    if ($recipient->email === logged('email')) {
+                        $recipientId = $recipient->id;
+                        break;
+                    }
+                }
+
+                $message = json_encode([
+                    'recipient_id' => $recipientId,
+                    'document_id' => $document->id,
+                ]);
+                $hash = encrypt($message, $this->password);
+                $document->signing_url = $this->getSigningUrl() . '/signing?hash=' . $hash;
+            }
+        }
+
         header('content-type: application/json');
         echo json_encode(['data' => $data, 'view' => $view]);
     }
@@ -1732,6 +1751,7 @@ SQL;
         $docfileIds = array_map(function ($result) {return $result->docfile_id;}, $results);
 
         $this->db->where_in('id', $docfileIds);
+        $this->db->order_by('id', 'DESC');
         return $this->db->get('user_docfile')->result();
     }
 }
