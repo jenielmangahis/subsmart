@@ -140,8 +140,8 @@ vertical-align: middle;
   display: block;
 }
 .c-online-payment-logo{
-  margin: 7% auto;
-  height: 87px;
+  margin: 11% auto;
+  height: 60px;
 }
 .payment-logo-container{
   display: block;
@@ -156,7 +156,9 @@ vertical-align: middle;
     margin-bottom: 7px;
     margin-top: 8px;
 }
-
+.paypal-button > .paypal-button-label-container {    
+    height: 30 !important;
+}
 </style>
 <?php if( $appointment ){ ?>
 <?php 
@@ -183,6 +185,10 @@ vertical-align: middle;
   }
 ?>
 <div class="row" style="text-align: left;">
+  <input type="hidden" id="customer-firstname" value="<?= $customer->first_name; ?>">
+  <input type="hidden" id="customer-lastname" value="<?= $customer->last_name; ?>">
+  <input type="hidden" id="customer-email" value="<?= $customer->email; ?>">
+  <input type="hidden" id="payment-method" value="">
   <div class="col-md-9">
     <!-- Start step1 -->
     <div class="checkout-step1">
@@ -228,9 +234,10 @@ vertical-align: middle;
             <table class="table table-borderless tbl-items" style="border: none;">     
               <thead>
                   <tr>
-                      <th style="width: 65%;text-align: left;">Item Name</th>
+                      <th style="width: 55%;text-align: left;">Item Name</th>
                       <th style="width: 10%;text-align: left;">Item Price</th>
                       <th style="width: 10%;">Quantity</th>
+                      <th style="width: 10%;">Tax (Percentage)</th>
                       <th style="width: 10%;">Discount</th>
                       <th style="width: 5%;"></th>
                   </tr>
@@ -246,9 +253,10 @@ vertical-align: middle;
                   <?php 
                     $total_items += $item->item_price * $item->qty;
                     $total_discount += $item->discount_amount;
+                    $total_tax += ($item->item_price * $item->qty) * ($item->tax_percentage / 100);
                   ?>
                   <tr style="background: none !important;">
-                    <td style="width:65%;">
+                    <td style="width:55%;">
                       <input type="text" class="form-control" value="<?= $item->item_name; ?>" name="item_name[]" placeholder="Item Name">
                       <input type="hidden" class="form-control" value="<?= $item->item_id; ?>" name="item_id[]" placeholder="Item Name">
                     </td>
@@ -256,7 +264,10 @@ vertical-align: middle;
                       <input type="text" class="form-control item-price" value="<?= number_format($item->item_price,2); ?>" name="price[]" placeholder="Item Price">
                     </td>
                     <td>
-                      <input type="text" class="form-control item-qty" value="<?= number_format($item->qty,2); ?>" name="qty[]" placeholder="Quantity">
+                      <input type="text" class="form-control item-qty" value="<?= number_format($item->qty,0); ?>" name="qty[]" placeholder="Quantity">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control item-tax" value="<?= number_format($item->tax_percentage,2); ?>" name="tax[]" placeholder="Tax Percentage">
                     </td>
                     <td>
                       <input type="text" class="form-control item-discount" value="<?= number_format($item->discount_amount,2); ?>" name="discount[]" placeholder="Item Discount">
@@ -282,22 +293,36 @@ vertical-align: middle;
       <!-- Gateway select -->
       <div class="checkout-online-gateway">
         <h3><i class="fa fa-credit-card"></i> Select Payment Gateway</h3>
-        <div class="row" style="margin-top: 32px;">
+        <div class="row" style="margin-top: 32px;">            
             <div class="col-3">
               <a href="javascript:void(0);" class="c-cash-logo payment-logo-container">
-                <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/cashpayment.png" style="height: 127px;margin:0 auto;">
+                  <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/cashpayment.png" style="height: 127px;margin:0 auto;">
               </a>
             </div>
             <div class="col-3">
               <a href="javascript:void(0);" class="c-converge-logo payment-logo-container">
                 <img class="img-responsive c-online-payment-logo" src="<?php echo $url->assets ?>img/converge-logo.png">
               </a>
-            </div>
-            <div class="col-3">
-              <a href="javascript:void(0);" class="c-paypal-logo payment-logo-container">
-                <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
-              </a>
-            </div>
+            </div>            
+            <?php if($onlinePaymentAccount){ ?>
+              <?php if( $onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '' ){ ?>
+                <div class="col-3" style="border:1px solid rgb(101, 101, 101);">
+                  <div id="paypal-button-container" style="width: 100%;margin-top: 43px;"></div>
+                </div>
+              <?php }else{ ?>
+                <div class="col-3">
+                  <a href="javascript:void(0);" class="c-paypal-logo payment-logo-container">
+                    <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+                  </a>
+                </div>
+              <?php } ?>
+            <?php }else{ ?>
+              <div class="col-3">
+                <a href="javascript:void(0);" class="c-paypal-logo payment-logo-container">
+                  <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+                </a>
+              </div>
+            <?php } ?>
             <div class="col-3">
               <a href="javascript:void(0);" class="c-stripe-logo payment-logo-container">
                 <img class="img-responsive c-online-payment-logo c-stripe-logo" src="<?php echo $url->assets ?>img/stripe-logo.png">
@@ -385,7 +410,7 @@ vertical-align: middle;
 
       <!-- Cash form -->
       <div class="checkout-cash-form" style="display: none;">
-          <h3><i class="fa fa-credit-card"></i> Cash Payment</h3>
+          <h3><i class="fa fa-dollar"></i> Cash Payment</h3>
           <div id="credit_card" style="margin-top: 49px;">
           <form id="frm-cash-payment">
             <input type="hidden" id="cash-checkout-aid" name="cash_checkout_aid" value="<?= $appointment->id; ?>">
@@ -451,7 +476,7 @@ vertical-align: middle;
 <script>
 $(function(){
   $(".btn-checkout-add-item").click(function(){
-    var append_row = '<tr style="background: none !important;"><td style="width:60%;"><input type="text" class="form-control" name="items[]" placeholder="Item Name"></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
+    var append_row = '<tr style="background: none !important;"><td style="width:60%;"><input type="text" class="form-control" name="items[]" placeholder="Item Name"></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price"></td><td><input type="text" class="form-control item-tax" name="tax[]" placeholder="Tax Percentage"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
 
     $(".tbl-items tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
   });
@@ -504,6 +529,21 @@ $(function(){
   });
 
   $(document).on('keyup', '.item-discount', function(event){
+    c_compute_totals();
+  });
+
+  $(document).on('keypress', '.item-tax', function(event){
+    var key = window.event ? event.keyCode : event.which;
+    if (event.keyCode === 8 || event.keyCode === 46) {
+        return true;
+    } else if ( key < 48 || key > 57 ) {
+        return false;
+    } else {
+        return true;
+    }
+  });
+
+  $(document).on('keyup', '.item-tax', function(event){
     c_compute_totals();
   });
 
@@ -682,5 +722,47 @@ $(function(){
     }, 1000);
 
   });
+  //Paypal
+  // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+      style: {
+            layout: 'vertical',
+            tagline: false,
+            //height:200,
+            size:'large',
+            shape:   'rect',
+            color:'blue'
+        },
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+              payer: {
+          name: {
+            given_name: $("#customer-firstname").val() + " " + $("#customer-lastname").val()
+          },
+          email_address: $("#customer-email").val(),
+        },
+                purchase_units: [{
+                    amount: {
+                        value: $("#appointment-total-amount").val()
+                    }
+                }],
+                application_context: {
+            shipping_preference: 'NO_SHIPPING'
+          }
+            });
+        },
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                //console.log(details);
+                $("#payment-method").val('paypal');
+                onlinepayment_set_appointment_paid();                
+            });
+        }
+    }).render('#paypal-button-container');
+
+    c_compute_totals();
 });
 </script>

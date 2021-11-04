@@ -25,6 +25,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </style>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.18/jquery.timepicker.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+<?php if( $onlinePaymentAccount ){ ?>
+    <?php if( $onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '' ){ ?>
+        <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD&disable-funding=credit,card"></script>
+    <?php } ?>
+<?php } ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -131,7 +136,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <button type="button" class="text-white btn btn-primary btn-md btn-create-event">
                                                             <span class="fa fa-plus fa-margin-right"></span>&nbsp;&nbsp;Create Event
                                                         </button>
-                                                        <button type="button" class="btn btn-primary btn-md dropdown-toggle"
+                                                        <!-- <button type="button" class="btn btn-primary btn-md dropdown-toggle"
                                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                             <span class="caret"></span>
                                                             <span class="text-white sr-only">Toggle Dropdown</span>
@@ -143,13 +148,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             <li><a data-calendar="add-event" data-calendar-event-type="3" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">
                                                                     Assign New Lead</a></li>
-                                                            <!-- <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
-                                                                   data-target="#modalCreateEvent">Create Event</a></li> -->
+                                                            <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
+                                                                   data-target="#modalCreateEvent">Create Event</a></li>
                                                             <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">Cancel Schedule</a></li>
                                                             <li><a data-calendar="event-modal-open" href="#" data-toggle="modal"
                                                                    data-target="#modalCreateEvent">Reschedule</a></li>
-                                                        </ul>
+                                                        </ul> -->
                                                     </div>
                                                 </div>
                                               </div>
@@ -157,7 +162,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                         <br class="clearfix"/>
                                         <div class="alert alert-warning mt-2 mb-4" role="alert">
-                                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">With Calendar, you can quickly schedule meetings and events and get reminders about upcoming activities, so you always know what’s next. Calendar is designed for teams, so it’s easy to share... </span>
+                                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">With Calendar, you can quickly schedule meetings and events and get reminders about upcoming activities, so you always know what’s next. Calendar is designed for teams, so it’s easy to share. </span>
                                         </div>
 
                                     </div>
@@ -684,6 +689,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             </div>
             <form id="frm-checkout-appointment" method="post">
                 <input type="hidden" name="aid" id="checkout-aid" value="">
+                <input type="hidden" name="total_amount" id="appointment-total-amount" value="">
                 <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
                     <div class="checkoout-appointment-container"></div>
                 </div>
@@ -2461,7 +2467,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
            {
               if( o.is_exists ){
                 var item_price = parseFloat(o.item_price);
-                var append_row = '<tr style="background: none !important;"><td style="width:65%;"><input type="text" class="form-control" name="item_name[]" placeholder="Item Name" value="'+o.item_name+'"><input type="hidden" name="item_id[]" value="'+o.item_id+'" /></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price" value="'+item_price.toFixed(2)+'"></td><td><input type="text" class="form-control item-qty" name="qty[]" placeholder="Item Quantity" value="1"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount" value="0"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
+                var append_row = '<tr style="background: none !important;"><td style="width:55%;"><input type="text" class="form-control" name="item_name[]" placeholder="Item Name" value="'+o.item_name+'"><input type="hidden" name="item_id[]" value="'+o.item_id+'" /></td><td><input type="text" class="form-control item-price" name="price[]" placeholder="Item Price" value="'+item_price.toFixed(2)+'"></td><td><input type="text" class="form-control item-qty" name="qty[]" placeholder="Item Quantity" value="1"></td><td><input type="text" class="form-control item-tax" name="tax[]" placeholder="Tax Percentage" value="0.00"></td><td><input type="text" class="form-control item-discount" name="discount[]" placeholder="Item Discount" value="0.00"></td><td class="td-actions"><a href="javascript:void(0);" class="btn btn-sm btn-primary btn-item-delete"><i class="fa fa-trash"></i></a></td></tr>';
 
                 $(".tbl-items tbody").append(append_row).find("tr:last").hide().fadeIn("slow");
                 c_compute_totals();
@@ -2479,6 +2485,35 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
            }
         });
       });
+
+    function onlinepayment_set_appointment_paid(){
+        $(".payment-method-container").hide();
+        var url = base_url + 'registration/_create_registration';
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#subscribe-form-payment").serialize(),
+               success: function(o)
+               {    
+                    Swal.fire({
+                        title: 'Registration Completed!',
+                        text: 'You can now login to your account',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Login'
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.href= base_url + 'login';
+                        }
+                    });
+               }
+            });
+        }, 500);
+    }
 
     function c_compute_totals(){
         var total_price    = 0;
@@ -2507,6 +2542,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               total_discount = total_discount + parseFloat($el.val());
             }
           }
+
+          if( $el.hasClass('item-tax') ){        
+            if ($.isNumeric(n)){
+              var item_price = parseFloat($el.closest('tr').find('.item-price').val());
+              var item_qty   = parseFloat($el.closest('tr').find('.item-qty').val());
+              var tax_amount = (parseFloat($el.val()) / 100) * (item_price * item_qty);              
+              total_tax = total_tax + tax_amount;
+            }
+          }
         });
 
         total_amount = (parseFloat(total_price) - parseFloat(total_discount)) + parseFloat(total_tax);
@@ -2517,8 +2561,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $(".c-total-amount").text(parseFloat(total_amount).toFixed(2));
         $(".c-total-price").text(parseFloat(total_price).toFixed(2));
         $(".c-total-discount").text(parseFloat(total_discount).toFixed(2));
+        $(".c-total-tax").text(parseFloat(total_tax).toFixed(2));
         $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
         $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
+        $("#appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
+
       }
 
       $(".btn-add-wait-list").click(function(){
