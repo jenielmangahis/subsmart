@@ -1445,9 +1445,11 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($depositFunds as $depFund) {
             $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id);
+            $depFunds = $this->accounting_bank_deposit_model->getFunds($dep->id);
 
             $transaction = [
                 'id' => $dep->id,
+                'child_id' => $depFund->id,
                 'date' => date("m/d/Y", strtotime($dep->date)),
                 'ref_no' => $depFund->ref_no,
                 'ref_no_disabled' => false,
@@ -1472,18 +1474,26 @@ class Chart_of_accounts extends MY_Controller {
                 case 'Credit Card' :
                     $transaction['charge'] = number_format(floatval($depFund->amount), 2, '.', ',');
                     $transaction['payment'] = '';
+                    $transaction['charge_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $transaction['payment_disabled'] = true;
                 break;
                 case 'Asset' :
                     $transaction['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
                     $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $transaction['decrease_disabled'] = true;
                 break;
                 case 'Liability' :
                     $transaction['increase'] = number_format(floatval($depFund->amount), 2, '.', ',');
                     $transaction['decrease'] = '';
+                    $transaction['increase_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $transaction['decrease_disabled'] = true;
                 break;
                 default :
                     $transaction['payment'] = number_format(floatval($depFund->amount), 2, '.', ',');
                     $transaction['deposit'] = '';
+                    $transaction['payment_disabled'] = count($depFunds) > 1 || floatval($dep->cash_back_amount) > 0.00;
+                    $transaction['deposit_disabled'] = true;
                 break;
             }
 
@@ -3381,8 +3391,15 @@ class Chart_of_accounts extends MY_Controller {
         if($update) {
             foreach($entries as $entry) {
                 $account = $this->chart_of_accounts_model->getById($entry->account_id);
-                $newBalance = floatval($account->balance) + floatval($entry->credit);
-                $newBalance = floatval($account->balance) - floatval($entry->debit);
+
+                if($account->account_id !== "7") {
+                    $newBalance = floatval($account->balance) + floatval($entry->credit);
+                    $newBalance = $newBalance - floatval($entry->debit);
+                } else {
+                    $newBalance = floatval($account->balance) - floatval($entry->credit);
+                    $newBalance = $newBalance + floatval($entry->debit);
+                }
+    
                 $newBalance = number_format($newBalance, 2, '.', ',');
     
                 $accountData = [
@@ -3861,7 +3878,7 @@ class Chart_of_accounts extends MY_Controller {
                 $return = $this->save_transfer($accountId, $transactionId, $post);
             break;
             case 'Deposit' :
-
+                $return = $this->save_deposit($accountId, $transactionId, $post);
             break;
             case 'CC-Credit' :
 
@@ -4105,6 +4122,112 @@ class Chart_of_accounts extends MY_Controller {
             'data' => $journalId,
             'success' => $update ? true : false,
             'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+
+        return $return;
+    }
+
+    private function save_deposit($accountId, $depositId, $data)
+    {
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        if($accountId === $deposit->account_id) {
+            $total = number_format(floatval($amount), 2, '.', ',');
+        } else if(count($funds) === 1 && $accountId !== $deposit->account && $accountId === $funds[0]->received_from_account_id) {
+            $total = number_format(floatval($amount), 2, '.', ',');
+        }
+
+        $depositData = [
+            'date' => date('Y-m-d', strtotime($data['date'])),
+            'total_amount' => $total,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null
+        ];
+
+        $update = $this->accounting_bank_deposit_model->update($depositId, $depositData);
+
+        if ($update) {
+            // REVERT OLD
+            // if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
+            //     foreach(json_decode($deposit->attachments, true) as $attachmentId) {
+            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            //         $attachmentData = [
+            //             'linked_to_count' => intval($attachment->linked_to_count) - 1
+            //         ];
+    
+            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            //     }
+            // }
+
+
+            // NEW
+            // if (isset($data['attachments']) && is_array($data['attachments'])) {
+            //     foreach ($data['attachments'] as $attachmentId) {
+            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            //         $attachmentData = [
+            //             'linked_to_count' => intval($attachment->linked_to_count) + 1
+            //         ];
+    
+            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            //     }
+            // }
+
+            // OLD
+            $oldDepositAcc = $this->chart_of_accounts_model->getById($deposit->account_id);
+            $oldAccData = [
+                'id' => $oldDepositAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval($oldDepositAcc->balance) - floatval($deposit->total_amount)
+            ];
+            $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+            if ($deposit->cash_back_amount !== "" && !is_null($deposit->cash_back_amount)) {
+                $oldCashBackAcc = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+                $oldCashBackAccData = [
+                    'id' => $oldCashBackAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $oldCashBackAcc->account_id !== "7" ? floatval($oldCashBackAcc->balance) - floatval($deposit->cash_back_amount) : floatval($oldCashBackAcc->balance) + floatval($deposit->cash_back_amount)
+                ];
+
+                $cashBack = $this->chart_of_accounts_model->updateBalance($oldCashBackAccData);
+            }
+
+            // NEW
+            $depositToAcc = $this->chart_of_accounts_model->getById($deposit->id);
+            $depositData = [
+                'id' => $depositToAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => floatval($depositToAcc->balance) + floatval($totalAmount)
+            ];
+            $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+            if ($data['cash_back_amount'] !== "") {
+                $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
+                $cashBackData = [
+                    'id' => $cashBackAccount->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($data['cash_back_amount']) : floatval($cashBackAccount->balance) - floatval($data['cash_back_amount'])
+                ];
+
+                $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+            }
+        }
+
+        $return = [
+            'data' => $depositId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
         ];
 
         return $return;

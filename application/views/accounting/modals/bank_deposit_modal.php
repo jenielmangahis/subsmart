@@ -232,7 +232,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="cashBackAmount">Cash back amount</label>
-                                                        <input type="number" name="cash_back_amount" value="<?=isset($deposit) ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
+                                                        <input type="number" name="cash_back_amount" value="<?=isset($deposit) && $deposit->cash_back_amount !== "0" ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="updateBankDepositTotal(this)" class="form-control text-right">
                                                     </div>
                                                 </div>
                                             </div>
