@@ -1060,65 +1060,65 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'payment' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="payment" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
-                    } else if(rowData.type === 'Journal' && rowData.payment_disabled === true) {
+                    } else if(rowData.hasOwnProperty('payment_disabled') && rowData.payment_disabled === true) {
                         $(this).html(`<input type="number" name="payment" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="payment" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill Payment') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'charge' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="charge" class="form-control font-italic" value="" placeholder="Charge" disabled>`);
-                    } else if(rowData.type === 'Journal' && rowData.charge_disabled === true) {
+                    } else if(rowData.hasOwnProperty('charge_disabled') && rowData.charge_disabled === true) {
                         $(this).html(`<input type="number" name="charge" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="charge" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill Payment') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'deposit' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="deposit" class="form-control font-italic" value="" placeholder="Deposit" disabled>`);
-                    } else if(rowData.type === 'Journal' && rowData.deposit_disabled === true) {
+                    } else if(rowData.hasOwnProperty('deposit_disabled') && rowData.deposit_disabled === true) {
                         $(this).html(`<input type="number" name="deposit" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="deposit" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit') {
+                    if(rowData.type === 'Inventory Qty Adjust') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'increase' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="increase" class="form-control font-italic" value="" placeholder="Increase" disabled>`);
-                    } else if(rowData.type === 'Journal' && rowData.increase_disabled === true) {
+                    } else if(rowData.hasOwnProperty('increase_disabled') && rowData.increase_disabled === true) {
                         $(this).html(`<input type="number" name="increase" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="increase" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit' || rowData.type === 'Bill Payment') {
+                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill Payment') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
                 case 'decrease' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="decrease" class="form-control font-italic" value="" placeholder="Decrease" disabled>`);
-                    } else if(rowData.type === 'Journal' && rowData.decrease_disabled === true) {
+                    } else if(rowData.hasOwnProperty('decrease_disabled') && rowData.decrease_disabled === true) {
                         $(this).html(`<input type="number" name="decrease" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="decrease" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Deposit') {
+                    if(rowData.type === 'Inventory Qty Adjust') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
@@ -1233,10 +1233,14 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
                 $('#transferModal').modal('show');
             break;
             case 'deposit' :
-                initModalFields('depositModal', data);
+                rowCount = 8;
+                rowInputs = $('#depositModal table tbody tr:first-child()').html();
+                blankRow = $('#depositModal table tbody tr:last-child()').html();
 
                 $('#depositModal table.clickable tbody tr:first-child()').remove();
                 $('#depositModal table tbody tr:last-child()').remove();
+
+                initModalFields('depositModal', data);
 
                 $('#depositModal').modal('show');
             break;
