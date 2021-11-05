@@ -184,11 +184,7 @@ vertical-align: middle;
     $u_email = $appointment->user_mobile;
   }
 ?>
-<div class="row" style="text-align: left;">
-  <input type="hidden" id="customer-firstname" value="<?= $customer->first_name; ?>">
-  <input type="hidden" id="customer-lastname" value="<?= $customer->last_name; ?>">
-  <input type="hidden" id="customer-email" value="<?= $customer->email; ?>">
-  <input type="hidden" id="payment-method" value="">
+<div class="row" style="text-align: left;">  
   <div class="col-md-9">
     <!-- Start step1 -->
     <div class="checkout-step1">
@@ -296,7 +292,7 @@ vertical-align: middle;
         <div class="row" style="margin-top: 32px;">            
             <div class="col-3">
               <a href="javascript:void(0);" class="c-cash-logo payment-logo-container">
-                  <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/cashpayment.png" style="height: 127px;margin:0 auto;">
+                  <img class="img-responsive c-online-payment-logo c-cash-logo" src="<?php echo $url->assets ?>img/cashpayment.png" style="height: 127px;margin:0 auto;">
               </a>
             </div>
             <div class="col-3">
@@ -306,24 +302,37 @@ vertical-align: middle;
             </div>            
             <?php if($onlinePaymentAccount){ ?>
               <?php if( $onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '' ){ ?>
+                <form id="frm-paypal-payment" method="post">
+                  <input type="hidden" name="aid" id="checkout-aid" value="<?= $appointment->id; ?>">
+                  <input type="hidden" name="total_amount" id="appointment-total-amount" value="">
+                  <input type="hidden" id="customer-firstname" value="<?= $customer->first_name; ?>">
+                  <input type="hidden" id="customer-lastname" value="<?= $customer->last_name; ?>">
+                  <input type="hidden" id="customer-email" value="<?= $customer->email; ?>">
+                  <input type="hidden" id="payment-method" name="payment_gateway" value="paypal">
+                </form>
                 <div class="col-3" style="border:1px solid rgb(101, 101, 101);">
                   <div id="paypal-button-container" style="width: 100%;margin-top: 43px;"></div>
                 </div>
               <?php }else{ ?>
                 <div class="col-3">
                   <a href="javascript:void(0);" class="c-paypal-logo payment-logo-container">
-                    <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+                    <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/a_paypal.jpg" style="height: 34px;margin-top: 39px;">
                   </a>
                 </div>
               <?php } ?>
             <?php }else{ ?>
               <div class="col-3">
                 <a href="javascript:void(0);" class="c-paypal-logo payment-logo-container">
-                  <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/paypal-logo.png">
+                  <img class="img-responsive c-online-payment-logo c-paypal-logo" src="<?php echo $url->assets ?>img/a_paypal.jpg" style="height: 34px;margin-top: 39px;">
                 </a>
               </div>
             <?php } ?>
             <div class="col-3">
+              <form id="frm-stripe-payment" method="post">
+                <input type="hidden" name="aid" id="stripe-aid" value="<?= $appointment->id; ?>">
+                <input type="hidden" id="stripe-payment-method" name="payment_gateway" value="stripe">
+                <input type="hidden" name="total_amount" id="stripe-appointment-total-amount" value="">
+              </form>
               <a href="javascript:void(0);" class="c-stripe-logo payment-logo-container">
                 <img class="img-responsive c-online-payment-logo c-stripe-logo" src="<?php echo $url->assets ?>img/stripe-logo.png">
               </a>
@@ -573,16 +582,24 @@ $(function(){
            dataType: 'json',
            data: $("#frm-checkout-items").serialize(),
            success: function(o)
-           {            
-              //$(this).html('PROCEED TO PAYMENT');
-              $(".btn-c-payment").fadeOut(function(){
-                $(".btn-c-back").fadeIn();
-              });
-              $(".checkout-step1").fadeOut(function(){
-                $(".checkout-step2").fadeIn();
-              });
+           {          
+              if( o.is_success ){
+                //$(this).html('PROCEED TO PAYMENT');
+                $(".btn-c-payment").fadeOut(function(){
+                  $(".btn-c-back").fadeIn();
+                });
+                $(".checkout-step1").fadeOut(function(){
+                  $(".checkout-step2").fadeIn();
+                });
+              }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cannot proceed to payment.',
+                  text: o.msg
+                });
+              } 
 
-              $(this).html('PROCEED TO PAYMENT');
+              $(".btn-c-payment").html('PROCEED TO PAYMENT');
            }
         });
     }, 800);
@@ -722,7 +739,25 @@ $(function(){
     }, 1000);
 
   });
+
   //Paypal
+  $(".c-paypal-logo").click(function(){
+    Swal.fire({
+        title: 'Cannot find your paypal credentials',
+        text: 'Please set your paypal credentials via our api connectors',
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Set Paypal Credentials'
+    }).then((result) => {
+        if (result.value) {
+          location.href = base_url + "/tools/api_connectors";
+        }
+    });
+  });
+
+  <?php if( $onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != '' ){ ?>
   // Render the PayPal button into #paypal-button-container
     paypal.Buttons({
       style: {
@@ -756,12 +791,59 @@ $(function(){
         onApprove: function(data, actions) {
             return actions.order.capture().then(function(details) {
                 // Show a success message to the buyer
-                //console.log(details);
                 $("#payment-method").val('paypal');
-                onlinepayment_set_appointment_paid();                
+                onlinepayment_set_appointment_paid('paypal', 'frm-paypal-payment');                
             });
         }
     }).render('#paypal-button-container');
+    <?php } ?>
+    //End Paypal
+
+    //Stripe
+    <?php if( $onlinePaymentAccount->stripe_publish_key != '' ){ ?>
+    var handler = StripeCheckout.configure({
+      key: '<?= $onlinePaymentAccount->stripe_publish_key; ?>',
+      theme: 'night',
+      image: '',
+      token: function(token) {
+        $("#stripe-payment-method").val('stripe');
+         onlinepayment_set_appointment_paid('stripe', 'frm-stripe-payment');   
+      }
+    });
+
+    $('.c-stripe-logo').on('click', function(e) {
+      var amountInCents = Math.floor($("#stripe-appointment-total-amount").val() * 100);
+      var displayAmount = parseFloat(Math.floor($("#stripe-appointment-total-amount").val() * 100) / 100).toFixed(2);
+      // Open Checkout with further options
+      handler.open({
+        name: '<?= $company->business_name; ?>',
+        description: 'Service amount ($' + displayAmount + ')',
+        amount: amountInCents,
+      });
+      e.preventDefault();
+    });
+    // Close Checkout on page navigation
+    $(window).on('popstate', function() {
+    handler.close();
+    });
+    <?php }else{ ?>
+    $(".c-stripe-logo").click(function(){
+      Swal.fire({
+          title: 'Cannot find your stripe credentials',
+          text: 'Please set your stripe credentials via our api connectors',
+          icon: 'error',
+          showCancelButton: false,
+          confirmButtonColor: '#32243d',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Set Paypal Credentials'
+      }).then((result) => {
+          if (result.value) {
+            location.href = base_url + "/tools/api_connectors";
+          }
+      });
+    });
+    <?php } ?>
+    //End Stripe
 
     c_compute_totals();
 });

@@ -2145,6 +2145,7 @@ class Workcalender extends MY_Controller
         $this->load->model('AppointmentItem_model');
         $this->load->model('CompanyOnlinePaymentAccount_model');
         $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
 
         $post = $this->input->post();
         $cid  = logged('company_id');
@@ -2163,7 +2164,9 @@ class Workcalender extends MY_Controller
         $appointmentItems = $this->AppointmentItem_model->getAllByAppointmentId($appointment->id);
         $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
         $customer = $this->AcsProfile_model->getByProfId($appointment->prof_id);
+        $company  = $this->Business_model->getByCompanyId($cid);
 
+        $this->page_data['company']  = $company;
         $this->page_data['customer'] = $customer;
         $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['a_selected_tags'] = $a_tags;
@@ -2215,50 +2218,57 @@ class Workcalender extends MY_Controller
         $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
 
         if( $appointment ) {
-            $this->AppointmentItem_model->deleteAllByAppointmentId($appointment->id);
-            $total_tax = 0;
-            $total_discount = 0;
-            $total_items    = 0;
+            if( isset($post['item_id']) ){
+                $this->AppointmentItem_model->deleteAllByAppointmentId($appointment->id);
+                $total_tax = 0;
+                $total_discount = 0;
+                $total_items    = 0;
+                foreach( $post['item_id'] as $key => $value ){
+                    if( isset($post['price'][$key]) && isset($post['discount'][$key]) ){
 
-            foreach( $post['item_id'] as $key => $value ){
-                if( isset($post['price'][$key]) && isset($post['discount'][$key]) ){
-                    $data_item = [
-                        'appointment_id' => $appointment->id,
-                        'item_id' => $value,
-                        'item_name' => $post['item_name'][$key],
-                        'item_price' => $post['price'][$key],
-                        'qty' => $post['qty'][$key],
-                        'tax_percentage' => $post['tax'][$key],
-                        'discount_amount' => $post['discount'][$key],
-                        'created' => date("Y-m-d H:i:s")
-                    ];
+                        $data_item = [
+                            'appointment_id' => $appointment->id,
+                            'item_id' => $value,
+                            'item_name' => $post['item_name'][$key],
+                            'item_price' => $post['price'][$key],
+                            'qty' => $post['qty'][$key],
+                            'tax_percentage' => $post['tax'][$key],
+                            'discount_amount' => $post['discount'][$key],
+                            'created' => date("Y-m-d H:i:s")
+                        ];
 
-                    $this->AppointmentItem_model->create($data_item);
+                        $tax_amount = ($post['price'][$key] * $post['qty'][$key]) * ($post['tax'][$key] / 100);
+                        $total_tax += $tax_amount;
 
-                    $total_discount += $post['discount'][$key];
-                    $total_items += $post['price'][$key];                    
+                        $this->AppointmentItem_model->create($data_item);
+
+                        $total_discount += $post['discount'][$key];
+                        $total_items += $post['price'][$key];                    
+                    }
                 }
+
+                $total_amount = ($total_items + $total_tax) - $total_discount;
+                $data_appointment = [
+                    'total_item_price' => $total_items,
+                    'total_item_discount' => $total_discount,
+                    'total_amount' => $total_amount,
+                    'total_tax' => $total_tax
+                ];
+
+                $this->Appointment_model->update($appointment->id, $data_appointment);
+
+                $is_success = true;
+                $message    = '';
+            }else{
+                $message    = 'Please select an item';
             }
-
-            $total_amount = ($total_items + $total_tax) - $total_discount;
-            $data_appointment = [
-                'total_item_price' => $total_items,
-                'total_item_discount' => $total_discount,
-                'total_amount' => $total_amount
-            ];
-
-            $this->Appointment_model->update($appointment->id, $data_appointment);
-
-            $is_success = true;
-            $message    = '';
-
         } else {
             $message = 'Required fields cannot be empty';
         }
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message
+            'msg' => $message
         ];
 
         echo json_encode($json_data);
@@ -2564,6 +2574,34 @@ class Workcalender extends MY_Controller
         $this->session->set_userdata('calendar_filter_eids', $post['eids']);
 
         $json_data = ['is_error' => 0, 'msg' => ''];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_set_appointment_paid()
+    {
+        $this->load->model('Appointment_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');        
+        $appointment = $this->Appointment_model->getByIdAndCompanyId($post['aid'], $cid);
+
+        if( $appointment ){
+            $data_appointment = [
+                'payment_gateway' => $post['payment_gateway'],
+                'date_paid' => date("Y-m-d"),
+                'amount_received' => $appointment->total_amount,
+                'is_paid' => $this->Appointment_model->isPaid()              
+            ];
+
+            $is_success = 1;
+            $this->Appointment_model->update($appointment->id, $data_appointment);
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
     }

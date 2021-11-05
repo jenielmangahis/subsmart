@@ -30,6 +30,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD&disable-funding=credit,card"></script>
     <?php } ?>
 <?php } ?>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -686,18 +688,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span>
                 </button>
+            </div>           
+            <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
+                <div class="checkoout-appointment-container"></div>
             </div>
-            <form id="frm-checkout-appointment" method="post">
-                <input type="hidden" name="aid" id="checkout-aid" value="">
-                <input type="hidden" name="total_amount" id="appointment-total-amount" value="">
-                <div class="modal-body" style="padding:1.5rem;margin-bottom: 50px;">
-                    <div class="checkoout-appointment-container"></div>
-                </div>
-                <!-- <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                    
-                    <button type="button" style="" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary btn-update-appointment" name="action" value="update_appointment">Update</button>
-                </div> -->
-            </form>
+            <!-- <div class="modal-footer custom-modal-footer" style="margin-top:-2.5rem;">                                    
+                <button type="button" style="" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-update-appointment" name="action" value="update_appointment">Update</button>
+            </div> -->
       </div>
   </div>
 </div>
@@ -2486,30 +2484,41 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
       });
 
-    function onlinepayment_set_appointment_paid(){
-        $(".payment-method-container").hide();
-        var url = base_url + 'registration/_create_registration';
+    function onlinepayment_set_appointment_paid(payment_gateway, form_id){
+        var url = base_url + 'calendar/_set_appointment_paid';
+        
+        $("#payment-method").val(payment_gateway);
         setTimeout(function () {
             $.ajax({
                type: "POST",
                url: url,
                dataType: "json",
-               data: $("#subscribe-form-payment").serialize(),
+               data: $("#"+form_id).serialize(),
                success: function(o)
                {    
-                    Swal.fire({
-                        title: 'Registration Completed!',
-                        text: 'You can now login to your account',
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Login'
-                    }).then((result) => {
-                        if (result.value) {
-                            window.location.href= base_url + 'login';
-                        }
-                    });
+                    if( o.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Payment Completed!',
+                            text: 'Appointment was successfully updated and marked as paid.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                reload_calendar();
+                            }
+                        });
+
+                        $("#modal-checkout-appointment").modal('hide');
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Cannot update data.',
+                            text: o.msg
+                          });
+                    }                    
                }
             });
         }, 500);
@@ -2565,6 +2574,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $("#cash-amount-received").val(parseFloat(total_amount).toFixed(2));
         $("#converge-amount-received").val(parseFloat(total_amount).toFixed(2));
         $("#appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
+        $("#stripe-appointment-total-amount").val(parseFloat(total_amount).toFixed(2));
 
       }
 
