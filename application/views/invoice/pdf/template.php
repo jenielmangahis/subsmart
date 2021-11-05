@@ -1,4 +1,4 @@
-<div class="<?php echo ($format == 'print') ? 'print': '' ?>" style="width:50% !important;">
+<div class="<?php echo ($format == 'print') ? 'print': '' ?>" style="width:<?php echo ($format == 'print') ? '50%': '100%' ?> !important;">
     <div class="<?php echo ($format == 'print') ? 'invoice-paper print-body': 'invoice-paper' ?>" id="presenter-paper">
     <?php if($format == 'print') : ?>
     <div style="text-align: right; margin-bottom: 10px;">
@@ -10,7 +10,8 @@
     <div  id="printableArea" style="width:100%">
     
     <style>
-        #background{
+        #background
+        {
             position:absolute;
             z-index:0;
             /* background:white; */

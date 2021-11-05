@@ -950,6 +950,7 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($journalEntries as $journalEntryItem) {
             $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id);
+            $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
 
             switch($journalEntryItem->name_key) {
                 case 'vendor':
@@ -968,6 +969,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $transaction = [
                 'id' => $journalEntry->id,
+                'child_id' => $journalEntryItem->id,
                 'date' => date("m/d/Y", strtotime($journalEntry->journal_date)),
                 'ref_no' => $journalEntry->journal_no === null ? '' : $journalEntry->journal_no,
                 'ref_no_disabled' => false,
@@ -978,7 +980,7 @@ class Chart_of_accounts extends MY_Controller {
                 'payee_disabled' => false,
                 'account' => '-Split-',
                 'account_disabled' => true,
-                'memo' => $journalEntry->memo,
+                'memo' => $journalEntryItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -991,18 +993,26 @@ class Chart_of_accounts extends MY_Controller {
                 case 'Credit Card' :
                     $transaction['charge'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
                     $transaction['payment'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $transaction['charge_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $transaction['payment_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
                 case 'Asset' :
                     $transaction['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
                     $transaction['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $transaction['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $transaction['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
                 case 'Liability' :
                     $transaction['increase'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
                     $transaction['decrease'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $transaction['increase_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $transaction['decrease_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
                 default :
                     $transaction['payment'] = $journalEntryItem->credit !== "0" ? number_format(floatval($journalEntryItem->credit), 2, '.', ',') : "";
                     $transaction['deposit'] = $journalEntryItem->debit !== "0" ? number_format(floatval($journalEntryItem->debit), 2, '.', ',') : "";
+                    $transaction['payment_disabled'] = count($entries) > 2 || $journalEntryItem->credit === "0";
+                    $transaction['deposit_disabled'] = count($entries) > 2 || $journalEntryItem->debit === "0";
                 break;
             }
 
@@ -3727,15 +3737,15 @@ class Chart_of_accounts extends MY_Controller {
             switch($entry->name_key) {
                 case 'customer' :
                     $customer = $this->accounting_customers_model->get_by_id($entry->name_id);
-                    $entry[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                    $entries[$key]->name = $customer->first_name . ' ' . $customer->last_name;
                 break;
                 case 'vendor' :
                     $vendor = $this->vendors_model->get_vendor_by_id($entry->name_id);
-                    $entry[$key]->name = $vendor->display_name;
+                    $entries[$key]->name = $vendor->display_name;
                 break;
                 case 'employee' :
                     $employee = $this->users_model->getUser($entry->name_id);
-                    $entry[$key]->name = $employee->FName . ' ' . $employee->LName;
+                    $entries[$key]->name = $employee->FName . ' ' . $employee->LName;
                 break;
             }
         }
@@ -3845,7 +3855,7 @@ class Chart_of_accounts extends MY_Controller {
 
             break;
             case 'Journal' :
-
+                $return = $this->save_journal($accountId, $transactionId, $post);
             break;
             case 'Transfer' :
                 $return = $this->save_transfer($accountId, $transactionId, $post);
@@ -4018,6 +4028,84 @@ class Chart_of_accounts extends MY_Controller {
         $return['data'] = $transferId;
         $return['success'] = $update ? true : false;
         $return['message'] = $update ? 'Update Successful!' : 'An unexpected error occured';
+
+        return $return;
+    }
+
+    private function save_journal($accountId, $journalId, $data)
+    {
+        $journalData = [
+            'journal_no' => $data['ref_no'],
+            'journal_date' => date('Y-m-d', strtotime($data['date']))
+        ];
+
+        $update = $this->accounting_journal_entries_model->update($journalId, $journalData);
+
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        $payee = explode('-', $data['payee']);
+
+        if ($update) {
+            $journal = $this->accounting_journal_entries_model->getById($journalId);
+
+            $entries = $this->accounting_journal_entries_model->getEntries($journalId);
+            foreach($entries as $entry) {
+                $entryAccount = $this->chart_of_accounts_model->getById($entry->account_id);
+
+                if($entryAccount->account_id !== "7") {
+                    // REVERT PREVIOUS UPDATE
+                    $newBalance = floatval($entryAccount->balance) + floatval($entry->credit);
+                    $newBalance = $newBalance - floatval($entry->debit);
+
+                    // NEW UPDATE
+                    $newBalance -= $entry->credit === "0" ? 0.00 : floatval($amount);
+                    $newBalance += $entry->debit === "0" ? 0.00 : floatval($amount);
+                } else {
+                    // REVERT PREVIOUS UPDATE
+                    $newBalance = floatval($entryAccount->balance) - floatval($entry->credit);
+                    $newBalance = $newBalance + floatval($entry->debit);
+
+                    // NEW UPDATE
+                    $newBalance += $entry->credit === "0" ? 0.00 : floatval($amount);
+                    $newBalance -= $entry->debit === "0" ? 0.00 : floatval($amount);
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accountData = [
+                    'id' => $entryAccount->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accountData);
+
+                $entryData = [
+                    'debit' => $entry->debit === "0" ? $entry->debit : $amount,
+                    'credit' => $entry->credit === "0" ? $entry->credit : $amount,
+                    'description' => $data['child_id'] === $entry->id ? $data['memo'] : $entry->description,
+                    'name_key' => $data['child_id'] === $entry->id ? $payee[0] : $entry->name_key,
+                    'name_id' => $data['child_id'] === $entry->id ? $payee[1] : $entry->name_id
+                ];
+
+                $this->accounting_journal_entries_model->update_entry($entry->id, $journalId, $entryData);
+            }
+        }
+
+        $return = [
+            'data' => $journalId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
 
         return $return;
     }

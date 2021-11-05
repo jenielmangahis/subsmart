@@ -172,3 +172,22 @@ $(document).on("click", "#invoice-reminder-modal form button[type='submit']", fu
         });
     }
 });
+
+$(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.print-btn', function() {
+    if ($(".invoices-page-section table.invoices-table tbody tr td input[type='checkbox']:checked").length > 0) {
+        $("#loader-modal").show();
+        $.ajax({
+            url: baseURL + "invoice-page/print-batch",
+            type: "POST",
+            dataType: "json",
+            data: $("form.invoice-table-form").serialize(),
+            success: function(data) {
+                $("#batch-print-iframe-section").html('<iframe id="the-batch-iframe" src="' + baseURL + data.filelocation + '"class="the-file" frameborder="0"></iframe>');
+                var PDF = document.getElementById('the-batch-iframe');
+                PDF.focus();
+                PDF.contentWindow.print();
+                $("#loader-modal").hide();
+            },
+        });
+    }
+});
