@@ -58,4 +58,12 @@ class Accounting_journal_entries_model extends MY_Model {
 	function deleteEntries($journal_entry_id) {
 		return $this->db->where('journal_entry_id', $journal_entry_id)->delete('accounting_journal_entry_items');
 	}
+
+	public function update_entry($id, $journalId, $data)
+	{
+		$this->db->where('id', $id);
+		$this->db->where('journal_entry_id', $journalId);
+		$update = $this->db->update('accounting_journal_entry_items', $data);
+		return $update ? true : false;
+	}
 }

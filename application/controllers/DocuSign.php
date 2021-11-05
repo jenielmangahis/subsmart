@@ -499,8 +499,6 @@ class DocuSign extends MYF_Controller
 
         $errors = [];
         foreach ($recipients as $recipient) {
-            var_dump($recipient['id']);
-
             $message = json_encode([
                 'recipient_id' => $recipient['id'],
                 'document_id' => $envelope['id'],

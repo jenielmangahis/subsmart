@@ -336,7 +336,7 @@ class Chart_of_accounts_model extends MY_Model {
 
 	public function get_journal_entry_registers($accountId)
 	{
-		$this->db->select('*');
+		$this->db->select('accounting_journal_entry_items.*');
 		$this->db->from('accounting_journal_entry_items');
 		$this->db->where('accounting_journal_entry_items.account_id', $accountId);
 		$this->db->where('accounting_journal_entries.status !=', 0);

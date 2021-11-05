@@ -203,3 +203,7 @@ div#invoice-reminder-modal {
     font-size: 14px;
     font-weight: 700;
 }
+
+#batch-print-iframe-section {
+    display: none;
+}

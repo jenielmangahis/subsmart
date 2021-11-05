@@ -846,6 +846,10 @@ $(document).on('click', '#registers-table tbody tr.action-row #save-transaction'
         }
     });
 
+    if(rowData.hasOwnProperty('child_id')) {
+        data.set('child_id', rowData.child_id);
+    }
+
     $.ajax({
         url: '/accounting/chart-of-accounts/'+accountId+'/save-transaction/'+rowData.id,
         data: data,
@@ -1056,6 +1060,8 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'payment' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="payment" class="form-control font-italic" value="" placeholder="Payment" disabled>`);
+                    } else if(rowData.type === 'Journal' && rowData.payment_disabled === true) {
+                        $(this).html(`<input type="number" name="payment" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="payment" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
                     }
@@ -1067,6 +1073,8 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'charge' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="charge" class="form-control font-italic" value="" placeholder="Charge" disabled>`);
+                    } else if(rowData.type === 'Journal' && rowData.charge_disabled === true) {
+                        $(this).html(`<input type="number" name="charge" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="charge" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
                     }
@@ -1078,6 +1086,8 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'deposit' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="deposit" class="form-control font-italic" value="" placeholder="Deposit" disabled>`);
+                    } else if(rowData.type === 'Journal' && rowData.deposit_disabled === true) {
+                        $(this).html(`<input type="number" name="deposit" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="deposit" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Deposit">`);
                     }
@@ -1089,6 +1099,8 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'increase' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="increase" class="form-control font-italic" value="" placeholder="Increase" disabled>`);
+                    } else if(rowData.type === 'Journal' && rowData.increase_disabled === true) {
+                        $(this).html(`<input type="number" name="increase" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="increase" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase">`);
                     }
@@ -1100,6 +1112,8 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'decrease' :
                     if(current === '' && rowData.type !== 'Journal') {
                         $(this).html(`<input type="number" name="decrease" class="form-control font-italic" value="" placeholder="Decrease" disabled>`);
+                    } else if(rowData.type === 'Journal' && rowData.decrease_disabled === true) {
+                        $(this).html(`<input type="number" name="decrease" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease" disabled>`);
                     } else {
                         $(this).html(`<input type="number" name="decrease" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Decrease">`);
                     }

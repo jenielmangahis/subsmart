@@ -494,21 +494,28 @@ function Signing(hash) {
         $input.attr("readonly", false);
         $spinner.addClass("d-none");
 
-        const name = $input.attr("data-name");
+        const name = $input.attr("data-name").toLowerCase();
         const key = $input.attr("data-key");
         const $sameFields = $(`input[data-name='${name}' i]:not([data-key='${key}'])`); // prettier-ignore
 
         if (!$sameFields.length) return;
 
+        // This will avoid auto-filling, same data-name
+        // for different recipients.
+        const inputsWithFields = [];
+
         const promises = [...$sameFields].map((input) => {
           const $input = $(input);
           const key = $input.attr("data-key");
           const field = data.fields.find(({ unique_key }) => unique_key === key); // prettier-ignore
-          return storeFieldValue({ value, id: field.id });
+          if (field) {
+            inputsWithFields.push($input);
+            return storeFieldValue({ value, id: field.id });
+          }
         });
 
         await Promise.all(promises);
-        $sameFields.val(value);
+        inputsWithFields.forEach(($input) => $input.val(value));
       };
 
       $element.find("input").keyup(function () {
@@ -565,6 +572,26 @@ function Signing(hash) {
     });
 
     $page.append($fields);
+
+    // We wanted to auto-fill name and email fields
+    // from recipient data.
+    $fields.forEach(($field, index) => {
+      const { field_name, specs } = fields[index];
+      if (field_name !== "Text") return;
+      if (!specs) return;
+
+      const parsedSpecs = JSON.parse(specs);
+      if (!parsedSpecs.name) return;
+
+      const nameLower = parsedSpecs.name.toLowerCase();
+      if (!["email", "name"].includes(nameLower)) return;
+
+      const $input = $field.find("input[type=text]");
+      if ($input.val()) return; // avoid overiding user defined value
+
+      $input.val(recipient[nameLower]);
+      $input.keyup(); // manually trigger event, this will make sure to save the value
+    });
   }
 
   async function renderPDF(file) {
