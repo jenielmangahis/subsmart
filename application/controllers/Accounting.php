@@ -11645,4 +11645,41 @@ class Accounting extends MY_Controller
         }
         echo json_encode($data);
     }
+    public function invoice_print_batch()
+    {
+        $checkboxes = $this->input->post("checkbox");
+        $pdf_data=array();
+        for ($i=0;$i<count($checkboxes); $i++) {
+            $pdf_sub_data = array();
+            $invoice_id = $checkboxes[$i];
+            $invoice = get_invoice_by_id($invoice_id);
+            $user = get_user_by_id(logged('id'));
+            $pdf_sub_data['invoice'] = $invoice;
+            $pdf_sub_data['user'] = $user;
+            // $this->page_data['items'] = $user;
+            $pdf_sub_data['items'] = $this->invoice_model->getItemsInv($invoice_id);
+            $pdf_sub_data['users'] = $this->invoice_model->getInvoiceCustomer($invoice_id);
+
+            if (!empty($invoice)) {
+                foreach ($invoice as $key => $value) {
+                    if (is_serialized($value)) {
+                        $invoice->{$key} = unserialize($value);
+                    }
+                }
+                $pdf_sub_data['invoice'] = $invoice;
+                $pdf_sub_data['user'] = $user;
+            }
+            $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+            $pdf_sub_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+            $pdf_data[$i] = $pdf_sub_data;
+        }
+        $this->page_data["pdf_data"]=$pdf_data;
+        $filename = "nSmarTrac_invoice_batch";
+        $this->load->library('pdf');
+        $this->pdf->save_pdf('accounting/invoices_page_includes/pdf_template', $this->page_data, $filename, "P");
+
+        $data = new stdClass();
+        $data->filelocation = "assets/pdf/".$filename."";
+        echo json_encode($data);
+    }
 }

@@ -48,6 +48,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model');
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
 
         add_css(array(
             'assets/css/bootstrap-multiselect.min.css',
@@ -327,9 +328,11 @@ class Workcalender extends MY_Controller
         }
 
         $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $this->load->model('Users_model', 'user_model');
 
+        $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['appointmentTypes'] = $this->AppointmentType_model->getAllByCompany($company_id, true);
         $this->page_data['settings'] = $settings;
         $this->page_data['enabled_calendar'] = $enabled_calendar;
@@ -2140,6 +2143,8 @@ class Workcalender extends MY_Controller
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
         $this->load->model('AppointmentItem_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('AcsProfile_model');
 
         $post = $this->input->post();
         $cid  = logged('company_id');
@@ -2156,7 +2161,11 @@ class Workcalender extends MY_Controller
         }
 
         $appointmentItems = $this->AppointmentItem_model->getAllByAppointmentId($appointment->id);
+        $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($appointment->prof_id);
 
+        $this->page_data['customer'] = $customer;
+        $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['a_selected_tags'] = $a_tags;
         $this->page_data['appointment'] = $appointment;
         $this->page_data['appointmentItems'] = $appointmentItems;
@@ -2219,6 +2228,7 @@ class Workcalender extends MY_Controller
                         'item_name' => $post['item_name'][$key],
                         'item_price' => $post['price'][$key],
                         'qty' => $post['qty'][$key],
+                        'tax_percentage' => $post['tax'][$key],
                         'discount_amount' => $post['discount'][$key],
                         'created' => date("Y-m-d H:i:s")
                     ];

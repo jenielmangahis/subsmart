@@ -361,7 +361,7 @@ class Jobs_model extends MY_Model
         $this->db->join('users eb', 'jobs.employee3_id = eb.id', 'left');
         $this->db->join('users ec', 'jobs.employee4_id = ec.id', 'left');
         
-        // $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
         $this->db->where('jobs.company_id', $company_id);
         $this->db->order_by('jobs.id', 'DESC');
         //$this->db->group_by('jobs.id');

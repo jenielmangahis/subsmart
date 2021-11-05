@@ -5083,6 +5083,16 @@ const submitModalForm = (event, el) => {
                 }
             }
         });
+    } else if(modalId === '#journalEntryModal') {
+        data.delete('names[]');
+
+        $('#journalEntryModal #journal-table tbody tr select[name="names[]"]').each(function() {
+            if(data.has('names[]') === false) {
+                data.set('names[]', $(this).val() === null ? '' : $(this).val());
+            } else {
+                data.append('names[]', $(this).val() === null ? '' : $(this).val());
+            }
+        });
     }
     data.append('modal_name', $(el).children().attr('id'));
 

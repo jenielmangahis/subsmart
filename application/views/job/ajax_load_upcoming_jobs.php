@@ -8,7 +8,7 @@
     <?php if ( !empty($upcomingJobs) ) { ?>
       <?php foreach($upcomingJobs as $jb){ ?>  
         <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: -1px; cursor: pointer">
-            <div class="col-20 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
+            <div class="col-18 float-left no-padding text-center" style="border-right:1px solid #ccc; padding-right:5px;">
                 <a href="<?php echo base_url('workcalender/'); ?>">
                 <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
                     <em><?= date('D', strtotime($jb->start_date)) ?></em>
