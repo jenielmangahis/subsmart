@@ -5093,6 +5093,25 @@ const submitModalForm = (event, el) => {
                 data.append('names[]', $(this).val() === null ? '' : $(this).val());
             }
         });
+    } else if(modalId === '#depositModal') {
+        data.delete('received_from[]');
+        data.delete('payment_method[]');
+
+        $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function() {
+            if(data.has('received_from[]') === false) {
+                data.set('received_from[]', $(this).val() === null ? '' : $(this).val());
+            } else {
+                data.append('received_from[]', $(this).val() === null ? '' : $(this).val());
+            }
+        });
+
+        $('#depositModal #bank-deposit-table tbody tr select[name="payment_method[]"]').each(function() {
+            if(data.has('payment_method[]') === false) {
+                data.set('payment_method[]', $(this).val() === null ? '' : $(this).val());
+            } else {
+                data.append('payment_method[]', $(this).val() === null ? '' : $(this).val());
+            }
+        });
     }
     data.append('modal_name', $(el).children().attr('id'));
 
@@ -5771,6 +5790,35 @@ const updateTransaction = (event, el) => {
                     data.append('credits[]', $(this).find('input[type="checkbox"]').val());
                     data.append('credit_payment[]', $(this).find('input[name="credit_payment[]"]').val());
                 }
+            }
+        });
+    } else if(modalId === '#journalEntryModal') {
+        data.delete('names[]');
+
+        $('#journalEntryModal #journal-table tbody tr select[name="names[]"]').each(function() {
+            if(data.has('names[]') === false) {
+                data.set('names[]', $(this).val() === null ? '' : $(this).val());
+            } else {
+                data.append('names[]', $(this).val() === null ? '' : $(this).val());
+            }
+        });
+    } else if(modalId === '#depositModal') {
+        data.delete('received_from[]');
+        data.delete('payment_method[]');
+
+        $('#depositModal #bank-deposit-table tbody tr select[name="received_from[]"]').each(function() {
+            if(data.has('received_from[]') === false) {
+                data.set('received_from[]', $(this).val() === null ? '' : $(this).val());
+            } else {
+                data.append('received_from[]', $(this).val() === null ? '' : $(this).val());
+            }
+        });
+
+        $('#depositModal #bank-deposit-table tbody tr select[name="payment_method[]"]').each(function() {
+            if(data.has('payment_method[]') === false) {
+                data.set('payment_method[]', $(this).val() === null ? '' : $(this).val());
+            } else {
+                data.append('payment_method[]', $(this).val() === null ? '' : $(this).val());
             }
         });
     }

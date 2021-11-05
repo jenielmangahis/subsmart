@@ -8073,7 +8073,7 @@ class Accounting_modals extends MY_Controller
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
-                'cash_back_account_id' => $data['cash_back_account'],
+                'cash_back_account_id' => floatval($data['cash_back_amount']) > 0.00 ? $data['cash_back_account'] : null,
                 'cash_back_memo' => $data['cash_back_memo'],
                 'cash_back_amount' => $data['cash_back_amount'],
                 'memo' => $data['memo'],
@@ -8083,7 +8083,7 @@ class Accounting_modals extends MY_Controller
 
             $update = $this->accounting_bank_deposit_model->update($depositId, $depositData);
 
-            if ($update > 0) {
+            if ($update) {
                 // if (isset($data['template_name'])) {
                 //     $recurringData = [
                 //         'company_id' => getLoggedCompanyID(),
@@ -8189,7 +8189,7 @@ class Accounting_modals extends MY_Controller
                         'company_id' => logged('company_id'),
                         'balance' => floatval($oldDepositAcc->balance) - floatval($deposit->total_amount)
                     ];
-                    $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+                    $this->chart_of_accounts_model->updateBalance($oldAccData);
 
                     if ($deposit->cash_back_amount !== "" && !is_null($deposit->cash_back_amount)) {
                         $oldCashBackAcc = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
@@ -8209,7 +8209,7 @@ class Accounting_modals extends MY_Controller
                         'company_id' => logged('company_id'),
                         'balance' => floatval($depositToAcc->balance) + floatval($totalAmount)
                     ];
-                    $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+                    $this->chart_of_accounts_model->updateBalance($depositData);
 
                     if ($data['cash_back_amount'] !== "") {
                         $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
