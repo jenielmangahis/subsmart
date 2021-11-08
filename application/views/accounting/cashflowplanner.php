@@ -301,6 +301,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 						</td>
 						</tr>
 						<?php } //print_r($sales_receipts);?>
+
+						<?php foreach ($expenses as $exp):?>
+							<tr class="moneyin">
+								<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($exp->payment_date)); ?> </td>
+								<td><?php echo get_customer_by_id($exp->vendor_id)->first_name .' '. get_customer_by_id($exp->vendor_id)->last_name ?> </td>
+								<td><?php echo $exp->amount; ?> </td>
+								<td><?php echo 'Expense'; ?></td>
+							</tr>
+						<?php endforeach; ?>
+
 								<!-- <tr>
 									<td>08/30/2021</td>
 									<td>Loucelle Emperio</td>

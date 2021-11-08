@@ -31,7 +31,7 @@
                                 });
                             }
 
-                            $(".btn-save-payment").html('Save');
+                            //$(".btn-save-payment").html('Save');
                         }
                     });
                 }, 500);

@@ -594,7 +594,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="col-lg-12">
 						<h3>Already have a workers' comp policy?</h3>
 						<h5 class="font-weight-normal">Connect your policy to nSmarTrac and reap the benefits of simplification.</h5>
-						<a href="#" class="btn btn-default rounded-20 px-3 py-0 mt-3" data-toggle="modal" data-target=".connectPolicy"><h5>Connect my policy</h5></a>
+						<a href="<?= base_url('accounting/connect_policy') ?>" class="btn btn-default rounded-20 px-3 py-0 mt-3" ><h5>Connect my policy</h5></a>
 					</div>
 				</div>
 				<div class="row pt-3">
@@ -1049,7 +1049,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </button>
                 </div> -->
                 <div class="modal-body" style="background-color:white;height:1000px;">
-					
                     <div style="padding:2%;width:65%;margin:0 20% 0 20%;">
                         <div class="row">
                             <div class="col-md-6">
@@ -1062,8 +1061,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                     </div>
-                    
-					          <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
+                    <form id="regForm" action="<?php echo site_url('accounting/addQuote');?>">
                     <div style="padding:3%;border: solid gray 1px;width:60%;margin:-5px 20% 1% 20%;">
                         <h4>Connect your policy to nSmarTrac</h4>
 
@@ -1145,8 +1143,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                     </div>
                     </form>
-
-
                 <div class="modal-footer">
                     <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 </div>

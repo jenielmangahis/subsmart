@@ -508,3 +508,22 @@ table.dataTable thead {
     align-items: center;
   }
 }
+
+.makeAgenctInactivePrompt {
+  .swal2-title {
+    font-size: 18px;
+    text-align: left;
+  }
+
+  #swal2-html-container {
+    text-align: left;
+    font-size: 16px;
+    margin: 1em 1em 0.3em;
+  }
+
+  .swal2-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0.8em;
+  }
+}

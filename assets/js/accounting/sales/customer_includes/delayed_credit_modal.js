@@ -337,7 +337,6 @@ $(document).on("click", "#delayed_credit_modal table .suggestions li", function(
     $(this).parent("ul").parent("td").parent("tr").find("input.tax-hide").val("7.5");
     var total = tax_computed + parseFloat($(this).attr('data-price'));
     $(this).parent("ul").parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
-    $(this).parent("ul").parent("td").parent("tr").find("input[name='total[]']").val(total);
     $("#delayed_credit_modal table .suggestions").html("");
     delayed_credit_compute_grand_total();
 });
@@ -356,7 +355,6 @@ $(document).on("change", "#delayed_credit_modal table td input", function(event)
     var total = ((qty * price) + ((qty * price) * (tax / 100))) - discount;
     $(this).parent("td").parent("tr").find("input[name='tax[]']").val(Number((qty * price) * (tax / 100)).toLocaleString('en'));
     $(this).parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
-    $(this).parent("td").parent("tr").find("input[name='total[]']").val(total);
     delayed_credit_compute_grand_total();
 
 });
@@ -448,7 +446,7 @@ $(document).on("click", "#delayed_credit_modal form button[data-action='save']",
                     data: $("#delayed_credit_modal form").serialize(),
                     success: function(data) {
                         if (data.count_save > 0) {
-                            $("#delayed_credit_modal form input[name='delayed_credit_id']").val(data.delayed_credit_id);
+                            $("#delayed_credit_modal form input[name='delayed_credit_id']").val(data.delayed_charge_id);
                             get_load_customers_table();
                             Swal.fire({
                                 showConfirmButton: false,

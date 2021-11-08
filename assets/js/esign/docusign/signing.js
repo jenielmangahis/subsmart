@@ -64,12 +64,7 @@ function Signing(hash) {
     const container = document.querySelector(".signing__documentContainer");
 
     if (field_name === "Date Signed") {
-      const date = moment().format("MM/DD/YYYY");
-      const $element = createElementFromHTML(
-        `<span class="docusignField" data-field-type="date-signed">${date}</span>`
-      );
-      $element.css({ top, left, position: "absolute" });
-      return $element;
+      return moment().format("MM/DD/YYYY");
     }
 
     if (["Approve", "Decline"].includes(field_name)) {
@@ -152,15 +147,9 @@ function Signing(hash) {
       const $element = createElementFromHTML(html);
 
       if (value) {
-        let time = "";
-        if (fieldValue.created_at) {
-          time = moment(fieldValue.created_at).format("MM/DD/YYYY hh:mm A");
-        }
-
         const valueHtml = `
               <div class="fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
-                <span class="text fillAndSign__signatureDrawDate">${time}</span>
               </div>
             `;
 
@@ -531,14 +520,6 @@ function Signing(hash) {
       return $element;
     }
 
-    if (text !== undefined) {
-      const $element = createElementFromHTML(
-        `<span class="docusignField text">${text}</span>`
-      );
-      $element.css({ top, left, position: "absolute" });
-      return $element;
-    }
-
     return null;
   }
 
@@ -701,7 +682,6 @@ function Signing(hash) {
       recipient_id,
       field_id: id,
       value,
-      created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     };
 
     const response = await fetch(`${prefixURL}/DocuSign/apiStoreFieldValue`, {
@@ -786,11 +766,9 @@ function Signing(hash) {
       const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
       await Promise.all(promises);
 
-      const time = moment().format("MM/DD/YYYY hh:mm A");
       const html = `
         <div class="fillAndSign__signatureContainer">
           <img class="fillAndSign__signatureDraw" src="${signatureDataUrl}"/>
-          <span class="text fillAndSign__signatureDrawDate">${time}</span>
         </div>
       `;
 

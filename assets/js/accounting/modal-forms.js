@@ -1568,10 +1568,6 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#previous-adjustments-table tbody tr td .deleteRow', function() {
-        $(this).parent().parent().remove();
-    });
-
     // Expenses modal
     $(document).on('click', '#modal-container .modal .btn[data-toggle="collapse"]', function(e) {
         if ($(this).attr('aria-expanded') === 'true') {

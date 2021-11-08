@@ -1,7 +1,5 @@
-let mobileWidth = 768;
-let windowWidth = $(window).innerWidth();
-
 $(document).ready(function () {
+	let windowWidth = $(window).innerWidth();
 
 	initializeWindow();
 	resizeSidebar();
@@ -28,18 +26,16 @@ $(document).ready(function () {
 
 	$(".nsm-fab").on("click", function () {
 		let _this = $(this);
-		let _fabOptions = _this.closest(".nsm-fab-container").find(".nsm-fab-options");
+		let _fabOptions = $(".nsm-fab-options");
 		let isShown = _fabOptions.hasClass("shown");
 
-		if(_fabOptions[0] != undefined){
-			if (!isShown) {
-				_fabOptions.addClass("shown");
-				_this.find(".bx").removeClass("bx-plus").addClass("bx-x");
-				return false;
-			}
-			_fabOptions.removeClass("shown");
-			_this.find(".bx").removeClass("bx-x").addClass("bx-plus");
+		if (!isShown) {
+			_fabOptions.addClass("shown");
+			_this.find(".bx").removeClass("bx-plus").addClass("bx-x");
+			return false;
 		}
+		_fabOptions.removeClass("shown");
+		_this.find(".bx").removeClass("bx-x").addClass("bx-plus");
 	});
 
 	$(".nsm-sidebar-menu li").on("click", function(){
@@ -53,10 +49,6 @@ $(document).ready(function () {
 			_menuList.removeClass("shown")
 			_this.addClass("shown");
 		}
-	});
-
-	$(".nsm-alert button").on("click", function(){
-		$(this).closest(".nsm-alert").fadeOut();
 	});
 });
 
@@ -135,8 +127,4 @@ function initializeChart(chartType="all") {
 	}
 
 	resizeSidebar();
-}
-
-function isMobileView(){
-    return windowWidth < mobileWidth;
 }

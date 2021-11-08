@@ -276,7 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <button class="btn btn-default disabled" type="button" data-toggle="dropdown">
                                     Batch action <span class="fa fa-caret-down"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right by-batch-btn" role="menu">
-                                    <li class="print-transaction-btn disabled">
+                                    <li class="delete-btn disabled">
                                         <a href="#">Send</a>
                                     </li>
                                     <li class="send-reminder-btn disabled">

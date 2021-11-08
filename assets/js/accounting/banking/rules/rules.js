@@ -226,19 +226,8 @@ window.openRuleForm = async (data = null) => {
 
   $parent.classList.remove("createRuleModalRight--edit");
 
-  const setUpConditionsSelect = () => {
-    const $selects = $newRuleModal.querySelectorAll(
-      "[data-type='conditions.description']"
-    );
-
-    [...$selects].forEach(($select) => {
-      window.addConditionSelectListener($select);
-    });
-  };
-
   if (data === null) {
     $($newRuleModal).modal("show");
-    setUpConditionsSelect();
     return;
   }
 
@@ -249,9 +238,6 @@ window.openRuleForm = async (data = null) => {
   const $conditions = $addRuleForm.querySelectorAll(".addCondition-container > div"); // prettier-ignore
   const $conditionsWrapper = $addRuleForm.querySelector(".addCondition-container"); // prettier-ignore
   const $saveBtn = $addRuleForm.querySelector("[data-action=save]");
-
-  const $bankSelect = $addRuleForm.querySelector("#transactionsBankSelect");
-  const $checkingCheckbox = $bankSelect.querySelector("#checkingCb");
 
   $saveBtn.setAttribute("data-id", data.id);
 
@@ -309,12 +295,7 @@ window.openRuleForm = async (data = null) => {
     }
 
     if ($input.matches('[type="checkbox"]')) {
-      const isChecked = value == 1;
-      $input.checked = isChecked;
-
-      if (isChecked && key === "banks") {
-        $checkingCheckbox.click();
-      }
+      $input.checked = value == 1;
     } else {
       $input.value = value;
     }
@@ -354,14 +335,6 @@ window.resetRuleForm = () => {
     }
 
     if (!isSelectInput) {
-      if (
-        $element.matches('[type="checkbox"]') &&
-        $element.dataset.type === "banks" &&
-        $element.checked === true
-      ) {
-        $element.click();
-      }
-
       // fallback for checkbox, input, radios, textareas and etc.
       $element.checked = false;
       $element.value = "";
@@ -570,19 +543,4 @@ window.getFormElementValue = ($element) => {
   }
 
   return $element.value;
-};
-
-window.addConditionSelectListener = ($element) => {
-  $element.addEventListener("change", (event) => {
-    const $parent = event.target.closest(".addCondition");
-    const $valueInput = $parent.querySelector(
-      "[data-type='conditions.comment']"
-    );
-
-    if (!$valueInput) return;
-
-    const { value } = event.target;
-    const valueLower = value.toLowerCase();
-    $valueInput.type = valueLower === "amount" ? "number" : "text";
-  });
 };

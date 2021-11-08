@@ -70,7 +70,7 @@ function Step3() {
     await renderPage({ canvas, page, ...rest });
 
     $element.on("click", () => {
-      $docRenderer.animate({ scrollTop: rest.offsetTop });
+      rest.$page.get(0).scrollIntoView({ behavior: "smooth" });
     });
 
     return $element;
@@ -671,7 +671,11 @@ function Step3() {
         });
 
         const { top: offsetTop } = $page.offset();
-        const $pagePreview = await getPagePreview({ ...params, offsetTop });
+        const $pagePreview = await getPagePreview({
+          ...params,
+          $page,
+          offsetTop,
+        });
         $docPreviewRenderer.append($pagePreview);
       }
 

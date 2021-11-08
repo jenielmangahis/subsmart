@@ -22,9 +22,11 @@
                       <div class="form-group form-check">
                         <?php 
                             $checked  = '';
-                            if( in_array($key, $customer_tbl_headers) ){
-                                $checked = 'checked="checked"';
-                            }
+                            if( $customer_tbl_headers ){
+                                if( in_array($key, $customer_tbl_headers) ){
+                                    $checked = 'checked="checked"';
+                                }
+                            }                            
                         ?>
                         <input type="checkbox" <?= $checked; ?> class="form-check-input" id="<?= $key; ?>" name="headers[<?= $key; ?>]">
                         <label class="form-check-label" for="<?= $key; ?>"><?= $value; ?></label>

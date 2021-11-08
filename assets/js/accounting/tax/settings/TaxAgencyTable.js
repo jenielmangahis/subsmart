@@ -127,12 +127,15 @@ export class TaxAgencyTable {
       },
       makeInactive: async (row) => {
         const result = await Swal.fire({
-          title: `Change ${row.agency} to inactive`,
+          title: `Change ${row.name} to inactive`,
           text: "Are you sure you want to make this tax agency inactive? This means that you'll stop collecting tax for it.",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           cancelButtonColor: "#d33",
           confirmButtonText: "Make inactive",
+          customClass: {
+            container: "makeAgenctInactivePrompt",
+          },
         });
 
         if (!result.isConfirmed) {

@@ -26,7 +26,7 @@
                                     <tr>
                                         <td><?= $workorder->work_order_number; ?></td>
                                         <td><?= $workorder->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($workorder->start_date)); ?></td>
+                                        <td><?= !empty($workorder->date_created) ? date('M d, Y', strtotime($workorder->date_created)) : ''; ?></td>
                                         <td>
                                             <button id="<?= $workorder->id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default workorder_select">
                                                 <span class="fa fa-plus"></span> Convert to Job

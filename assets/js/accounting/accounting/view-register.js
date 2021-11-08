@@ -995,7 +995,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                                         field: fieldName,
                                         modal: modalName
                                     }
-    
+
                                     // Query parameters will be ?search=[term]&type=public&field=[type]
                                     return query;
                                 }
@@ -1019,6 +1019,18 @@ $(document).on('click', '#registers-table tbody tr', function() {
                             var fieldName = 'inventory-adj-account';
                             var modalName = 'adjust-starting-value-modal';
                         break;
+                        case 'Deposit' :
+                            var fieldName = rowData.account_field;
+                            var modalName = 'depositModal';
+                        break;
+                        case 'Expense' :
+                            var fieldName = rowData.account_field;
+                            var modalName = 'expenseModal';
+                        break;
+                        case 'CC Expense' :
+                            var fieldName = rowData.account_field;
+                            var modalName = 'expenseModal';
+                        break;
                     }
 
                     $(this).html(`<select class="form-control" name="${fieldName !== undefined ? fieldName.replaceAll('-', '_') : 'account'}" ${current === '-Split-' ? 'disabled' : ''}><option value="${rowData.account_id}">${current}</option></select>`);
@@ -1029,7 +1041,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                         });
                     } else {
                         $(this).find('select').select2({
-                            placeholder: 'Payee',
+                            placeholder: 'Account',
                             ajax: {
                                 url: '/accounting/get-dropdown-choices',
                                 dataType: 'json',
@@ -1129,13 +1141,13 @@ $(document).on('click', '#registers-table tbody tr', function() {
                     $(this).html('');
                 break;
                 case 'attachments' :
-                    $(this).html(`<input type="text" name="attachments_count" class="form-control" value="${current}" disabled>`);
+                    $(this).html(`<input type="text" class="form-control" value="${current}" disabled>`);
                 break;
                 case 'tax' :
                     $(this).html('');
                 break;
                 case 'balance' :
-                    $(this).html(`<input type="number" name="balance" class="form-control text-right" value="${current.replaceAll('$', '')}" disabled>`);
+                    $(this).html(`<input type="number" class="form-control text-right" value="${current.replaceAll('$', '')}" disabled>`);
                 break;
             }
         });
@@ -1145,7 +1157,6 @@ $(document).on('click', '#registers-table tbody tr', function() {
 $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction', function() {
     var row = $('#registers-table tbody tr.editting');
     var data = $('#registers-table').DataTable().row(row).data();
-    var displayedType = data.type;
     var transactionType = data.type;
     switch(data.type) {
         case 'CC Expense' :
@@ -1268,8 +1279,6 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
             break;
         }
     });
-
-    data.type = displayedType;
 });
 
 $(document).on('click', '#registers-table tbody tr.action-row #delete-transaction', function() {

@@ -1908,13 +1908,12 @@ $(".sendESTemail_cm").click(function() {
   $('.estID_cm').text(id);
   $('.custEmail_cm').val(est_email);
   // $('.custname').val(est_cust);
-  $('.custmessage_cm').val(`Dear {est_cust}, 
-      
-  Please review the sales receipt below.
-  We appreciate it very much.
+  $('.custmessage_cm').val(`Dear test,
+
+  Your credit memo is attached.  We have reduced your account balance by the amount shown on the credit memo.
   
-  Thanks for your business!
-  nSmarTrac`);
+  Have a great day!
+  ADI Smart Security`);
 
 
 });

@@ -150,7 +150,7 @@ include viewPath('includes/header');
                                     |
                                 </div>
                                 <div class="col-md-4" align="center">
-                                    <a href="#" style="color:#0077C5;">Sales tax settings</a>
+                                    <a href="<?=url('/accounting/taxEditSettings');?>" style="color:#0077C5;">Sales tax settings</a>
                                 </div>
                                 <div class="col-md-1" align="center">
                                     |

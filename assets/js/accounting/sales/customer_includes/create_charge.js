@@ -351,7 +351,6 @@ $(document).on("click", "#create_charge_modal table .suggestions li", function(e
     $(this).parent("ul").parent("td").parent("tr").find("input.tax-hide").val("7.5");
     var total = tax_computed + parseFloat($(this).attr('data-price'));
     $(this).parent("ul").parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
-    $(this).parent("ul").parent("td").parent("tr").find("input[name='total[]']").val(total);
     $("#create_charge_modal table .suggestions").html("");
     compute_grand_total();
 });
@@ -370,7 +369,6 @@ $(document).on("change", "#create_charge_modal table td input", function(event) 
     var total = ((qty * price) + ((qty * price) * (tax / 100))) - discount;
     $(this).parent("td").parent("tr").find("input[name='tax[]']").val(Number((qty * price) * (tax / 100)).toLocaleString('en'));
     $(this).parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
-    $(this).parent("td").parent("tr").find("input[name='total[]']").val(total);
     compute_grand_total();
 
 });

@@ -172,7 +172,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                 <li role="presentation">
                                     <a href="" class="editJobTypeBtn editItemBtn">
-                                        <span class="fa fa-file"></span> File Upload
+                                        <span class="fa fa-file"></span> Import Bank Transactions
                                     </a>
                                 </li>
                                 <li>

@@ -345,7 +345,7 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function get_vendor_transaction_registers($accountId, $transactionType)
+	public function get_vendor_transaction_category_registers($accountId, $transactionType)
 	{
 		$this->db->select('*');
 		$this->db->from('accounting_vendor_transaction_categories');

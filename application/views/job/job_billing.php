@@ -385,10 +385,10 @@ add_css(array(
                                                         <span >Document Signed.</span>
                                                     </div>
                                                 </div>
-                                                <div style="text-align: right;right: 0;position: relative;">
+                                                <div >
                                                     <br>
                                                     <div id="payment-button">
-                                                        <button type="button" class="btn btn-primary"> <span class="fa fa-remove"></span> Cancel</button>
+                                                        <a href="<?= $_SERVER['HTTP_REFERER']; ?>"><button type="button" class="btn btn-primary"> <span class="fa fa-remove"></span> Cancel</button></a>&nbsp;&nbsp;
                                                         <button type="submit" class="btn btn-primary btn-save-payment"> <span class="fa fa-money"></span> Pay</button>
                                                     </div>
                                                     <div id="paypal-button-container" style="display: none;"></div>
