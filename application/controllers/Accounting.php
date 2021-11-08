@@ -259,6 +259,13 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/banking/test_payment', $this->page_data);
     }
 
+    public function connect_policy()
+    {
+        $comp_id = logged('company_id');
+        $this->page_data['accounts'] = '';
+        $this->load->view('accounting/payroll/connect-policy', $this->page_data);
+    }
+
     public function onSaveBakingPayment()
     {
         $banking_payments_data = array(
@@ -11527,16 +11534,38 @@ class Accounting extends MY_Controller
 
     public function cashflowPDF()
     {
+
+        $customers       = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
+        $invoices        = $this->invoice_model->getAllData(logged('company_id'));
+        $clients         = $this->invoice_model->getclientsData(logged('company_id'));
+        $invoices_sales  = $this->invoice_model->getAllDataSales(logged('company_id'));
+        $OpenInvoices    = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
+        $InvOverdue      = $this->invoice_model->InvOverdue(logged('company_id'));
+        $getAllInvPaid   = $this->invoice_model->getAllInvPaid(logged('company_id'));
+        $items           = $this->items_model->getItemlist();
+        $packages        = $this->workorder_model->getPackagelist(logged('company_id'));
+        $estimates       = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
+        $sales_receipts  = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
+        $credit_memo     = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
+        $employees       = $this->users_model->getCompanyUsers(logged('company_id'));
+        $statements      = $this->accounting_statements_model->getAllComp(logged('company_id'));
+        $rpayments       = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
+        $checks          = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        $expenses        = $this->expenses_model->getExpenseByComp(logged('company_id'));
+
+
         $data = array(
-            // 'header'                            => $workData->header,
-            
+            'customers'             => $customers,
+            'checks'                => $checks,
+            'expenses'              => $expenses,
+            'clients'               => $clients,
+            'sales_receipts'        => $sales_receipts,
             // 'source' => $source
         );
 
             
         $filename = "cashflow-report";
         $this->load->library('pdf');
-
         $this->pdf->load_view('accounting/cashflow_pdf_template', $data, $filename, "portrait");
     }
     public function get_info_for_send_invoice_reminder()
@@ -11681,5 +11710,111 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->filelocation = "assets/pdf/".$filename."";
         echo json_encode($data);
+    }
+    public function invoice_delete_batch()
+    {
+        $checkboxes = $this->input->post("checkbox");
+        for ($i=0;$i<count($checkboxes);$i++) {
+            $invoice_id = $checkboxes[$i];
+            $data = array(
+                'id' => $invoice_id,
+                'view_flag' => '1',
+            );
+            $this->invoice_model->deleteInvoice($data);
+        }
+        $data = new stdClass();
+        $data->status = "success";
+        echo json_encode($data);
+    }
+    public function invoice_send_batch()
+    {
+        $checkboxes = $this->input->post("checkbox");
+        $errors="";
+        for ($i=0;$i<count($checkboxes);$i++) {
+            $invoice_id = $checkboxes[$i];
+            $invoice_info = get_invoice_by_id($invoice_id);
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($invoice_info->customer_id);
+            $user_info = $this->users_model->getUserById(logged("id"));
+            $this->create_pdf_for_invoice($invoice_id, $invoice_info->customer_id);
+            $subject = "Invoice ".$invoice_info->invoice_number;
+            $message = 'Dear ' . $customer_info->first_name . " " . $customer_info->last_name . ',
+
+            We\'re sending you this invoice [' . $invoice_info->invoice_number . ']. 
+                            
+            Have a great day!
+            ' . $customer_info->business_name;
+            
+            $to = $customer_info->acs_email;
+            $from = $customer_info->business_email;
+            $server = MAIL_SERVER;
+            $port = MAIL_PORT;
+            $username = MAIL_USERNAME;
+            $password = MAIL_PASSWORD;
+            // $from = MAIL_FROM;
+
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->Host = $server;
+            $mail->SMTPDebug = 0;
+            $mail->SMTPAuth = true;
+            $mail->Username = $username;
+            $mail->Password = $password;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout = 10; // seconds
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'nSmarTrac';
+            $mail->Subject = $subject;
+
+            $this->page_data['message'] = $message;
+            $this->page_data['subject'] = $subject;
+
+            $mail->IsHTML(true);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+            $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . "nSmarTrac_invoice_".$invoice_id);
+            $content = $this->load->view('accounting/invoices_page_includes/send_invoice', $this->page_data, true);
+
+            $mail->MsgHTML($content);
+
+            $data = new stdClass();
+            try {
+                // $mail->addAddress($to);
+                $mail->addAddress('webtestcustomer@nsmartrac.com');
+                $mail->Send();
+                $data->status = "success";
+            } catch (Exception $e) {
+                $errors = $invoice_info->invoice_number.' Mailer Error: ' . $mail->ErrorInfo;
+                $data->status = "error";
+            }
+        }
+        $data->errors=$errors;
+        echo json_encode($data);
+    }
+    public function create_pdf_for_invoice($invoice_id, $customer_id)
+    {
+        $invoice = get_invoice_by_id($invoice_id);
+        $user = get_user_by_id(logged('id'));
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['user'] = $user;
+        // $this->page_data['items'] = $user;
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($invoice_id);
+        $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($invoice_id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['user'] = $user;
+        }
+        $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
+        $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
+        $filename = "nSmarTrac_invoice_".$invoice_id;
+        $this->load->library('pdf');
+        $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
+
     }
 }

@@ -153,6 +153,7 @@ class DocuSign extends MYF_Controller
             'assets/css/esign/docusign/manage/manage.css',
             'assets/css/esign/docusign/template-create/template-create.css',
             'assets/css/esign/esign-builder/esign-builder.css',
+            'assets/css/esign/esign.css',
         ]);
 
         add_footer_js([
@@ -1826,6 +1827,9 @@ function getMailInstance($config = [])
     if (isLocalhost()) {
         // Send using gmail
         $mail->Host = 'tls://smtp.gmail.com:587';
+        $mail->Username = null;
+        $mail->Password = null;
+        $mail->port = 587;
         $mail->SMTPOptions = [
             'ssl' => [
                 'verify_peer' => false,

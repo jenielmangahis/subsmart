@@ -777,6 +777,7 @@ class Invoice extends MY_Controller
 
         echo json_encode($delete);
     }
+    
     public function void_invoice()
     {
         $id = $this->input->post('id');

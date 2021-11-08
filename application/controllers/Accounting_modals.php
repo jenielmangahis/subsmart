@@ -2664,7 +2664,7 @@ class Accounting_modals extends MY_Controller
     
                         if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
+                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_amount'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
     
                             $invAssetAccData = [
@@ -8132,7 +8132,7 @@ class Accounting_modals extends MY_Controller
                     $this->chart_of_accounts_model->updateBalance($accountData);
                 }
 
-                $this->accounting_bank_deposit_model->deleteFunds($depositId);
+                // $this->accounting_bank_deposit_model->deleteFunds($depositId);
 
                 // NEW
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -8150,7 +8150,7 @@ class Accounting_modals extends MY_Controller
                 foreach ($data['funds_account'] as $key => $value) {
                     $receivedFrom = explode('-', $data['received_from'][$key]);
 
-                    $fundsData[] =[
+                    $fundsData = [
                         'bank_deposit_id' => $depositId,
                         'received_from_key' => $receivedFrom[0],
                         'received_from_id' => $receivedFrom[1],
@@ -8162,7 +8162,9 @@ class Accounting_modals extends MY_Controller
                     ];
 
                     if(!is_null($funds[$key])) {
-                        $fundsData[$key]['created_at'] = $funds[$key]->created_at;
+                        $this->accounting_bank_deposit_model->update_fund($funds[$key]->id, $depositId, $fundsData);
+                    } else {
+                        $this->accounting_bank_deposit_model->insert_fund($fundsData);
                     }
 
                     if (!isset($data['template_name'])) {
@@ -8178,8 +8180,6 @@ class Accounting_modals extends MY_Controller
                         $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
                     }
                 }
-
-                $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
 
                 if (!isset($data['template_name'])) {
                     // OLD

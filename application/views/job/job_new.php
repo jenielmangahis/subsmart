@@ -39,8 +39,13 @@ add_css(array(
     .label-width .form-control {
         width: 80% !important;
     }
-</style>
 
+    /** css fix for data table missing search input **/
+    label>input {
+        visibility: visible !important;
+        position: inherit !important;
+    }
+</style>
 <?php if(isset($jobs_data)): ?>
 <input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
 <?php endif; ?>
@@ -261,7 +266,7 @@ add_css(array(
                             <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 <h6 class="page-title"> <span class="fa fa-book box_footer_icon"></span> &nbsp; Private Notes </h6>
                             </button>
-                            <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
+                            <a href="javascript:void(0);" title="Transfer to the right column." id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
                         </div>
                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseOne">
                         <div class="card-body">

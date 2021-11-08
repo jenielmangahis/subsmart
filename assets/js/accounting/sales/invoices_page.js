@@ -42,6 +42,7 @@ function invoices_filter_changed() {
             date_range: $(".invoices-page-section .filtering select.date_range").val(),
         },
         success: function(data) {
+            $(".invoices-page-section table.invoices-table th input.select-all").prop("checked", false);
             if (data.the_html_tbody == "") {
                 $(".invoices-page-section table tbody").html("<tr><td colspan='8' style='text-align:center;color: #C7C7C7;'><center>No data found.</center></td></tr>");
             } else {
@@ -188,6 +189,99 @@ $(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.
                 PDF.contentWindow.print();
                 $("#loader-modal").hide();
             },
+        });
+    }
+});
+$(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.delete-btn', function() {
+    if ($(".invoices-page-section table.invoices-table tbody tr td input[type='checkbox']:checked").length > 0) {
+        Swal.fire({
+            title: "Delete?",
+            html: "Are you sure you want to delete all selcted invoices?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/delete.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Delete now",
+        }).then((result) => {
+            if (result.value) {
+                $("#loader-modal").show();
+                $.ajax({
+                    url: baseURL + "invoice-page/delete-batch",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("form.invoice-table-form").serialize(),
+                    success: function(data) {
+                        if (data.status == "success") {
+                            invoices_filter_changed();
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Invoice has been deleted",
+                                icon: "success",
+                            });
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "Unable to delete invoices.",
+                                icon: "error",
+                            });
+                        }
+                        $("#loader-modal").hide();
+                    },
+                });
+            } else {
+                $("#loader-modal").hide();
+            }
+        });
+    }
+});
+
+$(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.delete-btn', function() {
+    if ($(".invoices-page-section table.invoices-table tbody tr td input[type='checkbox']:checked").length > 0) {
+        Swal.fire({
+            title: "Send?",
+            html: "Are you sure you want to send all selected invoices?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/message.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Send now",
+        }).then((result) => {
+            if (result.value) {
+                $("#loader-modal").show();
+                $.ajax({
+                    url: baseURL + "invoice-page/send-batch",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("form.invoice-table-form").serialize(),
+                    success: function(data) {
+                        if (data.status == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Invoices are sent.",
+                                icon: "success",
+                            });
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "Unable to send invoices.",
+                                icon: "error",
+                            });
+                        }
+
+                        $("#loader-modal").hide();
+                    },
+                });
+            } else {
+                $("#loader-modal").hide();
+            }
         });
     }
 });

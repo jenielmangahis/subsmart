@@ -389,6 +389,8 @@ $route['accounting/filter/invoices-page'] = 'accounting/invoices_page_filter';
 $route['invoice-page/get/send-invoice-reminder'] = 'accounting/get_info_for_send_invoice_reminder';
 $route['invoice-page/send/send-invoice-reminder'] = 'accounting/send_invoice_reminder';
 $route['invoice-page/print-batch'] = 'accounting/invoice_print_batch';
+$route['invoice-page/delete-batch'] = 'accounting/invoice_delete_batch';
+$route['invoice-page/send-batch'] = 'accounting/invoice_send_batch';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';

@@ -66,7 +66,7 @@ const columns = {
         const sentOnTime = moment(sent_at);
 
         const sentOnDateFormatted = sentOnDate.format("MM/DD/YYYY");
-        const sentOnTimeFormatted = sentOnTime.format("HH:mm:ss A");
+        const sentOnTimeFormatted = sentOnTime.format("hh:mm A");
 
         let textSecondary = `Sent on ${sentOnDateFormatted} &bull; ${sentOnTimeFormatted}`;
         if (!sentOnDate.isValid() || !sentOnTime.isValid()) {
@@ -229,7 +229,7 @@ const columns = {
     updated_at = updated_at || row.created_at;
 
     const sentOnDate = moment(updated_at).format("MM/DD/YYYY");
-    const sentOnTime = moment(updated_at).format("HH:mm:ss A");
+    const sentOnTime = moment(updated_at).format("hh:mm A");
 
     return `
       <div>
@@ -350,7 +350,7 @@ const actions = {
       }
 
       const dateFormat = moment(date).format("MM/DD/YYYY");
-      const timeFormat = moment(date).format("HH:mm:ss A");
+      const timeFormat = moment(date).format("hh:mm A");
 
       return `${dateFormat} | ${timeFormat}`;
     };
@@ -384,13 +384,9 @@ $(document).ready(function () {
 
   const views = [...$navItems].map((item) => {
     const navItemLink = $(item).find("a").attr("href");
-    try {
-      const urlParams = new URLSearchParams(new URL(navItemLink).search);
-      if (!urlParams.has("view")) return null;
-      return urlParams.get("view").toLowerCase();
-    } catch (error) {
-      return null;
-    }
+    const urlParams = new URLSearchParams(new URL(navItemLink).search);
+    if (!urlParams.has("view")) return null;
+    return urlParams.get("view").toLowerCase();
   });
 
   const [defaultView] = views.filter(Boolean);
@@ -402,7 +398,7 @@ $(document).ready(function () {
     view = defaultView;
   }
 
-  $("#currentView").text(view.split("_").join(" "));
+  $("#currentView").text(view);
 
   $navItems.each(function (_, navItem) {
     const $navItem = $(navItem);

@@ -119,15 +119,9 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'items.company_id' => logged('company_id'),
-                'is_active' => 1,
+                'is_active' => 1
             ),
             'table' => 'items',
-//            'join' => array(
-//                'table' => 'items_has_storage_loc',
-//                'statement' => 'items.id=items_has_storage_loc.item_id',
-//                'join_as' => 'left',
-//            ),
             'select' => 'items.id,title,price,type',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
@@ -148,7 +142,7 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'work_orders',
-            'select' => 'id,work_order_number,job_name,customer_id',
+            'select' => 'id,work_order_number,job_name,customer_id,date_created',
         );
         $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
 
@@ -1176,6 +1170,12 @@ class Job extends MY_Controller
     {
         $comp_id = logged('company_id');
         //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
+        $input = $this->input->post();
+        if($input){
+            strtoupper($input['job_num_prefix']);
+            $this->general->update_with_key_field($input, $comp_id, 'job_settings','company_id');
+        }
+
         $get_job_settings = array(
             'where' => array(
                 'company_id' => $comp_id
@@ -1183,7 +1183,7 @@ class Job extends MY_Controller
             'table' => 'job_settings',
             'select' => '*',
         );
-        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings);
+        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings,false);
 
         $get_job_tax = array(
             'table' => 'tax_rates',

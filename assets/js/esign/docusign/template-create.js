@@ -216,7 +216,7 @@ function TemplateCreate() {
 
   function prepareForm({ action }) {
     const dateNow = moment().format("MM/DD/YYYY");
-    const timeNow = moment().format("hh:mm:ss A");
+    const timeNow = moment().format("hh:mm A");
 
     $form.find("#name").attr("placeholder", `Untitled ${dateNow} | ${timeNow}`);
 

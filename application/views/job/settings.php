@@ -37,7 +37,7 @@ include viewPath('job/css/settings');
                         <div class="pl-3 pr-3 mt-0 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                               <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                  ......
+                                  Feel free to modify job settings in your company. Please note that the new update will only take effect to the new jobs after updating settings.
                               </span>
                             </div>
                         </div>
@@ -60,10 +60,17 @@ include viewPath('job/css/settings');
                             </div>
                             <div class="tab-content mt-4" >
                                 <div class="tab-pane <?= $active_tab == 'jobSettings' || $active_tab == '' ? "active" : "fade"; ?> standard-accordion" id="jobSettings">
-                                    <div class="row col-md-12 pb-3">
-                                        <label class="pt-2 pr-5">Job Prefix</label>
-                                        <input type="text" class="form-control col-md-2" id="surveyPrefix" value="JOB-">
-                                    </div>
+                                    <form method="post" action="<?=base_url()?>job/settings">
+                                        <div class="row col-md-12 pb-3">
+                                            <label class="pt-2 pr-5">Job Prefix</label>
+                                            <input type="text" class="form-control col-md-2" name="job_num_prefix" id="job_num_prefix" value="<?= $job_settings->job_num_prefix ?>" ">
+                                        </div>
+                                        <div class="row form_line">
+                                            <div class="row col-md-12 ">
+                                                <button type="submit" class="btn btn-primary btn-save-payment"> <span class="fa fa-edit"></span> Update</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
 
                                 <div class="tab-pane <?= $active_tab == 'taxRate' ? "active" : "fade"; ?> standard-accordion" id="taxRate">
