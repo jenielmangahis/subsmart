@@ -1031,6 +1031,10 @@ $(document).on('click', '#registers-table tbody tr', function() {
                             var fieldName = rowData.account_field;
                             var modalName = 'expenseModal';
                         break;
+                        case 'Check' :
+                            var fieldName = rowData.account_field;
+                            var modalName = 'checkModal';
+                        break;
                     }
 
                     $(this).html(`<select class="form-control" name="${fieldName !== undefined ? fieldName.replaceAll('-', '_') : 'account'}" ${current === '-Split-' ? 'disabled' : ''}><option value="${rowData.account_id}">${current}</option></select>`);
