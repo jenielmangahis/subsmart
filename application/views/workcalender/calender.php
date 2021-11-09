@@ -415,10 +415,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> When</label>
                       <div class="row g-3">
                         <div class="col-sm-8">
-                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" autocomplete="off" data-content="Appointment Date">
+                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" autocomplete="off" data-content="Appointment Date" required="">
                         </div>
                         <div class="col-sm-4">
-                          <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Appointment Time">
+                          <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Appointment Time" required="">
                         </div>
                       </div>
                   </div>  
@@ -509,10 +509,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       <label for="" style="width:100%;text-align: left;"><i class="fa fa-calendar"></i> Preferred Date</label>
                       <div class="row g-3">
                         <div class="col-sm-8">
-                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" autocomplete="off" data-content="Your Preferred Appointment Date">
+                          <input type="text" name="appointment_date" class="form-control appointment-datepicker appointment-date field-popover" placeholder="Date" aria-label="Date" data-trigger="hover" data-original-title="When" data-container="body" data-placement="right" autocomplete="off" data-content="Your Preferred Appointment Date" required="">
                         </div>
                         <div class="col-sm-4">
-                          <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Your Preferred Appointment Time">
+                          <input type="text" name="appointment_time" class="form-control appointment-time field-popover" placeholder="Time" aria-label="Time" data-trigger="hover" data-original-title="Time" data-container="body" data-placement="right" data-content="Your Preferred Appointment Time" required="">
                         </div>
                       </div>
                   </div>  
@@ -971,11 +971,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 jQuery('.tiva-calendar').html('<div class="loading"><img src="images/temp/loading.gif" /></div>');
             },
             success: function (response) {
-
-                //console.log(response);
-
                 // $('.tiva-events-calendar > .events-calendar-bar').append(response);
-
                 $('#calender_toolbar').append(response);
             }
         });
@@ -991,8 +987,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
         if (action === 'open_event_modal') {
-
-            //console.log('opening modal...');
             var data = {
                 id: "<?php echo (!empty($_GET['customer_id'])) ? get_customer_by_id($_GET['customer_id'])->id : 0 ?>",
                 contact_name: "<?php echo (!empty($_GET['customer_id'])) ?  get_customer_by_id($_GET['customer_id'])->contact_name : '' ?>",
@@ -1165,6 +1159,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
               type: 'listWeek',
               buttonText: 'List'
             },
+            OneDayView: {
+              type: 'resourceTimeGrid',                
+              //type: 'timeGrid',
+              datesAboveResources: true,
+              allDaySlot: false,
+              slotLabelFormat: [
+                { hour: 'numeric', minute: 'numeric', meridiem: true }
+              ],
+              nowIndicator: true,
+              expandRows: true,
+              buttonText: 'Day',
+              duration: { days: 1 },              
+              slotDuration: '00:15',
+              slotLabelInterval : '01:00',
+              scrollTime: scrollTime
+            },
             threeDaysView: {
               type: 'resourceTimeGrid',                
               //type: 'timeGrid',
@@ -1191,20 +1201,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                trigger: 'hover',
                container: 'body',
                html:true,
-               content: '<i class="fa fa-plus"></i> Create an Appointment',
+               content: '<i class="fa fa-plus"></i>',
            });
 
-           $('.fc-timegrid-slot:before').popover({               
+           /*$('.fc-timegrid-slot:before').popover({               
                placement: 'left',
                trigger: 'hover',
                container: 'body',
                html:true,
                content: '<i class="fa fa-plus"></i> Create an Appointment',
-           });
+           });*/
           },   
           selectable: true,
-          select: function(info) {
-            //console.log(info);
+          select: function(info) {            
             //alert('selected ' + info.startStr + ' to ' + info.endStr);
             let result = info.hasOwnProperty('resource');
             if( result ){
@@ -1231,6 +1240,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $("#modal-create-appointment").modal('show');
           },
           slotEventOverlap: false,
+          slotLabelDidMount: function(info){ 
+            //info.el.prepend("test");                 
+            $('.fc-timegrid-slot-lane').popover({               
+               placement: 'left',
+               trigger: 'hover',
+               container: 'body',
+               boundary: 'window',
+               fallbackPlacement: ['counterclockwise'],
+               rootBoundary: 'document',
+               html:true,
+               content: '<i class="fa fa-plus"></i>',
+            });          
+            $('.fc-timegrid-slot-label').popover({               
+               placement: 'left',
+               trigger: 'hover',
+               container: 'body',
+               boundary: 'window',
+               html:true,
+               content: '<i class="fa fa-plus"></i>',
+           });
+          },
           /*dayCellDidMount: function(info) {
                 info.el.prepend("test");
           },*/
@@ -1309,7 +1339,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
           },
           eventDrop: function(info) {
-              console.log(info);
+              //console.log(info);
               //alert(info.event.extendedProps.eventType);
               //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
 
@@ -1812,8 +1842,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 // }
               };
             },
-            formatResult: function(item){ 
-                //console.log(item);
+            formatResult: function(item){                 
                 return '<div>'+item.FName + ' ' + item.LName +'<br /><small>'+item.email+'</small></div>';
             },
             cache: true

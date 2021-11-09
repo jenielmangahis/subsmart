@@ -239,23 +239,27 @@ vertical-align: middle;
             <table class="table table-borderless tbl-items" style="border: none;">     
               <thead>
                   <tr>
-                      <th style="width: 65%;text-align: left;">Item Name</th>
+                      <th style="width: 55%;text-align: left;">Item Name</th>
                       <th style="width: 10%;text-align: left;">Item Price</th>
                       <th style="width: 10%;">Quantity</th>
+                      <th style="width: 10%;">Tax Percentage</th>
                       <th style="width: 10%;">Discount</th>
                   </tr>
               </thead>       
               <tbody>
                   <?php foreach($appointmentItems as $item){ ?>
                   <tr style="background: none !important;">
-                    <td style="width:65%;">
+                    <td style="width:55%;">
                       <input type="text" class="form-control" value="<?= $item->item_name; ?>" readonly="readonly">
                     </td>
                     <td>
                       <input type="text" class="form-control" value="<?= number_format($item->item_price,2); ?>" readonly="readonly">
                     </td>
                     <td>
-                      <input type="text" class="form-control" value="<?= number_format($item->qty,2); ?>" readonly="readonly">
+                      <input type="text" class="form-control" value="<?= number_format($item->qty,0); ?>" readonly="readonly">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" value="<?= number_format($item->tax_percentage,2); ?>" readonly="readonly">
                     </td>
                     <td>
                       <input type="text" class="form-control" value="<?= number_format($item->discount_amount,2); ?>" readonly="readonly">

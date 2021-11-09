@@ -1896,13 +1896,19 @@ class Workcalender extends MY_Controller
 
         if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] != '') {
 
+            if( $post['appointment_tags'] != '' ){
+                $tags = implode(",", $post['appointment_tags']);
+            }else{
+                $tags = '';
+            }
+
             $data_appointment = [
                 'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                 'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
                 'user_id' => $post['appointment_user_id'],
                 'prof_id' => $post['appointment_customer_id'],
                 'company_id' => $company_id,
-                'tag_ids' => implode(",", $post['appointment_tags']),
+                'tag_ids' => $tags,
                 'total_item_price' => 0,
                 'total_item_discount' => 0,
                 'total_amount' => 0,
@@ -1918,12 +1924,25 @@ class Workcalender extends MY_Controller
             $message    = '';
 
         } else {
+
             $message = 'Required fields cannot be empty';
+            
+            if( $post['appointment_user_id'] == '' ){
+                $message = 'Please select employee to assign to this appointment';
+            }
+            
+            if( $post['appointment_customer_id'] == '' ){
+                $message = 'Please select customer to assign to this appointment';
+            }
+
+            if( $post['appointment_type_id'] == '' ){
+                $message = 'Please select appointment type';
+            }
         }
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message
+            'msg' => $message
         ];
 
         echo json_encode($json_data);
@@ -1962,12 +1981,21 @@ class Workcalender extends MY_Controller
             $message    = '';
 
         } else {
+
             $message = 'Required fields cannot be empty';
+
+            if( $post['appointment_customer_id'] == '' ){
+                $message = 'Please select customer';
+            }
+
+            if( $post['appointment_type_id'] == '' ){
+                $message = 'Please select appointment type';
+            }
         }
 
         $json_data = [
             'is_success' => $is_success,
-            'message' => $message
+            'msg' => $message
         ];
 
         echo json_encode($json_data);
@@ -2036,12 +2064,18 @@ class Workcalender extends MY_Controller
         if( $appointment ){
             if ($post['appointment_date'] != '' && $post['appointment_time'] != '' && $post['appointment_user_id'] != '' && $post['appointment_customer_id'] != '' && $post['appointment_type_id'] > 0) {
 
+                if( $post['appointment_tags'] != '' ){
+                    $tags = implode(",", $post['appointment_tags']);
+                }else{
+                    $tags = '';
+                }
+
                 $data_appointment = [
                     'appointment_date' => date("Y-m-d",strtotime($post['appointment_date'])),
                     'appointment_time' => date("H:i:s", strtotime($post['appointment_time'])),
                     'user_id' => $post['appointment_user_id'],
                     'prof_id' => $post['appointment_customer_id'],
-                    'tag_ids' => implode(",", $post['appointment_tags']),
+                    'tag_ids' => $tags,
                     'appointment_type_id' => $post['appointment_type_id']
                 ];
 

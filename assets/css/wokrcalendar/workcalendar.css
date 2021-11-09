@@ -496,3 +496,6 @@ a.btn-gcustom i {
 /*.list-wait-list li { background: #ffffff; }
 .list-wait-list li:nth-child(odd) { background: #bdbdbd; }*/
 /**/
+.navbar-side{
+  z-index: 9999 !important;
+}
