@@ -757,7 +757,7 @@ class Chart_of_accounts extends MY_Controller {
                     'account' => $paymentAcc->name,
                     'account_disabled' => true,
                     'account_field' => '',
-                    'memo' => $expense->memo,
+                    'memo' => $expenseCategory->description,
                     'payment' => '',
                     'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
                     'reconcile_status' => '',
@@ -830,7 +830,7 @@ class Chart_of_accounts extends MY_Controller {
                 'id' => $check->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
-                'ref_no_disabled' => false,
+                'ref_no_disabled' => $check->to_print === "1",
                 'type' => 'Check',
                 'payee_type' => $check->payee_type,
                 'payee_id' => $check->payee_id,
@@ -839,6 +839,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account_id' => $account['id'],
                 'account' => $account['name'],
                 'account_disabled' => $account['disabled'],
+                'account_field' => $account['field_name'],
                 'memo' => $check->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
@@ -892,6 +893,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $transaction = [
                 'id' => $check->id,
+                'child_id' => $checkCategory->id,
                 'date' => date("m/d/Y", strtotime($check->payment_date)),
                 'ref_no' => $check->to_print === "1" ? "To print" : ($check->check_no === null ? '' : $check->check_no),
                 'ref_no_disabled' => true,
@@ -903,7 +905,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account_id' => $check->bank_account_id,
                 'account' => $this->chart_of_accounts_model->getName($check->bank_account_id),
                 'account_disabled' => true,
-                'memo' => $check->memo,
+                'memo' => $checkCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -1629,7 +1631,7 @@ class Chart_of_accounts extends MY_Controller {
                     'account' => $account->name,
                     'account_disabled' => true,
                     'account_field' => '',
-                    'memo' => $expense->memo,
+                    'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -1915,7 +1917,7 @@ class Chart_of_accounts extends MY_Controller {
                     'account' => $paymentAcc->name,
                     'account_disabled' => true,
                     'account_field' => '',
-                    'memo' => $expense->memo,
+                    'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -3908,7 +3910,7 @@ class Chart_of_accounts extends MY_Controller {
 
             break;
             case 'Check' :
-
+                $return = $this->save_check($accountId, $transactionId, $post);
             break;
             case 'Expense' :
                 $return = $this->save_expense($accountId, $transactionId, $post);
@@ -4258,7 +4260,6 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_expense($accountId, $expenseId, $data)
     {
-        dd($data);
         $expense = $this->vendors_model->get_expense_by_id($expenseId);
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
         $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
@@ -4278,7 +4279,7 @@ class Chart_of_accounts extends MY_Controller {
         $payee = explode('-', $data['payee']);
 
         $expenseData = [
-            'payment_date' => date('m-d-Y', strtotime($data['date'])),
+            'payment_date' => date('Y-m-d', strtotime($data['date'])),
             'ref_no' => $accountId === $expense->payment_account_id ? $data['ref_no'] : $expense->ref_no,
             'payee_type' => $payee[0],
             'payee_id' => $payee[1],
@@ -4291,28 +4292,28 @@ class Chart_of_accounts extends MY_Controller {
 
         if($update) {
             // REVERT OLD
-            if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
-                foreach(json_decode($deposit->attachments, true) as $attachmentId) {
-                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                    $attachmentData = [
-                        'linked_to_count' => intval($attachment->linked_to_count) - 1
-                    ];
+            // if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
+            //     foreach(json_decode($deposit->attachments, true) as $attachmentId) {
+            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            //         $attachmentData = [
+            //             'linked_to_count' => intval($attachment->linked_to_count) - 1
+            //         ];
 
-                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-                }
-            }
+            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            //     }
+            // }
 
             // NEW ATTACHMENTS
-            if (isset($data['attachments']) && is_array($data['attachments'])) {
-                foreach ($data['attachments'] as $attachmentId) {
-                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                    $attachmentData = [
-                        'linked_to_count' => intval($attachment->linked_to_count) + 1
-                    ];
+            // if (isset($data['attachments']) && is_array($data['attachments'])) {
+            //     foreach ($data['attachments'] as $attachmentId) {
+            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            //         $attachmentData = [
+            //             'linked_to_count' => intval($attachment->linked_to_count) + 1
+            //         ];
 
-                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-                }
-            }
+            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            //     }
+            // }
 
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccBal = $paymentAcc->account_id !== "7" ? floatval($paymentAcc->balance) + floatval($expense->total_amount) : floatval($paymentAcc->balance) - floatval($expense->total_amount);
@@ -4325,7 +4326,7 @@ class Chart_of_accounts extends MY_Controller {
             ];
             $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
-            if($accountId === $expense->payment_account_id && $totalCount === 1) {
+            if($totalCount === 1) {
                 if(count($categories) === 1 && count($items) === 0) {
                     $oldCatAcc = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
                     $oldCatAccType = $this->account_model->getById($expenseAcc->account_id);
@@ -4345,7 +4346,12 @@ class Chart_of_accounts extends MY_Controller {
 
                     $this->chart_of_accounts_model->updateBalance($oldCatAccData);
 
-                    $expenseAcc = $this->chart_of_accounts_model->getById($data['expense_account']);
+                    if($accountId === $expense->payment_account_id) {
+                        $expenseAccId = $data['expense_account'];
+                    } else {
+                        $expenseAccId = $categories[0]->expense_account_id;
+                    }
+                    $expenseAcc = $this->chart_of_accounts_model->getById($expenseAccId);
                     $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
                     if ($expenseAccType->account_name === 'Credit Card') {
@@ -4364,12 +4370,28 @@ class Chart_of_accounts extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($expenseAccData);
 
                     $categoryData = [
-                        'expense_account_id' => $data['expense_account'],
+                        'expense_account_id' => $accountId === $expense->payment_account_id ? $data['expense_account'] : $categories[0]->expense_account_id,
+                        'description' => $accountId === $categories[0]->expense_account_id ? $data['memo'] : $categories[0]->description,
                         'amount' => number_format(floatval($amount), 2, '.', ',')
                     ];
 
                     $this->vendors_model->update_transaction_category_details($categories[0]->id, $categoryData);
-                } else {
+                } else if(count($categories) === 0 && count($items) === 1) {
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($items[0]->rate);
+                    $newBalance = floatval($invAssetAcc->balance) + floatval($amount);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
                     $itemData = [
                         'rate' => number_format(floatval($amount), 2, '.', ',')
                     ];
@@ -4381,6 +4403,159 @@ class Chart_of_accounts extends MY_Controller {
 
         $return = [
             'data' => $expenseId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
+        ];
+
+        return $return;
+    }
+
+    private function save_check($accountId, $checkId, $data)
+    {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+        $totalCount = count($categories) + count($items);
+
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        $payee = explode('-', $data['payee']);
+
+        $checkData = [
+            'payment_date' => date('Y-m-d', strtotime($data['date'])),
+            'check_no' => $accountId === $check->bank_account_id && $check->to_print !== "1" ? $data['ref_no'] : $check->check_no,
+            'to_print' => $accountId === $check->bank_account_id && $data['ref_no'] !== 'To print' && $check->to_print !== "1" ? null : $check->to_print,
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            'memo' => $accountId === $check->bank_account_id ? $data['memo'] : $check->memo,
+            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($expense->total_amount), 2, '.', ',')
+        ];
+
+        $update = $this->vendors_model->update_check($checkId, $checkData);
+
+        if($update) {
+            // REVERT OLD
+            // if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
+            //     foreach(json_decode($deposit->attachments, true) as $attachmentId) {
+            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            //         $attachmentData = [
+            //             'linked_to_count' => intval($attachment->linked_to_count) - 1
+            //         ];
+
+            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            //     }
+            // }
+
+            // NEW ATTACHMENTS
+            // if (isset($data['attachments']) && is_array($data['attachments'])) {
+            //     foreach ($data['attachments'] as $attachmentId) {
+            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            //         $attachmentData = [
+            //             'linked_to_count' => intval($attachment->linked_to_count) + 1
+            //         ];
+
+            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            //     }
+            // }
+
+            $account = $this->chart_of_accounts_model->getById($check->bank_account_id);
+            $accountBal = floatval($account->balance) + floatval($check->total_amount);
+            $accountBal = $accountBal - floatval($checkData['total_amount']);
+            $accountBal = number_format($accountBal, 2, '.', ',');
+            $accountData = [
+                'id' => $account->id,
+                'company_id' => logged('company_id'),
+                'balance' => $accountBal
+            ];
+            $this->chart_of_accounts_model->updateBalance($accountData);
+
+            if($totalCount === 1) {
+                if(count($categories) === 1 && count($items) === 0) {
+                    $oldCatAcc = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
+                    $oldCatAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($oldCatAccType->account_name === 'Credit Card') {
+                        $oldCatAccBal = floatval($oldCatAcc->balance) + floatval($categories[0]->amount);
+                    } else {
+                        $oldCatAccBal = floatval($oldCatAcc->balance) - floatval($categories[0]->amount);
+                    }
+                    $oldCatAccBal = number_format($oldCatAccBal, 2, '.', ',');
+
+                    $oldCatAccData = [
+                        'id' => $oldCatAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $oldCatAccBal
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($oldCatAccData);
+
+                    if($accountId === $expense->payment_account_id) {
+                        $expenseAccId = $data['expense_account'];
+                    } else {
+                        $expenseAccId = $categories[0]->expense_account_id;
+                    }
+                    $expenseAcc = $this->chart_of_accounts_model->getById($expenseAccId);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($amount);
+                    }
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    $categoryData = [
+                        'expense_account_id' => $accountId === $check->bank_account_id ? $data['expense_account'] : $categories[0]->expense_account_id,
+                        'description' => $accountId === $categories[0]->expense_account_id ? $data['memo'] : $categories[0]->description,
+                        'amount' => number_format(floatval($amount), 2, '.', ',')
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($categories[0]->id, $categoryData);
+                } else {
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($items[0]->rate);
+                    $newBalance = floatval($invAssetAcc->balance) + floatval($amount);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                    $itemData = [
+                        'rate' => number_format(floatval($amount), 2, '.', ',')
+                    ];
+
+                    $this->vendors_model->update_transaction_item($items[0]->id, $itemData);
+                }
+            }
+        }
+
+        $return = [
+            'data' => $checkId,
             'success' => $update ? true : false,
             'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
         ];
