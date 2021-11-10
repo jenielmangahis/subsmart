@@ -945,7 +945,11 @@ $(document).on('click', '#registers-table tbody tr', function() {
                 case 'payee' :
                     $(this).html(`<select class="form-control" name="payee"></select>`);
                     if(current !== "") {
-                        $(this).find('select').append(`<option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option>`);
+                        if(rowData.type !== "Bill" && rowData.type !== 'Vendor Credit') {
+                            $(this).find('select').append(`<option value="${rowData.payee_type+'-'+rowData.payee_id}">${current}</option>`);
+                        } else {
+                            $(this).find('select').append(`<option value="${rowData.payee_id}">${current}</option>`);
+                        }
                     }
                     if(rowData.payee_disabled === true) {
                         $(this).find('select').prop('disabled', true);

@@ -173,7 +173,6 @@ $(document).on("click", "#invoice-reminder-modal form button[type='submit']", fu
         });
     }
 });
-
 $(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.print-btn', function() {
     if ($(".invoices-page-section table.invoices-table tbody tr td input[type='checkbox']:checked").length > 0) {
         $("#loader-modal").show();
@@ -285,3 +284,68 @@ $(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.
         });
     }
 });
+
+$(document).on('click', '.invoices-page-section table.invoices-table tbody>tr', function() {
+    $("div#invoice-viewer-modal").fadeIn();
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title .invoice-number").html($(this).attr("data-invoice-number"));
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .total-amount-section .amount").html($(this).attr("data-grand-total"));
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.invoice-date .date").html($(this).attr("data-date"));
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.due-date .date").html($(this).attr("data-due-date"));
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-text").html($(this).attr("data-status"));
+    if ($(this).attr("data-status") == "Paid") {
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("pending");
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("success");
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-check-circle");
+    } else {
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("success");
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("pending");
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-pause-circle");
+    }
+    invoice_viewer_changed($(this).attr("data-id"), $(this).attr("data-customer-id"));
+});
+$(document).on('click', 'div#invoice-viewer-modal .the-close', function() {
+    $("div#invoice-viewer-modal").fadeOut();
+
+});
+$(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .section .title', function(event) {
+    if ($(this).parent(".section").hasClass("shown")) {
+        $(this).parent(".section").attr("class", "section hidden");
+        $(this).children(".icon").children("i").attr("class", "fa fa-angle-right");
+    } else {
+        $(this).parent(".section").attr("class", "section shown");
+        $(this).children(".icon").children("i").attr("class", "fa fa-angle-down");
+    }
+});
+$(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .more-description-section a.show-more', function(event) {
+    event.preventDefault();
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .more-description-section .more-description-info").show();
+    $(this).attr("class", "show-less");
+});
+$(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .more-description-section a.show-less', function(event) {
+    event.preventDefault();
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .more-description-section .more-description-info").hide();
+    $(this).attr("class", "show-more");
+});
+
+function invoice_viewer_changed(invoice_id, customer_id) {
+    $("div#invoice-viewer-modal .section-loader").show();
+    $("div#invoice-viewer-modal .section").hide();
+    $.ajax({
+        url: baseURL + "invoice-viewer",
+        type: "POST",
+        dataType: "json",
+        data: {
+            invoice_id: invoice_id,
+            customer_id: customer_id
+        },
+        success: function(data) {
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .section .section-content .items").html(data.html_items_and_price);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .more-description-section .more-description-info").html(data.html_items_description);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .section .title span.customer-name").html(data.customer_name);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .section .section-content .email").html(data.customer_email);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal ul.status-tracker").html(data.status_steps);
+            $("div#invoice-viewer-modal .section-loader").hide();
+            $("div#invoice-viewer-modal .section").show();
+        },
+    });
+}

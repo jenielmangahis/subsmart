@@ -10,12 +10,12 @@
 </style>
 <script>
     $(document).ready(function() {
-        new TaxRateAdder($("#invoiceTaxRate__sales"), {
-            tableRows: "#items_table_body_sales_receipt tr",
-            totalTax: "#summaryContainer__sales #total_tax_sr_",
-            grandTotal: "#summaryContainer__sales #grand_total_sr",
-            subTotal: "#summaryContainer__sales #span_sub_total_sr",
-        });
+        // new TaxRateAdder($("#invoiceTaxRate__sales"), {
+        //     tableRows: "#items_table_body_sales_receipt tr",
+        //     totalTax: "#summaryContainer__sales #total_tax_sr_",
+        //     grandTotal: "#summaryContainer__sales #grand_total_sr",
+        //     subTotal: "#summaryContainer__sales #span_sub_total_sr",
+        // });
     });
 </script>
 <!-- end add tax rate sidebar -->
@@ -1044,7 +1044,7 @@ Alarm Direct, Inc</textarea>
     </div>
 </div>
 
-<div class="sidebarForm" id="addRateSidebar" style="z-index: 1051;" data-isSales="true">
+<!-- <div class="sidebarForm" id="addRateSidebar" style="z-index: 1051;" data-isSales="true">
     <div class="sidebarForm__inner">
         <div class="sidebarForm__header">
             <div class="sidebarForm__title">Add a custom sales tax rate</div>
@@ -1101,7 +1101,7 @@ Alarm Direct, Inc</textarea>
             <button id="addRateBtn" type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <script>
