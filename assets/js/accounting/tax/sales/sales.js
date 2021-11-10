@@ -111,11 +111,10 @@ class Accounting__TaxItem {
       const $adjustments = adjustments.map((adjustment) => {
         // Gets the select item's text by value
         const reasonText = $sidebar.find(`[value=${adjustment.reason}]`).text();
-
         return `
           <div class="taxModal__adjustmentItem">
             <span>${reasonText}</span>
-            <span>-$${formatCurrency(adjustment.amount)}</span>
+            <span>${formatCurrencyWithSign(adjustment.amount)}</span>
           </div>
         `;
       });

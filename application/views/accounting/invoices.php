@@ -467,7 +467,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </ul>
 </div>
 
-<div class="tab-content invoices-page-section invoices-page-section" id="myTabContent">
+<div class="tab-content invoices-page-section" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
 
         <?php if (!empty($invoices)) { ?>
@@ -618,7 +618,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <!--    Modal for creating rules-->
 <div class="modal-right-side">
-    <div class="modal right fade" id="type-selection-modal" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
+    <div class="modal right fade" id="type-selection-modal-not-in-use" tabindex="" role="dialog"
+        aria-labelledby="myModalLabel2">
         <div class="modal-dialog" role="document" style="width: 25%">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1012,6 +1013,111 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
     <!--end of modal-->
 </div>
+<div id="invoice-viewer-modal">
+    <div class="the-modal-body right-side-modal">
+        <div class="the-title">Invoice <span class="invoice-number">11001</span></div>
+        <div class="the-close">x</div>
+        <div class="status-section">
+            <div class="status-icon success"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+            <div class="status-text">Paid (Deposited)</div>
+        </div>
+        <div class="total-amount-section">
+            <div class="label">Total</div>
+            <div class="amount">$1.08</div>
+        </div>
+        <div class="invoice-info invoice-date">
+            <div class="label">Invoice date</div>
+            <div class="date">1/28/2021</div>
+        </div>
+        <div class="invoice-info due-date">
+            <div class="label">Due date</div>
+            <div class="date">2/28/2021</div>
+        </div>
+        <div class="section-loader">
+            <img
+                src="<?=base_url("assets/img/accounting/customers/loader.gif")?>">
+        </div>
+        <div class="section hidden">
+            <div class="title">
+                <span class="customer-name">Lou Pinton</span>
+                <span class="icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+            </div>
+            <div class="section-content ">
+                <div class="email">pintonlou@gmail.com</div>
+            </div>
+        </div>
+        <div class="section shown">
+            <div class="title">
+                <span class="normal">Invoice activity</span>
+                <span class="icon"><i class="fa fa-angle-down" aria-hidden="true"></i></span>
+            </div>
+            <div class="section-content ">
+                <ul class="status-tracker">
+                    <div class="status-marker next-completed">
+                        <div class="line"></div>
+                    </div>
+                    <li class="status-step completed">
+                        <div class="status-marker completed next-completed">
+                            <div class="circle default"></div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">Opened</div>
+                            <div class="status-event-info">
+                                <div><span class="status-date">1/28/2021</span></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="status-step completed">
+                        <div class="status-marker completed next-completed">
+                            <div class="circle default"></div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">Paid</div>
+                            <div class="status-event-info">
+                                <div><span class="status-date">2/1/2021</span></div>
+                                <div><span><span class="money">$1.08</span></span></div><a tabindex="0"
+                                    class="action-button">View payment #2674</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="status-step completed">
+                        <div class="status-marker completed">
+                            <div class="circle default last-active-status"></div>
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">Deposited</div>
+                            <div class="status-event-info">
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="section hidden">
+            <div class="title">
+                <span class="normal">Products and services</span>
+                <span class="icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+            </div>
+            <div class="section-content ">
+                <div class="items">
+                    <div class="item"><span class="title">Sales</span><span class="price">$1.00</span></div>
+                </div>
+                <div class="more-description-section">
+                    <div class="more-description-info">
+                        this is a test product<br>
+                        Taxable
+                    </div>
+                    <a href="#" class="show-more">More details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="invoice-reminder-modal">
     <div class="the-modal-body">
         <h1 class="the-title">Send Invoice <span class="invoice-number"></span></h1>
@@ -1089,7 +1195,7 @@ ADI
     </div>
 </div>
 <div id="batch-print-iframe-section">
-<iframe src=""class="the-file" frameborder="0"></iframe>
+    <iframe src="" class="the-file" frameborder="0"></iframe>
 </div>
 <script
     src="<?php echo $url->assets ?>js/accounting/sales/customer_includes/customer_single_modal.js">

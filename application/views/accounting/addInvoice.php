@@ -1327,7 +1327,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 
-<div class="sidebarForm" id="addRateSidebar">
+<div class="sidebarForm customRate" id="addRateSidebar">
     <div class="sidebarForm__inner">
         <div class="sidebarForm__header">
             <div class="sidebarForm__title">Add a custom sales tax rate</div>
@@ -1336,7 +1336,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </button>
         </div>
 
-        <form>
+        <form class="sidebarForm__form">
             <div class="form-group">
                 <div class="form-check">
                     <input data-type="type" class="form-check-input" type="radio" name="rateType" id="addRate__rateType1" value="single" checked>
@@ -1352,28 +1352,119 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="addRate__name">Name</label>
-                <input data-type="name" required type="text" class="form-control" id="addRate__name">
-            </div>
+            <div id="rateSingleWrapper">
+                <div class="form-group">
+                    <label for="addRate__name">Name</label>
+                    <input data-type="name" required type="text" class="form-control" id="addRate__name">
+                </div>
 
-            <div class="form-group">
-                <label for="addRate__agency">Agency</label>
-                <div class="dropdownWithSearch" id="rateAgencySelect">
-                    <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" id="addRate__agency" placeholder="Select agency">
-                    <button type="button" class="dropdownWithSearch__btn">
-                        <i class="fa fa-chevron-down"></i>
-                    </button>
+                <div class="form-group">
+                    <label for="addRate__agency">Agency</label>
+                    <div class="dropdownWithSearch" id="rateAgencySelect">
+                        <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" id="addRate__agency" placeholder="Select agency">
+                        <button type="button" class="dropdownWithSearch__btn">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="addRate__rate">Rate</label>
+                    <div class="d-flex align-items-center">
+                        <input required data-type="rate" type="number" class="form-control" id="addRate__rate">
+                        <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="addRate__rate">Rate</label>
-                <div class="d-flex align-items-center">
-                    <input required data-type="rate" type="number" class="form-control" id="addRate__rate">
-                    <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+
+            <div id="rateCombinedWrapper">
+                <template>
+                    <div class="rateCombined">
+                        <div class="rateCombined__header">
+                            <div class="rateCombined__title"></div>
+                            <button class="rateCombined__btn rateCombined__btn--delete" type="button">
+                                <i class="fa fa-trash"></i>Remove
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="rateCombined__label">Nickname</label>
+                            <input required data-type="name" type="text" class="form-control">
+                        </div>
+
+                        <div class="rateCombined__groupForm">
+                            <div class="form-group">
+                                <label class="rateCombined__label">Agency</label>
+                                <div class="dropdownWithSearch">
+                                    <input required data-type="agency" type="text" class="form-control dropdownWithSearch__input" placeholder="Select agency">
+                                    <button type="button" class="dropdownWithSearch__btn">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="rateCombined__label">Rate</label>
+                                <div class="d-flex align-items-center">
+                                    <input required data-type="rate" type="number" class="form-control">
+                                    <div class="ml-1" style="font-size: 20px; font-family: inherit;">%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="rateCombined__exampleToggle">
+                    <button type="button">Show example</button>
                 </div>
+
+                <div class="rateCombined__example">
+                    <table class="rateCombined__table">
+                        <tr>
+                            <th>NAME</th>
+                            <th class="text-right">CUSTOM RATE TOTAL</th>
+                        </tr>
+                        <tr>
+                            <td>Your custom rate</td>
+                            <td class="text-right">8.31%</td>
+                        </tr>
+                    </table>
+
+                    <table class="rateCombined__table">
+                        <tr>
+                            <th>NICKNAME</th>
+                            <th>AGENCY</th>
+                            <th>RATE</th>
+                        </tr>
+                        <tr>
+                            <td>State</td>
+                            <td>nSmarTrac Department of Revenue</td>
+                            <td>2.90%</td>
+                        </tr>
+                        <tr>
+                            <td>County</td>
+                            <td>Intuit Treasury Division</td>
+                            <td>4.31%</td>
+                        </tr>
+                        <tr>
+                            <td>City</td>
+                            <td>nSmarTrac Department of Revenue</td>
+                            <td>1.10%</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label class="rateCombined__label">Name</label>
+                    <input required data-type="name" type="text" class="form-control">
+                </div>
+
+                <div id="rateCombinedItems"></div>
+
+                <button type="button" class="rateCombined__btn" id="addCombinedItemBtn">+ Add another rate</button>
             </div>
+
         </form>
 
         <div class="sidebarForm__footer">

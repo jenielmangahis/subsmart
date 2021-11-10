@@ -259,6 +259,21 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/banking/test_payment', $this->page_data);
     }
 
+    public function import_transactions()
+    {
+        $comp_id = logged('company_id');
+
+        $get_company_account = array(
+            'table' => 'accounting_bank_accounts',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
+
+        $this->page_data['accounts'] = '';
+        $this->load->view('accounting/banking/import_transaction', $this->page_data);
+    }
+
     public function connect_policy()
     {
         $comp_id = logged('company_id');
@@ -11534,7 +11549,6 @@ class Accounting extends MY_Controller
 
     public function cashflowPDF()
     {
-
         $customers       = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         $invoices        = $this->invoice_model->getAllData(logged('company_id'));
         $clients         = $this->invoice_model->getclientsData(logged('company_id'));
@@ -11815,6 +11829,82 @@ class Accounting extends MY_Controller
         $filename = "nSmarTrac_invoice_".$invoice_id;
         $this->load->library('pdf');
         $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
+    }
+    public function invoice_viewer()
+    {
+        $invoice_id = $this->input->post("invoice_id");
+        $customer_id = $this->input->post("customer_id");
+        $invoice_info = get_invoice_by_id($invoice_id);
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $invoice_items = $this->invoice_model->getInvoiceItems($invoice_id);
+        $html_items_and_price="";
+        $html_items_description="";
+        foreach ($invoice_items as $items) {
+            $html_items_and_price.='<div class="item"><span class="title">'.$items->title.'</span><span class="price">$'.number_format($items->total, 2).'</span></div>';
+            if ($items->description!="") {
+                if ($html_items_description != "") {
+                    $html_items_description.="<br>";
+                }
+                $html_items_description.=$items->description;
+            }
+        }
+        $received_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_id);
+        $status_steps='<div class="status-marker next-completed">
+        <div class="line"></div>
+    </div>
+    <li class="status-step completed">
+        <div class="status-marker completed next-completed">
+            <div class="circle default"></div>
+            <div class="line"></div>
+        </div>
+        <div class="status-info">
+            <div class="status-title">Approved</div>
+            <div class="status-event-info">
+                <div><span class="status-date">1/28/2021</span></div>
+                <div></div>
+            </div>
+        </div>
+    </li>';
+    $ctr=0;
+    // var_dump($received_payments);
+    foreach($received_payments as $payment){
+        
+        if($payment->open_balance == $payment->payment_amount){
+            $status = "Paid";
+        }else{
+            $status = "Partially paid";
+        }$ctr++;
+        $liner_circle = '<div class="circle default"></div>
+        <div class="line"></div>';
+        $next_completed="next-completed";
+        if($ctr == count($received_payments)){
+            $liner_circle = '<div class="circle default last-active-status"></div>';
+            $next_completed="";
+        }
+        $status_steps.='
+        <li class="status-step completed">
+            <div class="status-marker completed '.$next_completed.'">
+                '.$liner_circle.'
+            </div>
+            <div class="status-info">
+                <div class="status-title">'.$status.'</div>
+                <div class="status-event-info">
+                    <div><span class="status-date">'.date("m/d/Y",strtotime($payment->payment_date)).'</span></div>
+                    <div><span><span class="money">$'.number_format($payment->payment_amount, 2).'</span></span></div><a tabindex="0"
+                        class="action-button">View payment #'.$payment->id.'</a>
+                </div>
+            </div>
+        </li>';
+    }
+    
 
+        $data = new stdClass();
+        $data->customer_name = $customer_info->first_name." ".$customer_info->last_name;
+        $data->customer_email = $customer_info->acs_email;
+        $data->html_items_and_price = $html_items_and_price;
+        $data->html_items_description = $html_items_description;
+        $data->memo = $invoice_info->message_to_customer;
+        $data->status_steps = $status_steps;
+        echo json_encode($data);
     }
 }

@@ -171,7 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                 <li role="presentation">
-                                    <a href="" class="editJobTypeBtn editItemBtn">
+                                    <a href="<?= base_url('accounting/import_transactions') ?>" class="editJobTypeBtn editItemBtn">
                                         <span class="fa fa-file"></span> Import Bank Transactions
                                     </a>
                                 </li>
@@ -198,6 +198,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <li>
                                     <a href="" class="editItemBtn">
                                         <span class="fa fa-cogs"></span> Settings
+
                                     </a>
                                 </li>
                                 <li>
