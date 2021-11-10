@@ -1,7 +1,5 @@
 <?php
 
-use oasis\names\specification\ubl\schema\xsd\CommonBasicComponents_2\StartDate;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class AccountingSales extends MY_Controller
@@ -72,6 +70,9 @@ class AccountingSales extends MY_Controller
 
         if (!array_key_exists('rates', $payload)) {
             $payload['user_id'] = $userId;
+            $payload['agency_name'] = $payload['agency'];
+            unset($payload['agency']);
+
             $data = $this->saveRate($payload);
         } else {
             ['rates' => $rates] = $payload;
@@ -119,14 +120,15 @@ class AccountingSales extends MY_Controller
         $agency = new stdClass;
         $agency->id = $payload['agency_id'] ?? null;
 
-        if (array_key_exists('agency', $payload)) {
+        if (array_key_exists('agency_name', $payload)) {
             $agency = $this->findOrCreateAgency([
                 'user_id' => $payload['user_id'],
-                'name' => $payload['agency'],
+                'name' => $payload['agency_name'],
             ]);
+
+            unset($payload['agency_name']);
         }
 
-        unset($payload['agency']);
         $payload['agency_id'] = $agency->id;
         $this->db->insert('accounting_tax_rates', $payload);
 

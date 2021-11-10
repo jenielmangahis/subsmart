@@ -72,6 +72,8 @@ class TaxRateAdder {
       ];
     }
 
+    this.userCreatedAgencies = agencies;
+    this.allAgencies = allAgencies;
     new this.Accounting__DropdownWithSearch(
       this.$rateAgencySelect,
       allAgencies
@@ -99,29 +101,62 @@ class TaxRateAdder {
   attachEventListeners() {
     const $addRateBtn = $("#addRateBtn");
     $addRateBtn.on("click", async (event) => {
-      const $inputs = this.$sidebar.find("[data-type]");
-      const payload = {};
+      let payload = {};
 
-      for (let index = 0; index < $inputs.length; index++) {
-        const input = $inputs[index];
-        const value = input.value;
-        const key = input.dataset.type;
+      if (!this.$sidebar.hasClass("customRate--combined")) {
+        const $inputs = this.$sidebar.find("#rateSingleWrapper [data-type]");
 
-        const $input = $(input);
-        const $formGroup = $input.closest(".form-group");
+        for (let index = 0; index < $inputs.length; index++) {
+          const input = $inputs[index];
+          const value = input.value;
+          const key = input.dataset.type;
 
-        $formGroup.removeClass("form-group--error");
-        if (!value) {
-          $formGroup.addClass("form-group--error");
-          $input.focus();
-          return;
+          const $input = $(input);
+          const $formGroup = $input.closest(".form-group");
+
+          $formGroup.removeClass("form-group--error");
+          if (!value) {
+            $formGroup.addClass("form-group--error");
+            $input.focus();
+            return;
+          }
+
+          if ($(input).is(":checkbox") && !input.checked) {
+            continue;
+          }
+
+          payload[key] = value;
         }
+      } else {
+        const $items = this.$sidebar.find("#rateCombinedItems .rateCombined");
+        const name = this.$sidebar.find("#rateCombinedWrapper [data-type=name]").val(); // prettier-ignore
+        const items = [];
+        $items.each((_, itemEl) => {
+          const item = {};
+          const $inputs = $(itemEl).find("[data-type]");
 
-        if ($(input).is(":checkbox") && !input.checked) {
-          continue;
-        }
+          for (let index = 0; index < $inputs.length; index++) {
+            const input = $inputs[index];
+            const { value } = input;
+            const { type: key } = input.dataset;
 
-        payload[key] = value;
+            if (key === "agency") {
+              const match = this.userCreatedAgencies.find(
+                ({ agency }) => agency === value
+              );
+              if (match) {
+                item["agency_id"] = match.id;
+                continue;
+              }
+            }
+
+            item[key] = value;
+          }
+
+          items.push(item);
+        });
+
+        payload = { rates: items, name };
       }
 
       const $this = $(event.target);
@@ -187,6 +222,78 @@ class TaxRateAdder {
       if (this.$select.has(event.target).length === 1) return;
       if (this.isOptionOpen()) {
         this.hideOptions();
+      }
+    });
+
+    // rate combined
+    const $rateTypes = $("input[type=radio][name=rateType]");
+    const $rateCombinedWrapper = this.$sidebar.find("#rateCombinedWrapper");
+    const $rateCombinedItems = $rateCombinedWrapper.find("#rateCombinedItems");
+    const $template = $rateCombinedWrapper.find("template");
+    const $addCombineItem = $rateCombinedWrapper.find("#addCombinedItemBtn");
+    let combinedRates = [{}];
+    const template = $template.get(0).content;
+    const renderCombinedRates = () => {
+      const htmls = combinedRates.map((data, index, array) => {
+        const copy = document.importNode(template, true);
+        const $copy = $(copy);
+        const $inputs = $copy.find("input");
+
+        $copy.find(".rateCombined__title").text(`Rate ${index + 1}`);
+        new this.Accounting__DropdownWithSearch(
+          $copy.find(".dropdownWithSearch"),
+          this.allAgencies
+        );
+
+        $copy.find(".rateCombined__btn--delete").on("click", function () {
+          combinedRates = combinedRates.filter((_, i) => i !== index);
+          renderCombinedRates();
+        });
+
+        $inputs.each((_, element) => {
+          element.value = data[element.dataset.type] || "";
+        });
+
+        $inputs.on("change", function (event) {
+          combinedRates = combinedRates.map((d, i) => {
+            if (i !== index) return d;
+            return { ...d, [event.target.dataset.type]: event.target.value };
+          });
+        });
+
+        if (array.length <= 2) {
+          $copy.find(".rateCombined").addClass("rateCombined--noDelete");
+        }
+
+        return $copy;
+      });
+
+      $rateCombinedItems.empty();
+      $rateCombinedItems.append(htmls);
+    };
+    $rateTypes.change((event) => {
+      if (event.target.value === "combined") {
+        this.$sidebar.addClass("customRate--combined");
+        renderCombinedRates();
+        return;
+      }
+
+      this.$sidebar.removeClass("customRate--combined");
+      combinedRates = [{}];
+    });
+    $addCombineItem.on("click", function () {
+      combinedRates.push({});
+      renderCombinedRates();
+    });
+    const $rateCombinedExampleToggle = $(".rateCombined__exampleToggle button");
+    const $rateCombinedExample = $(".rateCombined__example");
+    $rateCombinedExampleToggle.on("click", function () {
+      if ($rateCombinedExample.hasClass("rateCombined__example--show")) {
+        $rateCombinedExample.removeClass("rateCombined__example--show");
+        $(this).text("Show example");
+      } else {
+        $rateCombinedExample.addClass("rateCombined__example--show");
+        $(this).text("Hide example");
       }
     });
   }

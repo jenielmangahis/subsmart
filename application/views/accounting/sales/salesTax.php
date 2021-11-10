@@ -566,7 +566,7 @@ include viewPath('includes/header');
 
                 <div>
                     <div class="addAdjustment__title addAdjustment__title--small">Total tax due</div>
-                    <div class="addAdjustment__total">$<span data-type="tax_adjusted"></span></div>
+                    <div class="addAdjustment__total"><span data-type="tax_adjusted"></span></div>
                 </div>
             </form>
 

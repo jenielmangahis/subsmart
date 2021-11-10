@@ -139,7 +139,7 @@ class Accounting_receive_payment_model extends MY_Model
     }
     public function get_invoice_receive_payment($invoice_id, $receive_payment_id=0)
     {
-        $this->db->select('accounting_receive_payment_invoices.*');
+        $this->db->select('accounting_receive_payment_invoices.*,accounting_receive_payment.payment_date');
         $this->db->where('accounting_receive_payment_invoices.invoice_id', $invoice_id);
         $this->db->where('accounting_receive_payment_invoices.receive_payment_id !=', $receive_payment_id);
         $this->db->where('accounting_receive_payment.status', 1);
@@ -169,4 +169,5 @@ class Accounting_receive_payment_model extends MY_Model
             return $query->result();
         }
     }
+    
 }

@@ -2,11 +2,18 @@
 if ($invoices!=null) {
     foreach ($invoices as $invoice) {
         ?>
-<tr>
+<tr data-id="<?=$invoice->id ?>"
+    data-customer-id="<?=$invoice->customer_id?>"
+    data-invoice-number="<?=$invoice->invoice_number?>"
+    data-grand-total="$<?=number_format($invoice->grand_total, 2)?>"
+    data-status="<?=$invoice->INV_status ?>"
+    data-date="<?=get_format_date($invoice->date_issued) ?>"
+    data-due-date="<?=get_format_date($invoice->due_date)?>">
     <td>
         <div class="form-check">
             <div class="checkbox checkbox-sec ">
-                <input type="checkbox" name="checkbox[]" value="<?=$invoice->id?>" class="select-one"
+                <input type="checkbox" name="checkbox[]"
+                    value="<?=$invoice->id?>" class="select-one"
                     id="invoice_id_<?php echo $invoice->id ?>"
                     data-status="<?=$invoice->INV_status?>"
                     data-customer-id="<?=$invoice->customer_id?>"
@@ -30,9 +37,7 @@ if ($invoices!=null) {
     </td>
     <td>
         <label for="invoice_id_<?php echo $invoice->id ?>">
-            <a class="a-default" href="#" id="inv_number_details"
-                inv-no="<?php echo $invoice->invoice_number ?>"
-                data-id="<?php echo $invoice->id ?>"><?php echo $invoice->invoice_number ?> </a>
+            <a class="a-default" href="#"><?php echo $invoice->invoice_number ?> </a>
         </label>
     </td>
     <td>
