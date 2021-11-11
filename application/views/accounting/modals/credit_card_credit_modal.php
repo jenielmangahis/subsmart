@@ -354,7 +354,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : <span class="transaction-total-amount">$0.00</span></h5>
                                         </div>
                                     </div>
                                 </div>
