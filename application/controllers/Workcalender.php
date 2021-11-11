@@ -30,6 +30,7 @@ class Workcalender extends MY_Controller
             'assets/libs/jcanvas/global.css',
             'assets/plugins/timeline_calendar/main.css',
             'assets/css/wokrcalendar/workcalendar.css',
+            'assets/css/slidebox.css',
         ));
 
         add_footer_js(array(
@@ -38,6 +39,7 @@ class Workcalender extends MY_Controller
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
             'assets/js/quick_launch.js',
+            'assets/js/jquery.slidebox.min.js',
         ));
     }
 

@@ -1697,7 +1697,7 @@ class Estimate extends MY_Controller
     }
 
     public function view($id)
-    {
+    {        
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateItem_model');
         $this->load->model('Clients_model');

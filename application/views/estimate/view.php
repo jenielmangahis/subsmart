@@ -799,11 +799,12 @@ span.sc-item {
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                  <td colspan="2" style="text-align: right;">
+                                    <p>$ <?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
                                 </tr>
                                 <tr>
                                   <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->grand_total, 2); ?></b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format((float)$estimate->grand_total, 2); ?></b></td>
                                 </tr>
                             <?php } ?>
                             </tbody>
