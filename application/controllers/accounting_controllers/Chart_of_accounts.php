@@ -1150,6 +1150,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account_id' => $account['id'],
                 'account' => $account['name'],
                 'account_disabled' => $account['disabled'],
+                'account_field' => $account['field_name'],
                 'memo' => $ccCredit->memo,
                 'payment' => number_format(floatval($ccCredit->total_amount), 2, '.', ','),
                 'charge' => '',
@@ -1184,6 +1185,7 @@ class Chart_of_accounts extends MY_Controller {
 
             $transaction = [
                 'id' => $ccCredit->id,
+                'child_id' => $ccCreditCategory->id,
                 'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
                 'ref_no' => $ccCredit->ref_no === null ? '' : $ccCredit->ref_no,
                 'ref_no_disabled' => true,
@@ -1195,7 +1197,7 @@ class Chart_of_accounts extends MY_Controller {
                 'account_id' => $ccCredit->bank_credit_account_id,
                 'account' => $this->chart_of_accounts_model->getName($ccCredit->bank_credit_account_id),
                 'account_disabled' => true,
-                'memo' => $ccCredit->memo,
+                'memo' => $ccCreditCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
                 'attachments' => '',
@@ -3922,7 +3924,7 @@ class Chart_of_accounts extends MY_Controller {
                 $return = $this->save_deposit($accountId, $transactionId, $post);
             break;
             case 'CC-Credit' :
-
+                $return = $this->save_cc_credit($accountId, $transactionId, $post);
             break;
             case 'Vendor Credit' :
                 $return = $this->save_vendor_credit($accountId, $transactionId, $post);
@@ -4353,7 +4355,7 @@ class Chart_of_accounts extends MY_Controller {
             if($totalCount === 1) {
                 if(count($categories) === 1 && count($items) === 0) {
                     $oldCatAcc = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
-                    $oldCatAccType = $this->account_model->getById($expenseAcc->account_id);
+                    $oldCatAccType = $this->account_model->getById($oldCatAcc->account_id);
 
                     if ($oldCatAccType->account_name === 'Credit Card') {
                         $oldCatAccBal = floatval($oldCatAcc->balance) + floatval($categories[0]->amount);
@@ -4404,7 +4406,7 @@ class Chart_of_accounts extends MY_Controller {
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
 
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) - floatval($items[0]->rate);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($items[0]->total);
                     $newBalance = floatval($invAssetAcc->balance) + floatval($amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
@@ -4417,7 +4419,7 @@ class Chart_of_accounts extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
 
                     $itemData = [
-                        'rate' => number_format(floatval($amount), 2, '.', ',')
+                        'total' => number_format(floatval($amount), 2, '.', ',')
                     ];
 
                     $this->vendors_model->update_transaction_item($items[0]->id, $itemData);
@@ -4557,7 +4559,7 @@ class Chart_of_accounts extends MY_Controller {
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
 
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) - floatval($items[0]->rate);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($items[0]->total);
                     $newBalance = floatval($invAssetAcc->balance) + floatval($amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
 
@@ -4570,7 +4572,7 @@ class Chart_of_accounts extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
 
                     $itemData = [
-                        'rate' => number_format(floatval($amount), 2, '.', ',')
+                        'total' => number_format(floatval($amount), 2, '.', ',')
                     ];
 
                     $this->vendors_model->update_transaction_item($items[0]->id, $itemData);
@@ -4632,12 +4634,12 @@ class Chart_of_accounts extends MY_Controller {
                     }
                 } else if(count($categories) === 0 && count($items) === 1) {
                     $itemData = [
-                        'rate' => number_format(floatval($amount), 2, '.', ',')
+                        'total' => number_format(floatval($amount), 2, '.', ',')
                     ];
 
                     $this->vendors_model->update_transaction_item($data['child_id'], $itemData);
 
-                    $newBalance = floatval($account->balance) - floatval($items[0]->rate);
+                    $newBalance = floatval($account->balance) - floatval($items[0]->total);
                     $newBalance = $newBalance + floatval($amount);
                 }
 
@@ -4662,7 +4664,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_vendor_credit($accountId, $vCreditId, $data)
     {
-        $vCredit = $this->vendors_model->get_bill_by_id($vCreditId);
+        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
         $categories = $this->expenses_model->get_transaction_categories($vCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vCreditId, 'Vendor Credit');
         $totalCount = count($categories) + count($items);
@@ -4703,29 +4705,152 @@ class Chart_of_accounts extends MY_Controller {
                         $newBalance = floatval($account->balance) + floatval($categories[0]->amount);
                         $newBalance = $newBalance - floatval($amount);
                     }
-                } else if(count($categories) === 0 && count($items) === 1) {
-                    $itemData = [
-                        'rate' => number_format(floatval($amount), 2, '.', ',')
+
+                    $accountData = [
+                        'id' => $account->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => number_format($newBalance, 2, '.', ',')
                     ];
-
-                    $this->vendors_model->update_transaction_item($data['child_id'], $itemData);
-
-                    $newBalance = floatval($account->balance) + floatval($items[0]->rate);
-                    $newBalance = $newBalance - floatval($amount);
+        
+                    $this->chart_of_accounts_model->updateBalance($accountData);
                 }
-
-                $accountData = [
-                    'id' => $account->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => number_format($newBalance, 2, '.', ',')
-                ];
-    
-                $this->chart_of_accounts_model->updateBalance($accountData);
             }
         }
 
         $return = [
             'data' => $vCreditId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
+        ];
+
+        return $return;
+    }
+
+    private function save_cc_credit($accountId, $ccCreditId, $data)
+    {
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
+        $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
+        $totalCount = count($categories) + count($items);
+
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        $payee = explode('-', $data['payee']);
+
+        $ccCreditData = [
+            'payment_date' => date('Y-m-d', strtotime($data['date'])),
+            'ref_no' => $accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id']) ? $data['ref_no'] : $ccCredit->ref_no,
+            'payee_type' => $payee[0],
+            'payee_id' => $payee[1],
+            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'memo' => $accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id']) ? $data['memo'] : $ccCredit->memo,
+            'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($vCredit->total_amount), 2, '.', ',')
+        ];
+
+        $update = $this->vendors_model->update_credit_card_credit($ccCreditId, $ccCreditData);
+
+        if($update) {
+            if($totalCount === 1) {
+                $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+                $newBalance = floatval($creditAcc->balance) + floatval($ccCredit->total_amount);
+                $newBalance = $newBalance - floatval($amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+                if(count($categories) === 1 && count($items) === 0) {
+                    // OLD CATEGORY ACCOUNT
+                    $oldCatAcc = $this->chart_of_accounts_model->getById($categories[0]->expense_account_id);
+                    $oldCatAccType = $this->account_model->getById($oldCatAcc->account_id);
+
+                    if ($oldCatAccType->account_name === 'Credit Card') {
+                        $oldCatAccBal = floatval($oldCatAcc->balance) - floatval($categories[0]->amount);
+                    } else {
+                        $oldCatAccBal = floatval($oldCatAcc->balance) + floatval($categories[0]->amount);
+                    }
+                    $oldCatAccBal = number_format($oldCatAccBal, 2, '.', ',');
+
+                    $oldCatAccData = [
+                        'id' => $oldCatAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $oldCatAccBal
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($oldCatAccData);
+
+                    // NEW CATEGORY ACCOUNT
+                    if($accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id'])) {
+                        $expenseAccId = $data['expense_account'];
+                    } else {
+                        $expenseAccId = $categories[0]->expense_account_id;
+                    }
+                    $expenseAcc = $this->chart_of_accounts_model->getById($expenseAccId);
+                    $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($amount);
+                    }
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $expenseAccData = [
+                        'id' => $expenseAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                    $categoryData = [
+                        'expense_account_id' => $accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id']) ? $data['expense_account'] : $categories[0]->expense_account_id,
+                        'description' => isset($data['child_id']) ? $data['memo'] : $categories[0]->description,
+                        'amount' => number_format(floatval($amount), 2, '.', ',')
+                    ];
+
+                    $this->vendors_model->update_transaction_category_details($categories[0]->id, $categoryData);
+                } else if(count($categories) === 0 && count($items) === 1) {
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($items[0]->item_id);
+
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($items[0]->total) - floatval($items[0]->quantity);
+                    $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                    $newBalance = $newBalance + floatval($items[0]->total);
+
+                    $newBalance = $newBalance + (floatval($amount) - floatval($items[0]->quantity));
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($amount);
+
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                    $itemData = [
+                        'total' => number_format(floatval($amount), 2, '.', ',')
+                    ];
+
+                    $this->vendors_model->update_transaction_item($items[0]->id, $itemData);
+                }
+            }
+        }
+
+        $return = [
+            'data' => $ccCreditId,
             'success' => $update ? true : false,
             'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
         ];

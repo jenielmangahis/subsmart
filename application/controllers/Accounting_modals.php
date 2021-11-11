@@ -3772,20 +3772,9 @@ class Accounting_modals extends MY_Controller
 
                         if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($data['item_amount'][$index]) - 5.00;
+                            $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
                             $newBalance = floatval($invAssetAcc->balance) + $newBalance;
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) - floatval($data['item_total'][$index]);
+                            $newBalance = $newBalance - floatval($data['item_total'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
 
                             $invAssetAccData = [
@@ -4151,20 +4140,9 @@ class Accounting_modals extends MY_Controller
 
                         if ($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($data['item_amount'][$index]) - 5.00;
+                            $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
                             $newBalance = floatval($invAssetAcc->balance) + $newBalance;
-                            $newBalance = number_format($newBalance, 2, '.', ',');
-
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) - floatval($data['item_total'][$index]);
+                            $newBalance = $newBalance - floatval($data['item_total'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
 
                             $invAssetAccData = [
