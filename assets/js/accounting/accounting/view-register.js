@@ -1039,6 +1039,10 @@ $(document).on('click', '#registers-table tbody tr', function() {
                             var fieldName = rowData.account_field;
                             var modalName = 'checkModal';
                         break;
+                        case 'CC-Credit' :
+                            var fieldName = rowData.account_field;
+                            var modalName = 'creditCardCreditModal';
+                        break;
                     }
 
                     $(this).html(`<select class="form-control" name="${fieldName !== undefined ? fieldName.replaceAll('-', '_') : 'account'}" ${current === '-Split-' ? 'disabled' : ''}><option value="${rowData.account_id}">${current}</option></select>`);
