@@ -215,7 +215,7 @@ div#invoice-reminder-modal {
 div#invoice-viewer-modal {
     position: fixed;
     top: 0;
-    z-index: 1059;
+    z-index: 1038;
     width: 100%;
     height: 100%;
     background: #00000082;
@@ -230,7 +230,7 @@ div#invoice-viewer-modal .the-modal-body.right-side-modal {
     right: 0;
     padding: 15px 0px;
     font-size: 13px;
-    height: 100%;
+    height: calc(100% - 158px);
     overflow: scroll;
     overflow-x: hidden;
 }
@@ -455,4 +455,75 @@ div#invoice-viewer-modal .the-modal-body.right-side-modal .section.hidden .secti
 
 div#invoice-viewer-modal .the-modal-body.right-side-modal .section.shown .section-content {
     display: block;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer-container {
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+    width: 370px;
+    padding: 10px 0;
+    z-index: 1;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer-container .buttons {
+    padding: 20px;
+    display: flow-root;
+    background: #F4F5F8;
+    border-top: solid 1px #D5D7DC;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer {
+    position: relative;
+    width: 100%;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options {
+    float: left;
+    width: 200px;
+    border: solid 3px #6B6C70;
+    padding: 5px 10px;
+    color: #383A3D;
+    cursor: pointer;
+    position: relative;
+    font-weight: 600;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options:hover {
+    background-color: #CED0D2;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options {
+    position: absolute;
+    bottom: 35px;
+    width: 100%;
+    left: -2px;
+    border: solid 1px #D5D7DC;
+    border-radius: 5px;
+    display: none;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li {
+    padding: 10px;
+    background: #fff;
+    font-weight: normal;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li:hover {
+    color: #fff;
+    background: #2BA01D;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer button.edit-invoice-btn.success {
+    float: right;
+    height: auto;
+    padding: 8px 15px;
+    border: none;
+    background: #2BA01D;
+    color: #fff;
+    font-weight: 600;
+}
+
+div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer button.edit-invoice-btn.success:hover {
+    background: rgb(30, 144, 14)
 }

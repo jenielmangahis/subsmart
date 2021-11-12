@@ -6,7 +6,7 @@
             <input type="text" name="receive_payment_id" style="display:none;">
             <div class="customer_receive_payment_modal_header">
                 <div class="tittle">
-                    <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
+                    <i class="fa fa-history" aria-hidden="true"></i> Receive Payment <span></span>
                 </div>
                 <div class="close-btn">
                     <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"

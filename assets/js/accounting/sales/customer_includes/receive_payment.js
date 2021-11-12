@@ -164,6 +164,7 @@ var invoice_count = 0;
 
 function get_customer_info_for_receive_payment_modal(customer_id) {
     $("#loader-modal").show();
+    $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_header .tittle span").html("");
     $("#customer_receive_payment_modal form input[name='attachment-file']").val('');
     if ($("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val() != "") {
         $("#customer_receive_payment_modal form .attachement-file-section input[name='attachement-filenames']").val("");
@@ -788,4 +789,47 @@ function upload_attachment(target_form) {
             }
         });
     }
+}
+
+function get_receive_payment(customer_id, receive_payment_id, invoice_id) {
+    $.ajax({
+        url: baseURL + "invoice-page/get/receive-payment",
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: customer_id,
+            receive_payment_id: receive_payment_id,
+            invoice_id: invoice_id
+        },
+        success: function(data) {
+            $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val(receive_payment_id);
+            $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_header .tittle span").html("#" + receive_payment_id);
+            if (data.html == "") {
+                $("#customer_receive_payment_modal .invoices .outstanding-transactions").hide();
+            } else {
+                $("#customer_receive_payment_modal .invoices .outstanding-transactions").show();
+            }
+            $('#customer_receive_payment_modal #customer_invoice_table .table-body').html(data.html);
+            $('#receive_payment_form .total-receive-payment .amount').html("$" + data.display_receivable_payment);
+            $('div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .total-amount .amount-to-apply .amount').html("$" + data.display_receivable_payment);
+            $("#customer_receive_payment_modal #receive_payment_form input[name='amount_received']").val(data.display_receivable_payment);
+            invoice_count = parseFloat(data.inv_count);
+            $("#customer_receive_payment_modal #receive_payment_form input[name='invoice_count']").val(data.inv_count);
+
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices input[name='checkbox-all-action']").prop("checked", true);
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input[name='filter_date_from']").val("");
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input[name='filter_date_to']").val("");
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input[name='filter_overdue']").prop('checked', false);
+
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content input[name='payment_date']").val(data.payment_date);
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='payment_method']").val(data.payment_method);
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content input[name='ref_no']").val(data.ref_no);
+            $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='deposite_to']").val(data.deposit_to);
+
+            $('#customer_receive_payment_modal form .attachement-file-section div.attachement-viewer').html(data.attachments_images);
+            $("#customer_receive_payment_modal form .attachement-file-section input[name='attachement-filenames']").val(data.attachments);
+            $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").hide();
+            $("#loader-modal").hide();
+        },
+    });
 }

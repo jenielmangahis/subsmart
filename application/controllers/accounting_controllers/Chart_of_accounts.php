@@ -653,6 +653,9 @@ class Chart_of_accounts extends MY_Controller {
         $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
 
         foreach($expenses as $expense) {
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
             switch($expense->payee_type) {
                 case 'vendor':
                     $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -701,18 +704,26 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['payment'] = '';
+                        $transaction['charge_disabled'] = $count > 1;
+                        $transaction['payment_disabled'] = true;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = $count > 1;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = $count > 1;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     default :
                         $transaction['payment'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['deposit'] = '';
+                        $transaction['payment_disabled'] = $count > 1;
+                        $transaction['deposit_disabled'] = true;
                     break;
                 }
 
@@ -725,6 +736,9 @@ class Chart_of_accounts extends MY_Controller {
             $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
 
             switch($expense->payee_type) {
                 case 'vendor':
@@ -758,8 +772,6 @@ class Chart_of_accounts extends MY_Controller {
                     'account_disabled' => true,
                     'account_field' => '',
                     'memo' => $expenseCategory->description,
-                    'payment' => '',
-                    'deposit' => number_format(floatval($expenseCategory->amount), 2, '.', ','),
                     'reconcile_status' => '',
                     'banking_status' => '',
                     'attachments' => '',
@@ -772,18 +784,106 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = '';
                         $transaction['payment'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = '';
                         $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = '';
                         $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
                     break;
                     default :
                         $transaction['payment'] = '';
                         $transaction['deposit'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
+                    break;
+                }
+
+                $data[] = $transaction;
+            }
+        }
+
+        $expenseItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Expense');
+        foreach($expenseItems as $expenseItem) {
+            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
+
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            if($paymentAccType->account_name === 'Credit Card') {
+                $transaction = [
+                    'id' => $expense->id,
+                    'child_id' => $expenseItem->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => true,
+                    'type' => 'CC Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'payee_disabled' => false,
+                    'account_id' => $paymentAcc->id,
+                    'account' => $paymentAcc->name,
+                    'account_disabled' => true,
+                    'account_field' => '',
+                    'memo' => $expenseItem->description,
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expenseItem->created_at))
+                ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = '';
+                        $transaction['payment'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    default :
+                        $transaction['payment'] = '';
+                        $transaction['deposit'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
                     break;
                 }
 
@@ -1550,6 +1650,9 @@ class Chart_of_accounts extends MY_Controller {
         $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
 
         foreach($expenses as $expense) {
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
             switch($expense->payee_type) {
                 case 'vendor':
                     $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -1599,18 +1702,26 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['payment'] = '';
+                        $transaction['charge_disabled'] = $count > 1;
+                        $transaction['payment_disabled'] = true;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = $count > 1;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = $count > 1;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     default :
                         $transaction['payment'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['deposit'] = '';
+                        $transaction['payment_disabled'] = $count > 1;
+                        $transaction['deposit_disabled'] = true;
                     break;
                 }
     
@@ -1625,6 +1736,9 @@ class Chart_of_accounts extends MY_Controller {
             $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $accountType = $this->account_model->getById($account->account_id);
             $detailType = $this->account_detail_model->getById($account->acc_detail_id);
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
 
             switch($expense->payee_type) {
                 case 'vendor':
@@ -1670,21 +1784,110 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = '';
                         $transaction['payment'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = '';
                         $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = '';
                         $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
                     break;
                     default :
                         $transaction['payment'] = '';
                         $transaction['deposit'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
                     break;
                 }
     
+                $data[] = $transaction;
+            }
+        }
+
+        $expenseItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Expense');
+        foreach($expenseItems as $expenseItem) {
+            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id);
+            $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $accountType = $this->account_model->getById($account->account_id);
+            $detailType = $this->account_detail_model->getById($account->acc_detail_id);
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
+
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            if($accountType->account_name === 'Bank' && $detailType->acc_detail_name === 'Cash on hand') {
+                $transaction = [
+                    'id' => $expense->id,
+                    'child_id' => $expenseItem->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => true,
+                    'type' => 'Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'payee_disabled' => true,
+                    'account_id' => $account->id,
+                    'account' => $account->name,
+                    'account_disabled' => true,
+                    'account_field' => '',
+                    'memo' => $expenseItem->description,
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
+                ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = '';
+                        $transaction['payment'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    default :
+                        $transaction['payment'] = '';
+                        $transaction['deposit'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
+                    break;
+                }
+
                 $data[] = $transaction;
             }
         }
@@ -1838,6 +2041,9 @@ class Chart_of_accounts extends MY_Controller {
         $expenses = $this->chart_of_accounts_model->get_expense_registers($accountId);
 
         foreach($expenses as $expense) {
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
             switch($expense->payee_type) {
                 case 'vendor':
                     $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -1886,18 +2092,26 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['payment'] = '';
+                        $transaction['charge_disabled'] = $count > 1;
+                        $transaction['payment_disabled'] = true;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = $count > 1;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = $count > 1;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     default :
                         $transaction['payment'] = number_format(floatval($expense->total_amount), 2, '.', ',');
                         $transaction['deposit'] = '';
+                        $transaction['payment_disabled'] = $count > 1;
+                        $transaction['deposit_disabled'] = true;
                     break;
                 }
     
@@ -1911,6 +2125,9 @@ class Chart_of_accounts extends MY_Controller {
             $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
 
             switch($expense->payee_type) {
                 case 'vendor':
@@ -1956,18 +2173,106 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = '';
                         $transaction['payment'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = '';
                         $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = '';
                         $transaction['decrease'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
                     break;
                     default :
                         $transaction['payment'] = '';
                         $transaction['deposit'] = number_format(floatval($expenseCategory->amount), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
+                    break;
+                }
+
+                $data[] = $transaction;
+            }
+        }
+
+        $expenseItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Expense');
+        foreach($expenseItems as $expenseItem) {
+            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id);
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+            $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
+            $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
+            $count = count($categories) + count($items);
+
+            switch($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            if($paymentAccType->account_name !== 'Credit Card') {
+                $transaction = [
+                    'id' => $expense->id,
+                    'child_id' => $expenseItem->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'ref_no' => $expense->ref_no === null ? '' : $expense->ref_no,
+                    'ref_no_disabled' => true,
+                    'type' => 'Expense',
+                    'payee_type' => $expense->payee_type,
+                    'payee_id' => $expense->payee_id,
+                    'payee' => $payeeName,
+                    'payee_disabled' => true,
+                    'account_id' => $account->id,
+                    'account' => $account->name,
+                    'account_disabled' => true,
+                    'account_field' => '',
+                    'memo' => $expenseItem->description,
+                    'reconcile_status' => '',
+                    'banking_status' => '',
+                    'attachments' => '',
+                    'tax' => '',
+                    'balance' => '',
+                    'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
+                ];
+
+                switch($accType) {
+                    case 'Credit Card' :
+                        $transaction['charge'] = '';
+                        $transaction['payment'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = $count > 1;
+                    break;
+                    case 'Asset' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    case 'Liability' :
+                        $transaction['increase'] = '';
+                        $transaction['decrease'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = $count > 1;
+                    break;
+                    default :
+                        $transaction['payment'] = '';
+                        $transaction['deposit'] = number_format(floatval($expenseItem->total), 2, '.', ',');
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = $count > 1;
                     break;
                 }
 
@@ -2217,18 +2522,26 @@ class Chart_of_accounts extends MY_Controller {
                     case 'Credit Card' :
                         $transaction['charge'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
                         $transaction['payment'] = '';
+                        $transaction['charge_disabled'] = true;
+                        $transaction['payment_disabled'] = true;
                     break;
                     case 'Asset' :
                         $transaction['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     case 'Liability' :
                         $transaction['increase'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
                         $transaction['decrease'] = '';
+                        $transaction['increase_disabled'] = true;
+                        $transaction['decrease_disabled'] = true;
                     break;
                     default :
                         $transaction['payment'] = number_format(floatval($billPayment->total_amount), 2, '.', ',');
                         $transaction['deposit'] = '';
+                        $transaction['payment_disabled'] = true;
+                        $transaction['deposit_disabled'] = true;
                     break;
                 }
     
@@ -3930,7 +4243,7 @@ class Chart_of_accounts extends MY_Controller {
                 $return = $this->save_vendor_credit($accountId, $transactionId, $post);
             break;
             case 'Bill Payment' :
-
+                $return = $this->save_bill_payment($accountId, $transactionId, $post);
             break;
             case 'Bill' :
                 $return = $this->save_bill($accountId, $transactionId, $post);
@@ -4851,6 +5164,38 @@ class Chart_of_accounts extends MY_Controller {
 
         $return = [
             'data' => $ccCreditId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
+        ];
+
+        return $return;
+    }
+
+    private function save_bill_payment($accountId, $billPaymentId, $data)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $account = $this->chart_of_accounts_model->getById($accountId);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        if($accountType->account_name === 'Credit Card') {
+            $amount = $data['charge'] === '' ? $data['payment'] : $data['charge'];
+        } else if(stripos($accountType->account_name, 'Asset') !== false || stripos($accountType->account_name, 'Liabilities') !== false) {
+            $amount = $data['decrease'] === '' ? $data['increase'] : $data['decrease'];
+        } else {
+            $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
+        }
+
+        $billPaymentData = [
+            'payment_date' => date('Y-m-d', strtotime($data['date'])),
+            'check_no' => $data['ref_no'],
+            'memo' => $data['memo'],
+            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+        ];
+
+        $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
+
+        $return = [
+            'data' => $billPaymentId,
             'success' => $update ? true : false,
             'message' => $update ? 'Update Successful!' : 'An unexpected error occured!'
         ];

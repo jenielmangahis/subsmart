@@ -1,3 +1,11 @@
+$(document).on("click", function(event) {
+    if ($(event.target).closest("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options").length === 0) {
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options").hide();
+    } else {
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options").show();
+    }
+
+});
 $(document).on('change', '.invoices-page-section table.invoices-table th input.select-all', function() {
     if ($(".invoices-page-section table.invoices-table th input.select-all").is(':checked')) {
         $(".invoices-page-section table.invoices-table tbody tr td input[type='checkbox']").prop("checked", true);
@@ -285,27 +293,28 @@ $(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.
     }
 });
 
-$(document).on('click', '.invoices-page-section table.invoices-table tbody>tr', function() {
-    $("div#invoice-viewer-modal").fadeIn();
-    $("div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title .invoice-number").html($(this).attr("data-invoice-number"));
-    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .total-amount-section .amount").html($(this).attr("data-grand-total"));
-    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.invoice-date .date").html($(this).attr("data-date"));
-    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.due-date .date").html($(this).attr("data-due-date"));
-    $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-text").html($(this).attr("data-status"));
-    if ($(this).attr("data-status") == "Paid") {
-        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("pending");
-        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("success");
-        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-check-circle");
-    } else {
-        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("success");
-        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("pending");
-        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-pause-circle");
+$(document).on('click', '.invoices-page-section table.invoices-table tbody>tr>td', function() {
+    if (!$(this).is(':last-child')) {
+        $("div#invoice-viewer-modal").fadeIn();
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title .invoice-number").html($(this).parent("tr").attr("data-invoice-number"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .total-amount-section .amount").html($(this).parent("tr").attr("data-grand-total"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.invoice-date .date").html($(this).parent("tr").attr("data-date"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.due-date .date").html($(this).parent("tr").attr("data-due-date"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-text").html($(this).parent("tr").attr("data-status"));
+        if ($(this).parent("tr").attr("data-status") == "Paid") {
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("pending");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("success");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-check-circle");
+        } else {
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("success");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("pending");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-pause-circle");
+        }
+        invoice_viewer_changed($(this).parent("tr").attr("data-id"), $(this).parent("tr").attr("data-customer-id"));
     }
-    invoice_viewer_changed($(this).attr("data-id"), $(this).attr("data-customer-id"));
 });
 $(document).on('click', 'div#invoice-viewer-modal .the-close', function() {
     $("div#invoice-viewer-modal").fadeOut();
-
 });
 $(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .section .title', function(event) {
     if ($(this).parent(".section").hasClass("shown")) {
@@ -345,7 +354,29 @@ function invoice_viewer_changed(invoice_id, customer_id) {
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .section .section-content .email").html(data.customer_email);
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal ul.status-tracker").html(data.status_steps);
             $("div#invoice-viewer-modal .section-loader").hide();
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer button.edit-invoice-btn.success").attr("onclick", "window.location.href = '" + baseURL + "accounting/invoice_edit/" + invoice_id + "'");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.print").attr("onclick", "window.open('" + baseURL + "invoice/preview/" + invoice_id + "?format=print')");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.openCloneInvoice").attr("data-invoice-number", $("div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title .invoice-number").html());
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.openCloneInvoice").attr("data-id", invoice_id);
+
             $("div#invoice-viewer-modal .section").show();
         },
     });
 }
+
+$(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .section .section-content .status-tracker .status-event-info .view-payment-button', function(event) {
+    event.preventDefault();
+    $("#customer_receive_payment_modal").fadeIn();
+    var customer_id = $(this).attr("data-customer-id");
+    var receive_payment_id = $(this).attr("data-receive-payment-id");
+    var invoice_id = $(this).attr("data-invoice-id");
+    $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
+    $('#new-popup').modal('hide');
+    $("#loader-modal").show();
+    get_receive_payment(customer_id, receive_payment_id, invoice_id);
+});
+$(document).on('click', 'div#invoice-viewer-modal', function(event) {
+    if ($(event.target).closest("div#invoice-viewer-modal .the-modal-body.right-side-modal ").length === 0) {
+        $("div#invoice-viewer-modal").fadeOut();
+    }
+});

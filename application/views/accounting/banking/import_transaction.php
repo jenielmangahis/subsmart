@@ -61,7 +61,7 @@
                                                     <h4 style="margin: 20px 20px 30px 20px; ">Manually upload your transactions</h4>
                                                     <ol>
                                                         <li>1. Open a new tab and sign in to your bank.</li>
-                                                        <li>2. Download transactions: CSV, QFX, QBO, OFX or TXT format only.</li>
+                                                        <li>2. Download transactions: CSV only.</li>
                                                         <li>3. Close the tab and return to nSmartrac.</li>
                                                     </ol>
                                                 </div>
@@ -69,7 +69,7 @@
                                                     <h5 style="margin: 20px 20px 30px 20px;">Select a file to upload</h5>
                                                     <form style="margin: 20px 20px 30px 20px;">
                                                         <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="customFile">
+                                                            <input type="file" name="file" class="custom-file-input" id="uploadTransaction" accept=".csv">
                                                             <label class="custom-file-label" for="customFile">Choose file</label>
                                                         </div>
                                                     </form>
@@ -92,8 +92,6 @@
 
                                             </div>
                                         </div>
-
-
                                         <div class="col-sm-6" id="form2">
                                             <div class="modal-container box-bank-container">
                                                 <div style="margin-top: 70px;">
@@ -113,6 +111,45 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-sm-6" id="form3">
+                                            <div class="modal-container box-bank-container">
+                                                <div style="margin-top: 70px;">
+                                                    <h5 style="margin: 20px 20px 30px 20px; ">Step 2</h5>
+                                                </div>
+                                                <div>
+                                                    <h6 style="margin: 20px 20px 30px 20px;">Select the fields that correspond to your file</h6>
+                                                    <form style="margin: 20px 20px 30px 20px;">
+                                                        <div class="row ">
+                                                            <label> Date</label>
+                                                            <select id="account" name="account" class="form-control" required>
+                                                                <option  value="">Select field</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="row form_line">
+                                                            <label> Description</label>
+                                                            <select id="account" name="account" class="form-control" required>
+                                                                <option  value="">Select field</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="row form_line">
+                                                            <label> Money Received</label>
+                                                            <select id="account" name="account" class="form-control" required>
+                                                                <option  value="">Select field</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="row form_line">
+                                                            <label> Money Spent</label>
+                                                            <select id="account" name="account" class="form-control" required>
+                                                                <option  value="">Select field</option>
+                                                            </select>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="modal-footer">
                                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
@@ -124,11 +161,7 @@
                                         <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                                     </div>
                                 </div>
-
-
                             </div>
-
-
                     <!--end of modal-->
                 </div>
             </div>
@@ -189,6 +222,42 @@
             }
         });
     }
+    $(document).ready(function() {
+        $("#uploadTransaction").change(function(){
+            console.log("A file has been selected.");
+
+            var fileInput = document.getElementById('uploadTransaction');
+            var file = fileInput.files[0];
+            var formDatas = new FormData();
+            formDatas.append('file', file);
+
+            console.log(formDatas);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "<?= base_url() ?>processing/onGetCSVHeaders",
+                data: formDatas,
+                processData: false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    console.log('Sending Now!');
+                },
+                success: function (data) {
+                    // console.log(data);
+                    var head = JSON.parse(data);
+                    var csvHeaders  = Object.keys(head[0]);
+                    console.log(head);
+                    $.each(csvHeaders,function(i,o){
+                        console.log(o);
+                    });
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        });
+    });
 </script>
 
 </body>

@@ -15,7 +15,7 @@
     border: 0;
     border-radius: 0;
     background-color: #f4f5f8;
-    min-height: 100%;
+    /* min-height: 100%; */
 }
 
 .full-screen-modal .modal .modal-body {

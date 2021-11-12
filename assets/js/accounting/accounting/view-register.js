@@ -1090,7 +1090,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                         $(this).html(`<input type="number" name="payment" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Payment">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill Payment') {
+                    if(rowData.type === 'Inventory Qty Adjust') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
@@ -1103,7 +1103,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                         $(this).html(`<input type="number" name="charge" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Charge">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill Payment') {
+                    if(rowData.type === 'Inventory Qty Adjust') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;
@@ -1129,7 +1129,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                         $(this).html(`<input type="number" name="increase" class="form-control text-right" step=".01" value="${current.replaceAll('$', '')}" placeholder="Increase">`);
                     }
 
-                    if(rowData.type === 'Inventory Qty Adjust' || rowData.type === 'Bill Payment') {
+                    if(rowData.type === 'Inventory Qty Adjust') {
                         $(this).find('input').prop('disabled', true);
                     }
                 break;

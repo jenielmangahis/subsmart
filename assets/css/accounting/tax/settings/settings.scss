@@ -299,6 +299,8 @@ table.dataTable thead {
 }
 
 .customRate {
+  z-index: 1051;
+
   &:not(.customRate--combined) {
     #rateSingleWrapper {
       display: block;
