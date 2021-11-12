@@ -211,240 +211,7 @@ $(document).on('change paste keyup select','#price_2',function(){
 
 $(document).on("focusout", ".quantity", function () {
   var counter = $(this).data("counter");
-  // alert('aaa');
-  // calculation(counter);
-//   var price = $("#price_" + counter).val();
-//   var quantity = $("#quantity_" + counter).val();
-//   var discount = $("#discount_" + counter).val();
-//   var rate_val = this.value;
-//   // alert(rate_val);
-//   var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
-//   var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
-//     2
-//   );
-//   if( discount == '' ){
-//     discount = 0;
-//   }
-  
-//   var total = (
-//     (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-//     parseFloat(discount)
-//   ).toFixed(2);
-
-//   // alert( 'yeah' + total);
-
-//   $("#span_total_" + counter).text(total);
-//   $("#tax_1_" + counter).text(tax1);
-//   $("#tax_111_" + counter).text(tax1);
-//   $("#tax_1_" + counter).val(tax1);
-//   $("#discount_" + counter).val(discount);
-//   $("#tax1_" + counter).val(tax1);
-//   // $("#tax1_" + counter).val(tax1);
-//   // $("#tax_" + counter).val(tax1);
-//   // alert(tax1);
-
-//   if( $('#tax_1_'+ counter).length ){
-//     $('#tax_1_'+counter).val(tax1);
-//   }
-
-//   if( $('#item_total_'+ counter).length ){
-//     $('#item_total_'+counter).val(total);
-//   }
-
-//   var eqpt_cost = 0;
-//   var cnt = $("#count").val();
-//   var total_discount = 0;
-//   for (var p = 0; p <= cnt; p++) {
-//     var prc = $("#price_" + p).val();
-//     var quantity = $("#quantity_" + p).val();
-//     var discount = $("#discount_" + p).val();
-//     // var discount= $('#discount_' + p).val();
-//     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-//     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-//     total_discount += parseFloat(discount);
-//   }
-// //   var subtotal = 0;
-// // $( total ).each( function(){
-// //   subtotal += parseFloat( $( this ).val() ) || 0;
-// // });
-
-//   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-//   total_discount = parseFloat(total_discount).toFixed(2);
-//   // var test = 5;
-
-//   var subtotal = 0;
-//   // $("#span_total_0").each(function(){
-//     $('*[id^="span_total_"]').each(function(){
-//     subtotal += parseFloat($(this).text());
-//   });
-//   // $('#sum').text(subtotal);
-
-//   var subtotaltax = 0;
-//   // $("#span_total_0").each(function(){
-//     $('*[id^="tax_1_"]').each(function(){
-//       subtotaltax += parseFloat($(this).text());
-//   });
-
-//   // alert(subtotaltax);
-
-//   $("#eqpt_cost").val(eqpt_cost);
-//   $("#total_discount").val(total_discount);
-//   $("#span_sub_total_0").text(total_discount);
-//   $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-//   $("#item_total").val(subtotal.toFixed(2));
-  
-//   var s_total = subtotal.toFixed(2);
-//   var adjustment = $("#adjustment_input").val();
-//   var grand_total = s_total - parseFloat(adjustment);
-//   var markup = $("#markup_input_form").val();
-//   var grand_total_w = grand_total + parseFloat(markup);
-
-//   $("#total_tax_").text(subtotaltax.toFixed(2));
-//   $("#total_tax_").val(subtotaltax.toFixed(2));
-  
-
-//   $("#grand_total").text(grand_total_w.toFixed(2));
-//   $("#grand_total_input").val(grand_total_w.toFixed(2));
-
-//   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-//   sls = parseFloat(sls).toFixed(2);
-//   $("#sales_tax").val(sls);
-//   cal_total_due();
-
-var price = $("#price_" + counter).val();
-  var quantity = $("#quantity_" + counter).val();
-  var discount = $("#discount_" + counter).val();
-  var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
-  if( discount == '' ){
-    discount = 0;
-  }
-  
-  var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-  ).toFixed(2);
-
-  var pqty = price * quantity;
-
-  // alert( 'yeah' + pqty);
-  $("#priceqty_" + counter).val(pqty);
-  $("#span_total_" + counter).text(total);
-  $("#tax_1_" + counter).text(tax1);
-  $("#tax_111_" + counter).text(tax1);
-  $("#tax_1_" + counter).val(tax1);
-  $("#discount_" + counter).val(discount);
-  $("#tax1_" + counter).val(tax1);
-  // $("#tax1_" + counter).val(tax1);
-  // $("#tax_" + counter).val(tax1);
-  // alert(tax1);
-
-  if( $('#tax_1_'+ counter).length ){
-    $('#tax_1_'+counter).val(tax1);
-  }
-
-  if( $('#item_total_'+ counter).length ){
-    $('#item_total_'+counter).val(total);
-  }
-
-  // alert('dri');
-
-  var eqpt_cost = 0;
-  var total_cost = 0;
-  var cnt = $("#count").val();
-  var total_discount = 0;
-  for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_" + p).val();
-    var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    total_cost += parseFloat(prc);
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
-  }
-//   var subtotal = 0;
-// $( total ).each( function(){
-//   subtotal += parseFloat( $( this ).val() ) || 0;
-// });
-
-  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  total_discount = parseFloat(total_discount).toFixed(2);
-  stotal_cost = parseFloat(total_cost).toFixed(2);
-  // var test = 5;
-
-  var subtotal = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="span_total_"]').each(function(){
-    subtotal += parseFloat($(this).text());
-  });
-  // $('#sum').text(subtotal);
-
-  var subtotaltax = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function(){
-      subtotaltax += parseFloat($(this).text());
-  });
-
-  var priceqty2 = 0;
-    $('*[id^="priceqty_"]').each(function(){
-      priceqty2 += parseFloat($(this).val());
-  });
-
-  // alert(priceqty2);
-
-  $("#item_total").val(priceqty2);
-  $("#item_total_text").html(stotal_cost);
-  
-  $("#eqpt_cost").val(eqpt_cost);
-  $("#total_discount").val(total_discount);
-  $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice").text(stotal_cost);
-  // $("#item_total").val(subtotal.toFixed(2));
-  
-  var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input").val();
-  var grand_total = s_total - parseFloat(adjustment);
-  var markup = $("#markup_input_form").val();
-  var grand_total_w = grand_total + parseFloat(markup);
-
-  $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_input").val(subtotaltax.toFixed(2));
-  
-
-  $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-  $("#grandtotal_input").val(grand_total_w.toFixed(2));
-  $("#payment_amount").val(grand_total_w.toFixed(2));
-  
-
-  if($("#grand_total").length && $("#grand_total").val().length)
-  {
-    // console.log('none');
-    // alert('none');
-  }else{
-    $("#grand_total").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
-    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-    $("#payment_amount").val(grand_total_w.toFixed(2));
-
-    var bundle1_total = $("#grand_total").text();
-    var bundle2_total = $("#grand_total2").text();
-    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
-
-    $("#supergrandtotal").text(super_grand.toFixed(2));
-    $("#supergrandtotal_input").val(super_grand.toFixed(2));
-  }
-
-  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-  sls = parseFloat(sls).toFixed(2);
-  $("#sales_taxs").val(sls);
-  $("#total_tax_").html(sls);
-  $("#total_tax_input").val(sls);
-  cal_total_due();
+  calculation(counter);
 });
 
 $(document).on("focusout", ".discount", function () {
@@ -454,107 +221,7 @@ $(document).on("focusout", ".discount", function () {
 
 $(document).on("focusout", ".tax_change", function () {
   var counter = $(this).data("counter");
-  // alert(counter);
-  //calculation(counter);
-  var price = $("#price_" + counter).val();
-  var quantity = $("#quantity_" + counter).val();
-  var discount = $("#discount_" + counter).val();
-  var rate_val = this.value;
-  // alert(rate_val);
-  var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
-  var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
-  if( discount == '' ){
-    discount = 0;
-  }
-  
-  var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-  ).toFixed(2);
-
-  // alert( 'yeah' + total);
-
-  $("#span_total_" + counter).text(total);
-  $("#tax_1_" + counter).text(tax1);
-  $("#tax_111_" + counter).text(tax1);
-  $("#tax_1_" + counter).val(tax1);
-  $("#discount_" + counter).val(discount);
-  $("#tax1_" + counter).val(tax1);
-  // $("#tax1_" + counter).val(tax1);
-  // $("#tax_" + counter).val(tax1);
-  // alert(tax1);
-
-  if( $('#tax_1_'+ counter).length ){
-    $('#tax_1_'+counter).val(tax1);
-  }
-
-  if( $('#item_total_'+ counter).length ){
-    $('#item_total_'+counter).val(total);
-  }
-
-  var eqpt_cost = 0;
-  var cnt = $("#count").val();
-  var total_discount = 0;
-  for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_" + p).val();
-    var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
-  }
-//   var subtotal = 0;
-// $( total ).each( function(){
-//   subtotal += parseFloat( $( this ).val() ) || 0;
-// });
-
-  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  total_discount = parseFloat(total_discount).toFixed(2);
-  // var test = 5;
-
-  var subtotal = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="span_total_"]').each(function(){
-    subtotal += parseFloat($(this).text());
-  });
-  // $('#sum').text(subtotal);
-
-  var subtotaltax = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function(){
-      subtotaltax += parseFloat($(this).text());
-  });
-
-  // alert(subtotaltax);
-
-  $("#eqpt_cost").val(eqpt_cost);
-  $("#total_discount").val(total_discount);
-  $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-  $("#item_total").val(subtotal.toFixed(2));
-  
-  var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input").val();
-  var grand_total = s_total - parseFloat(adjustment);
-  var markup = $("#markup_input_form").val();
-  var grand_total_w = grand_total + parseFloat(markup);
-
-  $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
-  
-
-  $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-  $("#payment_amount").val(grand_total_w.toFixed(2));
-
-  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-  sls = parseFloat(sls).toFixed(2);
-  $("#sales_tax").val(sls);
-  cal_total_due();
+  calculation(counter);
 });
 
 
@@ -709,12 +376,12 @@ $(".select_item3").click(function () {
   markup = "<tr id=\"ss\">" +
       "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
       "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
-      "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest\"></td>\n" +
+      "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control qtyest\"></td>\n" +
       // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-      "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+      "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
       // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
       // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-      "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' readonly></td>\n" +
+      "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+idd+"' readonly></td>\n" +
       // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
       "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
       "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
@@ -1029,17 +696,17 @@ $(".select_item").click(function () {
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
                 "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+count+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control price2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+count+"' value='"+price+"'  type=\"number\" name=\"price[]\" data-counter='"+count+"' class=\"form-control price hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' data-counter="+idd+"></td>\n" +
+                "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-                "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' disabled min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
                 "<td>\n" +
                 "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
                 "</td>\n" +
@@ -1064,150 +731,7 @@ $(".select_item").click(function () {
             // calculate_subtotal();
             // var counter = $(this).data("counter");
             // calculation(idd);
-
-  var in_id = idd;
-  var price = $("#price_" + in_id).val();
-  var quantity = $("#quantity_" + in_id).val();
-  var discount = $("#discount_" + in_id).val();
-  var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
-  if( discount == '' ){
-    discount = 0;
-  }
-  
-  var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-  ).toFixed(2);
-
-  var total_wo_tax = price * quantity;
-
-  // alert( 'yeah' + total);
-
-  
-  $("#priceqty_" + in_id).val(total_wo_tax);
-  $("#span_total_" + in_id).text(total);
-  $("#sub_total_text" + in_id).val(total);
-  $("#tax_1_" + in_id).text(tax1);
-  $("#tax1_" + in_id).val(tax1);
-  $("#discount_" + in_id).val(discount);
-
-  if( $('#tax_1_'+ in_id).length ){
-    $('#tax_1_'+in_id).val(tax1);
-  }
-
-  if( $('#item_total_'+ in_id).length ){
-    $('#item_total_'+in_id).val(total);
-  }
-
-  var eqpt_cost = 0;
-  var total_costs = 0;
-  var cnt = $("#count").val();
-  var total_discount = 0;
-  var pquantity = 0;
-  for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_" + p).val();
-    var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_" + p).val();
-    var pqty = $("#priceqty_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    pquantity += parseFloat(pqty);
-    total_costs += parseFloat(prc);
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
-  }
-//   var subtotal = 0;
-// $( total ).each( function(){
-//   subtotal += parseFloat( $( this ).val() ) || 0;
-// });
-
-var total_cost = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="price_"]').each(function(){
-      total_cost += parseFloat($(this).val());
-  });
-
-// var totalcosting = 0;
-// $('*[id^="span_total_"]').each(function(){
-//   totalcosting += parseFloat($(this).val());
-// });
-
-
-// alert(total_cost);
-
-var tax_tot = 0;
-$('*[id^="tax1_"]').each(function(){
-  tax_tot += parseFloat($(this).val());
-});
-
-over_tax = parseFloat(tax_tot).toFixed(2);
-// alert(over_tax);
-
-$("#sales_taxs").val(over_tax);
-$("#total_tax_input").val(over_tax);
-$("#total_tax_").text(over_tax);
-
-
-  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  total_discount = parseFloat(total_discount).toFixed(2);
-  stotal_cost = parseFloat(total_cost).toFixed(2);
-  priceqty = parseFloat(pquantity).toFixed(2);
-  // var test = 5;
-
-  var subtotal = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="span_total_"]').each(function(){
-    subtotal += parseFloat($(this).text());
-  });
-  // $('#sum').text(subtotal);
-
-  var subtotaltax = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function(){
-      subtotaltax += parseFloat($(this).text());
-  });
-
-
-  var priceqty2 = 0;
-    $('*[id^="priceqty_"]').each(function(){
-      priceqty2 += parseFloat($(this).val());
-  });
-
-  $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-  // $("#span_sub_total_invoice").text(priceqty);
-
-  $("#eqpt_cost").val(eqpt_cost);
-  $("#total_discount").val(total_discount);
-  $("#span_sub_total_0").text(total_discount);
-  // $("#span_sub_total_invoice").text(stotal_cost);
-  // $("#item_total").val(subtotal.toFixed(2));
-  $("#item_total").val(priceqty2.toFixed(2));
-  
-  var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input").val();
-  var grand_total = s_total - parseFloat(adjustment);
-  var markup = $("#markup_input_form").val();
-  var grand_total_w = grand_total + parseFloat(markup);
-
-  // $("#total_tax_").text(subtotaltax.toFixed(2));
-  // $("#total_tax_").val(subtotaltax.toFixed(2));
-  
-  
-  
-  // grand_total_input
-  $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-  $("#payment_amount").val(grand_total_w.toFixed(2));
-  $("#balanceDueText").text(grand_total_w.toFixed(2));
-
-  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-  sls = parseFloat(sls).toFixed(2);
-  $("#sales_tax").val(sls);
-  cal_total_due();
+  calculation(count);
 });
 
 $(".select_item_package").click(function () {
@@ -2298,147 +1822,6 @@ $(document).on("focusout", ".price_inv", function () {
 $(document).on("focusout", ".quantity", function () {
   var counter = $(this).data("counter");
   calculation(counter);
-  var price = $("#price_" + counter).val();
-  var quantity = $("#quantity_" + counter).val();
-  var discount = $("#discount_" + counter).val();
-  var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
-  if( discount == '' ){
-    discount = 0;
-  }
-  
-  var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-  ).toFixed(2);
-
-  // alert( 'yeah' + total);
-
-  $("#span_total_" + counter).text(total);
-  $("#tax_1_" + counter).text(tax1);
-  $("#tax_111_" + counter).text(tax1);
-  $("#tax_1_" + counter).val(tax1);
-  $("#discount_" + counter).val(discount);
-  $("#tax1_" + counter).val(tax1);
-  // $("#tax1_" + counter).val(tax1);
-  // $("#tax_" + counter).val(tax1);
-  // alert(tax1);
-
-  if( $('#tax_1_'+ counter).length ){
-    $('#tax_1_'+counter).val(tax1);
-  }
-
-  if( $('#item_total_'+ counter).length ){
-    $('#item_total_'+counter).val(total);
-  }
-
-  // alert('dri');
-
-  var eqpt_cost = 0;
-  var total_cost = 0;
-  var cnt = $("#count").val();
-  var total_discount = 0;
-  for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_" + p).val();
-    var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    total_cost += parseFloat(prc);
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
-  }
-//   var subtotal = 0;
-// $( total ).each( function(){
-//   subtotal += parseFloat( $( this ).val() ) || 0;
-// });
-
-  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  total_discount = parseFloat(total_discount).toFixed(2);
-  stotal_cost = parseFloat(total_cost).toFixed(2);
-  // var test = 5;
-
-  var subtotal = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="span_total_"]').each(function(){
-    subtotal += parseFloat($(this).text());
-  });
-  // $('#sum').text(subtotal);
-
-  var subtotaltax = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function(){
-      subtotaltax += parseFloat($(this).text());
-  });
-
-  // alert(subtotaltax);
-
-  var priceqty = 0;
-    $('*[id^="priceqty_"]').each(function(){
-      priceqty += parseFloat($(this).val());
-  });
-
-  var priceqty2 = 0;
-    $('*[id^="priceqty_"]').each(function(){
-      priceqty2 += parseFloat($(this).val());
-  });
-
-  // alert(priceqty2);
-
-  $("#span_sub_total_invoice").text(priceqty.toFixed(2));
-
-  $("#item_total").val(priceqty2.toFixed(2));
-  $("#item_total_text").html(stotal_cost);
-  
-  $("#eqpt_cost").val(eqpt_cost);
-  $("#total_discount").val(total_discount);
-  $("#span_sub_total_0").text(total_discount);
-  // $("#span_sub_total_invoice").text(stotal_cost);
-  // $("#item_total").val(subtotal.toFixed(2));
-  
-  var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input").val();
-  var grand_total = s_total - parseFloat(adjustment);
-  var markup = $("#markup_input_form").val();
-  var grand_total_w = grand_total + parseFloat(markup);
-
-  $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_input").val(subtotaltax.toFixed(2));
-  
-
-  $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-  $("#grandtotal_input").val(grand_total_w.toFixed(2));
-  $("#payment_amount").val(grand_total_w.toFixed(2));
-  
-
-  if($("#grand_total").length && $("#grand_total").val().length)
-  {
-    // console.log('none');
-    // alert('none');
-  }else{
-    $("#grand_total").text(grand_total_w.toFixed(2));
-    $("#grand_total_input").val(grand_total_w.toFixed(2));
-    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-    $("#payment_amount").val(grand_total_w.toFixed(2));
-
-    var bundle1_total = $("#grand_total").text();
-    var bundle2_total = $("#grand_total2").text();
-    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
-
-    $("#supergrandtotal").text(super_grand.toFixed(2));
-    $("#supergrandtotal_input").val(super_grand.toFixed(2));
-  }
-
-  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-  sls = parseFloat(sls).toFixed(2);
-  $("#sales_taxs").val(sls);
-  $("#total_tax_").html(sls);
-  $("#total_tax_input").val(sls);
-  cal_total_due();
 });
 
 $(document).on("focusout", ".quantity_w", function () {
@@ -2571,9 +1954,10 @@ function calculation(counter) {
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_" + counter).val();
   var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(2);
+  var subtotaltax = 0;
+  var stotal_cost = 0;
+
   if( discount == '' ){
     discount = 0;
   }
@@ -2615,12 +1999,17 @@ function calculation(counter) {
     var quantity = $("#quantity_" + p).val();
     var discount = $("#discount_" + p).val();
     var pqty = $("#priceqty_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    pquantity += parseFloat(pqty);
-    total_cost += parseFloat(prc);
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
+    var tax  = $("#tax1_" + p).val();
+    if( prc > 0 ){
+      // var discount= $('#discount_' + p).val();
+      // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+      pquantity += parseFloat(pqty);
+      total_cost += parseFloat(prc);
+      eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+      total_discount += parseFloat(discount);
+      subtotaltax += parseFloat(tax);
+      stotal_cost += parseFloat(prc) * parseFloat(quantity);
+    }
   }
 //   var subtotal = 0;
 // $( total ).each( function(){
@@ -2629,7 +2018,6 @@ function calculation(counter) {
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
-  stotal_cost = parseFloat(total_cost).toFixed(2);
   priceqty = parseFloat(pquantity).toFixed(2);
   // var test = 5;
 
@@ -2639,12 +2027,12 @@ function calculation(counter) {
     subtotal += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
-
-  var subtotaltax = 0;
+  
   // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function(){
+  /*$('*[id^="tax_1_"]').each(function(){
+      alert(parseFloat($(this).text()));
       subtotaltax += parseFloat($(this).text());
-  });
+  });*/
 
   // alert(subtotaltax);
   // var priceqty = 0;
@@ -2653,15 +2041,15 @@ function calculation(counter) {
   // });
   // alert(priceqty);
 
-  $("#span_sub_total_invoice").text(priceqty);
+  //$("#span_sub_total_invoice").text(priceqty);
 
-  $("#item_total").val(stotal_cost);
-  $("#item_total_text").html(stotal_cost);
+  $("#item_total").val(stotal_cost.toFixed(2));
+  $("#item_total_text").html(stotal_cost.toFixed(2));
   
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice").text(stotal_cost);
+  $("#span_sub_total_invoice").text(stotal_cost.toFixed(2));
   // $("#item_total").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);

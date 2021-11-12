@@ -232,7 +232,7 @@ class Accounting_invoices_model extends MY_Model
     public function get_invoices_by_customer_id($customer_id="")
     {
         if ($customer_id!="") {
-            $query = $this->db->query("SELECT * FROM invoices where customer_id = ".$customer_id." AND view_flag != 1 AND voided != 1 AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid')");
+            $query = $this->db->query("SELECT * FROM invoices where customer_id = ".$customer_id." AND view_flag != 1 AND voided != 1 AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid' OR status = 'Paid')");
             return $query->result();
         }
     }
@@ -434,5 +434,11 @@ class Accounting_invoices_model extends MY_Model
         $sql="SELECT * FROM accounting_receive_payment WHERE ".$where." ORDER BY id ASC";
         $query = $this->db->query($sql);
         return $query->result();
+    }
+    public function get_payements_by_invoice_and_receipt_payment_id($invoice_id, $receive_payment_id)
+    {
+        $sql="SELECT * FROM accounting_receive_payment_invoices JOIN accounting_receive_payment ON accounting_receive_payment_invoices.receive_payment_id = accounting_receive_payment.id WHERE accounting_receive_payment_invoices.invoice_id=".$invoice_id." and accounting_receive_payment_invoices.receive_payment_id=".$receive_payment_id;
+        $query = $this->db->query($sql);
+        return $query->row();
     }
 }

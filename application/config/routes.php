@@ -391,6 +391,7 @@ $route['invoice-page/send/send-invoice-reminder'] = 'accounting/send_invoice_rem
 $route['invoice-page/print-batch'] = 'accounting/invoice_print_batch';
 $route['invoice-page/delete-batch'] = 'accounting/invoice_delete_batch';
 $route['invoice-page/send-batch'] = 'accounting/invoice_send_batch';
+$route['invoice-page/get/receive-payment'] = 'accounting/get_customer_received_payment';
 $route['invoice-viewer'] = 'accounting/invoice_viewer';
 
 // Accounting products and services

@@ -139,12 +139,13 @@ class Accounting_receive_payment_model extends MY_Model
     }
     public function get_invoice_receive_payment($invoice_id, $receive_payment_id=0)
     {
-        $this->db->select('accounting_receive_payment_invoices.*,accounting_receive_payment.payment_date');
+        $this->db->select('accounting_receive_payment_invoices.*,accounting_receive_payment.payment_date,,accounting_receive_payment.id as receive_payment_id');
         $this->db->where('accounting_receive_payment_invoices.invoice_id', $invoice_id);
         $this->db->where('accounting_receive_payment_invoices.receive_payment_id !=', $receive_payment_id);
         $this->db->where('accounting_receive_payment.status', 1);
         $this->db->from('accounting_receive_payment_invoices');
         $this->db->join('accounting_receive_payment', 'accounting_receive_payment.id = accounting_receive_payment_invoices.receive_payment_id');
+        $this->db->order_by('accounting_receive_payment.id', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }

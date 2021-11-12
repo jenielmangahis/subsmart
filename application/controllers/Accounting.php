@@ -8706,7 +8706,8 @@ class Accounting extends MY_Controller
             "id" => $receive_payment_id
         );
         $data = array(
-            "payment_date" => $this->input->post("payment_date"),
+            "customer_id" => $customer_id,
+            "payment_date" => date("Y-m-d", strtotime($this->input->post("payment_date"))),
             "payment_method" => $this->input->post("payment_method"),
             "ref_no" => $this->input->post("ref_no"),
             "deposit_to" => $this->input->post("deposite_to"),
@@ -8717,7 +8718,6 @@ class Accounting extends MY_Controller
             "user_id" => logged('id'),
             "company_id" => $customer_info->company_id,
             "created_by" => logged('id'),
-            "date_modified" => date("Y-m-d H:i:s")
         );
         $this->accounting_receive_payment_model->update_receive_payment_details($data, $receive_payment_id);
 
@@ -8901,9 +8901,7 @@ class Accounting extends MY_Controller
             $amount = 0;
             $invoice_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_info->id, $receive_payment_id);
             $total_amount_received = 0;
-            foreach ($invoice_payments as $receive) {
-                $total_amount_received += $receive->payment_amount;
-            }
+            
             if ($this->input->post("inv_cb_" . $i) == "on") {
                 $amount = str_replace(',', '', $this->input->post("inv_" . $i));
                 $where = array(
@@ -8934,6 +8932,26 @@ class Accounting extends MY_Controller
                 );
                 $this->accounting_receive_payment_model->delete_receive_payment_invoices($where);
             }
+
+            $total_amount_received = 0;
+            $open_balance = $invoice_info->grand_total;
+            $invoice_payments  = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_info->id);
+            
+            foreach ($invoice_payments as $receive) {
+                $total_amount_received += $receive->payment_amount;
+                $where = array(
+                    "receive_payment_id" => $receive->receive_payment_id,
+                    "invoice_id" => $invoice_info->id
+                );
+                $data = array(
+                    "open_balance" => $open_balance,
+                    "date_modified" => date("Y-m-d H:i:s"),
+                    "note" => "Open blance got updated due to Payment #".$receive_payment_id." got modified"
+                );
+                $updated = $this->accounting_receive_payment_model->update_receive_payment_invoices($data, $where);
+                $open_balance -= $receive->payment_amount;
+            }
+
             $this->accounting_invoices_model->updateInvoices($invoice_info->id, array("balance" => $invoice_info->grand_total - ($total_amount_received + $amount)));
         }
     }
@@ -11865,23 +11883,23 @@ class Accounting extends MY_Controller
             </div>
         </div>
     </li>';
-    $ctr=0;
-    // var_dump($received_payments);
-    foreach($received_payments as $payment){
-        
-        if($payment->open_balance == $payment->payment_amount){
-            $status = "Paid";
-        }else{
-            $status = "Partially paid";
-        }$ctr++;
-        $liner_circle = '<div class="circle default"></div>
+        $ctr=0;
+        // var_dump($received_payments);
+        foreach ($received_payments as $payment) {
+            if ($payment->open_balance <= $payment->payment_amount) {
+                $status = "Paid";
+            } else {
+                $status = "Partially paid";
+            }
+            $ctr++;
+            $liner_circle = '<div class="circle default"></div>
         <div class="line"></div>';
-        $next_completed="next-completed";
-        if($ctr == count($received_payments)){
-            $liner_circle = '<div class="circle default last-active-status"></div>';
-            $next_completed="";
-        }
-        $status_steps.='
+            $next_completed="next-completed";
+            if ($ctr == count($received_payments)) {
+                $liner_circle = '<div class="circle default last-active-status"></div>';
+                $next_completed="";
+            }
+            $status_steps.='
         <li class="status-step completed">
             <div class="status-marker completed '.$next_completed.'">
                 '.$liner_circle.'
@@ -11889,13 +11907,13 @@ class Accounting extends MY_Controller
             <div class="status-info">
                 <div class="status-title">'.$status.'</div>
                 <div class="status-event-info">
-                    <div><span class="status-date">'.date("m/d/Y",strtotime($payment->payment_date)).'</span></div>
+                    <div><span class="status-date">'.date("m/d/Y", strtotime($payment->payment_date)).'</span></div>
                     <div><span><span class="money">$'.number_format($payment->payment_amount, 2).'</span></span></div><a tabindex="0"
-                        class="action-button">View payment #'.$payment->id.'</a>
+                        class="action-button view-payment-button" data-receive-payment-id="'.$payment->receive_payment_id.'" data-customer-id="'.$customer_id.'" data-invoice-id="'.$invoice_id.'">View payment #'.$payment->receive_payment_id.'</a>
                 </div>
             </div>
         </li>';
-    }
+        }
     
 
         $data = new stdClass();
@@ -11905,6 +11923,72 @@ class Accounting extends MY_Controller
         $data->html_items_description = $html_items_description;
         $data->memo = $invoice_info->message_to_customer;
         $data->status_steps = $status_steps;
+        echo json_encode($data);
+    }
+    public function get_customer_received_payment()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $invoice_id = $this->input->post("invoice_id");
+        $receive_payment_id = $this->input->post("receive_payment_id");
+        if ($customer_id == "") {
+            $customer_id = 0;
+        }
+        if ($receive_payment_id == "") {
+            $receive_payment_id = 0;
+        }
+        $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+        $receivable_payment = 0;
+        $html = '';
+        $counter = 0;
+        $customer_id = $inv->customer_id;
+        $total_amount_received = 0;
+
+        $payment_received = $this->accounting_invoices_model->get_payements_by_invoice_and_receipt_payment_id($inv->id, $receive_payment_id);
+        $total_amount_received += $payment_received->payment_amount;
+        $html .= '<tr>
+                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_' . $counter . '" checked>
+                    </td>
+                    <td>
+                    ' . $inv->invoice_number . '
+                    <input type="text" class="hide" name="inv_number_' . $counter . '" value="' . $inv->invoice_number . '">
+                    </td>
+                    <td>
+                    ' . $inv->due_date . '
+                    </td>
+                    <td class="text-right">' . number_format($inv->grand_total, 2) . '</td>
+                    <td class="text-right">
+                    ' . number_format($payment_received->open_balance, 2) . '
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="text-right inv_grand_amount" name="inv_' . $counter . '" value="' . number_format($total_amount_received, 2) . '">
+                        </div>
+                    </td>
+                </tr>';
+        $counter++;
+        $receivable_payment += $total_amount_received;
+            
+
+
+        $file_names = explode(",",$payment_received->attachments);
+        $images="";
+        for($i =0; $i < count($file_names); $i++){
+            if($file_names[$i]!=""){
+                $images.='<img src="'.base_url("uploads/accounting/attachments/final-attachments/". $file_names[$i]).'">';
+            }
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        $data->receivable_payment = $receivable_payment;
+        $data->display_receivable_payment = number_format($receivable_payment, 2);
+        $data->inv_count = $counter;
+        $data->payment_date = date("d/m/Y",strtotime($payment_received->payment_date));
+        $data->ref_no = $payment_received->ref_no;
+        $data->payment_method = $payment_received->payment_method;
+        $data->deposit_to = $payment_received->deposit_to;
+        $data->memo = $payment_received->memo;
+        $data->attachments = $payment_received->attachments;
+        $data->attachments_images = $images;
         echo json_encode($data);
     }
 }

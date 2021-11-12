@@ -2,6 +2,10 @@
     cursor: pointer;
 }
 
+div#create_statement_modal .modal-content {
+    min-height: 100%;
+}
+
 #create_statement_modal .modal-footer-check {
     left: 0;
 }

@@ -1098,21 +1098,41 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </ul>
             </div>
         </div>
-        <div class="section hidden">
-            <div class="title">
-                <span class="normal">Products and services</span>
-                <span class="icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
-            </div>
-            <div class="section-content ">
-                <div class="items">
-                    <div class="item"><span class="title">Sales</span><span class="price">$1.00</span></div>
-                </div>
-                <div class="more-description-section">
-                    <div class="more-description-info">
-                        this is a test product<br>
-                        Taxable
+        <div class="the-modal-footer">
+            <div class="the-modal-footer-container">
+
+                <div class="section hidden">
+                    <div class="title">
+                        <span class="normal">Products and services</span>
+                        <span class="icon"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
                     </div>
-                    <a href="#" class="show-more">More details</a>
+                    <div class="section-content ">
+                        <div class="items">
+                            <div class="item"><span class="title">Sales</span><span class="price">$1.00</span></div>
+                        </div>
+                        <div class="more-description-section">
+                            <div class="more-description-info">
+                                this is a test product<br>
+                                Taxable
+                            </div>
+                            <a href="#" class="show-more">More details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="button-dropdown-options">
+                        <span>More actions</span> <span class="float-right"><i class="fa fa-chevron-down"
+                                aria-hidden="true"></i></span>
+                        <ul class="options">
+                            <li class="print">Print</li>
+                            <li class="openCloneInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cloneModal" data-invoice-number="INV-000000015" data-id="37">Duplicate</li>
+                            <li class="">Send</li>
+                            <li class="">Print packaging slip</li>
+                            <li class="">Void</li>
+                            <li class="">Delete</li>
+                        </ul>
+                    </div>
+                    <button class="edit-invoice-btn success">Edit invoice</button>
                 </div>
             </div>
         </div>

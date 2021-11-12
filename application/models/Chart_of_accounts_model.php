@@ -345,6 +345,44 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_vendor_transaction_item_registers($accountId, $transactionType)
+	{
+		$this->db->select('accounting_vendor_transaction_items.*');
+		$this->db->from('accounting_vendor_transaction_items');
+		$this->db->where('items_accounting_details.inv_asset_acc_id', $accountId);
+		$this->db->where('accounting_vendor_transaction_items.transaction_type', $transactionType);
+		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = accounting_vendor_transaction_items.item_id');
+
+		switch($transactionType) {
+			case 'Expense' :
+				$this->db->where('accounting_expense.status !=', 0);
+				$this->db->join('accounting_expense', 'accounting_expense.id = accounting_vendor_transaction_items.transaction_id');
+			break;
+			case 'Check' :
+				$this->db->where('accounting_check.status !=', 0);
+				$this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_items.transaction_id');
+			break;
+			case 'Bill' :
+				$this->db->where('accounting_bill.status !=', 0);
+				$this->db->join('accounting_bill', 'accounting_bill.id = accounting_vendor_transaction_items.transaction_id');
+			break;
+			case 'Purchase Order' :
+				$this->db->where('accounting_purchase_order.status !=', 0);
+				$this->db->join('accounting_purchase_order', 'accounting_purchase_order.id = accounting_vendor_transaction_items.transaction_id');
+			break;
+			case 'Vendor Credit' :
+				$this->db->where('accounting_vendor_credit.status !=', 0);
+				$this->db->join('accounting_vendor_credit', 'accounting_vendor_credit.id = accounting_vendor_transaction_items.transaction_id');
+			break;
+			case 'Credit Card Credit' :
+				$this->db->where('accounting_credit_card_credits.status !=', 0);
+				$this->db->join('accounting_credit_card_credits', 'accounting_credit_card_credits.id = accounting_vendor_transaction_items.transaction_id');
+			break;
+		}
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function get_vendor_transaction_category_registers($accountId, $transactionType)
 	{
 		$this->db->select('accounting_vendor_transaction_categories.*');

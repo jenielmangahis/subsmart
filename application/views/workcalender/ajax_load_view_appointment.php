@@ -84,7 +84,7 @@
 <div class="row" style="text-align: left;">
   <div class="col-md-12">
     <span class="v-appointment-time"><i class="fa fa-clock-o"></i> <?= date("g:i A",strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
-    <span class="v-appointment-date"><?= date("l, F D, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
+    <span class="v-appointment-date"><?= date("l, F d, Y", strtotime($appointment->appointment_date . ' ' . $appointment->appointment_time)); ?></span>
   </div>
   <div class="col-md-12">
     <span class="v-appointment-type"><i class="fa fa-list"></i> Appointment Type : <?= $appointment->appointment_type; ?></span>

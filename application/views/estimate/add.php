@@ -7,6 +7,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
    <style>
+   label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
    .but:hover {
     font-weight: 900;
     color:black;
@@ -446,7 +450,7 @@ input:checked + .slider:before {
 
                             <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
-                                    <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
+                                    <b>Items Summary</b>
                                 </div>
                                 <div class="col-md-6">
                                 </div>
@@ -475,78 +479,7 @@ input:checked + .slider:before {
                                             <th class="hidden_mobile_view">Total</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="jobs_items_table_body">
-                                        <!-- <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr> -->
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                        </tr>
-                                        </tbody>
+                                        <tbody id="jobs_items_table_body"></tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
@@ -763,20 +696,20 @@ input:checked + .slider:before {
                                 </button>
                             </div>
                             <div class="modal-body pt-0 pl-3 pb-3">
-                                        <table id="items_table_newWorkorder" class="table table-hover" style="width: 100%;">
+                                        <table id="dt-package-list" class="table table-hover" style="width: 100%;">
                                             <thead>
                                             <tr>
-                                                <td> Name</td>
-                                                <td> Action</td>
+                                                <td>Name</td>
+                                                <td></td>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php foreach($packages as $package){ // print_r($item); ?>
+                                            <?php foreach($packages as $package){ ?>
                                                 <tr>
                                                     <td><?php echo $package->name; ?></td>
                                                     <td>
                                                         <button id="<?= $package->item_categories_id ; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
-                                                </td>
+                                                    </td>
                                                 </tr>
                                                 
                                             <?php } ?>
@@ -1119,6 +1052,17 @@ $(document).ready(function(){
         });
     });
 
+    var table = $('#dt-package-list').DataTable({
+      "searching" : true,
+      "paging":   false,
+      "autoWidth": false,
+      "order": [],
+       "aoColumnDefs": [
+        { "sWidth": "95%", "aTargets": [ 0 ] },
+        { "sWidth": "5%", "aTargets": [ 1 ] },          
+      ]
+    });
+
     $(document).on('click','.setmarkup',function(){
        // alert('yeah');
         var markup_amount = $('#markup_input').val();
@@ -1233,8 +1177,14 @@ $.ajax({
 
         // var objJSON = JSON.parse(response['items'][0].title);
                 var inputs = "";
+                var count = parseFloat($("#count").val());
                 $.each(response['items'], function (i, v) {
-                    inputs += v.title ;
+                    inputs += v.title ;                    
+                    count = count + 1;
+                    $("#count").val(count);
+                    if( v.units <= 0 ){
+                        v.units = 0;
+                    }
                     var total_pu = v.price * v.units;
                     var total_tax = (v.price * v.units) * 7.5 / 100;
                     var total_temp = total_pu + total_tax;
@@ -1244,14 +1194,14 @@ $.ajax({
                   markup = "<tr id=\"ss\">" +
                       "<td width=\"35%\"><input value='"+v.title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+v.id+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+v.title+"</span></div></td>\n" +
                       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                      "<td width=\"10%\"><input data-itemid='"+v.id+"' id='quantity_"+v.id+"' value='"+v.units+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-                      "<td width=\"10%\"><input id='price_"+v.id+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+v.id+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
+                      "<td width=\"10%\"><input data-itemid='"+v.id+"' id='quantity_"+count+"' value='"+v.units+"' type=\"number\" name=\"quantity[]\" data-counter='"+count+"'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
+                      "<td width=\"10%\"><input id='price_"+count+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control price hidden_mobile_view \" placeholder=\"Unit Price\" data-counter='"+count+"'><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+v.id+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
                     //   "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter=\"0\" id=\"discount_0\" value=\"0\" ></td>\n" +
                     // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+v.id+"' value=\"0\"></td>\n" +
+                      "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+count+"' value=\"0\" data-counter='"+count+"'></td>\n" +
                     // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+v.id+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+v.id+"' min=\"0\" value='"+total_tax+"'></td>\n" +
-                      "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total+"' id='span_total_"+v.id+"' class=\"total_per_item\">"+total+
+                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+v.id+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' min=\"0\" disabled value='"+total_tax+"'></td>\n" +
+                      "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
                     // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                       "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+v.id+"' value='"+total+"'></td>" +
                       "<td>\n" +
@@ -1274,161 +1224,19 @@ $.ajax({
                       "<td ></td>\n" +
                       "</tr>";
 
+                    calculation(count);
+
                 });
                 // $("#input_container").html(inputs);
                 
                 tableBody2 = $("#device_audit_datas");
                 tableBody2.append(markup2);
                 // alert(inputs);
-
-                var in_id = idd;
-                var price = $("#price_" + in_id).val();
-                var quantity = $("#quantity_" + in_id).val();
-                var discount = $("#discount_" + in_id).val();
-                var tax = (parseFloat(price) * 7.5) / 100;
-                var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-                2
-                );
-                if( discount == '' ){
-                discount = 0;
-                }
-
-                var total = (
-                (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-                parseFloat(discount)
-                ).toFixed(2);
-
-                var total_wo_tax = price * quantity;
-
-                // alert( 'yeah' + total);
-
-
-                $("#priceqty_" + in_id).val(total_wo_tax);
-                $("#span_total_" + in_id).text(total);
-                $("#sub_total_text" + in_id).val(total);
-                $("#tax_1_" + in_id).text(tax1);
-                $("#tax1_" + in_id).val(tax1);
-                $("#discount_" + in_id).val(discount);
-
-                if( $('#tax_1_'+ in_id).length ){
-                $('#tax_1_'+in_id).val(tax1);
-                }
-
-                if( $('#item_total_'+ in_id).length ){
-                $('#item_total_'+in_id).val(total);
-                }
-
-                var eqpt_cost = 0;
-                var total_costs = 0;
-                var cnt = $("#count").val();
-                var total_discount = 0;
-                var pquantity = 0;
-                for (var p = 0; p <= cnt; p++) {
-                var prc = $("#price_" + p).val();
-                var quantity = $("#quantity_" + p).val();
-                var discount = $("#discount_" + p).val();
-                var pqty = $("#priceqty_" + p).val();
-                // var discount= $('#discount_' + p).val();
-                // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-                pquantity += parseFloat(pqty);
-                total_costs += parseFloat(prc);
-                eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-                total_discount += parseFloat(discount);
-                }
-                //   var subtotal = 0;
-                // $( total ).each( function(){
-                //   subtotal += parseFloat( $( this ).val() ) || 0;
-                // });
-
-                var total_cost = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="price_"]').each(function(){
-                total_cost += parseFloat($(this).val());
-                });
-
-                // var totalcosting = 0;
-                // $('*[id^="span_total_"]').each(function(){
-                //   totalcosting += parseFloat($(this).val());
-                // });
-
-
-                // alert(total_cost);
-
-                var tax_tot = 0;
-                $('*[id^="tax1_"]').each(function(){
-                tax_tot += parseFloat($(this).val());
-                });
-
-                over_tax = parseFloat(tax_tot).toFixed(2);
-                // alert(over_tax);
-
-                $("#sales_taxs").val(over_tax);
-                $("#total_tax_input").val(over_tax);
-                $("#total_tax_").text(over_tax);
-
-
-                eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-                total_discount = parseFloat(total_discount).toFixed(2);
-                stotal_cost = parseFloat(total_cost).toFixed(2);
-                priceqty = parseFloat(pquantity).toFixed(2);
-                // var test = 5;
-
-                var subtotal = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="span_total_"]').each(function(){
-                subtotal += parseFloat($(this).text());
-                });
-                // $('#sum').text(subtotal);
-
-                var subtotaltax = 0;
-                // $("#span_total_0").each(function(){
-                $('*[id^="tax_1_"]').each(function(){
-                subtotaltax += parseFloat($(this).text());
-                });
-
-
-                var priceqty2 = 0;
-                $('*[id^="priceqty_"]').each(function(){
-                priceqty2 += parseFloat($(this).val());
-                });
-
-                $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-                // $("#span_sub_total_invoice").text(priceqty);
-
-                $("#eqpt_cost").val(eqpt_cost);
-                $("#total_discount").val(total_discount);
-                $("#span_sub_total_0").text(total_discount);
-                // $("#span_sub_total_invoice").text(stotal_cost);
-                // $("#item_total").val(subtotal.toFixed(2));
-                $("#item_total").val(priceqty2.toFixed(2));
-
-                var s_total = subtotal.toFixed(2);
-                var adjustment = $("#adjustment_input").val();
-                var grand_total = s_total - parseFloat(adjustment);
-                var markup = $("#markup_input_form").val();
-                var grand_total_w = grand_total + parseFloat(markup);
-
-                // $("#total_tax_").text(subtotaltax.toFixed(2));
-                // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-                $("#grand_total").text(grand_total_w.toFixed(2));
-                $("#grand_total_input").val(grand_total_w.toFixed(2));
-                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-                var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-                sls = parseFloat(sls).toFixed(2);
-                $("#sales_tax").val(sls);
-                cal_total_due();
-
-
     },
-        error: function(response){
-        alert('Error'+response);
+    error: function(response){
+    alert('Error'+response);
 
-        }
+    }
 });
 
 
