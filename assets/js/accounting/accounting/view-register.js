@@ -1020,7 +1020,7 @@ $(document).on('click', '#registers-table tbody tr', function() {
                             var modalName = 'payDownCreditModal';
                         break;
                         case 'Inventory Starting Value' :
-                            var fieldName = 'inventory-adj-account';
+                            var fieldName = rowData.account_field;
                             var modalName = 'adjust-starting-value-modal';
                         break;
                         case 'Deposit' :

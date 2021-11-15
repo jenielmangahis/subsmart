@@ -11,6 +11,6 @@ class Sms extends Widgets {
     }
 
     public function index() {
-        $this->load->view('v2/pages/sms.php', $this->page_data);
+        $this->load->view('v2/pages/dashboard/sms.php', $this->page_data);
     }
 }

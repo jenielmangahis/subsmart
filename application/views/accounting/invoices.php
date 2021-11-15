@@ -276,7 +276,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <button class="btn btn-default disabled" type="button" data-toggle="dropdown">
                                     Batch action <span class="fa fa-caret-down"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right by-batch-btn" role="menu">
-                                    <li class="delete-btn disabled">
+                                    <li class="send-btn disabled">
                                         <a href="#">Send</a>
                                     </li>
                                     <li class="send-reminder-btn disabled">
@@ -1125,11 +1125,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 aria-hidden="true"></i></span>
                         <ul class="options">
                             <li class="print">Print</li>
-                            <li class="openCloneInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal" data-target="#cloneModal" data-invoice-number="INV-000000015" data-id="37">Duplicate</li>
-                            <li class="">Send</li>
-                            <li class="">Print packaging slip</li>
-                            <li class="">Void</li>
-                            <li class="">Delete</li>
+                            <li class="openCloneInvoice" tabindex="-1" href="javascript:void(0)" data-toggle="modal"
+                                data-target="#cloneModal" data-invoice-number="INV-000000015" data-id="37">Duplicate
+                            </li>
+                            <li class="send">Send</li>
+                            <li class="print-packaging" data-invoice-id="">Print packaging slip</li>
+                            <li class="void" data-invoice-id="">Void</li>
+                            <li class="delete" data-invoice-id="">Delete</li>
                         </ul>
                     </div>
                     <button class="edit-invoice-btn success">Edit invoice</button>

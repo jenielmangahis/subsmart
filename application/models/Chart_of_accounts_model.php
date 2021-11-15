@@ -487,7 +487,7 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function get_item_starting_value_registers($accountId)
+	public function get_adjustment_acc_starting_value_registers($accountId)
 	{
 		$this->db->where('inv_adj_account', $accountId);
 		$this->db->where('status !=', 0);
@@ -497,12 +497,9 @@ class Chart_of_accounts_model extends MY_Model {
 
 	public function get_adjusted_starting_value_registers($accountId)
 	{
-		$this->db->select('*');
-		$this->db->from('accounting_item_starting_value_adjustment');
-		$this->db->where('items_accounting_details.inv_asset_acc_id', $accountId);
+		$this->db->where('inv_asset_account', $accountId);
 		$this->db->where('status !=', 0);
-		$this->db->join('items_accounting_details', 'items_accounting_details.item_id = accounting_item_starting_value_adjustment.item_id');
-		$query = $this->db->get();
+		$query = $this->db->get('accounting_item_starting_value_adjustment');
 		return $query->result();
 	}
 

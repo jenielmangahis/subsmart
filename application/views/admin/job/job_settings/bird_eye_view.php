@@ -45,7 +45,7 @@
                 <div class="card p-20">
                     <div>
                         <div class="col-sm-12 pl-0">
-                            <h3 class="mt-0 page-title pb-0 mb-0">Bird's Eye View</h3>
+                            <h3 class="mt-0 page-title pb-0 mb-0">Bird's Eye Views</h3>
                             <span style="margin-top:4px;margin-bottom: 8px;display: block;font-size: 14px;color: rgba(42, 49, 66, 0.7);">Manage Bird's Eye View</span>
                             <div class="alert alert-warning col-md-12 mt-1 mb-4" role="alert">
                                 <span style="color:black;">

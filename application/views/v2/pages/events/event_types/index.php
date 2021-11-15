@@ -115,6 +115,8 @@
 
 
 <script type="text/javascript">
+    $(".nsm-table").nsmPagination();
+
     $(document).ready(function() {
         $(document).on('click', '.delete-item', function() {
             var eid = $(this).data("id");

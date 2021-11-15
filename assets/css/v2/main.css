@@ -20,7 +20,7 @@ html, body{
 }
 
 .nsm-content{
-	min-height: calc(100vh - 202px);
+	min-height: calc(100vh - 183px);
 }
 
 .nsm-container.nsm-mobile .nsm-sidebar{
@@ -1164,6 +1164,7 @@ a.nsm-button{
     display: flex;
     justify-content: center;
     align-items: center;
+	font-size: 18px;
 }
 
 .nsm-table .table-row-icon.img{
@@ -1173,6 +1174,7 @@ a.nsm-button{
 	background-repeat: no-repeat;
 	background-size: cover;
     background-color: #f1f1f1;
+    border-radius: 5px;
 }
 
 .nsm-table .table-row-icon > .bx{
@@ -1198,7 +1200,7 @@ a.nsm-button{
 .nsm-page-nav > ul > li{
 	float: left;
 	border-bottom: 3px solid lightgray;
-	padding: 1rem 0;
+	padding: 1rem 0.25rem;
 }
 
 .nsm-page-nav > ul > li.active{
@@ -1223,4 +1225,27 @@ a.nsm-button{
 
 .nsm-page-nav .nsm-page-link > i{
 	font-size: 1.5rem;
+}
+
+.nsm-page-nav .dropdown > .dropdown-menu{
+	min-width: calc(100% + .55rem);
+	border-radius: 0 0 .25rem .25rem;
+	transform: translate(-4px, 17px) !important;
+	border-top: unset;
+}
+
+.nsm-page-nav .dropdown > .dropdown-toggle > .dropdown-icon{
+	width: 22px !important;
+	margin-left: 1rem;
+}
+
+.nsm-page-nav > ul > li:hover > .dropdown > .dropdown-menu{
+	display: block;
+}
+
+.nsm-page-nav .dropdown > .dropdown-menu .dropdown-item{
+	font-weight: 600;
+	color: #888888;
+	padding-top: .5rem;
+	padding-bottom: .5rem;
 }

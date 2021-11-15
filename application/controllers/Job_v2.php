@@ -2,14 +2,12 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Job extends MY_Controller
+class Job_v2 extends MY_Controller
 {
     public function __construct()
     {
         parent::__construct();
         $this->checkLogin();
-		$this->page_data['page']->title = 'Jobs';
-        $this->page_data['page']->parent = 'Sales';
         //$this->load->library('paypal_lib');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('JobType_model');
@@ -30,7 +28,7 @@ class Job extends MY_Controller
         $this->isAllowedModuleAccess(15);
         $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
         $this->page_data['title'] = 'Jobs';
-        $this->load->view('v2/pages/job/list', $this->page_data);
+        $this->load->view('job/list', $this->page_data);
     }
 
     public function new_job1($id=null)
@@ -121,9 +119,15 @@ class Job extends MY_Controller
         // get items
         $get_items = array(
             'where' => array(
-                'is_active' => 1
+                'items.company_id' => logged('company_id'),
+                'is_active' => 1,
             ),
             'table' => 'items',
+//            'join' => array(
+//                'table' => 'items_has_storage_loc',
+//                'statement' => 'items.id=items_has_storage_loc.item_id',
+//                'join_as' => 'left',
+//            ),
             'select' => 'items.id,title,price,type',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
@@ -144,7 +148,7 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'work_orders',
-            'select' => 'id,work_order_number,job_name,customer_id,date_created',
+            'select' => 'id,work_order_number,job_name,customer_id',
         );
         $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
 
@@ -1025,9 +1029,6 @@ class Job extends MY_Controller
 
     public function job_tags()
     {
-		$this->page_data['page']->title = 'Job Tags';
-        $this->page_data['page']->parent = 'Sales';
-
         $get_job_settings = array(
             'where' => array(
                 'company_id' => logged('company_id')
@@ -1040,14 +1041,12 @@ class Job extends MY_Controller
             ),
         );
         $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_settings);
-        $this->load->view('v2/pages/job/job_tags', $this->page_data);
+        $this->load->view('job/job_settings/job_tags', $this->page_data);
     }
 
     public function job_types()
     {
         $this->hasAccessModule(26);
-		$this->page_data['page']->title = 'Job Types';
-        $this->page_data['page']->parent = 'Sales';
 
         $get_job_types = array(
             'where' => array(
@@ -1062,13 +1061,11 @@ class Job extends MY_Controller
             ),
         );
         $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
-        $this->load->view('v2/pages/job/job_types', $this->page_data);
+        $this->load->view('job/job_settings/job_types', $this->page_data);
     }
 
     public function bird_eye_view()
     {
-		$this->page_data['page']->title = 'Bird\'s Eye View';
-        $this->page_data['page']->parent = 'Sales';
         $this->page_data['title'] = 'Bird Eye View';
         $this->load->view('job/job_settings/bird_eye_view', $this->page_data);
     }
@@ -1177,17 +1174,8 @@ class Job extends MY_Controller
 
     public function settings()
     {
-		$this->page_data['page']->title = 'Settings';
-        $this->page_data['page']->parent = 'Sales';
-
         $comp_id = logged('company_id');
         //$this->page_data['invoices'] = $this->invoice_model->getByWhere(['company_id' => $comp_id]);
-        $input = $this->input->post();
-        if($input){
-            strtoupper($input['job_num_prefix']);
-            $this->general->update_with_key_field($input, $comp_id, 'job_settings','company_id');
-        }
-
         $get_job_settings = array(
             'where' => array(
                 'company_id' => $comp_id
@@ -1195,7 +1183,7 @@ class Job extends MY_Controller
             'table' => 'job_settings',
             'select' => '*',
         );
-        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings,false);
+        $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings);
 
         $get_job_tax = array(
             'table' => 'tax_rates',
@@ -1204,7 +1192,7 @@ class Job extends MY_Controller
         $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_job_tax);
         $this->page_data['active_tab'] = $this->uri->segment(3);
 
-        $this->load->view('v2/pages/job/settings', $this->page_data);
+        $this->load->view('job/settings', $this->page_data);
     }
 
     public function job_time_settings()

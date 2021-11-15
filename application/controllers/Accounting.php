@@ -327,6 +327,13 @@ class Accounting extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['receipts'] = $this->receipt_model->getReceipt();
         $this->page_data['receipts_two'] = $this->receipt_model->getReceipt_two();
+        add_css([
+            'assets/css/accounting/receipts/receipts.css',
+        ]);
+        add_footer_js([
+            'assets/js/accounting/banking/receipts/receipts.js',
+        ]);
+
         $this->load->view('accounting/receipts', $this->page_data);
     }
 
@@ -11556,7 +11563,7 @@ class Accounting extends MY_Controller
         } else {
             $status = "";
         }
-        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
         
         $this->page_data['invoices'] = $this->accounting_invoices_model->get_filtered_invoices($where);
         $the_html_tbody.=$this->load->view('accounting/invoices_page_includes/invoices_page_table_filteres', $this->page_data, true);
@@ -11626,7 +11633,7 @@ class Accounting extends MY_Controller
         }
         $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
         $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
-        $filename = "nSmarTrac_invoice_".$invoice_id;
+        $filename = "nSmarTrac_invoice_".$invoice_id.".pdf";
         $this->load->library('pdf');
         $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
 
@@ -11676,7 +11683,7 @@ class Accounting extends MY_Controller
 
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . "nSmarTrac_invoice_".$invoice_id);
+        $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . "nSmarTrac_invoice_".$invoice_id.".pdf");
         $content = $this->load->view('accounting/invoices_page_includes/send_reminder_email_layout', $this->page_data, true);
 
         $mail->MsgHTML($content);
@@ -11735,7 +11742,7 @@ class Accounting extends MY_Controller
             $pdf_data[$i] = $pdf_sub_data;
         }
         $this->page_data["pdf_data"]=$pdf_data;
-        $filename = "nSmarTrac_invoice_batch";
+        $filename = "nSmarTrac_invoice_batch.pdf";
         $this->load->library('pdf');
         $this->pdf->save_pdf('accounting/invoices_page_includes/pdf_template', $this->page_data, $filename, "P");
 
@@ -11762,6 +11769,9 @@ class Accounting extends MY_Controller
     {
         $checkboxes = $this->input->post("checkbox");
         $errors="";
+        if($this->input->post("action") == "single-invoice"){
+            $checkboxes = array($this->input->post("invoice_id"));
+        }
         for ($i=0;$i<count($checkboxes);$i++) {
             $invoice_id = $checkboxes[$i];
             $invoice_info = get_invoice_by_id($invoice_id);
@@ -11804,7 +11814,7 @@ class Accounting extends MY_Controller
 
             $mail->IsHTML(true);
             $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-            $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . "nSmarTrac_invoice_".$invoice_id);
+            $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . "nSmarTrac_invoice_".$invoice_id.".pdf");
             $content = $this->load->view('accounting/invoices_page_includes/send_invoice', $this->page_data, true);
 
             $mail->MsgHTML($content);
@@ -11844,7 +11854,7 @@ class Accounting extends MY_Controller
         }
         $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
         $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
-        $filename = "nSmarTrac_invoice_".$invoice_id;
+        $filename = "nSmarTrac_invoice_".$invoice_id.".pdf";
         $this->load->library('pdf');
         $this->pdf->save_pdf('invoice/pdf/template', $this->page_data, $filename, "P");
     }
@@ -11922,6 +11932,7 @@ class Accounting extends MY_Controller
         $data->html_items_and_price = $html_items_and_price;
         $data->html_items_description = $html_items_description;
         $data->memo = $invoice_info->message_to_customer;
+        $data->inv_number = $invoice_info->invoice_number;
         $data->status_steps = $status_steps;
         echo json_encode($data);
     }
@@ -11970,10 +11981,10 @@ class Accounting extends MY_Controller
             
 
 
-        $file_names = explode(",",$payment_received->attachments);
+        $file_names = explode(",", $payment_received->attachments);
         $images="";
-        for($i =0; $i < count($file_names); $i++){
-            if($file_names[$i]!=""){
+        for ($i =0; $i < count($file_names); $i++) {
+            if ($file_names[$i]!="") {
                 $images.='<img src="'.base_url("uploads/accounting/attachments/final-attachments/". $file_names[$i]).'">';
             }
         }
@@ -11982,7 +11993,7 @@ class Accounting extends MY_Controller
         $data->receivable_payment = $receivable_payment;
         $data->display_receivable_payment = number_format($receivable_payment, 2);
         $data->inv_count = $counter;
-        $data->payment_date = date("d/m/Y",strtotime($payment_received->payment_date));
+        $data->payment_date = date("d/m/Y", strtotime($payment_received->payment_date));
         $data->ref_no = $payment_received->ref_no;
         $data->payment_method = $payment_received->payment_method;
         $data->deposit_to = $payment_received->deposit_to;
