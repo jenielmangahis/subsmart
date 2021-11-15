@@ -120,10 +120,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
                                             Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="#" class="dropdown-item disabled">Confirm selected</a></li>
-                                            <li><a href="#" class="dropdown-item disabled" >Review selected</a></li>
-                                            <li><a href="#" class="dropdown-item disabled" >Delete selected</a></li>
+                                        <ul class="dropdown-menu dropdown-menu-left" id="batchActions">
+                                            <li><a href="#" class="dropdown-item" data-action="confirm">Confirm selected</a></li>
+                                            <li><a href="#" class="dropdown-item" data-action="review">Review selected</a></li>
+                                            <li><a href="#" class="dropdown-item" data-action="delete">Delete selected</a></li>
                                         </ul>
                                     </div>
                                     <div class="dropdown filter-dp" style="position: relative;display: inline-block;margin-left: 20px;margin-top: 10px;">
@@ -222,7 +222,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                         </ul>
                                     </div>
-                                    <table id="forReview_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
+                                    <!-- <table id="forReview_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                         <tr>
                                             <th><input type="checkbox"></th>
@@ -262,7 +262,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
                                                     <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
                                                     <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#" type="submit" id="deleteReceipt" data-id="<?php echo $receipt->id;?>">Delete</a></li>
+                                                        <li><a href="#" type="submit" id="deleteReceipt__old" data-id="<?php echo $receipt->id;?>">Delete</a></li>
                                                         <?php if($receipt->for_expense == 1){ ?>
                                                             <a id="updateReceipt" href="#" style="display: inline" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>
                                                         <?php } ?>
@@ -272,6 +272,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                         <?php endforeach; ?>
                                         </tbody>
+                                    </table> -->
+
+                                    <input type="hidden" id="uploadPath" value="<?=base_url('uploads/accounting/');?>" />
+                                    <table id="receiptsReview" class="table table-striped table-bordered receiptsTable">
+                                        <thead class="receiptsTable__head">
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" class="receiptsTable__checkbox receiptsTable__checkbox--primary"/>
+                                                </th>
+                                                <th class="receiptsTable__imgHeader">Receipt</th>
+                                                <th>Date</th>
+                                                <th>Description</th>
+                                                <th>Payment Account</th>
+                                                <th>Amount/Tax</th>
+                                                <th>Category</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
                                     </table>
                                 </div>
                                 <div class="tab-pane fade" id="reviewed">
@@ -456,7 +474,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="modal-footer-uploadedReceipt">
                         <button type="button" data-dismiss="" class="btn btn-default btn-leftSide">Cancel</button>
-                        <button class="btn btn-default btn-leftSide" style="margin-left: 10px">Delete this receipt</button>
+                        <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
                         <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                             <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px">Save and next</button>
                             <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">

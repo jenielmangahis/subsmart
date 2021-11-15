@@ -131,6 +131,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        $(".nsm-table").nsmPagination();
+
         $(document).on("click", ".delete-item", function(event) {
             var ID = $(this).data("id");
             Swal.fire({

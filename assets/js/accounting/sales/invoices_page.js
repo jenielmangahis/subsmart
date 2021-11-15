@@ -246,7 +246,7 @@ $(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.
     }
 });
 
-$(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.delete-btn', function() {
+$(document).on('click', '.invoices-page-section .by-batch-btn .dropdown-menu li.send-btn', function() {
     if ($(".invoices-page-section table.invoices-table tbody tr td input[type='checkbox']:checked").length > 0) {
         Swal.fire({
             title: "Send?",
@@ -339,6 +339,7 @@ $(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-mod
 function invoice_viewer_changed(invoice_id, customer_id) {
     $("div#invoice-viewer-modal .section-loader").show();
     $("div#invoice-viewer-modal .section").hide();
+    $("div#invoice-viewer-modal .the-modal-body.right-side-modal").addClass("full-height");
     $.ajax({
         url: baseURL + "invoice-viewer",
         type: "POST",
@@ -348,6 +349,7 @@ function invoice_viewer_changed(invoice_id, customer_id) {
             customer_id: customer_id
         },
         success: function(data) {
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal").removeClass("full-height");
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .section .section-content .items").html(data.html_items_and_price);
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .more-description-section .more-description-info").html(data.html_items_description);
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .section .title span.customer-name").html(data.customer_name);
@@ -358,7 +360,11 @@ function invoice_viewer_changed(invoice_id, customer_id) {
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.print").attr("onclick", "window.open('" + baseURL + "invoice/preview/" + invoice_id + "?format=print')");
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.openCloneInvoice").attr("data-invoice-number", $("div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title .invoice-number").html());
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.openCloneInvoice").attr("data-id", invoice_id);
-
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.delete").attr("data-invoice-id", invoice_id);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.void").attr("data-invoice-id", invoice_id);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.send").attr("data-invoice-id", invoice_id);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.print-packaging").attr("data-invoice-id", invoice_id);
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.print-packaging").attr("data-invoice-no", data.inv_number);
             $("div#invoice-viewer-modal .section").show();
         },
     });
@@ -379,4 +385,16 @@ $(document).on('click', 'div#invoice-viewer-modal', function(event) {
     if ($(event.target).closest("div#invoice-viewer-modal .the-modal-body.right-side-modal ").length === 0) {
         $("div#invoice-viewer-modal").fadeOut();
     }
+});
+$(document).on("click", "div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.delete", function(event) {
+    delete_invoice(this, "invoice_page");
+});
+$(document).on("click", "div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.void", function(event) {
+    void_invoice(this, "invoice_page");
+});
+$(document).on("click", "div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.print-packaging", function(event) {
+    print_invoice_packaging(this);
+});
+$(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.send', function() {
+    send_single_invoice(this);
 });

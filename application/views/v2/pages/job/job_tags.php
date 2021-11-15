@@ -1,14 +1,14 @@
 <?php include viewPath('v2/includes/header'); ?>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('events/add_new_event_tag') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'">
         <i class='bx bx-tag'></i>
     </div>
 </div>
 
 <div class="row">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/event_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/job_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -17,15 +17,15 @@
                     <div class="col-12">
                         <div class="nsm-alert warning">
                             <button><i class='bx bx-x'></i></button>
-                            While categories are broader designations that are typically assigned one per event, tags are short but specific, and each event can be assigned as many tags as you'd like. It's a great way to use keywords or other important phrases to help you locate events that are most relevant to your interests.
+                            A job tag identifies similar jobs or job templates. Use job tags to easily search and filter jobs and job templates when viewing them in the Jobs view. Tags will also help you to see the growth direction of your product, service, source and more.
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('events/add_new_event_tag'); ?>'">
-                                <i class='bx bx-fw bx-tag'></i> New Event Tag
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'">
+                                <i class='bx bx-fw bx-tag'></i> New Tag
                             </button>
                         </div>
                     </div>
@@ -40,10 +40,10 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($event_tags)) :
+                        if (!empty($job_tags)) :
                         ?>
                             <?php
-                            foreach ($event_tags as $tag) :
+                            foreach ($job_tags as $tag) :
                             ?>
                                 <tr>
                                     <td>
@@ -52,10 +52,10 @@
                                             if ($tag->is_marker_icon_default_list == 1) :
                                                 $marker = base_url("uploads/icons/" . $tag->marker_icon);
                                             else :
-                                                $marker = base_url("uploads/event_tags/" . $tag->company_id . "/" . $tag->marker_icon);
+                                                $marker = base_url("uploads/job_tags/" . $tag->company_id . "/" . $tag->marker_icon);
                                             endif;
                                         else :
-                                            $marker = base_url("uploads/event_tags/default_no_image.jpg");
+                                            $marker = base_url("uploads/job_tags/default_no_image.jpg");
                                         endif;
                                         ?>
                                         <div class="table-row-icon img" style="background-image: url('<?php echo $marker ?>')"></div>
@@ -68,7 +68,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= base_url("events/edit_event_tags/" . $tag->id); ?>">Edit</a>
+                                                    <a class="dropdown-item" href="<?= base_url("job/edit_job_tag/" . $tag->id); ?>">Edit</a>
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $tag->id; ?>">Delete</a>
@@ -86,7 +86,7 @@
                             <tr>
                                 <td colspan="3">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Event Tags yet.</span>
+                                        <span>You haven't yet added Job Tags yet.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -94,19 +94,6 @@
                         endif;
                         ?>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3">
-                                <nav class="nsm-table-pagination">
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link disabled" href="#">Prev</a></li>
-                                        <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link disabled" href="#">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -117,9 +104,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
-        
-        $(document).on( "click", ".delete-item", function( event ) {
-            var ID = $(this).data("id");
+
+        $(document).on("click", ".delete-item", function( event ) {
+            var ID = $(this).attr("data-id");
+
             Swal.fire({
                 title: 'Continue to REMOVE tag?',
                 text: "",
@@ -131,7 +119,7 @@
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url(); ?>/events/delete_tag",
+                        url: "<?= base_url('job/delete_tag') ?>",
                         data: {tag_id : ID}, // serializes the form's elements.
                         success: function(data)
                         {

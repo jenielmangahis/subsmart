@@ -235,6 +235,10 @@ div#invoice-viewer-modal .the-modal-body.right-side-modal {
     overflow-x: hidden;
 }
 
+div#invoice-viewer-modal .the-modal-body.right-side-modal.full-height {
+    height: 100%;
+}
+
 div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title {
     font-size: 14px;
     color: #6D6E74;

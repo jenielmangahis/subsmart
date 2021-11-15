@@ -1,0 +1,59 @@
+.receiptsTable {
+  --img-width: 100px;
+
+  &__img {
+    max-width: var(--img-width);
+    margin: auto;
+    cursor: pointer;
+  }
+
+  &__imgHeader {
+    max-width: var(--img-width);
+  }
+
+  &__preview {
+    position: fixed;
+    padding: 10px;
+    border-radius: 0.4rem;
+    border: 1px solid #ddd;
+    background-color: #fff;
+
+    img {
+      max-width: 200px;
+      border: 1px solid;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+
+    .fa {
+      margin-left: 5px;
+      font-size: 16px;
+      color: #6b6c72;
+    }
+  }
+
+  &__link {
+    color: #0077c5;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__selectColumn {
+    padding: 0 8px !important;
+    text-align: center;
+    max-width: 50px;
+  }
+
+  &__row--selected {
+    background-color: #e4e7eb !important;
+  }
+}
+
+#batchActions {
+  width: 100%;
+}

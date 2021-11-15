@@ -9,6 +9,8 @@ var original_fname_vc = [];
 var siteURL = document.getElementById('siteurl').value;
 var attachment = null;
 var attachment_id = [];
+window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
 $(document).ready(function () {
     $('.loader').hide();
     // Rules page
@@ -2265,7 +2267,11 @@ $(document).ready(function () {
 
 
 // Get Receipt data
-$(document).on('click','#updateReceipt',function () {
+$(document).on('click','.receiptsTable__row',function (event) {
+    const { target: $target } = event;
+    if ($target.classList.contains("receiptsTable__checkbox")) return;
+    if ($target.classList.contains("receiptsTable__selectColumn")) return;
+
     var id = $(this).attr('data-id');
     var site_url = jQuery("#siteurl").val();
     $.ajax({
@@ -2285,11 +2291,14 @@ $(document).on('click','#updateReceipt',function () {
             $('#totalAmount').val(data.total_amount);
             $('#memo').text(data.memo);
             $('#refNumber').val(data.ref_number);
+            $('#deleteReceipt').attr("data-id", data.id);
+            $("#receiptModal").modal("show");
         }
     });
 });
 // Delete Receipt
-$(document).on('click','#deleteReceipt',function () {
+$(document).on('click','#deleteReceipt',function (event) {
+    event.preventDefault();
     var id = $(this).attr('data-id');
     Swal.fire({
         title: 'Are you sure?',
@@ -2302,15 +2311,11 @@ $(document).on('click','#deleteReceipt',function () {
     }).then((result) => {
         if (result.value) {
         $.ajax({
-            url:'/accounting/deleteReceiptData',
+            url:`${window.prefixURL}/accounting/deleteReceiptData`,
             method:"POST",
             data:{id:id},
             success:function (data) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                );
+                window.location.reload();
             }
         });
     }

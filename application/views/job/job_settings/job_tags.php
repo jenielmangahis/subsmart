@@ -156,7 +156,7 @@ a.btn-primary.btn-md {
                             <div class="card-body hid-desk pt-0" style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
                                 <div class="row margin-bottom-ter mb-2 align-items-center" style="background-color:white; padding:0;">
                                     <div class="col-auto pl-0">
-                                        <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Job Tags</h5>
+                                        <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Job Tagss</h5>
                                     </div>
                                     <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                         <div class="float-right d-md-block">

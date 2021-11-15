@@ -102,7 +102,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-calendar-event'></i> Events
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird Eye View' || $page->title == 'Checklist' || $page->title == 'Settings'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("job") ?>">
                                 <i class='bx bx-fw bx-message-square-error'></i> Jobs
                             </a>

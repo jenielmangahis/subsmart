@@ -1021,6 +1021,10 @@ $(document).on("click", "div#share-link-modal .the-modal-body .btns button.cance
 });
 
 $(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn", function(event) {
+    delete_invoice(this, "single_customer_page");
+});
+
+function delete_invoice(element, action_from = "") {
     Swal.fire({
         title: "Delete Invoice?",
         html: "Are you sure you want to delete this invoice? This invoice is linked to other transactions",
@@ -1032,11 +1036,11 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
     }).then((result) => {
         if (result.value) {
             $("body").css({ 'cursor': 'wait' });
-            $(this).css({ 'cursor': 'wait' });
+            $(element).css({ 'cursor': 'wait' });
             $.ajax({
                 type: 'POST',
                 url: baseURL + "invoice/deleteInvoiceBtnNew",
-                data: { id: $(this).attr("data-invoice-id") },
+                data: { id: $(element).attr("data-invoice-id") },
                 success: function(result) {
                     $("body").css({ 'cursor': 'default' });
                     $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .delete-invoice-btn").css({ 'cursor': 'default' });
@@ -1051,10 +1055,15 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
                     }
                 },
             });
-            single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+            if (action_from == "single_customer_page") {
+                single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+            } else if (action_from == "invoice_page") {
+                invoices_filter_changed();
+                $("div#invoice-viewer-modal").fadeOut();
+            }
         }
     });
-});
+}
 $(document).on("click", "div#share-link-modal .the-modal-body .btns button.copy-btn", function(event) {
     $('div#share-link-modal .the-modal-body .form-group input[name="shared_invoice_link"]').select();
     document.execCommand("copy");
@@ -1095,17 +1104,22 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
 });
 
 $(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .print-invoice-packaging-slip-btn", function(event) {
+    print_invoice_packaging(this);
+});
+
+function print_invoice_packaging(element) {
     $("body").css({ 'cursor': 'wait' });
-    $(this).css({ 'cursor': 'wait' });
+    $(element).css({ 'cursor': 'wait' });
     $.ajax({
         url: baseURL + "accounting/print_invoice_packaging_slip",
         type: "POST",
         dataType: "json",
         data: {
-            invoice_id: $(this).attr("data-invoice-id"),
-            invoice_no: $(this).attr("data-invoice-no")
+            invoice_id: $(element).attr("data-invoice-id"),
+            invoice_no: $(element).attr("data-invoice-no")
         },
         success: function(data) {
+            $(element).css({ 'cursor': 'pointer' });
             var win = window.open(data.pdf_link, '_blank');
             if (win) {
                 win.focus();
@@ -1116,7 +1130,7 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
             $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .print-invoice-packaging-slip-btn").css({ 'cursor': 'default' });
         },
     });
-});
+}
 
 function single_customer_sortTable() {
     var table, rows, switching, i, x, y, shouldSwitch;
@@ -1253,6 +1267,10 @@ function print_by_batch(action = "") {
     });
 }
 $(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .void-invoice-btn", function(event) {
+
+});
+
+function void_invoice(element, action_from = "") {
     Swal.fire({
         title: "Void Invoice?",
         html: "Are you sure you want to void this invoice? This invoice is linked to other transactions",
@@ -1264,11 +1282,11 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
     }).then((result) => {
         if (result.value) {
             $("body").css({ 'cursor': 'wait' });
-            $(this).css({ 'cursor': 'wait' });
+            $(element).css({ 'cursor': 'wait' });
             $.ajax({
                 type: 'POST',
                 url: baseURL + "invoice/void_invoice",
-                data: { id: $(this).attr("data-invoice-id") },
+                data: { id: $(element).attr("data-invoice-id") },
                 success: function(result) {
                     $("body").css({ 'cursor': 'default' });
                     $("#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td .void-invoice-btn").css({ 'cursor': 'default' });
@@ -1280,13 +1298,18 @@ $(document).on("click", "#customer-single-modal .single-customer-info-section .b
                             html: "Invoice has been voided.",
                             icon: "success",
                         });
-                        single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+                        if (action_from == "single_customer_page") {
+                            single_customer_page_get_all_customers($("#customer-single-modal input[name='customer_id']").val());
+                        } else if (action_from == "invoice_page") {
+                            invoices_filter_changed();
+                            $("div#invoice-viewer-modal").fadeOut();
+                        }
                     }
                 },
             });
         }
     });
-});
+}
 
 $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batch-btn li.print-packaging-slip-btn", function(event) {
     if (!$(this).hasClass("disabled")) {
@@ -1402,3 +1425,50 @@ Thanks for your business!
 $(document).on("click", "#customer-single-modal #single_customer_table .print-statement-btn ", function(event) {
     window.open(baseURL + "assets/pdf/" + $(this).attr("type") + "_" + $(this).attr("data-statement-id") + ".pdf");
 });
+$(document).on("click", "#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td ul li.send-invoice-btn", function(event) {
+    send_single_invoice(this);
+});
+
+function send_single_invoice(element) {
+    Swal.fire({
+        title: "Send Invoice?",
+        html: "Are you sure you want to send this invoice?",
+        showCancelButton: true,
+        imageUrl: baseURL + "/assets/img/accounting/customers/message.png",
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#2ca01c",
+        confirmButtonText: "Send now",
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: baseURL + "invoice-page/send-batch",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    invoice_id: $(element).attr("data-invoice-id"),
+                    action: "single-invoice"
+                },
+                success: function(data) {
+                    if (data.status == "success") {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Success",
+                            html: "Invoices are sent.",
+                            icon: "success",
+                        });
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Error",
+                            html: "Unable to send invoice.",
+                            icon: "error",
+                        });
+                    }
+                    $("#loader-modal").hide();
+                },
+            });
+        }
+    });
+}

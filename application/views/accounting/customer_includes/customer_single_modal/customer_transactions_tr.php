@@ -170,7 +170,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
                 aria-labelledby="dropdown-edit">
-                <li>
+                <li class="send-invoice-btn" data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Send
                     </a>

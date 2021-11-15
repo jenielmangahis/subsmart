@@ -11,6 +11,6 @@ class Inbox extends Widgets {
     }
 
     public function index() {
-        $this->load->view('v2/pages/inbox.php', $this->page_data);
+        $this->load->view('v2/pages/dashboard/inbox.php', $this->page_data);
     }
 }
