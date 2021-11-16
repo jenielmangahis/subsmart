@@ -5589,4 +5589,53 @@ class Chart_of_accounts extends MY_Controller {
 
         return $return;
     }
+
+    public function add_attachment()
+    {
+        $files = $_FILES['files'];
+
+        if(count($files['name']) > 0) {
+            $this->load->helper('string');
+            $data = [];
+            foreach($files['name'] as $key => $name)
+            {
+                $extension = end(explode('.', $name));
+
+                do {
+                    $randomString = random_string('alnum');
+                    $fileNameToStore = $randomString . '.' .$extension;
+                    $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+                } while ($exists);
+
+                $fileType = explode('/', $files['type'][$key]);
+                $uploadedName = str_replace('.'.$extension, '', $name);
+
+                $data[] = [
+                    'company_id' => getLoggedCompanyID(),
+                    'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+                    'uploaded_name' => $uploadedName,
+                    'stored_name' => $fileNameToStore,
+                    'file_extension' => $extension,
+                    'size' => $files['size'][$key],
+                    'notes' => null,
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
+
+                move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+            }
+
+            $attachmentIds = [];
+            foreach($data as $attachment) {
+                $attachmentIds[] = $this->accounting_attachments_model->create($attachment);
+            }
+
+            $return = new stdClass();
+            $return->attachment_ids = $attachmentIds;
+            echo json_encode($return);
+        } else {
+            echo json_encode('error');
+        }
+    }
 }

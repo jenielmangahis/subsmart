@@ -32,4 +32,25 @@ class AccountingReceipts extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $ids]);
     }
+
+    public function apiBatchConfirmReceipts()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['ids' => $ids] = $payload;
+
+        $updates = [];
+        foreach ($ids as $id) {
+            $updates[] = ['id' => $id, 'to_expense' => 1];
+        }
+
+        $this->db->update_batch('accounting_receipts', $updates, 'id');
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $ids]);
+    }
 }

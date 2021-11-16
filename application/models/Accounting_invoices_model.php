@@ -196,6 +196,22 @@ class Accounting_invoices_model extends MY_Model
         $vendor = $this->db->get('acs_profile');
         return $vendor->result();
     }
+
+    public function getCustomersInv()
+    {
+        // $vendor = $this->db->get('acs_profile');
+        // return $vendor->result();
+        // $where = array(
+        //     'invoice_id'      => $id,
+        //   );
+
+        $this->db->select('*');
+        $this->db->from('acs_profile');
+        $this->db->join('invoices', 'acs_profile.prof_id   = invoices.customer_id');
+        // $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
     
     public function getPayTerms()
     {

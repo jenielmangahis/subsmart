@@ -244,4 +244,5 @@
 <?php //include viewPath('accounting/customer_includes/receive_payment/receive_payment_modal');?>
 <?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
 <?php include viewPath('accounting/customer_includes/create_invoice/create_invoice_modal'); ?>
-<?php include viewPath('accounting/add_new_term');
+<?php include viewPath('accounting/add_new_term');?>
+<?php include viewPath('accounting/invoices_page_includes/invoice_viewer_modal');

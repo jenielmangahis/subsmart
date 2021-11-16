@@ -57,3 +57,17 @@
 #batchActions {
   width: 100%;
 }
+
+#receiptModal {
+  .modal-body .viewer-backdrop-container .viewer-backdrop {
+    width: unset;
+    height: unset;
+    padding-top: unset;
+    padding: 1rem;
+  }
+
+  #receiptImage {
+    min-width: unset;
+    min-height: unset;
+  }
+}

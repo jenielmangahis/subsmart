@@ -1472,3 +1472,33 @@ function send_single_invoice(element) {
         }
     });
 }
+
+$(document).on('click', '#customer-single-modal .single-customer-info-section .body-section .tab-body-content-section .transaction-list-table table td', function() {
+    if (!$(this).is(':last-child') && !$(this).is(':first-child') && $(this).parent("tr").attr("data-transaction") == "Invoice") {
+        $("div#invoice-viewer-modal").fadeIn();
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal>.the-title .invoice-number").html($(this).parent("tr").attr("data-invoice-number"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .total-amount-section .amount").html($(this).parent("tr").attr("data-grand-total"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.invoice-date .date").html($(this).parent("tr").attr("data-date"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .invoice-info.due-date .date").html($(this).parent("tr").attr("data-due-date"));
+        $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-text").html($(this).parent("tr").attr("data-status"));
+        if ($(this).parent("tr").attr("data-status") == "Paid") {
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("pending");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("success");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-check-circle");
+        } else {
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").removeClass("success");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon").addClass("pending");
+            $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-pause-circle");
+        }
+        invoice_viewer_changed($(this).parent("tr").attr("data-id"), $(this).parent("tr").attr("data-customer-id"));
+    } else if ($(this).parent("tr").attr("data-transaction") == "Payment") {
+        $("#customer_receive_payment_modal").fadeIn();
+        var customer_id = $(this).parent("tr").attr("data-customer-id");
+        var receive_payment_id = $(this).parent("tr").attr("data-receive-payment-id");
+        var invoice_id = $(this).parent("tr").attr("data-id");
+        $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
+        $('#new-popup').modal('hide');
+        $("#loader-modal").show();
+        get_receive_payment(customer_id, receive_payment_id, invoice_id);
+    }
+});

@@ -390,45 +390,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="payeeID">Payee</label>
                                             <select name="payee_id" id="payeeID" class="form-control select2">
                                                 <option disabled selected value="default">Select payee (optional)</option>
-                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
-                                                <option value="1">Betty Fuller</option>
-                                                <option value="2">Brian Boyden</option>
-                                                <option value="3">Ken Curry</option>
-                                                <option value="4">Mary Brown</option>
-                                                <option value="5">Patricia Motes</option> -->
-                                                <!-- <option value="" disabled="" selected>Payee</option> -->
-                                                <option value="fa fa-plus">&#xf067; Add new</option>
-                                                <?php
-                                                foreach($this->AccountingVendors_model->select() as $ro)
-                                                {
-                                                ?>
-                                                <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
-                                                <?php
-                                                }
-                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="bank_account">Bank/Credit Account</label>
                                             <select name="bank_account" id="bank_account" class="form-control select2">
                                                 <option disabled selected value="default">Select an account</option>
-                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
-                                                <option>Billable Expenses</option>
-                                                <option>Gross Receipt</option>
-                                                <option>Guardian</option>
-                                                <option>Mary Brown</option>
-                                                <option>Sales</option> -->
-                                                <?php
-                                                    $i=1;
-                                                    foreach($this->chart_of_accounts_model->select() as $row)
-                                                    {
-                                                        ?>
-                                                        <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
-                                                        <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
-                                                    <?php
-                                                    $i++;
-                                                    }
-                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -473,7 +440,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="modal-footer-uploadedReceipt">
-                        <button type="button" data-dismiss="" class="btn btn-default btn-leftSide">Cancel</button>
+                        <button type="button" data-dismiss="modal" class="btn btn-default btn-leftSide">Cancel</button>
                         <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
                         <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                             <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px">Save and next</button>
@@ -632,6 +599,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
             </div>
         </div>
+    </div>
+
+    <div id="modal-container">
+        <div class="full-screen-modal"></div>
     </div>
     
     <!--    end of modal-->

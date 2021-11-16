@@ -19,3 +19,17 @@ export async function batchDeleteReceipts(ids) {
 
   return response.json();
 }
+
+export async function batchConfirmReceipts(ids) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiBatchConfirmReceipts`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify({ ids }),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}

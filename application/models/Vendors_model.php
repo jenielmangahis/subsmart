@@ -795,4 +795,18 @@ class Vendors_model extends MY_Model {
 		$delete = $this->db->delete('accounting_vendor_transaction_items');
 		return $delete ? true : false;
 	}
+
+	public function savecashflowplan($new_data){
+        $vendor = $this->db->insert('cashflow_planned', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+
+	public function getcashflowplan($company_id)
+	{
+		// $this->db->where('company_id', $company_id);
+		$query = $this->db->get('cashflow_planned');
+		return $query->result();
+	}
 }
