@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", async () => {
   const { ReceiptsReviewTable } = await import("./ReceiptsReviewTable.js");
   const api = await import("./api.js");
+  const rulesUtils = await import("../rules/utils.js");
 
   new ReceiptsReviewTable($("#receiptsReview"));
 
@@ -15,21 +16,52 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     const { target: $target } = event;
     const { action } = $target.dataset;
-    if (action !== "delete") return;
 
-    const { isConfirmed } = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#2ca01c",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    });
+    if (action === "delete") {
+      const { isConfirmed } = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2ca01c",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
 
-    if (!isConfirmed) return;
+      if (!isConfirmed) return;
 
-    await api.batchDeleteReceipts(ids);
-    window.location.reload();
+      await api.batchDeleteReceipts(ids);
+      window.location.reload();
+    }
+
+    if (action === "confirm") {
+      await api.batchConfirmReceipts(ids);
+      window.location.reload();
+    }
+  });
+
+  rulesUtils.initSelect({
+    $select: $("#bank_account"),
+    field: "bank-account",
+  });
+  rulesUtils.initSelect({
+    $select: $("#payeeID"),
+    field: "payee",
+  });
+});
+
+window.addEventListener("DOMContentLoaded", function () {
+  const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+  if (!isLocalhost) return;
+
+  $.ajaxSetup({
+    beforeSend: function (_, settings) {
+      if (settings.url.startsWith("/accounting/")) {
+        settings.url = settings.url.replace(
+          "/accounting/",
+          "/nsmartrac/accounting/"
+        );
+      }
+    },
   });
 });

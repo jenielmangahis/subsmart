@@ -1,4 +1,12 @@
-<tr>
+<tr data-id="<?=$invoice_id?>"
+    data-customer-id="<?=$customer_id?>"
+    data-invoice-number="<?=$no?>"
+    data-grand-total="<?="$ ".number_format(($total), 2)?>"
+    data-status="<?=$status?>"
+    data-date="<?=date("m/d/Y", strtotime($date))?>"
+    data-due-date="<?=date("m/d/Y", strtotime($duedate))?>"
+    data-transaction="<?=$type?>"
+    data-receive-payment-id="<?=$invoice_payment_id?>">
     <td>
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
@@ -106,25 +114,22 @@
         <?=$interval?>
     </td>
     <td data-column="prev-date">
-    <?php
+        <?php
         if ($prev_date!="") {
             echo date("m/d/Y", strtotime($prev_date));
-        }
-    ?>
+        } ?>
     </td>
     <td data-column="next-date">
         <?php
-        if($next_date!=""){
+        if ($next_date!="") {
             echo date("m/d/Y", strtotime($next_date));
-        }
-        ?>
+        } ?>
     </td>
     <td data-column="amount">
-        <?php 
+        <?php
         if ($amount!="") {
             echo "$ ".number_format(($amount), 2);
-        }
-        ?>
+        } ?>
     </td>
     <?php
     }
@@ -170,7 +175,8 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
                 aria-labelledby="dropdown-edit">
-                <li class="send-invoice-btn" data-invoice-id="<?=$invoice_id?>">
+                <li class="send-invoice-btn"
+                    data-invoice-id="<?=$invoice_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         Send
                     </a>

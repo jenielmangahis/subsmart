@@ -199,11 +199,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div style="background-color:#f4f5f8;padding:1.5%;display:none;" id="cfp_add_item_area">
 						<div class="row">
 							<div class="col-md-3">
-								<input type="date" name="item_date" class="form-control">
+								<input type="text" id="datepicker" name="item_date" class="form-control date_plan" placeholder="Date">
 							</div>
 							<div class="col-md-6 input-group" style="">
-								<input type="text" name="item_desc" class="form-control" style="width: 65%;" placeholder="Merchant name"> &nbsp;&nbsp;&nbsp;
-								<input type="text" name="item_amt" class="form-control" style="width: 30%;" placeholder="$0.00">
+								<input type="text" name="item_desc" class="form-control merchant_name" style="width: 65%;" placeholder="Merchant name"> &nbsp;&nbsp;&nbsp;
+								<input type="text" name="item_amt" class="form-control plan_amount" style="width: 30%;" placeholder="$0.00">
 							</div>
 							<div class="col-md-2">
 								<label>Planned</label>
@@ -219,21 +219,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<div class="col-md-3">
 								<div class="row">
 									<div class="col-md-6">
-										<input type="radio" name="item_type" class="form-control_" checked> &nbsp; <label>Money in</label>
+										<input type="radio" name="plan_type" class="form-control_" id="plan_type" value="moneyin" checked> &nbsp; <label>Money in</label>
 										<!-- <input type="radio" name="item_type" class="form-control"> <label>Money out</label> -->
 									</div>
 									<div class="col-md-6">
-										One-time &nbsp; <input type="radio" name="item_type" class="form-control_"> &nbsp; <label> Repeating</label>
+										One-time &nbsp; <input type="radio" name="item_type" class="form-control_ plan_repeat"> &nbsp; <label> Repeating</label>
 									</div>
 								</div><br>
 								<div class="row">
 									<div class="col-md-6">
-										<input type="radio" name="item_type" class="form-control_"> &nbsp; <label>Money out</label>
+										<input type="radio" name="plan_type" class="form-control_" id="plan_type" value="moneyout"> &nbsp; <label>Money out</label>
 									</div>
 								</div>
 							</div>
 							<div class="col-md-9" align="right">
-								<a href="#" class="btn btn-success"> Save </a>
+								<a href="#" class="btn btn-success savecashflowplanned"> Save </a>
 							</div>
 						</div>
 					</div>
@@ -260,6 +260,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?> </td>
 									<td><?php echo $inv->grand_total; ?> </td>
 									<td><?php echo 'Invoice'; ?></td>
+								</tr>
+								<?php endforeach; ?>
+
+								<?php foreach ($plans as $plan):?>
+								<tr class="moneyin">
+									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($plan->date_plan)); ?> </td>
+									<td><?php echo $plan->merchant_name;?> </td>
+									<td><?php echo $plan->amount; ?> </td>
+									<td><?php echo 'Planned'; ?></td>
 								</tr>
 								<?php endforeach; ?>
 
@@ -328,7 +337,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
 
 					<div id="Paris" class="tabcontent">
-						<table class="table" id="cashflowtransactions">
+						<table class="table" id="cashflowmoneyin">
 							<thead>
 								<th>DATE</th>
 								<th>DESCRIPTION</th>
@@ -369,7 +378,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				</div>
 
 				<div id="Tokyo" class="tabcontent">
-				<table class="table" id="cashflowtransactions">
+				<table class="table" id="cashflowmoneyout">
 							<thead>
 								<th>DATE</th>
 								<th>DESCRIPTION</th>
@@ -862,4 +871,73 @@ $(".close_add_item").click(function() {
 $(".cfp_add_item").click(function() {
   $('#cfp_add_item_area').show();
 });
+
+$('.savecashflowplanned').click(function() {
+//   alert('test');
+	var date_plan 			=  $(".date_plan").val();
+  	var merchant_name 		=  $(".merchant_name").val();
+  	var plan_amount 		=  $(".plan_amount").val();
+
+	//   plan_type 2x
+	var plan_type 			=  $('input[name="plan_type"]:checked').val();
+
+	// alert(plan_type);
+
+	if($('.plan_repeat').is(':checked')) { 
+		var plan_repeat = '1';
+	 }else{
+		var plan_repeat = '0';
+	 }
+
+	//   plan_repeat
+
+	// sucess("Data Added Successfully!");
+  
+      $.ajax({
+          type : 'POST',
+          url : "<?php echo base_url(); ?>accounting/savecashflowplan",
+          data : {date_plan: date_plan, merchant_name:merchant_name, plan_amount:plan_amount, plan_type:plan_type, plan_repeat:plan_repeat },
+          dataType: 'json',
+          success: function(response){
+			sucess("Data Added Successfully!");
+		  },
+      });
+
+	  		function sucess(information, $id) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: information,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {
+                        location.reload();
+                    }
+                });
+            }
+});
+</script>
+<script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+  </script>
+
+<script>
+// jQuery(document).ready(function() {
+	$('#cashflowtransactions').DataTable({
+		order: [[ 0, 'desc' ]],
+	});
+
+	$('#cashflowmoneyin').DataTable({
+		order: [[ 0, 'desc' ]],
+	});
+
+	$('#cashflowmoneyout').DataTable({
+		order: [[ 0, 'desc' ]],
+	});
+// });
 </script>

@@ -7779,16 +7779,22 @@ class Accounting_modals extends MY_Controller
                                 $oldBalance = floatval($oldInvAssetAcc->balance) - floatval($items[$index]->total);
                             break;
                             case 'Vendor Credit':
-                                $newBalance = floatval($data['item_amount'][$index]) - 5.00;
+                                $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
                                 $newBalance = floatval($newInvAssetAcc->balance) + $newBalance;
-                                $oldBalance = floatval($items[$index]->total) - 5.00;
+                                $newBalance = $newBalance - floatval($data['item_total'][$index]);
+
+                                $oldBalance = floatval($items[$index]->total) - floatval($items[$index]->quantity);
                                 $oldBalance = floatval($oldInvAssetAcc->balance) - $oldBalance;
+                                $oldBalance = $oldBalance + floatval($items[$index]->total);
                             break;
                             case 'Credit Card Credit':
-                                $newBalance = floatval($data['item_amount'][$index]) - 5.00;
+                                $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
                                 $newBalance = floatval($newInvAssetAcc->balance) + $newBalance;
-                                $oldBalance = floatval($items[$index]->total) - 5.00;
+                                $newBalance = $newBalance - floatval($data['item_total'][$index]);
+
+                                $oldBalance = floatval($items[$index]->total) - floatval($items[$index]->quantity);
                                 $oldBalance = floatval($oldInvAssetAcc->balance) - $oldBalance;
+                                $oldBalance = $oldBalance + floatval($items[$index]->total);
                             break;
                         }
     
@@ -7828,14 +7834,20 @@ class Accounting_modals extends MY_Controller
                                 $newBalance = $newBalance + floatval($data['item_total'][$index]);
                             break;
                             case 'Vendor Credit':
-                                $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
-                                $totalAmount = floatval($data['item_amount'][$index]) - 5.00;
-                                $newBalance = $newBalance + $totalAmount;
+                                $newBalance = floatval($items[$index]->total) - floatval($items[$index]->quantity);
+                                $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                                $newBallance = $newBalance + floatval($items[$index]->total);
+
+                                $newBalance = $newBalance + (floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]));
+                                $newBalance = $newBalance - floatval($data['item_total'][$index]);
                             break;
                             case 'Credit Card Credit':
-                                $newBalance = floatval($invAssetAcc->balance) - floatval($items[$index]->total);
-                                $totalAmount = floatval($data['item_amount'][$index]) - 5.00;
-                                $newBalance = $newBalance + $totalAmount;
+                                $newBalance = floatval($items[$index]->total) - floatval($items[$index]->quantity);
+                                $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                                $newBallance = $newBalance + floatval($items[$index]->total);
+
+                                $newBalance = $newBalance + (floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]));
+                                $newBalance = $newBalance - floatval($data['item_total'][$index]);
                             break;
                         }
     
@@ -7952,13 +7964,15 @@ class Accounting_modals extends MY_Controller
                         break;
                         case 'Vendor Credit':
                             $newQty = intval($location->qty) + intval($item->quantity);
-                            $newBalance = floatval($item->total) - 5.00;
+                            $newBalance = floatval($item->total) - floatval($item->quantity);
                             $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                            $newBalance = $newBalance + floatval($item->total);
                         break;
                         case 'Credit Card Credit':
                             $newQty = intval($location->qty) + intval($item->quantity);
-                            $newBalance = floatval($item->total) - 5.00;
+                            $newBalance = floatval($item->total) - floatval($item->quantity);
                             $newBalance = floatval($invAssetAcc->balance) - $newBalance;
+                            $newBalance = $newBalance + floatval($item->total);
                         break;
                     }
 

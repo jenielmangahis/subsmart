@@ -870,6 +870,21 @@ $(document).on('click', '#registers-table tbody tr.action-row #add-attachment', 
     $(this).parent().find('input').trigger('click');
 });
 
+$(document).on('change', '#registers-table tbody tr.action-row input[type="file"]', function() {
+    var data = new FormData(document.getElementById('attachments-form'));
+
+    $.ajax({
+        url: '/accounting/chart-of-accounts/add-attachment',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+
+        }
+    });
+});
+
 $(document).on('click', '#registers-table tbody tr', function() {
     if($('#show_in_one_line').prop('checked') && $(this).find('input').length < 1 && !$(this).hasClass('action-row') && $(this).find('td.dataTables_empty').length < 1) {
         var row = $(this);
@@ -885,7 +900,9 @@ $(document).on('click', '#registers-table tbody tr', function() {
             <div class="row">
                 <div class="col-6 d-flex align-items-center">
                     <h6 class="m-0">
-                        <input type="file" class="d-none form-control" name="files" multiple>
+                        <form id="attachments-form">
+                            <input type="file" class="d-none form-control" name="files" id="files" multiple>
+                        </form>
                         <i class="fa fa-paperclip"></i> <a href="#" class="text-info" id="add-attachment">Add Attachment</a>
                     </h6>
                 </div>

@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                     <div class="col-md-11" style="padding:0 3% 3% 3%;">
                                                         <div align="center" style="padding:;display: inline-block;">
-                                                            <a href="#">
+                                                            <a href="<?php echo base_url('accounting/products-and-services') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
                                                                 </div>
@@ -91,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </div>
                                                         </div>
                                                         <div align="center" style="padding:;display: inline-block;">
-                                                            <a href="#">
+                                                            <a href="<?php echo base_url('accounting/customers') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
                                                                 </div>
@@ -105,7 +105,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </div>
                                                         </div>
                                                         <div align="center" style="padding:;display: inline-block;">
-                                                            <a href="#">
+                                                            <a href="#" class="ajax-" data-toggle="modal" data-target="#newJobModal">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
                                                                 </div>
@@ -119,7 +119,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </div>
                                                         </div>
                                                         <div align="center" style="padding:;display: inline-block;">
-                                                            <a href="#" class="notification">
+                                                            <a href="<?php echo base_url('accounting/addnewInvoice') ?>" class="notification">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
                                                                     <span class="badge"><b>99+</b></span>
@@ -275,7 +275,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </div>
                                                         </div>
                                                         <div align="center" style="padding:;display: inline-block;">
-                                                            <a href="#">
+                                                            <a href="<?php echo base_url('accounting/reports') ?>">
                                                                 <div id="circle" style="padding:20px 0 ;">
                                                                     <center><img src="<?php echo base_url();?>assets/img/accounting/handProduct.png" class="img-responsive max-85" style="width:40px;" /></center>
                                                                 </div>
@@ -2654,6 +2654,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <script src="<?php echo $url->assets ?>js/dashboard_js.js"></script>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('accounting/estimate_one_modal'); ?>
+<?php include viewPath('accounting/customer_invoice_modal'); ?>
+<?php include viewPath('accounting/customer_receive_payment_modal');?>
+<?php include viewPath('accounting/customer_estimate_modal'); ?>
 
 <script>
 function openCity(evt, cityName) {

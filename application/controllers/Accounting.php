@@ -68,6 +68,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/create_charge.css",
             "assets/css/accounting/accounting_includes/refund_receipt_modal.css",
             "assets/css/accounting/accounting_includes/delayed_credit_modal.css",
+            "assets/css/accounting/invoices_page.css",
         ));
 
         add_footer_js(array(
@@ -80,6 +81,7 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/create_charge.js",
             "assets/js/accounting/sales/customer_includes/refund_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/delayed_credit_modal.js",
+            "assets/js/accounting/sales/invoices_page.js",
         ));
 
         $this->page_data['menu_name'] =
@@ -489,11 +491,9 @@ class Accounting extends MY_Controller
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             "assets/css/accounting/customers.css",
-            "assets/css/accounting/invoices_page.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
-            "assets/js/accounting/sales/invoices_page.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
 
@@ -796,7 +796,7 @@ class Accounting extends MY_Controller
     public function aging_summary_report()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomersInv();
         $this->page_data['page_title'] = "A/R Aging Summary Report";
         $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
     }
@@ -11007,23 +11007,24 @@ class Accounting extends MY_Controller
 
         $this->page_data['page_title'] = "Cash Flow";
         
-        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
-        $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
-        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
-        $this->page_data['invoices_sales'] = $this->invoice_model->getAllDataSales(logged('company_id'));
-        $this->page_data['OpenInvoices'] = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
-        $this->page_data['InvOverdue'] = $this->invoice_model->InvOverdue(logged('company_id'));
-        $this->page_data['getAllInvPaid'] = $this->invoice_model->getAllInvPaid(logged('company_id'));
-        $this->page_data['items'] = $this->items_model->getItemlist();
-        $this->page_data['packages'] = $this->workorder_model->getPackagelist(logged('company_id'));
-        $this->page_data['estimates'] = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
-        $this->page_data['sales_receipts'] = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
-        $this->page_data['credit_memo'] = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
-        $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['statements'] = $this->accounting_statements_model->getAllComp(logged('company_id'));
-        $this->page_data['rpayments'] = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
-        $this->page_data['checks'] = $this->vendors_model->get_check_by_comp(logged('company_id'));
-        $this->page_data['expenses'] = $this->expenses_model->getExpenseByComp(logged('company_id'));
+        $this->page_data['customers']       = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
+        $this->page_data['invoices']        = $this->invoice_model->getAllData(logged('company_id'));
+        $this->page_data['clients']         = $this->invoice_model->getclientsData(logged('company_id'));
+        $this->page_data['invoices_sales']  = $this->invoice_model->getAllDataSales(logged('company_id'));
+        $this->page_data['OpenInvoices']    = $this->invoice_model->getAllOpenInvoices(logged('company_id'));
+        $this->page_data['InvOverdue']      = $this->invoice_model->InvOverdue(logged('company_id'));
+        $this->page_data['getAllInvPaid']   = $this->invoice_model->getAllInvPaid(logged('company_id'));
+        $this->page_data['items']           = $this->items_model->getItemlist();
+        $this->page_data['packages']        = $this->workorder_model->getPackagelist(logged('company_id'));
+        $this->page_data['estimates']       = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
+        $this->page_data['sales_receipts']  = $this->accounting_sales_receipt_model->getAllByCompany(logged('company_id'));
+        $this->page_data['credit_memo']     = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
+        $this->page_data['employees']       = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['statements']      = $this->accounting_statements_model->getAllComp(logged('company_id'));
+        $this->page_data['rpayments']       = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
+        $this->page_data['checks']          = $this->vendors_model->get_check_by_comp(logged('company_id'));
+        $this->page_data['expenses']        = $this->expenses_model->getExpenseByComp(logged('company_id'));
+        $this->page_data['plans']           = $this->vendors_model->getcashflowplan(logged('company_id'));
 
         $this->load->view('accounting/cashflowplanner', $this->page_data);
     }
@@ -11591,6 +11592,7 @@ class Accounting extends MY_Controller
         $rpayments       = $this->accounting_receive_payment_model->getReceivePaymentsByComp(logged('company_id'));
         $checks          = $this->vendors_model->get_check_by_comp(logged('company_id'));
         $expenses        = $this->expenses_model->getExpenseByComp(logged('company_id'));
+        $plans           = $this->vendors_model->getcashflowplan(logged('company_id'));
 
 
         $data = array(
@@ -11599,7 +11601,8 @@ class Accounting extends MY_Controller
             'expenses'              => $expenses,
             'clients'               => $clients,
             'sales_receipts'        => $sales_receipts,
-            // 'source' => $source
+            'invoices'              => $invoices,
+            'plans'                 => $plans
         );
 
             
@@ -11769,7 +11772,7 @@ class Accounting extends MY_Controller
     {
         $checkboxes = $this->input->post("checkbox");
         $errors="";
-        if($this->input->post("action") == "single-invoice"){
+        if ($this->input->post("action") == "single-invoice") {
             $checkboxes = array($this->input->post("invoice_id"));
         }
         for ($i=0;$i<count($checkboxes);$i++) {
@@ -12002,4 +12005,36 @@ class Accounting extends MY_Controller
         $data->attachments_images = $images;
         echo json_encode($data);
     }
+
+    public function savecashflowplan()
+    {
+        $date_plan      = $this->input->post("date_plan");
+        $merchant_name  = $this->input->post("merchant_name");
+        $plan_amount    = $this->input->post("plan_amount");
+        $plan_type      = $this->input->post("plan_type");
+        $plan_repeat    = $this->input->post("plan_repeat");
+
+        $new_data = array(
+            'date_plan'     => $date_plan,
+            'merchant_name' => $merchant_name,
+            'amount'        => $plan_amount,
+            'type'          => $plan_type,
+            'description'   => 'Planned',
+            'repeating'     => $plan_repeat,
+            'created_at'    => date("Y-m-d H:i:s"),
+            'updated_at'    => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->vendors_model->savecashflowplan($new_data);
+
+        // if ($addQuery > 0) {
+           
+        // }
+
+        $data = 'Success';
+
+        echo json_encode($data);
+    }
 }
+
+// date_plan: date_plan, merchant_name:merchant_name, plan_amount:plan_amount, plan_type:plan_type, plan_repeat:plan_repeat

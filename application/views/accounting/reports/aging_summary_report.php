@@ -91,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <center>
                             <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                            <p>A/R Aging Summary <br> As of July 31, 2021</p>
+                            <p>A/R Aging Summary <br> As of <?php echo date('F d, Y'); ?></p>
                         </center>
 
                         <table class="table" style="width: 100%;">
@@ -105,15 +105,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <th>TOTAL</th>
                             </thead>
                             <tbody>
-                                <?php foreach($customers as $customer){ ?>
+                                <?php foreach($customers as $customer){ 
+                                    $dateNow = date('Y-m-d');
+                                    $dueDate = date('Y-m-d', strtotime($customer->due_date));
+                                    // $interval = $dateNow->diff($dueDate);
+                                    // $diff = abs(strtotime($dateNow) - strtotime($dueDate));
+                                    // $datediff = abs($dateNow - $dueDate);
+                                    // $datediff = abs($dateNow - $dueDate);
+
+                                    // $no_of_days =  floor($datediff / (60 * 60 * 24));
+                                    // $diff=date_diff($dateNow,$dueDate);
+
+                                    $diff = abs($dateNow - $dueDate); 
+  
+                                    // To get the year divide the resultant date into
+                                    // total seconds in a year (365*60*60*24)
+                                    $years = floor($diff / (365*60*60*24)); 
+                                    
+                                    
+                                    // To get the month, subtract it with years and
+                                    // divide the resultant date into
+                                    // total seconds in a month (30*60*60*24)
+                                    $months = floor(($diff - $years * 365*60*60*24)
+                                                                / (30*60*60*24)); 
+                                    
+                                    
+                                    // To get the day, subtract it with years and 
+                                    // months and divide the resultant date into
+                                    // total seconds in a days (60*60*24)
+                                    $days = floor(($diff - $years * 365*60*60*24 - 
+                                                $months*30*60*60*24)/ (60*60*24));
+                                    
+
+                                    ?>
                                 <tr>
                                     <td><?php echo $customer->first_name . ' ' . $customer->last_name; ?></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><?php echo number_format($customer->grand_total,2); ?></td>
+                                    <td><?php   //echo $dateNow; echo '<br>';
+                                                //echo $dueDate; echo '<br>';
+                                                echo $days; ?></td>
                                     <td></td>
                                     <td></td>
                                     <td>$0.00</td>
-                                    <td>$0.00</td>
+                                    <td><?php echo number_format($customer->grand_total,2); ?></td>
                                 </tr>
 
                                 <?php } ?>
