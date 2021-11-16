@@ -143,6 +143,7 @@ class Estimate_model extends MY_Model
             'customer_id'               => $customer_id,
             'job_location'              => $job_location,
             'job_name'                  => $job_name,
+            'attachments'               => $data['attachments'],
             'estimate_number'           => $estimate_number,
             'estimate_date'             => $estimate_date,
             'expiry_date'               => $expiry_date,

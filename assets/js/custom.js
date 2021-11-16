@@ -187,8 +187,12 @@ $(document).on("focusout", ".adjustment_input", function () {
   var subtotal = $('#item_total').val();
   var taxes = $('#total_tax_input').val();
   var adjustment = $(this).val();
-  var grand = parseFloat(subtotal) + parseFloat(taxes);
-  var new_grand = parseFloat(grand) - adjustment;
+  if( adjustment <= 0 ){
+    adjustment = 0;
+  }
+  var grand = parseFloat(subtotal) + parseFloat(taxes);  
+  var new_grand = parseFloat(grand) + parseFloat(adjustment);
+
   $('#grand_total_input').val(new_grand.toFixed(2));
   $('#grand_total').text(new_grand.toFixed(2));
   $('#adjustmentText').text(adjustment.toFixed(2));
@@ -202,11 +206,11 @@ $(document).on("focusout", ".setmarkup", function () {
 });
 
 $(document).on('change','#span_total_0',function(){
-    alert('Change Happened');
+    //alert('Change Happened');
 });
 
 $(document).on('change paste keyup select','#price_2',function(){
-  alert('Change Happened');
+  //alert('Change Happened');
 });
 
 $(document).on("focusout", ".quantity", function () {
@@ -670,8 +674,8 @@ cal_total_due();
 
 $(".select_item").click(function () {
             var idd = this.id;
-            console.log(idd);
-            console.log($(this).data('itemname'));
+            //console.log(idd);
+            //console.log($(this).data('itemname'));
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             
@@ -703,7 +707,7 @@ $(".select_item").click(function () {
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" value=\"0\" class=\"form-control discount\" data-counter='"+count+"' id='discount_"+count+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' disabled min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' readonly min=\"0\" value='"+taxes_t+"'></td>\n" +
                 "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+count+"' value='"+total+"'></td>" +
@@ -3376,5 +3380,21 @@ $(document).ready(function() {
           },
           dataType: "html"
       });
+  });
+
+  $(".btn-markup-percent").click(function(){
+    $(this).removeClass('btn-default');
+    $(this).addClass('btn-success');
+
+    $(".btn-markup-dollar").removeClass('btn-success');
+    $(".btn-markup-dollar").addClass('btn-default');
+  });
+
+  $(".btn-markup-dollar").click(function(){
+    $(this).removeClass('btn-default');
+    $(this).addClass('btn-success');
+
+    $(".btn-markup-percent").removeClass('btn-success');
+    $(".btn-markup-percent").addClass('btn-default');
   });
 });

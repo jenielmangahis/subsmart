@@ -477,6 +477,7 @@ input:checked + .slider:before {
                                             <th class="hidden_mobile_view" width="150px">Discount</th>
                                             <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
                                             <th class="hidden_mobile_view">Total</th>
+                                            <th class="hidden_mobile_view"></th>
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body"></tbody>
@@ -528,12 +529,19 @@ input:checked + .slider:before {
                                             <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                            <td align="center">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                            <td>                                                
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td><span id="adjustmentText">0.00</span></td>
+                                            <td colspan="2" style="text-align: right;">
+                                                <div class="input-group mb-2" style="width: 40%;float: right;">
+                                                    <div class="input-group-prepend">
+                                                      <div class="input-group-text">$</div>
+                                                    </div>
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                </div>
+                                                <span id="adjustmentText" style="display: none;">0.00</span>
+                                            </td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -603,7 +611,7 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                               <div class="col-md-4">
-                                  <label for="billing_date"><h6>Attachments</h6></label>
+                                  <label for="billing_date"><h6>Attachment</h6></label>
                                   <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
                                   <input type="file" name="est_contract_upload" id="est_contract_upload"
                                          class="form-control"/>
@@ -622,9 +630,9 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
+                                    <button type="submit" class="btn btn-primary" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
-                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
+                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn btn-primary">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -760,8 +768,8 @@ input:checked + .slider:before {
                                 <p>The markup will not be visible to customer estimate.</p>
 
                                 <div class="btn-group margin-right-sec" role="group" aria-label="...">
-                                    <button class="btn btn-default" type="button" name="markup_type_percent">%</button>
-                                    <button class="btn btn-success" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
+                                    <button class="btn btn-default btn-markup-percent" type="button" name="markup_type_percent">%</button>
+                                    <button class="btn btn-success btn-markup-dollar" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
                                     <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
                                 </div>
                         </div>
@@ -786,37 +794,18 @@ input:checked + .slider:before {
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_estimate_sales" class="table table-hover" style="width: 100%;">
+                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <td>Rebate</td>
-                                            <td> Qty</td>
                                             <td> Price</td>
-                                            <td> Action</td>
+                                            <td></td>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                        <?php foreach($items as $item){ ?>
                                             <tr>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
-                                                    </label>
-                                                <?php }else{ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
-                                                <td></td>
+                                                <td><?php echo $item->title; ?></td>                                                
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                 <span class="fa fa-plus"></span>
@@ -841,7 +830,7 @@ input:checked + .slider:before {
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-lg" role="document" style="top: 107px;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
@@ -922,13 +911,22 @@ input:checked + .slider:before {
 //   })
 $(document).ready(function () {
 
+    $('#modal_items_list').DataTable({
+        "autoWidth" : false,
+        "columnDefs": [
+        { width: 540, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 100, targets: 0 }
+        ],
+        "ordering": false,
+    });
+
 //iterate through all the divs - get their ids, hide them, then call the on click
 $(".toggle").each(function () {
     var $context = $(this);
     var $button = $context.find("#rebatable_toggle");
     //            $currentId = $button.attr('id');
     // var $divOptions = $context.find('div').last();
-
     //$($divOptions).hide();
     $($button).on('change', function (event) {
         // alert('yeah');
@@ -1046,7 +1044,7 @@ $(document).ready(function(){
         
             },
                 error: function(response){
-                alert('Error'+response);
+                //alert('Error'+response);
        
                 }
         });
@@ -1200,7 +1198,7 @@ $.ajax({
                     // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                       "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+count+"' value=\"0\" data-counter='"+count+"'></td>\n" +
                     // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+v.id+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' min=\"0\" disabled value='"+total_tax+"'></td>\n" +
+                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+v.id+"' class=\"form-control tax_change\" name=\"tax[]\" data-counter='"+count+"' id='tax1_"+count+"' min=\"0\" readonly value='"+total_tax+"'></td>\n" +
                       "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total+"' id='span_total_"+count+"' class=\"total_per_item\">"+total+
                     // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                       "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+v.id+"' value='"+total+"'></td>" +
