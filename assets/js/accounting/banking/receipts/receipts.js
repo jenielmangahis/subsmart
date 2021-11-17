@@ -1,9 +1,11 @@
 window.addEventListener("DOMContentLoaded", async () => {
-  const { ReceiptsReviewTable } = await import("./ReceiptsReviewTable.js");
+  const { ForReviewTable } = await import("./ForReviewTable.js");
+  const { ReviewedTable } = await import("./ReviewedTable.js");
   const api = await import("./api.js");
   const rulesUtils = await import("../rules/utils.js");
 
-  new ReceiptsReviewTable($("#receiptsReview"));
+  new ForReviewTable($("#receiptsReview"));
+  new ReviewedTable($("#receiptsReviewed"));
 
   const $batchActions = $("#batchActions");
   $batchActions.on("click", async (event) => {

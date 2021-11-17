@@ -1,7 +1,7 @@
 window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
-export async function fetchReceipts() {
-  const endpoint = `${window.prefixURL}/AccountingReceipts/apiGetReceipts`;
+export async function fetchReceipts(isReviewed = false) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiGetReceipts?isReviewed=${isReviewed}`;
   const response = await fetch(endpoint);
   return response.json();
 }
@@ -25,6 +25,32 @@ export async function batchConfirmReceipts(ids) {
   const response = await fetch(endpoint, {
     method: "post",
     body: JSON.stringify({ ids }),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}
+
+export async function deleteReceipt(id) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiDeleteReceipt/${id}`;
+  const response = await fetch(endpoint, {
+    method: "delete",
+    headers: {
+      accept: "application/json",
+    },
+  });
+
+  return response.json();
+}
+
+export async function editReceipt(id, payload) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiEditReceipt/${id}`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
     headers: {
       accept: "application/json",
       "content-type": "application/json",

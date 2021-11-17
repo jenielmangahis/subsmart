@@ -2271,6 +2271,7 @@ $(document).on('click','.receiptsTable__row',function (event) {
     const { target: $target } = event;
     if ($target.classList.contains("receiptsTable__checkbox")) return;
     if ($target.classList.contains("receiptsTable__selectColumn")) return;
+    if ($target.classList.contains("action")) return;
 
     var id = $(this).attr('data-id');
     var site_url = jQuery("#siteurl").val();
@@ -2311,9 +2312,8 @@ $(document).on('click','#deleteReceipt',function (event) {
     }).then((result) => {
         if (result.value) {
         $.ajax({
-            url:`${window.prefixURL}/accounting/deleteReceiptData`,
-            method:"POST",
-            data:{id:id},
+            url:`${window.prefixURL}/AccountingReceipts/apiDeleteReceipt/${id}`,
+            method: 'DELETE',
             success:function (data) {
                 window.location.reload();
             }
