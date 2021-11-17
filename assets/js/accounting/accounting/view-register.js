@@ -846,6 +846,11 @@ $(document).on('click', '#registers-table tbody tr.action-row #save-transaction'
         }
     });
 
+    $('#registers-table tbody tr.action-row #attachments-container .attachment-item').each(function() {
+        var id = $(this).data('id');
+        data.append('attachments[]', id);
+    });
+
     if(rowData.hasOwnProperty('child_id')) {
         data.set('child_id', rowData.child_id);
     }
@@ -866,12 +871,25 @@ $(document).on('click', '#registers-table tbody tr.action-row #save-transaction'
     });
 });
 
-$(document).on('click', '#registers-table tbody tr.action-row #add-attachment', function() {
-    $(this).parent().find('input').trigger('click');
+$(document).on('click', '#registers-table tbody tr.action-row #attachments-container .attachment-item a.remove-attachment', function() {
+    $(this).parent().parent().remove();
+
+    if($('#registers-table tbody tr.action-row #attachments-container .attachment-item').length < 1) {
+        $('#registers-table tbody tr.action-row #attachments-container').html('');
+    }
 });
 
-$(document).on('change', '#registers-table tbody tr.action-row input[type="file"]', function() {
-    var data = new FormData(document.getElementById('attachments-form'));
+$(document).on('click', '#registers-table tbody tr.action-row #add-attachment', function() {
+    $('#registers-table tbody tr.action-row input#files').trigger('click');
+});
+
+$(document).on('change', '#registers-table tbody tr.action-row input#files', function() {
+    var data = new FormData();
+    var totalfiles = this.files.length;
+
+    for (var index = 0; index < totalfiles; index++) {
+        data.append("files[]", this.files[index]);
+    }
 
     $.ajax({
         url: '/accounting/chart-of-accounts/add-attachment',
@@ -880,7 +898,18 @@ $(document).on('change', '#registers-table tbody tr.action-row input[type="file"
         processData: false,
         contentType: false,
         success: function(result) {
+            var attachments = JSON.parse(result);
 
+            if($('#registers-table tbody tr.action-row #attachments-container div.attachment-item').length < 1) {
+                $('#registers-table tbody tr.action-row #attachments-container').append('<h6 class="mt-0">ATTACHMENTS</h6>');
+            }
+
+            for(i in attachments) {
+                var html = `<div class="d-inline-block px-1 attachment-item" data-id="${attachments[i].id}">
+                    <h6 class="m-0"><a class="text-info">${attachments[i].name}</a class="text-info">&nbsp;&nbsp;<a href="#" class="text-muted remove-attachment">&times;</a></h6>
+                </div>`;
+                $('#registers-table tbody tr.action-row #attachments-container').append(html);
+            }
         }
     });
 });
@@ -898,11 +927,14 @@ $(document).on('click', '#registers-table tbody tr', function() {
         var actionRow = '<tr class="action-row">';
         actionRow += `<td colspan="${colCount}">
             <div class="row">
+                <div class="col">
+                    <div id="attachments-container"></div>
+                    <input type="file" class="d-none form-control" name="files" id="files" multiple>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-6 d-flex align-items-center">
                     <h6 class="m-0">
-                        <form id="attachments-form">
-                            <input type="file" class="d-none form-control" name="files" id="files" multiple>
-                        </form>
                         <i class="fa fa-paperclip"></i> <a href="#" class="text-info" id="add-attachment">Add Attachment</a>
                     </h6>
                 </div>

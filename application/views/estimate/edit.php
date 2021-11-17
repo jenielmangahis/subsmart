@@ -7,6 +7,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
    <style>
+   label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
    .but:hover {
     font-weight: 900;
     color:black;
@@ -463,6 +467,7 @@ input:checked + .slider:before {
                                             <th class="hidden_mobile_view" width="150px">Discount</th>
                                             <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
                                             <th class="hidden_mobile_view">Total</th>
+                                            <th class="hidden_mobile_view"></th>
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
@@ -532,7 +537,7 @@ input:checked + .slider:before {
                                                        $<span id="span_total_0">0.00</span></td>
                                             <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr> -->
-                                        <?php foreach($itemsDetails as $data){ ?>
+                                        <?php $count = 0; foreach($itemsDetails as $data){ ?>
                                                         <tr>
                                                             <td width="30%">
                                                             <div class="hidden_mobile_view">
@@ -558,22 +563,37 @@ input:checked + .slider:before {
                                                             <?php echo $data->item_type; ?>
                                                             </div>
                                                             </td>
-                                                            <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
-                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
-                                                            <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
-                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->costing; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->costing; ?></div></td>
-                                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
-                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
+                                                            <td width="10%">
+                                                                <input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                                    data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $count; ?>" value="<?php echo $data->qty; ?>">
+                                                            </td>
+                                                            <td width="10%">
+                                                                <input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                                    data-counter="<?php echo $count; ?>" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $count; ?>" min="0" value="<?php echo $data->costing; ?>">
+                                                                <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>">
+                                                                <div class="show_mobile_view"><?php echo $data->costing; ?></div>
+                                                            </td>
+                                                            <td class="hidden_mobile_view" width="10%">
+                                                                <input type="number" class="form-control discount" name="discount[]"
+                                                                    data-counter="<?php echo $count; ?>" id="discount_<?php echo $count; ?>" min="0" value="<?php echo $data->discount; ?>" />
+                                                            </td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
-                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                                    data-counter="<?php echo $count; ?>" id="tax1_<?php echo $count; ?>" min="0" value="<?php echo $data->tax; ?>" readonly>
                                                                     <!-- <span id="span_tax_0">0.0</span> -->
-                                                                    </td>
-                                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
-                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
-                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                            </td>
+                                                            <td class="hidden_mobile_view" width="10%">
+                                                                <?php 
+                                                                    $total_item_price = $data->costing * $data->qty;
+                                                                    $tax = $data->tax > 0 ? $data->tax : 0;
+                                                                    $discount = $data->discount > 0 ? $data->discount : 0;
+                                                                    $total_row_price = ($total_item_price + $tax) - $data->discount;
+                                                                ?>
+                                                                <input type="hidden" class="form-control " name="total[]"
+                                                                    data-counter="<?php echo $count; ?>" id="item_total_<?php echo $count; ?>" min="0" value="<?php echo $total_row_price; ?>">
+                                                                    <span id="span_total_<?php echo $count; ?>"><?php echo number_format($total_row_price,2); ?></span></td>
                                                             <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                                         </tr>
-                                                    <?php } ?>
+                                                    <?php $count++;} ?>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
@@ -623,12 +643,25 @@ input:checked + .slider:before {
                                             <td colspan="2" align="right">$ <span id="total_tax_"><?php echo $estimate->tax1_total; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $estimate->tax1_total; ?>"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $estimate->adjustment_name; ?>"></td>
-                                            <td align="center">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo $estimate->adjustment_value; ?>" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                            <td>                                                
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1" value="<?php echo $estimate->adjustment_name; ?>">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td>$ <span id="adjustmentText"><?php echo $estimate->adjustment_value; ?></span></td>
+                                            <td colspan="2" style="text-align: right;">
+                                                <div class="input-group mb-2" style="width: 40%;float: right;">
+                                                    <div class="input-group-prepend">
+                                                      <div class="input-group-text">$</div>
+                                                    </div>
+                                                    <?php 
+                                                        $adjustment_value = 0;
+                                                        if( $estimate->adjustment_value > 0 ){
+                                                            $adjustment_value = $estimate->adjustment_value;
+                                                        }
+                                                    ?>
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value,2); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                </div>
+                                                <span id="adjustmentText" style="display: none;"><?php echo $estimate->adjustment_value; ?></span>
+                                            </td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -698,8 +731,12 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                               <div class="col-md-4">
-                                  <label for="billing_date"><h6>Attachments</h6></label>
+                                  <label for="billing_date"><h6>Attachment</h6></label>
                                   <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
+                                  <?php if( $estimate->attachments != '' ){ ?>
+                                        <a class="btn btn-sm btn-primary" target="_new" style="margin-top:10px; margin-bottom: 10px;" href="<?= base_url('uploads/estimates/' . $estimate->user_id . '/' . $estimate->attachments); ?>"><?= $estimate->attachments; ?></a>
+                                  <?php } ?>
+                                  
                                   <input type="file" name="est_contract_upload" id="est_contract_upload"
                                          class="form-control"/>
                               </div>
@@ -717,9 +754,10 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-danger but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
-                                    <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
-                                    <a href="<?php echo url('estimate') ?>" class="btn but-red">Cancel this</a>
+                                    <button type="submit" class="btn btn-primary" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
+                                    <a class="btn btn-primary" href="<?php echo url('estimate/view/' . $estimate->id); ?>" class="btn but-red">Preview</a>
+                                    <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
+                                    <a href="<?php echo url('estimate') ?>" class="btn btn-primary">Cancel</a>
                                 </div>
                             </div>
                         </div>
@@ -824,8 +862,8 @@ input:checked + .slider:before {
                                 <p>The markup will not be visible to customer estimate.</p>
 
                                 <div class="btn-group margin-right-sec" role="group" aria-label="...">
-                                    <button class="btn btn-default" type="button" name="markup_type_percent">%</button>
-                                    <button class="btn btn-success" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
+                                    <button class="btn btn-default btn-markup-percent" type="button" name="markup_type_percent">%</button>
+                                    <button class="btn btn-success btn-markup-dollar" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
                                     <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
                                 </div>
                         </div>
@@ -850,37 +888,18 @@ input:checked + .slider:before {
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_estimate_sales" class="table table-hover" style="width: 100%;">
+                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <td>Rebate</td>
-                                            <td> Qty</td>
                                             <td> Price</td>
-                                            <td> Action</td>
+                                            <td></td>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                        <?php foreach($items as $item){ ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
-                                                    </label>
-                                                <?php }else{ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
-                                                <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                 <span class="fa fa-plus"></span>
@@ -905,7 +924,7 @@ input:checked + .slider:before {
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-lg" role="document" style="top: 107px;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
@@ -984,6 +1003,16 @@ input:checked + .slider:before {
 //     })
 //   })
 $(document).ready(function () {
+
+    $('#modal_items_list').DataTable({
+        "autoWidth" : false,
+        "columnDefs": [
+        { width: 540, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 100, targets: 0 }
+        ],
+        "ordering": false,
+    });
 
 //iterate through all the divs - get their ids, hide them, then call the on click
 $(".toggle").each(function () {

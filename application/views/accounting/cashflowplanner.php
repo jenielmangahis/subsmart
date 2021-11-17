@@ -111,6 +111,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   border: 1px solid #ccc;
   border-top: none;
 }
+
+/* .updateoverduetable tr td
+{
+	padding: 3px !important;
+} */
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css"> -->
@@ -170,7 +175,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p>
                     <br>
                     <div style="border:solid gray 1px;padding:1%;width:100%;color:black;">
-                        <a href="#" style="color:blue;float:right;"><h5>Update</h5></a>
+                        <a href="#" style="color:blue;float:right;" data-toggle="modal" data-target=".updateoverdue"><h5>Update</h5></a>
                         <h5>Overdue Transactions</h5>
                         You have 8 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.
                     </div>
@@ -458,6 +463,83 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <!-- end row -->
             <div class="row"></div>
+
+			<div class="modal fade updateoverdue" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div style="padding:3%;">
+								<h2>Overdue Transactions</h2>
+								<p>You have 3 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.</p>
+
+								<table class="table table-condensed updateoverduetable" style="border-collapse:collapse;">
+									<thead>
+										<th>DATE</th>
+										<th>DESCRIPTION</th>
+										<th>AMOUNT</th>
+										<th>TYPE</th>
+										<th></th>
+									</thead>
+									<tbody>
+										<!-- <tr>
+											<td>08/20/2021</td>
+											<td>John Doe</td>
+											<td>$1000</td>
+											<td>Invoice</td>
+											<td><i class="fa fa-toggle-down"></i></td>
+										</tr>-->
+										<tr data-toggle="collapse" data-target="#demo3">
+											<td>09/09/2021</td>
+											<td>Jerrell Milton</td>
+											<td>$1980.35</td>
+											<td>Invoice</td>
+											<td><i class="fa fa-toggle-down"></i></td>
+										</tr>
+										<tr>
+											<td colspan="6" class="hiddenRow">
+												<div id="demo3" class="collapse">Demo3</div>
+											</td>
+										</tr>
+										<tr data-toggle="collapse" data-target=".demo1">
+											<td>09/09/2021</td>
+											<td>Ronnie & Lynne Davis</td>
+											<td>$1980.35</td>
+											<td>Invoice</td>
+											<td><i class="fa fa-toggle-down"></i></td>
+										</tr> 
+										<tr>
+											<td class="hiddenRow">
+												<div class="collapse demo1">Demo1</div>
+											</td>
+											<td class="hiddenRow">
+												<div class="collapse demo1">Demo1</div>
+											</td>
+											<td class="hiddenRow">
+												<div class="collapse demo1">Demo1</div>
+											</td>
+											<td class="hiddenRow">
+												<div class="collapse demo1">Demo1</div>
+											</td>
+										</tr>
+										<tr data-toggle="collapse" data-target="#demo2">
+											<td>09/09/2021</td>
+											<td>Harry Dodich</td>
+											<td>$1980.35</td>
+											<td>Invoice</td>
+											<td><i class="fa fa-toggle-down"></i></td>
+										</tr>
+										<tr>
+											<td colspan="6" class="hiddenRow">
+												<div id="demo2" class="collapse">Demo2</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<input type="submit" class="btn btn-success" value="Done" style="float: right;">
+						</div>
+					</div>
+				</div>
+			</div>
             <!-- end row -->
         </div>
     </div>
@@ -940,4 +1022,137 @@ $('.savecashflowplanned').click(function() {
 		order: [[ 0, 'desc' ]],
 	});
 // });
+</script>
+
+<script>
+	$('.collapse').on('show.bs.collapse', function () {
+    $('.collapse.in').collapse('hide');
+});
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+ $('#sel-customer').change(function(){
+ var id  = $(this).val();
+//  alert(id);
+
+	 $.ajax({
+		 type: 'POST',
+		 url:"<?php echo base_url(); ?>accounting/addLocationajax",
+		 data: {id : id },
+		 dataType: 'json',
+		 success: function(response){
+			//  alert('success');
+			 console.log(response);
+		 $("#email").val(response['customer'].email);
+		 $("#billing_address").html(response['customer'].billing_address);
+	 
+		 },
+			 error: function(response){
+			 alert('Error'+response);
+	
+			 }
+	 });
+ 	});
+	});
+});
+
+
+$('.close').on('hidden.bs.modal', function () {
+  $(this).find('form').trigger('reset');
+});
+
+$(document).on('click','#closeModalExpense',function () {
+  if(check_original != check_updated){
+      Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to leave without saving?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#2ca01c',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, leave without saving!'
+      }).then((result) => {
+          if (result.value) {
+          if(attachment == 0){
+              Swal.fire({
+                  title: 'Are you sure?',
+                  text: "There is/are a attachment that temporarily removed?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#2ca01c',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, remove it permanently!'
+              }).then((result) => {
+                  if (result.value) {
+                  $(".loader").fadeIn('fast',function(){
+                      $('.loader').show();
+                  });
+                  $('#edit-expensesCheck').modal('hide');
+                  $(".loader").fadeOut('fast',function(){
+                      $('.loader').hide();
+                  });
+                  attachment = null;
+                  attachment_id = [];
+              }
+          });
+          }else{
+              $(".loader").fadeIn('fast',function(){
+                  $('.loader').show();
+              });
+              $('#edit-expensesCheck').modal('hide');
+              $(".loader").fadeOut('fast',function(){
+                  $('.loader').hide();
+              });
+              attachment = null;
+              attachment_id = [];
+          }
+      }
+  });
+  }else{
+      if(attachment == 0){
+          Swal.fire({
+              title: 'Are you sure?',
+              text: "There is/are a attachment that temporarily removed?",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#2ca01c',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, remove it permanently!'
+          }).then((result) => {
+              if (result.value) {
+              $.ajax({
+                  url:"/accounting/removePermanentlyAttachment",
+                  type:"POST",
+                  data:{attachment_id:attachment_id},
+                  success:function () {
+
+                  }
+              });
+              $(".loader").fadeIn('fast',function(){
+                  $('.loader').show();
+              });
+              $('#edit-expensesCheck').modal('hide');
+              $(".loader").fadeOut('fast',function(){
+                  $('.loader').hide();
+              });
+              attachment = null;
+              attachment_id = [];
+          }
+      });
+      }else{
+          $(".loader").fadeIn('fast',function(){
+              $('.loader').show();
+          });
+          $('#edit-expensesCheck').modal('hide');
+          $(".loader").fadeOut('fast',function(){
+              $('.loader').hide();
+          });
+          attachment = null;
+          attachment_id = [];
+      }
+  }
+});
 </script>

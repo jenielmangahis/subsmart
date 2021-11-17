@@ -222,57 +222,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </li>
                                         </ul>
                                     </div>
-                                    <!-- <table id="forReview_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
-                                        <thead>
-                                        <tr>
-                                            <th><input type="checkbox"></th>
-                                            <th>Receipt</th>
-                                            <th>Transaction Date</th>
-                                            <th>Description/Vendor</th>
-                                            <th>Payment account</th>
-                                            <th>Total amount/Taxes</th>
-                                            <th>Category or Matched</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach ($receipts as $receipt): ?>
-                                        <tr class="receiptRow">
-                                            <td><input type="checkbox" value="<?php echo $receipt->id;?>"></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>" height="100" width="100">
-                                        
-                                                <div id="thumbwrap">
-                                                    <a class="thumb" href="#"><img src="<?php echo base_url('uploads/accounting/').$receipt->receipt_img; ?>" alt="" alt="Image" height="100" width="100">
-                                                    <span><img src="<?php echo base_url('uploads/accounting/').$receipt->receipt_img; ?>" alt="" height="400" width="400"></span></a> 
-                                                </div>
-                                            </td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->transaction_date == null || $receipt->transaction_date == "0000-00-00")?"Not found": $receipt->transaction_date; ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->description == null)?"Not found" : $receipt->description; ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->payee_id == 0)?"Not found": $receipt->payee_id ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->total_amount == null || $receipt->total_amount == 0.00)?"Not found" : $receipt->total_amount; ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt->id;?>"><?php echo ($receipt->category == null)?"Not found":$receipt->category; ?></td>
-                                            <td>
-                                                <?php if($receipt->for_expense == 0){ ?>
-                                                    <a id="updateReceipt" href="#" style="display: inline;color:#0077c5;font-weight:bold;" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>
-                                                <?php }else{ ?>
-                                                    <a id="createExpense" href="#" style="display: inline;color:#0077c5;font-weight:bold;" data-id="<?php echo $receipt->id;?>">Create Expense</a>
-                                                <?php } ?>
-                                                    
-                                                    &nbsp;
-                                                <div class="dropdown" style="display: inline-block;position: relative;cursor: pointer;">
-                                                    <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li><a href="#" type="submit" id="deleteReceipt__old" data-id="<?php echo $receipt->id;?>">Delete</a></li>
-                                                        <?php if($receipt->for_expense == 1){ ?>
-                                                            <a id="updateReceipt" href="#" style="display: inline" data-id="<?php echo $receipt->id;?>" data-toggle="modal" data-target="#receiptModal">Review</a>
-                                                        <?php } ?>
-                                                    </ul>
-                                                </div>&nbsp;
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                        </tbody>
-                                    </table> -->
 
                                     <input type="hidden" id="uploadPath" value="<?=base_url('uploads/accounting/');?>" />
                                     <table id="receiptsReview" class="table table-striped table-bordered receiptsTable">
@@ -293,48 +242,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </table>
                                 </div>
                                 <div class="tab-pane fade" id="reviewed">
-                                    <table id="reviewed_receipts_tbl" class="table table-striped table-bordered" style="width:100%">
-                                        <thead>
-                                        <tr>
-                                            <th><input type="checkbox" ></th>
-                                            <th>Receipt</th>
-                                            <th>Transaction Date</th>
-                                            <th>Description/Vendor</th>
-                                            <th>Total amount/Tax</th>
-                                            <th>Linked Record</th>
-                                            <th>Action</th>
-                                        </tr>
+                                    <table id="receiptsReviewed" class="table table-striped table-bordered receiptsTable">
+                                        <thead class="receiptsTable__head">
+                                            <tr>
+                                                <th class="receiptsTable__imgHeader">Receipt</th>
+                                                <th>Date</th>
+                                                <th>Description</th>
+                                                <th>Amount/Tax</th>
+                                                <th>Linked Record</th>
+                                                <th>Action</th>
+                                            </tr>
                                         </thead>
-                                        <tbody>
-                                        <!-- <tr>
-                                            <td><input type="checkbox"></td>
-                                            <td>06/29/2020</td>
-                                            <td>CHECK #2701 2701</td>
-                                            <td>Mike Bell Jr</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><a href="">View</a></td>
-                                        </tr> -->
-                                        <?php foreach ($receipts_two as $receipt_t): ?>
-                                        <tr class="receiptRow">
-                                            <td><input type="checkbox" value="<?php echo $receipt_t->id;?>"></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>" height="100" width="100">
-                                        
-                                                <div id="thumbwrap">
-                                                    <a class="thumb" href="#"><img src="<?php echo base_url('uploads/accounting/').$receipt_t->receipt_img; ?>" alt="" alt="Image" height="100" width="100">
-                                                    <span><img src="<?php echo base_url('uploads/accounting/').$receipt_t->receipt_img; ?>" alt="" height="400" width="400"></span></a> 
-                                                </div>
-                                            </td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->transaction_date == null || $receipt_t->transaction_date == "0000-00-00")?"Not found": $receipt_t->transaction_date; ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->description == null)?"Not found" : $receipt->description; ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->total_amount == null || $receipt_t->total_amount == 0.00)?"Not found" : $receipt_t->total_amount; ?></td>
-                                            <td id="updateReceipt" data-toggle="modal" data-target="#receiptModal" data-id="<?php echo $receipt_t->id;?>"><?php echo ($receipt_t->category == null)?"Not found":$receipt_t->category; ?></td>
-                                            <td>
-                                                <a id="updateReceipt" href="#" style="display: inline;color:#0077c5;font-weight:bold;" data-id="<?php echo $receipt_t->id;?>" data-toggle="modal" data-target="#receiptModal">Undo add</a> &nbsp;
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>

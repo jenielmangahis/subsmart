@@ -24,6 +24,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_pay_down_credit_card_model');
+        $this->load->model('accounting_attachments_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
@@ -37,6 +38,7 @@ class Chart_of_accounts extends MY_Controller {
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
+            "assets/css/accounting/invoices_page.css",
         ));
 
         add_footer_js(array(
@@ -48,6 +50,7 @@ class Chart_of_accounts extends MY_Controller {
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
             "assets/js/accounting/sales/customer_includes/create_charge.js",
+            "assets/js/accounting/sales/invoices_page.js",
         ));
 
 		$this->page_data['menu_name'] =
@@ -5295,9 +5298,16 @@ class Chart_of_accounts extends MY_Controller {
             $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
         }
 
+        $attachments = !is_null($vCredit->attachments) && $vCredit->attachments !== '' ? json_decode($vCredit->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $vCreditData = [
             'vendor_id' => $data['payee'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'attachments' => json_encode($attachments),
             'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($vCredit->total_amount), 2, '.', ',')
         ];
 
@@ -5628,12 +5638,14 @@ class Chart_of_accounts extends MY_Controller {
 
             $attachmentIds = [];
             foreach($data as $attachment) {
-                $attachmentIds[] = $this->accounting_attachments_model->create($attachment);
+                $id = $this->accounting_attachments_model->create($attachment);
+                $attachmentIds[] = [
+                    'id' => $id,
+                    'name' => $attachment['uploaded_name'].'.'.$attachment['file_extension']
+                ];
             }
 
-            $return = new stdClass();
-            $return->attachment_ids = $attachmentIds;
-            echo json_encode($return);
+            echo json_encode($attachmentIds);
         } else {
             echo json_encode('error');
         }

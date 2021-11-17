@@ -117,6 +117,19 @@ class Estimate extends MY_Controller
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
 
+        $attachment_name = '';
+        if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
+            $target_dir = "./uploads/estimates/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
+            $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/estimates/$user_id/$attachment_name");
+        }
+
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
@@ -135,7 +148,7 @@ class Estimate extends MY_Controller
             // 'tracking_no' => $this->input->post('tracking_no'),
             // 'ship_to' => $this->input->post('ship_to'),
             // 'tags' => $this->input->post('tags'),
-            'attachments' => 'testing',
+            'attachments' => $attachment_name,
             // 'message_invoice' => $this->input->post('message_invoice'),
             // 'message_statement' => $this->input->post('message_statement'),
             'status' => $this->input->post('status'),
@@ -212,15 +225,15 @@ class Estimate extends MY_Controller
                 $a          = $this->input->post('itemid');
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
-                $h          = $this->input->post('tax');
+                $tax        = $this->input->post('tax');
                 $gtotal     = $this->input->post('total');
 
                 $i = 0;
-                foreach($a as $row){
+                foreach($a as $row){                    
                     $data['items_id'] = $a[$i];
-                    $data['qty'] = $quantity[$i];
-                    $data['cost'] = $price[$i];
-                    $data['tax'] = $h[$i];
+                    $data['qty']   = $quantity[$i];
+                    $data['cost']  = $price[$i];
+                    $data['tax']   =  $tax[$i];
                     $data['total'] = $gtotal[$i];
                     $data['estimates_id '] = $addQuery;
                     $addQuery2 = $this->estimate_model->add_estimate_items($data);
@@ -1058,7 +1071,21 @@ class Estimate extends MY_Controller
     public function update($id)
     {
         $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();
+        $user_id     = getLoggedUserID();
+        $estimate    = $this->estimate_model->getById($id);
+
+        $attachment_name = $estimate->attachments;
+        if(isset($_FILES['est_contract_upload']) && $_FILES['est_contract_upload']['tmp_name'] != '') {
+            $target_dir = "./uploads/estimates/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+                        
+            $tmp_name = $_FILES['est_contract_upload']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['est_contract_upload']['name'])));
+            $attachment_name = "attachment_" . basename($_FILES["est_contract_upload"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/estimates/$user_id/$attachment_name");
+        }
 
         $new_data = array(
             'id'        => $id,
@@ -1079,7 +1106,7 @@ class Estimate extends MY_Controller
             // 'tracking_no' => $this->input->post('tracking_no'),
             // 'ship_to' => $this->input->post('ship_to'),
             // 'tags' => $this->input->post('tags'),
-            'attachments' => 'testing',
+            'attachments' => $attachment_name,
             // 'message_invoice' => $this->input->post('message_invoice'),
             // 'message_statement' => $this->input->post('message_statement'),
             // 'status' => $this->input->post('status'),
