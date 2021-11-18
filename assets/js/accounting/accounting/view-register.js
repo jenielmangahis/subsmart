@@ -871,6 +871,14 @@ $(document).on('click', '#registers-table tbody tr.action-row #save-transaction'
     });
 });
 
+$(document).on('click', '#registers-table tbody tr.action-row #attachments-container .attachment-item a.view-attachment', function() {
+    var attachmentId = $(this).parent().parent().data('id');
+
+    $.get('/accounting/get-attachment-file-path/'+attachmentId, function(res) {
+        window.open(res, '_blank');
+    });
+});
+
 $(document).on('click', '#registers-table tbody tr.action-row #attachments-container .attachment-item a.remove-attachment', function() {
     $(this).parent().parent().remove();
 
@@ -906,7 +914,7 @@ $(document).on('change', '#registers-table tbody tr.action-row input#files', fun
 
             for(i in attachments) {
                 var html = `<div class="d-inline-block px-1 attachment-item" data-id="${attachments[i].id}">
-                    <h6 class="m-0"><a class="text-info">${attachments[i].name}</a class="text-info">&nbsp;&nbsp;<a href="#" class="text-muted remove-attachment">&times;</a></h6>
+                    <h6 class="m-0"><a class="text-info view-attachment">${attachments[i].name}</a class="text-info">&nbsp;&nbsp;<a href="#" class="text-muted remove-attachment">&times;</a></h6>
                 </div>`;
                 $('#registers-table tbody tr.action-row #attachments-container').append(html);
             }

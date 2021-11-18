@@ -41,6 +41,14 @@ invoices_filter_changed();
 
 function invoices_filter_changed() {
     $(".invoices-page-section table tbody").html("<tr><td colspan='8' style='text-align:center;color: #C7C7C7;'><center><img src='" + baseURL + "assets/img/accounting/customers/loader.gif' style='width:50px;' /></center></td></tr>");
+
+    $("#invoice_page_tabs ul li").removeClass("active");
+    if ($("#invoice_page_tabs ul li a[data-tab='" + $(".invoices-page-section .filtering select.status").val() + "']").length > 0) {
+        $("#invoice_page_tabs ul li a[data-tab='" + $(".invoices-page-section .filtering select.status").val() + "']").parent("li").addClass("active");
+    } else {
+        $("#invoice_page_tabs ul li a[data-tab='']").parent("li").addClass("active");
+    }
+
     $.ajax({
         url: baseURL + "/accounting/filter/invoices-page",
         type: "POST",
@@ -48,6 +56,7 @@ function invoices_filter_changed() {
         data: {
             status: $(".invoices-page-section .filtering select.status").val(),
             date_range: $(".invoices-page-section .filtering select.date_range").val(),
+            current_tab: $("#invoice_page_tabs ul li.active a").attr("data-tab")
         },
         success: function(data) {
             $(".invoices-page-section table.invoices-table th input.select-all").prop("checked", false);
@@ -56,6 +65,12 @@ function invoices_filter_changed() {
             } else {
                 $(".invoices-page-section table tbody").html(data.the_html_tbody);
             }
+
+            $("#invoice_page_tabs ul li a[data-tab='Due'] span").html("(" + data.due_count + ")");
+            $("#invoice_page_tabs ul li a[data-tab='Overdue'] span").html("(" + data.overdue_count + ")");
+            $("#invoice_page_tabs ul li a[data-tab='Partially Paid'] span").html("(" + data.partially_paid_count + ")");
+            $("#invoice_page_tabs ul li a[data-tab='Paid'] span").html("(" + data.paid_count + ")");
+            $("#invoice_page_tabs ul li a[data-tab='Draft'] span").html("(" + data.draft_count + ")");
         },
     });
 }
@@ -397,4 +412,18 @@ $(document).on("click", "div#invoice-viewer-modal .the-modal-body.right-side-mod
 });
 $(document).on('click', 'div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer .button-dropdown-options .options li.send', function() {
     send_single_invoice(this);
+});
+$(document).on('click', '#invoice_page_tabs ul li a.nav-link', function(event) {
+    event.preventDefault();
+    if ($("#invoice_page_tabs ul li").hasClass("active")) {
+        $("#invoice_page_tabs ul li").removeClass("active");
+        $(this).parent("li").addClass("active");
+        if ($("#invoice_page_tabs ul li.active a").attr("data-tab") != "") {
+            $(".invoices-page-section .filtering select.status").val($("#invoice_page_tabs ul li.active a").attr("data-tab"));
+        } else {
+            $(".invoices-page-section .filtering select.status").val("All");
+        }
+
+        invoices_filter_changed();
+    }
 });

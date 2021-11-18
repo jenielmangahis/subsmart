@@ -3841,21 +3841,10 @@ class Chart_of_accounts extends MY_Controller {
 
                 if ($itemAccDetails) {
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($item->rate) + 5.00;
+
+                    $newBalance = floatval($item->total) - floatval($item->quantity);
                     $newBalance = floatval($invAssetAcc->balance) - $newBalance;
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => $newBalance
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
-                    $newBalance = number_format($newBalance, 2, '.', ',');
+                    $newBalance = $newBalance + floatval($item->total);
 
                     $invAssetAccData = [
                         'id' => $invAssetAcc->id,
@@ -4006,21 +3995,10 @@ class Chart_of_accounts extends MY_Controller {
 
                 if ($itemAccDetails) {
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($item->rate) + 5.00;
+
+                    $newBalance = floatval($item->total) - floatval($item->quantity);
                     $newBalance = floatval($invAssetAcc->balance) - $newBalance;
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => $newBalance
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
-                    $newBalance = number_format($newBalance, 2, '.', ',');
+                    $newBalance = $newBalance + floatval($item->total);
 
                     $invAssetAccData = [
                         'id' => $invAssetAcc->id,
@@ -4811,29 +4789,24 @@ class Chart_of_accounts extends MY_Controller {
             $total = number_format(floatval($deposit->total_amount), 2, '.', ',');
         }
 
+        $attachments = !is_null($deposit->attachments) && $deposit->attachments !== '' ? json_decode($deposit->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $depositData = [
             'date' => date('Y-m-d', strtotime($data['date'])),
             'total_amount' => $total,
             'memo' => $accountId === $deposit->account_id ? $data['memo'] : $deposit->memo,
             'cash_back_memo' => $accountId === $deposit->cash_back_account_id ? $data['cash_back_memo'] : $deposit->cash_back_memo,
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null
         ];
 
         $update = $this->accounting_bank_deposit_model->update($depositId, $depositData);
 
         if ($update) {
-            // REVERT OLD
-            if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
-                foreach(json_decode($deposit->attachments, true) as $attachmentId) {
-                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                    $attachmentData = [
-                        'linked_to_count' => intval($attachment->linked_to_count) - 1
-                    ];
-    
-                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-                }
-            }
-
             // NEW ATTACHMENTS
             if (isset($data['attachments']) && is_array($data['attachments'])) {
                 foreach ($data['attachments'] as $attachmentId) {
@@ -4920,44 +4893,39 @@ class Chart_of_accounts extends MY_Controller {
             $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
         }
 
+        $attachments = !is_null($expense->attachments) && $expense->attachments !== '' ? json_decode($expense->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $payee = explode('-', $data['payee']);
 
         $expenseData = [
             'payment_date' => date('Y-m-d', strtotime($data['date'])),
-            'ref_no' => $accountId === $expense->payment_account_id ? $data['ref_no'] : $expense->ref_no,
+            'ref_no' => $accountId === $expense->payment_account_id ? ($data['ref_no'] === '' ? null : $data['ref_no']) : $expense->ref_no,
             'payee_type' => $payee[0],
             'payee_id' => $payee[1],
             'memo' => $accountId === $expense->payment_account_id ? $data['memo'] : $expense->memo,
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null,
             'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($expense->total_amount), 2, '.', ',')
         ];
 
         $update = $this->vendors_model->update_expense($expenseId, $expenseData);
 
         if($update) {
-            // REVERT OLD
-            // if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
-            //     foreach(json_decode($deposit->attachments, true) as $attachmentId) {
-            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
-            //         $attachmentData = [
-            //             'linked_to_count' => intval($attachment->linked_to_count) - 1
-            //         ];
-
-            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-            //     }
-            // }
-
             // NEW ATTACHMENTS
-            // if (isset($data['attachments']) && is_array($data['attachments'])) {
-            //     foreach ($data['attachments'] as $attachmentId) {
-            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
-            //         $attachmentData = [
-            //             'linked_to_count' => intval($attachment->linked_to_count) + 1
-            //         ];
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
 
-            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-            //     }
-            // }
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                }
+            }
 
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccBal = $paymentAcc->account_id !== "7" ? floatval($paymentAcc->balance) + floatval($expense->total_amount) : floatval($paymentAcc->balance) - floatval($expense->total_amount);
@@ -5072,45 +5040,40 @@ class Chart_of_accounts extends MY_Controller {
             $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
         }
 
+        $attachments = !is_null($check->attachments) && $check->attachments !== '' ? json_decode($check->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $payee = explode('-', $data['payee']);
 
         $checkData = [
             'payment_date' => date('Y-m-d', strtotime($data['date'])),
-            'check_no' => $accountId === $check->bank_account_id && $check->to_print !== "1" ? $data['ref_no'] : $check->check_no,
+            'check_no' => $accountId === $check->bank_account_id && $check->to_print !== "1" ? ($data['ref_no'] === '' ? null : $data['ref_no']) : $check->check_no,
             'to_print' => $accountId === $check->bank_account_id && $data['ref_no'] !== 'To print' && $check->to_print !== "1" ? null : $check->to_print,
             'payee_type' => $payee[0],
             'payee_id' => $payee[1],
             'memo' => $accountId === $check->bank_account_id ? $data['memo'] : $check->memo,
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($expense->total_amount), 2, '.', ',')
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null,
+            'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($check->total_amount), 2, '.', ',')
         ];
 
         $update = $this->vendors_model->update_check($checkId, $checkData);
 
         if($update) {
-            // REVERT OLD
-            // if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
-            //     foreach(json_decode($deposit->attachments, true) as $attachmentId) {
-            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
-            //         $attachmentData = [
-            //             'linked_to_count' => intval($attachment->linked_to_count) - 1
-            //         ];
-
-            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-            //     }
-            // }
-
             // NEW ATTACHMENTS
-            // if (isset($data['attachments']) && is_array($data['attachments'])) {
-            //     foreach ($data['attachments'] as $attachmentId) {
-            //         $attachment = $this->accounting_attachments_model->getById($attachmentId);
-            //         $attachmentData = [
-            //             'linked_to_count' => intval($attachment->linked_to_count) + 1
-            //         ];
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
 
-            //         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-            //     }
-            // }
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                }
+            }
 
             $account = $this->chart_of_accounts_model->getById($check->bank_account_id);
             $accountBal = floatval($account->balance) + floatval($check->total_amount);
@@ -5225,15 +5188,34 @@ class Chart_of_accounts extends MY_Controller {
             $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
         }
 
+        $attachments = !is_null($bill->attachments) && $bill->attachments !== '' ? json_decode($bill->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $billData = [
             'vendor_id' => $data['payee'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null,
             'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($bill->total_amount), 2, '.', ',')
         ];
 
         $update = $this->vendors_model->update_bill($billId, $billData);
 
         if($update) {
+            // NEW ATTACHMENTS
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                }
+            }
+
             if($totalCount === 1) {
                 if(count($categories) === 1 && count($items) === 0) {
                     $categoryData = [
@@ -5307,13 +5289,25 @@ class Chart_of_accounts extends MY_Controller {
 
         $vCreditData = [
             'vendor_id' => $data['payee'],
-            'attachments' => json_encode($attachments),
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null,
             'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($vCredit->total_amount), 2, '.', ',')
         ];
 
         $update = $this->vendors_model->update_vendor_credit($vCreditId, $vCreditData);
 
         if($update) {
+            // NEW ATTACHMENTS
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                }
+            }
+
             if($totalCount === 1) {
                 if(count($categories) === 1 && count($items) === 0) {
                     $categoryData = [
@@ -5369,21 +5363,40 @@ class Chart_of_accounts extends MY_Controller {
             $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
         }
 
+        $attachments = !is_null($ccCredit->attachments) && $ccCredit->attachments !== '' ? json_decode($ccCredit->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $payee = explode('-', $data['payee']);
 
         $ccCreditData = [
             'payment_date' => date('Y-m-d', strtotime($data['date'])),
-            'ref_no' => $accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id']) ? $data['ref_no'] : $ccCredit->ref_no,
+            'ref_no' => $accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id']) ? ($data['ref_no'] === '' ? null : $data['ref_no']) : $ccCredit->ref_no,
             'payee_type' => $payee[0],
             'payee_id' => $payee[1],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null,
             'memo' => $accountId === $ccCredit->bank_credit_account_id && !isset($data['child_id']) ? $data['memo'] : $ccCredit->memo,
-            'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($vCredit->total_amount), 2, '.', ',')
+            'total_amount' => $totalCount === 1 ? number_format(floatval($amount), 2, '.', ',') : number_format(floatval($ccCredit->total_amount), 2, '.', ',')
         ];
 
         $update = $this->vendors_model->update_credit_card_credit($ccCreditId, $ccCreditData);
 
         if($update) {
+            // NEW ATTACHMENTS
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                }
+            }
+
             if($totalCount === 1) {
                 $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
 
@@ -5497,14 +5510,35 @@ class Chart_of_accounts extends MY_Controller {
             $amount = $data['payment'] === '' ? $data['deposit'] : $data['payment'];
         }
 
+        $attachments = !is_null($billPayment->attachments) && $billPayment->attachments !== '' ? json_decode($billPayment->attachments, true) : []; 
+        if(isset($data['attachments']) && count($data['attachments']) > 0) {
+            foreach($data['attachments'] as $attachmentId) {
+                $attachments[] = $attachmentId;
+            }
+        }
+
         $billPaymentData = [
             'payment_date' => date('Y-m-d', strtotime($data['date'])),
-            'check_no' => $data['ref_no'],
+            'check_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
             'memo' => $data['memo'],
-            // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'attachments' => count($attachments) > 0 ? json_encode($attachments) : null,
         ];
 
         $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
+
+        if($update) {
+            // NEW ATTACHMENTS
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                }
+            }
+        }
 
         $return = [
             'data' => $billPaymentId,
@@ -5531,7 +5565,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $adjustmentData = [
             'as_of_date' => date('Y-m-d', strtotime($data['date'])),
-            'ref_no' => $data['ref_no'],
+            'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
             'memo' => $data['memo'],
             'inv_adj_account' => !isset($data['inventory_adj_account']) ? $adjustment->inv_adj_account : $data['inventory_adj_account'],
             'inv_asset_account' => !isset($data['inventory_asset_account']) ? $adjustment->inv_asset_account : $data['inventory_asset_account']

@@ -334,6 +334,7 @@ class Accounting extends MY_Controller
         ]);
         add_footer_js([
             'assets/js/accounting/banking/receipts/receipts.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
 
         $this->load->view('accounting/receipts', $this->page_data);
@@ -496,9 +497,111 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customers.js",
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js'
         ));
+        
+        $company_id = getLoggedCompanyID();
+        $start_date = date('Y-m-d', strtotime(date("Y-m-d") . ' - 365 days'));
+        $end_date = date('Y-m-d');
+        $invoices = $this->accounting_invoices_model->get_ranged_invoices_by_company_id($company_id, $start_date, $end_date);
+        $receivable_payment = 0;
+        $total_amount_received = 0;
+        $receivable_last30_days = 0;
+        $total_amount_received_last30_days = 0;
+        $total_overdue = 0;
+        $total_not_due = 0;
+        $deposited_last30_days = 0;
+
+        foreach ($invoices as $inv) {
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment += $inv->grand_total;
+                if ($this->get_date_difference_indays($inv->date_issued, date("Y-m-d")) <= 30) {
+                    $receivable_last30_days += $inv->grand_total;
+                }
+            }
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            $amount_payment = 0;
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+                $amount_payment += $payment->payment_amount;
+                if ($this->get_date_difference_indays($inv->date_issued, date("Y-m-d")) <= 30) {
+                    $total_amount_received_last30_days += $payment->payment_amount;
+                    $deposited_last30_days += $payment->payment_amount;
+                }
+            }
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d")) {
+                $total_overdue += $inv->grand_total - $amount_payment;
+            } else {
+                $total_not_due += $inv->grand_total - $amount_payment;
+            }
+        }
+
+        //caculating this month overall income
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of this month")), date("Y-m-d"));
+        $income_this_month = 0;
+        $income_last_month = 0;
+        $income_per_day = array();
+
+        $graph_data = array();
+        $graph_data["type"] = "line";
+        $graph_data["indexLabelFontSize"] = "12";
+        $dataPoints = array();
+        foreach ($receive_payments as $payment) {
+            if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
+                $income_this_month += $payment->amount;
+                $per_day_index = date("d", strtotime($payment->payment_date));
+                $income_per_day[$per_day_index] += $payment->amount;
+                $dataPoints["y"][] = $payment->amount;
+            } else {
+                $income_last_month += $payment->amount;
+            }
+        }
+        $dataPoints["y"][] = 100;
+        $graph_data["dataPoints"] = $dataPoints;
+        // var_dump($receive_payments);
+
+        //script for deposit widget
+        $invoices_this_week = $this->invoice_model->get_ranged_PaidInv($company_id, date("Y-m-d", strtotime('monday this week')), date("Y-m-d", strtotime('sunday this week')));
+        $total_deposit = 0;
+        $statuses = array(0, 0, 0, 0);
+        $deposit_transaction_count = 0;
+        foreach ($invoices_this_week as $inv) {
+            $total_deposit += $inv->grand_total;
+            $deposit_transaction_count++;
+            if ($inv->status == 'Submitted') {
+                $statuses[0] += 1;
+            } elseif ($inv->status == 'Approved') {
+                $statuses[1] += 1;
+            } elseif ($inv->status == 'Partially Paid') {
+                $statuses[2] += 1;
+            } elseif ($inv->status == 'Paid') {
+                $statuses[3] += 1;
+            }
+        }
+        $current_status = -1;
+        $largest_status = 0;
+        for ($i = 0; $i < count($statuses); $i++) {
+            if ($statuses[$i] > $largest_status) {
+                $current_status = $i;
+                $largest_status = $statuses[$i];
+                $i = -1;
+            }
+        }
+
+
+        $this->page_data['unpaid_last_365'] = $receivable_payment - $total_amount_received;
+        $this->page_data['unpaid_last_30'] = $receivable_last30_days - $total_amount_received_last30_days;
+        $this->page_data['due_last_365'] = $total_overdue;
+        $this->page_data['not_due_last_365'] = $total_not_due;
+        $this->page_data['deposited_last30_days'] = $deposited_last30_days;
+        $this->page_data['not_deposited_last30_days'] = $receivable_last30_days - $deposited_last30_days;
+        $this->page_data['invoice_needs_attention'] = false;
+        $this->page_data['income_this_month'] = $income_this_month;
+        $this->page_data['income_last_month'] = $income_last_month;
+        $this->page_data['deposit_current_status'] = $current_status;
+        $this->page_data['deposit_total_amount'] = $total_deposit;
+        $this->page_data['deposit_transaction_count'] = $deposit_transaction_count;
+        $this->page_data['graph_data'] = "[" . $this->graph_data_to_text($graph_data) . "]";
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $company_id = getLoggedCompanyID();
         $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
         $this->page_data['page_title'] = "Invoices";
         // print_r($this->page_data);
@@ -2366,7 +2469,7 @@ class Accounting extends MY_Controller
             $this->load->library('upload', $config);
             if ($this->upload->do_upload("file")) {
                 $uploadData = $this->upload->data();
-                $data2 = array('receipt_img' => $uploadData['file_name']);
+                $data2 = array('receipt_img' => $uploadData['file_name'], 'user_id' => logged('id'));
                 $this->db->insert('accounting_receipts', $data2);
                 echo json_encode($uploadData['file_name']);
             } else {
@@ -2405,6 +2508,7 @@ class Accounting extends MY_Controller
             $data->total_amount = (empty($query->row()->total_amount)) ? "" : $query->row()->total_amount;
             $data->memo = (empty($query->row()->memo)) ? "" : $query->row()->memo;
             $data->ref_number = (empty($query->row()->ref_number)) ? "" : $query->row()->ref_number;
+            $data->created_at = $query->row()->created_at;
 
             echo json_encode($data);
         }
@@ -11564,11 +11668,31 @@ class Accounting extends MY_Controller
         } else {
             $status = "";
         }
+        if ($this->input->post("current_tab")!="") {
+            $status="AND invoices.status = '".$this->input->post("current_tab")."'";
+        }
         $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
-        
         $this->page_data['invoices'] = $this->accounting_invoices_model->get_filtered_invoices($where);
         $the_html_tbody.=$this->load->view('accounting/invoices_page_includes/invoices_page_table_filteres', $this->page_data, true);
+        
         $data = new stdClass();
+        
+        $status="AND invoices.status = 'Due'";
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        $data->due_count = count($this->accounting_invoices_model->get_filtered_invoices($where));
+        $status="AND invoices.status = 'Overdue'";
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        $data->overdue_count = count($this->accounting_invoices_model->get_filtered_invoices($where));
+        $status="AND invoices.status = 'Partially Paid'";
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        $data->partially_paid_count = count($this->accounting_invoices_model->get_filtered_invoices($where));
+        $status="AND invoices.status = 'Paid'";
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        $data->paid_count = count($this->accounting_invoices_model->get_filtered_invoices($where));
+        $status="AND invoices.status = 'Draft'";
+        $where = " invoices.company_id = ".logged('company_id')." AND invoices.view_flag = 0 AND invoices.voided = 0  AND invoices.date_issued >= '".$start_date."' AND invoices.date_issued <= '".$end_date."' ".$status;
+        $data->draft_count = count($this->accounting_invoices_model->get_filtered_invoices($where));
+        
         $data->the_html_tbody = $the_html_tbody;
         echo json_encode($data);
     }

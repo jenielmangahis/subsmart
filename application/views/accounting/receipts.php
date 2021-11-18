@@ -280,25 +280,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <form action="<?php echo site_url()?>accounting/updateReceipt" method="post">
                     <div class="modal-body" id="first_step_receipt">
                         <div class="row" style="margin-bottom: 100px">
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 <div class="viewer-backdrop-container">
                                     <div class="viewer-backdrop">
                                         <input type="hidden" id="base_url" value="<?php echo base_url()?>uploads/accounting/">
                                         <img src="" id="receiptImage" alt="Image">
                                     </div>
                                     <div class="label-imageContainer" style="margin-top: 15px;">
-                                        <span>Added 5:57 PM 07/06/2020</span>
+                                        <span id="receiptImageCreatedAt"></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-7">
                                 <div class="receiptDetailsContainer">
+                                    <div class="formError">
+                                        <div class="formError__inner">
+                                            <i class="fa fa-info-circle"></i>
+                                            <div>
+                                                <p>Something’s not quite right</p>
+                                                <p>Please fill in all required details.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="step-header">Receipt details</div>
                                     <div class="step-header-text">Double-check the details and add any missing info.</div>
                                         <div class="form-group form-element">
                                             <span>Document Type</span>
                                             <input type="hidden" name="receipt_id" id="receipt_id">
-                                            <select name="document_type" id="documentType" class="form-control">
+                                            <select name="document_type" id="documentType" class="form-control" data-type="document_type">
                                                 <option value="Receipt">Receipt</option>
                                                 <option value="Bill">Bill</option>
                                             </select>
@@ -306,51 +316,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <hr>
                                         <div class="form-group">
                                             <label for="payeeID">Payee</label>
-                                            <select name="payee_id" id="payeeID" class="form-control select2">
-                                                <option disabled selected value="default">Select payee (optional)</option>
+                                            <select name="payee_id" id="payeeID" class="form-control select2" data-type="payee_id">
+                                                <option disabled selected value="">Select payee (optional)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="bank_account">Bank/Credit Account</label>
-                                            <select name="bank_account" id="bank_account" class="form-control select2">
-                                                <option disabled selected value="default">Select an account</option>
+                                            <select required name="bank_account" id="bank_account" class="form-control select2" data-type="bank_account">
+                                                <option disabled selected value="">Select an account</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Payment Date</label>
-                                            <input type="date" name="transaction_date" id="paymentDate" class="form-control" placeholder="Select a date">
+                                            <input required type="date" name="transaction_date" id="paymentDate" class="form-control" placeholder="Select a date" data-type="transaction_date">
                                         </div>
                                         <div class="form-group">
-                                            <label for="category">Account/Category</label>
-                                            <select name="category" id="category" class="form-control select2">
-                                                <option disabled selected value="default">Select a category</option>
-                                                <option disabled>&plus;&nbsp;Add new</option>
-                                                <option>Commissions & Fees</option>
-                                                <option>Billable Expenses</option>
-                                                <option>Gross Receipt</option>
-                                                <option>Guardian</option>
-                                                <option>Mary Brown</option>
-                                                <option>Sales</option>
+                                            <label for="account_category">Account/Category</label>
+                                            <select required name="category" id="account_category" class="form-control select2" data-type="account_category">
+                                                <option disabled selected value="">Select a category</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Description</label>
-                                            <input type="text" name="description" id="description" class="form-control" placeholder="Enter a description">
+                                            <input type="text" name="description" id="description" class="form-control" placeholder="Enter a description" data-type="description">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Total amount (Inclusive of tax)*</label>
-                                            <input type="text" name="total_amount" id="totalAmount" class="form-control" placeholder="Enter amount">
+                                            <input required type="number" name="total_amount" id="totalAmount" class="form-control" placeholder="Enter amount" data-type="total_amount">
                                         </div>
                                         <div class="form-group">
                                             <label for="memo">Memo</label>
-                                            <textarea name="memo" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)"></textarea>
+                                            <textarea name="memo" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)" data-type="memo"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <a href="#" style="font-weight: bolder;color: color: #0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
+                                            <a href="#" style="font-weight:bolder;color:#0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
                                         </div>
                                         <div class="form-group" id="refNumber" style="display: none">
                                             <label for="refNumber">Ref no.</label>
-                                            <input type="text" name="ref_number" id="refNumber" class="form-control">
+                                            <input type="text" name="ref_number" id="refNumber" class="form-control" data-type="ref_number">
                                         </div>
 
                                 </div>
@@ -361,7 +364,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" data-dismiss="modal" class="btn btn-default btn-leftSide">Cancel</button>
                         <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
                         <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                            <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px">Save and next</button>
+                            <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px" id="saveAndNextButton">Save and next</button>
                             <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
                                 <span class="fa fa-caret-down"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right">
@@ -552,12 +555,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('#toggleRefNumber').click(function () {
        $('#refNumber').toggle();
     });
-</script>
-
-<script>
-$(".save_next").click(function () {
-    $('#nextreceiptModal').modal('toggle');
-});
 </script>
 
 <script>

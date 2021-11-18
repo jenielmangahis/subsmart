@@ -6,6 +6,7 @@ class AccountingReceipts extends MY_Controller
     public function apiGetReceipts()
     {
         $isReviewed = filter_var($this->input->get('isReviewed'), FILTER_VALIDATE_BOOLEAN);
+        $this->db->where('user_id', logged('id'));
         $this->db->where('to_expense', $isReviewed ? 1 : 0);
         $receipts = $this->db->get('accounting_receipts')->result();
 
