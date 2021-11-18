@@ -47,8 +47,39 @@ window.addEventListener("DOMContentLoaded", async () => {
     field: "bank-account",
   });
   rulesUtils.initSelect({
+    $select: $("#account_category"),
+    field: "bank-account",
+  });
+  rulesUtils.initSelect({
     $select: $("#payeeID"),
     field: "payee",
+  });
+
+  const $saveAndNextButton = $("#saveAndNextButton");
+  const $errorMessage = $(".formError");
+  $saveAndNextButton.on("click", (event) => {
+    event.preventDefault();
+    const $form = $(event.target).closest("form");
+    const $dataTypes = $form.find("[data-type]");
+
+    for (let index = 0; index < $dataTypes.length; index++) {
+      const $element = $dataTypes[index];
+      $element.classList.remove("inputError");
+
+      if (!isEmpty($element.value)) {
+        continue;
+      }
+
+      if (!$element.hasAttribute("required")) {
+        continue;
+      }
+
+      $element.classList.add("inputError");
+      $errorMessage.addClass("formError--show");
+      return;
+    }
+
+    $errorMessage.removeClass("formError--show");
   });
 });
 
@@ -67,3 +98,8 @@ window.addEventListener("DOMContentLoaded", function () {
     },
   });
 });
+
+function isEmpty(string) {
+  // https://stackoverflow.com/a/3261380/8062659
+  return !string || string.length === 0;
+}

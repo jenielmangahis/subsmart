@@ -531,3 +531,71 @@ div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer butt
 div#invoice-viewer-modal .the-modal-body.right-side-modal .the-modal-footer button.edit-invoice-btn.success:hover {
     background: rgb(30, 144, 14)
 }
+
+#invoice_page_tabs ul li a.nav-link {
+    cursor: pointer;
+}
+
+.overview-widget.invoices .invoices-365-segment,
+.overview-widget.invoices .invoices-30-segment {
+    cursor: pointer;
+}
+
+.overview-widget .sigments {
+    display: flex;
+}
+
+.overview-widget .sigments>div {
+    float: left;
+}
+
+.overview-widget .bold {
+    color: #404145;
+}
+
+.overview-widget .sigments>div {
+    float: left;
+}
+
+.overview-widget .content-monitary-highlight.small {
+    font-size: 20px;
+}
+
+.overview-widget .content-monitary-highlight {
+    font-size: 35px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.overview-widget.invoices .progress {
+    background-color: transparent;
+    height: 25px;
+}
+
+.overview-widget.invoices .progress-bar.orange {
+    background-color: #FF8001;
+    margin-right: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices .progress-bar.default {
+    background-color: #D4D7DC;
+    margin-left: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices .progress-bar.light-success {
+    background-color: #7CD203;
+    margin-right: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices .progress-bar.success {
+    background-color: #2CA01C;
+    margin-right: 1px;
+    border-radius: 5px;
+}
+
+.overview-widget.invoices {
+    padding-top: 30px;
+}

@@ -8937,4 +8937,11 @@ class Accounting_modals extends MY_Controller
 
         return $return;
     }
+
+    public function get_attachment_file_path($attachmentId)
+    {
+        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+
+        echo '/uploads/accounting/attachments/'.$attachment->stored_name;
+    }
 }

@@ -78,7 +78,8 @@ if ($invoices!=null) {
             &emsp;
             <?php } ?>
 
-            <button class="dropdown-toggle" type="button" id="dropdown-edit" style="height: 25px;"
+            <button class="dropdown-toggle" type="button" id="dropdown-edit"
+                style="height: 25px;background: none;background-color: transparent;border: none;border-left: solid 1px #BABEC5;"
                 data-toggle="dropdown" aria-expanded="true">
                 <span class="btn-label"></span>
                 <span class="caret-holder">

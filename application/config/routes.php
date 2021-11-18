@@ -342,6 +342,7 @@ $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting_modals/adju
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting_modals/adjust_starting_value/$1';
 $route['accounting/get-transaction-attachments/(:any)/(:any)'] = 'accounting_modals/get_transaction_attachments/$1/$2';
 $route['accounting/update-transaction/(:any)/(:any)']['post'] = 'accounting_modals/update_transaction/$1/$2';
+$route['accounting/get-attachment-file-path/(:any)'] = 'accounting_modals/get_attachment_file_path/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

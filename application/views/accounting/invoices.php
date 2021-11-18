@@ -211,54 +211,110 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             class="banking-tab">Products and Services</a>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-sm-6 px-0">
-                        <div class="row px-4">
-                            <div class="col-sm-12">
-                                <h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span class="pl-3">Last 365
-                                        days</span></h6>
-                            </div>
-                            <div class="col-sm-12 mt-0">
-                                <div class="pull-left">
-                                    <h3 class="mb-0"><strong>$4.00</strong></h3>
-                                    <h6 class="font-weight-normal text-dark mt-1">Overdue</h6>
+                <div class="overview-widget invoices">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="invoices-365-segment">
+                                <div class="sigments">
+                                    <div class="last-365days">
+                                        <div class="bold">$<?=number_format($unpaid_last_365, 2)?>
+                                            Unpaid</div>
+                                    </div>
+                                    <div class="text">
+                                        <div class="text" style="padding: 0 10px;">Last 365 days</div>
+                                    </div>
                                 </div>
-                                <div class="pull-right">
-                                    <h3 class="mb-0"><strong>$4.00</strong></h3>
-                                    <h6 class="font-weight-normal text-dark mt-1">Not due yet</h6>
+                                <div style="padding: 20px 0;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="content-monitary-highlight small">
+                                                $<?=number_format($due_last_365, 2)?>
+                                            </div>
+                                            <div class="text">Overdue</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="content-monitary-highlight small" style="text-align: right;">
+                                                $<?=number_format($not_due_last_365, 2)?>
+                                            </div>
+                                            <div class="text" style="text-align: right;">Not due yet
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 mt-1">
-                                <div class="progress" style="height:30px">
-                                    <div class="progress-bar bg-secondary w-50"
-                                        style="background-color:#ff8000 !important;"></div>
-                                    <div class="progress-bar bg-dark  w-50"
-                                        style="background-color:#d4d7dc !important;"></div>
+                                <div class="invoices-bars">
+                                    <div class="progress">
+                                        <?php
+                                                        if ($due_last_365 == 0 && $not_due_last_365==0) {
+                                                            $progress_overdue =50;
+                                                            $progress_not_due =50;
+                                                        } else {
+                                                            $progress_overdue =($due_last_365/($not_due_last_365+$due_last_365))*100;
+                                                            $progress_not_due =($not_due_last_365/($not_due_last_365+$due_last_365))*100;
+                                                        }
+                                                        ?>
+                                        <div class="progress-bar orange" role="progressbar"
+                                            style="width: <?=$progress_overdue?>%"
+                                            aria-valuenow="<?=$progress_overdue?>"
+                                            aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                        <div class="progress-bar default" role="progressbar"
+                                            style="width: <?=$progress_not_due?>%"
+                                            aria-valuenow="<?=$progress_not_due?>"
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 px-0">
-                        <div class="row px-4">
-                            <div class="col-sm-12">
-                                <h6 class="font-weight-normal"><strong>$0 Paid</strong><span class="pl-3">Last 30
-                                        days</span></h6>
-                            </div>
-                            <div class="col-sm-12 mt-0">
-                                <div class="pull-left">
-                                    <h3 class="mb-0"><strong>$12</strong></h3>
-                                    <h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
+                        <div class="col-md-6">
+                            <div class="invoices-30-segment">
+                                <div class="sigments">
+                                    <div class="last-365days">
+                                        <div class="bold">$<?=number_format($unpaid_last_30, 2)?>
+                                            Unpaid</div>
+                                    </div>
+                                    <div class="text">
+                                        <div class="text" style="padding: 0 10px;">Last 30 days
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="pull-right">
-                                    <h3 class="mb-0"><strong>$12</strong></h3>
-                                    <h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
+                                <div style="padding: 20px 0;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="content-monitary-highlight small">
+                                                $<?=number_format($not_deposited_last30_days, 2)?>
+                                            </div>
+                                            <div class="text">Not deposited</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="content-monitary-highlight small" style="text-align: right;">
+                                                $<?=number_format($deposited_last30_days, 2)?>
+                                            </div>
+                                            <div class="text" style="text-align: right;">Deposited
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 mt-1">
-                                <div class="progress" style="height:30px">
-                                    <div class="progress-bar bg-success w-50"
-                                        style="background-color:#2ca01c !important;"></div>
-                                    <div class="progress-bar bg-info  w-50"></div>
+                                <div class="invoices-bars">
+                                    <div class="progress">
+                                        <?php
+                                                        if ($deposited_last30_days == 0 && $not_deposited_last30_days==0) {
+                                                            $progress_deposited =50;
+                                                            $progress_not_deposited =50;
+                                                        } else {
+                                                            $progress_deposited =($deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
+                                                            $progress_not_deposited =($not_deposited_last30_days/($not_deposited_last30_days+$deposited_last30_days))*100;
+                                                        }
+                                                        ?>
+                                        <div class="progress-bar light-success" role="progressbar"
+                                            style="width: <?=$progress_not_deposited?>%"
+                                            aria-valuenow="<?=$progress_not_deposited?>"
+                                            aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                        <div class="progress-bar success" role="progressbar"
+                                            style="width: <?=$progress_deposited?>%"
+                                            aria-valuenow="<?=$progress_deposited?>"
+                                            aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -426,43 +482,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
 </div> -->
 
-<div class="tabs">
+<div class="tabs" id="invoice_page_tabs">
     <ul class="clearfix work__order mobile-invoice-ul" id="myTab" role="tablist">
         <li <?php echo ((empty($tab)) || $tab == 1) ? "class='active'" : "" ?>>
-            <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                href="<?php echo base_url('invoice') ?>"
-                role="tab" aria-controls="profile" aria-selected="false">All
-                (<?php echo get_invoice_count(1) ?>)</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1" role="tab" aria-controls="profile"
+                aria-selected="false" data-tab="">All
+                <span>&nbsp;</span></a>
         </li>
         <li <?php echo ((!empty($tab)) && $tab == 2) ? "class='active'" : "" ?>>
-            <a class="nav-link" id="profile-tab" data-toggle="tab2"
-                href="<?php echo base_url('invoice/tab/2') ?>"
-                role="tab" aria-controls="profile" aria-selected="false">Due
-                (<?php echo get_invoice_count(2) ?>)</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab2" role="tab" aria-controls="profile"
+                aria-selected="false" data-tab="Due">Due
+                <span>&nbsp;</span></a>
         </li>
         <li <?php echo ((!empty($tab)) && $tab == 3) ? "class='active'" : "" ?>>
-            <a class="nav-link" id="profile-tab" data-toggle="tab3"
-                href="<?php echo base_url('invoice/tab/3') ?>"
-                role="tab" aria-controls="profile" aria-selected="false">Overdue
-                (<?php echo get_invoice_count(3) ?>)</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab3" role="tab" aria-controls="profile"
+                aria-selected="false" data-tab="Overdue">Overdue
+                <span>&nbsp;</span></a>
         </li>
         <li <?php echo ((!empty($tab)) && $tab == 4) ? "class='active'" : "" ?>>
-            <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                href="<?php echo base_url('invoice/tab/4') ?>"
-                role="tab" aria-controls="profile" aria-selected="false">Partially Paid
-                (<?php echo get_invoice_count(4) ?>)</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1" role="tab" aria-controls="profile"
+                aria-selected="false" data-tab="Partially Paid">Partially Paid
+                <span>&nbsp;</span></a>
         </li>
         <li <?php echo ((!empty($tab)) && $tab == 5) ? "class='active'" : "" ?>>
-            <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                href="<?php echo base_url('invoice/tab/5') ?>"
-                role="tab" aria-controls="profile" aria-selected="false">Paid
-                (<?php echo get_invoice_count(5) ?>)</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1" role="tab" aria-controls="profile"
+                aria-selected="false" data-tab="Paid">Paid
+                <span>&nbsp;</span></a>
         </li>
         <li <?php echo ((!empty($tab)) && $tab == 6) ? "class='active'" : "" ?>>
-            <a class="nav-link" id="profile-tab" data-toggle="tab1"
-                href="<?php echo base_url('invoice/tab/6') ?>"
-                role="tab" aria-controls="profile" aria-selected="false">Draft
-                (<?php echo get_invoice_count(6) ?>)</a>
+            <a class="nav-link" id="profile-tab" data-toggle="tab1" role="tab" aria-controls="profile"
+                aria-selected="false" data-tab="Draft">Draft
+                <span>&nbsp;</span></a>
         </li>
     </ul>
 </div>
