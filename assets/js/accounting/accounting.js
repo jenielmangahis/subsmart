@@ -2268,6 +2268,7 @@ $(document).ready(function () {
 
 // Get Receipt data
 $(document).on('click','.receiptsTable__row',function (event) {
+    return;
     const { target: $target } = event;
     if ($target.classList.contains("receiptsTable__checkbox")) return;
     if ($target.classList.contains("receiptsTable__selectColumn")) return;

@@ -60,4 +60,25 @@ class Accounting_attachments_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function link_attachment($data)
+	{
+		$this->db->insert('accounting_attachment_links', $data);
+	    return $this->db->insert_id();
+	}
+
+	public function unlink_attachment($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete('accounting_attachment_links');
+	}
+
+	public function get_attachment_link($data)
+	{
+		$this->db->where('type', $data['type']);
+		$this->db->where('attachment_id', $data['attachment_id']);
+		$this->db->where('linked_id', $data['linked_id']);
+		$query = $this->db->get('accounting_attachment_links');
+		return $query->row();
+	}
 }

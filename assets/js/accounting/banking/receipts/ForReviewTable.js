@@ -1,6 +1,8 @@
 export class ForReviewTable {
   constructor($table) {
     this.$table = $table;
+    const $uploadPath = $("#uploadPath");
+    this.uploadPath = $uploadPath.val();
 
     this.loadDeps().then(() => {
       this.init();
@@ -12,12 +14,10 @@ export class ForReviewTable {
   }
 
   get columns() {
-    const $uploadPath = $("#uploadPath");
-    const uploadPath = $uploadPath.val();
     const fallback = "Not Found";
 
     const isEmpty = (string) => {
-      if (string === null) return true;
+      if (typeof string !== "string") return true;
       return string.trim().length === 0;
     };
 
@@ -26,7 +26,7 @@ export class ForReviewTable {
         return '<input type="checkbox" class="receiptsTable__checkbox" />';
       },
       receipt: (_, __, row) => {
-        return `<img src="${uploadPath}/${row.receipt_img}" class="receiptsTable__img">`;
+        return `<img src="${this.uploadPath}/${row.receipt_img}" class="receiptsTable__img">`;
       },
       date: (_, __, row) => {
         const { transaction_date } = row;
@@ -38,13 +38,13 @@ export class ForReviewTable {
         return isEmpty(row.description) ? fallback : row.description;
       },
       paymentAccount: (_, __, row) => {
-        return Number(row.payee_id) === 0 ? fallback : row.payee_id;
+        return Number(row.payee) === 0 ? fallback : row.payee;
       },
       amountOrTax: (_, __, row) => {
         return Number(row.total_amount) <= 0 ? fallback : row.total_amount;
       },
       category: (_, __, row) => {
-        return isEmpty(row.category) ? fallback : row.category;
+        return isEmpty(row.category_id) ? fallback : row.category_id;
       },
       actions: (_, __, row) => {
         const subOptions = {
@@ -90,6 +90,35 @@ export class ForReviewTable {
         window.location.reload();
       },
       findMatch: () => {},
+      view: (row) => {
+        const $modal = $("#receiptModal");
+        const $dataTypes = $modal.find("[data-type]");
+
+        const $image = $modal.find("#receiptImage");
+        $image.attr("src", `${this.uploadPath}${row.receipt_img}`);
+
+        const $createdAt = $modal.find("#receiptImageCreatedAt");
+        const createdAt = moment(row.created_at).format("hh:mm A MM/DD/YYYY");
+        $createdAt.text(`Added ${createdAt}`);
+
+        for (let index = 0; index < $dataTypes.length; index++) {
+          const $element = $dataTypes[index];
+          const { type } = $element.dataset;
+
+          if (!row.hasOwnProperty(type)) {
+            continue;
+          }
+
+          let value = row[type];
+          if (type === "transaction_date") {
+            value = moment(value).format("YYYY-MM-DD");
+          }
+
+          $element.value = value;
+        }
+
+        $modal.modal("show");
+      },
     };
   }
 
@@ -159,6 +188,19 @@ export class ForReviewTable {
       const func = isChecked ? "addClass" : "removeClass";
       $(rows)[func]("receiptsTable__row--selected");
       this.onCheckboxStateChange();
+    });
+
+    table.on("click", ".receiptsTable__row", (event) => {
+      const { target: $target } = event;
+      if ($target.classList.contains("receiptsTable__checkbox")) return;
+      if ($target.classList.contains("receiptsTable__selectColumn")) return;
+      if ($target.classList.contains("action")) return;
+
+      const $parent = $($target).closest("tr");
+      const rowId = $parent.data("id");
+      const rows = table.rows().data().toArray();
+      const row = rows.find(({ id }) => id == rowId);
+      this.actions.view(row);
     });
 
     table.on(

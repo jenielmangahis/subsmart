@@ -11129,6 +11129,8 @@ class Accounting extends MY_Controller
         $this->page_data['checks']          = $this->vendors_model->get_check_by_comp(logged('company_id'));
         $this->page_data['expenses']        = $this->expenses_model->getExpenseByComp(logged('company_id'));
         $this->page_data['plans']           = $this->vendors_model->getcashflowplan(logged('company_id'));
+        $this->page_data['totoverdues']     = $this->invoice_model->totalcountOverdue(logged('company_id'));
+        $this->page_data['overdues']        = $this->invoice_model->overdue(logged('company_id'));
 
         $this->load->view('accounting/cashflowplanner', $this->page_data);
     }
@@ -12150,6 +12152,29 @@ class Accounting extends MY_Controller
         );
 
         $addQuery = $this->vendors_model->savecashflowplan($new_data);
+
+        // if ($addQuery > 0) {
+           
+        // }
+
+        $data = 'Success';
+
+        echo json_encode($data);
+    }
+
+    public function updateOverdueCashflow()
+    {
+        $overId         = $this->input->post("overId");
+        $overdate       = $this->input->post("overdate");
+        $overtotal      = $this->input->post("overtotal");
+
+        $new_data = array(
+            'id'            => $overId,
+            'due_date'      => $overdate,
+            'grand_total'   => $overtotal,
+        );
+
+        $addQuery = $this->invoice_model->updateOverDueInv($new_data);
 
         // if ($addQuery > 0) {
            

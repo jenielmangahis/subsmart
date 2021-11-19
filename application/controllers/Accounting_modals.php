@@ -1231,6 +1231,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Transfer',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $transferId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -1308,6 +1316,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'CC Payment',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $payDownId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -1521,6 +1537,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Journal',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $entryId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -1680,6 +1704,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Deposit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $depositId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -2575,6 +2607,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Expense',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $expenseId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -2730,6 +2770,9 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Expense', 'attachment_id' => $attachmentId, 'linked_id' => $expense->id]);
+                $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
             }
         }
 
@@ -2935,6 +2978,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Check',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $checkId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -3084,6 +3135,9 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $revert = $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Bill', 'attachment_id' => $attachmentId, 'linked_id' => $bill->id]);
+                $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
             }
         }
 
@@ -3213,6 +3267,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Bill',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $billId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -3692,6 +3754,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Vendor Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $vendorCreditId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -3831,6 +3901,9 @@ class Accounting_modals extends MY_Controller
                 ];
 
                 $revert = $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Purchase Order', 'attachment_id' => $attachmentId, 'linked_id' => $purchaseOrder->id]);
+                $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
             }
         }
 
@@ -3936,6 +4009,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'Purchase Order',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $purchaseOrderId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -4074,6 +4155,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                        $linkAttachmentData = [
+                            'type' => 'CC Credit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $creditId
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 

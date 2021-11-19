@@ -57,13 +57,19 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const $saveAndNextButton = $("#saveAndNextButton");
   const $errorMessage = $(".formError");
-  $saveAndNextButton.on("click", (event) => {
+  $saveAndNextButton.on("click", async (event) => {
     event.preventDefault();
     const $form = $(event.target).closest("form");
     const $dataTypes = $form.find("[data-type]");
 
+    const payload = {};
+    let hasError = false;
+
     for (let index = 0; index < $dataTypes.length; index++) {
       const $element = $dataTypes[index];
+      const { type } = $element.dataset;
+      payload[type] = $element.value;
+
       $element.classList.remove("inputError");
 
       if (!isEmpty($element.value)) {
@@ -76,10 +82,15 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       $element.classList.add("inputError");
       $errorMessage.addClass("formError--show");
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
     $errorMessage.removeClass("formError--show");
+    await api.editReceipt(payload.id, payload);
   });
 });
 

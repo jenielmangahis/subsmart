@@ -307,7 +307,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="step-header-text">Double-check the details and add any missing info.</div>
                                         <div class="form-group form-element">
                                             <span>Document Type</span>
-                                            <input type="hidden" name="receipt_id" id="receipt_id">
+                                            <input type="hidden" name="receipt_id" id="receipt_id" data-type="id">
                                             <select name="document_type" id="documentType" class="form-control" data-type="document_type">
                                                 <option value="Receipt">Receipt</option>
                                                 <option value="Bill">Bill</option>
@@ -316,13 +316,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <hr>
                                         <div class="form-group">
                                             <label for="payeeID">Payee</label>
-                                            <select name="payee_id" id="payeeID" class="form-control select2" data-type="payee_id">
+                                            <select name="payee_id" id="payeeID" class="form-control select2" data-type="payee">
                                                 <option disabled selected value="">Select payee (optional)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="bank_account">Bank/Credit Account</label>
-                                            <select required name="bank_account" id="bank_account" class="form-control select2" data-type="bank_account">
+                                            <select required name="bank_account" id="bank_account" class="form-control select2" data-type="bank_account_id">
                                                 <option disabled selected value="">Select an account</option>
                                             </select>
                                         </div>
@@ -332,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="form-group">
                                             <label for="account_category">Account/Category</label>
-                                            <select required name="category" id="account_category" class="form-control select2" data-type="account_category">
+                                            <select required name="category" id="account_category" class="form-control select2" data-type="category_id">
                                                 <option disabled selected value="">Select a category</option>
                                             </select>
                                         </div>
@@ -546,11 +546,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('.banking-sub-tab').click(function(){
         $(this).parent().addClass('banking-sub-active').siblings().removeClass('banking-sub-active')
     });
-    $("#totalAmount").change(function () {
-        if (!$.isNumeric($(this).val()))
-            $(this).val('0').trigger('change');
-        $(this).val(parseFloat($(this).val(),10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
-    });
+    // $("#totalAmount").change(function () {
+    //     if (!$.isNumeric($(this).val()))
+    //         $(this).val('0').trigger('change');
+    //     $(this).val(parseFloat($(this).val(),10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
+    // });
 
     $('#toggleRefNumber').click(function () {
        $('#refNumber').toggle();

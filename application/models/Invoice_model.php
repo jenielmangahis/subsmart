@@ -191,6 +191,42 @@ class Invoice_model extends MY_Model
         return $query2->result();
     }
 
+    public function totalcountOverdue($company_id)
+    {
+        $where = array(
+            'status'        => 'Overdue',
+            'company_id'    => $company_id
+          );
+
+        $this->db->select('COUNT(*) as totalOverdue');
+        $this->db->from('invoices');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
+    public function overdue($company_id)
+    {
+        $where = array(
+            'status'        => 'Overdue',
+            'company_id'    => $company_id
+          );
+
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function updateOverDueInv($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('invoices', array('due_date' => $due_date, 'grand_total' => $grand_total));
+        return true;
+    }
+
     public function getPaidInv($company_id)
     {
         $where = array(
