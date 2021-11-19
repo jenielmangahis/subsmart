@@ -118,6 +118,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 } */
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css"> -->
 
 <script type="text/javascript" id="js">
@@ -170,6 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <canvas id="canvas"></canvas>
                     </div> -->
 					<canvas id="myChart_" style="width:80%;"></canvas>
+					<!-- <div id="GoogleLineChart" style="height: 400px; width: 100%"></div> -->
 
                     <br><br>
                     <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p>
@@ -177,7 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div style="border:solid gray 1px;padding:1%;width:100%;color:black;">
                         <a href="#" style="color:blue;float:right;" data-toggle="modal" data-target=".updateoverdue"><h5>Update</h5></a>
                         <h5>Overdue Transactions</h5>
-                        You have 8 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.
+                        You have <?php echo $totoverdues->totalOverdue; ?> overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.
                     </div>
 					<br><br>
 					<div class="row pb-2">
@@ -469,7 +471,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<div class="modal-content">
 						<div style="padding:3%;">
 								<h2>Overdue Transactions</h2>
-								<p>You have 3 overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.</p>
+								<p>You have <?php echo $totoverdues->totalOverdue; ?> overdue transactions. For a more accurate cash flow picture, update each transaction with a new expected date.</p>
 
 								<table class="table table-condensed updateoverduetable" style="border-collapse:collapse;">
 									<thead>
@@ -487,55 +489,109 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											<td>Invoice</td>
 											<td><i class="fa fa-toggle-down"></i></td>
 										</tr>-->
-										<tr data-toggle="collapse" data-target="#demo3">
+										<!-- <tr data-toggle="collapse" data-target="#demo3">
 											<td>09/09/2021</td>
 											<td>Jerrell Milton</td>
-											<td>$1980.35</td>
+											<td>$1,980.35</td>
 											<td>Invoice</td>
 											<td><i class="fa fa-toggle-down"></i></td>
 										</tr>
 										<tr>
-											<td colspan="6" class="hiddenRow">
+											<td colspan="6" class="hiddenRow" style="background-color: #f4f5f8; padding: 0 8px !important;">
 												<div id="demo3" class="collapse">Demo3</div>
 											</td>
 										</tr>
 										<tr data-toggle="collapse" data-target=".demo1">
 											<td>09/09/2021</td>
 											<td>Ronnie & Lynne Davis</td>
-											<td>$1980.35</td>
+											<td>$1,980.35</td>
 											<td>Invoice</td>
 											<td><i class="fa fa-toggle-down"></i></td>
 										</tr> 
 										<tr>
-											<td class="hiddenRow">
-												<div class="collapse demo1">Demo1</div>
+											<td class="hiddenRow" colspan="5" style="background-color: #f4f5f8; padding: 0 8px !important;">
+												<div class="collapse demo1">
+															<table class="table">
+																<tr>
+																	<td style="width:20%;"><input type="text" value="09/09/2021" class="form-control"></td>
+																	<td colspan="3">Ronnie & Lynne Davi</td>
+																	<td style="width:24%;"><input type="text" value="1980.35" class="form-control"></td>
+																	<td>Invoice</td>
+																</tr>
+																<tr>
+																	<td colspan="3">
+																		<table>
+																			<tr>
+																				<td>DUE DATE <br> 09/09/2021</td>
+																				<td>DUE AMOUNT <br> $1,980.35</td>
+																				<td>REF NUMBER <br> <a href="#" style="color: blue;"> 13271 </a></td>
+																			</tr>
+																		</table>
+																	</td>
+																	<td colspan="3"> <div align="right"> <a href="#" style="color:#0077c5;" class="btn">Remove</a> &emsp; <button class="btn btn-primary">Update</button> </div></td>
+																</tr>
+															</table>
+												</div>
 											</td>
-											<td class="hiddenRow">
-												<div class="collapse demo1">Demo1</div>
-											</td>
-											<td class="hiddenRow">
-												<div class="collapse demo1">Demo1</div>
-											</td>
-											<td class="hiddenRow">
-												<div class="collapse demo1">Demo1</div>
+										</tr> -->
+
+										<?php foreach($overdues as $overdue){ ?>
+
+										<tr data-toggle="collapse" data-target=".demo<?php echo $overdue->id; ?>">
+											<td><?php echo $overdue->due_date; ?></td>
+											<td><?php echo get_customer_by_id($overdue->customer_id)->first_name .' '. get_customer_by_id($overdue->customer_id)->last_name ?></td>
+											<td>$<?php echo number_format($overdue->grand_total,2); ?></td>
+											<td>Invoice</td>
+											<td><i class="fa fa-toggle-down"></i></td>
+										</tr> 
+										<tr>
+											<td class="hiddenRow" colspan="5" style="background-color: #f4f5f8; padding: 0 8px !important;">
+												<div class="collapse demo<?php echo $overdue->id; ?>">
+													<!-- <div class="row">
+														<div class="col-md-12"> -->
+															<table class="table">
+																<tr>
+																	<td style="width:20%;"><input type="text" id="datepickerOD<?php echo $overdue->id; ?>" over-id="<?php echo $overdue->id; ?>" value="<?php echo $overdue->due_date; ?>" class="form-control overdate<?php echo $overdue->id; ?> overdate"></td>
+																	<td colspan="3"><?php echo get_customer_by_id($overdue->customer_id)->first_name .' '. get_customer_by_id($overdue->customer_id)->last_name ?></td>
+																	<td style="width:24%;"><input type="text" value="<?php echo$overdue->grand_total; ?>" class="form-control overtotal<?php echo $overdue->id; ?>"></td>
+																	<td>Invoice</td>
+																</tr>
+																<tr>
+																	<td colspan="3">
+																		<table>
+																			<tr>
+																				<td>DUE DATE <br> <?php echo $overdue->due_date; ?></td>
+																				<td>DUE AMOUNT <br> $<?php echo $overdue->grand_total; ?></td>
+																				<td>REF NUMBER <br> <a href="#" style="color: blue;"> <?php echo $overdue->id; ?> </a></td>
+																			</tr>
+																		</table>
+																	</td>
+																	<td colspan="3"> <div align="right"> <a href="#" style="color:#0077c5;" class="btn">Remove</a> &emsp; <a href="#" over-id="<?php echo $overdue->id; ?>" class="btn btn-primary updateOverdue">Update</a> </div></td>
+																</tr>
+															</table>
+														<!-- </div>
+													</div> -->
+												</div>
 											</td>
 										</tr>
-										<tr data-toggle="collapse" data-target="#demo2">
+
+										<?php } ?>
+										<!-- <tr data-toggle="collapse" data-target="#demo2">
 											<td>09/09/2021</td>
 											<td>Harry Dodich</td>
-											<td>$1980.35</td>
+											<td>$1,980.35</td>
 											<td>Invoice</td>
 											<td><i class="fa fa-toggle-down"></i></td>
 										</tr>
 										<tr>
-											<td colspan="6" class="hiddenRow">
+											<td colspan="6" class="hiddenRow" style="background-color: #f4f5f8; padding: 0 8px !important;">
 												<div id="demo2" class="collapse">Demo2</div>
 											</td>
-										</tr>
+										</tr> -->
 									</tbody>
 								</table>
 
-								<input type="submit" class="btn btn-success" value="Done" style="float: right;">
+								<input type="submit" class="btn btn-success" value="Done" style="float: right;" data-dismiss="modal">
 						</div>
 					</div>
 				</div>
@@ -1002,11 +1058,25 @@ $('.savecashflowplanned').click(function() {
             }
 });
 </script>
+
 <script>
   $( function() {
     $( "#datepicker" ).datepicker();
   } );
-  </script>
+</script>
+
+<script>
+//   $( function() {
+//     $( "#datepickerOD" ).datepicker();
+//   } );
+
+$(".overdate").click(function () {
+    var overId = $(this).attr('over-id');
+	
+	$('#datepickerOD' + overId).datepicker();
+});
+
+</script>
 
 <script>
 // jQuery(document).ready(function() {
@@ -1031,128 +1101,86 @@ $('.savecashflowplanned').click(function() {
 </script>
 
 <script>
+$(".updateOverdue").click(function () {
+    var overId = $(this).attr('over-id');
+	var overdate = $('.overdate' + overId).val();
+	var overtotal = $('.overtotal' + overId).val();
 
-$(document).ready(function(){
- 
- $('#sel-customer').change(function(){
- var id  = $(this).val();
-//  alert(id);
+	// alert(overdate);
 
-	 $.ajax({
-		 type: 'POST',
-		 url:"<?php echo base_url(); ?>accounting/addLocationajax",
-		 data: {id : id },
-		 dataType: 'json',
-		 success: function(response){
-			//  alert('success');
-			 console.log(response);
-		 $("#email").val(response['customer'].email);
-		 $("#billing_address").html(response['customer'].billing_address);
-	 
-		 },
-			 error: function(response){
-			 alert('Error'+response);
-	
-			 }
-	 });
- 	});
-	});
-});
-
-
-$('.close').on('hidden.bs.modal', function () {
-  $(this).find('form').trigger('reset');
-});
-
-$(document).on('click','#closeModalExpense',function () {
-  if(check_original != check_updated){
-      Swal.fire({
-          title: 'Are you sure?',
-          text: "You want to leave without saving?",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#2ca01c',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, leave without saving!'
-      }).then((result) => {
-          if (result.value) {
-          if(attachment == 0){
-              Swal.fire({
-                  title: 'Are you sure?',
-                  text: "There is/are a attachment that temporarily removed?",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#2ca01c',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, remove it permanently!'
-              }).then((result) => {
-                  if (result.value) {
-                  $(".loader").fadeIn('fast',function(){
-                      $('.loader').show();
-                  });
-                  $('#edit-expensesCheck').modal('hide');
-                  $(".loader").fadeOut('fast',function(){
-                      $('.loader').hide();
-                  });
-                  attachment = null;
-                  attachment_id = [];
-              }
-          });
-          }else{
-              $(".loader").fadeIn('fast',function(){
-                  $('.loader').show();
-              });
-              $('#edit-expensesCheck').modal('hide');
-              $(".loader").fadeOut('fast',function(){
-                  $('.loader').hide();
-              });
-              attachment = null;
-              attachment_id = [];
-          }
-      }
-  });
-  }else{
-      if(attachment == 0){
-          Swal.fire({
-              title: 'Are you sure?',
-              text: "There is/are a attachment that temporarily removed?",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#2ca01c',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Yes, remove it permanently!'
-          }).then((result) => {
-              if (result.value) {
-              $.ajax({
-                  url:"/accounting/removePermanentlyAttachment",
-                  type:"POST",
-                  data:{attachment_id:attachment_id},
-                  success:function () {
-
-                  }
-              });
-              $(".loader").fadeIn('fast',function(){
-                  $('.loader').show();
-              });
-              $('#edit-expensesCheck').modal('hide');
-              $(".loader").fadeOut('fast',function(){
-                  $('.loader').hide();
-              });
-              attachment = null;
-              attachment_id = [];
-          }
+	$.ajax({
+          type : 'POST',
+          url : "<?php echo base_url(); ?>accounting/updateOverdueCashflow",
+          data : {overId: overId, overdate: overdate, overtotal: overtotal},
+          dataType: 'json',
+          success: function(response){
+			sucess("Data Updates Successfully!");
+		  },
       });
-      }else{
-          $(".loader").fadeIn('fast',function(){
-              $('.loader').show();
-          });
-          $('#edit-expensesCheck').modal('hide');
-          $(".loader").fadeOut('fast',function(){
-              $('.loader').hide();
-          });
-          attachment = null;
-          attachment_id = [];
-      }
-  }
+
+	  		function sucess(information, $id) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: information,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {
+                        location.reload();
+                    }
+                });
+            }
 });
 </script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script>
+			google.charts.load('current', {'packages':['corechart', 'bar']});
+			google.charts.setOnLoadCallback(drawLineChart);
+			google.charts.setOnLoadCallback(drawBarChart);
+
+            // Line Chart
+			function drawLineChart() {
+				var data = google.visualization.arrayToDataTable([
+					['Day', 'Products Count'],
+						<?php 
+							foreach ($invoices as $rows){
+							   echo "['".$rows['date_created']."',".$rows['grand_total']."],";
+						} ?>
+				]);
+
+				var options = {
+					title: 'Money in and out',
+					curveType: 'function',
+					legend: {
+						position: 'top'
+					}
+				};
+				var chart = new google.visualization.LineChart(document.getElementById('GoogleLineChart'));
+				chart.draw(data, options);
+			}
+			
+			
+			// Bar Chart
+			// google.charts.setOnLoadCallback(showBarChart);
+			// function drawBarChart() {
+			// 	var data = google.visualization.arrayToDataTable([
+			// 		['Day', 'Products Count'], 
+			// 			<?php 
+			// 				foreach ($products as $row){
+			// 				   echo "['".$row['day']."',".$row['sell']."],";
+			// 				}
+			// 			?>
+			// 	]);
+			// 	var options = {
+			// 		title: ' Bar chart products sell wise',
+			// 		is3D: true,
+			// 	};
+			// 	var chart = new google.visualization.BarChart(document.getElementById('GoogleBarChart'));
+			// 	chart.draw(data, options);
+			// }
+			
+		</script>

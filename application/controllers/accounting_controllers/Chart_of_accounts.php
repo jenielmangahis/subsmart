@@ -697,7 +697,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
@@ -777,7 +777,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -857,7 +857,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseItem->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseItem->created_at))
@@ -946,7 +946,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $check->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($check->attachments) ? count(json_decode($check->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
@@ -1014,7 +1014,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $checkCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($check->attachments) ? count(json_decode($check->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($checkCategory->created_at))
@@ -1089,7 +1089,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $checkItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($check->attachments) ? count(json_decode($check->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($checkItem->created_at))
@@ -1255,7 +1255,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $billCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($bill->attachments) ? count(json_decode($bill->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($billCategory->created_at))
@@ -1317,7 +1317,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $billItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($bill->attachments) ? count(json_decode($bill->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($billItem->created_at))
@@ -1407,7 +1407,7 @@ class Chart_of_accounts extends MY_Controller {
                 'charge' => '',
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($ccCredit->attachments) ? count(json_decode($ccCredit->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCredit->created_at))
@@ -1454,7 +1454,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $ccCreditCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($ccCredit->attachments) ? count(json_decode($ccCredit->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditCategory->created_at))
@@ -1529,7 +1529,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $ccCreditItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($ccCredit->attachments) ? count(json_decode($ccCredit->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccCreditItem->created_at))
@@ -1607,7 +1607,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $vCreditCategory->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($vCredit->attachments) ? count(json_decode($vCredit->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($vCreditCategory->created_at))
@@ -1669,7 +1669,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $vCreditItem->description,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($vCredit->attachments) ? count(json_decode($vCredit->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($vCreditItem->created_at))
@@ -1746,7 +1746,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $transfer->transfer_memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($transfer->attachments) ? count(json_decode($transfer->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at))
@@ -1827,7 +1827,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $deposit->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($deposit->attachments) ? count(json_decode($deposit->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($deposit->created_at))
@@ -1895,7 +1895,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $dep->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($dep->attachments) ? count(json_decode($dep->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($depFund->created_at))
@@ -1991,7 +1991,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
@@ -2073,7 +2073,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2154,7 +2154,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseItem->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2381,7 +2381,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expense->memo,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
@@ -2462,7 +2462,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseCategory->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2542,7 +2542,7 @@ class Chart_of_accounts extends MY_Controller {
                     'memo' => $expenseItem->description,
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($expense->attachments) ? count(json_decode($expense->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($expenseCategory->created_at))
@@ -2748,7 +2748,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $ccPayment->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => '',
+                'attachments' => !is_null($ccPayment->attachments) ? count(json_decode($ccPayment->attachments, true)) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
@@ -2817,7 +2817,7 @@ class Chart_of_accounts extends MY_Controller {
                     'deposit' => '',
                     'reconcile_status' => '',
                     'banking_status' => '',
-                    'attachments' => '',
+                    'attachments' => !is_null($billPayment->attachments) ? count(json_decode($billPayment->attachments, true)) : '',
                     'tax' => '',
                     'balance' => '',
                     'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
