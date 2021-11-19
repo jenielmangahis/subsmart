@@ -5,6 +5,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
     <style>
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
    .but:hover {
     font-weight: 900;
     color:black;
@@ -318,29 +322,34 @@ border: none;
         z-index: -1;
     }
 }
-   </style>
+
+#header_area {
+  width: 90%;
+  position: relative;
+}
+#header_area:hover > .btn-edit-header {
+  display: block;
+}
+.btn-edit-header {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+</style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
+            <div class="row" style="margin-top: 30px;">
+                <div class="col">
+                    <h3 class="m-0">Edit Work Order</h3>
+                </div>
+            </div>
+
+            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                Update your workorder.
+            </div>
           <div class="card">
-              <div class="page-title-box pt-1 pb-0">
-                  <div class="row align-items-center">
-                      <div class="col-sm-12">
-                          </div>
-                          <!-- <h3 class="page-title mt-0">New Lead</h3> -->
-                          <h3 style="font-family: Sarabun, sans-serif">Update Work Order</h3>
-                          <!-- <div class="pl-3 pr-3 mt-1 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                    To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
-                                    Enter Address information.  Enter Additional Information and Description
-                                    and Finally click Save Button.  All required fields must have information.
-                                </span>
-                            </div>
-                          </div> -->
-                      </div>
-                  </div>
-              </div>
             <!-- end row -->
             <!-- <div class="row">
                 <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
@@ -355,16 +364,16 @@ border: none;
                                 <h4 class="mt-0 header-title mb-5">Header</h4>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        <ol class="breadcrumb" style="margin-top:-30px;">
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
                                                 <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
                                             </li>
-                                        </ol>
+                                        </ol>                                        
                                     </div> 
                                 </div>
                                 <br>
-
+                                <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a>
                                 <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
                                 <input type="hidden" name="wo_id" value="<?php echo $workorder->id; ?>">
                                 <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
@@ -603,7 +612,7 @@ border: none;
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
                                         <?php } ?>
-                                        <?php foreach($items_data as $data){ ?>
+                                        <?php $item_row = 0; foreach($items_data as $data){ ?>
 
                                         <tr>
                                             <td width="30%">
@@ -624,36 +633,31 @@ border: none;
                                                 </select>
                                             </div>
                                                 </td>
-                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control qtyest2 mobile_qty hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"> 
+                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_<?php echo $item_row; ?>" value="<?php echo $data->qty; ?>"> 
                                                        <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
                                                        data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
                                                        </td>
-                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price2 hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_<?php echo $data->items_id; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
+                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_<?php echo $item_row; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
                                                                                     $price1 = $data->costing; 
                                                                                     $total1 = $quantity1*$price1;
                                                                                     echo $total1;
                                                                                                 ?>"> 
                                                        <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
-                                                       <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="<?php 
-                                                                                                                                                                                                $quantity = $data->qty;
-                                                                                                                                                                                                $price = $data->costing; 
-                                                                                                                                                                                                $total = $quantity*$price;
-                                                                                                                                                                                                echo $total;
-                                                                                                                                                                                                ?>"></td>
+                                                       <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="" /></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_<?php echo $data->items_id; ?>" min="0"  value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change2" name="tax[]"
-                                                       data-counter="0" id="tax1_<?php echo $data->items_id; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
+                                                       data-counter="0" id="discount_<?php echo $item_row; ?>" min="0"  value="0" ></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_<?php echo $item_row; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
-                                                       $<span id="span_total_<?php echo $data->items_id; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
+                                                       $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
                                             <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
-                                        <?php } ?>
+                                        <?php $item_row++;} ?>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
@@ -1303,15 +1307,23 @@ border: none;
                             <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
+                                    <?php if( $workorder->attached_photo != '' ){ ?>
+                                         <br />
+                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->user_id . '/' . $workorders->attached_photo); ?>"><?= $workorder->attached_photo; ?></a>
+                                    <?php } ?>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
-                                    <input type="file" class="form-control" name="attachment" id="attachment">
+                                    <input type="file" class="form-control" name="attachment_photo" id="attachment">
                                 </div>                                                                
                             </div>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Document Links</label>
+                                    <?php if( $workorder->document_links != '' ){ ?>
+                                         <br />
+                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->user_id . '/' . $workorders->document_links); ?>"><?= $workorder->document_links; ?></a>
+                                    <?php } ?>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
-                                    <input type="file" class="form-control" name="attachment" id="attachment">
+                                    <input type="file" class="form-control" name="attachment_document" id="attachment">
                                 </div>                                                                
                             </div>
 
@@ -1604,12 +1616,10 @@ border: none;
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <td> Rebatable</td>
-                                            <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
                                         </tr>
@@ -1618,8 +1628,6 @@ border: none;
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->rebate; ?></td>
-                                                <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                 <span class="fa fa-plus"></span>
@@ -2280,6 +2288,11 @@ $(document).on('click','#headerContent',function(){
     $('#update_header_modal').modal('show');
 });
 
+$(document).on('click','.btn-edit-header',function(){
+    //    alert('yeah');
+    $('#update_header_modal').modal('show');
+});
+
 $(document).on('click','.save_update_header',function(){
     //    alert('yeah');
     var id = $('#update_h_id').val();
@@ -2441,6 +2454,15 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function(){
+        $('#modal_items_list').DataTable({
+            "autoWidth" : false,
+            "columnDefs": [
+            { width: 540, targets: 0 },
+            { width: 100, targets: 0 },
+            { width: 100, targets: 0 }
+            ],
+            "ordering": false,
+        });
 
         $('.add_checklist_items').click(function(){
             // alert('test');
