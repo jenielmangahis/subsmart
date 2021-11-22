@@ -10,8 +10,68 @@ class AccountingReceipts extends MY_Controller
         $this->db->where('to_expense', $isReviewed ? 1 : 0);
         $receipts = $this->db->get('accounting_receipts')->result();
 
+        foreach ($receipts as $receipt) {
+            if (!is_null($receipt->payee)) {
+                $receipt->__select2_payee = $this->getPayee($receipt->payee);
+            }
+
+            if (!is_null($receipt->category_id)) {
+                $receipt->__select2_category = $this->getAccount($receipt->category_id);
+            }
+
+            if (!is_null($receipt->bank_account_id)) {
+                $receipt->__select2_bank_account = $this->getAccount($receipt->bank_account_id);
+            }
+        }
+
         header('content-type: application/json');
         echo json_encode(['data' => $receipts]);
+    }
+
+    private function getPayee($payeeId)
+    {
+        [$type, $rowId] = explode('-', $payeeId);
+        $value = null;
+
+        if ($type === 'vendor') {
+            $this->db->where('id', $rowId);
+            $this->db->select(['f_name', 'l_name']);
+            $result = $this->db->get('accounting_vendors')->row();
+            $value = $result->f_name . ' ' . $result->l_name;
+        }
+
+        if ($type === 'employee') {
+            $this->db->where('id', $rowId);
+            $this->db->select(['FName', 'LName']);
+            $result = $this->db->get('users')->row();
+            $value = $result->FName . ' ' . $result->LName;
+        }
+
+        if ($type === 'customer') {
+            $this->db->where('customer_id', $rowId);
+            $this->db->select(['display_name']);
+            $result = $this->db->get('customer_accounting_details')->row();
+            $value = $result->display_name;
+        }
+
+        if (is_null($value)) {
+            return null;
+        }
+
+        return ['text' => $value, 'value' => $payeeId];
+    }
+
+    private function getAccount($accountId)
+    {
+        $this->db->where('id', $accountId);
+        $this->db->select(['name']);
+        $result = $this->db->get('accounting_chart_of_accounts')->row();
+
+        if (!$result) {
+            return null;
+        }
+
+        return ['text' => $result->name, 'value' => $accountId];
     }
 
     public function apiBatchDeleteReceipts()

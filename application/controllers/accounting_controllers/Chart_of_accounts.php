@@ -39,6 +39,7 @@ class Chart_of_accounts extends MY_Controller {
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
             "assets/css/accounting/invoices_page.css",
+            "assets/css/accounting/accounting_includes/send_reminder_by_batch_modal.css"
         ));
 
         add_footer_js(array(
@@ -51,6 +52,7 @@ class Chart_of_accounts extends MY_Controller {
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
             "assets/js/accounting/sales/customer_includes/create_charge.js",
             "assets/js/accounting/sales/invoices_page.js",
+            "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js"
         ));
 
 		$this->page_data['menu_name'] =
@@ -1730,6 +1732,9 @@ class Chart_of_accounts extends MY_Controller {
                 $transferAcc = $this->chart_of_accounts_model->getName($transfer->transfer_from_account_id);
                 $account_id = $transfer->transfer_from_account_id;
             }
+
+            $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transfer->id);
+
             $transaction = [
                 'id' => $transfer->id,
                 'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
@@ -1746,7 +1751,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $transfer->transfer_memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($transfer->attachments) ? count(json_decode($transfer->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at))
@@ -2731,6 +2736,8 @@ class Chart_of_accounts extends MY_Controller {
             $account_id = $ccPayment->credit_card_id === $accountId ? $ccPayment->bank_account_id : $ccPayment->credit_card_id;
             $accountFieldName = $ccPayment->credit_card_id === $accountId ? 'bank-account' : 'credit-card-account';
 
+            $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $ccPayment->id);
+
             $transaction = [
                 'id' => $ccPayment->id,
                 'date' => date("m/d/Y", strtotime($ccPayment->date)),
@@ -2748,7 +2755,7 @@ class Chart_of_accounts extends MY_Controller {
                 'memo' => $ccPayment->memo,
                 'reconcile_status' => '',
                 'banking_status' => '',
-                'attachments' => !is_null($ccPayment->attachments) ? count(json_decode($ccPayment->attachments, true)) : '',
+                'attachments' => count($attachments) > 0 ? count($attachments) : '',
                 'tax' => '',
                 'balance' => '',
                 'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
@@ -3636,6 +3643,8 @@ class Chart_of_accounts extends MY_Controller {
             }
         }
 
+        $this->accounting_attachments_model->unlink_attachments('Expense', $expenseId);
+
         $update = $this->vendors_model->update_expense($expenseId, ['status' => 0]);
 
         return $update;
@@ -3707,6 +3716,8 @@ class Chart_of_accounts extends MY_Controller {
             }
         }
 
+        $this->accounting_attachments_model->unlink_attachments('Check', $checkId);
+
         $update = $this->vendors_model->update_check($checkId, ['status' => 0]);
 
         return $update;
@@ -3764,6 +3775,8 @@ class Chart_of_accounts extends MY_Controller {
             }
         }
 
+        $this->accounting_attachments_model->unlink_attachments('Bill', $billId);
+
         $update = $this->vendors_model->update_bill($billId, ['status' => 0]);
 
         return $update;
@@ -3771,7 +3784,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_purchase_order($purchaseOrderId)
     {
-        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
 
         if (count($items) > 0) {
             foreach ($items as $item) {
@@ -3782,6 +3795,8 @@ class Chart_of_accounts extends MY_Controller {
                 $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
             }
         }
+
+        $this->accounting_attachments_model->unlink_attachments('Purchase Order', $purchaseOrderId);
 
         $update = $this->vendors_model->update_purchase_order($purchaseOrderId, ['status' => 0]);
 
@@ -3842,20 +3857,22 @@ class Chart_of_accounts extends MY_Controller {
                 if ($itemAccDetails) {
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
 
-                    $newBalance = floatval($item->total) - floatval($item->quantity);
-                    $newBalance = floatval($invAssetAcc->balance) - $newBalance;
-                    $newBalance = $newBalance + floatval($item->total);
+                    $subtract = floatval($item->total) - floatval($item->quantity);
+                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
+                    $newBalance = $newBalance - $subtract;
 
                     $invAssetAccData = [
                         'id' => $invAssetAcc->id,
                         'company_id' => logged('company_id'),
-                        'balance' => $newBalance
+                        'balance' => number_format($newBalance, 2, '.', ',')
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
             }
         }
+
+        $this->accounting_attachments_model->unlink_attachments('Vendor Credit', $vendorCreditId);
 
         $update = $this->vendors_model->update_vendor_credit($vendorCreditId, ['status' => 0]);
 
@@ -3880,6 +3897,8 @@ class Chart_of_accounts extends MY_Controller {
 
         $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $bankAccBal]);
 
+        $this->accounting_attachments_model->unlink_attachments('CC Payment', $ccPaymentId);
+
         $update = $this->vendors_model->update_credit_card_payment($ccPaymentId, ['status' => 0]);
 
         return $update;
@@ -3897,6 +3916,8 @@ class Chart_of_accounts extends MY_Controller {
         $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
 
         if ($update) {
+            $this->accounting_attachments_model->unlink_attachments('Bill Payment', $billPaymentId);
+
             $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
             if (!is_null($vCredits)) {
                 foreach ($vCredits as $vCreditId => $amount) {
@@ -3908,6 +3929,12 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+
+                    $vendorData = [
+                        'vendor_credits' => floatval($payee->vendor_credits) + $amount
+                    ];
+
+                    $this->vendors_model->updateVendor($billPayment->payee_id, $vendorData);
                 }
             }
 
@@ -3996,20 +4023,22 @@ class Chart_of_accounts extends MY_Controller {
                 if ($itemAccDetails) {
                     $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
 
-                    $newBalance = floatval($item->total) - floatval($item->quantity);
-                    $newBalance = floatval($invAssetAcc->balance) - $newBalance;
-                    $newBalance = $newBalance + floatval($item->total);
+                    $subtract = floatval($item->total) - floatval($item->quantity);
+                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
+                    $newBalance = $newBalance - $subtract;
 
                     $invAssetAccData = [
                         'id' => $invAssetAcc->id,
                         'company_id' => logged('company_id'),
-                        'balance' => $newBalance
+                        'balance' => number_format($newBalance, 2, '.', ',')
                     ];
 
                     $this->chart_of_accounts_model->updateBalance($invAssetAccData);
                 }
             }
         }
+
+        $this->accounting_attachments_model->unlink_attachments('CC Credit', $ccCreditId);
 
         $update = $this->vendors_model->update_credit_card_credit($ccCreditId, ['status' => 0]);
 
@@ -4028,6 +4057,8 @@ class Chart_of_accounts extends MY_Controller {
         $update = $this->accounting_journal_entries_model->update($journalEntry->id, $journalEntryData);
 
         if($update) {
+            $this->accounting_attachments_model->unlink_attachments('Journal', $journalEntryId);
+
             foreach($entries as $entry) {
                 $account = $this->chart_of_accounts_model->getById($entry->account_id);
 
@@ -4061,6 +4092,8 @@ class Chart_of_accounts extends MY_Controller {
         $update = $this->accounting_transfer_funds_model->update($transfer->id, ['status' => 0]);
 
         if($update) {
+            $this->accounting_attachments_model->unlink_attachments('Transfer', $transferId);
+
             $transferFromAcc = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
             $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
 
@@ -4096,6 +4129,8 @@ class Chart_of_accounts extends MY_Controller {
         $update = $this->accounting_bank_deposit_model->update($deposit->id, ['status' => 0]);
 
         if($update) {
+            $this->accounting_attachments_model->unlink_attachments('Deposit', $depositId);
+
             foreach($funds as $fund) {
                 $account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
 
@@ -4816,6 +4851,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
     
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Deposit',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $depositId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
 
@@ -4924,6 +4967,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Expense',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $depositId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
 
@@ -5072,6 +5123,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Check',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $checkId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
 
@@ -5213,6 +5272,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Bill',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $billId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
 
@@ -5305,6 +5372,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Vendor Credit',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $vCreditId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
 
@@ -5394,6 +5469,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'CC Credit',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $ccCreditId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
 
@@ -5536,6 +5619,14 @@ class Chart_of_accounts extends MY_Controller {
                     ];
 
                     $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Bill Payment',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $billPaymentId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                 }
             }
         }

@@ -150,7 +150,7 @@ label>input {
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
- <?php include viewPath('includes/sidebars/inventory'); ?>
+ <?php include viewPath('includes/sidebars/estimate'); ?>
    <?php include viewPath('includes/notifications'); ?>
    <div wrapper__section>
    <div class="container-fluid p-40">

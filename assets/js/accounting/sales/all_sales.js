@@ -6,6 +6,97 @@ $(document).on("click", function(event) {
 $("document").ready(function() {
     all_sales_apply_filter();
 });
+
+
+$(document).on('change', '.all-sales-section table.all_sales_table th input.select-all', function() {
+    if ($(".all-sales-section table.all_sales_table th input.select-all").is(':checked')) {
+        $(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']").prop("checked", true);
+    } else {
+        $(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']").prop("checked", false);
+    }
+    all_sales_table_checkbox_changes();
+});
+$(document).on('change', ".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']", function() {
+    if ($(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']:checked").length == $(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']").length) {
+        $(".all-sales-section table.all_sales_table th input.select-all").prop("checked", true);
+    } else {
+        $(".all-sales-section table.all_sales_table th input.select-all").prop("checked", false);
+    }
+    all_sales_table_checkbox_changes();
+});
+
+function all_sales_table_checkbox_changes() {
+    if ($(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']:checked").length == 0) {
+        $(".all-sales-section .by-batch-btn button.btn-default").addClass("disabled");
+        $(".all-sales-section .by-batch-btn ul.by-batch-btn li").addClass("disabled");
+    } else {
+        $(".all-sales-section .by-batch-btn ul.by-batch-btn li").removeClass("disabled");
+        $(".all-sales-section .by-batch-btn button.btn-default").removeClass("disabled");
+    }
+    all_sales_send_reminder_checker();
+}
+
+function all_sales_send_reminder_checker() {
+    // if ($(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']:checked").length == 1) {
+    //     var status = $(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']:checked").attr("data-row-status");
+    //     console.log(status);
+    //     if (status != "Paid" && status != "Draft" && status != "Submitted" && status != "Declined" && status != "Scheduled") {
+    //         $(".all-sales-section .by-batch-btn .dropdown-menu li.send-reminder-btn").removeClass("disabled");
+    //     } else {
+    //         $(".all-sales-section .by-batch-btn .dropdown-menu li.send-reminder-btn").addClass("disabled");
+    //     }
+    // } else {
+    //     $(".all-sales-section .by-batch-btn .dropdown-menu li.send-reminder-btn").addClass("disabled");
+    // }
+    all_sales_set_by_batch_menu_disabled();
+}
+
+function all_sales_set_by_batch_menu_disabled() {
+    var invoice_selected = false;
+    var not_invoice_selected = false;
+    var no_selected = true;
+    var no_status_open_overdue = true;
+    $(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            no_selected = false;
+            if ($(this).attr("data-row-type") != "Invoice") {
+                not_invoice_selected = true;
+            } else {
+                invoice_selected = true;
+            }
+            var status = $(this).attr("data-row-status");
+            if (status != "Paid" && status != "Draft" && status != "Submitted" && status != "Declined" && status != "Scheduled" && status != undefined) {
+                no_status_open_overdue = false;
+            } else {
+                // no_status_open_overdue = false;
+                // console.log(status);
+            }
+        }
+    });
+    $(".all-sales-section ul.by-batch-btn li.print-transaction-btn").removeClass("disabled");
+    $(".all-sales-section ul.by-batch-btn li.print-packaging-slip-btn").removeClass("disabled");
+    $(".all-sales-section ul.by-batch-btn li.send-transaction-btn").removeClass("disabled");
+    $(".all-sales-section ul.by-batch-btn li.send-reminder-btn").removeClass("disabled");
+
+    if (not_invoice_selected) {
+        $(".all-sales-section ul.by-batch-btn li.print-transaction-btn").addClass("disabled");
+        $(".all-sales-section ul.by-batch-btn li.send-transaction-btn").addClass("disabled");
+        if (!invoice_selected) {
+            $(".all-sales-section ul.by-batch-btn li.print-transaction-btn").addClass("disabled");
+            $(".all-sales-section ul.by-batch-btn li.print-packaging-slip-btn").addClass("disabled");
+        }
+    }
+    if (no_selected) {
+        $(".all-sales-section ul.by-batch-btn li.print-transaction-btn").addClass("disabled");
+        $(".all-sales-section ul.by-batch-btn li.print-packaging-slip-btn").addClass("disabled");
+        $(".all-sales-section ul.by-batch-btn li.send-transaction-btn").addClass("disabled");
+        $(".all-sales-section ul.by-batch-btn li.send-reminder-btn").addClass("disabled");
+    }
+    if (no_status_open_overdue) {
+        $(".all-sales-section ul.by-batch-btn li.send-reminder-btn").addClass("disabled");
+    }
+}
+
 $(document).on("click", ".all-sales-section .filter-btn-section button.filter-btn", function(event) {
     $(".all-sales-section .filter-btn-section .filter-panel").show();
 });
@@ -130,12 +221,14 @@ $(document).on("click", ".all-sales-section .filter-btn-section .filter-panel bu
 });
 
 function all_sales_apply_filter() {
+    $(".loader_below_table").html("<div style='text-align:center;color: #C7C7C7;position:absolute;'><center><img src='" + baseURL + "assets/img/accounting/customers/loader.gif' style='width:50px;' /></center></div>");
     $.ajax({
         url: baseURL + "/accounting/filter/all-sales",
         type: "POST",
         dataType: "json",
         data: $(".all-sales-section .filter-btn-section .filter-panel form.filter_all_sales_table").serialize(),
         success: function(data) {
+            $(".loader_below_table").html("");
             var table = $('#all_sales_table').DataTable();
             table.destroy();
             $('#all_sales_table tbody').html(data.the_html_tbody);
@@ -148,3 +241,79 @@ function all_sales_apply_filter() {
         },
     });
 }
+
+$(document).on("click", ".all-sales-section ul.by-batch-btn li.print-packaging-slip-btn", function(event) {
+    event.preventDefault();
+    if (!$(this).hasClass("disabled")) {
+        alls_sales_print_by_batch("packaging_slip");
+    }
+});
+
+$(document).on("click", ".all-sales-section ul.by-batch-btn li.print-transaction-btn", function(event) {
+    event.preventDefault();
+    if (!$(this).hasClass("disabled")) {
+        alls_sales_print_by_batch("transactions");
+    }
+});
+
+function alls_sales_print_by_batch(action = "") {
+    var php_function = "";
+    if (action == "packaging_slip") {
+        php_function = "generate_customer_invoice_packaging_slip_by_batch";
+    } else if (action == "transactions") {
+        php_function = "print_transactions_by_batch";
+    }
+    var invoice_ids = new Array();
+    var customer_ids = new Array();
+    $(".all-sales-section table.all_sales_table tbody tr td input[type='checkbox']").each(function() {
+        if ($(this).is(":checked")) {
+            if ($(this).attr("data-row-type") == "Invoice") {
+                invoice_ids.push($(this).attr("data-invoice-id"));
+                customer_ids.push($(this).attr("data-customer-id"));
+            }
+        }
+    });
+
+    $("#loader-modal").show();
+    $.ajax({
+        url: baseURL + "accounting/" + php_function,
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_ids: customer_ids,
+            invoice_ids: invoice_ids,
+        },
+        success: function(data) {
+            var win = window.open(data.pdf_link, '_blank');
+            if (win) {
+                win.focus();
+            } else {
+                alert('Please allow popups for this website');
+            }
+            $("#loader-modal").hide();
+        },
+    });
+}
+
+$(document).on("click", ".all-sales-section ul.by-batch-btn li.send-reminder-btn", function() {
+
+    console.log("pasok");
+    if (!$(this).hasClass("disabled")) {
+        var invoice_ids = new Array();
+        var customer_ids = new Array();
+        var tos = "";
+        var business_name = "";
+        $(".all-sales-section table.all_sales_table tbody tr td input[data-row-type='Invoice']:checked").each(function() {
+            no_selected = true;
+            var status = $(this).attr("data-row-status");
+            if (status != "Paid" && status != "Draft" && status != "Submitted" && status != "Declined" && status != "Scheduled" && status != undefined) {
+                invoice_ids.push($(this).attr("data-invoice-id"));
+                customer_ids.push($(this).attr("data-customer-id"));
+                tos += $(this).attr("data-customer-name") + "; ";
+                business_name = $(this).attr("data-business-name");
+                console.log($(this).attr("data-customer-name") + "; ");
+            }
+        });
+        get_info_customer_reminder_by_batch(customer_ids, invoice_ids, tos, ".all-sales-section table.all_sales_table", business_name);
+    }
+});

@@ -821,6 +821,20 @@ class Invoice_model extends MY_Model
         $query = $this->db->query($sql);
         return $query->result();
     }
+
+    public function getAllData2($company_id)
+    {
+        $where = array(
+            'company_id'      => $company_id,
+          );
+
+        $this->db->select('date_issued,grand_total');
+        $this->db->from('invoices');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }
 
 /* End of file Invoice_model.php */

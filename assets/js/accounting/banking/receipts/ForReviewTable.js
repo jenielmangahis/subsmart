@@ -1,8 +1,6 @@
 export class ForReviewTable {
   constructor($table) {
     this.$table = $table;
-    const $uploadPath = $("#uploadPath");
-    this.uploadPath = $uploadPath.val();
 
     this.loadDeps().then(() => {
       this.init();
@@ -14,10 +12,12 @@ export class ForReviewTable {
   }
 
   get columns() {
+    const $uploadPath = $("#uploadPath");
+    const uploadPath = $uploadPath.val();
     const fallback = "Not Found";
 
     const isEmpty = (string) => {
-      if (typeof string !== "string") return true;
+      if (string === null) return true;
       return string.trim().length === 0;
     };
 
@@ -26,25 +26,25 @@ export class ForReviewTable {
         return '<input type="checkbox" class="receiptsTable__checkbox" />';
       },
       receipt: (_, __, row) => {
-        return `<img src="${this.uploadPath}/${row.receipt_img}" class="receiptsTable__img">`;
+        return `<img src="${uploadPath}/${row.receipt_img}" class="receiptsTable__img">`;
       },
       date: (_, __, row) => {
         const { transaction_date } = row;
         if (transaction_date === null) return fallback;
         if (transaction_date === "0000-00-00") return fallback;
-        return transaction_date;
+        return moment(transaction_date).format("MM/DD/YYYY");
       },
       description: (_, __, row) => {
         return isEmpty(row.description) ? fallback : row.description;
       },
       paymentAccount: (_, __, row) => {
-        return Number(row.payee) === 0 ? fallback : row.payee;
+        return Number(row.payee_id) === 0 ? fallback : row.payee_id;
       },
       amountOrTax: (_, __, row) => {
         return Number(row.total_amount) <= 0 ? fallback : row.total_amount;
       },
       category: (_, __, row) => {
-        return isEmpty(row.category_id) ? fallback : row.category_id;
+        return isEmpty(row.category) ? fallback : row.category;
       },
       actions: (_, __, row) => {
         const subOptions = {
@@ -53,11 +53,32 @@ export class ForReviewTable {
           makeActive: `<li><a href="#" class="action" data-action="findMatch">Find Match</a></li>`,
         };
 
+        let primaryOption = `
+          <a class="receiptsTable__link action" href="#" data-action="createExpense">
+            Create Expense
+          </a>
+        `;
+
+        if (
+          isEmpty(row.transaction_date) &&
+          isEmpty(row.description) &&
+          isEmpty(row.__select2_bank_account) &&
+          isEmpty(row.total_amount) &&
+          isEmpty(row.__select2_category)
+        ) {
+          primaryOption = `
+            <a class="receiptsTable__link action" href="#" data-action="review">
+              Review
+            </a>
+          `;
+
+          delete subOptions.makeInactive;
+          delete subOptions.makeActive;
+        }
+
         return `
             <div class="receiptsTable__actions">
-              <a class="receiptsTable__link action" href="#" data-action="createExpense">
-                Create Expense
-              </a>
+              ${primaryOption}
 
               <div class="dropdown">
                   <span class="fa fa-chevron-down" data-toggle="dropdown"></span>
@@ -73,7 +94,9 @@ export class ForReviewTable {
 
   get actions() {
     return {
-      review: () => {},
+      review: (row) => {
+        this.actions.view(row);
+      },
       delete: async ({ id }) => {
         const { isConfirmed } = await Swal.fire({
           title: "Are you sure?",
@@ -90,6 +113,8 @@ export class ForReviewTable {
         window.location.reload();
       },
       findMatch: () => {},
+<<<<<<< HEAD
+=======
       view: (row) => {
         const $modal = $("#receiptModal");
         const $dataTypes = $modal.find("[data-type]");
@@ -114,11 +139,35 @@ export class ForReviewTable {
             value = moment(value).format("YYYY-MM-DD");
           }
 
+          if ($element.classList.contains("select2-hidden-accessible")) {
+            $($element).find("option:not(:first-child)").remove(); // remove appended options
+            $($element).val("").trigger("change"); // reset value
+
+            if (type === "payee" && row.__select2_payee) {
+              const { __select2_payee: payee } = row;
+              const $option = `<option value="${payee.value}" selected="selected">${payee.text}</option>`;
+              $($element).append($option);
+            }
+
+            if (type === "bank_account_id" && row.__select2_bank_account) {
+              const { __select2_bank_account: account } = row;
+              const $option = `<option value="${account.value}" selected="selected">${account.text}</option>`;
+              $($element).append($option);
+            }
+
+            if (type === "category_id" && row.__select2_category) {
+              const { __select2_category: category } = row;
+              const $option = `<option value="${category.value}" selected="selected">${category.text}</option>`;
+              $($element).append($option);
+            }
+          }
+
           $element.value = value;
         }
 
         $modal.modal("show");
       },
+>>>>>>> staging
     };
   }
 
@@ -188,19 +237,6 @@ export class ForReviewTable {
       const func = isChecked ? "addClass" : "removeClass";
       $(rows)[func]("receiptsTable__row--selected");
       this.onCheckboxStateChange();
-    });
-
-    table.on("click", ".receiptsTable__row", (event) => {
-      const { target: $target } = event;
-      if ($target.classList.contains("receiptsTable__checkbox")) return;
-      if ($target.classList.contains("receiptsTable__selectColumn")) return;
-      if ($target.classList.contains("action")) return;
-
-      const $parent = $($target).closest("tr");
-      const rowId = $parent.data("id");
-      const rows = table.rows().data().toArray();
-      const row = rows.find(({ id }) => id == rowId);
-      this.actions.view(row);
     });
 
     table.on(

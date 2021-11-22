@@ -2268,7 +2268,6 @@ $(document).ready(function () {
 
 // Get Receipt data
 $(document).on('click','.receiptsTable__row',function (event) {
-    return;
     const { target: $target } = event;
     if ($target.classList.contains("receiptsTable__checkbox")) return;
     if ($target.classList.contains("receiptsTable__selectColumn")) return;
@@ -2294,8 +2293,6 @@ $(document).on('click','.receiptsTable__row',function (event) {
             $('#memo').text(data.memo);
             $('#refNumber').val(data.ref_number);
             $('#deleteReceipt').attr("data-id", data.id);
-            const createdAt = moment(data.created_at).format("hh:mm A MM/DD/YYYY");
-            $('#receiptImageCreatedAt').text(`Added ${createdAt}`);
             $("#receiptModal").modal("show");
         }
     });

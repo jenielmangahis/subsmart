@@ -167,17 +167,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="dropdown dropdown-btn text-center" style="float: right;position: relative;display: inline-block; margin-left: 10px">
                             <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                <span class="btn-label">Actions <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                                <span class="btn-label"><span class="fa fa-cogs"></span> Actions <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                 <li role="presentation">
                                     <a href="<?= base_url('accounting/import_transactions') ?>" class="editJobTypeBtn editItemBtn">
-                                        <span class="fa fa-file"></span> Import Bank Transactions
+                                        <span class="fa fa-upload"></span> Import Bank Transactions
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="" class="editItemBtn">
-                                        <span class="fa fa-money"></span> Order Checks
+                                <li role="presentation">
+                                    <a href="<?= base_url('accounting/import_transactions') ?>" class="editJobTypeBtn editItemBtn">
+                                        <span class="fa fa-upload"></span> Manage Connections
                                     </a>
                                 </li>
                                 <li>

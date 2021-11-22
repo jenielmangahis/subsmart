@@ -1683,24 +1683,11 @@
 
                                     <div class="tab-pane fade" id="payscale">
                                         <div class="px-4 pb-4">
-                                            <div class="container">
+                                            <div class="">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <div class="card">
-                                                            <div class="card-body p-0">
-                                                                <div class="row p-5">
-                                                                    <!-- <div class="col-md-6">
-                                                                            <img src="http://via.placeholder.com/400x90?text=logo">
-                                                                    </div>
-
-                                                                    <div class="col-md-6 text-right">
-                                                                            <p class="font-weight-bold mb-1">Invoice #550</p>
-                                                                            <p class="text-muted">Due to: 4 Dec, 2019</p>
-                                                                    </div> -->
-                                                                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-                                                                </div>
-
-                                                                <!-- <hr class="my-5"> -->
+                                                        <!-- <div class="card"> -->
+                                                            <!-- <div class="card-body p-0">
 
                                                                 <div class="row pb-5 p-5">
                                                                     <div class="col-md-6">
@@ -1710,14 +1697,6 @@
                                                                         <p class="mb-1">Berlin, Germany</p>
                                                                         <p class="mb-1">6781 45P</p>
                                                                     </div>
-
-                                                                    <!-- <div class="col-md-6 text-right">
-                                                                            <p class="font-weight-bold mb-4">Payment Details</p>
-                                                                            <p class="mb-1"><span class="text-muted">VAT: </span> 1425782</p>
-                                                                            <p class="mb-1"><span class="text-muted">VAT ID: </span> 10253642</p>
-                                                                            <p class="mb-1"><span class="text-muted">Payment Type: </span> Root</p>
-                                                                            <p class="mb-1"><span class="text-muted">Name: </span> John Doe</p>
-                                                                    </div> -->
                                                                 </div>
 
                                                                 <div class="row p-5">
@@ -1740,7 +1719,7 @@
                                                                                     <td>John Doe</td>
                                                                                     <td>$321</td>
                                                                                     <td>Fulltime</td>
-                                                                                    <td><a href="<?php echo url('/accounting/employeeinfo') ?>" class="btn btn-info">View</a></td>
+                                                                                    <td><a href="<?php //echo url('/accounting/employeeinfo') ?>" class="btn btn-info">View</a></td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>1</td>
@@ -1763,8 +1742,47 @@
                                                                     </div>
                                                                 </div>
 
-                                                            </div>
-                                                        </div>
+                                                            </div>-->
+                                                        
+                                                    <h4>Salary</h4> <br>
+                                                        <table class="table">
+                                                            <thead style="background-color:#EEEEEE;font-weight:bold;">
+                                                                <th><b>EMPLOYEE</b></th>
+                                                                <th><b>ROLE</b></th>
+                                                                <th><b>START DATE</b></th>
+                                                                <th><b>LOCATION</b></th>
+                                                                <th><b>SALARY</b></th>
+                                                                <th><b>ACTION</b></th>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>John Doe</td>
+                                                                    <td>Web Developer</td>
+                                                                    <td>03/06/18</td>
+                                                                    <td>New York, NY, USA</td>
+                                                                    <td>$30,000.00</td>
+                                                                    <td><a href="<?php echo url('/accounting/employee_payscale') ?>" class="btn btn-success">Manage</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Lheiann Vhiev</td>
+                                                                    <td>Accountant</td>
+                                                                    <td>03/20/20</td>
+                                                                    <td>Boston, MA, USA</td>
+                                                                    <td>$40,000.00</td>
+                                                                    <td><a href="#" class="btn btn-success">Manage</a></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Ronah Jay</td>
+                                                                    <td>Marketing</td>
+                                                                    <td>03/20/20</td>
+                                                                    <td>San Francisco, CA, USA</td>
+                                                                    <td>$20,000.00</td>
+                                                                    <td><a href="#" class="btn btn-success">Manage</a></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <!-- </div>  -->
                                                     </div>
                                                 </div>
 

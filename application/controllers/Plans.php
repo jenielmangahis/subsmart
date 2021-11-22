@@ -75,6 +75,7 @@ class Plans extends MY_Controller {
 		if(count(post('items')) > 0) {
 
 			$items = post('items');
+			$item_ids = post('item_id');
 			$quantity = post('quantity');
 			$price = post('price');
 			$discount = post('discount');
@@ -84,7 +85,7 @@ class Plans extends MY_Controller {
 			foreach(post('items') as $key=>$val) {
 
 				$itemArray[] = array(
-
+					'item_id' => $item_ids[$key],
 					'item' => $items[$key],
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
@@ -120,39 +121,35 @@ class Plans extends MY_Controller {
 		//ifPermissions('plan_edit');
 		$post = $this->input->post();
 		if(count(post('items')) > 0) {
-
 			$items = post('items');
+			$item_ids = post('item_id');
 			$quantity = post('quantity');
-			$price = post('price');
+			$price    = post('price');
 			$discount = post('discount');
-			$type = post('item_type');
+			$type     = post('item_type');
 			$location = post('location');
-
-			foreach(post('items') as $key=>$val) {
-
+			foreach($items as $key=> $val) {				
 				$itemArray[] = array(
-
-					'item' => $items[$key],
+					'item' => $val,
+					'item_id' => $item_ids[$key],
 					'item_type' => $type[$key],
 					'quantity'=> $quantity[$key],
-					'location'=> $location[$key],
+					//'location'=> $location[$key],
 					'discount'=> $discount[$key],
 					'price' => $price[$key]
 				);
 			}
-
-			$paln_items = serialize($itemArray);
+			$plan_items = serialize($itemArray);
 		} else {
-			$paln_items = '';
+			$plan_items = '';
 		}
-		
-		// echo "<pre>"; print_r($itemArray); die;
+
 		$company_id =  logged('company_id');
 		$data = [
 			'company_id' => $company_id,
 			'plan_name' => $this->input->post('plan_name'),
 			'status' => $this->input->post('status'),
-			'items' => $paln_items				
+			'items' => $plan_items				
 		];
 
 		$permission = $this->plans_model->update($id, $data);

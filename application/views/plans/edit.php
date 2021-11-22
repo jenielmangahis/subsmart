@@ -12,6 +12,10 @@
   font-weight: 600 !important;
   padding-top: 5px;
 }
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
+}
 </style>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
@@ -64,14 +68,22 @@
 								<div class="col-md-12 table-responsive">
 									<div class="row" style="margin-bottom: 10px;">
 					                    <div class="col-sm-6">
-					  									 <h5>Assign Items</h5>
+					  						<h5>Assign Items</h5>
 					                    </div>
 					                    <div class="col-sm-6" style="text-align: right;">
 					                      <a href="#" class="btn btn-primary btn-sm" id="add_another_old" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus"></i> Add Items</a>
 					                    </div>
-					                 </div>									
+					                 </div>			
+					                <?php 
+										$i=0;
+										$plan_items  = unserialize($plan->items);
+										$count_items = 0;
+										if( $plan_items > 0 ){
+											$count_items = count($plan_items)-1;
+										}
+									?>		
+									<input type="hidden" name="count" value="<?php echo $count_items; ?>" id="count">				
 									<table class="table table-hover">
-										
 										<thead>
 											<tr>
 												<th>DESCRIPTION</th>
@@ -85,33 +97,32 @@
 											</tr>
 										</thead>
 										<tbody id="jobs_items_table_body">
-											<?php 
-											$i=0;
-											if($plan->items!=''){?>
-												<input type="hidden" name="count" value="<?php echo count(unserialize($plan->items))-1; ?>" id="count">
-											<?php
-												foreach(unserialize($plan->items) as $row){ ?>
-												<tr>
-													<td><input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]" value="<?php echo $row['item'] ?>"><ul class="suggestions"></ul></td>
-													<td><select name="item_type[]" class="form-control">
-														<option value="product" <?php if($row['item_type']=='product') echo 'selected'; ?>>Product</option>
-														<option value="material" <?php if($row['item_type']=='material') echo 'selected'; ?>>Material</option>
-														<option value="service" <?php if($row['item_type']=='service') echo 'selected'; ?>>Service</option>
-														</select></td>
-													<td><input type="text" class="form-control quantity" name="quantity[]" value="<?php echo $row['quantity'] ?>" data-counter="<?=$i?>" id="quantity_<?=$i?>"></td>
-													<!-- <td><input type="text" class="form-control" name="location[]" value="<?php echo $row['location'] ?>"></td> -->
-													<td><input readonly type="number" class="form-control price" name="price[]" data-counter="<?=$i?>" id="price_<?=$i?>" min="0" value="<?php echo $row['price'] ?>"></td>
-													<td><input type="number" class="form-control discount" name="discount[]" data-counter="<?=$i?>" id="discount_<?=$i?>" min="0" value="<?php echo $row['discount'] ?>" readonly></td>
-													<td><span id="span_tax_<?=$i?>">0.00 (7.5%)</span></td>
-													<td><span id="span_total_<?=$i?>">0.00</span></td>
-												</tr>											
-												<?php 
-												$i++;
-												} 
-											}else{											
-											?>
-											<input type="hidden" name="count" value="0" id="count">
-											<tr>
+											<?php if($plan_items!=''){?>
+												<?php foreach($plan_items as $row){ ?>
+													<tr>
+														<td>
+															<input type="hidden" class="form-control" name="item_id[]" value="<?php echo $row['item_id']; ?>">
+															<input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="items[]" value="<?php echo $row['item']; ?>">
+															<ul class="suggestions"></ul>
+														</td>
+														<td><select name="item_type[]" class="form-control">
+															<option value="product" <?php if($row['item_type']=='product') echo 'selected'; ?>>Product</option>
+															<option value="material" <?php if($row['item_type']=='material') echo 'selected'; ?>>Material</option>
+															<option value="service" <?php if($row['item_type']=='service') echo 'selected'; ?>>Service</option>
+															</select></td>
+														<td><input type="text" class="form-control quantity" name="quantity[]" value="<?php echo $row['quantity'] ?>" data-counter="<?=$i?>" id="quantity_<?=$i?>"></td>
+														<!-- <td><input type="text" class="form-control" name="location[]" value="<?php echo $row['location'] ?>"></td> -->
+														<td><input readonly type="number" class="form-control price" name="price[]" data-counter="<?=$i?>" id="price_<?=$i?>" min="0" value="<?php echo $row['price'] ?>"></td>
+														<td><input type="number" class="form-control discount" name="discount[]" data-counter="<?=$i?>" id="discount_<?=$i?>" min="0" value="<?php echo $row['discount'] ?>" readonly></td>
+														<td><span id="span_tax_<?=$i?>">0.00 (7.5%)</span></td>
+														<td><span id="span_total_<?=$i?>">0.00</span></td>
+														<td>
+															<a href="javascript:void(0);" class="remove btn btn-sm btn-success" id="<?= $row['item_id']; ?>"><i class="fa fa-trash"></i></a>
+														</td>
+													</tr>	
+												<?php $i++; } ?>										
+											<?php }else{ ?>
+											<!-- <tr>
 												<td><input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul></td>
 												<td><select name="item_type[]" class="form-control">
 													<option value="product">Product</option>
@@ -124,7 +135,7 @@
 												<td><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0" readonly></td>
 												<td><span id="span_tax_0">0.00 (7.5%)</span></td>
 												<td><span id="span_total_0">0.00</span></td>
-											</tr>
+											</tr> -->
 											<?php 
 											} ?>
 										</tbody>
@@ -164,28 +175,23 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                        <table id="modal_items_table_estimate" class="table table-hover" style="width: 100%;">
                             <thead>
                             <tr>
                                 <td> Name</td>
-                                <td> Rebatable</td>
-                                <td> Qty</td>
                                 <td> Price</td>
-                                <td> Action</td>
+                                <td></td>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach($items as $item){ // print_r($item); ?>
                                 <tr>
                                     <td><?php echo $item->title; ?></td>
-                                    <td><?php echo $item->rebate; ?></td>
-                                    <td></td>
                                     <td><?php echo $item->price; ?></td>
                                     <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                     <span class="fa fa-plus"></span>
                                 </button></td>
                                 </tr>
-                                
                             <?php } ?>
                             </tbody>
                         </table>
@@ -212,6 +218,16 @@
      $('.form-validate').validate();
      $('.check-select-all-p').on('change', function() {
        $('.check-select-p').attr('checked', $(this).is(':checked'));
+     });
+
+     $('#modal_items_table_estimate').DataTable({
+       "autoWidth" : false,
+       "columnDefs": [
+        { width: 540, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 100, targets: 0 }
+      ],
+       "ordering": false,
      });
    
      $('.table-DT').DataTable({   

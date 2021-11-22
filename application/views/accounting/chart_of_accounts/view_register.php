@@ -42,6 +42,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #registers-table tbody tr.hover, #registers-table tbody tr.editting, #registers-table tbody tr.action-row {
         background-color: #f8f9fa;
     }
+    #registers-table tbody tr td.attachments {
+        text-align: center;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

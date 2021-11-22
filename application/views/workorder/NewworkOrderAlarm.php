@@ -8,6 +8,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <link href="<?php echo $url->assets ?>sass/styles.scss" rel="stylesheet" type="text/css">
     <style>
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
    .but:hover {
     font-weight: 900;
     color:black;
@@ -497,29 +501,34 @@ border: none;
 	border-left: 75px solid transparent;
 }
 
-   </style>
+#header_area {
+  width: 90%;
+  position: relative;
+}
+#header_area:hover > .btn-edit-header {
+  display: block;
+}
+.btn-edit-header {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+</style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40 add_mobile">
-          <div class="card">
-              <div class="page-title-box pt-1 pb-0">
-                  <div class="row align-items-center">
-                      <div class="col-sm-12">
-                          </div>
-                          <!-- <h3 class="page-title mt-0">New Lead</h3> -->
-                          <h3 style="font-family: Sarabun, sans-serif">ALARM SYSTEM WORKORDER AGREEMENT</h3>
-                          <!-- <div class="pl-3 pr-3 mt-1 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                    To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
-                                    Enter Address information.  Enter Additional Information and Description
-                                    and Finally click Save Button.  All required fields must have information.
-                                </span>
-                            </div>
-                          </div> -->
-                      </div>
-                  </div>
-              </div>
+            <div class="row" style="margin-top: 30px;">
+                <div class="col">
+                    <h3 class="m-0">ALARM SYSTEM WORKORDER AGREEMENT</h3>
+                </div>
+            </div>
+
+            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                Create new workorder.
+            </div>
+          <div class="card">              
             <!-- end row -->
             <!-- <div class="row">
                 <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
@@ -528,32 +537,41 @@ border: none;
             </div>
             <br> -->
             <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off']); ?> 
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="header_area">
+                        <h4 class="mt-0 header-title mb-5">Header</h4>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ol class="breadcrumb" style="margin-top:-30px;"></i>
+                                    <li class="breadcrumb-item active">
+                                        <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
+                                        <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
+                                    </li>
+                                </ol>                                        
+                            </div> 
+                        </div>
+                        <br>
+                        <a class="btn btn-sm btn-primary btn-edit-header" href="javascript:void(0);">Edit</a>
+                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                        <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
+                        <input type="hidden" id="content_input" class="form-control" name="header_" value="<?php echo $headers->content; ?>">
+                        <input type="hidden" name="wo_id" value="<?php 
+                        foreach($ids as $id)
+                        {
+                            $add = $id->id + 1;
+                            echo $add;
+                        }
+                        ?>">
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-md-12">
                     <!-- <div class="card"> -->
-                        <!-- <div class="card-body"> -->
-                        <div id="header_area">
-                                <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                            <li class="breadcrumb-item active">
-                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                                <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
-                                            </li>
-                                        </ol>
-
-                                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
-                                <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
-
-                                <input type="hidden" id="content_input" class="form-control" name="header_" value="<?php echo $headers->content; ?>">
-                                <input type="hidden" name="wo_id" value="<?php 
-                                foreach($ids as $id)
-                                {
-                                    $add = $id->id + 1;
-                                    echo $add;
-                                }
-                                ?>">
-                            </div>
+                        <!-- <div class="card-body"> -->                            
                             <!-- ====== CUSTOMER ====== -->
 							 <div class="row" id="group_area">
                                 <div class="col-md-3 form-group">
@@ -1839,17 +1857,17 @@ border: none;
 
                                                 <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                     </td>
-                                                <td width="10%"><input type="number" class="form-control quantity_w mobile_qty" name="quantity[]"
+                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                                         data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="number" class="form-control price_w price hidden_mobile_view" name="price[]"
+                                                <td width="10%"><input type="number" class="form-control price_ price hidden_mobile_view" name="price[]"
                                                         data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
                                                         <div class="show_mobile_view"><span class="price">0</span>
                                                         <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
                                                         </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0">
+                                                        data-counter="0" id="tax1_0" min="0" value="0" disabled="">
                                                         <!-- <span id="span_tax_0">0.0</span> -->
                                                         </td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
@@ -2658,9 +2676,9 @@ border: none;
                                         Submit
                                     </button> -->
                                     <!-- <input type="submit" value="Submit" class="btn btn-flat btn-primary"> -->
-                                    <button type="submit" name="action" class="btn btn-flat btn-success" value="submit">Submit</button>
+                                    <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
                                     <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
-                                    <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
+                                    <a href="<?php echo url('workorder') ?>" class="btn btn-primary">Cancel</a>
                                 </div>
                             </div>
 
@@ -3134,12 +3152,10 @@ border: none;
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <table id="items_table_package" class="table table-hover" style="width: 100%;">
+                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
                                         <thead>
                                         <tr>
                                             <td> Name</td>
-                                            <!-- <td> Rebatable</td> -->
-                                            <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
                                         </tr>
@@ -3148,13 +3164,11 @@ border: none;
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item_package">
                                                 <span class="fa fa-plus"></span>
                                             </button></td>
                                             </tr>
-                                            
                                         <?php } ?>
                                         </tbody>
                                     </table>
@@ -4506,6 +4520,11 @@ $(document).on('click','#headerContent',function(){
     $('#update_header_modal').modal('show');
 });
 
+$(document).on('click','.btn-edit-header',function(){
+    //    alert('yeah');
+    $('#update_header_modal').modal('show');
+});
+
 $(document).on('click','.save_update_header',function(){
     //    alert('yeah');
     var id = $('#update_h_id').val();
@@ -4610,6 +4629,15 @@ $(document).on('click','.save_terms_of_use',function(){
 </script>
 
 <script>
+$('#modal_items_list').DataTable({
+    "autoWidth" : false,
+    "columnDefs": [
+    { width: 540, targets: 0 },
+    { width: 100, targets: 0 },
+    { width: 100, targets: 0 }
+    ],
+    "ordering": false,
+});
 $(document).on("click", "label.mytxt", function () {
         var txt = $(".mytxt").text();
         $(".mytxt").replaceWith("<input class='mytxt'/>");

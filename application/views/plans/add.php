@@ -133,7 +133,7 @@ label>input {
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
- <?php include viewPath('includes/sidebars/inventory'); ?>
+ <?php include viewPath('includes/sidebars/estimate'); ?>
    <?php include viewPath('includes/notifications'); ?>
    <div wrapper__section>
    <div class="container-fluid p-40">
@@ -197,25 +197,7 @@ label>input {
 												<th>Total</th>
 											</tr>
 										</thead>
-										<tbody id="jobs_items_table_body">
-											<tr>
-												<td><input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul></td>
-												<td><select name="item_type[]" class="form-control">
-													<option value="product">Product</option>
-													<option value="material">Material</option>
-													<option value="service">Service</option>
-													</select></td>
-												<td width="100px"><input type="text" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
-												<!-- <td><input type="text" class="form-control" name="location[]"></td> -->
-												<td width="140px"><input type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0"></td>
-												<td width="100px"><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0"></td>
-												<td width="100px">
-                          <input type="text" class="form-control tax_change2" name="tax[]" data-counter="0" id="tax_1_0" min="0" value="0.00" disabled="">
-                          <!-- <span id="span_tax_0">0.00</span> -->
-                        </td>
-												<td><span id="span_total_0">0.00</span></td>
-											</tr>
-										</tbody>
+										<tbody id="jobs_items_table_body"></tbody>
 									</table>
 									
 								</div>
