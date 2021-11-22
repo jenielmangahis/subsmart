@@ -4277,6 +4277,7 @@ class Workorder extends MY_Controller
 
         $id = $this->input->post('wo_id');
         $wo_id = $this->input->post('workorder_number');
+        $workorder = $this->workorder_model->getById($id);
 
         if(!empty($this->input->post('company_representative_approval_signature1aM_web')))
         {
@@ -4336,6 +4337,32 @@ class Workorder extends MY_Controller
         // $action = $this->input->post('action');
         // if($action == 'submit') {
 
+        $attachment_photo = $workorder->attachment_photo;
+        if(isset($_FILES['attachment_photo']) && $_FILES['attachment_photo']['tmp_name'] != '') {
+            $target_dir = "./uploads/workorders/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['attachment_photo']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['attachment_photo']['name'])));
+            $attachment_photo = "photo_" . basename($_FILES["attachment_photo"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/workorders/$user_id/$attachment_photo");
+        }
+
+        $attachment_document = $workorder->attachment_document;
+        if(isset($_FILES['attachment_document']) && $_FILES['attachment_document']['tmp_name'] != '') {
+            $target_dir = "./uploads/workorders/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['attachment_document']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['attachment_document']['name'])));
+            $attachment_document = "document_" . basename($_FILES["attachment_document"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/workorders/$user_id/$attachment_document");
+        }
+
         $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
 
         $update_data = array(
@@ -4389,8 +4416,8 @@ class Workorder extends MY_Controller
             //attachment
             // 'attached_photo' => $this->input->post('attached_photo'),
             // 'document_links' => $this->input->post('document_links'),
-            'attached_photo'        => 'attached_photo',
-            'document_links'        => 'document_links',
+            'attached_photo'        => $attachment_photo,
+            'document_links'        => $attachment_document,
 
             'subtotal'              => $this->input->post('subtotal'),
             'taxes'                 => $this->input->post('taxes'), 

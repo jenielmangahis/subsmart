@@ -297,6 +297,8 @@ class Workorder_model extends MY_Model
             'job_description'       => $job_description,
             'payment_method'        => $payment_method,
             'payment_amount'        => $payment_amount,
+            'attached_photo'        => $attached_photo,
+            'document_links'        => $document_links,
             'terms_and_conditions'  => $terms_and_conditions,
             'status'                => $status,
             'priority'              => $priority,
