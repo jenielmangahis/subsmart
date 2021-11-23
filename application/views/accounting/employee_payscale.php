@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div> -->
                     <!-- </div> -->
 
-                    <table class="table">
+                    <table class="table employee_details">
                         <thead style="background-color:#EEEEEE;font-weight:bold;">
                             <th><b>ROLE</b></th>
                             <th><b>AMOUNT</b></th>
@@ -41,14 +41,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <tbody>
                             <tr>
                                 <td>
-                                    <select class="form-control">
-                                        <option>Web Developer</option>
+                                    <select class="form-control role_name" name="role_name">
+                                        <option value="">--Select Role--</option>
+                                        <option value="0">+ Add New</option>
+                                        <!-- <option>Web Developer</option>
                                         <option>Accountant</option>
                                         <option>Marketing</option>
                                         <option>Product</option>
                                         <option>HR</option>
                                         <option>Support</option>
-                                        <option>QA Tester</option>
+                                        <option>QA Tester</option> -->
+                                        <?php foreach($roles as $role): ?>
+                                            <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>"><?php echo $role->role_name; ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </td>
                                 <td><span>$30,000.00</span></td>
@@ -102,6 +107,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
         <!-- end container-fluid -->
 
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="addroleLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="addroleLabel">Add Role</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <span>Role name</span>
+                                                    <input type="texy" class="form-control role_name_text" name="role_name_text" placeholder="e.g Developer">
+                                                    <br>
+                                                    <span>Amount</span>
+                                                    <input type="texy" class="form-control role_amount" name="role_amount" placeholder="$0.00">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary save_role">Save role</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
 	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <!-- page wrapper end -->
 </div>
@@ -128,4 +159,90 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
     } );
+</script>
+
+<script>
+$(".role_name").change(function () {
+    var role_name = this.value;
+    var role_amount = $(this).attr('role-amount');
+    // var roleID = this.value;
+    if(role_name == '0')
+    {
+        // alert(role_name);
+        // $('#addrole').dialog('open');
+        $('#addrole').modal('show');
+    }
+    else
+    {
+        // alert('test');
+
+        var roleID = this.value;
+
+        $.ajax({
+            type: 'GET',
+            url: "<?php echo base_url(); ?>accounting/get_role_amount",
+            data: {
+                roleID: roleID
+            },
+            success: function(result) {
+                alert('test';)
+            },
+            error: function() {
+                alert("An error has occurred");
+            },
+
+        });
+    }
+});    
+</script>
+
+<script>
+$(document).on('click touchstart', '.save_role', function() {
+    // alert('test');
+
+    var role_name = $(".role_name_text").val();
+    var role_amount = $(".role_amount").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url(); ?>accounting/save_role",
+            data: {
+                role_name: role_name,
+                role_amount: role_amount
+            },
+            success: function(result) {
+                sucess("Added Successfully!");
+                
+                // $('.employee_details').html(result);
+                // alert('Email Successfully!');
+            },
+            error: function() {
+                alert("An error has occurred");
+            },
+
+        });
+
+    // else 
+    // {
+    // 	alert('no');
+    // }
+
+});
+
+function sucess(information, $id) {
+    Swal.fire({
+        title: 'Success!',
+        text: information,
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+    if (result.value) {
+        location.reload();
+        }
+    });
+}
+
 </script>

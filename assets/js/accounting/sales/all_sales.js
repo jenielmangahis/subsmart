@@ -297,7 +297,6 @@ function alls_sales_print_by_batch(action = "") {
 
 $(document).on("click", ".all-sales-section ul.by-batch-btn li.send-reminder-btn", function() {
 
-    console.log("pasok");
     if (!$(this).hasClass("disabled")) {
         var invoice_ids = new Array();
         var customer_ids = new Array();
@@ -311,9 +310,9 @@ $(document).on("click", ".all-sales-section ul.by-batch-btn li.send-reminder-btn
                 customer_ids.push($(this).attr("data-customer-id"));
                 tos += $(this).attr("data-customer-name") + "; ";
                 business_name = $(this).attr("data-business-name");
-                console.log($(this).attr("data-customer-name") + "; ");
             }
         });
+        console.log(invoice_ids);
         get_info_customer_reminder_by_batch(customer_ids, invoice_ids, tos, ".all-sales-section table.all_sales_table", business_name);
     }
 });

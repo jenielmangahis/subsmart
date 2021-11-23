@@ -2,10 +2,9 @@
     <div class="monal-body">
         <div class="modal-title">
             <h2>Send Reminders</h2>
-            <p class="normal">You are sending reminders for <span class="invoice-count">6</span> invoices to the
+            <p class="normal">You are sending reminders for <span class="invoice-count"></span> invoices to the
                 original
-                recipients. Please compose your
-                message below.</p>
+                recipients. </p>
             <div class="error-found">
                 <div class="error-title">
                     <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Email addresses missing

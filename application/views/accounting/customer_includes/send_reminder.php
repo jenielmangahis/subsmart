@@ -2,7 +2,7 @@
     <div class="monal-body">
         <div class="modal-title">
             <h2>Send Reminders</h2>
-            <p class="normal">You are sending reminders for <span class="invoice-count">6</span> invoices to the
+            <p class="normal">You are sending reminders for <span class="invoice-count">1</span> invoices to the
                 original
                 recipients. Please compose your
                 message below.</p>

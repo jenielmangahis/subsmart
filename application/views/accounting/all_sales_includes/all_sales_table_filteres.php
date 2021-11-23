@@ -8,7 +8,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ||
                 <input type="checkbox" name="all_sales_transaction_check_box[]"
                     id="transaction_<?=$customer_id?>_<?=$inv->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
                     class="customer_checkbox" data-row-type="Invoice"
-                    data-invoice-id="<?=$inv->id?>"
+                    data-invoice-id="<?=$inv->inv_id?>"
                     data-row-status="<?=$inv->INV_status?>"
                     data-invoice-number="<?=$inv->invoice_number?>"
                     data-customer-id="<?=$inv->customer_id?>"

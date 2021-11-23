@@ -1745,6 +1745,10 @@
                                                             </div>-->
                                                         
                                                     <h4>Salary</h4> <br>
+
+                                                    <div style="float:right;padding:1%;">
+                                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#addrole">Add role</a>
+                                                    </div>
                                                         <table class="table">
                                                             <thead style="background-color:#EEEEEE;font-weight:bold;">
                                                                 <th><b>EMPLOYEE</b></th>
@@ -1786,8 +1790,31 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="text-light mt-5 mb-5 text-center small">by : <a class="text-light" target="_blank" href="http://totoprayogo.com">totoprayogo.com</a></div>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="addroleLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="addroleLabel">Add Role</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <span>Role name</span>
+                                                    <input type="texy" class="form-control role_name_text" name="role_name" placeholder="e.g Developer">
+                                                    <br>
+                                                    <span>Amount</span>
+                                                    <input type="texy" class="form-control role_amount" name="role_amount" placeholder="$0.00">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary save_role">Save role</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -2154,3 +2181,55 @@
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
+
+
+<script>
+$(document).on('click touchstart', '.save_role', function() {
+    // alert('test');
+
+    var role_name = $(".role_name_text").val();
+    var role_amount = $(".role_amount").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url(); ?>accounting/save_role",
+            data: {
+                role_name: role_name,
+                role_amount: role_amount
+            },
+            success: function(result) {
+                sucess("Added Successfully!");
+                
+                // $('.employee_details').html(result);
+                // alert('Email Successfully!');
+            },
+            error: function() {
+                alert("An error has occurred");
+            },
+
+        });
+
+    // else 
+    // {
+    // 	alert('no');
+    // }
+
+});
+
+function sucess(information, $id) {
+    Swal.fire({
+        title: 'Success!',
+        text: information,
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+    if (result.value) {
+        location.reload();
+        }
+    });
+}
+
+</script>

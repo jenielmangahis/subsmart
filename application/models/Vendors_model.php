@@ -809,4 +809,31 @@ class Vendors_model extends MY_Model {
 		$query = $this->db->get('cashflow_planned');
 		return $query->result();
 	}
+
+	public function save_role($new_data){
+        $vendor = $this->db->insert('employee_role', $new_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+
+	public function getRoles($company_id)
+	{
+		$query = $this->db->get('employee_role');
+		return $query->result();
+	}
+
+	public function getRoleAmount($id)
+	{
+		$where = array(
+            'id'      => $id,
+          );
+
+        $this->db->select('role_amount');
+        $this->db->from('employee_role');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+	}
 }
