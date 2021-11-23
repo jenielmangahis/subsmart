@@ -69,6 +69,7 @@ class Accounting extends MY_Controller
             "assets/css/accounting/accounting_includes/refund_receipt_modal.css",
             "assets/css/accounting/accounting_includes/delayed_credit_modal.css",
             "assets/css/accounting/invoices_page.css",
+            "assets/css/accounting/accounting_includes/send_reminder_by_batch_modal.css",
         ));
 
         add_footer_js(array(
@@ -82,6 +83,7 @@ class Accounting extends MY_Controller
             "assets/js/accounting/sales/customer_includes/refund_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/delayed_credit_modal.js",
             "assets/js/accounting/sales/invoices_page.js",
+            "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js",
         ));
 
         $this->page_data['menu_name'] =
@@ -8077,6 +8079,140 @@ class Accounting extends MY_Controller
         echo json_encode($data);
     }
 
+    public function send_customer_reminder_by_batch()
+    {
+        $invoice_ids = $this->input->post("invoice_ids");
+        $error_found_ctr = 0;
+        $sent_ctr =0;
+        for ($ids_i =0 ; $ids_i<count($invoice_ids); $ids_i++) {
+            $invoice_id = $invoice_ids[$ids_i];
+            $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+            $customer_id = $inv->customer_id;
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+            $receivable_payment = 0;
+            $total_amount_received = 0;
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment = $inv->grand_total;
+            }
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+            }
+
+            $balance = ($receivable_payment - $total_amount_received) - $inv->deposit_request;
+
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+                $status = "Overdue";
+            } else {
+                if ($balance <= 0) {
+                    $status = "Paid";
+                } else {
+                    $status = "Open";
+                }
+            }
+
+            $pdf_data["data_pdf"][] = array(
+            "invoice_date" => $inv->date_issued,
+            "invoice_no" => $inv->invoice_number,
+            "payment" => $total_amount_received,
+            "balance_due" => $balance,
+            "inv_location_scale" => $inv->location_scale,
+            "inv_ship_from" => $inv->bus_state,
+            "inv_ship_via" => $inv->ship_via,
+            "inv_taxes" => $inv->taxes,
+            "inv_grand_total" => $inv->grand_total,
+            "inv_sub_total" => $inv->sub_total,
+            "inv_shipping_to_address" => $inv->shipping_to_address,
+            "due_date" => $inv->due_date,
+            "terms" => $this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+            "customer_name" => $customer_info->first_name . ' ' . $customer_info->last_name,
+            "customer_mail_add" => $customer_info->acs_mail_add,
+            "customer_phone_h" => $customer_info->customer_phone_h,
+            "customer_city" => $customer_info->acs_city,
+            "business_name" => $customer_info->business_name,
+            "customer_id" => $customer_info->prof_id,
+            "business_email" => $customer_info->business_email,
+            "business_website" => $customer_info->website,
+            "bus_street" => $customer_info->bus_street,
+            "bus_city" => $customer_info->bus_city,
+            "bus_state" => $customer_info->bus_state,
+            "bus_postal_code" => $customer_info->bus_postal_code,
+            "business_logo" => "uploads/users/business_profile/" . $customer_info->business_id . "/" . $customer_info->business_image,
+            "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+            "status" => $status
+        );
+
+
+            $customer_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+            $customer_email = $customer_info->acs_email;
+            $subject = `Reminder: Invoice `.$inv->invoice_number.` from Alarm Direct, Inc   `;
+            $message = `Dear `.$customer_name.`,
+
+    Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
+                                        
+    Thanks for your business!
+    `.$customer_info->business_name;
+
+            $pdf_file_name = "batched_inv_" . $customer_id . "_portalappinv.pdf";
+
+            $html_pdf = "accounting/customer_includes/customer_single_modal/invoice_packaging_pdf";
+            $orientation = "P";
+            $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
+
+            
+
+            $this->page_data['customer_name'] = $customer_name;
+            $this->page_data['message'] = $message;
+            $this->page_data['subject'] = $subject;
+    
+            $server = MAIL_SERVER;
+            $port = MAIL_PORT;
+            $username = MAIL_USERNAME;
+            $password = MAIL_PASSWORD;
+            $from = MAIL_FROM;
+    
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username = $username;
+            $mail->Password = $password;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout = 10; // seconds
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'nSmarTrac';
+            $mail->Subject = $subject;
+    
+            $mail->IsHTML(true);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+            $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . $pdf_file_name);
+    
+            $mail->Body = 'Send Transactions';
+            $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+            $mail->MsgHTML($content);
+            $mail->addAddress($customer_info->acs_email);
+    
+            $data = new stdClass();
+            $data->status = "success";
+            if (!$mail->Send()) {
+                $data->status = "error";
+                $data->status = "Mailer Error: " . $mail->ErrorInfo;
+                $error_found_ctr++;
+                exit;
+            }else{
+                $sent_ctr++;
+            }
+           
+        }
+        $data = new stdClass();
+        $data->sent_ctr=$sent_ctr;
+        $data->error_found_ctr=$error_found_ctr;
+        echo json_encode($data);
+    }
+
     public function send_customer_reminder1_unused()
     {
         $customer_name = $this->input->post("customer_name");
@@ -10835,7 +10971,7 @@ class Accounting extends MY_Controller
 
     public function generate_customer_invoice_packaging_slip_by_batch()
     {
-        $customer_id = $this->input->post("customer_id");
+        // $customer_ids = $this->input->post("customer_ids");
         $invoice_ids = $this->input->post("invoice_ids");
         for ($ids_i = 0; $ids_i < count($invoice_ids); $ids_i++) {
             $invoice_id = $invoice_ids[$ids_i];
@@ -10912,7 +11048,7 @@ class Accounting extends MY_Controller
 
     public function print_transactions_by_batch()
     {
-        $customer_id = $this->input->post("customer_id");
+        // $customer_ids = $this->input->post("customer_ids");
         $invoice_ids = $this->input->post("invoice_ids");
         for ($ids_i = 0; $ids_i < count($invoice_ids); $ids_i++) {
             $invoice_id = $invoice_ids[$ids_i];
@@ -12183,6 +12319,180 @@ class Accounting extends MY_Controller
         $data = 'Success';
 
         echo json_encode($data);
+    }
+
+    public function cashflowDataJson()
+    {
+        $invoices        = $this->invoice_model->getAllData2(logged('company_id'));
+        $response['price'] = $invoices;
+        // echo json_encode($response,TRUE);
+
+        $test = '{
+            "price_usd": [
+              [
+                1637275269000,
+                972.948
+              ],
+              [
+                1637361668000,
+                1025.88
+              ],
+              [
+                1637448068000,
+                1030.47
+              ],
+              [
+                1637534467000,
+                1100.52
+              ],
+              [
+                1637620867000,
+                1032.94
+              ],
+              [
+                1637707266000,
+                892.194
+              ],
+              [
+                1637793667000,
+                892.342
+              ],
+              [
+                1637880069000,
+                911.99
+              ],
+              [
+                1637966467000,
+                907.185
+              ],
+              [
+                1637052867000,
+                908.901
+              ],
+              [
+                1637139267000,
+                818.048
+              ],
+              [
+                1637225688000,
+                767.149
+              ],
+              [
+                1637312369000,
+                796.407
+              ],
+              [
+                1637398766000,
+                833.934
+              ],
+              [
+                1637485168000,
+                821.69
+              ],
+              [
+                1637571566000,
+                826.108
+              ],
+              [
+                1637657968000,
+                886.754
+              ],
+              [
+                1637744368000,
+                899.644
+              ],
+              [
+                1637830768000,
+                891.014
+              ],
+              [
+                1637917166000,
+                891.942
+              ],
+              [
+                1637003569000,
+                926.034
+              ],
+              [
+                1637089968000,
+                909.04
+              ],
+              [
+                1637176365000,
+                923.955
+              ],
+              [
+                1637262769000,
+                907.879
+              ],
+              [
+                1637349165000,
+                900.2
+              ],
+              [
+                1637435567000,
+                907.819
+              ],
+              [
+                1637521968000,
+                920.339
+              ],
+              [
+                1637608969000,
+                922.994
+              ],
+              [
+                1637695366000,
+                922.58
+              ],
+              [
+                1637692760000,
+                13411
+              ]
+            ]
+          }';
+
+        echo $test;
+    }
+
+    public function employee_payscale()
+    {
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['roles'] = $this->vendors_model->getRoles(logged('company_id'));
+        $this->load->view('accounting/employee_payscale', $this->page_data);
+    }
+
+    public function save_role()
+    {
+        $role_name      = $this->input->post("role_name");
+        $role_amount    = $this->input->post("role_amount");
+        
+
+        $new_data = array(
+            'role_name'     => $role_name,
+            'role_amount'   => $role_amount,
+            'company_id'    => logged('company_id'),
+            'created_at'    => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->vendors_model->save_role($new_data);
+
+        // if ($addQuery > 0) {
+           
+        // }
+
+        $data = 'Success';
+
+        echo json_encode($data);
+    }
+
+    public function get_role_amount()
+    {
+        $roleID      = $this->input->post("roleID");
+
+        $this->page_data['roles'] = $this->vendors_model->getRoleAmount($roleID);
+
+        echo json_encode($this->page_data);
     }
 }
 

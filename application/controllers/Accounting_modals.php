@@ -1191,7 +1191,7 @@ class Accounting_modals extends MY_Controller
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
-                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : 0,
                 'created_by' => logged('id'),
                 'status' => 1
@@ -1225,12 +1225,12 @@ class Accounting_modals extends MY_Controller
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     foreach ($data['attachments'] as $attachmentId) {
-                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                        $attachmentData = [
-                            'linked_to_count' => intval($attachment->linked_to_count) + 1
-                        ];
+                        // $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        // $attachmentData = [
+                        //     'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        // ];
         
-                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                        // $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
 
                         $linkAttachmentData = [
                             'type' => 'Transfer',
@@ -1300,7 +1300,7 @@ class Accounting_modals extends MY_Controller
                 'date' => date('Y-m-d', strtotime($data['payment_date'])),
                 'bank_account_id' => $data['bank_account'],
                 'memo' => $data['memo'],
-                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'created_by' => logged('id'),
                 'status' => 1
             ];
@@ -1310,12 +1310,12 @@ class Accounting_modals extends MY_Controller
             if ($payDownId) {
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     foreach ($data['attachments'] as $attachmentId) {
-                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                        $attachmentData = [
-                            'linked_to_count' => intval($attachment->linked_to_count) + 1
-                        ];
+                        // $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        // $attachmentData = [
+                        //     'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        // ];
         
-                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                        // $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
 
                         $linkAttachmentData = [
                             'type' => 'CC Payment',
@@ -6871,49 +6871,55 @@ class Accounting_modals extends MY_Controller
         switch ($transactionType) {
             case 'expense':
                 $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Expense', $transactionId);
             break;
             case 'check':
                 $transaction = $this->vendors_model->get_check_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Check', $transactionId);
             break;
             case 'bill':
                 $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill', $transactionId);
             break;
             case 'purchase-order':
                 $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $transactionId);
             break;
             case 'vendor-credit':
                 $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $transactionId);
             break;
             case 'credit-card-payment':
                 $transaction = $this->vendors_model->get_credit_card_payment_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $transactionId);
+            break;
+            case 'credit-card-pmt':
+                $transaction = $this->vendors_model->get_credit_card_payment_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $transactionId);
             break;
             case 'credit-card-credit':
                 $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $transactionId);
             break;
             case 'bill-payment':
                 $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $transactionId);
             break;
             case 'journal' :
                 $transaction = $this->accounting_journal_entries_model->getById($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Journal', $transactionId);
             break;
             case 'transfer' :
                 $transaction = $this->accounting_transfer_funds_model->getById($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transactionId);
             break;
             case 'deposit' :
                 $transaction = $this->accounting_bank_deposit_model->getById($transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $transactionId);
             break;
         }
 
-        $attachments = json_decode($transaction->attachments, true);
-
-        $attached = [];
-        if ($attachments !== null && count($attachments) > 0) {
-            foreach ($attachments as $attachment) {
-                $attached[] = $this->accounting_attachments_model->getById($attachment);
-            }
-        }
-
-        echo json_encode($attached);
+        echo json_encode($attachments);
     }
 
     public function update_transaction($transactionType, $transactionId)
@@ -6979,13 +6985,45 @@ class Accounting_modals extends MY_Controller
             'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'total_amount' => $data['total_amount'],
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => $data['total_amount']
         ];
 
         $update = $this->vendors_model->update_expense($expenseId, $expenseData);
 
         if ($update) {
+            if (!is_null($expense->attachments) && $expense->attachments !== "[]") {
+                foreach (json_decode($expense->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Expense', 'attachment_id' => $attachmentId, 'linked_id' => $expense->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Expense',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $expenseId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             if ($data['expense_payment_account'] !== $expense->payment_account_id) {
                 $newPaymentAcc = $this->chart_of_accounts_model->getById($data['expense_payment_account']);
                 $newPaymentAccType = $this->account_model->getById($newPaymentAcc->account_id);
@@ -7064,42 +7102,62 @@ class Accounting_modals extends MY_Controller
             'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'total_amount' => $data['total_amount'],
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => $data['total_amount']
         ];
 
         $update = $this->vendors_model->update_check($checkId, $checkData);
 
         if ($update) {
-            if (!is_null($checkData['check_no']) && !is_null($check->check_no)) {
-                $assignCheck = [
-                    'check_no' => $checkData['check_no'],
-                    'transaction_type' => 'check',
-                    'transaction_id' => $checkId,
-                    'payment_account_id' => $checkData['bank_account_id'],
-                    'updated_at' => date("Y-m-d H:i:s")
-                ];
+            if (!is_null($check->attachments) && $check->attachments !== "[]") {
+                foreach (json_decode($check->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Check', 'attachment_id' => $attachmentId, 'linked_id' => $check->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
 
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Check',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $checkId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
+            $assignCheck = [
+                'check_no' => $checkData['check_no'],
+                'transaction_type' => 'check',
+                'transaction_id' => $checkId,
+                'payment_account_id' => $checkData['bank_account_id']
+            ];
+
+            if (!is_null($checkData['check_no']) && !is_null($check->check_no))
+            {
                 $this->accounting_assigned_checks_model->update_check_no($assignCheck);
-            } elseif (is_null($check->check_no) && !is_null($checkData['check_no'])) {
-                $assignCheck = [
-                    'check_no' => $checkData['check_no'],
-                    'transaction_type' => 'check',
-                    'transaction_id' => $checkId,
-                    'payment_account_id' => $checkData['bank_account_id'],
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => date("Y-m-d H:i:s")
-                ];
-
+            }
+            elseif (is_null($check->check_no) && !is_null($checkData['check_no']))
+            {
                 $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
-            } elseif (!is_null($check->check_no) && is_null($checkData['check_no'])) {
-                $assignCheck = [
-                    'check_no' => $checkData['check_no'],
-                    'transaction_type' => 'check',
-                    'transaction_id' => $checkId,
-                    'payment_account_id' => $checkData['bank_account_id']
-                ];
-
+            }
+            elseif (!is_null($check->check_no) && is_null($checkData['check_no']))
+            {
                 $this->accounting_assigned_checks_model->unassign_check_no($assignCheck);
             }
 
@@ -7178,13 +7236,45 @@ class Accounting_modals extends MY_Controller
             'memo' => $data['memo'],
             'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'remaining_balance' => $data['total_amount'],
-            'total_amount' => $data['total_amount'],
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => $data['total_amount']
         ];
 
         $update = $this->vendors_model->update_bill($billId, $billData);
 
         if ($update) {
+            if (!is_null($bill->attachments) && $bill->attachments !== "[]") {
+                foreach (json_decode($bill->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Bill', 'attachment_id' => $attachmentId, 'linked_id' => $bill->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Bill',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $billId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             $this->update_categories('Bill', $billId, $data);
             $this->update_items('Bill', $billId, $data);
         }
@@ -7198,6 +7288,8 @@ class Accounting_modals extends MY_Controller
 
     private function update_purchase_order($purchaseOrderId, $data)
     {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
+
         $purchOrder = [
             'vendor_id' => $data['vendor_id'],
             'email' => $data['email'],
@@ -7211,13 +7303,45 @@ class Accounting_modals extends MY_Controller
             'message_to_vendor' => $data['message_to_vendor'],
             'memo' => $data['memo'],
             'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'total_amount' => $data['total_amount'],
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => $data['total_amount']
         ];
 
         $update = $this->vendors_model->update_purchase_order($purchaseOrderId, $purchOrder);
 
         if ($update) {
+            if (!is_null($purchaseOrder->attachments) && $purchaseOrder->attachments !== "[]") {
+                foreach (json_decode($purchaseOrder->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Purchase Order', 'attachment_id' => $attachmentId, 'linked_id' => $purchaseOrder->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Purchase Order',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $purchaseOrderId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             $this->update_categories('Purchase Order', $purchaseOrderId, $data);
             $this->update_items('Purchase Order', $purchaseOrderId, $data);
         }
@@ -7240,13 +7364,45 @@ class Accounting_modals extends MY_Controller
             'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'total_amount' => $data['total_amount'],
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => $data['total_amount']
         ];
 
         $update = $this->vendors_model->update_vendor_credit($vendorCreditId, $vCredit);
 
         if ($update) {
+            if (!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "[]") {
+                foreach (json_decode($vendorCredit->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor Credit', 'attachment_id' => $attachmentId, 'linked_id' => $vendorCredit->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Vendor Credit',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $vendorCreditId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             if ($data['vendor_id'] !== $vendorCredit->vendor_id) {
                 $newVendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
 
@@ -7315,13 +7471,45 @@ class Accounting_modals extends MY_Controller
             'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'total_amount' => $data['total_amount'],
-            'updated_at' => date("Y-m-d H:i:s")
+            'total_amount' => $data['total_amount']
         ];
 
         $update = $this->vendors_model->update_credit_card_credit($ccCreditId, $creditData);
 
         if ($update) {
+            if (!is_null($ccCredit->attachments) && $ccCredit->attachments !== "[]") {
+                foreach (json_decode($ccCredit->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'CC Credit', 'attachment_id' => $attachmentId, 'linked_id' => $ccCredit->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
+
+            if (isset($data['attachments']) && is_array($data['attachments'])) {
+                foreach ($data['attachments'] as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'CC Credit',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $ccCreditId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             if ($data['bank_credit_account'] !== $ccCredit->bank_credit_account_id) {
                 $newAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
                 $newBalance = floatval($newAcc->balance) - floatval($data['total_amount']);
@@ -7390,13 +7578,11 @@ class Accounting_modals extends MY_Controller
     
                 $vCreditData = [
                     'status' => 1,
-                    'remaining_balance' => number_format($remainingBal, 2, '.', ','),
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'remaining_balance' => number_format($remainingBal, 2, '.', ',')
                 ];
     
                 $vendorData = [
-                    'vendor_credits' => floatval($payee->vendor_credits) + $amount,
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'vendor_credits' => floatval($payee->vendor_credits) + $amount
                 ];
     
                 $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
@@ -7412,8 +7598,7 @@ class Accounting_modals extends MY_Controller
             $remainingBal = floatval($bill->remaining_balance) + floatval($paymentItem->total_amount);
             $billData = [
                 'status' => 1,
-                'remaining_balance' => number_format($remainingBal, 2, '.', ','),
-                'updated_at' => date("Y-m-d H:i:s")
+                'remaining_balance' => number_format($remainingBal, 2, '.', ',')
             ];
 
             $this->expenses_model->update_bill_data($bill->id, $billData);
@@ -7449,8 +7634,7 @@ class Accounting_modals extends MY_Controller
     
                 $vCreditData = [
                     'status' => $remainingBal === 0.00 ? 2 : 1,
-                    'remaining_balance' => $remainingBal,
-                    'updated_at' => date("Y-m-d H:i:s")
+                    'remaining_balance' => $remainingBal
                 ];
     
                 $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
@@ -7472,8 +7656,7 @@ class Accounting_modals extends MY_Controller
             'to_print_check_no' => $data['print_later'],
             'total_amount' => $data['total_amount'],
             'vendor_credits_applied' => isset($appliedVCredits) && count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
-            'status' => 1,
-            'updated_at' => date("Y-m-d H:i:s")
+            'status' => 1
         ];
 
         $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPayment);
@@ -7513,14 +7696,12 @@ class Accounting_modals extends MY_Controller
                 if (floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
                     $billData = [
                         'remaining_balance' => 0.00,
-                        'status' => 2,
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'status' => 2
                     ];
                 } else {
                     $remainingBal = floatval($bill->remaining_balance) - floatval($data['bill_payment'][$index]);
                     $billData = [
-                        'remaining_balance' => number_format($remainingBal, 2, '.', ','),
-                        'updated_at' => date("Y-m-d H:i:s")
+                        'remaining_balance' => number_format($remainingBal, 2, '.', ',')
                     ];
                 }
 
@@ -8105,21 +8286,21 @@ class Accounting_modals extends MY_Controller
                 'date' => date('Y-m-d', strtotime($data['payment_date'])),
                 'bank_account_id' => $data['bank_account'],
                 'memo' => $data['memo'],
-                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             ];
 
             $update = $this->accounting_pay_down_credit_card_model->update($paymentId, $updateData);
 
             if ($update) {
                 // REVERT OLD
-                if(!is_null($payment->attachments) && $payment->attachments !== "") {
-                    foreach(json_decode($payment->attachments, true) as $attachmentId) {
-                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                        $attachmentData = [
-                            'linked_to_count' => intval($attachment->linked_to_count) - 1
-                        ];
-        
-                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $payment->id);
+
+                if(count($attachments) > 0) {
+                    foreach($attachments as $attachment) {
+                        if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                            $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'CC Payment', 'attachment_id' => $attachment->id, 'linked_id' => $payment->id]);
+                            $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                        }
                     }
                 }
 
@@ -8139,13 +8320,33 @@ class Accounting_modals extends MY_Controller
 
                 // NEW
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
                     foreach ($data['attachments'] as $attachmentId) {
-                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                        $attachmentData = [
-                            'linked_to_count' => intval($attachment->linked_to_count) + 1
-                        ];
+                        $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                            return $v->id === $attachmentId;
+                        }, ARRAY_FILTER_USE_BOTH);
+
+                        if(count($link) > 0) {
+                            $attachmentData = [
+                                'type' => 'CC Payment',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $payment->id,
+                                'order_no' => $order
+                            ];
+
+                            $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        } else {
+                            $linkAttachmentData = [
+                                'type' => 'CC Payment',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $payment->id,
+                                'order_no' => $order
+                            ];
         
-                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                            $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        }
+
+                        $order++;
                     }
                 }
 
@@ -8276,14 +8477,17 @@ class Accounting_modals extends MY_Controller
                 // }
 
                 // REVERT OLD
-                if(!is_null($deposit->attachments) && $deposit->attachments !== "") {
-                    foreach(json_decode($deposit->attachments, true) as $attachmentId) {
+                if (!is_null($deposit->attachments) && $deposit->attachments !== "[]" && $deposit->attachments !== "") {
+                    foreach (json_decode($deposit->attachments, true) as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) - 1
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+        
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Deposit', 'attachment_id' => $attachmentId, 'linked_id' => $deposit->id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
                     }
                 }
 
@@ -8311,6 +8515,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                        $linkAttachmentData = [
+                            'type' => 'Deposit',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $depositId
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 
@@ -8460,14 +8672,14 @@ class Accounting_modals extends MY_Controller
 
             if ($update) {
                 // REVERT OLD
-                if(!is_null($transfer->attachments) && $transfer->attachments !== "") {
-                    foreach(json_decode($transfer->attachments, true) as $attachmentId) {
-                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                        $attachmentData = [
-                            'linked_to_count' => intval($attachment->linked_to_count) - 1
-                        ];
-        
-                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transfer->id);
+
+                if(count($attachments) > 0) {
+                    foreach($attachments as $attachment) {
+                        if(!isset($data['attachments']) || !in_array($attachment->id, $data['attachments'])) {
+                            $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Transfer', 'attachment_id' => $attachment->id, 'linked_id' => $transfer->id]);
+                            $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                        }
                     }
                 }
 
@@ -8519,13 +8731,33 @@ class Accounting_modals extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($transferToAccData);
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
                     foreach ($data['attachments'] as $attachmentId) {
-                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                        $attachmentData = [
-                            'linked_to_count' => intval($attachment->linked_to_count) + 1
-                        ];
+                        $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                            return $v->id === $attachmentId;
+                        }, ARRAY_FILTER_USE_BOTH);
+
+                        if(count($link) > 0) {
+                            $attachmentData = [
+                                'type' => 'Transfer',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $transferId,
+                                'order_no' => $order
+                            ];
+
+                            $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                        } else {
+                            $linkAttachmentData = [
+                                'type' => 'Transfer',
+                                'attachment_id' => $attachmentId,
+                                'linked_id' => $transferId,
+                                'order_no' => $order
+                            ];
         
-                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                            $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                        }
+
+                        $order++;
                     }
                 }
 
@@ -8659,14 +8891,17 @@ class Accounting_modals extends MY_Controller
                 $journal = $this->accounting_journal_entries_model->getById($journalId);
 
                 // REVERT OLD
-                if(!is_null($transfer->attachments) && $transfer->attachments !== "") {
-                    foreach(json_decode($transfer->attachments, true) as $attachmentId) {
+                if (!is_null($journal->attachments) && $journal->attachments !== "[]" && $journal->attachments !== "") {
+                    foreach (json_decode($journal->attachments, true) as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
                         $attachmentData = [
                             'linked_to_count' => intval($attachment->linked_to_count) - 1
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+        
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Journal', 'attachment_id' => $attachmentId, 'linked_id' => $journal->id]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
                     }
                 }
 
@@ -8704,6 +8939,14 @@ class Accounting_modals extends MY_Controller
                         ];
         
                         $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                        $linkAttachmentData = [
+                            'type' => 'Journal',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $journalId
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
                     }
                 }
 

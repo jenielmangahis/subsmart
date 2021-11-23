@@ -417,7 +417,7 @@ class Accounting_invoices_model extends MY_Model
     // for all sales queries
     public function get_filtered_invoices($where)
     {
-        $sql="SELECT *, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status FROM invoices JOIN acs_profile ON invoices.customer_id = acs_profile.prof_id WHERE ".$where;
+        $sql="SELECT *, invoices.id as inv_id, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status FROM invoices JOIN acs_profile ON invoices.customer_id = acs_profile.prof_id JOIN business_profile ON acs_profile.company_id = business_profile.id WHERE ".$where;
         $query = $this->db->query($sql);
         return $query->result();
     }

@@ -51,113 +51,118 @@
                                     <a href="<?= base_url('accounting/link_bank') ?>"><button type="button" class="close" ><i class="fa fa-times fa-lg"></i></button></a>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <div class="modal-container box-bank-container">
-                                                <div class="centered-container">
-                                                    <center><img style="width: 100px;" src="<?php echo base_url('assets/img/accounting/Artboard_230-512.png') ?>" alt=""></center>
-                                                </div>
-                                                <div style="margin-top: 70px;">
-                                                    <h4 style="margin: 20px 20px 30px 20px; ">Manually upload your transactions</h4>
-                                                    <ol>
-                                                        <li>1. Open a new tab and sign in to your bank.</li>
-                                                        <li>2. Download transactions: CSV only.</li>
-                                                        <li>3. Close the tab and return to nSmartrac.</li>
-                                                    </ol>
-                                                </div>
-                                                <div>
-                                                    <h5 style="margin: 20px 20px 30px 20px;">Select a file to upload</h5>
-                                                    <form style="margin: 20px 20px 30px 20px;">
+                                    <form id="import_transaction" enctype="multipart/form-data" >
+                                        <div class="row" id="step1">
+                                            <div class="col-sm-5">
+                                                <h5>Step 1</h5>
+                                                <div class="modal-container box-bank-container">
+                                                    <div class="centered-container">
+                                                        <center><img style="width: 100px;" src="<?php echo base_url('assets/img/accounting/Artboard_230-512.png') ?>" alt=""></center>
+                                                    </div>
+                                                    <div style="margin-top: 70px;">
+                                                        <h4 >Manually upload your transactions</h4>
+                                                        <ol>
+                                                            <li>1. Open a new tab and sign in to your bank.</li>
+                                                            <li>2. Download transactions: CSV only.</li>
+                                                            <li>3. Close the tab and return to nSmartrac.</li>
+                                                        </ol>
+                                                    </div>
+                                                    <div>
+                                                        <h5 >Select a file to upload</h5>
                                                         <div class="custom-file">
-                                                            <input type="file" name="file" class="custom-file-input" id="uploadTransaction" accept=".csv">
-                                                            <label class="custom-file-label" for="customFile">Choose file</label>
-                                                        </div>
-                                                    </form>
+                                                                <input type="file" name="file" class="custom-file-input" id="uploadTransaction" accept=".csv">
+                                                                <label class="custom-file-label" for="customFile">Choose file</label>
+                                                            </div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-2" style="padding-top: 250px;"><h1 class="modal-title" style="text-align: center;font-size: 46px;">OR</h1></div>
+                                            <div class="col-sm-4">
+                                                <br><br>
+                                                <div class="modal-container box-bank-container" style="width: 100%">
+                                                    <div class="centered-container">
+                                                        <center><img style="width: 100px;" src="<?php echo base_url('assets/img/accounting/bank-security-system-621346.png') ?>" alt=""></center>
+                                                    </div>
+                                                    <div style="margin-top: 70px;">
+                                                        <h4 style="margin: 20px 20px 30px 20px; ">Securely connect your bank</h4>
+                                                        <ol>
+                                                            <li>More secure. No need to share files with bank data.</li>
+                                                            <li>No work. Transactions come in from your bank automatically.</li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12" >
+                                                <br>
+                                                <button type="button" style="justify-content: right;" class="btn btn-success" id="toStepTwo"><span class="fa fa-arrow-right"></span> Next</button>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-2" style="padding-top: 250px;"><h1 class="modal-title" style="text-align: center;font-size: 46px;">OR</h1></div>
-                                        <div class="col-sm-5">
-                                            <div class="modal-container box-bank-container" style="width: 100%">
-                                                <div class="centered-container">
-                                                    <center><img style="width: 100px;" src="<?php echo base_url('assets/img/accounting/bank-security-system-621346.png') ?>" alt=""></center>
+                                        <div class="row" id="step2" style="display:none">
+                                            <div class="col-sm-6">
+                                                <h5 >Step 2</h5>
+                                                <div class="modal-container box-bank-container">
+                                                    <div style="margin-top: 70px;">
+                                                        <h5 style="margin: 20px 20px 30px 20px; ">Which account are these transactions from?</h5>
+                                                    </div>
+                                                    <div>
+                                                        <h6 style="margin: 20px 20px 30px 20px;">Select connected account</h6>
+                                                            <select id="account" name="account" class="form-control" >
+                                                                <option  value=""></option>
+                                                                <option  value="CC">Credit Card</option>
+                                                                <option  value="Stripe">Stripe</option>
+                                                                <option  value="Paypal">Paypal</option>
+                                                            </select>
+                                                    </div>
                                                 </div>
-                                                <div style="margin-top: 70px;">
-                                                    <h4 style="margin: 20px 20px 30px 20px; ">Securely connect your bank</h4>
-                                                    <ol>
-                                                        <li>More secure. No need to share files with bank data.</li>
-                                                        <li>No work. Transactions come in from your bank automatically.</li>
-                                                    </ol>
-                                                </div>
+                                            </div>
+                                            <div class="col-sm-6"></div>
+                                            <div class="col-sm-12" >
+                                                <button style="justify-content: left;" class="btn btn-success" id="toStepOne"><span class="fa fa-arrow-left"></span> Back</button>
+                                                <button style="justify-content: right;" class="btn btn-success" id="toStepThree"><span class="fa fa-arrow-right"></span> Next</button>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="step3" style="display:none">
+                                            <div class="col-sm-6" >
+                                                <div class="modal-container box-bank-container">
+                                                    <h5>Step 3</h5>
+                                                    <div>
+                                                        <h6 style="margin: 20px 20px 30px 20px;">Select the fields that correspond to your file</h6>
 
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6" id="form2">
-                                            <div class="modal-container box-bank-container">
-                                                <div style="margin-top: 70px;">
-                                                    <h5 style="margin: 20px 20px 30px 20px; ">Which account are these transactions from?</h5>
-                                                </div>
-                                                <div>
-                                                    <h6 style="margin: 20px 20px 30px 20px;">Select connected account</h6>
-                                                    <form style="margin: 20px 20px 30px 20px;">
-                                                        <select id="account" name="account" class="form-control" >
-                                                            <option  value=""></option>
-                                                            <option  value="CC">Credit Card</option>
-                                                            <option  value="Stripe">Stripe</option>
-                                                            <option  value="Paypal">Paypal</option>
-                                                        </select>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6" id="form3">
-                                            <div class="modal-container box-bank-container">
-                                                <div style="margin-top: 70px;">
-                                                    <h5 style="margin: 20px 20px 30px 20px; ">Step 2</h5>
-                                                </div>
-                                                <div>
-                                                    <h6 style="margin: 20px 20px 30px 20px;">Select the fields that correspond to your file</h6>
-                                                    <form style="margin: 20px 20px 30px 20px;">
-                                                        <div class="row ">
-                                                            <label> Date</label>
-                                                            <select id="account" name="account" class="form-control" required>
-                                                                <option  value="">Select field</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div class="row form_line">
-                                                            <label> Description</label>
-                                                            <select id="account" name="account" class="form-control" required>
-                                                                <option  value="">Select field</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="row form_line">
-                                                            <label> Money Received</label>
-                                                            <select id="account" name="account" class="form-control" required>
-                                                                <option  value="">Select field</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="row form_line">
-                                                            <label> Money Spent</label>
-                                                            <select id="account" name="account" class="form-control" required>
-                                                                <option  value="">Select field</option>
-                                                            </select>
-                                                        </div>
-                                                    </form>
+                                                            <div class="row">
+                                                                <label> Date</label>
+                                                                <select id="transDate" name="transDate" class="form-control" required>
+                                                                    <option  value="">Select field</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="row form_line">
+                                                                <label> Description</label>
+                                                                <select id="transDesc" name="account" class="form-control" required>
+                                                                    <option  value="">Select field</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="row form_line">
+                                                                <label> Money Received</label>
+                                                                <select id="transMoneyRec" name="account" class="form-control" required>
+                                                                    <option  value="">Select field</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="row form_line">
+                                                                <label> Money Spent</label>
+                                                                <select id="transMoneySpent" name="account" class="form-control" required>
+                                                                    <option  value="">Select field</option>
+                                                                </select>
+                                                            </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                                        <div style="display: flex;justify-content: center;">
-                                            <button class="btn btn-success">Connect</button>
+                                        <div class="modal-footer" style="display:none">
+                                            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                                            <button type="submit" class="btn btn-success"><span class="fa fa-upload"></span> Import Now</button>
                                         </div>
-                                    </div>
+                                    </form>
                                     <div style="margin: auto;text-align: center;">
+                                        <br>
                                         <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
                                     </div>
                                 </div>
@@ -205,6 +210,48 @@
 </script>
 
 <script type="text/javascript">
+    $("#import_transaction").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "<?= base_url('processing/onPostCSVValue'); ?>",
+            data: form,
+            processData:false,
+            contentType:false,
+            cache:false,
+            success: function(data) {
+                var project = JSON.parse(data);
+                console.log(project);
+                document.getElementById('overlay').style.display = "none";
+            }, beforeSend: function() {
+                document.getElementById('overlay').style.display = "flex";
+            }
+        });
+    });
+
+
+    $('#toStepTwo').click(function () {
+        if($("#uploadTransaction").val() === ""){
+            nsmartrac_alert("Warning!","Please upload file before proceeding to Step 2.","warning");
+        }else{
+            $('#step1').hide();
+            $('#step2').show();
+        }
+    });
+
+    $('#toStepOne').click(function () {
+        $('#step2').hide();
+        $('#step1').show();
+    });
+
+    $('#toStepThree').click(function () {
+        $('#step2').hide();
+        $('#step3').show();
+        $('.modal-footer').show();
+    });
+
     function nsmartrac_alert(title='Awesome',text,icon='success',redirect=''){
         Swal.fire({
             title: title,
@@ -228,29 +275,33 @@
 
             var fileInput = document.getElementById('uploadTransaction');
             var file = fileInput.files[0];
-            var formDatas = new FormData();
-            formDatas.append('file', file);
-
-            console.log(formDatas);
+            var formData = new FormData();
+            formData.append('file', file);
+            console.log(formData);
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
                 url: "<?= base_url() ?>processing/onGetCSVHeaders",
-                data: formDatas,
+                data: formData,
                 processData: false,
                 contentType: false,
                 cache: false,
                 beforeSend: function() {
                     console.log('Sending Now!');
                 },
-                success: function (data) {
-                    // console.log(data);
-                    var head = JSON.parse(data);
-                    var csvHeaders  = Object.keys(head[0]);
-                    console.log(head);
-                    $.each(csvHeaders,function(i,o){
-                        console.log(o);
+                success: function (response) {
+
+                    console.log(response);
+                    var head = response.data;
+                    //var csvHeaders  = Object.keys(head[0]);
+                    var toAppend = '';
+                    $.each(head,function(i,o){
+                        toAppend += '<option value='+i+'>'+i+'</option>';
                     });
+                    $('#transDate').append(toAppend);
+                    $('#transDesc').append(toAppend);
+                    $('#transMoneyRec').append(toAppend);
+                    $('#transMoneySpent').append(toAppend);
                 },
                 error: function (e) {
                     console.log("ERROR : ", e);

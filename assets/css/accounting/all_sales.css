@@ -76,3 +76,47 @@
     visibility: visible;
     position: relative;
 }
+
+.btn-above-table-section {
+    display: flex;
+}
+
+.btn-above-table-section>div {
+    margin-right: 10px;
+}
+
+.all-sales-section .by-batch-btn .dropdown-menu li {
+    padding: 5px 0;
+}
+
+.all-sales-section .by-batch-btn .dropdown-menu li:hover,
+.all-sales-section .by-batch-btn .dropdown-menu li:hover a {
+    color: #2CA01C;
+    background-color: #ECEDF1;
+    cursor: pointer;
+}
+
+.all-sales-section .by-batch-btn .dropdown-menu li:hover,
+.all-sales-section .by-batch-btn .dropdown-menu li:hover a {
+    color: #2CA01C;
+    background-color: #ECEDF1;
+    cursor: pointer;
+}
+
+.all-sales-section .by-batch-btn .dropdown-menu li a {
+    font-size: 13px;
+    color: #2C2C2C;
+    font-weight: lighter;
+}
+
+.all-sales-section ul.by-batch-btn li.print-transaction-btn.disabled,
+.all-sales-section ul.by-batch-btn li.print-transaction-btn.disabled a,
+.all-sales-section ul.by-batch-btn li.print-packaging-slip-btn.disabled,
+.all-sales-section ul.by-batch-btn li.print-packaging-slip-btn.disabled a,
+.all-sales-section ul.by-batch-btn li.send-transaction-btn.disabled,
+.all-sales-section ul.by-batch-btn li.send-transaction-btn.disabled a,
+.all-sales-section ul.by-batch-btn li.send-reminder-btn.disabled,
+.all-sales-section ul.by-batch-btn li.send-reminder-btn.disabled a {
+    cursor: default;
+    color: #A0A09F;
+}

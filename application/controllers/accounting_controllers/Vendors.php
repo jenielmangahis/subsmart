@@ -33,6 +33,7 @@ class Vendors extends MY_Controller
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
             "assets/css/accounting/invoices_page.css",
+            "assets/css/accounting/accounting_includes/send_reminder_by_batch_modal.css"
         ));
 
         add_footer_js(array(
@@ -45,6 +46,7 @@ class Vendors extends MY_Controller
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
             "assets/js/accounting/sales/customer_includes/create_charge.js",
             "assets/js/accounting/sales/invoices_page.js",
+            "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -235,14 +237,32 @@ class Vendors extends MY_Controller
             'notes' => $this->input->post('notes'),
             'attachments' => !is_null($this->input->post('attachments')) ? json_encode($this->input->post('attachments')) : null,
             'status' => 1,
-            'created_by' => logged('id'),
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
+            'created_by' => logged('id')
         );
 
         $addQuery = $this->vendors_model->createVendor($new_data);
 
         if ($addQuery > 0) {
+            $attachments = $this->input->post('attachments');
+            if (isset($attachments) && is_array($attachments)) {
+                foreach ($attachments as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Vendor',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $vendorId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             $this->session->set_flashdata('success', "New vendor successfully added!");
         } else {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");
@@ -333,8 +353,7 @@ class Vendors extends MY_Controller
         foreach ($vendors as $vendorId) {
             $data[] = [
                 'id' => $vendorId,
-                'status' => 0,
-                'updated_at' => date("Y-m-d H:i:s")
+                'status' => 0
             ];
         }
 
@@ -353,6 +372,7 @@ class Vendors extends MY_Controller
 
     public function update($vendorId)
     {
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
         $data = array(
             'title' => $this->input->post('title'),
             'f_name' => $this->input->post('f_name'),
@@ -381,13 +401,46 @@ class Vendors extends MY_Controller
             'tax_id' => $this->input->post('tax_id'),
             'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
-            'attachments' => $this->input->post('attachments') !== null ? json_encode($this->input->post('attachments')) : null,
-            'updated_at' => date("Y-m-d H:i:s")
+            'attachments' => $this->input->post('attachments') !== null ? json_encode($this->input->post('attachments')) : null
         );
 
         $update = $this->vendors_model->updateVendor($vendorId, $data);
 
         if ($update) {
+            if (!is_null($vendor->attachments) && $vendor->attachments !== "[]") {
+                foreach (json_decode($vendor->attachments, true) as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) - 1
+                    ];
+    
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+    
+                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor', 'attachment_id' => $attachmentId, 'linked_id' => $vendor->id]);
+                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                }
+            }
+
+            $attachments = $this->input->post('attachments');
+            if (isset($attachments) && is_array($attachments)) {
+                foreach ($attachments as $attachmentId) {
+                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                    $attachmentData = [
+                        'linked_to_count' => intval($attachment->linked_to_count) + 1
+                    ];
+
+                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+                    $linkAttachmentData = [
+                        'type' => 'Vendor',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $vendorId
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                }
+            }
+
             $this->session->set_flashdata('success', "Vendor updated successfully!");
         } else {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");
@@ -402,6 +455,16 @@ class Vendors extends MY_Controller
 
         if (count($files['name']) > 0) {
             $insert = $this->uploadFile($files);
+
+            foreach($insert as $attachmentId) {
+                $linkAttachmentData = [
+                    'type' => 'Vendor',
+                    'attachment_id' => $attachmentId,
+                    'linked_id' => $vendorId
+                ];
+
+                $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+            }
             $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
 
             if ($vendor->attachments !== null && $vendor->attachments !== "") {
@@ -427,6 +490,9 @@ class Vendors extends MY_Controller
         $attachments = json_decode($vendor->attachments, true);
         $attachmentKey = array_search($attachmentId, $attachments);
         unset($attachments[$attachmentKey]);
+
+        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor', 'attachment_id' => $attachmentId, 'linked_id' => $vendorId]);
+        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
 
         $attachments = count($attachments) > 0 ? json_encode($attachments) : null;
 
@@ -464,9 +530,7 @@ class Vendors extends MY_Controller
                 'file_extension' => $extension,
                 'size' => $files['size'][$key],
                 'notes' => null,
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
+                'status' => 1
             ];
 
             move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
@@ -483,16 +547,9 @@ class Vendors extends MY_Controller
     public function get_vendor_attachments($vendorId)
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
-        $attachments = json_decode($vendor->attachments, true);
-        
-        $attached = [];
-        if ($attachments !== null && count($attachments) > 0) {
-            foreach ($attachments as $attachment) {
-                $attached[] = $this->accounting_attachments_model->getById($attachment);
-            }
-        }
+        $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
 
-        echo json_encode($attached);
+        echo json_encode($attachments);
     }
 
     public function load_transactions($vendorId)
@@ -1549,8 +1606,7 @@ class Vendors extends MY_Controller
 
         $billPaymentData = [
             'vendor_credits_applied' => null,
-            'status' => 0,
-            'updated_at' => date("Y-m-d H:i:s")
+            'status' => 0
         ];
 
         $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);

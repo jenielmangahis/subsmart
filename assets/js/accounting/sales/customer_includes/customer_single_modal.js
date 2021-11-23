@@ -1491,7 +1491,7 @@ $(document).on('click', '#customer-single-modal .single-customer-info-section .b
             $("div#invoice-viewer-modal .the-modal-body.right-side-modal .status-icon i").attr("class", "fa fa-pause-circle");
         }
         invoice_viewer_changed($(this).parent("tr").attr("data-id"), $(this).parent("tr").attr("data-customer-id"));
-    } else if ($(this).parent("tr").attr("data-transaction") == "Payment") {
+    } else if (!$(this).is(':last-child') && !$(this).is(':first-child') && $(this).parent("tr").attr("data-transaction") == "Payment") {
         $("#customer_receive_payment_modal").fadeIn();
         var customer_id = $(this).parent("tr").attr("data-customer-id");
         var receive_payment_id = $(this).parent("tr").attr("data-receive-payment-id");

@@ -1,11 +1,10 @@
-<div id="send-reminder-modal">
+<div id="send-reminder-by-batch-modal">
     <div class="monal-body">
         <div class="modal-title">
             <h2>Send Reminders</h2>
-            <p class="normal">You are sending reminders for <span class="invoice-count">1</span> invoices to the
+            <p class="normal">You are sending reminders for <span class="invoice-count"></span> invoices to the
                 original
-                recipients. Please compose your
-                message below.</p>
+                recipients. </p>
             <div class="error-found">
                 <div class="error-title">
                     <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Email addresses missing
@@ -20,19 +19,26 @@
                     alt="">
             </div>
         </div>
-        <form id="send-reminder-form">
+        <form id="send-reminder-by-batch-form">
+            <input type="text" name="table-id" style="display: none;">
             <div class="send-reminder-modal-content">
                 <div class="form-group">
-                    <div class="label" for="receint-email">Email</div>
-                    <input type="email" name="receint-email" readonly value="pintonlou@gmail.com" />
+                    <div class="label" for="receint-email">To</div>
+                    <input type="text" name="to" readonly value="Lou Pinton;" />
                 </div>
                 <div class="form-group">
                     <div class="label" for="subject">Subject</div>
-                    <input type="type" name="subject" value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" />
+                    <input type="type" name="subject" readonly
+                        value="Reminder: Invoice {invoice_number} from Alarm Direct, Inc" />
                 </div>
                 <div class="form-group">
                     <div class="label" for="message">Message</div>
-                    <textarea name="message" rows="8" maxlength="4000"></textarea>
+                    <textarea name="message" rows="8" readonly maxlength="4000">Dear {customer_name},
+
+Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
+                                    
+Thanks for your business!
+nSMART, LLC</textarea>
                 </div>
             </div>
             <div class="send-reminder-modal-footer">

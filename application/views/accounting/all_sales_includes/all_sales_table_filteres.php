@@ -2,7 +2,23 @@
 if ($filter_type == "All transactions" || $filter_type == "All plus deposits" || $filter_type == "All invoices" || $filter_type == "All transactions"  || $filter_type == "Overdue invoices") {
     foreach ($invoices as $inv):?>
 <tr>
-    <td><input type="checkbox"></td>
+    <td>
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$inv->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Invoice"
+                    data-invoice-id="<?=$inv->inv_id?>"
+                    data-row-status="<?=$inv->INV_status?>"
+                    data-invoice-number="<?=$inv->invoice_number?>"
+                    data-customer-id="<?=$inv->customer_id?>"
+                    data-customer-name="<?= $inv->first_name." ".$inv->last_name; ?>"
+                    data-business-name="<?=$inv->business_name?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$inv->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
     <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?>
     </td>
     <td><?php echo 'Invoice'; ?>
@@ -129,9 +145,21 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ||
 if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Open estimates") {
     foreach ($estimates as $estimate) { ?>
 <tr id="estimates_rows">
-    <td><input type="checkbox"></td>
     <td>
-            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$estimate->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Estimate"
+                    data-estimate-id="<?=$estimate->id?>"
+                    data-customer-id="<?=$estimate->customer_id?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$estimate->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
+    <td>
+        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
     </td>
     <td>
         <?php echo 'Estimate'; ?>
@@ -281,12 +309,24 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 }?>
 
 <?php
-if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Money received" ) {
+if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Money received") {
     foreach ($sales_receipts as $salesReceipts) { ?>
 <tr id="sales_receipt_rows">
-    <td><input type="checkbox"></td>
     <td>
-            <?php echo  date('m/d/Y', strtotime($salesReceipts->sales_receipt_date)) ?>
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$salesReceipts->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Sales Receipt"
+                    data-estimate-id="<?=$salesReceipts->id?>"
+                    data-customer-id="<?=$salesReceipts->customer_id?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$salesReceipts->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
+    <td>
+        <?php echo  date('m/d/Y', strtotime($salesReceipts->sales_receipt_date)) ?>
     </td>
     <td>
         <?php echo 'Sales Receipt'; ?>
@@ -389,9 +429,21 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Credit memos") {
     foreach ($credit_memo as $credit) { ?>
 <tr>
-    <td><input type="checkbox"></td>
     <td>
-            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$credit->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Credit Memo"
+                    data-credit-id="<?=$credit->id?>"
+                    data-customer-id="<?=$credit->customer_id?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$credit->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
+    <td>
+        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($credit->credit_memo_date)) ?>
     </td>
     <td>
         <?php echo 'Credit Memo'; ?>
@@ -482,11 +534,23 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
 
 <?php
 if ($filter_type == "All transactions"  || $filter_type == "All plus deposits" || $filter_type == "Statements") {
-    foreach ($statements as $statement) { ?>
+     foreach ($statements as $statement) { ?>
 <tr>
-    <td><input type="checkbox"></td>
     <td>
-            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$statement->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Statements"
+                    data-statement-id="<?=$statement->id?>"
+                    data-customer-id="<?=$statement->customer_id?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$statement->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
+    <td>
+        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($statement->credit_memo_date)) ?>
     </td>
     <td>
         <?php echo 'Statements'; ?>
@@ -541,16 +605,28 @@ if ($filter_type == "All transactions"  || $filter_type == "All plus deposits" |
     </td>
 </tr>
 <?php }
-}//print_r($sales_receipts);?>
+ }//print_r($sales_receipts);?>
 
-<?php 
+<?php
 if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Money received") {
-    foreach ($rpayments as $rpayment) { ?>
+     foreach ($rpayments as $rpayment) { ?>
 <tr>
-    <td><input type="checkbox"></td>
     <td>
-            <?php echo  date('m/d/Y', strtotime($rpayment->payment_date)) ?>
-        
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$rpayment->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Statements"
+                    data-rpayment-id="<?=$rpayment->id?>"
+                    data-customer-id="<?=$rpayment->customer_id?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$rpayment->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
+    <td>
+        <?php echo  date('m/d/Y', strtotime($rpayment->payment_date)) ?>
+
     </td>
     <td>
         <?php echo 'Payment'; ?>
@@ -604,15 +680,27 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
     </td>
 </tr>
 <?php }
-} //print_r($sales_receipts);?>
+ } //print_r($sales_receipts);?>
 
-<?php 
+<?php
 if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  || $filter_type == "Money received") {
-    foreach ($checks as $check) { ?>
+     foreach ($checks as $check) { ?>
 <tr>
-    <td><input type="checkbox"></td>
     <td>
-            <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
+        <div class="form-check">
+            <div class="checkbox checkbox-sec margin-right">
+                <input type="checkbox" name="all_sales_transaction_check_box[]"
+                    id="transaction_<?=$customer_id?>_<?=$check->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    class="customer_checkbox" data-row-type="Check"
+                    data-check-id="<?=$check->id?>"
+                    data-customer-id="<?=$check->customer_id?>">
+                <label
+                    for="transaction_<?=$customer_id?>_<?=$check->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+            </div>
+        </div>
+    </td>
+    <td>
+        <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($check->payment_date)) ?>
     </td>
     <td>
         <?php echo 'Check'; ?>
@@ -692,4 +780,4 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits"  |
     </td>
 </tr>
 <?php }
-} //print_r($sales_receipts);
+ } //print_r($sales_receipts);

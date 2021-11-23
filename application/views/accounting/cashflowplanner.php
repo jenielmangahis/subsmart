@@ -116,9 +116,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 {
 	padding: 3px !important;
 } */
+
+.canvasjs-chart-credit
+{
+	display: none !important;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"> -->
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css"> -->
 
 <script type="text/javascript" id="js">
@@ -170,11 +175,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!-- <div id="container" style="width: 100%;">
                         <canvas id="canvas"></canvas>
                     </div> -->
-					<canvas id="myChart_" style="width:80%;"></canvas>
+					<!-- <canvas id="myChart_" style="width:80%;"></canvas> -->
 					<!-- <div id="GoogleLineChart" style="height: 400px; width: 100%"></div> -->
+					<?php
+ 
+						$dataPoints = array(
+							array("y" => 25, "label" => "January"),
+							array("y" => 15, "label" => "February"),
+							array("y" => 25, "label" => "March"),
+							array("y" => 5, "label" => "April"),
+							array("y" => 10, "label" => "May"),
+							array("y" => 0, "label" => "June"),
+							array("y" => 20, "label" => "July"),
+							array("y" => 20, "label" => "August"),
+							array("y" => 20, "label" => "September"),
+							array("y" => 20, "label" => "October"),
+							array("y" => 20, "label" => "November"),
+							array("y" => 20, "label" => "December"),
+						);
+						
+					?>
+					
+					<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
                     <br><br>
-                    <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p>
+                    <!-- <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p> -->
                     <br>
                     <div style="border:solid gray 1px;padding:1%;width:100%;color:black;">
                         <a href="#" style="color:blue;float:right;" data-toggle="modal" data-target=".updateoverdue"><h5>Update</h5></a>
@@ -265,7 +291,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<tr class="moneyin">
 									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?> </td>
 									<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?> </td>
-									<td><?php echo $inv->grand_total; ?> </td>
+									<td><?php echo number_format($inv->grand_total,2); ?> </td>
 									<td><?php echo 'Invoice'; ?></td>
 								</tr>
 								<?php endforeach; ?>
@@ -274,7 +300,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<tr class="moneyin">
 									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($plan->date_plan)); ?> </td>
 									<td><?php echo $plan->merchant_name;?> </td>
-									<td><?php echo $plan->amount; ?> </td>
+									<td><?php echo number_format($plan->amount,2); ?> </td>
 									<td><?php echo 'Planned'; ?></td>
 								</tr>
 								<?php endforeach; ?>
@@ -309,7 +335,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 																		?>
 									<!-- </a> -->
 								</td>
-								<td><?php echo $check->total_amount; ?>
+								<td><?php echo number_format($check->total_amount,2); ?>
 								</td>
 										<td>
 											<?php echo 'Check'; ?>
@@ -322,7 +348,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							<tr class="moneyin">
 								<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($exp->payment_date)); ?> </td>
 								<td><?php echo get_customer_by_id($exp->vendor_id)->first_name .' '. get_customer_by_id($exp->vendor_id)->last_name ?> </td>
-								<td><?php echo $exp->amount; ?> </td>
+								<td><?php echo number_format($exp->amount,2); ?> </td>
 								<td><?php echo 'Expense'; ?></td>
 							</tr>
 						<?php endforeach; ?>
@@ -362,7 +388,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<tr class="moneyin">
 									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?> </td>
 									<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?> </td>
-									<td><?php echo $inv->grand_total; ?> </td>
+									<td><?php echo number_format($inv->grand_total,2); ?> </td>
 									<td><?php echo 'Invoice'; ?></td>
 								</tr>
 								<?php endforeach; ?>
@@ -443,7 +469,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								<tr class="moneyin">
 									<td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($exp->payment_date)); ?> </td>
 									<td><?php echo get_customer_by_id($exp->vendor_id)->first_name .' '. get_customer_by_id($exp->vendor_id)->last_name ?> </td>
-									<td><?php echo $exp->amount; ?> </td>
+									<td><?php echo number_format($exp->amount,2); ?> </td>
 									<td><?php echo 'Expense'; ?></td>
 								</tr>
 								<?php endforeach; ?>
@@ -1136,51 +1162,95 @@ $(".updateOverdue").click(function () {
 });
 </script>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-		<script>
-			google.charts.load('current', {'packages':['corechart', 'bar']});
-			google.charts.setOnLoadCallback(drawLineChart);
-			google.charts.setOnLoadCallback(drawBarChart);
 
-            // Line Chart
-			function drawLineChart() {
-				var data = google.visualization.arrayToDataTable([
-					['Day', 'Products Count'],
-						<?php 
-							foreach ($invoices as $rows){
-							   echo "['".$rows['date_created']."',".$rows['grand_total']."],";
-						} ?>
-				]);
+<script>
+// window.onload = function () {
+ 
+// var chart = new CanvasJS.Chart("chartContainer", {
+// 	title: {
+// 		// text: ""
+// 	},
+// 	axisY: {
+// 		// title: ""
+// 		// lineColor: "#C24642",
+// 	},
+// 	data: [{
+// 		type: "line",
+// 		datasets: [{
+// 		// backgroundColor: [
+// 		// 		'rgba(186, 226, 153, 0.6)',
+// 		// 		],
+// 		// data: yValues
+// 		backgroundColor: "#C24642",
+// 		}],
+// 		dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+// 	}]
+// });
+// chart.render();
+ 
+// }
 
-				var options = {
-					title: 'Money in and out',
-					curveType: 'function',
-					legend: {
-						position: 'top'
-					}
-				};
-				var chart = new google.visualization.LineChart(document.getElementById('GoogleLineChart'));
-				chart.draw(data, options);
-			}
-			
-			
-			// Bar Chart
-			// google.charts.setOnLoadCallback(showBarChart);
-			// function drawBarChart() {
-			// 	var data = google.visualization.arrayToDataTable([
-			// 		['Day', 'Products Count'], 
-			// 			<?php 
-			// 				foreach ($products as $row){
-			// 				   echo "['".$row['day']."',".$row['sell']."],";
-			// 				}
-			// 			?>
-			// 	]);
-			// 	var options = {
-			// 		title: ' Bar chart products sell wise',
-			// 		is3D: true,
-			// 	};
-			// 	var chart = new google.visualization.BarChart(document.getElementById('GoogleBarChart'));
-			// 	chart.draw(data, options);
-			// }
-			
-		</script>
+// new Chart("myChart_", {
+//   type: "line",
+//   data: {
+//     labels: xValues,
+//     datasets: [{
+//       backgroundColor: [
+// 			'rgba(186, 226, 153, 0.6)',
+//             ],
+//       data: yValues
+//     }]
+//   },
+//   options: {
+//     legend: {display: false},
+//     title: {
+//       display: true,
+//     //   text: "World Wine Production 2018"
+//     }
+//   }
+// });
+
+
+</script>
+
+<script>
+window.onload = function() {
+ 
+var dataPoints = [];
+ 
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2",
+	zoomEnabled: true,
+	title: {
+		// text: "Bitcoin Price - 2017"
+	},
+	axisY: {
+		// title: "Price in USD",
+		titleFontSize: 24,
+		prefix: "$"
+	},
+	data: [{
+		type: "line",
+		yValueFormatString: "$#,##0.00",
+		dataPoints: dataPoints,
+		backgroundColor: "#C24642",
+	}]
+});
+ 
+function addData(data) {
+	var dps = data.price_usd;
+	for (var i = 0; i < dps.length; i++) {
+		dataPoints.push({
+			x: new Date(dps[i][0]),
+			y: dps[i][1]
+		});
+	}
+	chart.render();
+}
+ 
+// $.getJSON("<?php echo base_url(); ?>accounting/cashflowDataJson", addData);
+$.getJSON("https://canvasjs.com/data/gallery/php/bitcoin-price.json", addData);
+ 
+}
+</script>

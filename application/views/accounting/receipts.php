@@ -1,27 +1,20 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+defined('BASEPATH') or exit('No direct script access allowed');?>
+<?php include viewPath('includes/header');?>
 <style>
-    /* #thumbwrap {
-	position:relative;
-	margin:75px auto;
-	width:252px; height:252px;
-} */
-    .thumb img { 
+.thumb img {
 	border:1px solid #000;
 	margin:3px;
 	float:left;
 }
-.thumb span { 
+.thumb span {
 	position:absolute;
 	visibility:hidden;
 }
-    .thumb:hover, .thumb:hover span { 
+.thumb:hover, .thumb:hover span {
 	visibility:visible;
-	top:0; left:250px; 
+	top:0; left:250px;
 	z-index:1;
-    /* height:500px;
-    width:500px; */
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -35,29 +28,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					</div>
                     <div class="row pb-2">
                         <div class="col-md-12 banking-tab-container">
-                            <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
-                            <a href="<?php echo url('/accounting/rules')?>" class="banking-tab">Rules</a>
-                            <a href="<?php echo url('/accounting/receipts')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="receipts")?:'-active';?>">Receipts</a>
-                            <a href="<?php echo url('/accounting/tags')?>" class="banking-tab">Tags</a>
+                            <a href="<?=url('/accounting/link_bank')?>" class="banking-tab" style="text-decoration: none">Banking</a>
+                            <a href="<?=url('/accounting/rules')?>" class="banking-tab">Rules</a>
+                            <a href="<?=url('/accounting/receipts')?>" class="banking-tab<?=($this->uri->segment(1) == "receipts") ?: '-active';?>">Receipts</a>
+                            <a href="<?=url('/accounting/tags')?>" class="banking-tab">Tags</a>
                         </div>
                     </div>
 
-                    
-                
-                    <center><?php if ($this->session->flashdata('receipt_updated')){?>
+                    <center>
+                    <?php if ($this->session->flashdata('receipt_updated')): ?>
                         <div class="alert alert-success alert-dismissible col-md-4" role="alert">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <?php echo $this->session->flashdata('receipt_updated');?>
+                            <?=$this->session->flashdata('receipt_updated');?>
                         </div>
-                    <?php }elseif ($this->session->flashdata('receipt_updateFailed')){?>
-                    <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <?php echo $this->session->flashdata('receipt_updateFailed');?>
-                    </div>
-                    <?php }?></center>
-                    
+                    <?php elseif ($this->session->flashdata('receipt_updateFailed')): ?>
+                        <div class="alert alert-danger alert-dismissible col-md-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <?=$this->session->flashdata('receipt_updateFailed');?>
+                        </div>
+                    <?php endif;?>
+                    </center>
+
 					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-                        This is Receipts gold band 
+                        This is Receipts gold band
                     </div>
                 <div class="row align-items-center mt-3">
                     <div class="col-md-12 px-0">
@@ -65,8 +58,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="col-md-4">
                                 <div id="receiptDZ" class="dropzone" style="border: 2px dashed gray;background: #fff;">
                                     <div class="dz-message" style="margin: 20px;">
-                                        <!-- <span style="font-size: 16px;color: #909194">Drag and drop files here or</span> -->
-                                        <!-- <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a> -->
                                         <div class="row">
                                             <div class="col-sm-2">
                                                 <i class="fa fa-cloud-upload fa-2x" style="display: block;color: #909194;"></i>
@@ -77,7 +68,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="siteurl" value="<?php echo base_url(); ?>">
+                                    <input type="hidden" id="siteurl" value="<?=base_url();?>">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -85,10 +76,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="row" align="center">
                                         <div class="col-sm-12"><img src="data:image/png;base64,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" alt="Email" height="" width="" style="display: inline-block;width: 51px;height: 51px;margin: 13px 12px 0;">
 
-                                        <br><br><b>Upload from Google Drive</b>  <br>   
+                                        <br><br><b>Upload from Google Drive</b>  <br>
                                         <span>Access your Google account</span>
                                         </div>
-                                        <!-- <div class="col-sm-6">Email your receipts and bills, and we’ll create transactions from them. Ask your master admin to set up receipt forwarding.</div> -->
                                     </div>
                                 </div>
                             </div>
@@ -277,34 +267,35 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <h2>Upload receipt</h2>
                         <i class="fa fa-times fa-lg" data-dismiss="modal"></i>
                     </div>
-                    <form action="<?php echo site_url()?>accounting/updateReceipt" method="post">
-                    <div class="modal-body" id="first_step_receipt">
-                        <div class="row" style="margin-bottom: 100px">
-                            <div class="col-md-5">
-                                <div class="viewer-backdrop-container">
-                                    <div class="viewer-backdrop">
-                                        <input type="hidden" id="base_url" value="<?php echo base_url()?>uploads/accounting/">
-                                        <img src="" id="receiptImage" alt="Image">
-                                    </div>
-                                    <div class="label-imageContainer" style="margin-top: 15px;">
-                                        <span id="receiptImageCreatedAt"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-7">
-                                <div class="receiptDetailsContainer">
-                                    <div class="formError">
-                                        <div class="formError__inner">
-                                            <i class="fa fa-info-circle"></i>
-                                            <div>
-                                                <p>Something’s not quite right</p>
-                                                <p>Please fill in all required details.</p>
-                                            </div>
+                    <form data-active-step="1">
+                        <div class="modal-body" style="margin-bottom: 100px">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="viewer-backdrop-container">
+                                        <div class="viewer-backdrop">
+                                            <input type="hidden" id="base_url" value="<?=base_url()?>uploads/accounting/">
+                                            <img src="" id="receiptImage" alt="Image">
+                                        </div>
+                                        <div class="label-imageContainer" style="margin-top: 15px;">
+                                            <span id="receiptImageCreatedAt"></span>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="step-header">Receipt details</div>
-                                    <div class="step-header-text">Double-check the details and add any missing info.</div>
+                                <div class="col-md-7">
+                                    <div class="receiptDetailsContainer" data-step="1">
+                                        <div class="formError">
+                                            <div class="formError__inner">
+                                                <i class="fa fa-info-circle"></i>
+                                                <div>
+                                                    <p>Something’s not quite right</p>
+                                                    <p>Please fill in all required details.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="step-header">Receipt details</div>
+                                        <div class="step-header-text">Double-check the details and add any missing info.</div>
                                         <div class="form-group form-element">
                                             <span>Document Type</span>
                                             <input type="hidden" name="receipt_id" id="receipt_id" data-type="id">
@@ -355,169 +346,60 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <label for="refNumber">Ref no.</label>
                                             <input type="text" name="ref_number" id="refNumber" class="form-control" data-type="ref_number">
                                         </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer-uploadedReceipt">
-                        <button type="button" data-dismiss="modal" class="btn btn-default btn-leftSide">Cancel</button>
-                        <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
-                        <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                            <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px" id="saveAndNextButton">Save and next</button>
-                            <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
-                                <span class="fa fa-caret-down"></span></button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" class="dropdown-item">Save and close</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-    <div class="full-screen-modal">
-        <!--Modal for file upload-->
-        <div id="nextreceiptModal" class="modal fade modal-fluid" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Upload receipt</h2>
-                        <i class="fa fa-times fa-lg" data-dismiss="modal"></i>
-                    </div>
-                    <form action="<?php echo site_url()?>accounting/nextupdateReceipt" method="post">
-                    <div class="modal-body" id="first_step_receipt">
-                        <div class="row" style="margin-bottom: 100px">
-                            <div class="col-md-7">
-                                <div class="viewer-backdrop-container">
-                                    <div class="viewer-backdrop">
-                                        <input type="hidden" id="base_url" value="<?php echo base_url()?>uploads/accounting/">
-                                        <img src="" id="receiptImage" alt="Image">
                                     </div>
-                                    <div class="label-imageContainer" style="margin-top: 15px;">
-                                        <span>Added 5:57 PM 07/06/2020</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="receiptDetailsContainer">
-                                    <div class="step-header">No matches found</div>
-                                    <div class="step-header-text">Create a new expense for this receipt. If a matching transaction comes into QuickBooks later, we’ll mark it as a match.</div>
-                                        <div class="form-group form-element">
-                                            <span>Document Type</span>
-                                            <input type="hidden" name="receipt_id" id="receipt_id">
-                                            <select name="document_type" id="documentType" class="form-control">
-                                                <option value="Receipt">Receipt</option>
-                                                <option value="Bill">Bill</option>
-                                            </select>
-                                        </div>
+
+                                    <div class="receiptDetailsContainer" data-step="2">
+                                        <div class="mb-2"><a href="" class="step-back">< Edit receipt details</a></div>
+                                        <div class="step-header">No matches found</div>
+                                        <div class="step-header-text">Create a new expense for this receipt. If a matching transaction comes into QuickBooks later, we’ll mark it as a match.</div>
+
                                         <hr>
-                                        <div class="form-group">
-                                            <label for="payeeID">Payee</label>
-                                            <select name="payee_id" id="payeeID" class="form-control select2">
-                                                <option disabled selected value="default">Select payee (optional)</option>
-                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
-                                                <option value="1">Betty Fuller</option>
-                                                <option value="2">Brian Boyden</option>
-                                                <option value="3">Ken Curry</option>
-                                                <option value="4">Mary Brown</option>
-                                                <option value="5">Patricia Motes</option> -->
-                                                <!-- <option value="" disabled="" selected>Payee</option> -->
-                                                <option value="fa fa-plus">&#xf067; Add new</option>
-                                                <?php
-                                                foreach($this->AccountingVendors_model->select() as $ro)
-                                                {
-                                                ?>
-                                                <option value="<?=$ro->id?>"><?php echo $ro->f_name." ".$ro->l_name?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="bank_account">Bank/Credit Account</label>
-                                            <select name="bank_account" id="bank_account" class="form-control select2">
-                                                <option disabled selected value="default">Select an account</option>
-                                                <!-- <option disabled>&plus;&nbsp;Add new</option>
-                                                <option>Billable Expenses</option>
-                                                <option>Gross Receipt</option>
-                                                <option>Guardian</option>
-                                                <option>Mary Brown</option>
-                                                <option>Sales</option> -->
-                                                <?php
-                                                    $i=1;
-                                                    foreach($this->chart_of_accounts_model->select() as $row)
-                                                    {
-                                                        ?>
-                                                        <option <?php if($this->reconcile_model->checkexist($row->id) != $row->id): echo "disabled"; ?>
-                                                        <?php endif ?> value="<?=$row->id?>"><?=$row->name?></option>
-                                                    <?php
-                                                    $i++;
-                                                    }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Payment Date</label>
-                                            <input type="date" name="transaction_date" id="paymentDate" class="form-control" placeholder="Select a date">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="category">Account/Category</label>
-                                            <select name="category" id="category" class="form-control select2">
-                                                <option disabled selected value="default">Select a category</option>
-                                                <option disabled>&plus;&nbsp;Add new</option>
-                                                <option>Commissions & Fees</option>
-                                                <option>Billable Expenses</option>
-                                                <option>Gross Receipt</option>
-                                                <option>Guardian</option>
-                                                <option>Mary Brown</option>
-                                                <option>Sales</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Description</label>
-                                            <input type="text" name="description" id="description" class="form-control" placeholder="Enter a description">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Total amount (Inclusive of tax)*</label>
-                                            <input type="text" name="total_amount" id="totalAmount" class="form-control" placeholder="Enter amount">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="memo">Memo</label>
-                                            <textarea name="memo" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <a href="#" style="font-weight: bolder;color: color: #0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
-                                        </div>
-                                        <div class="form-group" id="refNumber" style="display: none">
-                                            <label for="refNumber">Ref no.</label>
-                                            <input type="text" name="ref_number" id="refNumber" class="form-control">
-                                        </div>
 
+                                        <div class="receiptInfo">
+                                            <div class="receiptInfo__inner">
+                                                <div class="receiptInfo__box">
+                                                    <div class="receiptInfo__row">
+                                                        <div>Draft Expense</div>
+                                                        <div>11/09/2021</div>
+                                                    </div>
+                                                    <div class="receiptInfo__row">
+                                                        <div>Test Bank (Cash on hand)</div>
+                                                        <div>$1.00</div>
+                                                    </div>
+                                                    <hr/>
+                                                    <div class="receiptInfo__row">
+                                                        <div>Test Bank (Cash on hand)</div>
+                                                        <div>$1.00</div>
+                                                    </div>
+                                                </div>
+
+                                                <button type="button" class="receiptInfo__btn">Search Manually</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer-uploadedReceipt">
-                        <button type="button" data-dismiss="" class="btn btn-default btn-leftSide">Cancel</button>
-                        <button class="btn btn-default btn-leftSide" style="margin-left: 10px">Delete this receipt</button>
-                        <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
-                            <button type="submit" class="btn btn-success"  style="border-radius: 36px 0 0 36px">Save and next</button>
-                            <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
-                                <span class="fa fa-caret-down"></span></button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#" class="dropdown-item">Save and close</a></li>
-                            </ul>
+
+                        <div class="modal-footer-uploadedReceipt" style="display: flex;justify-content:space-between;">
+                            <div>
+                                <button type="button" data-dismiss="modal" class="btn btn-default btn-leftSide">Cancel</button>
+                                <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
+                            </div>
+
+                            <div class="dropdown">
+                                <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px" data-action="savereceipt" data-action-after="next">Save and next</button>
+                                <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
+                                    <span class="fa fa-caret-down"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li>
+                                        <a href="#" class="dropdown-item" data-action="savereceipt" data-action-after="close">Save and close</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
@@ -525,11 +407,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div id="modal-container">
         <div class="full-screen-modal"></div>
     </div>
-    
-    <!--    end of modal-->
-	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
+	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer_accounting');?>
 <script>
 
     // DataTable JS
@@ -546,12 +426,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     $('.banking-sub-tab').click(function(){
         $(this).parent().addClass('banking-sub-active').siblings().removeClass('banking-sub-active')
     });
-    // $("#totalAmount").change(function () {
-    //     if (!$.isNumeric($(this).val()))
-    //         $(this).val('0').trigger('change');
-    //     $(this).val(parseFloat($(this).val(),10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString());
-    // });
-
     $('#toggleRefNumber').click(function () {
        $('#refNumber').toggle();
     });
@@ -563,7 +437,7 @@ $("#createExpense").click(function () {
 
     $.ajax({
         type : 'POST',
-        url : "<?php echo base_url(); ?>accounting/receipt_create_expense",
+        url : "<?=base_url();?>accounting/receipt_create_expense",
         data : {rID: rID },
         dataType: 'json',
         success: function(response){
