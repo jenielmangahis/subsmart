@@ -893,8 +893,26 @@ class Workorder_model extends MY_Model
     {
         $this->db->select('checklists.*,checklists.id as check_id,checklist_items.checklist_id,checklist_items.item_name,');
 		$this->db->from('checklists');
-        $this->db->join('checklist_items', 'checklist_items.checklist_id = checklists.id');
-		$this->db->where('user_id', $id);
+        $this->db->join('checklist_items', 'checklists.id = checklist_items.checklist_id');
+		$this->db->where('checklists.user_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getchecklistHeaderByUser($id)
+    {
+        $this->db->select('checklists.*');
+        $this->db->from('checklists');
+        $this->db->where('checklists.user_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getchecklistHeaderItems($checklist_id)
+    {
+        $this->db->select('checklist_items.*');
+        $this->db->from('checklist_items');
+        $this->db->where('checklist_items.checklist_id', $checklist_id);
         $query = $this->db->get();
         return $query->result();
     }

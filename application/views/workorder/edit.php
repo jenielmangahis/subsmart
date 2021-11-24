@@ -336,6 +336,15 @@ border: none;
   top: 5px;
   right: 5px;
 }
+.selected-checklists{
+    width: 18%;
+}
+.selected-checklists li{
+    padding: 10px;
+}
+.selected-checklists li a{
+    float: right;
+}
 </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -835,9 +844,7 @@ border: none;
                             <!-- <div id="citems"> -->
                             <!-- </div> -->
                             <br><br>
-                            <button class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</button>
-
-                            
+                            <a class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal" href="javascript:void(0);"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</a>
                         <br><br><br><br>
                             <h6>JOB DETAIL</h6><br>
                             
@@ -1532,7 +1539,7 @@ border: none;
 
             <!-- Modal checklist -->
             <div class="modal fade" id="checklist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Select Checklists</h5>
@@ -1541,9 +1548,24 @@ border: none;
                         </button>
                     </div>
                     <div class="modal-body">
-                            <?php foreach($checklists as $checklist){ ?>
-                            <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist->check_id; ?>" value="<?php echo $checklist->check_id; ?>"> <?php echo $checklist->checklist_name; ?><br>
+                        <?php foreach($checklists as $key => $checklist){ ?>
+                            <?php if( !empty($checklist['items']) ){ ?>
+                                <label style="width: 100%;">
+                                <h4 style="font-size: 16px; padding: 10px; background-color:#32243d; color:#ffffff;margin:17px 0px;">                                    
+                                    <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist['header']->id; ?>" value="<?php echo $checklist['header']->id; ?>" /> <?php echo $checklist['header']->checklist_name; ?>                                
+                                </h4>
+                                </label>
+                                <div class="row" style="margin-left: 1px;">                                   
+                                    <?php foreach($checklist['items'] as $item){ ?>
+                                        <div class="col-md-3 item-container">
+                                            <span class="">
+                                                <?php echo $item->item_name; ?>
+                                            </span>
+                                        </div>
+                                    <?php } ?>                                    
+                                </div>
                             <?php } ?>
+                        <?php } ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

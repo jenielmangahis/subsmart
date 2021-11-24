@@ -583,7 +583,17 @@ class Workorder extends MY_Controller
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
+
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+
+        $checkLists = array();
+        foreach( $checkListsHeader as $h ){
+            $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+            $checklists[] = ['header' => $h, 'items' => $checklistItems];
+        }
+
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['checklists'] = $checklists;
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
@@ -3118,10 +3128,19 @@ class Workorder extends MY_Controller
             $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
         }
 
+        $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
+
+        $checkLists = array();
+        foreach( $checkListsHeader as $h ){
+            $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+            $checklists[] = ['header' => $h, 'items' => $checklistItems];
+        }
+
         // print_r($this->page_data['terms_conditions']);
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
-        $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        //$this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        $this->page_data['checklists'] = $checklists;
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
 
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
@@ -3245,6 +3264,11 @@ class Workorder extends MY_Controller
         if($action == 'submit') {
 
             $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+            $post_checklists = $this->input->post('checklists');
+            $selected_checklists = "";
+            if( $post_checklists ){
+                $selected_checklists = serialize($post_checklists);                
+            }
 
         $new_data = array(
             
@@ -3255,6 +3279,7 @@ class Workorder extends MY_Controller
             'phone_number'                          => $this->input->post('phone_number'),
             'mobile_number'                         => $this->input->post('mobile_number'),
             'email'                                 => $this->input->post('email'),
+            'checklists'                            => $selected_checklists,
             // 'job_location'                          => $this->input->post('job_location') .', ' .$this->input->post('city') .', '. $this->input->post('state') .', '. $this->input->post('zip_code') .', '. $this->input->post('cross_street'),
             'job_location'                          => $this->input->post('job_location'),
             'city'                                  => $this->input->post('city'),

@@ -505,8 +505,23 @@ border: none;
   top: 5px;
   right: 5px;
 }
-
-   </style>
+.item-container{
+    background-color: #02a499;
+    padding: 5px;
+    color: #ffffff;
+    margin-right: 5px;
+    margin-top: 4px;
+}
+.selected-checklists{
+    width: 18%;
+}
+.selected-checklists li{
+    padding: 10px;
+}
+.selected-checklists li a{
+    float: right;
+}
+</style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -868,12 +883,19 @@ border: none;
                                             <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                            <td align="center">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                            <td style="width:;">
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline; border: 1px dashed #d1d1d1">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td><span id="adjustmentText">0.00</span></td>
+                                            <td colspan="2" style="text-align: right;">
+                                                <div class="input-group mb-2" style="width: 40%;float: right;">
+                                                    <div class="input-group-prepend">
+                                                      <div class="input-group-text">$</div>
+                                                    </div>
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                </div>
+                                                <span id="adjustmentText" style="display: none;">0.00</span>
+                                            </td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -941,11 +963,15 @@ border: none;
                             <h5>Checklist</h5>
                             <small class="help help-sm">You can set up a checklist for employees.</small><br>
                             <br><br>
-                            <div id="checklist_added"></div>
+                            <div id="checklist_added">
+                                <ul class="selected-checklists">
+                                    
+                                </ul>
+                            </div>
                             <!-- <div id="citems"> -->
                             <!-- </div> -->
                             <br><br>
-                            <button class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</button>
+                            <a class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal" href="javascript:void(0);"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</a>
 
                             
                         <br><br><br><br>
@@ -1543,10 +1569,10 @@ border: none;
                 <div>
 
                      <div class="form-group">
-                                <button type="submit" name="action" class="btn btn-flat btn-success" value="submit">Submit</button>
+                                <button type="submit" name="action" class="btn btn-flat btn-primary" value="submit">Submit</button>
                                 <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
-                                <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
-                                <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
+                                <button type="submit" class="btn btn-flat btn-primary"><b>Save Template</b></button>
+                                <a href="<?php echo url('workorder') ?>" class="btn btn-primary">Cancel this</a>
                     </div>
                 </div>
             <!-- end card -->
@@ -1566,23 +1592,23 @@ border: none;
 </div>
 
 <div class="modal fade" id="checklistModal" role="dialog">
-                        <div class="modal-dialog">            
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Select Checklists</h4>
-                            </div>
-                            <div class="modal-body">
-                            <p></p>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Add Selected</button>
-                            </div>
-                        </div>                
-                    </div>
-                </div>
+        <div class="modal-dialog">            
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Select Checklists</h4>
+            </div>
+            <div class="modal-body">
+            <p></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Add Selected</button>
+            </div>
+        </div>                
+    </div>
+</div>
 
 <!-- Modal Service Address -->
 <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
@@ -1735,7 +1761,7 @@ border: none;
 
             <!-- Modal checklist -->
             <div class="modal fade" id="checklist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Select Checklists</h5>
@@ -1744,9 +1770,24 @@ border: none;
                         </button>
                     </div>
                     <div class="modal-body">
-                            <?php foreach($checklists as $checklist){ ?>
-                            <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist->check_id; ?>" value="<?php echo $checklist->check_id; ?>"> <?php echo $checklist->checklist_name; ?><br>
+                        <?php foreach($checklists as $key => $checklist){ ?>
+                            <?php if( !empty($checklist['items']) ){ ?>
+                                <label style="width: 100%;">
+                                <h4 style="font-size: 16px; padding: 10px; background-color:#32243d; color:#ffffff;margin:17px 0px;">                                    
+                                    <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist['header']->id; ?>" value="<?php echo $checklist['header']->id; ?>" /> <?php echo $checklist['header']->checklist_name; ?>                                
+                                </h4>
+                                </label>
+                                <div class="row" style="margin-left: 1px;">                                   
+                                    <?php foreach($checklist['items'] as $item){ ?>
+                                        <div class="col-md-3 item-container">
+                                            <span class="">
+                                                <?php echo $item->item_name; ?>
+                                            </span>
+                                        </div>
+                                    <?php } ?>                                    
+                                </div>
                             <?php } ?>
+                        <?php } ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -3899,6 +3940,11 @@ $(document).ready(function(){
 </script>
 
 <script>
+    $(document).on('click', '.remove-checklist', function(){
+        var checklist_row_id = $(this).attr('data-row');
+        $("#s-checklist-"+checklist_row_id).remove();
+    });
+
     $(document).ready(function(){
 
         $('.add_checklist_items').click(function(){
@@ -3916,8 +3962,8 @@ $(document).ready(function(){
                 data : { id : id },
                 success: function(response){
 
-                  console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
-                  console.log(response); 
+                  //console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
+                  //console.log(response); 
 
                   $("#checklist_modal").modal('hide')
                 //   $("#checklist_added").html(response['checklists'].checklist_name);
@@ -3928,10 +3974,16 @@ $(document).ready(function(){
                 //     inputs += response['checklists'].checklist_name;
                 // });
 
-                
-                var check = '<ul> <li id="view_details" c_id="'+ response['checklists'][0].id +'"><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
+                //New Code
+                var current_row  = $('.selected-checklists li').length + 1;
+                var input_hidden = '<input type="hidden" name="checklists[]" value="'+response['checklists'][0].id+'" />';
+                var check = '<li id="s-checklist-'+current_row+'" id="view_details" c_id="'+ response['checklists'][0].id +'">'+response['checklists'][0].checklist_name+' <a class="remove-checklist" data-row="'+current_row+'" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>'+input_hidden+'</li>';
+                $(".selected-checklists").append(check);
 
-                $("#checklist_added").append(check);
+                //Old code
+                //var check = '<ul> <li id="view_details" ><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
+                //$("#checklist_added").append(check);
+
                 
                 var cID = response['checklists'][0].id;
                 // alert(cID);
