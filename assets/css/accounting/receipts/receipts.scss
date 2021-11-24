@@ -78,18 +78,53 @@ $colorError: #d52b1e;
     min-height: unset;
   }
 
-  [data-active-step="1"] {
-    [data-step="2"] {
+  .formActions {
+    .form-check,
+    [data-action="createexpense"] {
       display: none;
     }
   }
 
-  [data-active-step="2"] {
+  [data-active-step="1"] {
+    [data-step="2"],
+    [data-step="3"] {
+      display: none;
+    }
+
     [data-step="1"] {
+      display: block;
+    }
+  }
+
+  [data-active-step="2"] {
+    [data-step="1"],
+    [data-step="3"] {
       display: none;
     }
 
     [data-step="2"] {
+      display: block;
+    }
+
+    .formActions {
+      .form-check,
+      [data-action="createexpense"] {
+        display: block;
+      }
+
+      [data-action="savereceipt"][data-action-after="next"] {
+        display: none;
+      }
+    }
+  }
+
+  [data-active-step="3"] {
+    [data-step="1"],
+    [data-step="2"] {
+      display: none;
+    }
+
+    [data-step="3"] {
       display: block;
     }
   }

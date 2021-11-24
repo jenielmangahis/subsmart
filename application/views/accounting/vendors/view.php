@@ -536,9 +536,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                                 </div>
                                                             </div>
-                                                            <?php if($vendorDetails->attachments !== null && $vendorDetails->attachments !== "") : ?>
-                                                                <?php foreach(json_decode($vendorDetails->attachments, true) as $attachment) : ?>
-                                                                    <input type="hidden" name="attachments[]" value="<?=$attachment?>">
+                                                            <?php if(count($attachments) > 0) : ?>
+                                                                <?php foreach($attachments as $attachment) : ?>
+                                                                    <input type="hidden" name="attachments[]" value="<?=$attachment->id?>">
                                                                 <?php endforeach; ?>
                                                             <?php endif; ?>
                                                         </div>

@@ -811,7 +811,8 @@ class Vendors_model extends MY_Model {
 	}
 
 	public function save_role($new_data){
-        $vendor = $this->db->insert('employee_role', $new_data);
+        // $vendor = $this->db->insert('employee_role', $new_data);
+		$vendor = $this->db->insert('roles', $new_data);
         $insert_id = $this->db->insert_id();
 
         return  $insert_id;
@@ -819,8 +820,21 @@ class Vendors_model extends MY_Model {
 
 	public function getRoles($company_id)
 	{
-		$query = $this->db->get('employee_role');
-		return $query->result();
+		// $query = $this->db->get('employee_role');
+		// $query = $this->db->get('roles');
+		// return $query->result();
+
+		$where = array(
+            'company_id'      => $company_id,
+          );
+
+        $this->db->select('*');
+        // $this->db->from('employee_role');
+		$this->db->from('roles');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
 	}
 
 	public function getRoleAmount($id)
@@ -830,10 +844,41 @@ class Vendors_model extends MY_Model {
           );
 
         $this->db->select('role_amount');
-        $this->db->from('employee_role');
+        // $this->db->from('employee_role');
+		$this->db->from('roles');
         $this->db->where($where);
         $query = $this->db->get();
 
         return $query->result();
+	}
+
+	public function getEmployees($company_id)
+	{
+		$where = array(
+            'users.company_id'      => $company_id,
+          );
+
+        $this->db->select('*, users.id AS uid');
+		$this->db->from('users');
+		$this->db->join('roles', 'users.role  = roles.id');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->result();
+	}
+
+	public function getEmployeeByID($id)
+	{
+		$where = array(
+            'users.id'      => $id,
+          );
+
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->join('roles', 'users.role  = roles.id');
+        $this->db->where($where);
+        $query = $this->db->get();
+
+        return $query->row();
 	}
 }

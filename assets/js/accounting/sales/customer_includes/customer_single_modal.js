@@ -1338,7 +1338,7 @@ $(document).on("click", "#customer-single-modal .seaction-above-table ul.by-batc
         });
 
         $.ajax({
-            url: baseURL + "accounting/send_transaction_by_batch",
+            url: baseURL + "accounting/send_transaction",
             type: "POST",
             dataType: "json",
             data: {

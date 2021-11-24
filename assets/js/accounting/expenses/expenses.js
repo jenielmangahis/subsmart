@@ -1087,68 +1087,6 @@ function viewBillPayment(data) {
     });
 }
 
-function initBillsTable(data)
-{
-    $('#billPaymentModal #bills-table').DataTable({
-        autoWidth: false,
-        searching: false,
-        processing: true,
-        serverSide: true,
-        lengthChange: false,
-        info: false,
-        pageLength: parseInt($('#billPaymentModal #table_rows').val()),
-        ordering: false,
-        ajax: {
-            url: `/accounting/expenses/load-bill-payment-bills/${data.id}`,
-            dataType: 'json',
-            contentType: 'application/json',
-            type: 'POST',
-            data: function(d) {
-                d.search = $('#billPaymentModal #search').val();
-                d.from = $('#billPaymentModal #bills-from').val();
-                d.to = $('#billPaymentModal #bills-to').val();
-                d.overdue = $('#billPaymentModal #overdue_bills_only').prop('checked');
-                d.length = parseInt($('#billPaymentModal #table_rows').val());
-                return JSON.stringify(d);
-            },
-            pagingType: 'full_numbers'
-        },
-        columns: [
-            {
-                data: null,
-                name: 'checkbox',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="checkbox" value="${rowData.id}" ${rowData.selected ? 'checked' : ''}>`);
-                    $(td).css('padding', '10px 18px');
-                }
-            },
-            {
-                data: 'description',
-                name: 'description'
-            },
-            {
-                data: 'due_date',
-                name: 'due_date'
-            },
-            {
-                data: 'original_amount',
-                name: 'original_amount'
-            },
-            {
-                data: 'open_balance',
-                name: 'open_balance'
-            },
-            {
-                data: 'payment',
-                name: 'payment',
-                fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)">`);
-                }
-            }
-        ]
-    });
-}
-
 function applyBillsFilter() {
     $('#billPaymentModal #bills-table').DataTable().ajax.reload();
 }

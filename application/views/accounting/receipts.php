@@ -307,13 +307,13 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <hr>
                                         <div class="form-group">
                                             <label for="payeeID">Payee</label>
-                                            <select name="payee_id" id="payeeID" class="form-control select2" data-type="payee">
+                                            <select name="payee_id" id="payeeID" class="form-control select2" data-select2-type="payee" data-type="payee">
                                                 <option disabled selected value="">Select payee (optional)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="bank_account">Bank/Credit Account</label>
-                                            <select required name="bank_account" id="bank_account" class="form-control select2" data-type="bank_account_id">
+                                            <select required name="bank_account" id="bank_account" class="form-control select2" data-select2-type="bank_credit_account" data-type="bank_account_id">
                                                 <option disabled selected value="">Select an account</option>
                                             </select>
                                         </div>
@@ -323,7 +323,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         </div>
                                         <div class="form-group">
                                             <label for="account_category">Account/Category</label>
-                                            <select required name="category" id="account_category" class="form-control select2" data-type="category_id">
+                                            <select required name="category" id="account_category" class="form-control select2" data-select2-type="bank_account" data-type="category_id">
                                                 <option disabled selected value="">Select a category</option>
                                             </select>
                                         </div>
@@ -349,7 +349,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     </div>
 
                                     <div class="receiptDetailsContainer" data-step="2">
-                                        <div class="mb-2"><a href="" class="step-back">< Edit receipt details</a></div>
+                                        <div class="mb-2"><a href="" class="step-back" id="toEditReceipt">< Edit receipt details</a></div>
                                         <div class="step-header">No matches found</div>
                                         <div class="step-header-text">Create a new expense for this receipt. If a matching transaction comes into QuickBooks later, we’ll mark it as a match.</div>
 
@@ -373,8 +373,53 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     </div>
                                                 </div>
 
-                                                <button type="button" class="receiptInfo__btn">Search Manually</button>
+                                                <button type="button" class="receiptInfo__btn" id="searchManually">Search Manually</button>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="receiptDetailsContainer" data-step="3">
+                                        <div class="mb-2"><a href="" class="step-back" id="toFindMatch">< Go back</a></div>
+                                        <div class="step-header">Find other match</div>
+                                        <div class="step-header-text">Please select one of payment account, payee or date fields to begin search.</div>
+
+                                        <hr>
+
+                                        <div class="form-group">
+                                            <label for="transaction_type">Transaction type</label>
+                                            <select name="transaction_type" id="transaction_type" class="form-control select2" data-type="transaction_type">
+                                                <option disabled selected value="">Select transaction type</option>
+                                                <option value="bill">Bill</option>
+                                                <option value="expense">Expense</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="payment_account">Payment account</label>
+                                            <select required name="payment_account" id="payment_account" class="form-control select2" data-select2-type="payment_account" data-type="payment_account">
+                                                <option disabled selected value="">Select an account</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="payee">Payee</label>
+                                            <select required name="payee" id="payee" class="form-control select2" data-select2-type="payee" data-type="payee">
+                                                <option disabled selected value="">Select payee</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="starting_date">Starting Date</label>
+                                            <input required type="date" name="starting_date" id="starting_date" class="form-control" placeholder="Select a date" data-type="starting_date">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ending_date">Ending Date</label>
+                                            <input required type="date" name="ending_date" id="ending_date" class="form-control" placeholder="Select a date" data-type="ending_date">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="minimum_transaction_amount">Minimum transaction amount</label>
+                                            <input required type="number" name="minimum_transaction_amount" id="minimum_transaction_amount" class="form-control" placeholder="Select a date" data-type="minimum_transaction_amount">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="maximum_transaction_amount">Maximum transaction amount</label>
+                                            <input required type="number" name="maximum_transaction_amount" id="maximum_transaction_amount" class="form-control" placeholder="Select a date" data-type="maximum_transaction_amount">
                                         </div>
                                     </div>
                                 </div>
@@ -387,15 +432,44 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
                             </div>
 
-                            <div class="dropdown">
-                                <button type="submit" class="btn btn-success save_next"  style="border-radius: 36px 0 0 36px" data-action="savereceipt" data-action-after="next">Save and next</button>
-                                <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
-                                    <span class="fa fa-caret-down"></span></button>
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li>
-                                        <a href="#" class="dropdown-item" data-action="savereceipt" data-action-after="close">Save and close</a>
-                                    </li>
-                                </ul>
+                            <div class="d-flex align-items-center formActions">
+                                <div class="form-check mr-2">
+                                    <input type="checkbox" class="form-check-input" id="handlenextreceipt">
+                                    <label class="form-check-label" for="handlenextreceipt">Go to next</label>
+                                </div>
+
+                                <div class="dropdown d-flex">
+                                    <div>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-success"
+                                            style="border-radius: 36px 0 0 36px"
+                                            data-action="savereceipt"
+                                            data-action-after="next"
+                                        >
+                                            Save and next
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-success"
+                                            style="border-radius: 36px 0 0 36px"
+                                            data-action="createexpense"
+                                        >
+                                            Create expense
+                                        </button>
+                                    </div>
+
+
+                                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -3px;">
+                                        <span class="fa fa-caret-down"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li>
+                                            <a href="#" class="dropdown-item" data-action="savereceipt" data-action-after="close">Save and close</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </form>

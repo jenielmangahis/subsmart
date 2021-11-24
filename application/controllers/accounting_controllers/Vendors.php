@@ -235,7 +235,6 @@ class Vendors extends MY_Controller
             'tax_id' => $this->input->post('tax_id'),
             'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
-            'attachments' => !is_null($this->input->post('attachments')) ? json_encode($this->input->post('attachments')) : null,
             'status' => 1,
             'created_by' => logged('id')
         );
@@ -245,21 +244,18 @@ class Vendors extends MY_Controller
         if ($addQuery > 0) {
             $attachments = $this->input->post('attachments');
             if (isset($attachments) && is_array($attachments)) {
+                $order = 1;
                 foreach ($attachments as $attachmentId) {
-                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                    $attachmentData = [
-                        'linked_to_count' => intval($attachment->linked_to_count) + 1
-                    ];
-
-                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-
                     $linkAttachmentData = [
                         'type' => 'Vendor',
                         'attachment_id' => $attachmentId,
-                        'linked_id' => $vendorId
+                        'linked_id' => $vendorId,
+                        'order_no' => $order
                     ];
 
                     $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
                 }
             }
 
@@ -337,6 +333,7 @@ class Vendors extends MY_Controller
         $this->page_data['categoryAccs'] = $this->get_category_accs();
         $this->page_data['vendorDetails'] = $vendor;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['attachments'] = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('accounting/vendors/view', $this->page_data);
     }
@@ -401,43 +398,51 @@ class Vendors extends MY_Controller
             'tax_id' => $this->input->post('tax_id'),
             'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
-            'attachments' => $this->input->post('attachments') !== null ? json_encode($this->input->post('attachments')) : null
         );
 
         $update = $this->vendors_model->updateVendor($vendorId, $data);
 
         if ($update) {
-            if (!is_null($vendor->attachments) && $vendor->attachments !== "[]") {
-                foreach (json_decode($vendor->attachments, true) as $attachmentId) {
-                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                    $attachmentData = [
-                        'linked_to_count' => intval($attachment->linked_to_count) - 1
-                    ];
-    
-                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
-    
-                    $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor', 'attachment_id' => $attachmentId, 'linked_id' => $vendor->id]);
-                    $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+            $attached = $this->input->post('attachments');
+
+            if(count($attachments) > 0) {
+                foreach($attachments as $attachment) {
+                    if(is_null($attached) || !in_array($attachment->id, $attached)) {
+                        $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor', 'attachment_id' => $attachment->id, 'linked_id' => $vendorId]);
+                        $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
+                    }
                 }
             }
 
-            $attachments = $this->input->post('attachments');
-            if (isset($attachments) && is_array($attachments)) {
-                foreach ($attachments as $attachmentId) {
-                    $attachment = $this->accounting_attachments_model->getById($attachmentId);
-                    $attachmentData = [
-                        'linked_to_count' => intval($attachment->linked_to_count) + 1
-                    ];
+            if (!is_null($attached) && is_array($attached)) {
+                $order = 1;
+                foreach ($attached as $attachmentId) {
+                    $link = array_filter($attachments, function($v, $k) use ($attachmentId) {
+                        return $v->id === $attachmentId;
+                    }, ARRAY_FILTER_USE_BOTH);
 
-                    $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    if(count($link) > 0) {
+                        $attachmentData = [
+                            'type' => 'Vendor',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $vendorId,
+                            'order_no' => $order
+                        ];
 
-                    $linkAttachmentData = [
-                        'type' => 'Vendor',
-                        'attachment_id' => $attachmentId,
-                        'linked_id' => $vendorId
-                    ];
+                        $updateOrder = $this->accounting_attachments_model->update_order($attachmentData);
+                    } else {
+                        $linkAttachmentData = [
+                            'type' => 'Vendor',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $vendorId,
+                            'order_no' => $order
+                        ];
+    
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    }
 
-                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+                    $order++;
                 }
             }
 
@@ -456,14 +461,19 @@ class Vendors extends MY_Controller
         if (count($files['name']) > 0) {
             $insert = $this->uploadFile($files);
 
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+            $order = count($attachments);
             foreach($insert as $attachmentId) {
                 $linkAttachmentData = [
                     'type' => 'Vendor',
                     'attachment_id' => $attachmentId,
-                    'linked_id' => $vendorId
+                    'linked_id' => $vendorId,
+                    'order_no' => $order
                 ];
 
                 $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                $order++;
             }
             $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
 
@@ -546,7 +556,6 @@ class Vendors extends MY_Controller
 
     public function get_vendor_attachments($vendorId)
     {
-        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
         $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
 
         echo json_encode($attachments);

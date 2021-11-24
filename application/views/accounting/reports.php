@@ -1759,7 +1759,7 @@
                                                                 <th><b>ACTION</b></th>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
+                                                                <!-- <tr>
                                                                     <td>John Doe</td>
                                                                     <td>Web Developer</td>
                                                                     <td>03/06/18</td>
@@ -1782,7 +1782,17 @@
                                                                     <td>San Francisco, CA, USA</td>
                                                                     <td>$20,000.00</td>
                                                                     <td><a href="#" class="btn btn-success">Manage</a></td>
-                                                                </tr>
+                                                                </tr> -->
+                                                                <?php foreach($employees as $employee): ?>
+                                                                    <tr>
+                                                                        <td><?php echo $employee->FName .' '. $employee->LName; ?></td>
+                                                                        <td><?php echo $employee->title; ?></td>
+                                                                        <td><?php echo $employee->date_hired; ?></td>
+                                                                        <td><?php echo $employee->address; ?></td>
+                                                                        <td>$40,000.00</td>
+                                                                        <td><a href="<?php echo url('/accounting/employee_payscale/'.$employee->uid) ?>" class="btn btn-success">Manage</a></td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
                                                             </tbody>
                                                         </table>
 
