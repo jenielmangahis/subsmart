@@ -894,6 +894,7 @@ class Accounting extends MY_Controller
     public function reports()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
     }
@@ -11124,7 +11125,7 @@ class Accounting extends MY_Controller
         # code...
     }
 
-    public function send_transaction_by_batch()
+    public function send_transaction()
     {
         $customer_id = $this->input->post("customer_id");
         $invoice_ids = $this->input->post("invoice_ids");
@@ -11237,6 +11238,133 @@ class Accounting extends MY_Controller
             $data->status = "Mailer Error: " . $mail->ErrorInfo;
             exit;
         }
+        echo json_encode($data);
+    }
+    public function send_transaction_by_batch()
+    {
+        $invoice_ids = $this->input->post("invoice_ids");
+        $email_error_ctr=0;
+        $email_sent_ctr=0;
+        for ($ids_i = 0; $ids_i < count($invoice_ids); $ids_i++) {
+            $invoice_id = $invoice_ids[$ids_i];
+            $inv = $this->accounting_invoices_model->get_invoice_by_invoice_id($invoice_id);
+            $customer_id = $inv->customer_id;
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+            $receivable_payment = 0;
+            $total_amount_received = 0;
+            if (is_numeric($inv->grand_total)) {
+                $receivable_payment = $inv->grand_total;
+            }
+            $receive_payment = $this->accounting_invoices_model->get_payements_by_invoice($inv->id);
+            foreach ($receive_payment as $payment) {
+                $total_amount_received += $payment->payment_amount;
+            }
+
+            $balance = ($receivable_payment - $total_amount_received) - $inv->deposit_request;
+
+            if (date("Y-m-d", strtotime($inv->due_date)) <= date("Y-m-d") && $balance > 0) {
+                $status = "Overdue";
+            } else {
+                if ($balance <= 0) {
+                    $status = "Paid";
+                } else {
+                    $status = "Open";
+                }
+            }
+
+            $pdf_data["data_pdf"][] = array(
+                "invoice_date" => $inv->date_issued,
+                "invoice_no" => $inv->invoice_number,
+                "payment" => $total_amount_received,
+                "balance_due" => $balance,
+                "inv_location_scale" => $inv->location_scale,
+                "inv_ship_from" => $inv->bus_state,
+                "inv_ship_via" => $inv->ship_via,
+                "inv_taxes" => $inv->taxes,
+                "inv_grand_total" => $inv->grand_total,
+                "inv_sub_total" => $inv->sub_total,
+                "inv_shipping_to_address" => $inv->shipping_to_address,
+                "due_date" => $inv->due_date,
+                "terms" => $this->accounting_invoices_model->get_terms_by_id($inv->terms)->name,
+                "customer_name" => $customer_info->first_name . ' ' . $customer_info->last_name,
+                "customer_mail_add" => $customer_info->acs_mail_add,
+                "customer_phone_h" => $customer_info->customer_phone_h,
+                "customer_city" => $customer_info->acs_city,
+                "business_name" => $customer_info->business_name,
+                "customer_id" => $customer_info->prof_id,
+                "business_email" => $customer_info->business_email,
+                "business_website" => $customer_info->website,
+                "bus_street" => $customer_info->bus_street,
+                "bus_city" => $customer_info->bus_city,
+                "bus_state" => $customer_info->bus_state,
+                "bus_postal_code" => $customer_info->bus_postal_code,
+                "business_logo" => "uploads/users/business_profile/" . $customer_info->business_id . "/" . $customer_info->business_image,
+                "invoice_items" => $this->invoice_model->getInvoiceItems($invoice_id),
+                "status" => $status
+            );
+        
+            $pdf_file_name = "batched_transactions_" . $customer_id . "_portalappinv.pdf";
+
+            $html_pdf = "accounting/customer_includes/public_view/shared_invoice_link_pdf";
+            $orientation = "P";
+            $this->pdf->save_pdf($html_pdf, $pdf_data, $pdf_file_name, $orientation);
+
+            $subject = $customer_info->business_name . " || Transactions";
+            $customer_name = $customer_info->first_name . ' ' . $customer_info->last_name;
+                $customer_email = $customer_info->acs_email;
+                $subject = `Reminder: Invoice `.$inv->invoice_number.` from Alarm Direct, Inc   `;
+                $message = `Hi `.$customer_name.`,
+    
+        Sending you your transaction. Please see attached file.
+                                            
+        Thanks for your business!
+        `.$customer_info->business_name;
+
+            $this->page_data['customer_name'] = $customer_name;
+            $this->page_data['subject'] = $subject;
+            $this->page_data['business_name'] = $customer_info->business_name;
+            $this->page_data['message'] = $message;
+            $server = MAIL_SERVER;
+            $port = MAIL_PORT;
+            $username = MAIL_USERNAME;
+            $password = MAIL_PASSWORD;
+            $from = MAIL_FROM;
+
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username = $username;
+            $mail->Password = $password;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout = 10; // seconds
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'nSmarTrac';
+            $mail->Subject = $subject;
+
+            $mail->IsHTML(true);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+            $mail->addAttachment(dirname(__DIR__, 2) . '/assets/pdf/' . $pdf_file_name);
+
+            $mail->Body = 'Send Transactions';
+            $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
+            $mail->MsgHTML($content);
+            $mail->addAddress($customer_email);
+            
+            if (!$mail->Send()) {
+                // $email_status = "Mailer Error: " . $mail->ErrorInfo;
+                $email_error_ctr++;
+                exit;
+            }else{
+                $email_sent_ctr++;
+            }
+        }
+        $data = new stdClass();
+        $data->email_error_ctr = $email_error_ctr;
+        $data->email_sent_ctr = $email_sent_ctr;
         echo json_encode($data);
     }
 
@@ -12455,10 +12583,11 @@ class Accounting extends MY_Controller
         echo $test;
     }
 
-    public function employee_payscale()
+    public function employee_payscale($id)
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['roles'] = $this->vendors_model->getRoles(logged('company_id'));
+        $this->page_data['employee'] = $this->vendors_model->getEmployeeByID($id);
         $this->load->view('accounting/employee_payscale', $this->page_data);
     }
 
@@ -12469,7 +12598,8 @@ class Accounting extends MY_Controller
         
 
         $new_data = array(
-            'role_name'     => $role_name,
+            // 'role_name'     => $role_name,
+            'title'         => $role_name,
             'role_amount'   => $role_amount,
             'company_id'    => logged('company_id'),
             'created_at'    => date("Y-m-d H:i:s")

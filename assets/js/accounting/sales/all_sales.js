@@ -316,3 +316,61 @@ $(document).on("click", ".all-sales-section ul.by-batch-btn li.send-reminder-btn
         get_info_customer_reminder_by_batch(customer_ids, invoice_ids, tos, ".all-sales-section table.all_sales_table", business_name);
     }
 });
+
+$(document).on("click", ".all-sales-section ul.by-batch-btn li.send-transaction-btn", function(event) {
+    if (!$(this).hasClass("disabled")) {
+        event.preventDefault();
+        $("body").css({ 'cursor': 'wait' });
+        var invoice_ids = new Array();
+        $(".all-sales-section table.all_sales_table tbody tr td input[data-row-type='Invoice']:checked").each(function() {
+            if ($(this).is(":checked")) {
+                if ($(this).attr("data-row-type") == "Invoice") {
+                    invoice_ids.push($(this).attr("data-invoice-id"));
+                }
+            }
+        });
+        Swal.fire({
+            title: "Send transaction?",
+            html: "Are you sure you want to send this transaction?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/message.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Send now",
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: baseURL + "accounting/transaction/send/by-batch",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        invoice_ids: invoice_ids,
+                    },
+                    success: function(data) {
+                        $("body").css({ 'cursor': 'default' });
+                        if (data.status == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Transactions has been sent!",
+                                icon: "success",
+                            });
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+                        $("body").css({ 'cursor': 'default' });
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Error",
+                            html: "Something went wrong.",
+                            icon: "error",
+                        });
+                    }
+                });
+            }
+        });
+    }
+});

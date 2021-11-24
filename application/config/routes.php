@@ -395,6 +395,7 @@ $route['invoice-page/send-batch'] = 'accounting/invoice_send_batch';
 $route['invoice-page/get/receive-payment'] = 'accounting/get_customer_received_payment';
 $route['invoice-viewer'] = 'accounting/invoice_viewer';
 $route['accounting/customer-reminder/send/by-batch'] = 'accounting/send_customer_reminder_by_batch';
+$route['accounting/transaction/send/by-batch'] = 'accounting/send_transaction_by_batch';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';

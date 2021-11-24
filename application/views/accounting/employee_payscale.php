@@ -12,10 +12,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row" style="padding:3%;">
                 <div class="col-md-12">
 
-                    <span><h6>Employee Name: John Doe</h6><span>
-                    <span><h6>Role: Web Developer</h6><span>
-                    <span><h6>Start Date: 03/06/18</h6><span>
-                    <span><h6>Location: New York, NY, USA</h6><span>
+                    <span><h6>Employee Name: <?php echo $employee->FName . ' '. $employee->LName; ?></h6><span>
+                    <span><h6>Role: <?php echo $employee->title; ?></h6><span>
+                    <span><h6>Start Date: <?php echo $employee->date_hired; ?></h6><span>
+                    <span><h6>Location: <?php echo $employee->address .', '. $employee->city .', '. $employee->state .', '. $employee->postal_code; ?></h6><span>
                     <br><br>
                         <!-- <div class="col-md-1">
 
@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <tr>
                                 <td>
                                     <select class="form-control role_name" name="role_name">
-                                        <option value="">--Select Role--</option>
+                                        <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
                                         <option value="0">+ Add New</option>
                                         <!-- <option>Web Developer</option>
                                         <option>Accountant</option>
@@ -52,23 +52,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <option>Support</option>
                                         <option>QA Tester</option> -->
                                         <?php foreach($roles as $role): ?>
-                                            <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>"><?php echo $role->role_name; ?></option>
+                                            <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>"><?php echo $role->title; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
-                                <td><span>$30,000.00</span></td>
+                                <td><span id="rolevalue"></span></td>
                                 <td>
-                                    <select class="form-control">
-                                        <option>Tier A</option>
-                                        <option>Tier B</option>
-                                        <option>Tier C</option>
-                                        <option>Tier D</option>
-                                        <option>Tier E</option>
-                                        <option>Tier F</option>
+                                    <select class="form-control expRoleDropdown">
+                                        <option value="X 1,00">Tier A</option>
+                                        <option value="X 1,10">Tier B</option>
+                                        <option value="X 1,20">Tier C</option>
+                                        <option value="X 1,30">Tier D</option>
+                                        <option value="X 1,40">Tier E</option>
+                                        <option value="X 1,50">Tier F</option>
                                     </select>
                                 </td>
                                 <td style="width:180px;">
-                                    <input type="text"  class="form-control" value="X 1,00" readonly>
+                                    <input type="text"  class="form-control expRolevalue" value="X 1,00" readonly>
                                     <!-- <select class="form-control" readonly>
                                         <option>X 1,00</option>
                                         <option>X 1,10</option>
@@ -79,16 +79,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </select> -->
                                 </td>
                                 <td>
-                                    <select class="form-control">
-                                        <option>Tier A</option>
-                                        <option>Tier B</option>
-                                        <option>Tier C</option>
-                                        <option>Tier D</option>
-                                        <option>Tier E</option>
-                                        <option>Tier F</option>
+                                    <select class="form-control seniorityDropdown">
+                                        <option value="1,000">Tier A</option>
+                                        <option value="2,000">Tier B</option>
+                                        <option value="3,000">Tier C</option>
+                                        <option value="4,000">Tier D</option>
+                                        <option value="5,000">Tier E</option>
+                                        <option value="6,000">Tier F</option>
                                     </select>
                                 </td>
-                                <td style="width:180px;"><input type="text"  class="form-control" value="1,000" readonly></td>
+                                <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1,000" readonly></td>
                                 <td><span>$31,000.00</span></td>
                             </tr>
                         </tbody>
@@ -165,6 +165,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(".role_name").change(function () {
     var role_name = this.value;
     var role_amount = $(this).attr('role-amount');
+
+    var optiontest = $('option:selected', this).attr('role-amount');
     // var roleID = this.value;
     if(role_name == '0')
     {
@@ -174,25 +176,46 @@ $(".role_name").change(function () {
     }
     else
     {
-        // alert('test');
 
-        var roleID = this.value;
-
-        $.ajax({
-            type: 'GET',
-            url: "<?php echo base_url(); ?>accounting/get_role_amount",
-            data: {
-                roleID: roleID
-            },
-            success: function(result) {
-                alert('test';)
-            },
-            error: function() {
-                alert("An error has occurred");
-            },
-
-        });
+        $('#rolevalue').text(optiontest);
+        // alert(optiontest);
     }
+
+    //else
+    // {
+    //     // alert('test');
+
+    //     var roleID = this.value;
+
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: "<?php echo base_url(); ?>accounting/get_role_amount",
+    //         data: {
+    //             roleID: roleID
+    //         },
+    //         success: function(result) {
+    //             alert('test';)
+    //         },
+    //         error: function() {
+    //             alert("An error has occurred");
+    //         },
+
+    //     });
+    // }
+});    
+
+$(".expRoleDropdown").change(function () {
+    var expValue = this.value;
+
+    $('.expRolevalue').val(expValue);
+
+});    
+
+$(".seniorityDropdown").change(function () {
+    var expValue = this.value;
+
+    $('.seniorityamount').val(expValue);
+
 });    
 </script>
 

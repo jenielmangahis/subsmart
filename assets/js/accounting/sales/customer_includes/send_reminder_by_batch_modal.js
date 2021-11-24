@@ -4,7 +4,7 @@ function get_info_customer_reminder_by_batch(customer_ids, invoice_ids, tos, tab
     $("#send-reminder-by-batch-modal .form-group input[name='to']").val(tos);
     $("#send-reminder-by-batch-modal .form-group input[name='subject']").val(`Reminder: Invoice {invoice_number} from Alarm Direct, Inc`);
     $("#send-reminder-by-batch-modal .monal-body .modal-title p .invoice-count").html(customer_ids.length);
-    var message = `Dear {vustomer_name},
+    var message = `Dear {customer_name},
 
 Just a reminder that we have not received a payment for this invoice yet. Let us know if you have questions.
                                     

@@ -22,18 +22,6 @@ export function initSelect(options = null) {
   const { $select, field } = options;
   const modal = "expenseModal";
 
-  if (field === "tags") {
-    $select.select2({
-      placeholder: "Start typing to add a tag",
-      allowClear: true,
-      ajax: {
-        url: "/accounting/get-job-tags",
-        dataType: "json",
-      },
-    });
-    return;
-  }
-
   const formatResult = (optionElement) => {
     var searchField = $(".select2-search__field");
     var text = optionElement.text;
@@ -89,20 +77,18 @@ export function initSelect(options = null) {
       });
     }
 
-    if (field === "bank-account") {
-      $.get(
-        `/accounting/get-dropdown-modal/account_modal?modal=${modal}&field=${field}`,
-        (result) => {
-          $modalContainer.html(result);
-          initAccountModal(); // global function
+    $.get(
+      `/accounting/get-dropdown-modal/account_modal?modal=${modal}&field=${field}`,
+      (result) => {
+        $modalContainer.html(result);
+        initAccountModal(); // global function
 
-          $("#account-modal").on("hide.bs.modal", function () {
-            // Assign value to nonexisting option, this is the only
-            // way I was able to successfully empty the value.
-            $select.select2("val", "_");
-          });
-        }
-      );
-    }
+        $("#account-modal").on("hide.bs.modal", function () {
+          // Assign value to nonexisting option, this is the only
+          // way I was able to successfully empty the value.
+          $select.select2("val", "_");
+        });
+      }
+    );
   });
 }

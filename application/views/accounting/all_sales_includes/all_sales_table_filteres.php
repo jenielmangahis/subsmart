@@ -6,7 +6,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ||
         <div class="form-check">
             <div class="checkbox checkbox-sec margin-right">
                 <input type="checkbox" name="all_sales_transaction_check_box[]"
-                    id="transaction_<?=$customer_id?>_<?=$inv->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
+                    id="transaction_<?=$customer_id?>_<?=$inv->inv_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"
                     class="customer_checkbox" data-row-type="Invoice"
                     data-invoice-id="<?=$inv->inv_id?>"
                     data-row-status="<?=$inv->INV_status?>"
@@ -15,7 +15,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ||
                     data-customer-name="<?= $inv->first_name." ".$inv->last_name; ?>"
                     data-business-name="<?=$inv->business_name?>">
                 <label
-                    for="transaction_<?=$customer_id?>_<?=$inv->id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
+                    for="transaction_<?=$customer_id?>_<?=$inv->inv_id?>_<?=$invoice_payment_id?>_<?=$sales_receipt_id?>_<?=$deposit_id?>_<?=$estimate_id?>_<?=$credit_memo_id?>_<?=$statement_id?>_<?=$recurring_id?>"><span></span></label>
             </div>
         </div>
     </td>
@@ -25,7 +25,7 @@ if ($filter_type == "All transactions" || $filter_type == "All plus deposits" ||
     </td>
     <td><?php echo $inv->invoice_number; ?>
     </td>
-    <td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name; ?>
+    <td><?php echo $inv->first_name." ".$inv->last_name; ?>
     </td>
     <td><?php  echo date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->due_date)); ?>
     </td>
