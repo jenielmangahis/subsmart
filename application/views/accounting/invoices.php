@@ -486,7 +486,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <ul class="clearfix work__order mobile-invoice-ul" id="myTab" role="tablist">
         <li <?php echo ((empty($tab)) || $tab == 1) ? "class='active'" : "" ?>>
             <a class="nav-link" id="profile-tab" data-toggle="tab1" role="tab" aria-controls="profile"
-                aria-selected="false" data-tab="">All
+                aria-selected="false" data-tab="All">All
                 <span>&nbsp;</span></a>
         </li>
         <li <?php echo ((!empty($tab)) && $tab == 2) ? "class='active'" : "" ?>>

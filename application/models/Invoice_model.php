@@ -695,14 +695,36 @@ class Invoice_model extends MY_Model
 //        echo $this->db->last_query(); die;
         return $query->result();
     }
-
+    
     public function add_invoice_items($data)
     {
         $vendor = $this->db->insert('invoices_items', $data);
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
-
+    public function new_invoice_status($data)
+    {
+        $this->db->insert('invoice_statuses', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
+    public function get_invoice_statuses($invoice_id)
+    {
+        $this->db->select('*');
+        $this->db->from('invoice_statuses');
+        $this->db->where('invoice_id', $invoice_id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+public function get_last_invoice_status($invoice_id)
+{
+    $this->db->select('*');
+        $this->db->from('invoice_statuses');
+        $this->db->where('invoice_id', $invoice_id);
+        $this->db->order_by('date_created', "DESC");
+        $query2 = $this->db->get();
+        return $query2->row();
+}
     public function getInvoiceItems($id)
     {
         // $this->db->select('*');

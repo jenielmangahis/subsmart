@@ -1,7 +1,7 @@
 $(document).on("click", ".customer_craete_invoice_btn", function(event) {
-    event.preventDefault();
+    // event.preventDefault();
     reset_create_invoice_modal_form();
-    $('#create_invoice_modal').modal('toggle');
+    // $('#create_invoice_modal').modal('toggle');
     $("#create_invoice_modal form select[name='customer_id']").val($(this).attr("data-customer-id"));
     create_invoice_modal_customer_changed($(this).attr("data-customer-id"));
 });

@@ -337,6 +337,7 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/banking/receipts/receipts.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'assets/js/accounting/invoice/accounting.min.js',
         ]);
 
         $this->load->view('accounting/receipts', $this->page_data);
@@ -2714,6 +2715,14 @@ class Accounting extends MY_Controller
 
         $addQuery = $this->invoice_model->createInvoice($new_data);
 
+        //recording the status.
+        $new_status_data=array(
+            "invoice_id" => $addQuery,
+            "status" => $this->input->post('status'),
+            "note" => "First status"
+        );
+        $this->invoice_model->new_invoice_status($new_status_data);
+
         $file_names = explode(",", $this->input->post("attachement-filenames"));
         for ($i = 0; $i < count($file_names); $i++) {
             if ($file_names[$i] != "") {
@@ -2890,6 +2899,16 @@ class Accounting extends MY_Controller
 
         $addQuery = $this->invoice_model->update_invoice_data($update_data);
 
+        $last_invoice_status = $this->invoice_model->get_last_invoice_status($id);
+        if($last_invoice_status->status != $this->input->post('status')){
+            $new_status_data=array(
+                "invoice_id" => $id,
+                "status" => $this->input->post('status'),
+                "note" => "Invoice edited"
+            );
+            $this->invoice_model->new_invoice_status($new_status_data);
+        }
+
         $delete2 = $this->invoice_model->delete_items($id);
 
 
@@ -2926,8 +2945,7 @@ class Accounting extends MY_Controller
         $h = $this->input->post('tax');
         $total = $this->input->post('total');
 
-        $i = 0;
-        foreach ($a as $row) {
+        for ($i=0; $i < count($a); $i++) {
             $data['items_id'] = $a[$i];
             $data['qty'] = $quantity[$i];
             $data['cost'] = $price[$i];
@@ -2935,7 +2953,6 @@ class Accounting extends MY_Controller
             $data['total'] = $total[$i];
             $data['invoice_id '] = $id;
             $addQuery2 = $this->invoice_model->add_invoice_items($data);
-            $i++;
         }
 
         redirect('accounting/invoices');
@@ -8203,10 +8220,9 @@ class Accounting extends MY_Controller
                 $data->status = "Mailer Error: " . $mail->ErrorInfo;
                 $error_found_ctr++;
                 exit;
-            }else{
+            } else {
                 $sent_ctr++;
             }
-           
         }
         $data = new stdClass();
         $data->sent_ctr=$sent_ctr;
@@ -8326,10 +8342,12 @@ class Accounting extends MY_Controller
 
             $first_option = "Create invoice";
             $first_option_class = "customer_craete_invoice_btn";
+            $first_href = base_url('accounting/addnewInvoice');
             $amount = ($receivable_payment - $total_amount_received);
             if ($amount > 0) {
                 $first_option = "Receive payment";
                 $first_option_class = "customer_receive_payment_btn";
+                $first_href ="";
             }
             $html .= '<tr>
 								<td class="center"><input type="checkbox"
@@ -8343,7 +8361,7 @@ class Accounting extends MY_Controller
 								</td>
 								<td>
 									<div class="dropdown dropdown-btn text-right">
-										<a href=""
+										<a href="'.$first_href.'"
 											class="first-option ' . $first_option_class . '"
 											data-customer-id="' . $cus->prof_id . '">' . $first_option . ' </a>
 										<a type="button" id="dropdown-button-icon" data-toggle="dropdown">
@@ -8367,8 +8385,8 @@ class Accounting extends MY_Controller
 												</a>
 											</li>
 											<li>
-												<a href="javascript:void(0)"
-													class="customer_craete_invoice_btn" data-toggle="modal" data-target="#create_invoice_modal" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
+												<a href="'.base_url('accounting/addnewInvoice').'"
+													class="customer_craete_invoice_btn1" data-toggle="modal1" data-target="#create_invoice_modal1" data-email-add="' . $cus->email . '" data-customer-id="' . $cus->prof_id . '">
 													Create invoice
 												</a>
 											</li>';
@@ -10664,13 +10682,29 @@ class Accounting extends MY_Controller
 
     public function tester()
     {
-        $lastyear = date("Y") - 1;
-        $start_date = date("Y-m-d", strtotime($lastyear . "-01-01"));
-        $end_date = date("Y-m-t", strtotime('+11 months', strtotime($start_date)));
-        echo $start_date;
-        var_dump($end_date);
-    }
+        $myarray[]= array(
+            "hashtag" => "a7e87329b5eab8578f4f1098a152d6f4",
+            "title" => "Flower",
+            "order" => 3
+        );
 
+        $myarray[]= array(
+            "hashtag" => "b24ce0cd392a5b0b8dedc66c25213594",
+            "title" => "Free",
+            "order" => 2
+        );
+
+        $myarray[]= array(
+            "hashtag" => "e7d31fc0602fb2ede144d18cdffd816b",
+            "title" => "Ready",
+            "order" => 1
+    );
+        var_dump($myarray);
+        usort($myarray, function ($a, $b) {
+            return $a['order'] - $b['order'];
+        });
+        var_dump($myarray);
+    }
     public function update_customer_notes()
     {
         $customer_id = $this->input->post("customer_id");
@@ -11312,9 +11346,9 @@ class Accounting extends MY_Controller
 
             $subject = $customer_info->business_name . " || Transactions";
             $customer_name = $customer_info->first_name . ' ' . $customer_info->last_name;
-                $customer_email = $customer_info->acs_email;
-                $subject = `Reminder: Invoice `.$inv->invoice_number.` from Alarm Direct, Inc   `;
-                $message = `Hi `.$customer_name.`,
+            $customer_email = $customer_info->acs_email;
+            $subject = `Reminder: Invoice `.$inv->invoice_number.` from Alarm Direct, Inc   `;
+            $message = `Hi `.$customer_name.`,
     
         Sending you your transaction. Please see attached file.
                                             
@@ -11358,7 +11392,7 @@ class Accounting extends MY_Controller
                 // $email_status = "Mailer Error: " . $mail->ErrorInfo;
                 $email_error_ctr++;
                 exit;
-            }else{
+            } else {
                 $email_sent_ctr++;
             }
         }
@@ -12269,54 +12303,119 @@ class Accounting extends MY_Controller
                 $html_items_description.=$items->description;
             }
         }
+        $invoice_statuses = $this->invoice_model->get_invoice_statuses($invoice_id);
         $received_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_id);
-        $status_steps='<div class="status-marker next-completed">
-        <div class="line"></div>
-    </div>
-    <li class="status-step completed">
-        <div class="status-marker completed next-completed">
-            <div class="circle default"></div>
-            <div class="line"></div>
-        </div>
-        <div class="status-info">
-            <div class="status-title">Approved</div>
-            <div class="status-event-info">
-                <div><span class="status-date">1/28/2021</span></div>
-                <div></div>
-            </div>
-        </div>
-    </li>';
-        $ctr=0;
-        // var_dump($received_payments);
+
+        
+        $ativities_storage = array();
+        foreach ($invoice_statuses as $info) {
+            $ativities_storage[] = array(
+                "activity" => "status",
+                "status" => $info->status,
+                "activity_date" => $info->date_created,
+                "activity_time" => strtotime($info->date_created)
+            );
+        }
         foreach ($received_payments as $payment) {
             if ($payment->open_balance <= $payment->payment_amount) {
                 $status = "Paid";
             } else {
                 $status = "Partially paid";
             }
-            $ctr++;
-            $liner_circle = '<div class="circle default"></div>
-        <div class="line"></div>';
-            $next_completed="next-completed";
-            if ($ctr == count($received_payments)) {
-                $liner_circle = '<div class="circle default last-active-status"></div>';
-                $next_completed="";
-            }
-            $status_steps.='
-        <li class="status-step completed">
-            <div class="status-marker completed '.$next_completed.'">
-                '.$liner_circle.'
-            </div>
-            <div class="status-info">
-                <div class="status-title">'.$status.'</div>
-                <div class="status-event-info">
-                    <div><span class="status-date">'.date("m/d/Y", strtotime($payment->payment_date)).'</span></div>
-                    <div><span><span class="money">$'.number_format($payment->payment_amount, 2).'</span></span></div><a tabindex="0"
-                        class="action-button view-payment-button" data-receive-payment-id="'.$payment->receive_payment_id.'" data-customer-id="'.$customer_id.'" data-invoice-id="'.$invoice_id.'">View payment #'.$payment->receive_payment_id.'</a>
-                </div>
-            </div>
-        </li>';
+            $ativities_storage[] = array(
+                "activity" => "payment",
+                "status" => $status,
+                "activity_date" => $payment->payment_date,
+                "activity_time" => strtotime($payment->payment_date),
+                "amount"=>$payment->payment_amount,
+                "payment_id" => $payment->receive_payment_id
+            );
         }
+        usort($ativities_storage, function ($a, $b) {
+            return $a['activity_time'] - $b['activity_time'];
+        });
+        
+
+        $status_steps='';
+        $ctr=0;
+        
+        for ($i=0;$i<count($ativities_storage);$i++) {
+            $status=$ativities_storage[$i]["status"];
+            $ctr++;
+
+            
+            if ($i==0) {
+                $status_steps='<div class="status-marker next-completed"><div class="line"></div></div>
+                        <li class="status-step completed">
+                            <div class="status-marker completed next-completed">
+                                <div class="circle default"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-title">'.$status.'</div>
+                                <div class="status-event-info">
+                                    <div><span class="status-date">'.date("m/d/Y", strtotime($ativities_storage[$i]["activity_date"])).'</span></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </li>';
+            } else {
+                $liner_circle = '<div class="circle default"></div><div class="line"></div>';
+                $next_completed="next-completed";
+                if ($ctr == count($ativities_storage)) {
+                    $liner_circle = '<div class="circle default last-active-status"></div>';
+                    $next_completed="";
+                }
+                $status_steps.='
+                    <li class="status-step completed">
+                        <div class="status-marker completed '.$next_completed.'">
+                            '.$liner_circle.'
+                        </div>
+                        <div class="status-info">
+                            <div class="status-title">'.$status.'</div>
+                            <div class="status-event-info">
+                                <div><span class="status-date">'.date("m/d/Y", strtotime($ativities_storage[$i]["activity_date"])).'</span></div>
+                                <div>';
+                                
+                if ($ativities_storage[$i]["activity"] == "payment") {
+                    $status_steps.='<span><span class="money">$'.number_format($ativities_storage[$i]["amount"], 2).'</span></span></div><a tabindex="0"
+                                    class="action-button view-payment-button" data-receive-payment-id="'.$ativities_storage[$i]["payment_id"].'" data-customer-id="'.$customer_id.'" data-invoice-id="'.$invoice_id.'">View payment #'.$ativities_storage[$i]["payment_id"].'</a>';
+                }
+                                    $status_steps.='</div>
+                        </div>
+                    </li>';
+            }
+        }
+
+        // foreach ($received_payments as $payment) {
+        //     if ($payment->open_balance <= $payment->payment_amount) {
+        //         $status = "Paid";
+        //     } else {
+        //         $status = "Partially paid";
+        //     }
+        //     $ctr++;
+        //     $liner_circle = '<div class="circle default"></div>
+        // <div class="line"></div>';
+        //     $next_completed="next-completed";
+        //     if ($ctr == count($received_payments)) {
+        //         $liner_circle = '<div class="circle default last-active-status"></div>';
+        //         $next_completed="";
+        //     }
+        //     $status_steps.='
+        // <li class="status-step completed">
+        //     <div class="status-marker completed '.$next_completed.'">
+        //         '.$liner_circle.'
+        //     </div>
+        //     <div class="status-info">
+        //         <div class="status-title">'.$status.'</div>
+        //         <div class="status-event-info">
+        //             <div><span class="status-date">'.date("m/d/Y", strtotime($payment->payment_date)).'</span></div>
+        //             <div><span><span class="money">$'.number_format($payment->payment_amount, 2).'</span></span></div><a tabindex="0"
+        //                 class="action-button view-payment-button" data-receive-payment-id="'.$payment->receive_payment_id.'" data-customer-id="'.$customer_id.'" data-invoice-id="'.$invoice_id.'">View payment #'.$payment->receive_payment_id.'</a>
+        //         </div>
+        //     </div>
+        // </li>';
+        // }
     
 
         $data = new stdClass();

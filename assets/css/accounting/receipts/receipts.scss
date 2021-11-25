@@ -80,8 +80,25 @@ $colorError: #d52b1e;
 
   .formActions {
     .form-check,
-    [data-action="createexpense"] {
+    [data-action="createexpense"],
+    [data-action="matchreceipt"] {
       display: none;
+    }
+  }
+
+  .receiptsButton {
+    display: flex;
+    align-items: center;
+    border-radius: 36px 0 0 36px;
+
+    .spinner-border {
+      display: none;
+    }
+
+    &--isLoading {
+      .spinner-border {
+        display: block;
+      }
     }
   }
 
@@ -109,7 +126,7 @@ $colorError: #d52b1e;
     .formActions {
       .form-check,
       [data-action="createexpense"] {
-        display: block;
+        display: flex;
       }
 
       [data-action="savereceipt"][data-action-after="next"] {
@@ -126,6 +143,18 @@ $colorError: #d52b1e;
 
     [data-step="3"] {
       display: block;
+    }
+
+    .formActions {
+      [data-action="matchreceipt"] {
+        display: flex;
+      }
+
+      .form-check,
+      [data-action="createexpense"],
+      [data-action="savereceipt"][data-action-after="next"] {
+        display: none;
+      }
     }
   }
 }

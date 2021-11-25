@@ -115,10 +115,11 @@ export class ForReviewTable {
         window.location.reload();
       },
       findMatch: () => {},
-      view: (row) => {
+      view: (row, rows) => {
         const $modal = $("#receiptModal");
         const $form = $modal.find("form");
-        const $dataTypes = $modal.find("[data-step=1] [data-type]");
+        const $dataTypesStep1 = $modal.find("[data-step=1] [data-type]");
+        const $dataTypesStep2 = $modal.find("[data-step=2] [data-type]");
 
         const $image = $modal.find("#receiptImage");
         $image.attr("src", `${this.uploadPath}${row.receipt_img}`);
@@ -127,8 +128,8 @@ export class ForReviewTable {
         const createdAt = moment(row.created_at).format("hh:mm A MM/DD/YYYY");
         $createdAt.text(`Added ${createdAt}`);
 
-        for (let index = 0; index < $dataTypes.length; index++) {
-          const $element = $dataTypes[index];
+        for (let index = 0; index < $dataTypesStep1.length; index++) {
+          const $element = $dataTypesStep1[index];
           const { type } = $element.dataset;
 
           if (!row.hasOwnProperty(type)) {
@@ -166,9 +167,33 @@ export class ForReviewTable {
           $element.value = value;
         }
 
+        for (let index = 0; index < $dataTypesStep2.length; index++) {
+          const $element = $dataTypesStep2[index];
+          const { type } = $element.dataset;
+          let value = row[type];
+
+          if (!value) {
+            continue;
+          }
+
+          if (value.text) {
+            value = value.text;
+          }
+
+          if (type === "transaction_date") {
+            value = moment(value).format("MM/DD/YYYY");
+          }
+
+          if (type === "total_amount") {
+            value = accounting.formatMoney(value);
+          }
+
+          $element.textContent = value;
+        }
+
         let hasAllRequiredDetails = true;
-        for (let index = 0; index < $dataTypes.length; index++) {
-          const $element = $dataTypes[index];
+        for (let index = 0; index < $dataTypesStep1.length; index++) {
+          const $element = $dataTypesStep1[index];
           if ($element.hasAttribute("required")) {
             const { type } = $element.dataset;
             if (row[type] === null) {
@@ -177,10 +202,92 @@ export class ForReviewTable {
             }
           }
         }
+        $form.attr("data-active-step", hasAllRequiredDetails ? 2 : 1);
 
-        if (hasAllRequiredDetails) {
-          $form.attr("data-active-step", "2");
-        }
+        // step 1: save receipt
+        const $saveReceipt = $modal.find("[data-action=savereceipt]");
+        const $errorMessage = $modal.find(".formError");
+
+        $saveReceipt.off(); // remove previous event handlers
+        $saveReceipt.on("click", async (event) => {
+          event.preventDefault();
+
+          const payload = {};
+          let hasError = false;
+
+          for (let index = 0; index < $dataTypesStep1.length; index++) {
+            const $element = $dataTypesStep1[index];
+            const { type } = $element.dataset;
+            payload[type] = $element.value;
+
+            $element.classList.remove("inputError");
+
+            if (!isEmpty($element.value)) {
+              continue;
+            }
+
+            if (!$element.hasAttribute("required")) {
+              continue;
+            }
+
+            $element.classList.add("inputError");
+            $errorMessage.addClass("formError--show");
+            hasError = true;
+          }
+
+          if (hasError) {
+            return;
+          }
+
+          $errorMessage.removeClass("formError--show");
+          $saveReceipt.addClass("receiptsButton--isLoading");
+          $saveReceipt.prop("disabled", true);
+
+          await this.api.editReceipt(row.id, payload);
+
+          $saveReceipt.removeClass("receiptsButton--isLoading");
+          $saveReceipt.prop("disabled", false);
+
+          const { actionAfter } = $saveReceipt.get(0).dataset;
+          if (actionAfter === "close") {
+            $modal.modal("hide");
+          }
+
+          if (actionAfter === "next") {
+            $form.attr("data-active-step", "2");
+          }
+        });
+
+        // step 1: delete receipt
+        const $deleteButton = $modal.find("[data-action=deletereceipt]");
+        $deleteButton.off(); // remove previous event handlers
+        $deleteButton.on("click", () => {
+          this.actions.delete(row);
+        });
+
+        // step 2: create expense
+        const $createExpense = $modal.find("[data-action=createexpense]");
+        const $handlenextreceipt = $modal.find("#handlenextreceipt");
+        const rowIndex = rows.findIndex(({ id }) => id === row.id);
+        const nextRow = rows[rowIndex + 1];
+
+        $createExpense.off(); // remove previous event handlers
+        $createExpense.on("click", async (event) => {
+          event.preventDefault();
+          $createExpense.addClass("receiptsButton--isLoading");
+          $createExpense.prop("disabled", true);
+
+          await this.api.editReceipt(row.id, { to_expense: 1 });
+
+          $createExpense.removeClass("receiptsButton--isLoading");
+          $createExpense.prop("disabled", false);
+
+          if (!nextRow) {
+            window.location.reload();
+          } else if ($handlenextreceipt.is(":checked")) {
+            this.actions.view(nextRow, rows);
+          }
+        });
 
         $modal.modal("show");
       },
@@ -265,7 +372,7 @@ export class ForReviewTable {
       const rowId = $parent.data("id");
       const rows = table.rows().data().toArray();
       const row = rows.find(({ id }) => id == rowId);
-      this.actions.view(row);
+      this.actions.view(row, rows);
     });
 
     table.on(

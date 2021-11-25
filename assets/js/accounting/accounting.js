@@ -2300,6 +2300,7 @@ $(document).on('click','.receiptsTable__row',function (event) {
 });
 // Delete Receipt
 $(document).on('click','#deleteReceipt',function (event) {
+    return; // implementation is transfered on ReviewedTable.js
     event.preventDefault();
     var id = $(this).attr('data-id');
     Swal.fire({

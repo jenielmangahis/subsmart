@@ -56,9 +56,22 @@ function invoices_filter_changed() {
             } else {
                 $(".invoices-page-section table tbody").html(data.the_html_tbody);
             }
+
+            $("#invoice_page_tabs ul li").removeClass("active");
+            if ($("#invoice_page_tabs ul li a[data-tab='" + $(".invoices-page-section .filtering select.status").val() + "']").length > 0) {
+                $("#invoice_page_tabs ul li a[data-tab='" + $(".invoices-page-section .filtering select.status").val() + "']").parent("li").attr("class", "active");
+            } else {
+                $("#invoice_page_tabs ul li a[data-tab='All']").parent("li").attr("class", "active");
+            }
         },
     });
 }
+
+$(document).on('click', '#invoice_page_tabs ul li a[data-tab]', function() {
+    console.log("pasok");
+    $(".invoices-page-section .filtering select.status").val($(this).attr("data-tab"));
+    invoices_filter_changed();
+});
 $(document).on('click', '#invoice-reminder-modal .form-group label span.cc-bcc', function() {
     $("#invoice-reminder-modal form .cc-bcc-section").fadeIn();
     $("#invoice-reminder-modal .form-group label span.cc-bcc").addClass("show");
