@@ -284,6 +284,8 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 
                                 <div class="col-md-7">
                                     <div class="receiptDetailsContainer" data-step="1">
+                                        <input type="hidden" name="receipt_id" id="receipt_id" data-type="id">
+
                                         <div class="formError">
                                             <div class="formError__inner">
                                                 <i class="fa fa-info-circle"></i>
@@ -298,7 +300,6 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <div class="step-header-text">Double-check the details and add any missing info.</div>
                                         <div class="form-group form-element">
                                             <span>Document Type</span>
-                                            <input type="hidden" name="receipt_id" id="receipt_id" data-type="id">
                                             <select name="document_type" id="documentType" class="form-control" data-type="document_type">
                                                 <option value="Receipt">Receipt</option>
                                                 <option value="Bill">Bill</option>
@@ -359,17 +360,17 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             <div class="receiptInfo__inner">
                                                 <div class="receiptInfo__box">
                                                     <div class="receiptInfo__row">
-                                                        <div>Draft Expense</div>
-                                                        <div>11/09/2021</div>
+                                                        <div class="font-weight-bold">Draft Expense</div>
+                                                        <div data-type="transaction_date"></div>
                                                     </div>
                                                     <div class="receiptInfo__row">
-                                                        <div>Test Bank (Cash on hand)</div>
-                                                        <div>$1.00</div>
+                                                        <div data-type="__select2_bank_account"></div>
+                                                        <div class="font-weight-bold"><span data-type="total_amount"></span></div>
                                                     </div>
                                                     <hr/>
                                                     <div class="receiptInfo__row">
-                                                        <div>Test Bank (Cash on hand)</div>
-                                                        <div>$1.00</div>
+                                                        <div><span data-type="__select2_category"></span> (Cash on hand)</div>
+                                                        <div><span data-type="total_amount"></span></div>
                                                     </div>
                                                 </div>
 
@@ -429,10 +430,11 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <div class="modal-footer-uploadedReceipt" style="display: flex;justify-content:space-between;">
                             <div>
                                 <button type="button" data-dismiss="modal" class="btn btn-default btn-leftSide">Cancel</button>
-                                <button class="btn btn-default btn-leftSide" style="margin-left: 10px" id="deleteReceipt">Delete this receipt</button>
+                                <button class="btn btn-default btn-leftSide" style="margin-left: 10px" data-action="deletereceipt">Delete this receipt</button>
                             </div>
 
                             <div class="d-flex align-items-center formActions">
+                                <!-- this checkbox should only show in step 2 -->
                                 <div class="form-check mr-2">
                                     <input type="checkbox" class="form-check-input" id="handlenextreceipt">
                                     <label class="form-check-label" for="handlenextreceipt">Go to next</label>
@@ -440,23 +442,41 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 
                                 <div class="dropdown d-flex">
                                     <div>
+                                        <!-- this button should only show in step 1 -->
                                         <button
-                                            type="submit"
-                                            class="btn btn-success"
-                                            style="border-radius: 36px 0 0 36px"
+                                            type="button"
+                                            class="btn btn-success receiptsButton"
                                             data-action="savereceipt"
                                             data-action-after="next"
                                         >
+                                            <div class="spinner-border spinner-border-sm m-0 mr-1" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
                                             Save and next
                                         </button>
 
+                                        <!-- this button should only show in step 2 -->
                                         <button
-                                            type="submit"
-                                            class="btn btn-success"
-                                            style="border-radius: 36px 0 0 36px"
+                                            type="button"
+                                            class="btn btn-success receiptsButton"
                                             data-action="createexpense"
                                         >
+                                            <div class="spinner-border spinner-border-sm m-0 mr-1" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
                                             Create expense
+                                        </button>
+
+                                        <!-- this button should only show in step 3 -->
+                                        <button
+                                            type="button"
+                                            class="btn btn-success receiptsButton"
+                                            data-action="matchreceipt"
+                                        >
+                                            <div class="spinner-border spinner-border-sm m-0 mr-1" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            Match
                                         </button>
                                     </div>
 

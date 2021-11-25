@@ -2,7 +2,7 @@
 if ($invoices!=null) {
     foreach ($invoices as $invoice) {
         ?>
-<tr data-id="<?=$invoice->id ?>"
+<tr data-id="<?=$invoice->inv_id ?>"
     data-customer-id="<?=$invoice->customer_id?>"
     data-invoice-number="<?=$invoice->invoice_number?>"
     data-grand-total="$<?=number_format($invoice->grand_total, 2)?>"
@@ -13,15 +13,15 @@ if ($invoices!=null) {
         <div class="form-check">
             <div class="checkbox checkbox-sec ">
                 <input type="checkbox" name="checkbox[]"
-                    value="<?=$invoice->id?>" class="select-one"
-                    id="invoice_id_<?php echo $invoice->id ?>"
+                    value="<?=$invoice->inv_id?>" class="select-one"
+                    id="invoice_id_<?php echo $invoice->inv_id ?>"
                     data-status="<?=$invoice->INV_status?>"
                     data-customer-id="<?=$invoice->customer_id?>"
-                    data-invoice-id="<?=$invoice->id?>"
+                    data-invoice-id="<?=$invoice->inv_id?>"
                     data-company-id="<?=$invoice->company_id?>"
                     data-invoice-number="<?=$invoice->invoice_number?>">
                 <label
-                    for="invoice_id_<?php echo $invoice->id ?>"><span></span></label>
+                    for="invoice_id_<?php echo $invoice->inv_id ?>"><span></span></label>
             </div>
         </div>
     </td>
@@ -36,7 +36,7 @@ if ($invoices!=null) {
         </div>
     </td>
     <td>
-        <label for="invoice_id_<?php echo $invoice->id ?>">
+        <label for="invoice_id_<?php echo $invoice->inv_id ?>">
             <a class="a-default" href="#"><?php echo $invoice->invoice_number ?> </a>
         </label>
     </td>
@@ -65,12 +65,12 @@ if ($invoices!=null) {
     <td class="text-right">
         <div class="dropdown dropdown-btn open">
             <?php if ($invoice->INV_status == 'Paid') { ?>
-            <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>"
+            <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->inv_id) ?>"
                 style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp; <a
-                href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"
+                href="<?php echo base_url('invoice/preview/'. $invoice->inv_id . '?format=print') ?>"
                 style="color:#3a96d2;font-weight:bold;" target="_blank">Print</a> &emsp;
             <?php } else { ?>
-            <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>"
+            <a href="<?php echo base_url('accounting/invoice_edit/' . $invoice->inv_id) ?>"
                 style="color:gray;"><i class="fa fa-pencil" aria-hidden="true"></i></a> &emsp;
             <a href="" style="color:#3a96d2;font-weight:bold;" class="first-option customer_receive_payment_btn"
                 data-customer-id="<?=$invoice->customer_id?>">Receive
@@ -89,12 +89,12 @@ if ($invoices!=null) {
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">
+                        href="<?php echo base_url('invoice/send/' . $invoice->inv_id) ?>">
                         <span class="fa fa-envelope-o icon"></span> Send Invoice</a>
                 </li>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>">
+                        href="<?php echo base_url('accounting/invoice_edit/' . $invoice->inv_id) ?>">
                         <span class="fa fa-pencil-square-o icon"></span>
                         Edit
                     </a>
@@ -102,14 +102,14 @@ if ($invoices!=null) {
                 <li role="separator" class="divider"></li>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">
+                        href="<?php echo base_url('invoice/genview/' . $invoice->inv_id) ?>">
                         <span class="fa fa-file-text-o icon"></span>
                         View Invoice
                     </a>
                 </li>
                 <li role="presentation">
                     <a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('invoice/genview/' . $invoice->id) . "?do=payment_add" ?>">
+                        href="<?php echo base_url('invoice/genview/' . $invoice->inv_id) . "?do=payment_add" ?>">
                         <span class="fa fa-usd icon"></span>
                         Record Invoice
                     </a>
@@ -119,13 +119,13 @@ if ($invoices!=null) {
                                             href="javascript:void(0)" data-toggle="modal"
                                             data-target="#convertToWorkOrder"
                                             data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                    data-id="<?php echo $invoice->id ?>">
+                    data-id="<?php echo $invoice->inv_id ?>">
                     <span class="fa fa-file-text-o icon"></span> Convert to Work Order
                     </a> -->
                     <a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
+                        href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->inv_id) ?>"
                         data-convert-to-invoice-modal="open"
-                        data-id="<?php echo $invoice->id ?>"
+                        data-id="<?php echo $invoice->inv_id ?>"
                         data-invoice-number="<?php echo $invoice->invoice_number ?>">
                         <span class="fa fa-file-text-o icon"></span> Convert to Work Order
                     </a>
@@ -134,12 +134,12 @@ if ($invoices!=null) {
                     <a role="menuitem" class="openCloneInvoice" tabindex="-1" href="javascript:void(0)"
                         data-toggle="modal" data-target="#cloneModal"
                         data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                        data-id="<?php echo $invoice->id ?>">
+                        data-id="<?php echo $invoice->inv_id ?>">
                         <span class="fa fa-files-o icon"></span> Clone Invoice
                     </a>
                 </li>
                 <li class="share-invoice-link-btn"
-                    data-invoice-id="<?=$invoice->id?>">
+                    data-invoice-id="<?=$invoice->inv_id?>">
                     <a role="menuitem" tabindex="-1" href="javascript:void(0)">
                         <span class="fa fa-share icon" aria-hidden="true"></span>
                         Share invoice link
@@ -148,17 +148,17 @@ if ($invoices!=null) {
                 <li role="presentation">
                     <a role="menuitem" class="openDeleteInvoice" tabindex="-1" href="javascript:void(0)"
                         data-invoice-number="<?php echo $invoice->invoice_number ?>"
-                        data-id="<?php echo $invoice->id ?>"
+                        data-id="<?php echo $invoice->inv_id ?>"
                         id="deleteInvoiceBtnNew">
                         <span class="fa fa-trash-o icon"></span> Delete Invoice
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>"><span
+                        href="<?php echo base_url('invoice/preview/'. $invoice->inv_id . '?format=pdf') ?>"><span
                             class="fa fa-file-pdf-o icon"></span> Invoice PDF</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1"
-                        href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>"><span
+                        href="<?php echo base_url('invoice/preview/'. $invoice->inv_id . '?format=print') ?>"><span
                             class="fa fa-print icon"></span> Print Invoice</a></li>
             </ul>
         </div>

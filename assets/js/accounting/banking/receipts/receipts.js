@@ -59,55 +59,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     field: "payment-account",
   });
 
-  const $saveReceipt = $("[data-action=savereceipt]");
-  const $errorMessage = $(".formError");
-  $saveReceipt.on("click", async (event) => {
-    event.preventDefault();
-    const $this = $(event.target);
-    const $modal = $this.closest(".modal");
-    const $form = $this.closest("form");
-    const $dataTypes = $form.find("[data-step=1] [data-type]");
-
-    const payload = {};
-    let hasError = false;
-
-    for (let index = 0; index < $dataTypes.length; index++) {
-      const $element = $dataTypes[index];
-      const { type } = $element.dataset;
-      payload[type] = $element.value;
-
-      $element.classList.remove("inputError");
-
-      if (!isEmpty($element.value)) {
-        continue;
-      }
-
-      if (!$element.hasAttribute("required")) {
-        continue;
-      }
-
-      $element.classList.add("inputError");
-      $errorMessage.addClass("formError--show");
-      hasError = true;
-    }
-
-    if (hasError) {
-      return;
-    }
-
-    $errorMessage.removeClass("formError--show");
-    await api.editReceipt(payload.id, payload);
-
-    const { actionAfter } = $this.get(0).dataset;
-    if (actionAfter === "close") {
-      $modal.modal("hide");
-    }
-
-    if (actionAfter === "next") {
-      $form.attr("data-active-step", "2");
-    }
-  });
-
   const $receiptModal = $("#receiptModal");
   $receiptModal.on("show.bs.modal", () => {
     document.documentElement.style.overflow = "hidden";

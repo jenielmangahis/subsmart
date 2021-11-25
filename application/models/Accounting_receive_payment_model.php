@@ -148,6 +148,7 @@ class Accounting_receive_payment_model extends MY_Model
         $this->db->order_by('accounting_receive_payment.id', 'ASC');
         $query = $this->db->get();
         return $query->result();
+
     }
     public function update_payment_method($data, $receive_payment_id)
     {
