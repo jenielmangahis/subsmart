@@ -475,15 +475,6 @@ class Vendors extends MY_Controller
 
                 $order++;
             }
-            $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
-
-            if ($vendor->attachments !== null && $vendor->attachments !== "") {
-                foreach (json_decode($vendor->attachments, true) as $attachment) {
-                    array_unshift($insert, $attachment);
-                }
-            }
-
-            $update = $this->vendors_model->updateVendor($vendorId, ['attachments' => json_encode($insert)]);
 
             $return = new stdClass();
             $return->attachment_ids = $insert;
@@ -497,16 +488,9 @@ class Vendors extends MY_Controller
     {
         $attachmentId = $this->input->post('attachment_id');
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
-        $attachments = json_decode($vendor->attachments, true);
-        $attachmentKey = array_search($attachmentId, $attachments);
-        unset($attachments[$attachmentKey]);
 
         $attachmentLink = $this->accounting_attachments_model->get_attachment_link(['type' => 'Vendor', 'attachment_id' => $attachmentId, 'linked_id' => $vendorId]);
         $this->accounting_attachments_model->unlink_attachment($attachmentLink->id);
-
-        $attachments = count($attachments) > 0 ? json_encode($attachments) : null;
-
-        $update = $this->vendors_model->updateVendor($vendorId, ['attachments' => $attachments]);
 
         $return = [
             'data' => $vendorId,
@@ -752,12 +736,7 @@ class Vendors extends MY_Controller
         $transactions = [];
         if (isset($bills) && count($bills) > 0) {
             foreach ($bills as $bill) {
-                if (!is_null($bill->attachments) && $bill->attachments !== "") {
-                    $attachmentIds = json_decode($bill->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
 
                 $transactions[] = [
                     'id' => $bill->id,
@@ -781,12 +760,7 @@ class Vendors extends MY_Controller
 
         if (isset($billPayments) && count($billPayments) > 0) {
             foreach ($billPayments as $payment) {
-                if (!is_null($payment->attachments) && $payment->attachments !== "") {
-                    $attachmentIds = json_decode($payment->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $payment->id);
 
                 $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
@@ -814,12 +788,7 @@ class Vendors extends MY_Controller
 
         if (isset($checks) && count($checks) > 0) {
             foreach ($checks as $check) {
-                if (!is_null($check->attachments) && $check->attachments !== "") {
-                    $attachmentIds = json_decode($check->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
 
                 $transactions[] = [
                     'id' => $check->id,
@@ -843,12 +812,7 @@ class Vendors extends MY_Controller
 
         if (isset($creditCardCredits) && count($creditCardCredits) > 0) {
             foreach ($creditCardCredits as $creditCardCredit) {
-                if (!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
-                    $attachmentIds = json_decode($creditCardCredit->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $creditCardCredit->id);
 
                 $transactions[] = [
                     'id' => $creditCardCredit->id,
@@ -872,12 +836,7 @@ class Vendors extends MY_Controller
 
         if (isset($creditCardPayments) && count($creditCardPayments) > 0) {
             foreach ($creditCardPayments as $cardPayment) {
-                if (!is_null($cardPayment->attachments) && $cardPayment->attachments !== "") {
-                    $attachmentIds = json_decode($cardPayment->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $cardPayment->id);
 
                 $transactions[] = [
                     'id' => $cardPayment->id,
@@ -901,12 +860,7 @@ class Vendors extends MY_Controller
 
         if (isset($expenses) && count($expenses) > 0) {
             foreach ($expenses as $expense) {
-                if (!is_null($expense->attachments) && $expense->attachments !== "") {
-                    $attachmentIds = json_decode($expense->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
 
                 $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
 
@@ -932,12 +886,7 @@ class Vendors extends MY_Controller
 
         if (isset($purchaseOrders) && count($purchaseOrders) > 0) {
             foreach ($purchaseOrders as $purchaseOrder) {
-                if (!is_null($purchaseOrder->attachments) && $purchaseOrder->attachments !== "") {
-                    $attachmentIds = json_decode($purchaseOrder->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $purchaseOrder->id);
 
                 $transactions[] = [
                     'id' => $purchaseOrder->id,
@@ -961,12 +910,7 @@ class Vendors extends MY_Controller
 
         if (isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach ($vendorCredits as $vendorCredit) {
-                if (!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
-                    $attachmentIds = json_decode($vendorCredit->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vendorCredit->id);
 
                 $transactions[] = [
                     'id' => $vendorCredit->id,
@@ -1348,6 +1292,8 @@ class Vendors extends MY_Controller
             }
         }
 
+        $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Expense', $expenseId);
+
         $update = $this->vendors_model->update_expense($expenseId, ['status' => 0]);
 
         return $update;
@@ -1419,6 +1365,8 @@ class Vendors extends MY_Controller
             }
         }
 
+        $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Check', $checkId);
+
         $update = $this->vendors_model->update_check($checkId, ['status' => 0]);
 
         return $update;
@@ -1476,6 +1424,8 @@ class Vendors extends MY_Controller
             }
         }
 
+        $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Bill', $billId);
+
         $update = $this->vendors_model->update_bill($billId, ['status' => 0]);
 
         return $update;
@@ -1494,6 +1444,8 @@ class Vendors extends MY_Controller
                 $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
             }
         }
+
+        $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Purchase Order', $purchaseOrderId);
 
         $update = $this->vendors_model->update_purchase_order($purchaseOrderId, ['status' => 0]);
 
@@ -1580,6 +1532,8 @@ class Vendors extends MY_Controller
             }
         }
 
+        $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Vendor Credit', $vendorCreditId);
+
         $update = $this->vendors_model->update_vendor_credit($vendorCreditId, ['status' => 0]);
 
         return $update;
@@ -1603,6 +1557,7 @@ class Vendors extends MY_Controller
 
         $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $bankAccBal]);
 
+        $removeAttachments = $this->accounting_attachments_model->unlink_attachments('CC Payment', $ccPaymentId);
 
         $update = $this->vendors_model->update_credit_card_payment($ccPaymentId, ['status' => 0]);
 
@@ -1621,6 +1576,8 @@ class Vendors extends MY_Controller
         $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
 
         if ($update) {
+            $removeAttachments = $this->accounting_attachments_model->unlink_attachments('Bill Payment', $billPaymentId);
+
             $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
             if (!is_null($vCredits)) {
                 foreach ($vCredits as $vCreditId => $amount) {
@@ -1876,204 +1833,6 @@ class Vendors extends MY_Controller
         $this->page_data['balance'] = $selectedBalance;
 
         $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
-    }
-
-    public function load_bill_payment_bills($vendorId, $billPaymentId)
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-        $fromDate = $post['from'];
-        $toDate = $post['to'];
-        $search = $post['search'];
-
-        $filters = [
-            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue']
-        ];
-
-        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
-        $bills = $this->vendors_model->get_bill_payment_bills_by_vendor_id($billPaymentId, $vendorId, $filters);
-
-        $filters = [
-            'start-date' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'end-date' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue']
-        ];
-        $openBills = $this->vendors_model->get_vendor_open_bills($billPayment->payee_id, $filters);
-
-        $data = [];
-        foreach ($bills as $bill) {
-            $paymentData = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
-            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
-            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
-            $description .= '</a>';
-            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
-
-            if ($search !== "") {
-                if (stripos($bill->bill_no, $search) !== false) {
-                    $data[] = [
-                        'id' => $bill->id,
-                        'description' => $description,
-                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
-                        'payment' => number_format(floatval($paymentData->total_amount), 2, '.', ','),
-                        'selected' => true
-                    ];
-                }
-            } else {
-                $data[] = [
-                    'id' => $bill->id,
-                    'description' => $description,
-                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                    'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
-                    'payment' => number_format(floatval($paymentData->total_amount), 2, '.', ','),
-                    'selected' => true
-                ];
-            }
-        }
-
-        if (count($openBills) > 0) {
-            foreach ($openBills as $bill) {
-                $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
-                $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
-                $description .= '</a>';
-                $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
-
-                if ($search !== "") {
-                    if (stripos($bill->bill_no, $search) !== false) {
-                        $data[] = [
-                            'id' => $bill->id,
-                            'description' => $description,
-                            'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                            'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                            'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                            'payment' => '',
-                            'selected' => false
-                        ];
-                    }
-                } else {
-                    $data[] = [
-                        'id' => $bill->id,
-                        'description' => $description,
-                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                        'payment' => '',
-                        'selected' => false
-                    ];
-                }
-            }
-        }
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($bills),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
-    }
-
-    public function load_bill_payment_credits($vendorId, $billPaymentId)
-    {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $start = $post['start'];
-        $limit = $post['length'];
-        $fromDate = $post['from'];
-        $toDate = $post['to'];
-        $search = $post['search'];
-
-        $filters = [
-            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
-            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-        ];
-
-        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
-        $credits = json_decode($billPayment->vendor_credits_applied, true);
-        $openCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
-
-        $data = [];
-        foreach ($credits as $creditId => $creditAmount) {
-            $credit = $this->vendors_model->get_vendor_credit_by_id($creditId);
-
-            $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
-            $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
-            $description .= '</a>';
-            $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
-
-            if ($search !== "") {
-                if (stripos($credit->ref_no, $search) !== false) {
-                    $data[] = [
-                        'id' => $credit->id,
-                        'description' => $description,
-                        'due_date' => date("m/d/Y", strtotime($credit->due_date)),
-                        'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($credit->remaining_balance) + floatval($creditAmount), 2, '.', ','),
-                        'payment' => number_format(floatval($creditAmount), 2, '.', ','),
-                        'selected' => true
-                    ];
-                }
-            } else {
-                $data[] = [
-                    'id' => $credit->id,
-                    'description' => $description,
-                    'due_date' => date("m/d/Y", strtotime($credit->due_date)),
-                    'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
-                    'open_balance' => number_format(floatval($credit->remaining_balance) + floatval($creditAmount), 2, '.', ','),
-                    'payment' => number_format(floatval($creditAmount), 2, '.', ','),
-                    'selected' => true
-                ];
-            }
-        }
-
-        if (count($openCredits) > 0) {
-            foreach ($openCredits as $credit) {
-                $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
-                $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
-                $description .= '</a>';
-                $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
-
-                if (array_search($credit->id, array_column($data, 'id')) === false) {
-                    if ($search !== "") {
-                        if (stripos($credit->ref_no, $search) !== false) {
-                            $data[] = [
-                                'id' => $credit->id,
-                                'description' => $description,
-                                'due_date' => date("m/d/Y", strtotime($credit->due_date)),
-                                'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
-                                'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
-                                'payment' => '',
-                                'selected' => false
-                            ];
-                        }
-                    } else {
-                        $data[] = [
-                            'id' => $credit->id,
-                            'description' => $description,
-                            'due_date' => date("m/d/Y", strtotime($credit->due_date)),
-                            'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
-                            'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
-                            'payment' => '',
-                            'selected' => false
-                        ];
-                    }
-                }
-            }
-        }
-
-        $result = [
-            'draw' => $post['draw'],
-            'recordsTotal' => count($credits),
-            'recordsFiltered' => count($data),
-            'data' => array_slice($data, $start, $limit)
-        ];
-
-        echo json_encode($result);
     }
 
     public function copy_expense($expenseId)

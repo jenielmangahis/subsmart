@@ -146,3 +146,7 @@ define('MAIL_PASSWORD', 'hUp%c_^D2KZ@W^4@OL');
 define('MAIL_FROM', 'noreply@nsmartrac.com');
 
 define('REGISTRATION_MONTHS_DISCOUNTED', 3);
+
+
+//TRAC360
+define('GOOGLE_MAP_API_KEY', 'AIzaSyAXhOG7zvDz1l8tOrdMnmyrhCOL4Uc-Ink');

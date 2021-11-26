@@ -248,13 +248,15 @@ class Accounting_invoices_model extends MY_Model
     public function get_invoices_by_customer_id($customer_id="")
     {
         if ($customer_id!="") {
-            $query = $this->db->query("SELECT * FROM invoices where customer_id = ".$customer_id." AND view_flag != 1 AND voided != 1 AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid' OR status = 'Paid')");
+            $query = $this->db->query("SELECT * FROM invoices where customer_id = ".$customer_id." AND view_flag != 1 AND voided != 1 AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid' OR status = 'Paid' OR status = 'Overdue')");
+            // var_dump($this->db->last_query());
             return $query->result();
         }
     }
     public function get_payements_by_invoice($invoice_id)
     {
         $query = $this->db->query("SELECT accounting_receive_payment_invoices.*, accounting_receive_payment.* FROM accounting_receive_payment JOIN accounting_receive_payment_invoices ON accounting_receive_payment.id = accounting_receive_payment_invoices.receive_payment_id WHERE accounting_receive_payment.status=1 and accounting_receive_payment_invoices.invoice_id = ".$invoice_id);
+        // var_dump($this->db->last_query());
         return $query->result();
     }
     public function get_filtered_invoices_by_customer_id($filter_date_from, $filter_date_to, $filter_overdue, $customer_id)
@@ -371,7 +373,7 @@ class Accounting_invoices_model extends MY_Model
     public function get_ranged_invoices_by_company_id($company_id, $start_date, $end_date)
     {
         if ($company_id != "") {
-            $conditions ="AND (date_issued >= '".$start_date."' AND date_issued <=  '".$end_date."') AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid')";
+            $conditions ="AND (date_issued >= '".$start_date."' AND date_issued <=  '".$end_date."') AND (status = 'Approved' OR status = 'Due' OR status = 'Partially Paid'  OR status = 'Paid' )";
             $sql="SELECT * FROM invoices WHERE company_id = ".$company_id." ".$conditions;
             $query = $this->db->query($sql);
             return $query->result();

@@ -913,7 +913,7 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/view-expense/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/expense/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -936,7 +936,7 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/view-check/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/check/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -963,7 +963,7 @@ $(document).on('click', '#transactions-table .view-edit-bill', function() {
     }
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/view-bill/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/bill/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -984,7 +984,7 @@ $(document).on('click', '#transactions-table .view-edit-purch-order', function()
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/view-purchase-order/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/purchase-order/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1005,7 +1005,7 @@ $(document).on('click', '#transactions-table .view-edit-vendor-credit', function
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/view-vendor-credit/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/vendor-credit/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1026,7 +1026,7 @@ $(document).on('click', '#transactions-table .view-edit-cc-payment', function() 
     var row = $(this).parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
 
-    $.get('/accounting/vendors/view-cc-payment/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/credit-card-pmt/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1044,7 +1044,7 @@ $(document).on('click', '#transactions-table .view-edit-cc-payment', function() 
 });
 
 function viewCreditCardCredit(data) {
-    $.get('/accounting/vendors/view-cc-credit/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/cc-credit/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1062,7 +1062,7 @@ function viewCreditCardCredit(data) {
 }
 
 function viewBillPayment(data) {
-    $.get('/accounting/expenses/view-bill-payment/'+data.id, function(res) {
+    $.get('/accounting/view-transaction/bill-payment/'+data.id, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -1079,29 +1079,19 @@ function viewBillPayment(data) {
 
         initBillsTable(data);
 
+        if($('#billPaymentModal #vendor-credits-table').length > 0) {
+            initCreditsTable(data);
+        }
+
         $('#billPaymentModal .dropdown-menu').on('click', function(e) {
             e.stopPropagation();
         });
 
+        $('#billPaymentModal #payee').trigger('change');
+
         $('#billPaymentModal').modal('show');
     });
 }
-
-function applyBillsFilter() {
-    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
-}
-
-function resetBillsFilter() {
-    $('#billPaymentModal #bills-from').val('');
-    $('#billPaymentModal #bills-to').val('');
-    $('#billPaymentModal #overdue_bills_only').prop('checked', false);
-
-    applyBillsFilter();
-}
-
-$(document).on('keyup', '#billPaymentModal #search', function() {
-    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
-});
 
 $(document).on('click', '#transactions-table a.delete-transaction', function(e) {
     e.preventDefault();
