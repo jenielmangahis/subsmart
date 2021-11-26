@@ -6542,6 +6542,529 @@ class Accounting_modals extends MY_Controller
         echo json_encode($attachments);
     }
 
+    public function view_transaction($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'expense':
+                $this->view_expense($transactionId);
+            break;
+            case 'check':
+                $this->view_check($transactionId);
+            break;
+            case 'journal' :
+                $this->view_journal($transactionId);
+            break;
+            case 'bill':
+                $this->view_bill($transactionId);
+            break;
+            case 'cc-credit' :
+                $this->view_cc_credit($transactionId);
+            break;
+            case 'vendor-credit':
+                $this->view_vendor_credit($transactionId);
+            break;
+            case 'bill-payment':
+                $this->view_bill_payment($transactionId);
+            break;
+            case 'transfer' :
+                $this->view_transfer($transactionId);
+            break;
+            case 'deposit' :
+                $this->view_deposit($transactionId);
+            break;
+            case 'inventory-qty-adjust' :
+                $this->view_qty_adjustment($transactionId);
+            break;
+            case 'credit-card-pmt':
+                $this->view_cc_payment($transactionId);
+            break;
+            case 'inventory-starting-value' :
+                $this->view_starting_value_adjustment($transactionId);
+            break;
+            case 'purchase-order' :
+                $this->view_purchase_order($transactionId);
+            break;
+        }
+    }
+
+    private function view_expense($expenseId)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+
+        $selectedBalance = $paymentAcc->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
+        $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
+
+        $this->page_data['expense'] = $expense;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view("accounting/modals/expense_modal", $this->page_data);
+    }
+
+    private function view_check($checkId)
+    {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+
+        $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+
+        $selectedBalance = $bankAcc->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+
+        $this->page_data['check'] = $check;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view("accounting/modals/check_modal", $this->page_data);
+    }
+
+    private function view_bill($billId)
+    {
+        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $term = $this->accounting_terms_model->getById($bill->term_id);
+
+        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
+
+        $totalPayment = 0.00;
+        foreach ($billPayments as $billPayment) {
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
+
+            foreach ($paymentItems as $paymentItem) {
+                if ($paymentItem->bill_id === $billId) {
+                    $totalPayment += floatval($paymentItem->total_amount);
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        $this->page_data['bill_payments'] = $billPayments;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        $this->page_data['bill'] = $bill;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['term'] = $term;
+
+        $this->load->view("accounting/modals/bill_modal", $this->page_data);
+    }
+
+    private function view_vendor_credit($vendorCreditId)
+    {
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+
+        $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
+        $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
+
+        $this->page_data['vendorCredit'] = $vendorCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+
+        $this->load->view("accounting/modals/vendor_credit_modal", $this->page_data);
+    }
+
+    private function view_cc_payment($ccPaymentId)
+    {
+        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
+
+        $this->page_data['ccPayment'] = $ccPayment;
+
+        $this->load->view("accounting/modals/pay_down_credit_card_modal", $this->page_data);
+    }
+
+    private function view_cc_credit($ccCreditId)
+    {
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+
+        $creditCard = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+        $selectedBalance = $creditCard->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
+        $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
+
+        $this->page_data['ccCredit'] = $ccCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view("accounting/modals/credit_card_credit_modal", $this->page_data);
+    }
+
+    private function view_bill_payment($billPaymentId)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+
+        $selectedBalance = $paymentAcc->balance;
+        if (strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format(floatval($balance), 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format(floatval($selectedBalance), 2, '.', ',');
+        }
+
+        $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+        $this->page_data['balance'] = $selectedBalance;
+
+        $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
+    }
+
+    private function view_journal($journalId)
+    {
+        $journalEntry = $this->accounting_journal_entries_model->getById($journalId);
+        $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
+
+        foreach($entries as $key => $entry) {
+            $entries[$key]->account = $this->chart_of_accounts_model->getById($entry->account_id);
+
+            switch($entry->name_key) {
+                case 'customer' :
+                    $customer = $this->accounting_customers_model->get_by_id($entry->name_id);
+                    $entries[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                break;
+                case 'vendor' :
+                    $vendor = $this->vendors_model->get_vendor_by_id($entry->name_id);
+                    $entries[$key]->name = $vendor->display_name;
+                break;
+                case 'employee' :
+                    $employee = $this->users_model->getUser($entry->name_id);
+                    $entries[$key]->name = $employee->FName . ' ' . $employee->LName;
+                break;
+            }
+        }
+
+        $this->page_data['journal_no'] = $journalEntry->journal_no;
+        $this->page_data['journal_date'] = date("m/d/Y", strtotime($journalEntry->journal_date));
+        $this->page_data['entries'] = $entries;
+        $this->page_data['journal_entry'] = $journalEntry;
+
+        $this->load->view("accounting/modals/journal_entry_modal", $this->page_data);
+    }
+
+    private function view_transfer($transferId)
+    {
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $transfer->transfer_from = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+        $transfer->transfer_to = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+        $this->page_data['transfer'] = $transfer;
+        $this->load->view("accounting/modals/transfer_modal", $this->page_data);
+    }
+
+    private function view_deposit($depositId)
+    {
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $account = $this->chart_of_accounts_model->getById($deposit->account_id);
+        $balance = '$'.number_format(floatval($account->balance), 2, '.', ',');
+        $balance = str_replace('$-', '-$', $balance);
+        $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+        $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+        foreach($funds as $key => $fund) {
+            $funds[$key]->account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+            switch($fund->received_from_key) {
+                case 'customer' :
+                    $customer = $this->accounting_customers_model->get_by_id($fund->received_from_id);
+                    $funds[$key]->name = $customer->first_name . ' ' . $customer->last_name;
+                break;
+                case 'vendor' :
+                    $vendor = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                    $funds[$key]->name = $vendor->display_name;
+                break;
+                case 'employee' :
+                    $employee = $this->users_model->getUser($fund->received_from_id);
+                    $funds[$key]->name = $employee->FName . ' ' . $employee->LName;
+                break;
+            }
+
+            $funds[$key]->payment = $this->accounting_payment_methods_model->getById($fund->payment_method);
+        }
+
+        $this->page_data['deposit'] = $deposit;
+        $this->page_data['funds'] = $funds;
+        $this->page_data['account'] = $account;
+        $this->page_data['balance'] = $balance;
+        $this->page_data['cash_back_account'] = $cashBackAccount;
+
+        $this->load->view("accounting/modals/bank_deposit_modal", $this->page_data);
+    }
+
+    private function view_qty_adjustment($adjustmentId)
+    {
+        $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($adjustmentId);
+        $adjustment->account = $this->chart_of_accounts_model->getById($adjustment->inventory_adjustment_account_id);
+        $adjustedProds = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+
+        foreach($adjustedProds as $key => $adjustedProd) {
+            $adjustedProds[$key]->product = $this->items_model->getItemById($adjustedProd->product_id)[0];
+            $adjustedProds[$key]->locations = $this->items_model->getLocationByItemId($adjustedProd->product_id);
+        }
+
+        $this->page_data['adjustment_no'] = $adjustment->adjustment_no;
+        $this->page_data['adjustment'] = $adjustment;
+        $this->page_data['adjustedProds'] = $adjustedProds;
+
+        $this->load->view("accounting/modals/inventory_qty_modal", $this->page_data);
+    }
+
+    private function view_starting_value_adjustment($adjustmentId)
+    {
+        $adjustment = $this->starting_value_model->get_by_id($adjustmentId);
+        $adjustment->account = $this->chart_of_accounts_model->getById($adjustment->inv_adj_account);
+        $item = $this->items_model->getItemById($adjustment->item_id)[0];
+        $itemAccDetails = $this->items_model->getItemAccountingDetails($item->id);
+        $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+
+        $this->page_data['item'] = $item;
+        $this->page_data['accountingDetails'] = $itemAccDetails;
+        $this->page_data['invAssetAcc'] = $invAssetAcc;
+        $this->page_data['locations'] = $this->items_model->getLocationByItemId($item->id);
+        $this->page_data['adjustment'] = $adjustment;
+
+        $this->load->view('accounting/modals/adjust_starting_value', $this->page_data);
+    }
+
+    private function view_purchase_order($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
+
+        $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
+
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+
+        $this->load->view("accounting/modals/purchase_order_modal", $this->page_data);
+    }
+
+    public function load_bills_payed($billPaymentId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $fromDate = $post['from'];
+        $toDate = $post['to'];
+        $search = $post['search'];
+
+        $filters = [
+            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'overdue' => $post['overdue']
+        ];
+
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $bills = $this->vendors_model->get_bill_payment_bills_by_vendor_id($billPaymentId, $billPayment->payee_id, $filters);
+
+        $filters = [
+            'start-date' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'end-date' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'overdue' => $post['overdue']
+        ];
+        $openBills = $this->vendors_model->get_vendor_open_bills($billPayment->payee_id, $filters);
+
+        $data = [];
+        foreach ($bills as $bill) {
+            $paymentData = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
+            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description .= '</a>';
+            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+
+            if ($search !== "") {
+                if (stripos($bill->bill_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $bill->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
+                        'payment' => number_format(floatval($paymentData->total_amount), 2, '.', ','),
+                        'selected' => true
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $bill->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                    'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
+                    'payment' => number_format(floatval($paymentData->total_amount), 2, '.', ','),
+                    'selected' => true
+                ];
+            }
+        }
+
+        if (count($openBills) > 0) {
+            foreach ($openBills as $bill) {
+                $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+                $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+                $description .= '</a>';
+                $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+
+                if ($search !== "") {
+                    if (stripos($bill->bill_no, $search) !== false) {
+                        $data[] = [
+                            'id' => $bill->id,
+                            'description' => $description,
+                            'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                            'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                            'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                            'payment' => '',
+                            'selected' => false
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $bill->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                        'payment' => '',
+                        'selected' => false
+                    ];
+                }
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($bills),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function load_payment_used_credits($billPaymentId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $fromDate = $post['from'];
+        $toDate = $post['to'];
+        $search = $post['search'];
+
+        $filters = [
+            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+        ];
+
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $credits = json_decode($billPayment->vendor_credits_applied, true);
+        $openCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
+
+        $data = [];
+        foreach ($credits as $creditId => $creditAmount) {
+            $credit = $this->vendors_model->get_vendor_credit_by_id($creditId);
+
+            $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+            $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
+            $description .= '</a>';
+            $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
+
+            if ($search !== "") {
+                if (stripos($credit->ref_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $credit->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                        'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($credit->remaining_balance) + floatval($creditAmount), 2, '.', ','),
+                        'payment' => number_format(floatval($creditAmount), 2, '.', ','),
+                        'selected' => true
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $credit->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                    'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($credit->remaining_balance) + floatval($creditAmount), 2, '.', ','),
+                    'payment' => number_format(floatval($creditAmount), 2, '.', ','),
+                    'selected' => true
+                ];
+            }
+        }
+
+        if (count($openCredits) > 0) {
+            foreach ($openCredits as $credit) {
+                $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+                $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
+                $description .= '</a>';
+                $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
+
+                if (array_search($credit->id, array_column($data, 'id')) === false) {
+                    if ($search !== "") {
+                        if (stripos($credit->ref_no, $search) !== false) {
+                            $data[] = [
+                                'id' => $credit->id,
+                                'description' => $description,
+                                'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                                'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                                'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                                'payment' => '',
+                                'selected' => false
+                            ];
+                        }
+                    } else {
+                        $data[] = [
+                            'id' => $credit->id,
+                            'description' => $description,
+                            'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                            'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                            'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                            'payment' => '',
+                            'selected' => false
+                        ];
+                    }
+                }
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($credits),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
     public function update_transaction($transactionType, $transactionId)
     {
         $data = $this->input->post();

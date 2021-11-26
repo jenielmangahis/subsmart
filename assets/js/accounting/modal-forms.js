@@ -6549,7 +6549,7 @@ const initBillsTable = (data) => {
         pageLength: parseInt($('#billPaymentModal #table_rows').val()),
         ordering: false,
         ajax: {
-            url: `/accounting/expenses/load-bill-payment-bills/${data.id}`,
+            url: `/accounting/load-bill-payment-bills/${data.id}`,
             dataType: 'json',
             contentType: 'application/json',
             type: 'POST',
@@ -6565,11 +6565,15 @@ const initBillsTable = (data) => {
         },
         columns: [
             {
-                data: null,
-                name: 'checkbox',
+                data: 'id',
+                name: 'id',
+                orderable: false,
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="checkbox" value="${rowData.id}" ${rowData.selected ? 'checked' : ''}>`);
-                    $(td).css('padding', '10px 18px');
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                    </div>
+                    `);
                 }
             },
             {
@@ -6592,7 +6596,7 @@ const initBillsTable = (data) => {
                 data: 'payment',
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)">`);
+                    $(td).html(`<input type="number" value="${cellData}" name="bill_payment[]" class="form-control text-right" onchange="convertToDecimal(this)">`);
                 }
             }
         ]

@@ -769,5 +769,5 @@ include viewPath('includes/header'); ?>
     }
 </script>
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly"
+    src="<?="https://maps.googleapis.com/maps/api/js?key=".GOOGLE_MAP_API_KEY."&callback=initMap&libraries=&v=weekly"?>"
     async></script>

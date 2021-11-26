@@ -1237,7 +1237,7 @@ $(document).on('click', '#registers-table tbody tr.action-row #edit-transaction'
     }
     transactionType = transactionType.replaceAll(' ', '-').toLowerCase();
 
-    $.get(`/accounting/chart-of-accounts/view-transaction/${transactionType}/${data.id}`, function(res) {
+    $.get(`/accounting/view-transaction/${transactionType}/${data.id}`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
