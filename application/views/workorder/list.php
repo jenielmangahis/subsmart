@@ -334,10 +334,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title">Clone Work Order</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Clone Work Order</h4>
+                    </button>                    
                 </div>
                 <div class="modal-body">
                     <form name="clone-modal-form">

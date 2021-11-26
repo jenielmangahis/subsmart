@@ -815,7 +815,7 @@ border: none;
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0" disabled="">
+                                                       data-counter="0" id="tax1_0" min="0" value="0" readonly="">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
@@ -1547,14 +1547,14 @@ border: none;
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
-                                    <input type="file" class="form-control" name="attachment" id="attachment">
+                                    <input type="file" class="form-control" name="attachment_photo" id="attachment">
                                 </div>                                                                
                             </div>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="attachment">Document Links</label>
+                                    <label for="attachment">Attach Document</label>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
-                                    <input type="file" class="form-control" name="attachment" id="attachment">
+                                    <input type="file" class="form-control" name="attachment_document" id="attachment">
                                 </div>                                                                
                             </div>
 
@@ -3904,7 +3904,7 @@ $(document).ready(function(){
         
             },
                 error: function(response){
-                alert('Error'+response);
+                //alert('Error'+response);
        
                 }
         });

@@ -840,7 +840,17 @@ border: none;
                             <h5>Checklist</h5>
                             <small class="help help-sm">You can set up a checklist for employees.</small><br>
                             <br><br>
-                            <div id="checklist_added"></div>
+                            <div id="checklist_added">
+                                <ul class="selected-checklists">
+                                    <?php $c_row = 1; foreach($selected_checklists as $key => $checklist){ ?>
+                                        <li id="s-checklist-<?php echo $c_row; ?>" c_id="<?php echo $checklist['id']; ?>">
+                                            <?php echo $checklist['name']; ?>
+                                            <input type="hidden" name="checklists[]" value="<?php echo $checklist['id']; ?>" />
+                                            <a class="remove-checklist" data-row="<?php echo $c_row; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
+                                        </li>
+                                    <?php $c_row++;} ?>
+                                </ul>
+                            </div>
                             <!-- <div id="citems"> -->
                             <!-- </div> -->
                             <br><br>
@@ -1316,7 +1326,7 @@ border: none;
                                     <label for="attachment">Attach Photo</label>
                                     <?php if( $workorder->attached_photo != '' ){ ?>
                                          <br />
-                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->user_id . '/' . $workorders->attached_photo); ?>"><?= $workorder->attached_photo; ?></a>
+                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->employee_id . '/' . $workorder->attached_photo); ?>"><?= $workorder->attached_photo; ?></a>
                                     <?php } ?>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
                                     <input type="file" class="form-control" name="attachment_photo" id="attachment">
@@ -1324,10 +1334,10 @@ border: none;
                             </div>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="attachment">Document Links</label>
+                                    <label for="attachment">Attach Document</label>
                                     <?php if( $workorder->document_links != '' ){ ?>
                                          <br />
-                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->user_id . '/' . $workorders->document_links); ?>"><?= $workorder->document_links; ?></a>
+                                         <a class="btn btn-sm btn-primary" target="_new" style="margin-top:20px; margin-bottom: 20px;" href="<?= base_url('uploads/workorders/' . $workorder->employee_id . '/' . $workorder->document_links); ?>"><?= $workorder->document_links; ?></a>
                                     <?php } ?>
                                     <!-- <p style="font-weight: 10;">Optionally attach files to this work order. Allowed type: pdf, doc, docx, png, jpg, gif.</p> -->
                                     <input type="file" class="form-control" name="attachment_document" id="attachment">
@@ -1338,12 +1348,12 @@ border: none;
                 <div>
 
                      <div class="form-group">
-                                <button type="submit" class="btn btn-flat btn-danger" value="submit">Update</button>
+                                <button type="submit" class="btn btn-flat btn-primary" value="submit">Update</button>
                                 <!-- <button type="submit" class="btn btn-flat btn-success">Preview</button> -->
-                                <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview as PDF</button>
+                                <button type="submit" name="action" class="btn btn-flat btn-primary pdf_sheet" target="_blank" value="preview">Preview as PDF</button>
                                 <!-- <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button> -->
-                                <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
-                                <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
+                                <!-- <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button> -->
+                                <a class="btn btn-flat btn-primary" href="<?php echo url('workorder') ?>" class="btn ">Cancel</a>
                     </div>
                 </div>
             <!-- end card -->
@@ -2476,6 +2486,11 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function(){
+        $(document).on('click', '.remove-checklist', function(){
+            var checklist_row_id = $(this).attr('data-row');
+            $("#s-checklist-"+checklist_row_id).remove();
+        });
+
         $('#modal_items_list').DataTable({
             "autoWidth" : false,
             "columnDefs": [
@@ -2501,8 +2516,8 @@ $(document).ready(function(){
                 data : { id : id },
                 success: function(response){
 
-                  console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
-                  console.log(response); 
+                  //console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
+                  //console.log(response); 
 
                   $("#checklist_modal").modal('hide')
                 //   $("#checklist_added").html(response['checklists'].checklist_name);
@@ -2513,11 +2528,17 @@ $(document).ready(function(){
                 //     inputs += response['checklists'].checklist_name;
                 // });
 
-                
-                var check = '<ul> <li id="view_details" c_id="'+ response['checklists'][0].id +'"><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
+                //New Code
+                var current_row  = $('.selected-checklists li').length + 1;
+                var input_hidden = '<input type="hidden" name="checklists[]" value="'+response['checklists'][0].id+'" />';
+                var check = '<li id="s-checklist-'+current_row+'" id="view_details" c_id="'+ response['checklists'][0].id +'">'+response['checklists'][0].checklist_name+' <a class="remove-checklist" data-row="'+current_row+'" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>'+input_hidden+'</li>';
+                $(".selected-checklists").append(check);
 
-                $("#checklist_added").append(check);
-                
+                //Old code
+                /*var check = '<ul> <li id="view_details" c_id="'+ response['checklists'][0].id +'"><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
+                $("#checklist_added").append(check);   */
+
+
                 var cID = response['checklists'][0].id;
                 // alert(cID);
 
@@ -2571,7 +2592,7 @@ $(document).ready(function(){
 
                 },
                     error: function(response){
-                    alert('Error'+response);
+                    //alert('Error'+response);
        
                 }
 

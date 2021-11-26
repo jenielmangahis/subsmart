@@ -34,7 +34,7 @@ class Workorder extends MY_Controller
         add_css(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'assets/frontend/css/workorder/main.css',
-            "assets/css/accounting/sidebar.css",
+            //"assets/css/accounting/sidebar.css",
             'assets/css/accounting/sales.css'
         ));
 
@@ -53,12 +53,12 @@ class Workorder extends MY_Controller
         $this->hasAccessModule(24); 
 
         $role = logged('role');
+        $company_id = logged('company_id');
+
         $this->page_data['workorderStatusFilters'] = array ();
         $this->page_data['workorders'] = array ();
         $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
         if ($role == 2 || $role == 3) {
-            $company_id = logged('company_id');
-
             if (!empty($tab_index)) {
                 $this->page_data['tab_index'] = $tab_index;
                 // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
@@ -108,8 +108,15 @@ class Workorder extends MY_Controller
             // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
-        $this->page_data['workorders'] = $this->workorder_model->getworkorderList();
+        if (!empty(get('search'))) {
+            $filter['search'] = get('search');
+            $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
+        }else{
+            $workorder = $this->workorder_model->getworkorderList();    
+        }
 
+        
+        $this->page_data['workorders'] = $workorder;
         $company_id = logged('company_id');
         $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
 
@@ -577,6 +584,7 @@ class Workorder extends MY_Controller
         $company_id = logged('company_id');
         $user_id = logged('id');
         $parent_id = $this->db->query("select id from users where id=$user_id")->row();
+        $workOrder = $this->workorder_model->getById($id);
 
         if ($parent_id->parent_id == 1) {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
@@ -587,7 +595,12 @@ class Workorder extends MY_Controller
         $checkListsHeader = $this->workorder_model->getchecklistHeaderByUser($user_id);
 
         $checkLists = array();
+        $workorrder_checklists = unserialize($workOrder->checklists);
+        $selected_checklists    = array();
         foreach( $checkListsHeader as $h ){
+            if( in_array($h->id, $workorrder_checklists) ){
+                $selected_checklists[$h->id] = ['id' => $h->id, 'name' => $h->checklist_name];
+            }   
             $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
             $checklists[] = ['header' => $h, 'items' => $checklistItems];
         }
@@ -595,7 +608,8 @@ class Workorder extends MY_Controller
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['checklists'] = $checklists;
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
-        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $this->page_data['workorder'] = $workOrder;
+        $this->page_data['selected_checklists'] = $selected_checklists;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
@@ -3259,6 +3273,32 @@ class Workorder extends MY_Controller
             $file3_save          = NULL;
         }
 
+        $attachment_photo = '';
+        if(isset($_FILES['attachment_photo']) && $_FILES['attachment_photo']['tmp_name'] != '') {
+            $target_dir = "./uploads/workorders/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['attachment_photo']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['attachment_photo']['name'])));
+            $attachment_photo = "photo_" . basename($_FILES["attachment_photo"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/workorders/$user_id/$attachment_photo");
+        }
+
+        $attachment_document = '';
+        if(isset($_FILES['attachment_document']) && $_FILES['attachment_document']['tmp_name'] != '') {
+            $target_dir = "./uploads/workorders/$user_id/";            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $tmp_name = $_FILES['attachment_document']['tmp_name'];
+            $extension = strtolower(end(explode('.',$_FILES['attachment_document']['name'])));
+            $attachment_document = "document_" . basename($_FILES["attachment_document"]["name"]);
+            move_uploaded_file($tmp_name, "./uploads/workorders/$user_id/$attachment_document");
+        }
+
 
         $action = $this->input->post('action');
         if($action == 'submit') {
@@ -3327,8 +3367,8 @@ class Workorder extends MY_Controller
             //attachment
             // 'attached_photo' => $this->input->post('attached_photo'),
             // 'document_links' => $this->input->post('document_links'),
-            'attached_photo'                        => 'attached_photo',
-            'document_links'                        => 'document_links',
+            'attached_photo'                        => $attachment_photo,
+            'document_links'                        => $attachment_document,
 
             'subtotal'                              => $this->input->post('subtotal'),
             'taxes'                                 => $this->input->post('taxes'), 
@@ -4389,6 +4429,11 @@ class Workorder extends MY_Controller
         }
 
         $dateIssued = date('Y-m-d', strtotime($this->input->post('schedule_date_given')));
+        $post_checklists = $this->input->post('checklists');
+        $selected_checklists = "";
+        if( $post_checklists ){
+            $selected_checklists = serialize($post_checklists);                
+        }
 
         $update_data = array(
             'id'                    => $this->input->post('wo_id'),
@@ -4399,6 +4444,7 @@ class Workorder extends MY_Controller
             'phone_number'          => $this->input->post('phone_number'),
             'mobile_number'         => $this->input->post('mobile_number'),
             'email'                 => $this->input->post('email'),
+            'checklists'            => $selected_checklists,
             'job_location'          => $this->input->post('job_location'),
             'city'                  => $this->input->post('city'),
             'state'                 => $this->input->post('state'),
