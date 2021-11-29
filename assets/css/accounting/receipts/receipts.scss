@@ -100,6 +100,12 @@ $colorError: #d52b1e;
         display: block;
       }
     }
+
+    &--match {
+      border-radius: 36px;
+      min-width: 100px;
+      justify-content: center;
+    }
   }
 
   [data-active-step="1"] {
@@ -152,7 +158,8 @@ $colorError: #d52b1e;
 
       .form-check,
       [data-action="createexpense"],
-      [data-action="savereceipt"][data-action-after="next"] {
+      [data-action="savereceipt"][data-action-after="next"],
+      .receiptsButton__dropdown {
         display: none;
       }
     }

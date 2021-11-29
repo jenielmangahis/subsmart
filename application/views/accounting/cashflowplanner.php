@@ -1249,8 +1249,8 @@ function addData(data) {
 	chart.render();
 }
  
-// $.getJSON("<?php echo base_url(); ?>accounting/cashflowDataJson", addData);
-$.getJSON("https://canvasjs.com/data/gallery/php/bitcoin-price.json", addData);
+$.getJSON("<?php echo base_url(); ?>accounting/cashflowDataJson", addData);
+// $.getJSON("https://canvasjs.com/data/gallery/php/bitcoin-price.json", addData);
  
 }
 </script>

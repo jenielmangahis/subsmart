@@ -176,12 +176,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="<?= base_url('accounting/import_transactions') ?>" class="editJobTypeBtn editItemBtn">
+                                    <a href="<?= base_url('accounting/manage_connection') ?>" class="editJobTypeBtn editItemBtn">
                                         <span class="fa fa-upload"></span> Manage Connections
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="" class="editItemBtn">
+                                    <a href="<?= base_url('accounting/bank_register') ?>" class="editItemBtn">
                                         <span class="fa fa-bank"></span> Go to Bank Register
                                     </a>
                                 </li>
@@ -281,13 +281,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane active" id="forReview" style="background: #ffffff; padding: 10px">
-                                <table id="forReview_table" class="table">
+                                <table id="forReview_table" class="table responsive">
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" class=""></th>
                                             <th>Date</th>
-                                            <th>Description</th>
-                                            <th>Payee</th>
+                                            <th >Description</th>
+                                            <th >Payee</th>
                                             <th>Amount</th>
                                             <th>Assign To</th>
                                             <th>Action</th>
@@ -302,132 +302,65 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td ><?= $payment->payee ?></td>
                                                 <td >$<?= $payment->amount ?></td>
                                                 <td ><?= $payment->assign_to ?></td>
-                                                <td ></td>
+                                                <td ><button type="button" class="btn btn-default btn-sm" id="exportCustomers"><span class="fa fa-plus"></span> Add</button></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="reviewed" style="background: #ffffff; padding: 10px">
-                                <div class="filterFunnel">
-                                    <a href="#" data-toggle="dropdown"><i class="fa fa-filter fa-2x">&nbsp;<i class="fa fa-caret-down"></i></i></a>
-                                    <ul class="dropdown-menu">
-                                        <li style="padding:30px">
-                                            <form action="" method="" class="">
-                                                <div style="width: 180px;">
-                                                    <label for="">Rules</label>
-                                                    <select name="type" id="type" class="form-control" >
-                                                        <option value="">All dates</option>
-                                                        <option value="">Customs</option>
-                                                        <option value="">Today</option>
-                                                        <option value="">Yesterday</option>
-                                                        <option value="">This week</option>
-                                                        <option value="">This month</option>
-                                                        <option value="">This quarter</option>
-                                                        <option value="">This year</option>
-                                                        <option value="">Last month</option>
-                                                        <option value="">Last quarter</option>
-                                                        <option value="">Last year</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <div style="width: 180px;position:relative; display: inline-block;">
-                                                        <label for="type">Dates</label>
-                                                        <select name="type" id="type" class="form-control" >
-                                                            <option value="">All dates</option>
-                                                            <option value="">Customs</option>
-                                                            <option value="">Today</option>
-                                                            <option value="">Yesterday</option>
-                                                            <option value="">This week</option>
-                                                            <option value="">This month</option>
-                                                            <option value="">This quarter</option>
-                                                            <option value="">This year</option>
-                                                            <option value="">Last month</option>
-                                                            <option value="">Last quarter</option>
-                                                            <option value="">Last year</option>
-                                                        </select>
-                                                    </div>
-                                                    <div style="position: relative; display: inline-block;width: 120px;">
-                                                        <label for="">From</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div style="position:relative; display: inline-block;margin-left: 10px;width: 120px;">
-                                                        <label for="">To</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top: 20px">
-                                                    <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
-                                                    <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
-                                                </div>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <span style="display: inline-block;margin-left: 10px;">All</span>
-                                <div class="icon-settings-container">
-                                    <i class="fa fa-print"></i>
-                                    <i class="fa fa-upload"></i>
-                                    <i class="fa fa-cog"></i>
-                                </div>
-                                <table id="reviewedTable" class="table table-striped table-bordered" style="width:100%">
+                                <table id="reviewed_table" class="table table-striped table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class=""></th>
                                         <th>Date</th>
                                         <th>Description</th>
-                                        <th>Added or Matched</th>
-                                        <th>Rule</th>
+                                        <th>Payee</th>
+                                        <th>Amount</th>
+                                        <th>Assign To</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td>07/02/2020</td>
-                                        <td>CHECK #2702 2702</td>
-                                        <td>$-300.00</td>
-                                        <td>Matched to: </td>
-                                        <td><a href="">View</a></td>
-                                    </tr>
+                                    <?php //foreach ($banking_payments as $payment) : ?>
+                                        <tr>
+                                            <td></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                        </tr>
+                                    <?php //endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="excluded" style="background: #ffffff; padding: 10px">
-                                <div style="display: inline-block;margin-top: 50px">
-                                    <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
-                                </div>
-                                <div class="dropdown" style="position: relative;display: inline-block;margin: 15px 10px 10px 10px;">
-                                    <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
-                                        Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a href="#" class="dropdown-item disabled">Undo</a></li>
-                                        <li><a href="#" class="dropdown-item disabled" >Delete</a></li>
-                                    </ul>
-                                </div>
-                                <div class="icon-settings-container">
-                                    <i class="fa fa-print"></i>
-                                    <i class="fa fa-cog"></i>
-                                </div>
-                                <table id="reviewedTable" class="table table-striped table-bordered" style="width:100%">
+                                <table id="exluded_table" class="table table-striped table-bordered" style="width:100%">
                                     <thead>
                                     <tr>
                                         <th><input type="checkbox" class=""></th>
                                         <th>Date</th>
                                         <th>Description</th>
+                                        <th>Payee</th>
                                         <th>Amount</th>
+                                        <th>Assign To</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td><input type="checkbox"></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                    <?php //foreach ($banking_payments as $payment) : ?>
+                                        <tr>
+                                            <td></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                            <td ></td>
+                                        </tr>
+                                    <?php //endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -695,6 +628,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     // DataTable JS
     $(document).ready(function() {
         $('#forReview_table').DataTable({
+            "paging": true,
+            "filter":true,
+            "searching": true,
+            "lengthChange": true,
+            "pageLength": 10,
+            "order": [],
+        });
+
+        $('#reviewed_table').DataTable({
+            "paging": true,
+            "filter":true,
+            "searching": true,
+            "lengthChange": true,
+            "pageLength": 10,
+            "order": [],
+        });
+
+        $('#exluded_table').DataTable({
             "paging": true,
             "filter":true,
             "searching": true,

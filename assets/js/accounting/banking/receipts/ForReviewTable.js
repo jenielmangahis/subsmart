@@ -11,6 +11,7 @@ export class ForReviewTable {
 
   async loadDeps() {
     this.api = await import("./api.js");
+    this.utils = await import("./utils.js");
   }
 
   get columns() {
@@ -116,6 +117,8 @@ export class ForReviewTable {
       },
       findMatch: () => {},
       view: (row, rows) => {
+        this.utils.resetStep3();
+
         const $modal = $("#receiptModal");
         const $form = $modal.find("form");
         const $dataTypesStep1 = $modal.find("[data-step=1] [data-type]");
@@ -289,7 +292,71 @@ export class ForReviewTable {
           }
         });
 
+        // step 3: matching
+        const $matchReceipt = $modal.find("[data-action=matchreceipt]");
+        $matchReceipt.off(); // remove previous event handlers
+        $matchReceipt.on("click", async (event) => {
+          event.preventDefault();
+
+          const $step3 = $modal.find("[data-step=3]");
+          const $table = $step3.find("#searchedReceipts");
+          const $error = $step3.find(".formError");
+          const $selected = $table.find(".receiptsTable__row--selected");
+
+          $error.removeClass("formError--show");
+          if (!$selected.length || $selected.length > 1) {
+            $error.addClass("formError--show");
+            return;
+          }
+
+          const selectedRowIds = [];
+          $selected.each((_, $item) => {
+            selectedRowIds.push(Number.parseInt($item.dataset.id));
+          });
+
+          const tableData = $table.DataTable().table().rows().data().toArray();
+          const selectedData = tableData.find(
+            ({ id }) => id == selectedRowIds[0]
+          );
+
+          if (Number(selectedData.total_amount) !== Number(row.total_amount)) {
+            const { isConfirmed } = await Swal.fire({
+              title: "Are you sure you want to match?",
+              text: "The total amount of the selected transaction is not equal to the amount on the document.",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#2ca01c",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Confirm",
+            });
+
+            if (!isConfirmed) {
+              return;
+            }
+          }
+
+          $matchReceipt.addClass("receiptsButton--isLoading");
+          $matchReceipt.prop("disabled", true);
+
+          const receiptId = $modal.find("[data-type=id]").val();
+          const matches = selectedRowIds.map((id) => ({ match_id: id }));
+          await this.api.saveMatch(receiptId, { matches });
+
+          if (!nextRow) {
+            window.location.reload();
+          } else {
+            this.actions.view(nextRow, rows);
+          }
+
+          $matchReceipt.removeClass("receiptsButton--isLoading");
+          $matchReceipt.prop("disabled", false);
+        });
+
         $modal.modal("show");
+      },
+      createExpense: async (row) => {
+        await this.api.editReceipt(row.id, { to_expense: 1 });
+        window.location.reload();
       },
     };
   }

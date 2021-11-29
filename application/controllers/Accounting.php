@@ -285,6 +285,20 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/payroll/connect-policy', $this->page_data);
     }
 
+    public function manage_connection()
+    {
+        $comp_id = logged('company_id');
+        $this->page_data['accounts'] = '';
+        $this->load->view('accounting/banking/manage-connection', $this->page_data);
+    }
+
+    public function bank_register()
+    {
+        $comp_id = logged('company_id');
+        $this->page_data['accounts'] = '';
+        $this->load->view('accounting/banking/bank-register', $this->page_data);
+    }
+
     public function onSaveBakingPayment()
     {
         $banking_payments_data = array(
@@ -12551,7 +12565,7 @@ class Accounting extends MY_Controller
     public function cashflowDataJson()
     {
         $invoices        = $this->invoice_model->getAllData2(logged('company_id'));
-        $response['price'] = $invoices;
+        // $response['price'] = $invoices;
         // echo json_encode($response,TRUE);
 
         $test = '{
@@ -12679,7 +12693,25 @@ class Accounting extends MY_Controller
             ]
           }';
 
-        echo $test;
+        // echo $test;
+
+        $temp = [];
+        foreach($invoices as $key1 => $value1) {
+            foreach($value1 as $key2 => $value2) {    
+                switch($key2) {
+                    case 'date_issued':
+                        $temp[$key1][] = strtotime($value2);
+                    break;
+                    case 'grand_total':
+                        $temp[$key1][] = floatval($value2);
+                    break;
+                    default:
+                    break;
+                }
+            }
+        }
+        $response['price'] = $temp;
+        echo json_encode($response,TRUE);
     }
 
     public function employee_payscale($id)

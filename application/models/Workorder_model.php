@@ -319,6 +319,7 @@ class Workorder_model extends MY_Model
             'primary_account_holder_name'           => $primary_account_holder_name,
             'secondary_account_holder_signature'    => $secondary_account_holder_signature,
             'secondary_account_holder_name'         => $secondary_account_holder_name,
+            'checklists' => $checklists,
         ));
         return true;
     }
@@ -1160,6 +1161,32 @@ class Workorder_model extends MY_Model
         // $this->db->where('work_orders.company_id', $company_id);
         // $query = $this->db->get();
         // return $query;
+    }
+
+    public function getFilterworkorderList( $company_id, $filters=array() )
+    {
+
+        $where = array(
+            'work_orders.company_id' => $company_id,
+            'view_flag'   => '0'
+        );
+
+        $this->db->select('*, work_orders.status AS w_status');
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        $this->db->where($where);
+
+        if ( !empty($filters) ) {
+            if ( $filters['search'] != '' ) {
+                $this->db->like('work_order_number', $filters['search'], 'both');
+                $this->db->or_like('acs_profile.first_name', $filters['search'], 'both');
+                $this->db->or_like('acs_profile.last_name', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function getAlarms($id)

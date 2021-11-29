@@ -341,6 +341,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     </tbody>
                                 </table>
+                                <?php elseif ($type === "estimate-status-by-month") : ?>
+                                <table id="tableToListReportEstimate" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr style="background-color:#EEEEEE;">
+                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Estimate #</th>
+                                            <th class="text-center">Type</th>
+                                            <th class="text-center">Due</th>
+                                            <th class="text-center">Fees</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportEstimateBody">
+                                        <?php foreach($estimates as $est){ ?>
+                                        <tr>
+                                            <td class="text-center"><?php echo date('m-d-Y', strtotime($est->estimate_date)); ?></td>
+                                            <td class="text-center"><?php echo $est->estimate_number; ?></td>
+                                            <td class="text-center"><?php echo $est->estimate_type; ?></td>
+                                            <td class="text-center"><?php echo  date('m-d-Y', strtotime($est->expiry_date)); ?></td>
+                                            <td class="text-center">$<?php echo number_format($est->grand_total,2); ?></td>
+                                        </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
                                 <?php elseif ($type === "account-receivable-com-vs-res") : ?>
                                 <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>

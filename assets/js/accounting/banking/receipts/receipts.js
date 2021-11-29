@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", async () => {
   const { ForReviewTable } = await import("./ForReviewTable.js");
   const { ReviewedTable } = await import("./ReviewedTable.js");
+  const { SearchedReceiptsTable } = await import("./SearchedReceiptsTable.js");
   const api = await import("./api.js");
   const rulesUtils = await import("../rules/utils.js");
 
@@ -78,6 +79,52 @@ window.addEventListener("DOMContentLoaded", async () => {
   $searchManually.on("click", (event) => {
     const $form = $(event.target).closest("form");
     $form.attr("data-active-step", "3");
+  });
+
+  const $toFindMatch = $("#toFindMatch");
+  $toFindMatch.on("click", (event) => {
+    event.preventDefault();
+    const $form = $(event.target).closest("form");
+    $form.attr("data-active-step", 2);
+  });
+
+  const $searchExpenses = $("#searchExpenses");
+  const $searchsearchExpensesForm = $receiptModal.find("[data-step=3]");
+  const $searchedReceiptsTable =
+    $searchsearchExpensesForm.find("#searchedReceipts");
+  $searchExpenses.on("click", async (event) => {
+    event.preventDefault();
+    const $dataTypes = $searchsearchExpensesForm.find("[data-type]");
+    const payload = {};
+
+    for (let index = 0; index < $dataTypes.length; index++) {
+      const $element = $dataTypes[index];
+      const { value } = $element;
+      const { type } = $element.dataset;
+
+      if (value.trim().length === 0) {
+        continue;
+      }
+
+      payload[type] = value;
+
+      if (type.endsWith("date")) {
+        payload[type] = moment(value).format("YYYY-MM-DD");
+      }
+    }
+
+    if (Object.keys(payload).length === 0) {
+      return;
+    }
+
+    $searchExpenses.addClass("receiptsButton--isLoading");
+    $searchExpenses.prop("disabled", true);
+
+    const { data } = await api.searchExpenses(payload);
+
+    $searchExpenses.removeClass("receiptsButton--isLoading");
+    $searchExpenses.prop("disabled", false);
+    new SearchedReceiptsTable($searchedReceiptsTable, data);
   });
 });
 

@@ -1670,10 +1670,26 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>John Meyer</td>
-                                                        <td>Anne Mae</td>
-                                                        <td>09-09-09</td>
+                                                        <td>Company Overview</td>
+                                                        <td>Loucelle Emperio</td>
                                                         <td></td>
+                                                        <td>
+                                                        <select class="form-control " name="filter_date">
+                                                            <option>All dates</option>
+                                                            <option>Today</option>
+                                                            <option>Yesterday</option>
+                                                            <option>This week</option>
+                                                            <option>This month</option>
+                                                            <option>This quarter</option>
+                                                            <option>This year</option>
+                                                            <option>Last week</option>
+                                                            <option>Last month</option>
+                                                            <option>Last quarter</option>
+                                                            <option>Last year</option>
+                                                            <option selected>Last 365 days</option>
+                                                            <option>Custom</option>
+                                                        </select>
+                                                        </td>
                                                         <td><a href="">View</a></td>
                                                     </tr>
                                                 </tbody>
@@ -1995,9 +2011,10 @@
                                                                     <div class="header-top">
                                                                         <h3>Business Profile</h3>
                                                                         <div class="avatar">
-                                                                            <img class="user-avatar" src="#">
+                                                                            <!-- <img class="user-avatar" src="#"> -->
+                                                                            <img src="<?= getCompanyBusinessProfileImage(); ?>" class=""  style="max-width: 200px; max-height: 200px;display: inline-block;" />
                                                                             <div class="avatar-cnt">
-                                                                                ADi<br><a class="a-ter" href="#">view public profile</a>
+                                                                            <?php echo $clients->business_name; ?> <br><a class="a-ter" href="#">view public profile</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>

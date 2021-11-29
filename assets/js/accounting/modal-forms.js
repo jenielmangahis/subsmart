@@ -31,6 +31,7 @@ var itemTypeSelection = '';
 var submitType = 'save-and-close';
 
 var dropdownEl = null;
+var modalAttachments = null;
 
 const dropdownFields = [
     'customer',
@@ -497,7 +498,7 @@ $(function() {
 
             if ($(`${modal_element} .attachments`).length > 0) {
                 var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
-                var attachments = new Dropzone(`#${attachmentContId}`, {
+                modalAttachments = new Dropzone(`#${attachmentContId}`, {
                     url: '/accounting/attachments/attach',
                     maxFilesize: 20,
                     uploadMultiple: true,
@@ -555,6 +556,16 @@ $(function() {
             $('div#modal-container').next('.modal-backdrop').remove();
             $('div#modal-container').next().next('.modal-backdrop').remove();
         }
+    });
+
+    $(document).on('change', 'div#billPaymentModal select[name="payment_account"]', function() {
+        var value = $(this).val();
+
+        $.get('/accounting/get-account-balance/' + value, function(res) {
+            var result = JSON.parse(res);
+
+            $('div#billPaymentModal span#account-balance').html(result.balance);
+        });
     });
 
     $(document).on('change', 'div#depositModal select#bank_deposit_account', function() {
@@ -2461,6 +2472,7 @@ $(function() {
                 break;
             case 'bill':
                 if ($('#modal-container .modal').attr('id') !== 'billPaymentModal') {
+                    var modalId = $('#modal-container .modal').attr('id');
                     $('#modal-container .modal').modal('hide');
 
                     $.get('/accounting/bill-payment-form/' + data.id, function(res) {
@@ -2472,6 +2484,15 @@ $(function() {
                                     ${res}
                                 </div>
                             `);
+                        }
+
+                        if(modalId === 'expenseModal') {
+                            $('#billPaymentModal #payment_account').prev().attr('for', 'expense_payment_account');
+                            $('#billPaymentModal #payment_account').attr('id', 'expense_payment_account');
+                        } else if(modalId === 'checkModal') {
+                            $('#billPaymentModal #payment_account').prev().html('Bank account');
+                            $('#billPaymentModal #payment_account').prev().attr('for', 'bank_account');
+                            $('#billPaymentModal #payment_account').attr('id', 'bank_account');
                         }
 
                         initModalFields('billPaymentModal');
@@ -4484,6 +4505,116 @@ $(function() {
     $(document).on('change', '#billPaymentModal #vcredits_table_rows', function() {
         $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
+
+    $(document).on('click', '#modal-container form .modal #show-existing-attachments', function() {
+        $('#modal-container form .modal .modal-body').children('.row').append(`
+            <div class="col-xl-2">
+                <div class="bg-white h-100" style="padding: 15px">
+                    <div class="row attachments-container">
+                        <div class="col-12 pb-3">
+                            <h4>Add to Expense</h4>
+                            <div class="d-flex justify-content-center">
+                                <select class="form-control" id="attachment-types">
+                                    <option value="unlinked">Unlinked</option>
+                                    <option value="all">All</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        $('#modal-container form .modal #attachment-types').select2({
+            minimumResultsForSearch: -1
+        });
+
+        var attachmentType = $('#modal-container form .modal #attachment-types').val();
+        $.get(`/accounting/attachments/get-${attachmentType}-attachments-ajax`, function(res) {
+            var attachments = JSON.parse(res);
+    
+            $.each(attachments, function(index, attachment) {
+                var dateUploaded = new Date(attachment.created_at);
+                var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
+
+                $('#modal-container form .modal .attachments-container').append(`
+                    <div class="col-12">
+                        <div class="card border">
+                            <div class="card-body p-0">
+                                <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
+                                <p class="card-subtitle">
+                                    <div class="row">
+                                        <div class="col">${dateString}</div>
+                                        <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
+                                    </div>
+                                </p>
+                                <ul class="d-flex justify-content-around">
+                                    <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
+                                    <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+        });
+    });
+
+    $(document).on('change', '#modal-container form .modal #attachment-types', function() {
+        $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
+            var attachments = JSON.parse(res);
+    
+            $('#modal-container form .modal .attachments-container div.col-12:not(:first-child)').remove();
+            $.each(attachments, function(index, attachment) {
+                var dateUploaded = new Date(attachment.created_at);
+                var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
+
+                $('#modal-container form .modal .attachments-container').append(`
+                    <div class="col-12">
+                        <div class="card border">
+                            <div class="card-body p-0">
+                                <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
+                                <p class="card-subtitle">
+                                    <div class="row">
+                                        <div class="col">${dateString}</div>
+                                        <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
+                                    </div>
+                                </p>
+                                <ul class="d-flex justify-content-around">
+                                    <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
+                                    <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+        });
+    });
+
+    $(document).on('click', '#modal-container form .modal .attachments-container a.add-attachment', function(e) {
+        var id = e.currentTarget.dataset.id;
+        $('#modal-container form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
+
+        $.get('/accounting/get-attachment/'+id, function(res) {
+            var attachment = JSON.parse(res);
+
+            modalAttachmentId.push(id);
+            var mockFile = {
+                name: `${attachment.uploaded_name}.${attachment.file_extension}`,
+                size: parseInt(attachment.size),
+                dataURL: base_url+"uploads/accounting/attachments/" + attachment.stored_name,
+                accepted: true
+            };
+            modalAttachments.emit("addedfile", mockFile);
+            modalAttachedFiles.push(mockFile);
+
+            modalAttachments.createThumbnailFromUrl(mockFile, modalAttachments.options.thumbnailWidth, modalAttachments.options.thumbnailHeight, modalAttachments.options.thumbnailMethod, true, function(thumbnail) {
+                modalAttachments.emit('thumbnail', mockFile, thumbnail);
+            });
+            modalAttachments.emit("complete", mockFile);
+        });
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -6010,7 +6141,7 @@ const initModalFields = (modalName, data = {}) => {
             addRemoveLinks: true,
             init: function() {
                 if(!$.isEmptyObject(data)) {
-                    $.getJSON('/accounting/get-transaction-attachments/'+transactionType+'/'+data.id, function(attachments) {
+                    $.getJSON('/accounting/get-linked-attachments/'+transactionType+'/'+data.id, function(attachments) {
                         if(attachments.length > 0) {
                             $.each(attachments, function(index, val) {
                                 $(`#${modalName}`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);

@@ -1,8 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-// define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo"); // New firebase API key
 
-define("FIREBASE_API_KEY", "AAAAGdnNhSA:APA91bERYT0vPfk5mH7M_UYgIDTdLDLgEsTUDue9WJRbsqhpTXOPwsamzXoUB0BmaFJxoXX5p2RzSy_cvI96uolp0_iZV2FuQgUjusGbVDVtshbBzGLTZYhIiSqt5lbsuXV9lNsnaLOk"); // Old firebase API key
+define("FIREBASE_API_KEY", "AAAAGdnNhSA:APA91bERYT0vPfk5mH7M_UYgIDTdLDLgEsTUDue9WJRbsqhpTXOPwsamzXoUB0BmaFJxoXX5p2RzSy_cvI96uolp0_iZV2FuQgUjusGbVDVtshbBzGLTZYhIiSqt5lbsuXV9lNsnaLOk");
 
 class Cron_Jobs_Controller extends CI_Controller
 {
@@ -12,6 +11,7 @@ class Cron_Jobs_Controller extends CI_Controller
     {
         parent::__construct();
         $this->load->model('timesheet_model');
+        $this->load->model('invoice_model');
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
     public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
@@ -892,5 +892,17 @@ class Cron_Jobs_Controller extends CI_Controller
             $options
         );
         $pusher->trigger('nsmarttrac', 'my-event', $data);
+    }
+
+    ### ===>> Daily Cron Jobs
+    public function cron_job_daily()
+    {
+        $this->invoice_due_status_checker();
+    }
+    public function invoice_due_status_checker()
+    {
+        $date_now = date("Y-m-d");
+        $this->invoice_model->change_due_invoice_status($date_now, "Due");
+        $this->invoice_model->change_due_invoice_status($date_now, "Overdue");
     }
 }

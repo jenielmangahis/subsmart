@@ -3891,19 +3891,21 @@ class Accounting_modals extends MY_Controller
             $paymentTotal = floatval($data['payment_amount']);
 
             $appliedVCredits = [];
-            foreach ($data['credits'] as $index => $credit) {
-                $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit);
-                $balance = floatval($vCredit->remaining_balance);
-                $subtracted = floatval($data['credit_payment'][$index]);
-                $appliedVCredits[$vCredit->id] = $subtracted;
-                $remainingBal = $balance - $subtracted;
-
-                $vCreditData = [
-                    'status' => $remainingBal === 0.00 ? 2 : 1,
-                    'remaining_balance' => $remainingBal
-                ];
-
-                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+            if(isset($data['credits']) && count($data['credits']) > 0) {
+                foreach ($data['credits'] as $index => $credit) {
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit);
+                    $balance = floatval($vCredit->remaining_balance);
+                    $subtracted = floatval($data['credit_payment'][$index]);
+                    $appliedVCredits[$vCredit->id] = $subtracted;
+                    $remainingBal = $balance - $subtracted;
+    
+                    $vCreditData = [
+                        'status' => $remainingBal === 0.00 ? 2 : 1,
+                        'remaining_balance' => $remainingBal
+                    ];
+    
+                    $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                }
             }
 
             $billPayment = [
@@ -4088,45 +4090,7 @@ class Accounting_modals extends MY_Controller
 
     public function bill_payment_form($billId)
     {
-        $paymentAccs = [];
-        $accountTypes = [
-            'Bank',
-            'Credit Card'
-        ];
-
-        foreach ($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            $count = 0;
-            if (count($accounts) > 0) {
-                foreach ($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $paymentAccs[$typeName][] = $account;
-
-                    if ($count === 1) {
-                        $selectedBalance = $account->balance;
-                    }
-
-                    $count++;
-                }
-            }
-        }
-
-        if (strpos($selectedBalance, '-') !== false) {
-            $balance = str_replace('-', '', $selectedBalance);
-            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
-        } else {
-            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
-        }
-
-        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
-        $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['balance'] = '$0.00';
         $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId);
         $this->load->view('accounting/modals/bill_payment_modal', $this->page_data);
     }
@@ -6486,56 +6450,47 @@ class Accounting_modals extends MY_Controller
         redirect($_SERVER['HTTP_REFERER']);
     }
 
-    public function get_transaction_attachments($transactionType, $transactionId)
+    public function get_linked_attachments($linkedType, $linkedId)
     {
-        switch ($transactionType) {
+        switch ($linkedType) {
             case 'expense':
-                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Expense', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Expense', $linkedId);
             break;
             case 'check':
-                $transaction = $this->vendors_model->get_check_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Check', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Check', $linkedId);
             break;
             case 'bill':
-                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Bill', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill', $linkedId);
             break;
             case 'purchase-order':
-                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $linkedId);
             break;
             case 'vendor-credit':
-                $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $linkedId);
             break;
             case 'credit-card-payment':
-                $transaction = $this->vendors_model->get_credit_card_payment_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $linkedId);
             break;
             case 'credit-card-pmt':
-                $transaction = $this->vendors_model->get_credit_card_payment_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $linkedId);
             break;
             case 'credit-card-credit':
-                $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $linkedId);
             break;
             case 'bill-payment':
-                $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $linkedId);
             break;
             case 'journal' :
-                $transaction = $this->accounting_journal_entries_model->getById($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Journal', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Journal', $linkedId);
             break;
             case 'transfer' :
-                $transaction = $this->accounting_transfer_funds_model->getById($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $linkedId);
             break;
             case 'deposit' :
-                $transaction = $this->accounting_bank_deposit_model->getById($transactionId);
-                $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $transactionId);
+                $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $linkedId);
+            break;
+            case 'vendor' :
+                $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $linkedId);
             break;
         }
 
@@ -9535,5 +9490,12 @@ class Accounting_modals extends MY_Controller
         $attachment = $this->accounting_attachments_model->getById($attachmentId);
 
         echo '/uploads/accounting/attachments/'.$attachment->stored_name;
+    }
+
+    public function get_attachment($attachmentId)
+    {
+        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+
+        echo json_encode($attachment);
     }
 }

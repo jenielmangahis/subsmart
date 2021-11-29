@@ -35,7 +35,7 @@
 </style>
 <div id="overlay">
     <div>
-        <img src="<?=base_url()?>assets/images/uploading.gif" class="" style="width: 80px;" alt="" />
+        <img src="<?=base_url()?>assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
         <center><p id="overlay_message">Processing...</p></center></div>
 </div>
 
@@ -51,7 +51,7 @@
                                     <a href="<?= base_url('accounting/link_bank') ?>"><button type="button" class="close" ><i class="fa fa-times fa-lg"></i></button></a>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="import_transaction" enctype="multipart/form-data" >
+                                    <form id="import_transaction">
                                         <div class="row" id="step1">
                                             <div class="col-sm-5">
                                                 <h5>Step 1</h5>
@@ -136,19 +136,19 @@
                                                             </div>
                                                             <div class="row form_line">
                                                                 <label> Description</label>
-                                                                <select id="transDesc" name="account" class="form-control" required>
+                                                                <select id="transDesc" name="transDesc" class="form-control" required>
                                                                     <option  value="">Select field</option>
                                                                 </select>
                                                             </div>
                                                             <div class="row form_line">
-                                                                <label> Money Received</label>
-                                                                <select id="transMoneyRec" name="account" class="form-control" required>
+                                                                <label> Amount</label>
+                                                                <select id="transMoneyRec" name="transMoneyRec" class="form-control" required>
                                                                     <option  value="">Select field</option>
                                                                 </select>
                                                             </div>
                                                             <div class="row form_line">
-                                                                <label> Money Spent</label>
-                                                                <select id="transMoneySpent" name="account" class="form-control" required>
+                                                                <label> Payee</label>
+                                                                <select id="transMoneySpent" name="transMoneySpent" class="form-control" required>
                                                                     <option  value="">Select field</option>
                                                                 </select>
                                                             </div>
@@ -191,47 +191,14 @@
 <script
     src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js">
 </script>
-<script src="<?php echo $url->assets ?>js/custom.js"></script>
-<script src="<?php echo $url->assets ?>js/folders_files.js"></script>
-<script src="<?php echo $url->assets ?>js/add.js"></script>
-<script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
-<script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
-<script src="<?php echo $url->assets ?>dashboard/js/waves.min.js"></script>
 
-<script src="<?php echo $url->assets ?>dashboard/js/app.js"></script>
-<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<!--Accounting JS-->
-<?php echo put_footer_assets();?>
 
 <script type="text/javascript">
     window.base_url = <?php echo json_encode(base_url()); ?> ;
 </script>
 
 <script type="text/javascript">
-    $("#import_transaction").submit(function(e) {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-        var form = $(this);
-        $.ajax({
-            type: "POST",
-            enctype: 'multipart/form-data',
-            url: "<?= base_url('processing/onPostCSVValue'); ?>",
-            data: form,
-            processData:false,
-            contentType:false,
-            cache:false,
-            success: function(data) {
-                var project = JSON.parse(data);
-                console.log(project);
-                document.getElementById('overlay').style.display = "none";
-            }, beforeSend: function() {
-                document.getElementById('overlay').style.display = "flex";
-            }
-        });
-    });
-
-
     $('#toStepTwo').click(function () {
         if($("#uploadTransaction").val() === ""){
             nsmartrac_alert("Warning!","Please upload file before proceeding to Step 2.","warning");
@@ -270,6 +237,32 @@
         });
     }
     $(document).ready(function() {
+        $("#import_transaction").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "<?= base_url('processing/onPostCSVValue'); ?>",
+                data: new FormData(this),
+                processData:false,
+                contentType:false,
+                cache:false,
+                success: function(data) {
+                    console.log(data);
+                    document.getElementById('overlay').style.display = "none";
+                    if(data.success){
+                        nsmartrac_alert('Nice',data.message,'success','accounting/link_bank');
+                    }else{
+                        nsmartrac_alert('Warning',data.message,'warning');
+                    }
+                }, beforeSend: function() {
+                    document.getElementById('overlay').style.display = "flex";
+                }
+            });
+        });
+
+
         $("#uploadTransaction").change(function(){
             console.log("A file has been selected.");
 
