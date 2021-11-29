@@ -29,7 +29,7 @@ var attachments = new Dropzone('#vendorAttachments', {
     // maxFiles: 1,
     addRemoveLinks: true,
     init: function() {
-        $.getJSON('/accounting/vendors/get-vendor-attachments/'+vendorId, function(data) {
+        $.getJSON('/accounting/get-linked-attachments/vendor/'+vendorId, function(data) {
             if(data.length > 0) {
                 $.each(data, function(index, val) {
                     attachmentId.push(val.id);
@@ -96,7 +96,7 @@ var previewAttachments = new Dropzone('#previewVendorAttachments', {
     uploadMultiple: true,
     addRemoveLinks: true,
     init: function() {
-        $.getJSON('/accounting/vendors/get-vendor-attachments/'+vendorId, function(data) {
+        $.getJSON('/accounting/get-linked-attachments/vendor/'+vendorId, function(data) {
             if(data.length > 0) {
                 $.each(data, function(index, val) {
                     attachmentId.push(val.id);
@@ -660,42 +660,42 @@ $('#transactions-table').DataTable({
                             `);
                         }
                     break;
-                    case 'Bill Payment (Credit Card)' :
-                        if(rowData.status === 'Voided') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill-payment">
-                                    View/Edit
-                                </button>
+                    // case 'Bill Payment (Credit Card)' :
+                    //     if(rowData.status === 'Voided') {
+                    //         $(td).html(`
+                    //         <div class="btn-group float-right">
+                    //             <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill-payment">
+                    //                 View/Edit
+                    //             </button>
 
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
+                    //             <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    //                 <span class="sr-only">Toggle Dropdown</span>
+                    //             </button>
 
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill-payment">
-                                    View/Edit
-                                </button>
+                    //             <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                    //                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                    //             </div>
+                    //         </div>
+                    //         `);
+                    //     } else {
+                    //         $(td).html(`
+                    //         <div class="btn-group float-right">
+                    //             <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill-payment">
+                    //                 View/Edit
+                    //             </button>
 
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
+                    //             <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    //                 <span class="sr-only">Toggle Dropdown</span>
+                    //             </button>
 
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item void-bill-payment" href="#">Void</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
+                    //             <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                    //                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                    //                 <a class="dropdown-item void-bill-payment" href="#">Void</a>
+                    //             </div>
+                    //         </div>
+                    //         `);
+                    //     }
+                    // break;
                     default :
                         $(td).html('');
                         $(td).css('height', '64.67px');

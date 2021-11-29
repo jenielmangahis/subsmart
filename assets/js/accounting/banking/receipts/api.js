@@ -59,3 +59,35 @@ export async function editReceipt(id, payload) {
 
   return response.json();
 }
+
+export async function searchExpenses(payload) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiSearchExpenses`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}
+
+export async function saveMatch(id, payload) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiSaveMatch/${id}`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}
+
+function sleep(seconds) {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+}

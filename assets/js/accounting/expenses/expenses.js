@@ -857,7 +857,7 @@ $(document).on('change', '#transactions-table select[name="category[]"]', functi
     data.set('new_category', account);
 
     $.ajax({
-        url: '/accounting/expenses/update-transaction-category',
+        url: '/accounting/vendors/update-transaction-category',
         data: data,
         type: 'post',
         processData: false,

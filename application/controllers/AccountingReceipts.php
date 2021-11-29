@@ -168,7 +168,96 @@ class AccountingReceipts extends MY_Controller
         $this->db->where('id', $id);
         $record = $this->db->get('accounting_receipts')->row();
 
+        if ($record->to_expense === "0") {
+            $this->db->where('receipt_id', $id);
+            $this->db->delete('accounting_receipt_matches');
+        }
+
         header('content-type: application/json');
         echo json_encode(['data' => $record]);
+    }
+
+    public function apiSearchExpenses()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('company_id', logged('company_id'));
+
+        // TODO: transaction_type
+
+        if (array_key_exists('payee', $payload)) {
+            [$type, $id] = explode('-', $payload['payee']);
+            $this->db->where('payee_type', $type);
+            $this->db->where('payee_id', $id);
+        }
+
+        if (array_key_exists('payment_account', $payload)) {
+            $this->db->where('payment_account_id', $payload['payment_account']);
+        }
+
+        if (array_key_exists('minimum_transaction_amount', $payload)) {
+            $this->db->where('total_amount >=', (int) $payload['minimum_transaction_amount']);
+        }
+
+        if (array_key_exists('maximum_transaction_amount', $payload)) {
+            $this->db->where('total_amount <=', (int) $payload['maximum_transaction_amount']);
+        }
+
+        if (array_key_exists('starting_date', $payload)) {
+            $this->db->where('payment_date >=', date('Y-m-d', strtotime($payload['starting_date'])));
+        }
+
+        if (array_key_exists('ending_date', $payload)) {
+            $this->db->where('payment_date <=', date('Y-m-d', strtotime($payload['ending_date'])));
+        }
+
+        $results = $this->db->get('accounting_expense')->result();
+
+        foreach ($results as $result) {
+            $result->type = 'expense';
+
+            if (!is_null($result->payee_type) && !is_null($result->payee_id)) {
+                $result->__select2_payee = $this->getPayee($result->payee_type . '-' . $result->payee_id);
+            }
+
+            if (!is_null($result->payment_account_id)) {
+                $result->__select2_account = $this->getAccount($result->payment_account_id);
+            }
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $results]);
+    }
+
+    public function apiSaveMatch($id)
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        if (!array_key_exists('matches', $payload) && !is_array($payload['matches'])) {
+            echo json_encode(['data' => null]);
+            return;
+        }
+
+        $matches = array_map(function ($match) use ($id) {
+            return array_merge(['receipt_id' => $id], $match);
+        }, $payload['matches']);
+
+        $this->db->insert_batch('accounting_receipt_matches', $matches);
+
+        $this->db->where('id', $id);
+        $this->db->update('accounting_receipts', ['to_expense' => 1]);
+
+        echo json_encode(['data' => $matches]);
     }
 }

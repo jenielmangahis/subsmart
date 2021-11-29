@@ -38,7 +38,7 @@ export class ReviewedTable {
         return Number(row.total_amount) <= 0 ? fallback : row.total_amount;
       },
       linkedRecord: () => {
-        return fallback;
+        return `<span>Attached to: <a href="#" class="receiptsTable__link">Expense</a></span>`;
       },
       actions: () => {
         return `<a class="receiptsTable__link action" href="#" data-action="undoAdd">Undo add</a>`;

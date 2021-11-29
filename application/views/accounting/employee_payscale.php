@@ -80,16 +80,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </td>
                                 <td>
                                     <select class="form-control seniorityDropdown">
-                                        <option value="1,000">Tier A</option>
-                                        <option value="2,000">Tier B</option>
-                                        <option value="3,000">Tier C</option>
-                                        <option value="4,000">Tier D</option>
-                                        <option value="5,000">Tier E</option>
-                                        <option value="6,000">Tier F</option>
+                                        <option value="1000">Tier A</option>
+                                        <option value="2000">Tier B</option>
+                                        <option value="3000">Tier C</option>
+                                        <option value="4000">Tier D</option>
+                                        <option value="5000">Tier E</option>
+                                        <option value="6000">Tier F</option>
                                     </select>
                                 </td>
-                                <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1,000" readonly></td>
-                                <td><span>$31,000.00</span></td>
+                                <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1000" readonly></td>
+                                <td><span class="gross_salary">$31,000.00</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -178,7 +178,41 @@ $(".role_name").change(function () {
     {
 
         $('#rolevalue').text(optiontest);
-        // alert(optiontest);
+
+        var rolevalue = $('#rolevalue').text();
+        var expRolevalueT = $('.expRolevalue').val();
+        var seniorityamount = $('.seniorityamount').val();
+
+        if (expRolevalueT == 'X 1,00')
+        {
+            expRolevalue = '1.0';
+        }
+        else if(expRolevalueT == 'X 1,20')
+        {
+            expRolevalue = '1.2';
+        }
+        else if(expRolevalueT == 'X 1,30')
+        {
+            expRolevalue = '1.3';
+        }
+        else if(expRolevalueT == 'X 1,40')
+        {
+            expRolevalue = '1.4';
+        }
+        else if(expRolevalueT == 'X 1,50')
+        {
+            expRolevalue = '1.5';
+        }
+        else if(expRolevalueT == 'X 1,60')
+        {
+            expRolevalue = '1.6';
+        }
+
+        var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
+        var total = parseFloat(stotal) + parseFloat(seniorityamount);
+
+        $('.gross_salary').text(parseFloat(total).toFixed(2));
+        // alert(stotal);
     }
 
     //else
@@ -209,6 +243,42 @@ $(".expRoleDropdown").change(function () {
 
     $('.expRolevalue').val(expValue);
 
+        var rolevalue = $('#rolevalue').text();
+        var expRolevalueT = $('.expRolevalue').val();
+        var seniorityamount = $('.seniorityamount').val();
+
+        if (expRolevalueT == 'X 1,00')
+        {
+            expRolevalue = '1.0';
+        }
+        else if(expRolevalueT == 'X 1,20')
+        {
+            expRolevalue = '1.2';
+        }
+        else if(expRolevalueT == 'X 1,30')
+        {
+            expRolevalue = '1.3';
+        }
+        else if(expRolevalueT == 'X 1,40')
+        {
+            expRolevalue = '1.4';
+        }
+        else if(expRolevalueT == 'X 1,50')
+        {
+            expRolevalue = '1.5';
+        }
+        else (expRolevalueT == 'X 1,60')
+        {
+            expRolevalue = '1.6';
+        }
+
+        var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
+        var total = parseFloat(stotal) + parseFloat(seniorityamount);
+
+        $('.gross_salary').text(parseFloat(total).toFixed(2));
+
+        // alert(stotal);
+
 });    
 
 $(".seniorityDropdown").change(function () {
@@ -216,6 +286,40 @@ $(".seniorityDropdown").change(function () {
 
     $('.seniorityamount').val(expValue);
 
+        var rolevalue = $('#rolevalue').text();
+        var expRolevalueT = $('.expRolevalue').val();
+        var seniorityamount = $('.seniorityamount').val();
+
+        if (expRolevalueT == 'X 1,00')
+        {
+            expRolevalue = '1.0';
+        }
+        else if(expRolevalueT == 'X 1,20')
+        {
+            expRolevalue = '1.2';
+        }
+        else if(expRolevalueT == 'X 1,30')
+        {
+            expRolevalue = '1.3';
+        }
+        else if(expRolevalueT == 'X 1,40')
+        {
+            expRolevalue = '1.4';
+        }
+        else if(expRolevalueT == 'X 1,50')
+        {
+            expRolevalue = '1.5';
+        }
+        else if(expRolevalueT == 'X 1,60')
+        {
+            expRolevalue = '1.6';
+        }
+
+        var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
+        var total = parseFloat(stotal) + parseFloat(seniorityamount);
+
+        $('.gross_salary').text(parseFloat(total).toFixed(2));
+        
 });    
 </script>
 

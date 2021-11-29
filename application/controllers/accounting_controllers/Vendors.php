@@ -538,13 +538,6 @@ class Vendors extends MY_Controller
         return $attachmentIds;
     }
 
-    public function get_vendor_attachments($vendorId)
-    {
-        $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
-
-        echo json_encode($attachments);
-    }
-
     public function load_transactions($vendorId)
     {
         $post = json_decode(file_get_contents('php://input'), true);

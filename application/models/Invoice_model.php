@@ -702,12 +702,6 @@ class Invoice_model extends MY_Model
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
-    public function new_invoice_status($data)
-    {
-        $this->db->insert('invoice_statuses', $data);
-        $insert_id = $this->db->insert_id();
-        return  $insert_id;
-    }
     public function get_invoice_statuses($invoice_id)
     {
         $this->db->select('*');
@@ -716,15 +710,15 @@ class Invoice_model extends MY_Model
         $query2 = $this->db->get();
         return $query2->result();
     }
-public function get_last_invoice_status($invoice_id)
-{
-    $this->db->select('*');
+    public function get_last_invoice_status($invoice_id)
+    {
+        $this->db->select('*');
         $this->db->from('invoice_statuses');
         $this->db->where('invoice_id', $invoice_id);
         $this->db->order_by('date_created', "DESC");
         $query2 = $this->db->get();
         return $query2->row();
-}
+    }
     public function getInvoiceItems($id)
     {
         // $this->db->select('*');
@@ -856,6 +850,46 @@ public function get_last_invoice_status($invoice_id)
         $query = $this->db->get();
 
         return $query->result();
+    }
+    public function change_due_invoice_status($date, $status)
+    {
+        $this->db->select("*");
+        $this->db->from("invoices");
+
+        if ($status == "Due") {
+            $this->db->where('status !=', 'Due');
+            $this->db->where('due_date', $date);
+        } else {
+            $this->db->where('due_date <', $date);
+        }
+        $this->db->where('status !=', 'Overdue');
+        $this->db->where('status !=', 'Paid');
+        $this->db->where('status !=', 'Draft');
+        $this->db->where('status !=', 'Declined');
+        $this->db->where('status !=', 'Schedule');
+        $this->db->where('status !=', 'Submitted');
+        $result = $this->db->get();
+        $affected_rows = $result->result();
+        if ($affected_rows != null) {
+            foreach ($affected_rows as $row) {
+                $this->db->where('id', $row->id);
+                $this->db->update('invoices', array("status"=>$status));
+                if ($this->db->affected_rows() > 0) {
+                    $new_status_data=array(
+                        "invoice_id" => $row->id,
+                        "status" => $status,
+                        "note" => "Auto"
+                    );
+                    $this->new_invoice_status($new_status_data);
+                }
+            }
+        }
+    }
+    public function new_invoice_status($data)
+    {
+        $this->db->insert('invoice_statuses', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
     }
 }
 

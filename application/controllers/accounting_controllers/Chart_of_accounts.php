@@ -4418,7 +4418,7 @@ class Chart_of_accounts extends MY_Controller {
     private function save_journal($accountId, $journalId, $data)
     {
         $journalData = [
-            'journal_no' => $data['ref_no'],
+            'journal_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
             'journal_date' => date('Y-m-d', strtotime($data['date']))
         ];
 

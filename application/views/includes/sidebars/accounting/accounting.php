@@ -73,7 +73,7 @@
                     class="fa fa-tachometer"></span>Dashboard</a>
         </li>
         <li
-            class="submenus dropright <?= $this->uri->segment(2) == 'link_bank' ? "active" : "";  ?>">
+            class="submenus dropright <?= $this->uri->segment(2) == 'link_bank' || $this->uri->segment(2) == 'bank_register' ? "active" : "";  ?>">
             <a href="#menu11111" onclick="dropdownAccounting(this)" class="dropdown-toggle"><i
                     class="fa fa-university pr-3"></i>Banking</a>
             <ul class="collapse list-unstyled" id="menu11111">
