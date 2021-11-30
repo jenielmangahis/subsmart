@@ -2,7 +2,7 @@
     background: #f4f5f8;
 }
 
-#modal-form .modal .attachments-container span.select2.select2-container {
+#modal-form .modal .attachments-container span.select2.select2-container, #existing-attachments-modal .attachments-container span.select2.select2-container {
     width: 50% !important;
 }
 
@@ -126,8 +126,25 @@ div.modal.right .modal-content {
     border-radius: 0 !important;
 }
 
-div.modal.right .modal-body {
+div.modal.right:not(#existing-attachments-modal) .modal-body {
     padding: 0 30px 80px;
+}
+
+#existing-attachments-modal .modal-body {
+    padding: 30px 40px !important;
+}
+
+#existing-attachments-modal button[data-dismiss="modal"] {
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 1px solid #e3e3e3;
+    border-radius: 0;
+}
+
+#existing-attachments-modal button[data-dismiss="modal"]:hover {
+    color: unset;
 }
 
 div.modal.right.fade .modal-dialog {

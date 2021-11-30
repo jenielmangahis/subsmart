@@ -14,9 +14,9 @@
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row"  style="min-height: 100%">
+                    <div class="row" style="min-height: 100%">
                         <div class="col">
-                            <div class="card p-0 m-0"  style="min-height: 100%">
+                            <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
                                         <div class="col-md-8">
@@ -473,12 +473,27 @@
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                             </div>
                                                         </div>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : <span class="transaction-total-amount">$0.00</span></h5>
+                                            <?php if(isset($bill)) : ?>
+                                                <h5 class="m-0 text-right">
+                                                    <span class="transaction-total-amount">
+                                                        <?php
+                                                            $amount = '$'.number_format(floatval($bill->total_amount), 2, '.', ',');
+                                                            $amount = str_replace('$-', '-$', $amount);
+                                                            echo $amount;
+                                                        ?>
+                                                    </span>
+                                                </h5>
+                                            <?php else : ?>
+                                                <h5 class="m-0 text-right">Total : <span class="transaction-total-amount">$0.00</span></h5>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

@@ -97,8 +97,8 @@ export class ForReviewTable {
 
   get actions() {
     return {
-      review: (row) => {
-        this.actions.view(row);
+      review: (row, rows) => {
+        this.actions.view(row, rows);
       },
       delete: async ({ id }) => {
         const { isConfirmed } = await Swal.fire({
@@ -472,7 +472,7 @@ export class ForReviewTable {
       const func = this.actions[action].bind(this);
 
       if (!func) return;
-      func(row, table, event);
+      func(row, rows, table, event);
     });
   }
 

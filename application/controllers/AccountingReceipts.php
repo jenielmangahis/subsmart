@@ -22,6 +22,11 @@ class AccountingReceipts extends MY_Controller
             if (!is_null($receipt->bank_account_id)) {
                 $receipt->__select2_bank_account = $this->getAccount($receipt->bank_account_id);
             }
+
+            if (!is_null($receipt->expense_id)) {
+                $this->db->where('id', $receipt->expense_id);
+                $receipt->expense = $this->db->get('accounting_expense')->row();
+            }
         }
 
         header('content-type: application/json');
@@ -108,12 +113,9 @@ class AccountingReceipts extends MY_Controller
         $payload = json_decode(file_get_contents('php://input'), true);
         ['ids' => $ids] = $payload;
 
-        $updates = [];
         foreach ($ids as $id) {
-            $updates[] = ['id' => $id, 'to_expense' => 1];
+            $this->convertToExpense($id);
         }
-
-        $this->db->update_batch('accounting_receipts', $updates, 'id');
 
         header('content-type: application/json');
         echo json_encode(['data' => $ids]);
@@ -168,9 +170,14 @@ class AccountingReceipts extends MY_Controller
         $this->db->where('id', $id);
         $record = $this->db->get('accounting_receipts')->row();
 
-        if ($record->to_expense === "0") {
+        if ($record->to_expense == 0) {
             $this->db->where('receipt_id', $id);
             $this->db->delete('accounting_receipt_matches');
+            $this->deleteConvertedExpense($id);
+        }
+
+        if (array_key_exists('to_expense', $payload) && $payload['to_expense'] == 1) {
+            $this->convertToExpense($id);
         }
 
         header('content-type: application/json');
@@ -254,10 +261,59 @@ class AccountingReceipts extends MY_Controller
         }, $payload['matches']);
 
         $this->db->insert_batch('accounting_receipt_matches', $matches);
-
-        $this->db->where('id', $id);
-        $this->db->update('accounting_receipts', ['to_expense' => 1]);
+        $this->convertToExpense($id);
 
         echo json_encode(['data' => $matches]);
+    }
+
+    private function convertToExpense($id)
+    {
+        $this->db->where('id', $id);
+        $receipt = $this->db->get('accounting_receipts')->row();
+
+        $payeeType = null;
+        $payeeId = null;
+
+        if (!is_null($receipt->payee)) {
+            [$payeeType, $payeeId] = explode('-', $receipt->payee);
+        }
+
+        $expensePayload = [
+            'company_id' => logged('company_id'),
+            'payee_type' => $payeeType,
+            'payee_id' => $payeeId,
+            'payment_account_id' => $receipt->bank_account_id,
+            'payment_date' => date('Y-m-d', strtotime($receipt->transaction_date)),
+            'payment_method_id' => null,
+            'ref_no' => $receipt->ref_number,
+            'permit_no' => null,
+            'tags' => null,
+            'memo' => $receipt->memo,
+            'attachments' => null,
+            'total_amount' => $receipt->total_amount,
+            'linked_purchase_order_id' => null,
+            'status' => 1,
+            'created_at' => date('Y-m-d'),
+        ];
+
+        $this->db->insert('accounting_expense', $expensePayload);
+        $this->db->where('id', $this->db->insert_id());
+        $expense = $this->db->get('accounting_expense')->row();
+
+        $this->db->where('id', $id);
+        $this->db->update('accounting_receipts', ['to_expense' => 1, 'expense_id' => $expense->id]);
+
+        return [$receipt, $expense];
+    }
+
+    private function deleteConvertedExpense($id)
+    {
+        $this->db->where('id', $id);
+        $receipt = $this->db->get('accounting_receipts')->row();
+
+        if (!is_null($receipt->expense_id)) {
+            $this->db->where('id', $receipt->expense_id);
+            $this->db->delete('accounting_expense');
+        }
     }
 }

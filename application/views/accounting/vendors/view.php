@@ -349,6 +349,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                         </div>
                                                     </div>
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">

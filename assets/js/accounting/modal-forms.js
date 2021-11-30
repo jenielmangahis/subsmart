@@ -527,6 +527,10 @@ $(function() {
 
                         $(`${modal_element} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
+                        if($('#modal-container form .modal .attachments-container').length > 0) {
+                            $('#modal-container form .modal .attachments-container #attachment-types').trigger('change');
+                        }
+
                         //remove thumbnail
                         var previewElement;
                         return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
@@ -4507,69 +4511,74 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container form .modal #show-existing-attachments', function() {
-        $('#modal-container form .modal .modal-body').children('.row').append(`
-            <div class="col-xl-2">
-                <div class="bg-white h-100" style="padding: 15px">
-                    <div class="row attachments-container">
-                        <div class="col-12 pb-3">
-                            <h4>Add to Expense</h4>
-                            <div class="d-flex justify-content-center">
-                                <select class="form-control" id="attachment-types">
-                                    <option value="unlinked">Unlinked</option>
-                                    <option value="all">All</option>
-                                </select>
+        if($('#modal-container form .modal .attachments-container').length < 1) {
+            var transactionType = $('#modal-container form .modal .modal-title').text();
+            $('#modal-container form .modal .modal-body').children('.row').append(`
+                <div class="col-xl-2">
+                    <div class="bg-white h-100" style="padding: 15px">
+                        <div class="row attachments-container">
+                            <div class="col-12 pb-3">
+                                <h4>Add to ${transactionType}</h4>
+                                <div class="d-flex justify-content-center">
+                                    <select class="form-control" id="attachment-types">
+                                        <option value="unlinked">Unlinked</option>
+                                        <option value="all">All</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `);
+            `);
 
-        $('#modal-container form .modal #attachment-types').select2({
-            minimumResultsForSearch: -1
-        });
+            $('#modal-container form .modal #attachment-types').select2({
+                minimumResultsForSearch: -1
+            });
 
-        var attachmentType = $('#modal-container form .modal #attachment-types').val();
-        $.get(`/accounting/attachments/get-${attachmentType}-attachments-ajax`, function(res) {
-            var attachments = JSON.parse(res);
-    
-            $.each(attachments, function(index, attachment) {
-                var dateUploaded = new Date(attachment.created_at);
-                var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
+            var attachmentType = $('#modal-container form .modal #attachment-types').val();
+            $.get(`/accounting/attachments/get-${attachmentType}-attachments-ajax`, function(res) {
+                var attachments = JSON.parse(res);
+        
+                $.each(attachments, function(index, attachment) {
+                    var dateUploaded = new Date(attachment.created_at);
+                    var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                $('#modal-container form .modal .attachments-container').append(`
-                    <div class="col-12">
-                        <div class="card border">
-                            <div class="card-body p-0">
-                                <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
-                                <p class="card-subtitle">
-                                    <div class="row">
-                                        <div class="col">${dateString}</div>
-                                        <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
-                                    </div>
-                                </p>
-                                <ul class="d-flex justify-content-around">
-                                    <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
-                                    <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
-                                </ul>
+                    $('#modal-container form .modal .attachments-container').append(`
+                        <div class="col-12">
+                            <div class="card border">
+                                <div class="card-body p-0">
+                                    <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
+                                    <p class="card-subtitle">
+                                        <div class="row">
+                                            <div class="col">${dateString}</div>
+                                            <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
+                                        </div>
+                                    </p>
+                                    <ul class="d-flex justify-content-around">
+                                        <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
+                                        <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `);
+                    `);
+                });
             });
-        });
+        }
     });
 
-    $(document).on('change', '#modal-container form .modal #attachment-types', function() {
+    $(document).on('change', '#modal-container form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
+        var cont = $(this).parent().parent().parent();
         $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
             var attachments = JSON.parse(res);
     
-            $('#modal-container form .modal .attachments-container div.col-12:not(:first-child)').remove();
+            cont.children('div.col-12:not(:first-child)').remove();
+            // $('#modal-container form .modal .attachments-container div.col-12:not(:first-child)').remove();
             $.each(attachments, function(index, attachment) {
                 var dateUploaded = new Date(attachment.created_at);
                 var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                $('#modal-container form .modal .attachments-container').append(`
+                cont.append(`
                     <div class="col-12">
                         <div class="card border">
                             <div class="card-body p-0">
@@ -4614,6 +4623,8 @@ $(function() {
             });
             modalAttachments.emit("complete", mockFile);
         });
+
+        $(this).parent().parent().parent().parent().parent().remove();
     });
 });
 

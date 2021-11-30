@@ -1667,3 +1667,27 @@ $(document).on('click', '#transactions-table .view-attachment', function(e) {
 
     window.open(data.href, "_blank");
 });
+
+$(document).on('click', '#vendor-details.tab-pane .attachments-container #show-existing-attachments', function() {
+    $.get('/accounting/get-existing-attachments-modal/vendor', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#existing-attachments-modal #attachment-types').select2({
+            minimumResultsForSearch: -1
+        });
+
+        $('#existing-attachments-modal #attachment-types').trigger('change');
+
+        $('#existing-attachments-modal').modal({
+            backdrop: false
+        });
+    });
+});

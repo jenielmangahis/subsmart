@@ -11456,7 +11456,7 @@ class Accounting extends MY_Controller
         $this->page_data['totoverdues']     = $this->invoice_model->totalcountOverdue(logged('company_id'));
         $this->page_data['overdues']        = $this->invoice_model->overdue(logged('company_id'));
 
-        $this->load->view('accounting/cashflowplanner', $this->page_data);
+        $this->load->view('accounting/cashflowplanner1', $this->page_data);
     }
 
     public function add_attachement()
@@ -12696,9 +12696,9 @@ class Accounting extends MY_Controller
         // echo $test;
 
         $temp = [];
-        foreach($invoices as $key1 => $value1) {
-            foreach($value1 as $key2 => $value2) {    
-                switch($key2) {
+        foreach ($invoices as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                switch ($key2) {
                     case 'date_issued':
                         $temp[$key1][] = strtotime($value2);
                     break;
@@ -12711,7 +12711,7 @@ class Accounting extends MY_Controller
             }
         }
         $response['price'] = $temp;
-        echo json_encode($response,TRUE);
+        echo json_encode($response, true);
     }
 
     public function employee_payscale($id)

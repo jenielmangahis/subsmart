@@ -347,6 +347,7 @@ $route['accounting/view-transaction/(:any)/(:any)'] = 'accounting_modals/view_tr
 $route['accounting/load-bill-payment-bills/(:any)']['post'] = 'accounting_modals/load_bills_payed/$1';
 $route['accounting/load-bill-payment-credits/(:any)']['post'] = 'accounting_modals/load_payment_used_credits/$1';
 $route['accounting/get-attachment/(:any)'] = 'accounting_modals/get_attachment/$1';
+$route['accounting/get-existing-attachments-modal/(:any)'] = 'accounting_modals/get_existing_attachments_modal/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
