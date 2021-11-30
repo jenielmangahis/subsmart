@@ -390,12 +390,27 @@
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                             </div>
                                                         </div>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : <span class="transaction-total-amount">$0.00</span></h5>
+                                            <?php if(isset($check)) : ?>
+                                                <h5 class="m-0 text-right">
+                                                    <span class="transaction-total-amount">
+                                                        <?php
+                                                            $amount = '$'.number_format(floatval($check->total_amount), 2, '.', ',');
+                                                            $amount = str_replace('$-', '-$', $amount);
+                                                            echo $amount;
+                                                        ?>
+                                                    </span>
+                                                </h5>
+                                            <?php else : ?>
+                                                <h5 class="m-0 text-right">Total : <span class="transaction-total-amount">$0.00</span></h5>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

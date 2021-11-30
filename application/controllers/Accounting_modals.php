@@ -9498,4 +9498,10 @@ class Accounting_modals extends MY_Controller
 
         echo json_encode($attachment);
     }
+
+    public function get_existing_attachments_modal($type)
+    {
+        $this->page_data['type'] = $type;
+        $this->load->view('accounting/modals/attachments_modal', $this->page_data);
+    }
 }

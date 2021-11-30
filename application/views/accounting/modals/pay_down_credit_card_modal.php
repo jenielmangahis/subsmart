@@ -14,9 +14,9 @@
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
+                    <div class="row" style="min-height: 100%">
+                        <div class="col">
+                            <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -104,6 +104,9 @@
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                     </div>
+                                                </div>
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
                                                 </div>
                                             </div>
                                         </div>
