@@ -784,6 +784,7 @@ $route['workorder/_delete_checklist_items'] = 'Workorder/ajax_delete_checklist_i
 $route['workorder/_update_checklist_item'] = 'Workorder/ajax_update_checklist_item';
 $route['workorder/update_checklist'] = 'Workorder/update_checklist';
 $route['workorder/_load_map_routes'] = 'Workorder/ajax_load_map_routes';
+$route['workorder/_load_count_summary'] = 'Workorder/ajax_load_count_summary';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
@@ -874,6 +875,7 @@ $route['credit_notes/close'] = 'Credit_Notes/close_credit_note';
 $route['credit_notes/print/(:num)'] = 'Credit_Notes/print_credit_note/$1';
 $route['credit_notes/clone'] = 'Credit_Notes/clone_credit_note';
 $route['credit_notes/settings'] = 'Credit_Notes/credit_note_settings';
+$route['credit_notes/_update_credit_note_settings'] = 'Credit_Notes/ajax_update_credit_note_settings';
 
 //Event Types
 $route['event_types'] = 'Event_Types/index';

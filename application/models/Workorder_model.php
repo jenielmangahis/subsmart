@@ -1134,14 +1134,14 @@ class Workorder_model extends MY_Model
         }
     }
 
-    public function getworkorderList()
+    public function getworkorderList( $filters = array() )
     {
         $company_id = logged('company_id');
         
         $where = array(
             'work_orders.company_id' => $company_id,
             'view_flag'   => '0'
-          );
+        );
 
         // $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id, work_order_alarm_details.work_order_id');
 		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
@@ -1150,6 +1150,11 @@ class Workorder_model extends MY_Model
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
         // $this->db->join('work_order_alarm_details', 'work_orders.id  = work_order_alarm_details.work_order_id');
 		$this->db->where($where);
+
+        if( $filters['status'] != '' && $filters['status'] != 'all' ){
+            $this->db->where('work_orders.status', ucwords($filters['status']));
+        }
+
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
@@ -1177,6 +1182,10 @@ class Workorder_model extends MY_Model
         $this->db->where($where);
 
         if ( !empty($filters) ) {
+            if( $filter['status'] != '' && $filter['status'] != 'all' ){
+                $this->db->where('work_orders.status', ucwords($filter['status']));
+            }
+
             if ( $filters['search'] != '' ) {
                 $this->db->like('work_order_number', $filters['search'], 'both');
                 $this->db->or_like('acs_profile.first_name', $filters['search'], 'both');
@@ -1679,6 +1688,23 @@ class Workorder_model extends MY_Model
        $this->db->where("id", $id);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function countAllByStatusAndCompanyId($status, $company_id)
+    {
+        $status = ucwords($status);
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if( $status != 'All' ){
+            $this->db->where('status', $status);    
+        }
+
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->num_rows();
     }
 }
 

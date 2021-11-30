@@ -226,6 +226,7 @@
     </div>
 </div>
 
+<?php if(!isset($disable_accounting_modals)){ ?>
 <?php include viewPath('accounting/estimate_one_modal'); ?>
 <?php include viewPath('accounting/customer_invoice_modal'); ?>
 <?php include viewPath('accounting/customer_receive_payment_modal');?>
@@ -246,4 +247,5 @@
 <?php include viewPath('accounting/customer_includes/create_invoice/create_invoice_modal'); ?>
 <?php include viewPath('accounting/add_new_term');?>
 <?php include viewPath('accounting/invoices_page_includes/invoice_viewer_modal');?>
-<?php include viewPath('accounting/all_sales_includes/send_reminder_by_batch_modal');
+<?php include viewPath('accounting/all_sales_includes/send_reminder_by_batch_modal'); ?>
+<?php } ?>

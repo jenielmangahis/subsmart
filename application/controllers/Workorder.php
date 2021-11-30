@@ -53,7 +53,13 @@ class Workorder extends MY_Controller
         $this->hasAccessModule(24); 
 
         $role = logged('role');
-        $company_id = logged('company_id');
+        $company_id = logged('company_id');        
+
+        $query = $this->input->get();        
+        $workorder_status = 'all';
+        if( isset($query['status']) ){
+            $workorder_status = $query['status'];
+        }
 
         $this->page_data['workorderStatusFilters'] = array ();
         $this->page_data['workorders'] = array ();
@@ -109,10 +115,12 @@ class Workorder extends MY_Controller
         }
 
         if (!empty(get('search'))) {
+            $filter['status'] = $workorder_status;
             $filter['search'] = get('search');
             $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
         }else{
-            $workorder = $this->workorder_model->getworkorderList();    
+            $filter['status'] = $workorder_status;
+            $workorder = $this->workorder_model->getworkorderList($filter);    
         }
 
         
@@ -122,7 +130,7 @@ class Workorder extends MY_Controller
 
         // unserialized the value
 
-        $statusFilter = array();
+        $statusFilter = array();        
         foreach ($this->page_data['workorders'] as $workorder) {
 
             if (is_serialized($workorder)) {
@@ -133,6 +141,8 @@ class Workorder extends MY_Controller
 
 //        print_r($this->page_data['workorders']); die;
 
+
+        $this->page_data['tab_status'] = $workorder_status;
         $this->load->view('workorder/list', $this->page_data);
     }
 
@@ -597,12 +607,14 @@ class Workorder extends MY_Controller
         $checkLists = array();
         $workorrder_checklists = unserialize($workOrder->checklists);
         $selected_checklists    = array();
-        foreach( $checkListsHeader as $h ){
-            if( in_array($h->id, $workorrder_checklists) ){
-                $selected_checklists[$h->id] = ['id' => $h->id, 'name' => $h->checklist_name];
-            }   
-            $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
-            $checklists[] = ['header' => $h, 'items' => $checklistItems];
+        if( !empty($workorrder_checklists) ){
+            foreach( $checkListsHeader as $h ){
+                if( in_array($h->id, $workorrder_checklists) ){
+                    $selected_checklists[$h->id] = ['id' => $h->id, 'name' => $h->checklist_name];
+                }   
+                $checklistItems = $this->workorder_model->getchecklistHeaderItems($h->id);
+                $checklists[] = ['header' => $h, 'items' => $checklistItems];
+            }
         }
 
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
@@ -4249,13 +4261,12 @@ class Workorder extends MY_Controller
             $arr = explode("-", $next);
             $date_start = $arr[0];
             $nextNum = $arr[1];
-        //    echo $number;
+            //echo $number;
         }
-       $val = $nextNum + 1;
-       $work_order_number = 'WO-'.str_pad($val,7,"0",STR_PAD_LEFT);
+        $val = $nextNum + 1;
+        $work_order_number = 'WO-'.str_pad($val,7,"0",STR_PAD_LEFT);
 
         $new_data = array(
-            
             'work_order_number'                     => $work_order_number,
             'customer_id'                           => $datas->customer_id,
             'security_number'                       => $datas->security_number,
@@ -4323,8 +4334,24 @@ class Workorder extends MY_Controller
             'work_order_type_id'                    => $datas->work_order_type_id,
         );
 
-        $addQuery = $this->workorder_model->save_workorder($new_data);
+        $new_workorder_id = $this->workorder_model->save_workorder($new_data);
 
+        //Get Workorder items
+        $workorderItems = $this->workorder_model->getworkorderItems($new_workorder_id);
+        foreach( $workorderItems as $i ){
+            $data_items = [
+                'work_order_id' => $new_workorder_id,
+                'items_id' => $i->items_id,
+                'package_id' => $i->package_id,
+                'qty' => $i->qty,
+                'cost' => $i->cost,
+                'tax' => $i->tax,
+                'discount' => $i->discount,
+                'total' => $i->total
+            ];
+            
+            $this->workorder_model->add_work_order_details($data_items);
+        }
         // if($datas->is_template == 2)
         // {
         //     $payment_data = array(
@@ -6553,6 +6580,33 @@ class Workorder extends MY_Controller
         $this->pdf->createPDF($html, 'mypdf', false);
         exit(0);
     }
+
+    public function ajax_load_count_summary()
+    {
+        $cid = logged('company_id');
+
+        $count_all = $this->workorder_model->countAllByStatusAndCompanyId('all', $cid);
+        $count_new = $this->workorder_model->countAllByStatusAndCompanyId('new', $cid);
+        $count_scheduled = $this->workorder_model->countAllByStatusAndCompanyId('scheduled', $cid);
+        $count_started   = $this->workorder_model->countAllByStatusAndCompanyId('started', $cid);
+        $count_paused    = $this->workorder_model->countAllByStatusAndCompanyId('paused', $cid);
+        $count_invoiced  = $this->workorder_model->countAllByStatusAndCompanyId('invoiced', $cid);
+        $count_withdrawn = $this->workorder_model->countAllByStatusAndCompanyId('withdrawn', $cid);
+        $count_closed    = $this->workorder_model->countAllByStatusAndCompanyId('closed', $cid);
+
+        $json_data = [
+            'count_all' => $count_all,
+            'count_new' => $count_new,
+            'count_scheduled' => $count_scheduled,
+            'count_started' => $count_started,
+            'count_paused' => $count_paused,
+            'count_invoiced' => $count_invoiced,
+            'count_withdrawn' => $count_withdrawn,
+            'count_closed' => $count_closed
+        ];
+
+        echo json_encode($json_data);
+    }
 }
 
 
@@ -6560,3 +6614,4 @@ class Workorder extends MY_Controller
 /* End of file Workorder.php */
 
 /* Location: ./application/controllers/Workorder.php */
+
