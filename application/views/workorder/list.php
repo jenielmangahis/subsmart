@@ -112,73 +112,54 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
 
                 <div class="tabs">
-                    <ul class="clearfix work__order" id="myTab" role="tablist">
-                        <?php foreach ($workorderStatusFilters as $key => $statusFilter) { ?>
-                            <?php if ($key === 0) { ?>
-                                <li <?php echo (empty($tab_index)) ? 'class="active"' : '' ?>>
-                                    <a class="nav-link active"
-                                       href="<?php echo base_url('workorder') ?>"
-                                       aria-controls="tab1" aria-selected="true">All
-                                        (<?php echo get_workorder_count() ?>)</a>
-                                </li>
-                            <?php } ?>
-                            <li <?php echo ((!empty($tab_index)) && $statusFilter->id === $tab_index) ? "class='active'" : "" ?>>
-                                <a class="nav-link"
-                                   id="profile-tab"
-                                   data-toggle="tab<?php echo $key ?>"
-                                   href="<?php echo base_url('workorder/tab/' . $statusFilter->id) ?>"
-                                   role="tab"
-                                   aria-controls="profile" aria-selected="false"><?php echo $statusFilter->title ?>
-                                    (<?php echo $statusFilter->total ?>)</a>
-                            </li>
-                        <?php } ?>
-                        <li class="active">
+                    <ul class="clearfix work__order" id="myTab" role="tablist">                        
+                        <li class="<?= $tab_status == 'all' ? 'active' : '' ?>">
                             <a class="nav-link active"
                                 href="<?php echo base_url('workorder') ?>"
                                 aria-controls="tab1" aria-selected="true">All
-                                (0)</a>
+                                (<span class="w-count w-count-all">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'new' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=new') ?>"
                                 aria-controls="tab1" aria-selected="true">New
-                                (0)</a>
+                                (<span class="w-count w-count-new">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'scheduled' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=scheduled') ?>"
                                 aria-controls="tab1" aria-selected="true">Scheduled
-                                (0)</a>
+                                (<span class="w-count w-count-scheduled">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'started' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=started') ?>"
                                 aria-controls="tab1" aria-selected="true">Started
-                                (0)</a>
+                                (<span class="w-count w-count-started">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'paused' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=paused') ?>"
                                 aria-controls="tab1" aria-selected="true">Paused
-                                (0)</a>
+                                (<span class="w-count w-count-paused">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'invoiced' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=invoiced') ?>"
                                 aria-controls="tab1" aria-selected="true">Invoiced
-                                (0)</a>
+                                (<span class="w-count w-count-invoiced">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'withdrawn' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=withdrawn') ?>"
                                 aria-controls="tab1" aria-selected="true">Withdrawn
-                                (0)</a>
+                                (<span class="w-count w-count-withdrawn">0</span>)</a>
                         </li>
-                        <li>
+                        <li class="<?= $tab_status == 'closed' ? 'active' : '' ?>">
                             <a class="nav-link active"
-                                href="<?php echo base_url('workorder') ?>"
+                                href="<?php echo base_url('workorder?status=closed') ?>"
                                 aria-controls="tab1" aria-selected="true">Closed
-                                (0)</a>
+                                (<span class="w-count w-count-closed">0</span>)</a>
                         </li>
                     </ul>
                 </div>
@@ -213,7 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <tbody>
 
                                 <?php foreach ($workorders as $workorder) { ?>
-                                    <tr>
+                                    <tr id="w-row-<?= $workorder->id; ?>">
                                         <td>
                                             <div class="table-name">
                                                 <div class="checkbox checkbox-sm">
@@ -287,7 +268,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         </span> Clone Work Order</a>
                                                     </li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('invoice') ?>"
+                                                                               href="<?php echo base_url('invoice/add?workorder=' . $workorder->work_order_number); ?>"
                                                                                data-convert-to-invoice-modal="open"
                                                                                data-id="161983"
                                                                                data-name="WO-00433"><span
@@ -301,7 +282,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-trash-o icon"></span> Delete</a></li> -->
                                                     <li role="presentation">
-                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete </a></li>
+                                                        <a href="javascript:void(0);" data-id="<?= $workorder->id; ?>" data-name="<?= $workorder->work_order_number; ?>" class="btn-delete-work-order"><span class="fa fa-trash-o icon"></span> Delete </a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>">
                                                             <span class="fa fa-briefcase icon"></span> Convert To Jobs
@@ -351,9 +332,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
-                        Work Order
-                    </button>
+                    <a id="btn_clone_workorder" class="btn btn-primary" href="javascript:void(0);" data-clone-modal="submit">Clone
+                        Work Order</a>
                 </div>
             </div>
         </div>
@@ -475,6 +455,83 @@ $(document).on('click touchstart','#delete_workorder',function(){
 
 });
 
+$(document).on('click', '.btn-delete-work-order', function(){
+    var id = $(this).attr('data-id');
+    var workoder_number = $(this).attr('data-name');
+
+    Swal.fire({
+      title: 'Do you want to delete workorder number ' + workoder_number + '?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      confirmButtonColor: '#ec4561'
+    }).then((result) => {          
+      if (result.isConfirmed) {
+        var url = base_url + 'workorder/delete_workorder';
+
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: 'json',
+           data: {id:id},
+           success: function(o)
+           {     
+                if( o ){
+                    Swal.fire({
+                      title: 'Success',
+                      text: 'Workorder successfully deleted.',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                    }).then((result) => {
+                      if (result.value) {
+                        $("#w-row-" + id).fadeOut("normal", function() {
+                            $(this).remove();
+                        });
+                      }
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot find data.',
+                        text: o.msg
+                    });
+                }            
+           }
+        });
+      } 
+    });
+});
+
+load_workorder_count_summary();
+
+function load_workorder_count_summary(){
+    var url = base_url + 'workorder/_load_count_summary';
+    //$('.w-count').html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    setTimeout(function () {
+        $.ajax({
+           type: 'POST',
+           url: url,
+           data: {},
+           dataType: 'json',
+           success: function(o)
+           {
+
+                $('.w-count-all').html(o.count_all);
+                $('.w-count-new').html(o.count_new);
+                $('.w-count-scheduled').html(o.count_scheduled);
+                $('.w-count-started').html(o.count_started);
+                $('.w-count-paused').html(o.count_paused);
+                $('.w-count-invoiced').html(o.count_invoiced);
+                $('.w-count-withdrawn').html(o.count_withdrawn);
+                $('.w-count-closed').html(o.count_closed);
+           }
+        });
+    }, 800);
+}
+
 function sucess(information,$id){
             Swal.fire({
                 title: 'Good job!',
@@ -504,23 +561,21 @@ $('#wo_id').val(id)
 
 });
 
-$(document).on('click touchstart','#clone_workorder',function(){
-
-// var num = $(this).attr('data-wo_num');
-// var wo_num = $('.work_order_no').text();
-var wo_num = $('#wo_id').val();
-// alert(id);
-// $('.work_order_no').text(num);
-$.ajax({
-    type : 'POST',
-    url : "<?php echo base_url(); ?>workorder/duplicate_workorder",
-    data : {wo_num: wo_num},
-    success: function(result){
-        sucess("Data Cloned Successfully!");
-    },
+$(document).on('click','#btn_clone_workorder',function(){
+    // var num = $(this).attr('data-wo_num');
+    // var wo_num = $('.work_order_no').text();
+    var wo_num = $('#wo_id').val();
+    // alert(id);
+    // $('.work_order_no').text(num);
+    $.ajax({
+        type : 'POST',
+        url : "<?php echo base_url(); ?>workorder/duplicate_workorder",
+        data : {wo_num: wo_num},
+        success: function(result){
+            $("#modalCloneWorkorder").modal('hide');
+            sucess("Data Cloned Successfully!");
+        },
     });
-
-
 });
 
 function sucess(information,$id){

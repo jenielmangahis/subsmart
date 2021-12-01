@@ -123,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"> -->
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css">
 -->
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
 <script type="text/javascript" id="js">
     // var tableRows = document.getElementsByTagName('tr');
     // console.dir(tableRows);
@@ -173,8 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
 
 
-                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-
+                    <canvas id="chartContainer" style="height: 370px; width: 100%;"></canvas>
                     <br><br>
                     <!-- <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p> -->
                     <br>
@@ -662,30 +661,88 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 
-
 <script>
-    var cashflow_chart =  document.getElementById('chartContainer').getContext('2d');
-    var massPopChart = new Chart(cashflow_chart,{
-        type:"line",
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-            labels: ['January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'],
-            datasets:[{
-                label:"Population",
-                data:[1,2,3,4,5,6,7,8,9,10,11,12]
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
             }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
+</script>
+
+<script>
+    var cashflow_chart = document.getElementById('chartContainer').getContext('2d');
+    const cfg = {
+        type: "line",
+        data: {
+            labels: ['JAN',
+                'FEB',
+                'MAR',
+                'APR',
+                'MAY',
+                'JUN',
+                'JUL',
+                'AUG',
+                'SEP',
+                'OCT',
+                'NOV',
+                'DEC'
+            ],
+            datasets: [{
+                label: "Cash balance",
+                data: [282, 600, 411, 502, 800, 700, 947, 1402, 700, 2000, null, null],
+                backgroundColor: ['rgba(82, 183, 2, 0.6)'],
+                borderColor: ['rgba(82, 183, 2, 1)'],
+                fill: true,
+            }, {
+                label: "Projected",
+                data: [null, null, null, null, null, null, null, null, null, 2000, 3827, 4070],
+                backgroundColor: ['rgba(82, 183, 2, 0.2)'],
+                borderColor: ['rgba(82, 183, 2, 1)'],
+                fill: true,
+                borderDash: [5, 5],
+            }],
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            }
+        }
+    };
+
+
+    var massPopChart = new Chart(cashflow_chart, cfg);
 </script>
 
 <?php include viewPath('includes/footer_accounting');

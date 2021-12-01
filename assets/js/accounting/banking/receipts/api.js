@@ -1,4 +1,5 @@
 window.prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+export const prefixURL = window.prefixURL;
 
 export async function fetchReceipts(isReviewed = false) {
   const endpoint = `${window.prefixURL}/AccountingReceipts/apiGetReceipts?isReviewed=${isReviewed}`;
@@ -86,6 +87,12 @@ export async function saveMatch(id, payload) {
   });
 
   return response.json();
+}
+
+export async function getExpenseModal(expenseId) {
+  const endpoint = `${window.prefixURL}/accounting/view-transaction/expense/${expenseId}`;
+  const response = await fetch(endpoint);
+  return response.text();
 }
 
 function sleep(seconds) {

@@ -4548,12 +4548,12 @@ $(function() {
                             <div class="card border">
                                 <div class="card-body p-0">
                                     <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
-                                    <p class="card-subtitle">
+                                    <div class="card-subtitle">
                                         <div class="row">
                                             <div class="col">${dateString}</div>
                                             <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
                                         </div>
-                                    </p>
+                                    </div>
                                     <ul class="d-flex justify-content-around">
                                         <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
                                         <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
@@ -4573,7 +4573,6 @@ $(function() {
             var attachments = JSON.parse(res);
     
             cont.children('div.col-12:not(:first-child)').remove();
-            // $('#modal-container form .modal .attachments-container div.col-12:not(:first-child)').remove();
             $.each(attachments, function(index, attachment) {
                 var dateUploaded = new Date(attachment.created_at);
                 var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
@@ -4583,12 +4582,12 @@ $(function() {
                         <div class="card border">
                             <div class="card-body p-0">
                                 <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
-                                <p class="card-subtitle">
+                                <div class="card-subtitle">
                                     <div class="row">
                                         <div class="col">${dateString}</div>
                                         <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
                                     </div>
-                                </p>
+                                </div>
                                 <ul class="d-flex justify-content-around">
                                     <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
                                     <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>

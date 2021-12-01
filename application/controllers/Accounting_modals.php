@@ -4830,6 +4830,15 @@ class Accounting_modals extends MY_Controller
             case 'term' :
                 $return = $this->get_terms_choices($return, $search);
             break;
+            case 'vendor-expense-account' :
+                $accountTypes = [
+                    'Cost of Goods Sold',
+                    'Expenses',
+                    'Other Expense'
+                ];
+
+                $return = $this->get_account_choices($return, $search, $accountTypes);
+            break;
             case 'expense-account':
                 $accountTypes = [
                     'Expenses',
@@ -9503,5 +9512,51 @@ class Accounting_modals extends MY_Controller
     {
         $this->page_data['type'] = $type;
         $this->load->view('accounting/modals/attachments_modal', $this->page_data);
+    }
+
+    public function attach($type, $linkedId)
+    {
+        $attachmentId = $this->input->post('id');
+        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+
+        switch ($type) {
+            case 'expense':
+                $linkedType = 'Expense';
+            break;
+            case 'check':
+                $linkedType = 'Check';
+            break;
+            case 'bill':
+                $linkedType = 'Bill';
+            break;
+            case 'bill-payment':
+                $linkedType = 'Bill Payment';
+            break;
+            case 'purchase-order':
+                $linkedType = 'Purchase Order';
+            break;
+            case 'vendor-credit':
+                $linkedType = 'Vendor Credit';
+            break;
+            case 'credit-card-credit':
+                $linkedType = 'CC Credit';
+            break;
+            case 'vendor' :
+                $linkedType = 'Vendor';
+            break;
+        }
+
+        $attachments = $this->accounting_attachments_model->get_attachments($linkedType, $linkedId);
+
+        $attachmentData = [
+            'type' => $linkedType,
+            'attachment_id' => $attachmentId,
+            'linked_id' => $linkedId,
+            'order_no' => count($attachments) + 1
+        ];
+
+        $attach = $this->accounting_attachments_model->link_attachment($attachmentData);
+
+        echo json_encode(['data' => $attachmentId, 'success' => $attach ? true : false]);
     }
 }

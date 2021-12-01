@@ -56,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     <div class="col-md-12 px-0">
                         <div class="row">
                             <div class="col-md-4">
-                                <div id="receiptDZ" class="dropzone" style="border: 2px dashed gray;background: #fff;">
+                                <div id="receiptsUploadDropzone" class="dropzone" style="border: 2px dashed gray;background: #fff;">
                                     <div class="dz-message" style="margin: 20px;">
                                         <div class="row">
                                             <div class="col-sm-2">

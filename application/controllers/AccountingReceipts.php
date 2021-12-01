@@ -11,26 +11,31 @@ class AccountingReceipts extends MY_Controller
         $receipts = $this->db->get('accounting_receipts')->result();
 
         foreach ($receipts as $receipt) {
-            if (!is_null($receipt->payee)) {
-                $receipt->__select2_payee = $this->getPayee($receipt->payee);
-            }
-
-            if (!is_null($receipt->category_id)) {
-                $receipt->__select2_category = $this->getAccount($receipt->category_id);
-            }
-
-            if (!is_null($receipt->bank_account_id)) {
-                $receipt->__select2_bank_account = $this->getAccount($receipt->bank_account_id);
-            }
-
-            if (!is_null($receipt->expense_id)) {
-                $this->db->where('id', $receipt->expense_id);
-                $receipt->expense = $this->db->get('accounting_expense')->row();
-            }
+            $this->prepareReceipt($receipt);
         }
 
         header('content-type: application/json');
         echo json_encode(['data' => $receipts]);
+    }
+
+    private function prepareReceipt(stdClass &$receipt)
+    {
+        if (!is_null($receipt->payee)) {
+            $receipt->__select2_payee = $this->getPayee($receipt->payee);
+        }
+
+        if (!is_null($receipt->category_id)) {
+            $receipt->__select2_category = $this->getAccount($receipt->category_id);
+        }
+
+        if (!is_null($receipt->bank_account_id)) {
+            $receipt->__select2_bank_account = $this->getAccount($receipt->bank_account_id);
+        }
+
+        if (!is_null($receipt->expense_id)) {
+            $this->db->where('id', $receipt->expense_id);
+            $receipt->expense = $this->db->get('accounting_expense')->row();
+        }
     }
 
     private function getPayee($payeeId)
@@ -180,6 +185,8 @@ class AccountingReceipts extends MY_Controller
             $this->convertToExpense($id);
         }
 
+        $this->prepareReceipt($record);
+
         header('content-type: application/json');
         echo json_encode(['data' => $record]);
     }
@@ -315,5 +322,42 @@ class AccountingReceipts extends MY_Controller
             $this->db->where('id', $receipt->expense_id);
             $this->db->delete('accounting_expense');
         }
+    }
+
+    public function uploadImage()
+    {
+        header('content-type: application/json');
+
+        if (empty($_FILES)) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $uploadConfig = $this->uploadlib->initialize([
+            'upload_path' => './uploads/accounting/',
+            'allowed_types' => 'gif|jpg|png|jpeg|pdf',
+            'overwrite' => true,
+            'max_size' => '5000',
+            'max_height' => '0',
+            'max_width' => '0',
+            'encrypt_name' => true,
+        ]);
+        $this->load->library('upload', $uploadConfig);
+
+        if (!$this->upload->do_upload("file")) {
+            $errors = $this->upload->display_errors();
+            echo json_encode(['success' => false, 'errors' => $errors]);
+            return;
+        }
+
+        $uploadData = $this->upload->data();
+        $receiptData = ['receipt_img' => $uploadData['file_name'], 'user_id' => logged('id')];
+        $this->db->insert('accounting_receipts', $receiptData);
+
+        $this->db->where('id', $this->db->insert_id());
+        $record = $this->db->get('accounting_receipts')->row();
+
+        $this->prepareReceipt($record);
+        echo json_encode(['data' => $record]);
     }
 }

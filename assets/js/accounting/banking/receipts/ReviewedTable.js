@@ -38,7 +38,7 @@ export class ReviewedTable {
         return Number(row.total_amount) <= 0 ? fallback : row.total_amount;
       },
       linkedRecord: () => {
-        return `<span>Attached to: <a href="#" class="receiptsTable__link">Expense</a></span>`;
+        return `<span>Attached to: <a href="#" data-action="showExpense" class="receiptsTable__link action">Expense</a></span>`;
       },
       actions: () => {
         return `<a class="receiptsTable__link action" href="#" data-action="undoAdd">Undo add</a>`;
@@ -51,6 +51,17 @@ export class ReviewedTable {
       undoAdd: async ({ id }) => {
         await this.api.editReceipt(id, { to_expense: 0 });
         window.location.reload();
+      },
+      showExpense: async ({ expense }) => {
+        const modal = await this.api.getExpenseModal(expense.id);
+        if ($("div#modal-container").length > 0) {
+          $("div#modal-container").html(modal);
+        } else {
+          $("body").append(`<div id="modal-container">${modal}</div>`);
+        }
+
+        $("#expenseModal #payee").trigger("change");
+        $("#expenseModal").modal("show");
       },
     };
   }

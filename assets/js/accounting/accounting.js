@@ -2239,6 +2239,7 @@ $(document).on('click','#addCategorySaved',function () {
     //Upload Receipt image or Add receipt
 Dropzone.autoDiscover = false;
 $(document).ready(function () {
+    return; // implementation is transfered on receipts.js
     var fname;
     var site_url = jQuery("#siteurl").val();
     var receiptDropzone = new Dropzone('div#receiptDZ', {
