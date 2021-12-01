@@ -348,6 +348,7 @@ $route['accounting/load-bill-payment-bills/(:any)']['post'] = 'accounting_modals
 $route['accounting/load-bill-payment-credits/(:any)']['post'] = 'accounting_modals/load_payment_used_credits/$1';
 $route['accounting/get-attachment/(:any)'] = 'accounting_modals/get_attachment/$1';
 $route['accounting/get-existing-attachments-modal/(:any)'] = 'accounting_modals/get_existing_attachments_modal/$1';
+$route['accounting/attach/(:any)/(:any)']['post'] = 'accounting_modals/attach/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -508,6 +509,7 @@ $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 $route['accounting/vendors/make-inactive']['post'] = 'accounting_controllers/vendors/make_inactive';
+$route['accounting/vendors/(:any)/edit'] = 'accounting_controllers/vendors/edit/$1'; 
 $route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/vendors/update/$1';
 $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_controllers/vendors/update_attachments/$1';
 $route['accounting/vendors/remove-attachment/(:any)']['post'] = 'accounting_controllers/vendors/remove_attachment/$1';

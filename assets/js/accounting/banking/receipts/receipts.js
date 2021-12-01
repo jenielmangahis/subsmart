@@ -126,6 +126,26 @@ window.addEventListener("DOMContentLoaded", async () => {
     $searchExpenses.prop("disabled", false);
     new SearchedReceiptsTable($searchedReceiptsTable, data);
   });
+
+  Dropzone.autoDiscover = false;
+  new Dropzone("#receiptsUploadDropzone", {
+    url: `${api.prefixURL}/AccountingReceipts/uploadImage`,
+    acceptedFiles: "image/*",
+    addRemoveLinks: true,
+    init: function () {
+      const $table = $("#receiptsReview");
+
+      this.on("success", (_, { data }) => {
+        $table.DataTable().row.add(data).draw();
+      });
+
+      this.on("removedfile", async (file) => {
+        const { data } = JSON.parse(file.xhr.response);
+        await api.deleteReceipt(data.id);
+        $table.DataTable().row(`#row${data.id}`).remove().draw();
+      });
+    },
+  });
 });
 
 window.addEventListener("DOMContentLoaded", function () {

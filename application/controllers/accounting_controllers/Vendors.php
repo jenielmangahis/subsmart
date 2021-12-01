@@ -367,6 +367,13 @@ class Vendors extends MY_Controller
         }
     }
 
+    public function edit($vendorId)
+    {
+        $this->page_data['vendorDetails'] = $this->vendors_model->get_vendor_by_id($vendorId);
+        $this->page_data['attachments'] = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+        $this->load->view('accounting/vendors/edit_vendor_modal', $this->page_data);
+    }
+
     public function update($vendorId)
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);

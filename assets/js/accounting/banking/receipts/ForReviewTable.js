@@ -116,83 +116,13 @@ export class ForReviewTable {
         window.location.reload();
       },
       findMatch: () => {},
-      view: (row, rows) => {
+      view: (row, rows, table) => {
         this.utils.resetStep3();
+        this.prepareModal(row);
 
         const $modal = $("#receiptModal");
         const $form = $modal.find("form");
         const $dataTypesStep1 = $modal.find("[data-step=1] [data-type]");
-        const $dataTypesStep2 = $modal.find("[data-step=2] [data-type]");
-
-        const $image = $modal.find("#receiptImage");
-        $image.attr("src", `${this.uploadPath}${row.receipt_img}`);
-
-        const $createdAt = $modal.find("#receiptImageCreatedAt");
-        const createdAt = moment(row.created_at).format("hh:mm A MM/DD/YYYY");
-        $createdAt.text(`Added ${createdAt}`);
-
-        for (let index = 0; index < $dataTypesStep1.length; index++) {
-          const $element = $dataTypesStep1[index];
-          const { type } = $element.dataset;
-
-          if (!row.hasOwnProperty(type)) {
-            continue;
-          }
-
-          let value = row[type];
-          if (type === "transaction_date") {
-            value = moment(value).format("YYYY-MM-DD");
-          }
-
-          if ($element.classList.contains("select2-hidden-accessible")) {
-            $($element).find("option:not(:first-child)").remove(); // remove appended options
-            $($element).val("").trigger("change"); // reset value
-
-            if (type === "payee" && row.__select2_payee) {
-              const { __select2_payee: payee } = row;
-              const $option = `<option value="${payee.value}" selected="selected">${payee.text}</option>`;
-              $($element).append($option);
-            }
-
-            if (type === "bank_account_id" && row.__select2_bank_account) {
-              const { __select2_bank_account: account } = row;
-              const $option = `<option value="${account.value}" selected="selected">${account.text}</option>`;
-              $($element).append($option);
-            }
-
-            if (type === "category_id" && row.__select2_category) {
-              const { __select2_category: category } = row;
-              const $option = `<option value="${category.value}" selected="selected">${category.text}</option>`;
-              $($element).append($option);
-            }
-          }
-
-          $element.value = value;
-        }
-
-        for (let index = 0; index < $dataTypesStep2.length; index++) {
-          const $element = $dataTypesStep2[index];
-          const { type } = $element.dataset;
-          let value = row[type];
-
-          if (!value) {
-            continue;
-          }
-
-          if (value.text) {
-            value = value.text;
-          }
-
-          if (type === "transaction_date") {
-            value = moment(value).format("MM/DD/YYYY");
-          }
-
-          if (type === "total_amount") {
-            value = accounting.formatMoney(value);
-          }
-
-          $element.textContent = value;
-        }
 
         let hasAllRequiredDetails = true;
         for (let index = 0; index < $dataTypesStep1.length; index++) {
@@ -246,14 +176,17 @@ export class ForReviewTable {
           $saveReceipt.addClass("receiptsButton--isLoading");
           $saveReceipt.prop("disabled", true);
 
-          await this.api.editReceipt(row.id, payload);
+          const { data } = await this.api.editReceipt(row.id, payload);
+          this.prepareModal(data);
+          table.row(`#row${data.id}`).data(data).draw();
 
           $saveReceipt.removeClass("receiptsButton--isLoading");
           $saveReceipt.prop("disabled", false);
 
-          const { actionAfter } = $saveReceipt.get(0).dataset;
+          const { actionAfter } = $(event.target).get(0).dataset;
           if (actionAfter === "close") {
             $modal.modal("hide");
+            return;
           }
 
           if (actionAfter === "next") {
@@ -361,6 +294,82 @@ export class ForReviewTable {
     };
   }
 
+  prepareModal(receipt) {
+    const $modal = $("#receiptModal");
+    const $dataTypesStep1 = $modal.find("[data-step=1] [data-type]");
+    const $dataTypesStep2 = $modal.find("[data-step=2] [data-type]");
+
+    const $image = $modal.find("#receiptImage");
+    $image.attr("src", `${this.uploadPath}${receipt.receipt_img}`);
+
+    const $createdAt = $modal.find("#receiptImageCreatedAt");
+    const createdAt = moment(receipt.created_at).format("hh:mm A MM/DD/YYYY");
+    $createdAt.text(`Added ${createdAt}`);
+
+    for (let index = 0; index < $dataTypesStep1.length; index++) {
+      const $element = $dataTypesStep1[index];
+      const { type } = $element.dataset;
+
+      if (!receipt.hasOwnProperty(type)) {
+        continue;
+      }
+
+      let value = receipt[type];
+      if (type === "transaction_date") {
+        value = moment(value).format("YYYY-MM-DD");
+      }
+
+      if ($element.classList.contains("select2-hidden-accessible")) {
+        $($element).find("option:not(:first-child)").remove(); // remove appended options
+        $($element).val("").trigger("change"); // reset value
+
+        if (type === "payee" && receipt.__select2_payee) {
+          const { __select2_payee: payee } = receipt;
+          const $option = `<option value="${payee.value}" selected="selected">${payee.text}</option>`;
+          $($element).append($option);
+        }
+
+        if (type === "bank_account_id" && receipt.__select2_bank_account) {
+          const { __select2_bank_account: account } = receipt;
+          const $option = `<option value="${account.value}" selected="selected">${account.text}</option>`;
+          $($element).append($option);
+        }
+
+        if (type === "category_id" && receipt.__select2_category) {
+          const { __select2_category: category } = receipt;
+          const $option = `<option value="${category.value}" selected="selected">${category.text}</option>`;
+          $($element).append($option);
+        }
+      }
+
+      $element.value = value;
+    }
+
+    for (let index = 0; index < $dataTypesStep2.length; index++) {
+      const $element = $dataTypesStep2[index];
+      const { type } = $element.dataset;
+      let value = receipt[type];
+
+      if (!value) {
+        continue;
+      }
+
+      if (value.text) {
+        value = value.text;
+      }
+
+      if (type === "transaction_date") {
+        value = moment(value).format("MM/DD/YYYY");
+      }
+
+      if (type === "total_amount") {
+        value = accounting.formatMoney(value);
+      }
+
+      $element.textContent = value;
+    }
+  }
+
   async init() {
     const { data } = await this.api.fetchReceipts();
     const table = this.$table.DataTable({
@@ -439,7 +448,7 @@ export class ForReviewTable {
       const rowId = $parent.data("id");
       const rows = table.rows().data().toArray();
       const row = rows.find(({ id }) => id == rowId);
-      this.actions.view(row, rows);
+      this.actions.view(row, rows, table);
     });
 
     table.on(
