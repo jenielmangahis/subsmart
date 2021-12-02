@@ -218,12 +218,7 @@ class Expenses extends MY_Controller
         $transactions = [];
         if (isset($bills) && count($bills) > 0) {
             foreach ($bills as $bill) {
-                if (!is_null($bill->attachments) && $bill->attachments !== "") {
-                    $attachmentIds = json_decode($bill->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
 
                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
 
@@ -249,12 +244,7 @@ class Expenses extends MY_Controller
 
         if (isset($billPayments) && count($billPayments) > 0) {
             foreach ($billPayments as $billPayment) {
-                if (!is_null($billPayment->attachments) && $billPayment->attachments !== "") {
-                    $attachmentIds = json_decode($billPayment->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Bill Payment', $billPayment->id);
 
                 $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
@@ -284,12 +274,7 @@ class Expenses extends MY_Controller
 
         if (isset($checks) && count($checks) > 0) {
             foreach ($checks as $check) {
-                if (!is_null($check->attachments) && $check->attachments !== "") {
-                    $attachmentIds = json_decode($check->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
 
                 switch ($check->payee_type) {
                     case 'vendor':
@@ -328,12 +313,7 @@ class Expenses extends MY_Controller
 
         if (isset($creditCardCredits) && count($creditCardCredits) > 0) {
             foreach ($creditCardCredits as $creditCardCredit) {
-                if (!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
-                    $attachmentIds = json_decode($creditCardCredit->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $creditCardCredit->id);
 
                 switch ($creditCardCredit->payee_type) {
                     case 'vendor':
@@ -372,12 +352,7 @@ class Expenses extends MY_Controller
 
         if (isset($ccPayments) && count($ccPayments) > 0) {
             foreach ($ccPayments as $ccPayment) {
-                if (!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
-                    $attachmentIds = json_decode($ccPayment->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $ccPayment->id);
 
                 $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
 
@@ -403,12 +378,7 @@ class Expenses extends MY_Controller
 
         if (isset($expenses) && count($expenses) > 0) {
             foreach ($expenses as $expense) {
-                if (!is_null($expense->attachments) && $expense->attachments !== "") {
-                    $attachmentIds = json_decode($expense->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
 
                 switch ($expense->payee_type) {
                     case 'vendor':
@@ -449,12 +419,7 @@ class Expenses extends MY_Controller
 
         if (isset($purchOrders) && count($purchOrders) > 0) {
             foreach ($purchOrders as $purchOrder) {
-                if (!is_null($purchOrder->attachments) && $purchOrder->attachments !== "") {
-                    $attachmentIds = json_decode($purchOrder->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $purchOrder->id);
 
                 $payee = $this->vendors_model->get_vendor_by_id($purchOrder->vendor_id);
 
@@ -480,12 +445,7 @@ class Expenses extends MY_Controller
 
         if (isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach ($vendorCredits as $vendorCredit) {
-                if (!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
-                    $attachmentIds = json_decode($vendorCredit->attachments, true);
-                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
-                } else {
-                    $attachments = [];
-                }
+                $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vendorCredit->id);
 
                 $payee = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
 
@@ -1302,44 +1262,47 @@ class Expenses extends MY_Controller
     public function attach($transactionType, $transactionId)
     {
         $attachmentId = $this->input->post('id');
-
-        $transaction = $this->get_transaction($transactionType, $transactionId);
-        $attachments = json_decode($transaction->attachments, true);
-        $attachments[] = $attachmentId;
-        $attachments = json_encode($attachments);
+        $attachment = $this->accounting_attachments_model->getById($attachmentId);
 
         switch ($transactionType) {
             case 'expense':
-                $update = $this->vendors_model->update_expense($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'Expense';
             break;
             case 'check':
-                $update = $this->vendors_model->update_check($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'Check';
             break;
             case 'bill':
-                $update = $this->vendors_model->update_bill($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'Bill';
             break;
             case 'bill-payment':
-                $update = $this->vendors_model->update_bill_payment($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'Bill Payment';
             break;
             case 'purchase-order':
-                $update = $this->vendors_model->update_purchase_order($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'Purchase Order';
             break;
             case 'vendor-credit':
-                $update = $this->vendors_model->update_vendor_credit($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'Vendor Credit';
             break;
             case 'credit-card-credit':
-                $update = $this->vendors_model->update_credit_card_credit($transactionId, ['attachments' => $attachments]);
+                $linkedType = 'CC Credit';
+            break;
+            case 'vendor' :
+                $linkedType = 'Vendor';
             break;
         }
 
-        if ($update) {
-            $attachment = $this->accounting_attachments_model->getById($attachmentId);
-            $attachmentData = [
-                'linked_to_count' => intval($attachment->linked_to_count) + 1
-            ];
+        $attachments = $this->accounting_attachments_model->get_attachments($transactionType, $transactionId);
 
-            $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+        $attachmentData = [
+            'type' => $linkedType,
+            'attachment_id' => $attachmentId,
+            'linked_id' => $transactionId,
+            'order_no' => count($attachments) + 1
+        ];
 
+        $attach = $this->accounting_attachments_model->link_attachment($attachmentData);
+
+        if ($attach) {
             $this->session->set_flashdata('success', "$attachment->uploaded_name.$attachment->file_extension sucessfully attached.");
         } else {
             $this->session->set_flashdata('error', "Unexpected error, please try again!");

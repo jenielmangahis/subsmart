@@ -72,7 +72,8 @@ class Reports extends MY_Controller {
         $company_id = logged('company_id');  
         $this->page_data['type'] = $id;           
         $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);           
-        $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, 0);           
+        $this->page_data['invoices'] = $this->invoice_model->getAllByCompany($company_id, 0);    
+        $this->page_data['invoicesItems'] = $this->invoice_model->getInvoicesItems(logged('company_id'));       
         $this->load->view('report/main/popular_reports', $this->page_data);
     }
     public function preview()
@@ -146,6 +147,9 @@ class Reports extends MY_Controller {
 
             case "customer_source":
                 return $this->setCustomerBySource();
+
+            case "estimates_summary":
+                return $this->setEstimates();
         }
     }
 
@@ -156,6 +160,15 @@ class Reports extends MY_Controller {
     
         $this->page_data['users'] = $this->users_model->getAllUsersByCompany($comp_id, $user_id);			     
 
+    }
+
+    public function setEstimates()
+    {
+        $this->page_data['estimates'] = $this->estimate_model->getAllByCompanynDraft(logged('company_id'));
+
+        // return $this->page_data;
+        echo json_encode($this->page_data);
+        
     }
 
     public function filterReports() {

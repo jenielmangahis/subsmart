@@ -378,7 +378,7 @@
         <?php endforeach;?>
         </tbody>
     </table>
-    <?php elseif($type === "estimate-status-by-month") : ?>
+    <?php elseif($type === "estimates_summary") : ?>
     <table id="tableToListReport" class="table table-hover table-to-list">
         <thead>
             <tr>
@@ -391,22 +391,40 @@
         </thead>
         <tbody>
         <?php foreach($data as $item) : ?>
-        <?php if ($item[0] == 'Total') : ?>
-            <tr style='background-color:#ededed; font-weight:bold; padding:10px;'>
+        <?php if ($item[0] == '') : ?>
+            <!-- <tr style='background-color:#ededed; font-weight:bold; padding:10px;'>
                 <td style='padding:10px;'><?php echo $item[0] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[1] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[2] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[3] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[4] ?></td>
-            </tr>
-        <?php else :?>
+            </tr> -->
+            <?php foreach($estimates as $est){ ?>
             <tr>
-                <td style='padding:10px;'><?php echo $item[0] ?></td>
+                <td style='padding:10px;'><?php echo $est->id; ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[1] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[2] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[3] ?></td>
                 <td style='padding:10px;' class="text-right"><?php echo $item[4] ?></td>
             </tr>
+            <?php } ?>
+        <?php else :?>
+            <!-- <tr>
+                <td style='padding:10px;'><?php echo $item[0] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[1] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[2] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[3] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[4] ?></td>
+            </tr> -->
+            <?php foreach($estimates as $est){ ?>
+            <tr>
+                <td style='padding:10px;'><?php echo $est->id; ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[1] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[2] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[3] ?></td>
+                <td style='padding:10px;' class="text-right"><?php echo $item[4] ?></td>
+            </tr>
+            <?php } ?>
         <?php endif;?>
         <?php endforeach;?>
         </tbody>

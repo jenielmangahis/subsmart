@@ -104,113 +104,105 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 </li>
                             </ul>
                             <!-- Tab panes -->
-                            <div class="tab-content" style="padding-top: 10px">
+                            <div class="tab-content mt-3">
                                 <div class="tab-pane active" id="forReview">
-                                    <div class="dropdown" style="position: relative;display: inline-block;margin-left: 10px;margin-bottom: 10px;">
-                                        <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
-                                            Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-left" id="batchActions">
-                                            <li><a href="#" class="dropdown-item" data-action="confirm">Confirm selected</a></li>
-                                            <li><a href="#" class="dropdown-item" data-action="review">Review selected</a></li>
-                                            <li><a href="#" class="dropdown-item" data-action="delete">Delete selected</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="dropdown filter-dp" style="position: relative;display: inline-block;margin-left: 20px;margin-top: 10px;">
-                                        <i class="fa fa-sliders fa-2x fa-rotate-270 " data-toggle="dropdown"></i>
-                                        <ul class="dropdown-menu">
-                                            <li style="padding:30px">
-                                                <form action="" method="" class="">
-                                                    <div>
-                                                        <div style="width: 180px;position:relative; display: inline-block;">
-                                                            <label for="type">Dates</label>
-                                                            <select name="type" id="type" class="form-control" >
-                                                                <option value="">All dates</option>
-                                                                <option value="">Customs</option>
-                                                                <option value="">Since 365 days ago</option>
-                                                                <option value="">This month</option>
-                                                                <option value="">This quarter</option>
-                                                                <option value="">This year</option>
-                                                                <option value="">Last month</option>
-                                                                <option value="">Last quarter</option>
-                                                                <option value="">Last year</option>
-                                                            </select>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dropdown mr-2">
+                                            <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
+                                                Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-left" id="batchActions">
+                                                <li><a href="#" class="dropdown-item" data-action="confirm">Confirm selected</a></li>
+                                                <li><a href="#" class="dropdown-item" data-action="review">Review selected</a></li>
+                                                <li><a href="#" class="dropdown-item" data-action="delete">Delete selected</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="dropdown filter-dp">
+                                            <i class="fa fa-sliders fa-2x fa-rotate-270 " data-toggle="dropdown"></i>
+                                            <ul class="dropdown-menu">
+                                                <li style="padding:1rem; min-height:unset;">
+                                                    <form action="" method="" class="receiptsFilterForm" id="receiptsFilterForm">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <label for="receiptsFilterForm__date">Dates</label>
+                                                                <select id="receiptsFilterForm__date" class="form-control" data-type="date">
+                                                                    <option value="all">All dates</option>
+                                                                    <option value="custom">Custom</option>
+                                                                    <option value="365_ago">Since 365 days ago</option>
+                                                                    <option value="this_month">This month</option>
+                                                                    <option value="this_quarter">This quarter</option>
+                                                                    <option value="this_year">This year</option>
+                                                                    <option value="last_month">Last month</option>
+                                                                    <option value="last_quarter">Last quarter</option>
+                                                                    <option value="last_year">Last year</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label for="receiptsFilterForm__from">From</label>
+                                                                <input id="receiptsFilterForm__from" type="date" class="form-control" data-type="from">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label for="receiptsFilterForm__to">To</label>
+                                                                <input id="receiptsFilterForm__to" type="date" class="form-control" data-type="to">
+                                                            </div>
                                                         </div>
-                                                        <div style="position: relative; display: inline-block;width: 120px;">
-                                                            <label for="">From</label>
-                                                            <input type="text" class="form-control">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label for="receiptsFilterForm__category">Account/Category</label>
+                                                                <select id="receiptsFilterForm__category" name="category" class="form-control select2" data-select2-type="bank_account" data-type="category_id">
+                                                                    <option disabled selected value="">Select a category</option>
+                                                                </select>
+                                                            </div>
                                                         </div>
-                                                        <div style="position:relative; display: inline-block;margin-left: 10px;width: 120px;">
-                                                            <label for="">To</label>
-                                                            <input type="text" class="form-control">
+                                                        <div class="row amountWrapper" data-type="between">
+                                                            <div class="col-md-6">
+                                                                <label for="receiptsFilterForm__amount">Amount</label>
+                                                                <select id="receiptsFilterForm__amount" class="form-control" data-type="amount">
+                                                                    <option value="between">Between</option>
+                                                                    <option value="less_than">Less Than</option>
+                                                                    <option value="greater_than">Greater Than</option>
+                                                                    <option value="equals">Equals</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="row" data-amount-type="between">
+                                                                    <div class="col-md-6">
+                                                                        <label for="receiptsFilterForm__betweenMin">Minimum</label>
+                                                                        <input id="receiptsFilterForm__betweenMin" type="number" class="form-control" data-type="between_min">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="receiptsFilterForm__betweenMax">Maximum</label>
+                                                                        <input id="receiptsFilterForm__betweenMax" type="number" class="form-control" data-type="between_max">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" data-amount-type="less_than">
+                                                                    <div class="col-md-12">
+                                                                        <label for="receiptsFilterForm__lessThanMax">Maximum</label>
+                                                                        <input id="receiptsFilterForm__lessThanMax" type="number" class="form-control" data-type="less_than_max">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" data-amount-type="greater_than">
+                                                                    <div class="col-md-12">
+                                                                        <label for="receiptsFilterForm__greaterThanMin">Minimum</label>
+                                                                        <input id="receiptsFilterForm__greaterThanMin" type="number" class="form-control" data-type="greater_than_min">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" data-amount-type="equals">
+                                                                    <div class="col-md-12">
+                                                                        <label for="receiptsFilterForm__equals">Equals</label>
+                                                                        <input id="receiptsFilterForm__equals" type="number" class="form-control" data-type="equals">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div style="margin-top: 20px;width: 100%;">
-                                                        <div style="position: relative; display: inline-block;">
-                                                            <label for="" style="display: block">Payee</label>
-                                                            <input type="text" list="selectpayee" placeholder="Select Payee" class="filter-datalist" />
-                                                            <datalist id="selectpayee">
-                                                                <option>Test</option>
-                                                                <option>Test</option>
-                                                                <option>Test</option>
-                                                                <option>Test</option>
-                                                            </datalist>
+                                                        <div class="d-flex justify-content-between">
+                                                            <button class="btn btn-default" type="reset">Reset</button>
+                                                            <button class="btn btn-success" type="button">Apply</button>
                                                         </div>
-                                                        <div style="position:relative; display: inline-block;margin-left: 10px;">
-                                                            <label for="" style="display: block">Account/Category</label>
-                                                            <input type="text" list="selectCategory" placeholder="Select Category" class="filter-datalist" />
-                                                            <datalist id="selectCategory">
-                                                                <option>Test</option>
-                                                                <option>Test</option>
-                                                                <option>Test</option>
-                                                                <option>Test</option>
-                                                            </datalist>
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-top: 20px;">
-                                                        <div style="position:relative; display: inline-block;width: 45%" >
-                                                            <label for="">Actions</label>
-                                                            <select name="status" id="type" class="form-control">
-                                                                <option value="">All Actions</option>
-                                                                <option value="">Create</option>
-                                                                <option value="">Match</option>
-                                                                <option value="">Review</option>
-                                                            </select>
-                                                        </div>
-                                                        <div style="position:relative; display: inline-block;width: 45%">
-                                                            <label for="">Document type</label>
-                                                            <select name="status" id="type" class="form-control" >
-                                                                <option value="">Receipt</option>
-                                                                <option value="">Bill</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-top: 20px;">
-                                                        <div style="width: 180px;position:relative; display: inline-block;">
-                                                            <label for="type">Amount</label>
-                                                            <select name="type" id="type" class="form-control" >
-                                                                <option value="">Between</option>
-                                                                <option value="">Less Than</option>
-                                                                <option value="">Greater Than</option>
-                                                                <option value="">Equals</option>
-                                                            </select>
-                                                        </div>
-                                                        <div style="position: relative; display: inline-block;width: 120px;">
-                                                            <label for="">Minimum</label>
-                                                            <input type="text" class="form-control">
-                                                        </div>
-                                                        <div style="position:relative; display: inline-block;margin-left: 10px;width: 120px;">
-                                                            <label for="">Maximum</label>
-                                                            <input type="text" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-top: 20px">
-                                                        <button class="btn btn-default" type="reset" style="border-radius: 36px">Reset</button>
-                                                        <button class="btn btn-success" type="submit" style="border-radius: 36px; float: right;">Apply</button>
-                                                    </div>
-                                                </form>
-                                            </li>
-                                        </ul>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
 
                                     <input type="hidden" id="uploadPath" value="<?=base_url('uploads/accounting/');?>" />

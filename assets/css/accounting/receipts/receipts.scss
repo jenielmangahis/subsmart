@@ -265,3 +265,50 @@ $colorError: #d52b1e;
     }
   }
 }
+
+.receiptsFilterForm {
+  min-width: max-content;
+
+  .row {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+
+  [class^="col-"] {
+    padding: 0 8px;
+  }
+
+  .btn {
+    min-width: 100px;
+  }
+
+  .amountWrapper {
+    [data-amount-type] {
+      display: none;
+    }
+
+    &[data-type="between"] {
+      [data-amount-type="between"] {
+        display: flex;
+      }
+    }
+
+    &[data-type="less_than"] {
+      [data-amount-type="less_than"] {
+        display: flex;
+      }
+    }
+
+    &[data-type="greater_than"] {
+      [data-amount-type="greater_than"] {
+        display: flex;
+      }
+    }
+
+    &[data-type="equals"] {
+      [data-amount-type="equals"] {
+        display: flex;
+      }
+    }
+  }
+}
