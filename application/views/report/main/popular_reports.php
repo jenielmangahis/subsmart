@@ -342,7 +342,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "estimate-status-by-month") : ?>
-                                <table id="tableToListReportEstimate" class="table table-hover table-to-list">
+                                <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
                                         <tr style="background-color:#EEEEEE;">
                                             <th class="text-center">Date</th>
@@ -352,16 +352,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="text-center">Fees</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="reportEstimateBody">
-                                        <?php foreach($estimates as $est){ ?>
+                                    <tbody id="">
+                                    <!-- <tbody id="reportEstimateBody"> -->
+                                        <!-- <?php //foreach($estimates as $est){ ?>
                                         <tr>
-                                            <td class="text-center"><?php echo date('m-d-Y', strtotime($est->estimate_date)); ?></td>
-                                            <td class="text-center"><?php echo $est->estimate_number; ?></td>
-                                            <td class="text-center"><?php echo $est->estimate_type; ?></td>
-                                            <td class="text-center"><?php echo  date('m-d-Y', strtotime($est->expiry_date)); ?></td>
-                                            <td class="text-center">$<?php echo number_format($est->grand_total,2); ?></td>
+                                            <td class="text-center"><?php //echo date('m-d-Y', strtotime($est->estimate_date)); ?></td>
+                                            <td class="text-center"><?php //echo $est->estimate_number; ?></td>
+                                            <td class="text-center"><?php //echo $est->estimate_type; ?></td>
+                                            <td class="text-center"><?php //echo  date('m-d-Y', strtotime($est->expiry_date)); ?></td>
+                                            <td class="text-center">$<?php //cho number_format($est->grand_total,2); ?></td>
                                         </tr>
-                                        <?php } ?>
+                                        <?php //} ?> -->
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "account-receivable-com-vs-res") : ?>
@@ -428,17 +429,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <hr>
-                                <table class="table table-hover table-to-list">
+                                <table class="table table-hover table-to-list salesItemsReport" id="tableToListReport">
                                     <thead>
                                         <tr>
                                             <th class="text-left">Item</th>
-                                            <th class="text-left">Invoice</th>
-                                            <th class="text-left">Date Issued</th>
-                                            <th class="text-left">Total Qty</th>
+                                            <th class="text-center">Invoice</th>
+                                            <th class="text-center">Date Issued</th>
+                                            <th class="text-center">Total Qty</th>
                                             <th class="text-right">Total Sales</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
+                                        <!-- <?php //foreach($invoicesItems as $iInv){ ?>
+                                        <tr>
+                                            <th class="text-left"><?php //echo $iInv->title ; ?></th>
+                                            <th class="text-left"><?php //echo $iInv->invoice_number ; ?></th>
+                                            <th class="text-left"><?php //echo $iInv->date_issued ; ?></th>
+                                            <th class="text-left"><?php //echo $iInv->qty ; ?></th>
+                                            <th class="text-right"><?php //echo $iInv->total ; ?></th>
+                                        </tr>
+                                        <?php //} ?> -->
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "payment-by-customer-group") : ?>
@@ -564,3 +575,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+    $(document).ready(function(){
+        $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            var min = $('#fromCustomDateInput').va();
+            var max = $('#toCustomDateInput').va();
+            var startDate = new Date(data[4]);
+            if (min == null && max == null) { return true; }
+            if (min == null && startDate <= max) { return true;}
+            if(max == null && startDate >= min) {return true;}
+            if (startDate <= max && startDate >= min) { return true; }
+            return false;
+        }
+        );
+
+       
+            $("#fromCustomDateInput").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+            $("#toCustomDateInput").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+            var table = $('#tableToListReport').DataTable();
+
+            // Event listener to the two range filtering inputs to redraw on input
+            $('#fromCustomDateInput, #toCustomDateInput').change(function () {
+                table.draw();
+            });
+        });
+</script>
+
+<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script>
+// $(document).ready(function() {
+//     $('.salesItemsReport').DataTable( {
+//         "order": [[ 0, "desc" ]]
+//     } );
+// } );
+</script>

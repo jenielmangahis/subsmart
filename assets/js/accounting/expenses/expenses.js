@@ -50,9 +50,44 @@ var table = $('#transactions-table').DataTable({
 			data: null,
 			name: 'checkbox',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
+                var id = 'select-';
+                switch(rowData.type) {
+                    case 'Bill' :
+                        id += 'bill-';
+                    break;
+                    case 'Bill Payment (Check)' :
+                        id += 'bill-payment-';
+                    break;
+                    case 'Bill Payment (Credit Card)' :
+                        id += 'bill-payment-';
+                    break;
+                    case 'Check' :
+                        id += 'check-';
+                    break;
+                    case 'Credit Card Credit' :
+                        id += 'cc-credit-';
+                    break;
+                    case 'Credit Card Payment' :
+                        id += 'cc-payment-';
+                    break;
+                    case 'Expense' :
+                        id += 'expense-';
+                    break;
+                    case 'Purchase Order' :
+                        id += 'purchase-order-';
+                    break;
+                    case 'Vendor Credit' :
+                        id += 'vendor-credit-';
+                    break;
+                }
+                id += rowData.id;
+
                 $(td).html(`
                 <div class="d-flex justify-content-center">
-                    <input type="checkbox" value="${rowData.id}">
+                    <div class="checkbox checkbox-sec m-0">
+                        <input type="checkbox" value="${rowData.id}" id="${id}">
+                        <label for="${id}" class="p-0" style="width: 24px; height: 24px"></label>
+                    </div>
                 </div>
                 `);
 			}

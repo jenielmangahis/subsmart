@@ -135,7 +135,7 @@ $(document).on('change', '#vendors-table tbody input[type="checkbox"]', function
     var href = 'mailto:'
 
     $('#vendors-table tbody input[type="checkbox"]').each(function() {
-        var row = $(this).parent().parent();
+        var row = $(this).parent().parent().parent();
         var rowData = table.row(row).data();
 
         if($(this).prop('checked') === false) {
@@ -209,7 +209,14 @@ var table = $('#vendors-table').DataTable({
 			data: null,
 			name: 'checkbox',
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).html(`<input type="checkbox" value="${rowData.id}">`);
+                $(td).html(`
+                <div class="d-flex justify-content-center">
+                    <div class="checkbox checkbox-sec m-0">
+                        <input type="checkbox" value="${rowData.id}" id="select-${rowData.id}">
+                        <label for="select-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                    </div>
+                </div>
+                `);
 			}
 		},
         {

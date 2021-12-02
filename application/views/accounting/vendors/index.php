@@ -231,12 +231,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
-                                                        <p class="m-0"><input type="checkbox" id="address_chk"> Address</p>
-                                                        <p class="m-0"><input type="checkbox" id="attachments_chk"> Attachments</p>
-                                                        <p class="m-0"><input type="checkbox" id="phone_chk" checked> Phone</p>
-                                                        <p class="m-0"><input type="checkbox" id="email_chk" checked> Email</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="address_chk">
+                                                            <label for="address_chk">Address</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="attachments_chk">
+                                                            <label for="attachments_chk">Attachments</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="phone_chk" checked>
+                                                            <label for="phone_chk">Phone</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="email_chk" checked>
+                                                            <label for="email_chk">Email</label>
+                                                        </div>
 											            <p class="m-0">Other</p>
-                                                        <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="inc_inactive" value="1">
+                                                            <label for="inc_inactive">Include Inactive</label>
+                                                        </div>
                                                         <p class="m-0">Rows</p>
                                                         <p class="m-0">
                                                             <select name="table_rows" id="table_rows" class="form-control">
@@ -257,7 +272,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="vendors-table" class="table table-bordered table-hover" style="width:100%">
 									<thead>
                                         <tr>
-                                            <th><input type="checkbox" id="select-all-vendors"></th>
+                                            <th>
+                                                <div class="d-flex justify-content-center">
+													<div class="checkbox checkbox-sec m-0">
+                                                        <input type="checkbox" id="select-all-vendors">
+														<label for="select-all-vendors" class="p-0" style="width: 24px; height: 24px"></label>
+													</div>
+												</div>
+                                            </th>
                                             <th>Vendor/Company</th>
                                             <th class="hide address">Address</th>
                                             <th class="phone">Phone</th>

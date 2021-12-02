@@ -248,19 +248,55 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </a>
                                                             <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                                 <p class="m-0">Columns</p>
-                                                                <p class="m-0"><input type="checkbox" id="method_chk" onchange="showCol(this)"> Method</p>
-                                                                <p class="m-0"><input type="checkbox" id="source_chk" onchange="showCol(this)"> Source</p>
-                                                                <p class="m-0"><input type="checkbox" id="due_date_chk" onchange="showCol(this)"> Due date</p>
-                                                                <p class="m-0"><input type="checkbox" id="balance_chk" onchange="showCol(this)"> Balance</p>
-                                                                <p class="m-0"><input type="checkbox" id="status_chk" onchange="showCol(this)"> Status</p>
-                                                                <p class="m-0"><input type="checkbox" id="attachments_chk" onchange="showCol(this)"> Attachments</p>
-                                                                <p class="m-0"><input type="checkbox" id="type_chk" onchange="showCol(this)" checked> Type</p>
-                                                                <p class="m-0"><input type="checkbox" id="number_chk" onchange="showCol(this)" checked> No.</p>
-                                                                <p class="m-0"><input type="checkbox" id="payee_chk" onchange="showCol(this)" checked> Payee</p>
-                                                                <p class="m-0"><input type="checkbox" id="category_chk" onchange="showCol(this)" checked> Category</p>
-                                                                <p class="m-0"><input type="checkbox" id="memo_chk" onchange="showCol(this)" checked> Memo</p>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="method_chk" onchange="showCol(this)">
+                                                                    <label for="method_chk">Method</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="source_chk" onchange="showCol(this)">
+                                                                    <label for="source_chk">Source</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="due_date_chk" onchange="showCol(this)">
+                                                                    <label for="due_date_chk">Due date</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="balance_chk" onchange="showCol(this)">
+                                                                    <label for="balance_chk">Balance</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="status_chk" onchange="showCol(this)">
+                                                                    <label for="status_chk">Status</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="attachments_chk" onchange="showCol(this)">
+                                                                    <label for="attachments_chk">Attachments</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="type_chk" onchange="showCol(this)" checked>
+                                                                    <label for="type_chk">Type</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="number_chk" onchange="showCol(this)" checked>
+                                                                    <label for="number_chk">No.</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="payee_chk" onchange="showCol(this)" checked>
+                                                                    <label for="payee_chk">Payee</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="category_chk" onchange="showCol(this)" checked>
+                                                                    <label for="category_chk">Category</label>
+                                                                </div>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="memo_chk" onchange="showCol(this)" checked>
+                                                                    <label for="memo_chk">Memo</label>
+                                                                </div>
                                                                 <p class="m-0">Rows</p>
-                                                                <p class="m-0"><input type="checkbox" id="compact_chk"> Compact</p>
+                                                                <div class="checkbox checkbox-sec d-block my-2">
+                                                                    <input type="checkbox" id="compact_chk">
+                                                                    <label for="compact_chk">Compact</label>
+                                                                </div>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -274,7 +310,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <tr>
                                                             <th width="3%">
                                                                 <div class="d-flex justify-content-center">
-                                                                    <input type="checkbox">
+                                                                    <div class="checkbox checkbox-sec m-0">
+                                                                        <input type="checkbox" id="select-all-transactions">
+                                                                        <label for="select-all-transactions" class="p-0" style="width: 24px; height: 24px"></label>
+                                                                    </div>
                                                                 </div>
                                                             </th>
                                                             <th>Date</th>

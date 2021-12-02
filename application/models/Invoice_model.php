@@ -191,6 +191,22 @@ class Invoice_model extends MY_Model
         return $query2->result();
     }
 
+    public function getInvoicesItems($company_id)
+    {
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'invoices.status'      => 'Paid',
+          );
+
+        $this->db->select('*, invoices_items.cost as costing');
+        $this->db->from('invoices_items');
+        $this->db->join('items', 'invoices_items.items_id  = items.id');
+        $this->db->join('invoices', 'invoices_items.invoice_id  = invoices.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function totalcountOverdue($company_id)
     {
         $where = array(

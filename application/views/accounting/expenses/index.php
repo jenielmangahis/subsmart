@@ -353,29 +353,51 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_type" checked>
-                                                            Type</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_number" checked>
-                                                            No.</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_payee" checked>
-                                                            Payee</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_method" checked>
-                                                            Method</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_source" checked>
-                                                            Source</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_category"
-                                                                checked> Category</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_memo" checked>
-                                                            Memo</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_type" checked>
+                                                            <label for="trans_type">Type</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_number" checked>
+                                                            <label for="trans_number">No.</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_payee" checked>
+                                                            <label for="trans_payee">Payee</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_method" checked>
+                                                            <label for="trans_method">Method</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_source" checked>
+                                                            <label for="trans_source">Source</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_category" checked>
+                                                            <label for="trans_category">Category</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="trans_memo" checked>
+                                                            <label for="trans_memo">Memo</label>
+                                                        </div>
                                                         <div class="show-more hide">
-                                                            <p class="m-0"><input type="checkbox" id="trans_due_date"
-                                                                    checked> Due date</p>
-                                                            <p class="m-0"><input type="checkbox" id="trans_balance"
-                                                                    checked> Balance</p>
-                                                            <p class="m-0"><input type="checkbox" id="trans_status"
-                                                                    checked> Status</p>
-                                                            <p class="m-0"><input type="checkbox" id="trans_attachments"
-                                                                    checked> Attachments</p>
+                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                <input type="checkbox" id="trans_due_date" checked>
+                                                                <label for="trans_due_date">Due date</label>
+                                                            </div>
+                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                <input type="checkbox" id="trans_balance" checked>
+                                                                <label for="trans_balance">Balance</label>
+                                                            </div>
+                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                <input type="checkbox" id="trans_status" checked>
+                                                                <label for="trans_status">Status</label>
+                                                            </div>
+                                                            <div class="checkbox checkbox-sec d-block my-2">
+                                                                <input type="checkbox" id="trans_attachments" checked>
+                                                                <label for="trans_attachments">Attachments</label>
+                                                            </div>
                                                         </div>
                                                         <a href="#" class="text-info text-center show-more-button"><i
                                                                 class="fa fa-caret-down text-info"></i> &nbsp;Show
@@ -406,8 +428,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <tr>
                                             <th>
                                                 <div class="d-flex justify-content-center">
-                                                    <input type="checkbox" id="select-all-transactions">
-                                                </div>
+													<div class="checkbox checkbox-sec m-0">
+                                                        <input type="checkbox" id="select-all-transactions">
+														<label for="select-all-transactions" class="p-0" style="width: 24px; height: 24px"></label>
+													</div>
+												</div>
                                             </th>
                                             <th>DATE</th>
                                             <th class="type">TYPE</th>

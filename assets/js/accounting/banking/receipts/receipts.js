@@ -1,10 +1,13 @@
 window.addEventListener("DOMContentLoaded", async () => {
+  const { FilterForm } = await import("./FilterForm.js");
   const { ForReviewTable } = await import("./ForReviewTable.js");
   const { ReviewedTable } = await import("./ReviewedTable.js");
   const { SearchedReceiptsTable } = await import("./SearchedReceiptsTable.js");
+
   const api = await import("./api.js");
   const rulesUtils = await import("../rules/utils.js");
 
+  new FilterForm();
   new ForReviewTable($("#receiptsReview"));
   new ReviewedTable($("#receiptsReviewed"));
 

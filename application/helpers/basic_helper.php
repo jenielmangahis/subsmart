@@ -2942,7 +2942,7 @@ function getPaymentByCustomer($start_date, $end_date) {
     return $fn;
 }
 
-function getPaymentByItem($start_date, $end_date) {
+function getPaymentByItem_old($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');
     $company_id = logged('company_id');
@@ -2979,6 +2979,80 @@ function getPaymentByItem($start_date, $end_date) {
     }
 
     array_push($fn, array("Total", "", $grand_num_invoice, $grand_paid_invoice, dollar_format($grand_total)));
+    return $fn;
+}
+
+function getPaymentByItem($start_date, $end_date) {
+    $CI =& get_instance();
+    // $CI->load->database();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Invoice_items_model', 'invoice_items_model');
+    $CI->load->model('Items_model', 'items_model');
+    $company_id = logged('company_id');
+
+    // $CI->db->where('company_id', $company_id);
+    // $CI->db->where('date_issued >', $start_date);
+    // $CI->db->where('date_issued <', $end_date);
+    // $CI->db->where('status', 'Paid');
+    // $CI->db->where('is_recurring', 0);
+    // $results = $CI->db->get('invoices');
+    
+
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+    $item = 0;
+    
+
+    foreach ($results as $result) {
+        $items = unserialize($result2->invoice_items);
+
+
+        if (!in_array($result->customer_id, $comp_user)) {
+            array_push($comp_user, $result->customer_id);
+            $num_invoice = 0;
+            $total_invoice = 0;
+            $paid_invoice = 0;
+
+            foreach ($results as $result2) {
+                if ($result2->customer_id === $result->customer_id) {
+                    $item += 1;
+                    $num_invoice += 1;
+                    $paid_invoice += 1;
+                    $grand_num_invoice += 1;
+                    // $grand_paid_invoice += 1;
+
+                    $totals1 = unserialize($result2->invoice_totals);
+                    $total_invoice += floatval($totals1['grand_total']);
+                    // $grand_total += floatval($result2->grand_total);
+                }
+            }
+            // array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->first_name,0), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
+            
+        
+        $items = $CI->invoice_items_model->getByWhere(array('invoice_id' => $result->id));
+        foreach($items as $itemDet)
+        {
+            $itemsName = $CI->items_model->getByWhere(array('id' => $itemDet->items_id));
+            foreach($itemsName as $name)
+            {
+                $title = $name->title;
+                $grand_total += floatval($itemDet->total);
+                $grand_paid_invoice += $itemDet->qty;
+                
+                array_push($fn, array($title, $result->invoice_number, $result->date_issued, $itemDet->qty, dollar_format($itemDet->total)));
+            }
+        }
+
+            // array_push($fn, array(get_customer_by_id($result->customer_id)->first_name, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
+            // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
+        }
+    }
+
+    array_push($fn, array("Total", "", "", $grand_paid_invoice, dollar_format($grand_total)));
     return $fn;
 }
 
