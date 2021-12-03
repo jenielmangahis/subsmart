@@ -360,4 +360,57 @@ class AccountingReceipts extends MY_Controller
         $this->prepareReceipt($record);
         echo json_encode(['data' => $record]);
     }
+
+    public function apiSearchReceipts()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('to_expense', 0);
+
+        if (array_key_exists('from', $payload)) {
+            $this->db->where('transaction_date >=', date('Y-m-d', strtotime($payload['from'])));
+        }
+
+        if (array_key_exists('to', $payload)) {
+            $this->db->where('transaction_date <=', date('Y-m-d', strtotime($payload['to'])));
+        }
+
+        if (array_key_exists('category_id', $payload)) {
+            $this->db->where('category_id', $payload['category_id']);
+        }
+
+        if (array_key_exists('between_min', $payload)) {
+            $this->db->where('total_amount >=', $payload['between_min']);
+        }
+
+        if (array_key_exists('between_max', $payload)) {
+            $this->db->where('total_amount <=', $payload['between_max']);
+        }
+
+        if (array_key_exists('less_than_max', $payload)) {
+            $this->db->where('total_amount <', $payload['less_than_max']);
+        }
+
+        if (array_key_exists('greater_than_min', $payload)) {
+            $this->db->where('total_amount >', $payload['greater_than_min']);
+        }
+
+        if (array_key_exists('equals', $payload)) {
+            $this->db->where('total_amount', $payload['equals']);
+        }
+
+        $receipts = $this->db->get('accounting_receipts')->result();
+        foreach ($receipts as $receipt) {
+            $this->prepareReceipt($receipt);
+        }
+
+        echo json_encode(['data' => $receipts]);
+    }
 }

@@ -110,4 +110,11 @@ class Accounting_attachments_model extends MY_Model {
 		$update = $this->db->update('accounting_attachment_links', ['order_no' => $data['order_no']]);
 		return $update ? true : false;
 	}
+
+	public function get_attachment_link_by_attachment_id($attachmentId)
+	{
+		$this->db->where('attachment_id', $attachmentId);
+		$query = $this->db->get('accounting_attachment_links');
+		return $query->result();
+	}
 }
