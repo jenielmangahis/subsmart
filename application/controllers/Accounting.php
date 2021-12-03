@@ -10710,28 +10710,18 @@ class Accounting extends MY_Controller
 
     public function tester()
     {
-        $myarray[]= array(
-            "hashtag" => "a7e87329b5eab8578f4f1098a152d6f4",
-            "title" => "Flower",
-            "order" => 3
-        );
-
-        $myarray[]= array(
-            "hashtag" => "b24ce0cd392a5b0b8dedc66c25213594",
-            "title" => "Free",
-            "order" => 2
-        );
-
-        $myarray[]= array(
-            "hashtag" => "e7d31fc0602fb2ede144d18cdffd816b",
-            "title" => "Ready",
-            "order" => 1
-    );
-        var_dump($myarray);
-        usort($myarray, function ($a, $b) {
-            return $a['order'] - $b['order'];
-        });
-        var_dump($myarray);
+        $data_dates = "[";
+        $date= date("Y-01-01");
+        for ($i = 1; $i < 500 ;$i++) {
+            if ($date <= date('Y-m-d', strtotime('12/31/'.date("Y")))) {
+                $data_dates .= date("M d", strtotime($date)).",";
+                $date= date("Y-m-d", strtotime("+ 1 day", strtotime($date)));
+            } else {
+                // $i=0;
+            }
+        }
+        $data_dates.="]";
+        var_dump($data_dates);
     }
     public function update_customer_notes()
     {
@@ -11432,6 +11422,9 @@ class Accounting extends MY_Controller
 
     public function cashflowplanner()
     {
+        add_css(array(
+            "assets/css/accounting/accounting_includes/cashflow.css",
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
 

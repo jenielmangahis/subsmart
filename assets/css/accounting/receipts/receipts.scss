@@ -311,4 +311,21 @@ $colorError: #d52b1e;
       }
     }
   }
+
+  .receiptsButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 36px;
+
+    .spinner-border {
+      display: none;
+    }
+
+    &--isLoading {
+      .spinner-border {
+        display: block;
+      }
+    }
+  }
 }

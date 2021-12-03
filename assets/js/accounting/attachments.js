@@ -106,7 +106,16 @@ $(function(){
             },
             {
                 data: 'links',
-                name: 'links'
+                name: 'links',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html('');
+
+                    if(cellData.length > 0) {
+                        for(i in cellData) {
+                            $(td).append(cellData[i].text);
+                        }
+                    }
+                }
             },
             {
                 data: 'note',
@@ -134,9 +143,9 @@ $(function(){
                     `);
 
                     if(rowData.type === 'Image' || rowData.type === 'Pdf') {
-                        $(td).children().prepend(`<a href="/uploads/accounting/attachments/${rowData.thumbnail}" target="__blank" class="btn text-primary d-flex align-items-center justify-content-center download-attachment">Download</a>`);
+                        $(td).children().prepend(`<a href="/uploads/accounting/attachments/${rowData.thumbnail}" target="__blank" class="btn text-info d-flex align-items-center justify-content-center download-attachment">Download</a>`);
                     } else {
-                        $(td).children().prepend(`<a href="/accounting/attachments/download?filename=${rowData.thumbnail}" target="__blank" class="btn text-primary d-flex align-items-center justify-content-center download-attachment">Download</a>`);
+                        $(td).children().prepend(`<a href="/accounting/attachments/download?filename=${rowData.thumbnail}" target="__blank" class="btn text-info d-flex align-items-center justify-content-center download-attachment">Download</a>`);
                     }
                 }
             }

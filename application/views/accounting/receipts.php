@@ -197,7 +197,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                         </div>
                                                         <div class="d-flex justify-content-between">
                                                             <button class="btn btn-default" type="reset">Reset</button>
-                                                            <button class="btn btn-success" type="button">Apply</button>
+                                                            <button class="btn btn-success receiptsButton" type="button">
+                                                                <div class="spinner-border spinner-border-sm m-0 mr-1" role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                                Apply
+                                                            </button>
                                                         </div>
                                                     </form>
                                                 </li>

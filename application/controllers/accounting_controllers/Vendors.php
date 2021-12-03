@@ -868,7 +868,7 @@ class Vendors extends MY_Controller
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
                     'type' => 'Expense',
-                    'number' => $expense->ref_number,
+                    'number' => $expense->ref_no,
                     'payee' => $vendor->display_name,
                     'method' => $method->name,
                     'source' => '',

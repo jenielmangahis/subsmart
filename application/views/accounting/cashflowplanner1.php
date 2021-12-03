@@ -124,6 +124,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>frontend/css/accounting_dashboard.css">
 -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+
 <script type="text/javascript" id="js">
     // var tableRows = document.getElementsByTagName('tr');
     // console.dir(tableRows);
@@ -173,7 +174,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
 
 
-                    <canvas id="chartContainer" style="height: 370px; width: 100%;"></canvas>
+
+                    <div class="cash-flow-section">
+                        <canvas id="chartContainer" style="height: 370px; width: 100%;"></canvas>
+                        <div class="chart-x-label">
+                            <div class="line-divider"></div>
+                            <ul class="months">
+                                <li class="moth month-1">JAN</li>
+                                <li class="moth month-2">FEB</li>
+                                <li class="moth month-3">MAR</li>
+                                <li class="moth month-4">APR</li>
+                                <li class="moth month-5">MAY</li>
+                                <li class="moth month-6">JUN</li>
+                                <li class="moth month-7">JUL</li>
+                                <li class="moth month-8">AUG</li>
+                                <li class="moth month-9">SEP</li>
+                                <li class="moth month-10">OCT</li>
+                                <li class="moth month-11">NOV</li>
+                                <li class="moth month-12">DEC</li>
+                            </ul>
+                        </div>
+                    </div>
                     <br><br>
                     <!-- <p style="border:solid #0098cd 1px;padding:1%;width:80%;color:#0098cd;"><i class="fa fa-info-circle" style="font-size:18px;color:#0098cd"></i> This is a safe place to play with the numbers. Your planner won’t affect the rest of nSmarTrac.</p> -->
                     <br>
@@ -700,48 +721,88 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </script>
 
 <script>
+    <?php
+    $data_dates_projected = "[";
+    $data_dates = "[";
+    $data_labels = "[";
+    $date= date("Y-01-01");
+    for ($i = 1; $i < 400 ;$i++) {
+        if ($date <= date('Y-m-d', strtotime('12/31/'.date("Y")))) {
+            // $data_dates .= "{x:'".date("M d", strtotime($date))."',y:".rand(500, 4000)."},";
+            $val_amount=rand(1, $i+2);
+            if ($date <= date('Y-m-d')) {
+                $data_dates .= $val_amount.",";
+                
+            } if($date >= date('Y-m-d')) {
+                $data_dates_projected .= $val_amount.",";
+                $data_dates .= "null,";
+            }else{
+                $data_dates_projected .= "null,";
+            }
+            $data_labels .="'".date("M d", strtotime($date))."',";
+            $date= date("Y-m-d", strtotime("+ 1 day", strtotime($date)));
+        }
+    }
+    $data_dates_projected.="]";
+    $data_dates.="]";
+    $data_labels .= "]";
+    ?>
     var cashflow_chart = document.getElementById('chartContainer').getContext('2d');
+
+    var labels = <?=$data_labels?> ;
+    var data = <?=$data_dates?> ;
+    var data_projected = <?=$data_dates_projected?> ;
+    console.log(data);
     const cfg = {
         type: "line",
         data: {
-            labels: ['JAN',
-                'FEB',
-                'MAR',
-                'APR',
-                'MAY',
-                'JUN',
-                'JUL',
-                'AUG',
-                'SEP',
-                'OCT',
-                'NOV',
-                'DEC'
-            ],
+            labels: labels,
             datasets: [{
                 label: "Cash balance",
-                data: [282, 600, 411, 502, 800, 700, 947, 1402, 700, 2000, null, null],
+                data: data,
                 backgroundColor: ['rgba(82, 183, 2, 0.6)'],
                 borderColor: ['rgba(82, 183, 2, 1)'],
                 fill: true,
+                radius: 0,
             }, {
                 label: "Projected",
-                data: [null, null, null, null, null, null, null, null, null, 2000, 3827, 4070],
+                data: data_projected,
                 backgroundColor: ['rgba(82, 183, 2, 0.2)'],
                 borderColor: ['rgba(82, 183, 2, 1)'],
                 fill: true,
-                borderDash: [5, 5],
+                radius: 0,
+                borderDash: [2],
             }],
         },
         options: {
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
             plugins: {
+                decimation: {
+                    enabled: false,
+                    algorithm: 'min-max',
+                },
                 legend: {
-                    display: false,
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return "$" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        }
+                    }
                 }
             }
-        }
+        },
     };
-
-
     var massPopChart = new Chart(cashflow_chart, cfg);
 </script>
 

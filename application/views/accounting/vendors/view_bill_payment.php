@@ -1,6 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/vendors/<?=$vendor->id?>/update-transaction/bill-payment/<?=$billPayment->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/bill-payment/<?=$billPayment->id?>">
     <div id="billPaymentModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -270,6 +270,9 @@
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                             </div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <a href="#" id="show-existing-attachments" class="text-info">Show existing</a>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -6143,7 +6143,7 @@ const initModalFields = (modalName, data = {}) => {
 
     if($(`#${modalName} .attachments`).length > 0) {
         var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
-        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+        modalAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -6163,13 +6163,13 @@ const initModalFields = (modalName, data = {}) => {
                                     dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
                                     accepted: true
                                 };
-                                viewExpenseAtta.emit("addedfile", mockFile);
+                                modalAttachments.emit("addedfile", mockFile);
                                 modalAttachedFiles.push(mockFile);
             
-                                viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
-                                    viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
+                                modalAttachments.createThumbnailFromUrl(mockFile, modalAttachments.options.thumbnailWidth, modalAttachments.options.thumbnailHeight, modalAttachments.options.thumbnailMethod, true, function(thumbnail) {
+                                    modalAttachments.emit('thumbnail', mockFile, thumbnail);
                                 });
-                                viewExpenseAtta.emit("complete", mockFile);
+                                modalAttachments.emit("complete", mockFile);
                             });
                         }
                     });
