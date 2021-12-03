@@ -78,6 +78,8 @@ class Credit_Notes extends MY_Controller
                 array('#',  array()),
                 array("",   array('/accounting/chart_of_accounts','/accounting/reconcile')),
             );
+
+        $this->page_data['disable_accounting_modals'] = true;
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }
 
@@ -714,12 +716,11 @@ class Credit_Notes extends MY_Controller
         $this->load->model('CreditNoteSettings_model');
 
         $company_id = logged('company_id');
-        $user_id    = getLoggedUserID();
         $settings   = $this->CreditNoteSettings_model->getByCompanyId($company_id);
 
         if( empty($settings) ){
             $data_settings = [
-                'user_id' => $user_id,
+                'company_id' => $company_id,
                 'credit_note_number_prefix' => 'CN',
                 'credit_note_number_next_number' => 1,
                 'default_message' => '',
@@ -733,5 +734,32 @@ class Credit_Notes extends MY_Controller
 
         $this->page_data['settings'] = $settings;
         $this->load->view('credit_notes/settings', $this->page_data);
+    }
+
+    public function ajax_update_credit_note_settings()
+    {
+        $this->load->model('CreditNoteSettings_model');
+
+        $is_success = false;
+        $post       = $this->input->post();
+
+        $company_id = logged('company_id');
+        $settings   = $this->CreditNoteSettings_model->getByCompanyId($company_id);
+        if( $settings ){
+            $data_settings = [
+                'credit_note_number_prefix' => $post['credit_note_number_prefix'],
+                'credit_note_number_next_number' => $post['credit_note_number_next_number'],
+                'default_message' => $post['credit_note_message'],
+                'default_terms_conditions' => $post['credit_note_terms'],
+                'modified' => date("Y-m-d H:i:s")
+            ];
+
+            $this->CreditNoteSettings_model->update($settings->id, $data_settings);
+
+            $is_success = true;
+        }
+
+        $json_data = ['is_success' => $is_success];
+        echo json_encode($json_data);
     }
 }

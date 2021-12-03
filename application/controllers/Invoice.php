@@ -135,6 +135,18 @@ class Invoice extends MY_Controller
 
     public function add()
     {
+        $query       = $this->input->get();        
+        $workorder   = array();
+        $w_customer  = array();
+        $w_items     = array();
+        if( isset($query['workorder']) ){            
+            $this->load->model('Workorder_model');
+            $this->load->model('AcsProfile_model');
+            $workorder   = $this->Workorder_model->getByWhere(['work_order_number' => $query['workorder']]);
+            $w_items     = $this->Workorder_model->getworkorderItems($workorder[0]->id);
+            $w_customer  = $this->AcsProfile_model->getByProfId($workorder[0]->customer_id);
+        }
+
         $user_id = logged('id');
         // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
@@ -169,7 +181,10 @@ class Invoice extends MY_Controller
             $this->page_data['terms'] = $terms;
         }
 
-        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['workorder']  = $workorder;
+        $this->page_data['w_customer'] = $w_customer;
+        $this->page_data['w_items']    = $w_items;
+        $this->page_data['items']      = $this->items_model->getItemlist();
 
         $this->load->view('invoice/add', $this->page_data);
     }
