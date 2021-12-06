@@ -110,8 +110,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <td><?php echo $field->name; ?></td>
                                         <td><?php echo $field->date_created; ?></td>
                                         <td><?php echo $field->date_updated; ?></td>
-                                        <td><a href="#" class="btn btn-warning field" field-id="<?php echo $field->id; ?>"  field-name="<?php echo $field->name; ?>" data-toggle="modal" data-target="#updatecustom_field">Update</a> 
-                                        <!-- <a href="#" class="btn btn-danger" field-id="<?php echo $field->id; ?>">Delete</a> -->
+                                        <td>
+                                            <a href="#" class="btn btn-primary field" field-id="<?php echo $field->id; ?>"  field-name="<?php echo $field->name; ?>" data-toggle="modal" data-target="#updatecustom_field">Update</a>
+                                            <a href="#" class="btn btn-danger field" field-id="<?php echo $field->id; ?>"  field-name="<?php echo $field->name; ?>" data-toggle="modal" data-target="#updatecustom_field">Delete</a>                                         <!-- <a href="#" class="btn btn-danger" field-id="<?php echo $field->id; ?>">Delete</a> -->
                                         </td>
                                     </tr>
                                     <?php } ?>
@@ -122,7 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                         <!-- Modal -->
                         <div class="modal fade" id="addcustomfield" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-dialog modal-md" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">Add Custom Field</h5>
@@ -133,20 +134,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="modal-body">
                                 <?php echo form_open_multipart('workorder/addcustomeField', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                                     <label>Name</label>
-                                    <input type="text" class="form-control" name="custom_name" style="width:50%;" required><br>
-                                    <input type="submit" value="Add" class="btn btn-success">
-                                <?php echo form_close(); ?>
+                                    <input type="text" class="form-control" name="custom_name" style="width:100%;" required>
                                 </div>
                                 <div class="modal-footer">
+                                    <input type="submit" value="Add" class="btn btn-primary">                                
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
+                                <?php echo form_close(); ?>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Modal -->
                         <div class="modal fade" id="updatecustom_field" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-dialog modal-md" role="document">
                                 <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLongTitle">Update Field</h5>
@@ -154,17 +155,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body">
                                 <?php echo form_open_multipart('workorder/updatecustomField', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                                <div class="modal-body">                                
                                     <label>Name</label>
                                     <input type="hidden" class="form-control" name="custom_id" id="custom_id"><br>
-                                    <input type="text" class="form-control" name="custom_name" id="custom_name_update" style="width:50%;" ><br>
-                                    <input type="submit" value="Update" class="btn btn-danger">
-                                <?php echo form_close(); ?>
+                                    <input type="text" class="form-control" name="custom_name" required="" id="custom_name_update" style="width:100%;"/>
                                 </div>
                                 <div class="modal-footer">
+                                    <input type="submit" value="Update" class="btn btn-primary">                                
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
+                                <?php echo form_close(); ?>
                                 </div>
                             </div>
                         </div>
