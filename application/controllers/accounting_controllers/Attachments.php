@@ -179,7 +179,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($expense->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-expense text-info">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-expense text-info" data-id="'.$expense->id.'">';
                             if(in_array($expense->ref_no, ['', '0', null])) {
                                 $text .= "Expense:</a> $amount - $payeeName";
                             } else {
@@ -206,7 +206,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($check->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-check text-info">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-check text-info" data-id="'.$check->id.'">';
                             if(in_array($check->check_no, ['', '0', null]) || $check->to_print === "1") {
                                 $text .= "Check:</a> $amount - $payeeName";
                             } else {
@@ -222,7 +222,7 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($bill->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-bill text-info">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-bill text-info" data-id="'.$bill->id.'">';
                             if(in_array($bill->bill_no, ['', '0', null])) {
                                 $text .= "Bill:</a> $amount - $payeeName";
                             } else {
@@ -238,11 +238,112 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($billPayment->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
-                            $text = '<p class="m-0"><a href="#" class="view-linked-bill-payment text-info">';
+                            $text = '<p class="m-0"><a href="#" class="view-linked-bill-payment text-info" data-id="'.$billPayment->id.'">';
                             if(in_array($billPayment->check_no, ['', '0', null])) {
                                 $text .= "Bill Payment:</a> $amount - $payeeName";
                             } else {
                                 $text .= "Bill Payment $billPayment->check_no:</a> $amount - $payeeName";
+                            }
+                            $text .= '</p>';
+                        break;
+                        case 'Purchase Order' :
+                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($purchaseOrder->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $text = '<p class="m-0"><a href="#" class="view-linked-purchase-order text-info" data-id="'.$purchaseOrder->id.'">';
+                            if(in_array($purchaseOrder->purchase_order_no, ['', '0', null])) {
+                                $text .= "Purchase Order:</a> $amount - $payeeName";
+                            } else {
+                                $text .= "Purchase Order $purchaseOrder->purchase_order_no:</a> $amount - $payeeName";
+                            }
+                            $text .= '</p>';
+                        break;
+                        case 'Vendor Credit' :
+                            $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($vCredit->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $text = '<p class="m-0"><a href="#" class="view-linked-vendor-credit text-info" data-id="'.$vCredit->id.'">';
+                            if(in_array($vCredit->ref_no, ['', '0', null])) {
+                                $text .= "Vendor Credit:</a> $amount - $payeeName";
+                            } else {
+                                $text .= "Vendor Credit $vCredit->ref_no:</a> $amount - $payeeName";
+                            }
+                            $text .= '</p>';
+                        break;
+                        case 'CC Credit' :
+                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id);
+                            switch ($ccCredit->payee_type) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
+                            $amount = '$'.number_format($ccCredit->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $text = '<p class="m-0"><a href="#" class="view-linked-cc-credit text-info" data-id="'.$ccCredit->id.'">';
+                            if(in_array($ccCredit->ref_no, ['', '0', null])) {
+                                $text .= "CC-Credit:</a> $amount - $payeeName";
+                            } else {
+                                $text .= "CC-Credit $ccCredit->ref_no:</a> $amount - $payeeName";
+                            }
+                            $text .= '</p>';
+                        break;
+                        case 'CC Payment' :
+                            $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($ccPayment->amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $text = '<p class="m-0"><a href="#" class="view-linked-cc-payment text-info" data-id="'.$ccPayment->id.'">';
+                            $text .= "CC Payment:</a> $amount - $payeeName";
+                            $text .= '</p>';
+                        break;
+                        case 'Deposit' :
+                            $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id);
+                            $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $text = '<p class="m-0"><a href="#" class="view-linked-deposit text-info" data-id="'.$deposit->id.'">';
+                            $text .= "Deposit:</a> $amount";
+                            $text .= '</p>';
+                        break;
+                        case 'Transfer' :
+                            $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id);
+                            $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $text = '<p class="m-0"><a href="#" class="view-linked-transfer text-info" data-id="'.$transfer->id.'">';
+                            $text .= "Transfer:</a> $amount";
+                            $text .= '</p>';
+                        break;
+                        case 'Journal' :
+                            $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+                            $amount = '$0.00';
+                            
+                            $text = '<p class="m-0"><a href="#" class="view-linked-journal text-info" data-id="'.$journal->id.'">';
+                            if(in_array($journal->journal_no, ['', '0', null])) {
+                                $text .= "Journal:</a> $amount";
+                            } else {
+                                $text .= "Journal $journal->journal_no:</a> $amount";
                             }
                             $text .= '</p>';
                         break;
@@ -364,5 +465,243 @@ class Attachments extends MY_Controller {
         $attachments = $this->accounting_attachments_model->get_unlinked_attachments();
 
         echo json_encode($attachments);
+    }
+
+    public function print_attachments()
+    {
+        $data = $this->input->post();
+        $attachments = $this->accounting_attachments_model->getCompanyAttachments();
+
+        $tableHtml = "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Thumbnail</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Name</th>";
+        $tableHtml .= $data['size'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Size</th>" : "";
+        $tableHtml .= $data['uploaded'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Uploaded</th>" : "";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Links</th>";
+        $tableHtml .= $data['notes'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Note</th>" : "";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+        foreach($attachments as $attachment) {
+            $linked = $this->accounting_attachments_model->get_attachment_link_by_attachment_id($attachment['id']);
+
+            $links = "";
+            foreach($linked as $link) {
+                switch($link->type) {
+                    case 'Vendor' :
+                        $vendor = $this->vendors_model->get_vendor_by_id($link->linked_id);
+                        $links .= "<p style='margin: 0'>";
+                        $links .= 'Vendor: '.$vendor->display_name;
+                        $links .= '</p>';
+                    break;
+                    case 'Expense' :
+                        $expense = $this->vendors_model->get_expense_by_id($link->linked_id);
+                        switch ($expense->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($expense->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                        $amount = '$'.number_format($expense->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($expense->ref_no, ['', '0', null])) {
+                            $links .= "Expense: $amount - $payeeName";
+                        } else {
+                            $links .= "Expense $expense->ref_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'Check' :
+                        $check = $this->vendors_model->get_check_by_id($link->linked_id);
+                        switch ($check->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($check->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                        $amount = '$'.number_format($check->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($check->check_no, ['', '0', null]) || $check->to_print === "1") {
+                            $links .= "Check: $amount - $payeeName";
+                        } else {
+                            $links .= "Check $check->check_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'Bill' :
+                        $bill = $this->vendors_model->get_bill_by_id($link->linked_id);
+                        $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                        $payeeName = $vendor->display_name;
+
+                        $amount = '$'.number_format($bill->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($bill->bill_no, ['', '0', null])) {
+                            $links .= "Bill: $amount - $payeeName";
+                        } else {
+                            $links .= "Bill $bill->bill_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'Bill Payment' :
+                        $billPayment = $this->vendors_model->get_bill_payment_by_id($link->linked_id);
+                        $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+                        $payeeName = $payee->display_name;
+                        
+                        $amount = '$'.number_format($billPayment->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($billPayment->check_no, ['', '0', null])) {
+                            $links .= "Bill Payment: $amount - $payeeName";
+                        } else {
+                            $links .= "Bill Payment $billPayment->check_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'Purchase Order' :
+                        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id);
+                        $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+                        $payeeName = $vendor->display_name;
+
+                        $amount = '$'.number_format($purchaseOrder->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($purchaseOrder->purchase_order_no, ['', '0', null])) {
+                            $links .= "Purchase Order: $amount - $payeeName";
+                        } else {
+                            $links .= "Purchase Order $purchaseOrder->purchase_order_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'Vendor Credit' :
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id);
+                        $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                        $payeeName = $vendor->display_name;
+
+                        $amount = '$'.number_format($vCredit->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($vCredit->ref_no, ['', '0', null])) {
+                            $links .= "Vendor Credit: $amount - $payeeName";
+                        } else {
+                            $links .= "Vendor Credit $vCredit->ref_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'CC Credit' :
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id);
+                        switch ($ccCredit->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                        $amount = '$'.number_format($ccCredit->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($ccCredit->ref_no, ['', '0', null])) {
+                            $links .= "CC-Credit: $amount - $payeeName";
+                        } else {
+                            $links .= "CC-Credit $ccCredit->ref_no: $amount - $payeeName";
+                        }
+                        $links .= '</p>';
+                    break;
+                    case 'CC Payment' :
+                        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($link->linked_id);
+                        $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                        $payeeName = $vendor->display_name;
+
+                        $amount = '$'.number_format($ccPayment->amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        $links .= "CC Payment: $amount - $payeeName";
+                        $links .= '</p>';
+                    break;
+                    case 'Deposit' :
+                        $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id);
+                        $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links = '<p style="margin: 0">';
+                        $links .= "Deposit: $amount";
+                        $links .= '</p>';
+                    break;
+                    case 'Transfer' :
+                        $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id);
+                        $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
+                        $amount = str_replace('$-', '-$', $amount);
+
+                        $links .= '<p style="margin: 0">';
+                        $links .= "Transfer: $amount";
+                        $links .= '</p>';
+                    break;
+                    case 'Journal' :
+                        $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+                        $amount = '$0.00';
+                        
+                        $links .= '<p style="margin: 0">';
+                        if(in_array($journal->journal_no, ['', '0', null])) {
+                            $links .= "Journal: $amount";
+                        } else {
+                            $links .= "Journal $journal->journal_no: $amount";
+                        }
+                        $links .= '</p>';
+                    break;
+                }
+            }
+
+            $fileName = $attachment['stored_name'];
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'><img src='/uploads/accounting/attachments/$fileName'></td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$attachment['type']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$attachment['uploaded_name'].'.'.$attachment['file_extension']."</td>";
+            $tableHtml .= $data['size'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$attachment['size']."</td>" : "";
+            $tableHtml .= $data['uploaded'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".date('m/d/Y', strtotime($attachment['created_at']))."</td>" : "";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$links</td>";
+            $tableHtml .= $data['notes'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$attachment['notes']."</td>" : "";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
     }
 }

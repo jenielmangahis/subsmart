@@ -3,11 +3,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   const { ForReviewTable } = await import("./ForReviewTable.js");
   const { ReviewedTable } = await import("./ReviewedTable.js");
   const { SearchedReceiptsTable } = await import("./SearchedReceiptsTable.js");
+  const { GoogleDrive } = await import("./GoogleDrive.js");
 
   const api = await import("./api.js");
   const rulesUtils = await import("../rules/utils.js");
 
   new FilterForm();
+  new GoogleDrive();
   new ForReviewTable($("#receiptsReview"));
   new ReviewedTable($("#receiptsReviewed"));
 

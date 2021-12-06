@@ -158,17 +158,54 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                     </div> -->
                     <div class="row" style="margin-top:3%;">
-                        <div class="col-md-10">
+                        <div class="col-md-12">
                             <h6>CASH FLOW</h6>
-                            <h4>$100,000</h4>
-                            <h6>Current cash balance</h6>
                         </div>
-                        <div class="col-md-2">
-                            <div class="tab" align="right" style="text-align:right;">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Today's balance</h6>
+                            <h4>$100,000</h4>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- <div class="tab" align="right" style="text-align:right;">
                                 <button class="tablinks" onclick="openCity(event, 'MoneyIn')"
                                     style="border-radius: 12px 0 0 12px;padding:6%;">Money in/out</button>
                                 <button class="tablinks" onclick="openCity(event, 'MoneyOut')"
                                     style="border-radius: 0 12px 12px 0;padding:6%;">Cash balance</button>
+                            </div> -->
+                            <div class="section-above-chart">
+                                <div class="cashflowchart-tab-btns">
+                                    <button class="tablinks">
+                                        <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                        Money in/out
+                                    </button>
+                                    <button class="tablinks active">
+                                        <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                        Cash balance
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom: 10px;">
+                        <div class="col-md-6">
+                            <div class="cash-flow-filter">
+                                <select name="chart-month-range" class="duration">
+                                    <option value="24">24 months [BETA]</option>
+                                    <option value="12" selected>12 months</option>
+                                    <option value="6">6 months</option>
+                                    <option value="3">3 months</option>
+                                    <option value="1">This month</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="section-above-chart">
+                                <div style="display: flex;">
+                                    <div class="chart-legends">Cash balance</div>
+                                    <div class="chart-legends">Projected</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -178,8 +215,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="cash-flow-section">
                         <canvas id="chartContainer" style="height: 370px; width: 100%;"></canvas>
                         <div class="chart-x-label">
+                            <div class="right-label">THRESHOLD</div>
                             <div class="line-divider"></div>
-                            <ul class="months">
+                            <ul class="months months-12">
                                 <li class="moth month-1">JAN</li>
                                 <li class="moth month-2">FEB</li>
                                 <li class="moth month-3">MAR</li>
@@ -682,128 +720,66 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 
-<script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
 
 <script>
     <?php
     $data_dates_projected = "[";
     $data_dates = "[";
     $data_labels = "[";
-    $date= date("Y-01-01");
+
+    $data_dates_projected_3m = "[";
+    $data_dates_3m = "[";
+    $data_labels_3m = "[";
+    $date= date("Y-03-01");
     for ($i = 1; $i < 400 ;$i++) {
-        if ($date <= date('Y-m-d', strtotime('12/31/'.date("Y")))) {
+        if ($date <= date('Y-m-d', strtotime('03/31/2022'))) {
             // $data_dates .= "{x:'".date("M d", strtotime($date))."',y:".rand(500, 4000)."},";
-            $val_amount=rand(1, $i+2);
+            
             if ($date <= date('Y-m-d')) {
+                $val_amount=rand(rand(1, $i+2), $i+2);
                 $data_dates .= $val_amount.",";
-                
-            } if($date >= date('Y-m-d')) {
+            }
+            if ($date >= date('Y-m-d')) {
                 $data_dates_projected .= $val_amount.",";
                 $data_dates .= "null,";
-            }else{
+                $val_amount=rand($val_amount, rand(1, $i+2));
+            } else {
                 $data_dates_projected .= "null,";
             }
             $data_labels .="'".date("M d", strtotime($date))."',";
             $date= date("Y-m-d", strtotime("+ 1 day", strtotime($date)));
         }
+        if ($date <= date('Y-m-d', strtotime('01/31/2022'))  && $date >= date('Y-m-d', strtotime('11/01/2021'))) {
+            if ($date <= date('Y-m-d')) {
+                $val_amount=rand(rand(1, $i+2), $i+2);
+                $data_dates_3m .= $val_amount.",";
+            }
+            if ($date >= date('Y-m-d')) {
+                $data_dates_projected_3m .= $val_amount.",";
+                $data_dates_3m .= "null,";
+                $val_amount=rand($val_amount, rand(1, $i+2));
+            } else {
+                $data_dates_projected_3m .= "null,";
+            }
+            $data_labels_3m .="'".date("M d", strtotime($date))."',";
+        }
     }
     $data_dates_projected.="]";
     $data_dates.="]";
     $data_labels .= "]";
+
+    $data_dates_projected_3m .= "]";
+    $data_dates_3m .= "]";
+    $data_labels_3m .= "]";
     ?>
-    var cashflow_chart = document.getElementById('chartContainer').getContext('2d');
 
     var labels = <?=$data_labels?> ;
     var data = <?=$data_dates?> ;
     var data_projected = <?=$data_dates_projected?> ;
-    console.log(data);
-    const cfg = {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Cash balance",
-                data: data,
-                backgroundColor: ['rgba(82, 183, 2, 0.6)'],
-                borderColor: ['rgba(82, 183, 2, 1)'],
-                fill: true,
-                radius: 0,
-            }, {
-                label: "Projected",
-                data: data_projected,
-                backgroundColor: ['rgba(82, 183, 2, 0.2)'],
-                borderColor: ['rgba(82, 183, 2, 1)'],
-                fill: true,
-                radius: 0,
-                borderDash: [2],
-            }],
-        },
-        options: {
-            interaction: {
-                mode: 'nearest',
-                axis: 'x',
-                intersect: false
-            },
-            plugins: {
-                decimation: {
-                    enabled: false,
-                    algorithm: 'min-max',
-                },
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                x: {
-                    display: false
-                },
-                y: {
-                    ticks: {
-                        callback: function(value, index, values) {
-                            return "$" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                        }
-                    }
-                }
-            }
-        },
-    };
-    var massPopChart = new Chart(cashflow_chart, cfg);
+
+    var labels_3m = <?=$data_labels_3m?> ;
+    var data_3m = <?=$data_dates_3m?> ;
+    var data_projected_3m = <?=$data_dates_projected_3m?> ;
 </script>
 
 <?php include viewPath('includes/footer_accounting');

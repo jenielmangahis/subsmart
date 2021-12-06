@@ -1,24 +1,148 @@
+body {
+    color: #393A3D;
+}
+
 .cash-flow-section {
     position: relative;
 }
 
 .cash-flow-section .chart-x-label {
     position: absolute;
-    bottom: -21px;
+    bottom: -18px;
     width: 100%;
     padding-left: 110px;
 }
 
-.chart-x-label ul.months {
+.cash-flow-section .chart-x-label ul.months {
     width: 100%;
     height: 21px;
     background: #fff;
 }
 
-.chart-x-label ul.months li.moth {
+.cash-flow-section .chart-x-label ul.months li.moth {
     float: left;
-    width: 8.33333333333%;
     color: #6B6C72;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
+    padding: 5px 0;
+}
+
+.cash-flow-section .chart-x-label ul.months-24 li {
+    width: 4.16666666667%;
+}
+
+.cash-flow-section .chart-x-label ul.months-12 li {
+    width: 8.33333333333%;
+}
+
+.cash-flow-section .chart-x-label ul.months-6 li {
+    width: 16.6666666667%;
+}
+
+.cash-flow-section .chart-x-label ul.months-3 li {
+    width: 33.3333333333%;
+}
+
+.cash-flow-section .chart-x-label ul.months-1 li {
+    width: 3.22580645161%;
+}
+
+.cash-flow-section .chart-x-label .line-divider {
+    border-top: solid 1px #666666;
+    margin-left: -70px;
+    width: 99%;
+}
+
+.cash-flow-section .chart-x-label .right-label {
+    float: right;
+    position: absolute;
+    right: 10px;
+    bottom: 22px;
+    color: #787B74;
+    font-weight: lighter;
+    font-size: 12px;
+}
+
+.section-above-chart {
+    display: inline-block;
+    width: 100%;
+}
+
+.section-above-chart>div {
+    float: right;
+}
+
+.section-above-chart .cashflowchart-tab-btns button {
+    background: none;
+    height: auto;
+    border: solid 3px #8D9096;
+    padding: 5px 15px;
+    border-radius: 15px;
+    color: #46474A;
+}
+
+.section-above-chart .cashflowchart-tab-btns button:first-child {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-right: -6px;
+}
+
+.section-above-chart .cashflowchart-tab-btns button:last-child {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.section-above-chart .cashflowchart-tab-btns button:hover,
+.section-above-chart .cashflowchart-tab-btns button.active {
+    background: rgb(212, 215, 220) !important;
+    font-weight: 600;
+}
+
+.section-above-chart .cashflowchart-tab-btns button.active i {
+    color: #0F8001;
+}
+
+.section-above-chart .chart-legends {
+    padding: 0 20px;
+    position: relative;
+    font-size: 11px;
+}
+
+.section-above-chart .chart-legends:first-child::before {
+    content: " ";
+    border: solid 1px #57B814;
+    height: 1px;
+    width: 20px;
+    position: absolute;
+    left: -5px;
+    top: 50%;
+}
+
+.section-above-chart .chart-legends:last-child::before {
+    content: " ";
+    border: dashed 1px #57B814;
+    height: 1px;
+    width: 20px;
+    position: absolute;
+    left: -5px;
+    top: 50%;
+}
+
+.cash-flow-filter select[name='chart-month-range'] {
+    border: none;
+    padding: 5px 0;
+    padding-right: 10px;
+    color: #393A3D;
+}
+
+.cash-flow-filter select[name='chart-month-range']:focus,
+.cash-flow-filter select[name='chart-month-range']:focus-visible {
+    box-shadow: rgb(44 160 28 / 50%) 0px 0px 0px 2px !important;
+    border: 1px solid rgb(44, 160, 28) !important;
+    outline: none;
+    border-radius: none;
+}
+
+#chartContainer {
+    height: 370px!important;
 }

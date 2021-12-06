@@ -344,7 +344,7 @@ input:checked + .slider:before {
                                     <select name="customer_id" id="customer_id" class="form-control" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
-                                    <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                    <option <?= !empty($workorder[0]) && $workorder[0]->customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                     <?php endforeach; ?>
                                 </select>
                                 </div>
@@ -357,7 +357,7 @@ input:checked + .slider:before {
                                 <div class="col-md-5 form-group">
                                     <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
                                     
-                                    <input type="text" class="form-control" name="jobs_location" id="invoice_jobs_location" />
+                                    <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_location : ''; ?>" name="jobs_location" id="invoice_jobs_location" />
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <!-- <p>&nbsp;</p>
@@ -367,7 +367,7 @@ input:checked + .slider:before {
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" />
+                                    <input type="text" class="form-control" value="<?= !empty($workorder[0]) ? $workorder[0]->job_name : ''; ?>" name="job_name" id="job_name" />
                                 </div>
                             </div>
 
@@ -386,7 +386,7 @@ input:checked + .slider:before {
                                         </div>
                                         <div class="col-md-3">
                                             <label>Customer email</label>
-                                            <input type="email" class="form-control" name="customer_email" id="customer_email">
+                                            <input type="email" value="<?= !empty($w_customer) ? $w_customer->email : ''; ?>" class="form-control" name="customer_email" id="customer_email">
                                             <p><input type="checkbox"> Send later </p>
                                         </div>
                                         <div class="col-md-3">
@@ -550,44 +550,94 @@ input:checked + .slider:before {
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr> -->
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                        <?php if( empty($w_items) ){ ?>
+                                            <tr>
+                                                <td width="30%">
+                                                    <input type="text" class="form-control getItems"
+                                                           onKeyup="getItems(this)" name="items[]">
+                                                    <ul class="suggestions"></ul>
+                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid">
                                                 </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                        </tr>
+                                                <td width="20%">
+                                                <div class="dropdown-wrapper">
+                                                    <select name="item_type[]" id="item_typeid" class="form-control">
+                                                        <option value="product">Product</option>
+                                                        <option value="material">Material</option>
+                                                        <option value="service">Service</option>
+                                                        <option value="fee">Fee</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                                    </td>
+                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                           data-counter="0" id="quantity_0" value="1"></td>
+                                                <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                           data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                           <div class="show_mobile_view"><span class="price">0</span>
+                                                           <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
+                                                           </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                           data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                           data-counter="0" id="tax1_0" min="0" value="0">
+                                                           <!-- <span id="span_tax_0">0.0</span> -->
+                                                           </td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                           data-counter="0" id="item_total_0" min="0" value="0">
+                                                           $<span id="span_total_0">0.00</span></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                            </tr>
+                                        <?php }else{ ?>
+                                            <?php $item_row = 0; foreach($w_items as $data){ ?>
+
+                                            <tr>
+                                                <td width="30%">
+                                                    <input type="text" class="form-control getItems"
+                                                           onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
+                                                    <ul class="suggestions"></ul>
+                                                    <div class="show_mobile_view"><span class="getItems_hidden"><?php echo $data->title; ?></span></div>
+                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
+                                                </td>
+                                                <td width="20%">
+                                                <div class="dropdown-wrapper">
+                                                    <select name="item_type[]" id="item_typeid" class="form-control">
+                                                        <option value="<?php echo $data->type; ?>"><?php echo $data->type; ?></option>
+                                                        <option value="product">Product</option>
+                                                        <option value="material">Material</option>
+                                                        <option value="service">Service</option>
+                                                        <option value="fee">Fee</option>
+                                                    </select>
+                                                </div>
+                                                    </td>
+                                                <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
+                                                           data-counter="0" id="quantity_<?php echo $item_row; ?>" value="<?php echo $data->qty; ?>"> 
+                                                           <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
+                                                           data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
+                                                           </td>
+                                                <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price hidden_mobile_view" name="price[]"
+                                                           data-counter="0" id="price_<?php echo $item_row; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
+                                                                                        $price1 = $data->costing; 
+                                                                                        $total1 = $quantity1*$price1;
+                                                                                        echo $total1;
+                                                                                                    ?>"> 
+                                                           <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
+                                                           <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="" /></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                           data-counter="0" id="discount_<?php echo $item_row; ?>" min="0"  value="0" ></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                           data-counter="0" id="tax1_<?php echo $item_row; ?>" min="0" value="<?php echo number_format($data->tax,2); ?>">
+                                                           <!-- <span id="span_tax_0">0.0</span> -->
+                                                           </td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                           data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
+                                                           $<span id="span_total_<?php echo $item_row; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo number_format($b,2); ?></span></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                            </tr>
+                                            <?php $item_row++;} ?>
+
+                                        <?php } ?>
                                         </tbody>
                                     </table>
                                     <div class="row lamesa">
@@ -771,7 +821,7 @@ input:checked + .slider:before {
                                 <div class="col-md-12">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"><?= !empty($workorder[0]) ? htmlentities($workorder[0]->terms_and_conditions) : ''; ?></textarea>
                                 </div>
                             </div>
                             </div>

@@ -109,6 +109,12 @@ export async function searchReceipts(payload) {
   return response.json();
 }
 
+export async function geetGoogleCreds() {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiGetGoogleCreds`;
+  const response = await fetch(endpoint);
+  return response.json();
+}
+
 function sleep(seconds) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }

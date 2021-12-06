@@ -2045,6 +2045,10 @@ $(function() {
                     var transactions = JSON.parse(res);
 
                     if (transactions.length > 0) {
+                        if($('#expenseModal .attachments-container').length > 0) {
+                            $('#expenseModal .attachments-container').parent().parent().remove();
+                        }
+
                         if ($('#expenseModal .transactions-container').length > 0) {
                             $('#expenseModal .transactions-container').parent().remove();
                             $('#expenseModal a.close-transactions-container').parent().remove();
@@ -2117,6 +2121,10 @@ $(function() {
                     var transactions = JSON.parse(res);
 
                     if (transactions.length > 0) {
+                        if($('#checkModal .attachments-container').length > 0) {
+                            $('#checkModal .attachments-container').parent().parent().remove();
+                        }
+
                         if ($('#checkModal .transactions-container').length > 0) {
                             $('#checkModal .transactions-container').parent().remove();
                             $('#checkModal a.close-transactions-container').parent().remove();
@@ -2187,6 +2195,10 @@ $(function() {
                 var transactions = JSON.parse(res);
 
                 if (transactions.length > 0) {
+                    if($('#billModal .attachments-container').length > 0) {
+                        $('#billModal .attachments-container').parent().parent().remove();
+                    }
+
                     if ($('#billModal .transactions-container').length > 0) {
                         $('#billModal .transactions-container').parent().remove();
                         $('#billModal a.close-transactions-container').parent().remove();
@@ -2256,6 +2268,10 @@ $(function() {
                 var transactions = JSON.parse(res);
 
                 if (transactions.length > 0) {
+                    if($('#billPaymentModal .attachments-container').length > 0) {
+                        $('#billPaymentModal .attachments-container').parent().parent().remove();
+                    }
+
                     if ($('#billPaymentModal .transactions-container').length > 0) {
                         $('#billPaymentModal .transactions-container').parent().remove();
                         $('#billPaymentModal a.close-transactions-container').parent().remove();
@@ -4511,6 +4527,12 @@ $(function() {
     });
 
     $(document).on('click', '#modal-container form .modal #show-existing-attachments', function() {
+        if($('#modal-container form .modal .transactions-container').length > 0) {
+            $('#modal-container form .modal .transactions-container').parent().remove();
+            $('#modal-container form .modal a.close-transactions-container').parent().remove();
+            $('#modal-container form .modal a.open-transactions-container').parent().remove();
+        }
+
         if($('#modal-container form .modal .attachments-container').length < 1) {
             var transactionType = $('#modal-container form .modal .modal-title').text();
             $('#modal-container form .modal .modal-body').children('.row').append(`

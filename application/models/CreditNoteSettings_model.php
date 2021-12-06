@@ -10,10 +10,9 @@ class CreditNoteSettings_model extends MY_Model
     public function getAllByCompanyId($company_id)
     {
 
-        $this->db->select('credit_note_settings.*, users.id AS uid, users.company_id');
-        $this->db->from($this->table);
-        $this->db->join('users', 'credit_note_settings.user_id = users.id', 'LEFT');
-        $this->db->where('users.company_id', $company_id);
+        $this->db->select('*');
+        $this->db->from($this->table);        
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
@@ -22,9 +21,8 @@ class CreditNoteSettings_model extends MY_Model
     public function getAll()
     {
 
-        $this->db->select('credit_note_settings.*, users.id AS uid, users.company_id');        
-        $this->db->from($this->table);
-        $this->db->join('users', 'credit_note_settings.user_id = users.id', 'LEFT');
+        $this->db->select('*');        
+        $this->db->from($this->table);        
         $query = $this->db->get();
         return $query->result();
     }
@@ -32,10 +30,9 @@ class CreditNoteSettings_model extends MY_Model
     public function getById($id)
     {
 
-        $this->db->select('credit_note_settings.*, users.id AS uid, users.company_id');
+        $this->db->select('*');
         $this->db->from($this->table);
-         $this->db->join('users', 'credit_note_settings.user_id = users.id', 'LEFT');
-        $this->db->where('credit_note_settings.id', $id);
+        $this->db->where('id', $id);
 
         $query = $this->db->get();
         return $query->row();
@@ -44,10 +41,9 @@ class CreditNoteSettings_model extends MY_Model
     public function getByCompanyId($company_id)
     {
 
-        $this->db->select('credit_note_settings.*, users.id AS uid, users.company_id');
+        $this->db->select('*');
         $this->db->from($this->table);
-         $this->db->join('users', 'credit_note_settings.user_id = users.id', 'LEFT');
-        $this->db->where('users.company_id', $company_id);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->row();
