@@ -789,6 +789,7 @@ $route['workorder/_update_checklist_item'] = 'Workorder/ajax_update_checklist_it
 $route['workorder/update_checklist'] = 'Workorder/update_checklist';
 $route['workorder/_load_map_routes'] = 'Workorder/ajax_load_map_routes';
 $route['workorder/_load_count_summary'] = 'Workorder/ajax_load_count_summary';
+$route['workorder/_delete_custom_field'] = 'Workorder/ajax_delete_custom_field';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
@@ -1088,5 +1089,6 @@ $route['appointment_types/delete'] = 'Appointment_Types/delete_appointment_type'
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 
 //Support
+$route['support'] = 'Support/index';
 $route['support/_send_email'] = 'Support/ajax_send_email';
 $route['contact/_support_send_email'] = 'Contact/ajax_support_send_email';
