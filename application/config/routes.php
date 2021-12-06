@@ -362,6 +362,7 @@ $route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting_controlle
 $route['accounting/attachments/attach']['post'] = 'accounting_controllers/attachments/attach';
 $route['accounting/attachments/get-all-attachments-ajax'] = 'accounting_controllers/attachments/get_all_attachments';
 $route['accounting/attachments/get-unlinked-attachments-ajax'] = 'accounting_controllers/attachments/get_unlinked_attachments';
+$route['accounting/attachments/print-attachments']['post'] = 'accounting_controllers/attachments/print_attachments';
 
 // Accounting payment methods
 $route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/index';
@@ -402,6 +403,7 @@ $route['invoice-page/get/receive-payment'] = 'accounting/get_customer_received_p
 $route['invoice-viewer'] = 'accounting/invoice_viewer';
 $route['accounting/customer-reminder/send/by-batch'] = 'accounting/send_customer_reminder_by_batch';
 $route['accounting/transaction/send/by-batch'] = 'accounting/send_transaction_by_batch';
+$route['cahsflow/chash-balance/chart/updated'] = 'accounting/update_cash_balcnce_chart';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
@@ -509,7 +511,7 @@ $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 $route['accounting/vendors/make-inactive']['post'] = 'accounting_controllers/vendors/make_inactive';
-$route['accounting/vendors/(:any)/edit'] = 'accounting_controllers/vendors/edit/$1'; 
+$route['accounting/vendors/(:any)/edit'] = 'accounting_controllers/vendors/edit/$1';
 $route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/vendors/update/$1';
 $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_controllers/vendors/update_attachments/$1';
 $route['accounting/vendors/remove-attachment/(:any)']['post'] = 'accounting_controllers/vendors/remove_attachment/$1';

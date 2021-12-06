@@ -353,6 +353,7 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/banking/receipts/receipts.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'https://apis.google.com/js/client.js?onload=checkAuth',
         ]);
 
         $this->load->view('accounting/receipts', $this->page_data);
@@ -11425,6 +11426,9 @@ class Accounting extends MY_Controller
         add_css(array(
             "assets/css/accounting/accounting_includes/cashflow.css",
         ));
+        add_footer_js(array(
+            "assets/js/accounting/accounting/cashflow.js",
+        ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
 
@@ -11452,6 +11456,54 @@ class Accounting extends MY_Controller
         $this->page_data['overdues']        = $this->invoice_model->overdue(logged('company_id'));
 
         $this->load->view('accounting/cashflowplanner1', $this->page_data);
+    }
+    function update_cash_balcnce_chart(){
+        $date_range = $this->input->post("date_range");
+        $bottom_x_labels = "";
+        if ($date_range== "12") {
+            $date_start = date("Y-m-d",strtotime("- 9 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-d",strtotime("+ 2 months",strtotime(date("Y-m-01"))));
+            $ctr=1;
+            while($date_start <= $date_end){
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+                $ctr++;
+            }
+            
+        } else if ($date_range== "6") {
+            $date_start = date("Y-m-d",strtotime("- 4 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-d",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+            $ctr=1;
+            while($date_start <= $date_end){
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+                $ctr++;
+            }
+            
+        } else if ($date_range== "3") {
+            $date_start = date("Y-m-d",strtotime("- 1 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-d",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+            $ctr=1;
+            while($date_start <= $date_end){
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+                $ctr++;
+            }
+        } else if ($date_range== "1") {
+
+        }if ($date_range== "24") {
+            $date_start = date("Y-m-d",strtotime("- 20 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-d",strtotime("+ 3 months",strtotime(date("Y-m-01"))));
+            $ctr=1;
+            while($date_start <= $date_end){
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+                $ctr++;
+            }
+        }
+        $data = new stdClass();
+        $data->bottom_x_labels=$bottom_x_labels;
+        echo json_encode($data);
     }
 
     public function add_attachement()

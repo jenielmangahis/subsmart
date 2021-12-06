@@ -413,4 +413,10 @@ class AccountingReceipts extends MY_Controller
 
         echo json_encode(['data' => $receipts]);
     }
+
+    public function apiGetGoogleCreds()
+    {
+        header('content-type: application/json');
+        echo json_encode(['data' => google_credentials()]);
+    }
 }

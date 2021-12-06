@@ -6819,10 +6819,10 @@ class Accounting_modals extends MY_Controller
 
     private function view_purchase_order($purchaseOrderId)
     {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
 
-        $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
-        $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
 
         $this->page_data['purchaseOrder'] = $purchaseOrder;
         $this->page_data['categories'] = $categories;
