@@ -1086,3 +1086,7 @@ $route['appointment_types/update_appointment_type'] = 'Appointment_Types/update_
 $route['appointment_types/delete'] = 'Appointment_Types/delete_appointment_type';
 
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
+
+//Support
+$route['support/_send_email'] = 'Support/ajax_send_email';
+$route['contact/_support_send_email'] = 'Contact/ajax_support_send_email';
