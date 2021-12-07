@@ -3,6 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class AccountingReceipts extends MY_Controller
 {
+    static $uploadPath = './uploads/accounting';
+
     public function apiGetReceipts()
     {
         $isReviewed = filter_var($this->input->get('isReviewed'), FILTER_VALIDATE_BOOLEAN);
@@ -147,13 +149,8 @@ class AccountingReceipts extends MY_Controller
 
     private function tryDeleteImages(array $fileNames)
     {
-        // require_once APPPATH . 'controllers/Accounting.php';
-        // $accountingCtrlr = new Accounting();
-        // $uploadPath = str_replace('./', '', $accountingCtrlr->upload_path);
-        $uploadPath = '/uploads/accounting/';
-
         foreach ($fileNames as $fileName) {
-            $imagePath = FCPATH . $uploadPath . $fileName;
+            $imagePath = self::$uploadPath . '/' . $fileName;
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
@@ -334,7 +331,7 @@ class AccountingReceipts extends MY_Controller
         }
 
         $uploadConfig = $this->uploadlib->initialize([
-            'upload_path' => './uploads/accounting/',
+            'upload_path' => self::$uploadPath,
             'allowed_types' => 'gif|jpg|png|jpeg|pdf',
             'overwrite' => true,
             'max_size' => '5000',
@@ -418,5 +415,37 @@ class AccountingReceipts extends MY_Controller
     {
         header('content-type: application/json');
         echo json_encode(['data' => google_credentials()]);
+    }
+
+    public function apiGoogleFilesToReceipt()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['auth' => $auth, 'ids' => $ids] = $payload;
+
+        if (!array_key_exists('access_token', $auth)) {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
+
+        $client = new Google_Client();
+        $creds = google_credentials();
+        $client->setClientId($creds['client_id']);
+        $client->setClientSecret($creds['client_secret']);
+        $client->setDeveloperKey($creds['api_key']);
+        $client->setAccessToken($auth['access_token']);
+
+        $service = new Google_Service_Drive($client);
+        foreach ($ids as $id) {
+            $file = $service->files->get($id, ['alt' => 'media']);
+            file_put_contents(self::$uploadPath . $id, $file->getBody());
+        }
     }
 }

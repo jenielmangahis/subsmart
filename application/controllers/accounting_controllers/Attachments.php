@@ -704,4 +704,30 @@ class Attachments extends MY_Controller {
 
         echo $tableHtml;
     }
+
+    public function export()
+    {
+        $this->load->helper('string');
+        $ids = $this->input->post('ids');
+
+        $attachments = $this->accounting_attachments_model->get_attachments_by_ids($ids);
+
+        $zip = new ZipArchive();
+        do {
+            $randomString = random_string('alnum');
+            $exists = file_exists('./uploads/accounting/attachments/archive_'.$randomString.'.zip');
+        } while ($exists);
+
+        $zipFile = "archive_$randomString.zip";
+        $zip->open('./uploads/accounting/attachments/'.$zipFile, ZipArchive::CREATE);
+        foreach($attachments as $attachment) {
+            $zip->addFile('./uploads/accounting/attachments/'.$attachment->stored_name, $attachment->uploaded_name.'.'.$attachment->file_extension);
+        }
+
+        $zip->close();
+
+        $blob = file_get_contents('./uploads/accounting/attachments/'.$zipFile);
+
+        echo json_encode(['zip' => '/uploads/accounting/attachments/'.$zipFile]);
+    }
 }
