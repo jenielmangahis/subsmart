@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cron_Mail extends MY_Controller {
+class Cron_Mail extends MYF_Controller {
 
 	public function __construct()
 	{
