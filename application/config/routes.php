@@ -363,6 +363,7 @@ $route['accounting/attachments/attach']['post'] = 'accounting_controllers/attach
 $route['accounting/attachments/get-all-attachments-ajax'] = 'accounting_controllers/attachments/get_all_attachments';
 $route['accounting/attachments/get-unlinked-attachments-ajax'] = 'accounting_controllers/attachments/get_unlinked_attachments';
 $route['accounting/attachments/print-attachments']['post'] = 'accounting_controllers/attachments/print_attachments';
+$route['accounting/attachments/export']['post'] = 'accounting_controllers/attachments/export';
 
 // Accounting payment methods
 $route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/index';

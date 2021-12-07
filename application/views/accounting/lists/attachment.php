@@ -107,6 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <form class="d-none" id="export-form"></form>
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="row">
