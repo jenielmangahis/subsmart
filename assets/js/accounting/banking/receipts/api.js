@@ -109,9 +109,23 @@ export async function searchReceipts(payload) {
   return response.json();
 }
 
-export async function geetGoogleCreds() {
+export async function getGoogleCreds() {
   const endpoint = `${window.prefixURL}/AccountingReceipts/apiGetGoogleCreds`;
   const response = await fetch(endpoint);
+  return response.json();
+}
+
+export async function googleFilesToReceipt(payload) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiGoogleFilesToReceipt`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
   return response.json();
 }
 

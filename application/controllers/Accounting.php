@@ -353,7 +353,7 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/banking/receipts/receipts.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-            'https://apis.google.com/js/client.js?onload=checkAuth',
+            'https://apis.google.com/js/client.js?onload=checkAuth,onApiLoad',
         ]);
 
         $this->load->view('accounting/receipts', $this->page_data);

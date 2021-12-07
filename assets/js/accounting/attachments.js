@@ -567,4 +567,78 @@ $(function(){
             $('#attachment-actions').next().children('a.dropdown-item').addClass('disabled');
         }
     });
+
+    $('#create-expense').on('click', function(e) {
+        e.preventDefault();
+        var selected = $('#attachments_table tbody input[type="checkbox"]:checked');
+
+        $.get('/accounting/get-other-modals/expense_modal', function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+
+            initModalFields('expenseModal');
+
+            selected.each(function() {
+                var row = $(this).parent().parent().parent().parent();
+                var rowData = $('#attachments_table').DataTable().row(row).data();
+
+                $(`#expenseModal`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${rowData.id}">`);
+
+                modalAttachmentId.push(rowData.id);
+                var mockFile = {
+                    name: `${rowData.name}.${rowData.extension}`,
+                    size: parseInt(rowData.size),
+                    dataURL: base_url+"uploads/accounting/attachments/" + rowData.thumbnail,
+                    accepted: true
+                };
+                modalAttachments.emit("addedfile", mockFile);
+                modalAttachedFiles.push(mockFile);
+
+                modalAttachments.createThumbnailFromUrl(mockFile, modalAttachments.options.thumbnailWidth, modalAttachments.options.thumbnailHeight, modalAttachments.options.thumbnailMethod, true, function(thumbnail) {
+                    modalAttachments.emit('thumbnail', mockFile, thumbnail);
+                });
+                modalAttachments.emit("complete", mockFile);
+            });
+
+            $('#expenseModal').modal('show');
+        });
+    });
+
+    $('#export-attachments').on('click', function(e) {
+        e.preventDefault();
+
+        $('#export-form').submit();
+    });
+
+    $('#export-form').on('submit', function(e) {
+        e.preventDefault();
+        var selected = $('#attachments_table tbody input[type="checkbox"]:checked');
+        var data = new FormData();
+
+        selected.each(function() {
+            data.append('ids[]', $(this).val());
+        });
+
+        $.ajax({
+            url: '/accounting/attachments/export',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                var result = JSON.parse(res);
+
+                if(result.zip) {
+                    location.href = result.zip;
+                }
+            }
+        })
+    });
 });

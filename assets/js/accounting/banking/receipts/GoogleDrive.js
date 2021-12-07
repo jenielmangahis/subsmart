@@ -1,4 +1,7 @@
 export class GoogleDrive {
+  creds = null;
+  MAX_FILES = 5;
+
   constructor() {
     this.$button = $("#googleDriveConnectButton");
 
@@ -9,31 +12,63 @@ export class GoogleDrive {
 
   async loadDeps() {
     this.api = await import("./api.js");
+    const response = await this.api.getGoogleCreds();
+    this.creds = response.data;
+
+    gapi.load("auth");
+    gapi.load("picker");
   }
 
   addEventListeners() {
-    this.$button.on("click", async (event) => {
-      const { data: creds } = await this.api.geetGoogleCreds();
+    this.$button.on("click", async () => {
       const scopes = [
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/drive.metadata.readonly",
       ];
 
       gapi.auth.authorize(
         {
-          client_id: creds.client_id,
+          client_id: this.creds.client_id,
           scope: scopes.join(" "),
           prompt: "consent",
           access_type: "offline",
           response_type: "code token",
         },
-        this.handleAuthResult
+        (result) => this.handleAuthResult(result)
       );
     });
   }
 
-  handleAuthResult(auth) {
-    console.log(auth);
+  handleAuthResult(result) {
+    this.$button.remove("googleDriveConnectButton--error");
+
+    if (!result.access_token) {
+      console.error(result);
+      this.$button.addClass("googleDriveConnectButton--error");
+      return;
+    }
+
+    const view = new google.picker.View(google.picker.ViewId.DOCS);
+    view.setMimeTypes("image/png,image/jpeg,image/jpg");
+    const picker = new google.picker.PickerBuilder()
+      .enableFeature(google.picker.Feature.NAV_HIDDEN)
+      .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+      .setMaxItems(this.MAX_FILES)
+      .setTitle(`Please select up to ${this.MAX_FILES} files`)
+      .setOAuthToken(result.access_token)
+      .addView(view)
+      .addView(new google.picker.DocsUploadView())
+      .setCallback((data) => this.onPickFile(data, result))
+      .build();
+    picker.setVisible(true);
+  }
+
+  async onPickFile(data, authResult) {
+    if (data[google.picker.Response.ACTION] !== google.picker.Action.PICKED) {
+      return;
+    }
+
+    const docs = data[google.picker.Response.DOCUMENTS];
+    const ids = docs.map((doc) => doc[google.picker.Document.ID]);
+    await this.api.googleFilesToReceipt({ ids, auth: authResult });
   }
 }
