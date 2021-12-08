@@ -414,7 +414,7 @@ class AccountingReceipts extends MY_Controller
     public function apiGetGoogleCreds()
     {
         header('content-type: application/json');
-        echo json_encode(['data' => google_credentials()]);
+        echo json_encode(['data' => $this->getGoogleCreds()]);
     }
 
     public function apiGoogleFilesToReceipt()
@@ -436,16 +436,42 @@ class AccountingReceipts extends MY_Controller
         include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
 
         $client = new Google_Client();
-        $creds = google_credentials();
+        $creds = $this->getGoogleCreds();
         $client->setClientId($creds['client_id']);
-        $client->setClientSecret($creds['client_secret']);
-        $client->setDeveloperKey($creds['api_key']);
         $client->setAccessToken($auth['access_token']);
 
         $service = new Google_Service_Drive($client);
-        foreach ($ids as $id) {
-            $file = $service->files->get($id, ['alt' => 'media']);
-            file_put_contents(self::$uploadPath . $id, $file->getBody());
-        }
+        $receipts = array_map(function ($id) use ($service) {
+            return $this->createReceiptFromGoogleDrive($service, $id);
+        }, $ids);
+
+        echo json_encode(['data' => $receipts]);
+    }
+
+    private function createReceiptFromGoogleDrive(Google_Service_Drive $service, string $fileId): stdClass
+    {
+        $fileProperties = $service->files->get($fileId);
+        $fileType = pathinfo($fileProperties['name'], PATHINFO_EXTENSION);
+
+        $file = $service->files->get($fileId, ['alt' => 'media']);
+        $fileName = uniqid(rand()) . ".$fileType";
+        file_put_contents(self::$uploadPath . "/$fileName", $file->getBody());
+
+        $receiptData = ['receipt_img' => $fileName, 'user_id' => logged('id')];
+        $this->db->insert('accounting_receipts', $receiptData);
+
+        $this->db->where('id', $this->db->insert_id());
+        $record = $this->db->get('accounting_receipts')->row();
+
+        $this->prepareReceipt($record);
+        return $record;
+    }
+
+    private function getGoogleCreds()
+    {
+        return [
+            'client_id' => '1032522028757-bvqce6102l9122isf078qn88bl6ggb3g.apps.googleusercontent.com',
+            'client_secret' => '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',
+        ];
     }
 }

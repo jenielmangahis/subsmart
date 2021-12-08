@@ -408,6 +408,132 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     </tbody>
                                 </table>
+                                <?php elseif ($type === "expense-by-month-by-customer") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Customer</th>
+                                            <!-- <th class="text-left">Type</th> -->
+                                            <th class="text-right">Due Date</th>
+                                            <th class="text-right">Status</th>
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "expense-by-month-by-category") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Customer</th>
+                                            <th class="text-left">Category</th>
+                                            <th class="text-right">Due Date</th>
+                                            <th class="text-right">Status</th>
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "employee-payroll-summary") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Employee</th>
+                                            <th class="text-left">Pay Rate</th>
+                                            <th class="text-right">Start Date</th>
+                                            <th class="text-right">Rate</th>
+                                            <!-- <th class="text-right">Total</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "summary-by-period") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Employee</th>
+                                            <th class="text-left">Role</th>
+                                            <th class="text-left">Date</th>
+                                            <th class="text-right">Clock in</th>
+                                            <th class="text-right">Clock out</th>
+                                            <th class="text-right">Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "timesheet-entries") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Date</th>
+                                            <th class="text-left">Employee</th>
+                                            <th class="text-right">Clock in</th>
+                                            <th class="text-right">Clock out</th>
+                                            <th class="text-right">Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "employee-payroll-log") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Employee</th>
+                                            <th class="text-right">Date</th>
+                                            <th class="text-left">Clock in</th>
+                                            <th class="text-right">Clock out</th>
+                                            <th class="text-right">Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "sales-tax") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Name</th>
+                                            <th class="text-left">Type</th>
+                                            <th class="text-right">Detail type</th>
+                                            <th class="text-right">Balance</th>
+                                            <th class="text-right">Bank Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "work-order-status") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Work Order #</th>
+                                            <th class="text-left">Date Issued</th>
+                                            <th class="text-right">Customer</th>
+                                            <th class="text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "invoice-items-no-tax") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">No.</th>
+                                            <th class="text-left">Type</th>
+                                            <th class="text-right">Name</th>
+                                            <th class="text-right">Date</th>
+                                            <th class="text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                                 <?php elseif ($type === "payment-by-item") : ?>
                                 <hr>
                                 <div>

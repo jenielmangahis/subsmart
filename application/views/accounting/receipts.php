@@ -553,6 +553,17 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
         </div>
     </div>
 
+    <div class="googleDriveLoader" id="googleDriveLoader">
+        <div class="googleDriveLoader__inner">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <div class="googleDriveLoader__text">
+                Fetching your documents from Google Drive...
+            </div>
+        </div>
+    </div>
+
     <div id="modal-container">
         <div class="full-screen-modal"></div>
     </div>

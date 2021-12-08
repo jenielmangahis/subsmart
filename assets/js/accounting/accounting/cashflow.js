@@ -40,7 +40,7 @@ function update_cashflow_chart() {
             removeData_chashflow_chart(cash_balance_chart);
             $(".cash-flow-section .chart-x-label ul.months").html(data.bottom_x_labels);
             $(".cash-flow-section .chart-x-label ul.months").attr("class", "months months-" + date_range);
-            addData_chashflow_chart(cash_balance_chart, labels_3m, [data_3m, data_projected_3m]);
+            addData_chashflow_chart(cash_balance_chart, data.data_labels, [data.data_values, data.data_projected]);
         },
     });
 }
@@ -51,29 +51,14 @@ var cash_balance_chart;
 var cashflow_chart = document.getElementById('chartContainer').getContext('2d');
 
 function start_cashflow_chart() {
-    if (cash_balance_chart != null) {
-        cash_balance_chart.destroy();
-    }
-    var the_data;
-    var the_labels;
-    var the_data_projected;
-    if ($(".cash-flow-filter select[name='chart-month-range']").val() == "12") {
-        the_data = data;
-        the_labels = labels;
-        the_data_projected = data_projected;
-    } else if ($(".cash-flow-filter select[name='chart-month-range']").val() == "3") {
-        the_data = data_3m;
-        the_labels = labels_3m;
-        the_data_projected = data_projected_3m;
-    }
     cashflow_chart = document.getElementById('chartContainer').getContext('2d');
     const cfg = {
         type: "line",
         data: {
-            labels: the_labels,
+            labels: null,
             datasets: [{
                 label: "Cash balance",
-                data: the_data,
+                data: null,
                 backgroundColor: ['rgba(82, 183, 2, 0.4)'],
                 borderColor: ['rgba(82, 183, 2, 1)'],
                 fill: true,
@@ -81,7 +66,7 @@ function start_cashflow_chart() {
                 borderWidth: 2,
             }, {
                 label: "Projected",
-                data: the_data_projected,
+                data: null,
                 backgroundColor: ['rgba(82, 183, 2, 0.2)'],
                 borderColor: ['rgba(82, 183, 2, 1)'],
                 fill: true,
@@ -120,4 +105,5 @@ function start_cashflow_chart() {
         },
     };
     cash_balance_chart = new Chart(cashflow_chart, cfg);
+    update_cashflow_chart();
 }

@@ -11459,10 +11459,12 @@ class Accounting extends MY_Controller
     }
     function update_cash_balcnce_chart(){
         $date_range = $this->input->post("date_range");
-        $bottom_x_labels = "";
+        $bottom_x_labels = '<div class="line-divider"></div>';
         if ($date_range== "12") {
             $date_start = date("Y-m-d",strtotime("- 9 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-d",strtotime("+ 2 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t",strtotime("+ 2 months",strtotime(date("Y-m-01"))));
+            $the_start_date = $date_start;
+            $the_end_date = $date_end;
             $ctr=1;
             while($date_start <= $date_end){
                 $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
@@ -11472,17 +11474,22 @@ class Accounting extends MY_Controller
             
         } else if ($date_range== "6") {
             $date_start = date("Y-m-d",strtotime("- 4 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-d",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+            $the_start_date = $date_start;
+            $the_end_date = $date_end;
             $ctr=1;
             while($date_start <= $date_end){
                 $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
                 $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
                 $ctr++;
             }
+
             
         } else if ($date_range== "3") {
             $date_start = date("Y-m-d",strtotime("- 1 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-d",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+            $the_start_date = $date_start;
+            $the_end_date = $date_end;
             $ctr=1;
             while($date_start <= $date_end){
                 $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
@@ -11490,10 +11497,21 @@ class Accounting extends MY_Controller
                 $ctr++;
             }
         } else if ($date_range== "1") {
-
-        }if ($date_range== "24") {
+            $date_start = date("Y-m-01");
+            $date_end = date("Y-m-t");
+            $the_start_date = $date_start;
+            $the_end_date = $date_end;
+            $ctr=1;
+            while($date_start <= $date_end){
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M d",strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d",strtotime("+ 1 day",strtotime($date_start)));
+                $ctr++;
+            }
+        }else if ($date_range== "24") {
             $date_start = date("Y-m-d",strtotime("- 20 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-d",strtotime("+ 3 months",strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t",strtotime("+ 3 months",strtotime(date("Y-m-01"))));
+            $the_start_date = $date_start;
+            $the_end_date = $date_end;
             $ctr=1;
             while($date_start <= $date_end){
                 $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
@@ -11501,8 +11519,40 @@ class Accounting extends MY_Controller
                 $ctr++;
             }
         }
+
+        $data_labels = array();
+        $data_values = array();
+        $data_projected = array();
+        $ctr=1;
+        while($the_start_date <= $the_end_date){
+            $value = rand(rand(1, $ctr+2), $ctr+2);
+            if($the_start_date <= date("Y-m-d")){
+                $data_labels[]=date("M d",strtotime($the_start_date));
+                $data_values[] = $value;
+                if($the_start_date < date("Y-m-d")){
+                    $data_projected[] = null;
+                }
+            }
+            if($the_start_date >= date("Y-m-d")){
+                if($the_start_date > date("Y-m-d")){
+                    $data_labels[]=date("M d",strtotime($the_start_date));
+                    $data_values[] = null;
+                }
+                $data_projected[] = $value;
+            }
+            $the_start_date = date("Y-m-d",strtotime("+ 1 day",strtotime($the_start_date)));
+            $ctr++;
+        }
+
+
+
+
         $data = new stdClass();
         $data->bottom_x_labels=$bottom_x_labels;
+        $data->data_labels = $data_labels;
+        $data->data_values = $data_values;
+        $data->data_projected = $data_projected;
+        $data->the_end_date = $the_end_date;
         echo json_encode($data);
     }
 

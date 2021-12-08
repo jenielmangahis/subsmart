@@ -216,8 +216,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <canvas id="chartContainer" style="height: 370px; width: 100%;"></canvas>
                         <div class="chart-x-label">
                             <div class="right-label">THRESHOLD</div>
-                            <div class="line-divider"></div>
                             <ul class="months months-12">
+                                <div class="line-divider"></div>
                                 <li class="moth month-1">JAN</li>
                                 <li class="moth month-2">FEB</li>
                                 <li class="moth month-3">MAR</li>
@@ -720,66 +720,5 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 
-
-<script>
-    <?php
-    $data_dates_projected = "[";
-    $data_dates = "[";
-    $data_labels = "[";
-
-    $data_dates_projected_3m = "[";
-    $data_dates_3m = "[";
-    $data_labels_3m = "[";
-    $date= date("Y-03-01");
-    for ($i = 1; $i < 400 ;$i++) {
-        if ($date <= date('Y-m-d', strtotime('03/31/2022'))) {
-            // $data_dates .= "{x:'".date("M d", strtotime($date))."',y:".rand(500, 4000)."},";
-            
-            if ($date <= date('Y-m-d')) {
-                $val_amount=rand(rand(1, $i+2), $i+2);
-                $data_dates .= $val_amount.",";
-            }
-            if ($date >= date('Y-m-d')) {
-                $data_dates_projected .= $val_amount.",";
-                $data_dates .= "null,";
-                $val_amount=rand($val_amount, rand(1, $i+2));
-            } else {
-                $data_dates_projected .= "null,";
-            }
-            $data_labels .="'".date("M d", strtotime($date))."',";
-            $date= date("Y-m-d", strtotime("+ 1 day", strtotime($date)));
-        }
-        if ($date <= date('Y-m-d', strtotime('01/31/2022'))  && $date >= date('Y-m-d', strtotime('11/01/2021'))) {
-            if ($date <= date('Y-m-d')) {
-                $val_amount=rand(rand(1, $i+2), $i+2);
-                $data_dates_3m .= $val_amount.",";
-            }
-            if ($date >= date('Y-m-d')) {
-                $data_dates_projected_3m .= $val_amount.",";
-                $data_dates_3m .= "null,";
-                $val_amount=rand($val_amount, rand(1, $i+2));
-            } else {
-                $data_dates_projected_3m .= "null,";
-            }
-            $data_labels_3m .="'".date("M d", strtotime($date))."',";
-        }
-    }
-    $data_dates_projected.="]";
-    $data_dates.="]";
-    $data_labels .= "]";
-
-    $data_dates_projected_3m .= "]";
-    $data_dates_3m .= "]";
-    $data_labels_3m .= "]";
-    ?>
-
-    var labels = <?=$data_labels?> ;
-    var data = <?=$data_dates?> ;
-    var data_projected = <?=$data_dates_projected?> ;
-
-    var labels_3m = <?=$data_labels_3m?> ;
-    var data_3m = <?=$data_dates_3m?> ;
-    var data_projected_3m = <?=$data_dates_projected_3m?> ;
-</script>
 
 <?php include viewPath('includes/footer_accounting');

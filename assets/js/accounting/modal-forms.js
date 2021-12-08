@@ -4565,7 +4565,44 @@ $(function() {
                     var dateUploaded = new Date(attachment.created_at);
                     var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
 
-                    $('#modal-container form .modal .attachments-container').append(`
+                    if($('#modal-container form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
+                        $('#modal-container form .modal .attachments-container').append(`
+                            <div class="col-12">
+                                <div class="card border">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
+                                        <div class="card-subtitle">
+                                            <div class="row">
+                                                <div class="col">${dateString}</div>
+                                                <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
+                                            </div>
+                                        </div>
+                                        <ul class="d-flex justify-content-around">
+                                            <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
+                                            <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    }
+                });
+            });
+        }
+    });
+
+    $(document).on('change', '#modal-container form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
+        var cont = $(this).parent().parent().parent();
+        $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
+            var attachments = JSON.parse(res);
+    
+            cont.children('div.col-12:not(:first-child)').remove();
+            $.each(attachments, function(index, attachment) {
+                var dateUploaded = new Date(attachment.created_at);
+                var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
+
+                if($('#modal-container form .modal .attachments').parent().find(`input[value="${attachment.id}"]`).length < 1) {
+                    cont.append(`
                         <div class="col-12">
                             <div class="card border">
                                 <div class="card-body p-0">
@@ -4584,68 +4621,37 @@ $(function() {
                             </div>
                         </div>
                     `);
-                });
-            });
-        }
-    });
-
-    $(document).on('change', '#modal-container form .modal #attachment-types, #existing-attachments-modal #attachment-types', function() {
-        var cont = $(this).parent().parent().parent();
-        $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
-            var attachments = JSON.parse(res);
-    
-            cont.children('div.col-12:not(:first-child)').remove();
-            $.each(attachments, function(index, attachment) {
-                var dateUploaded = new Date(attachment.created_at);
-                var dateString = String(dateUploaded.getMonth() + 1).padStart(2, '0') + '/' + String(dateUploaded.getDate()).padStart(2, '0') + '/' + dateUploaded.getFullYear();
-
-                cont.append(`
-                    <div class="col-12">
-                        <div class="card border">
-                            <div class="card-body p-0">
-                                <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
-                                <div class="card-subtitle">
-                                    <div class="row">
-                                        <div class="col">${dateString}</div>
-                                        <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
-                                    </div>
-                                </div>
-                                <ul class="d-flex justify-content-around">
-                                    <li><a href="#" class="text-info add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
-                                    <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-info">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                `);
+                }
             });
         });
     });
 
     $(document).on('click', '#modal-container form .modal .attachments-container a.add-attachment', function(e) {
         var id = e.currentTarget.dataset.id;
-        $('#modal-container form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
+        if($('#modal-container form .modal .attachments').parent().find(`input[value="${id}"]`).length < 1) {
+            $('#modal-container form .modal .attachments').parent().append(`<input type="hidden" name="attachments[]" value="${id}">`);
 
-        $.get('/accounting/get-attachment/'+id, function(res) {
-            var attachment = JSON.parse(res);
+            $.get('/accounting/get-attachment/'+id, function(res) {
+                var attachment = JSON.parse(res);
 
-            modalAttachmentId.push(id);
-            var mockFile = {
-                name: `${attachment.uploaded_name}.${attachment.file_extension}`,
-                size: parseInt(attachment.size),
-                dataURL: base_url+"uploads/accounting/attachments/" + attachment.stored_name,
-                accepted: true
-            };
-            modalAttachments.emit("addedfile", mockFile);
-            modalAttachedFiles.push(mockFile);
+                modalAttachmentId.push(id);
+                var mockFile = {
+                    name: `${attachment.uploaded_name}.${attachment.file_extension}`,
+                    size: parseInt(attachment.size),
+                    dataURL: base_url+"uploads/accounting/attachments/" + attachment.stored_name,
+                    accepted: true
+                };
+                modalAttachments.emit("addedfile", mockFile);
+                modalAttachedFiles.push(mockFile);
 
-            modalAttachments.createThumbnailFromUrl(mockFile, modalAttachments.options.thumbnailWidth, modalAttachments.options.thumbnailHeight, modalAttachments.options.thumbnailMethod, true, function(thumbnail) {
-                modalAttachments.emit('thumbnail', mockFile, thumbnail);
+                modalAttachments.createThumbnailFromUrl(mockFile, modalAttachments.options.thumbnailWidth, modalAttachments.options.thumbnailHeight, modalAttachments.options.thumbnailMethod, true, function(thumbnail) {
+                    modalAttachments.emit('thumbnail', mockFile, thumbnail);
+                });
+                modalAttachments.emit("complete", mockFile);
             });
-            modalAttachments.emit("complete", mockFile);
-        });
 
-        $(this).parent().parent().parent().parent().parent().remove();
+            $(this).parent().parent().parent().parent().parent().remove();
+        }
     });
 });
 

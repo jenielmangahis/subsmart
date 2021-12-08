@@ -721,12 +721,181 @@ class Attachments extends MY_Controller {
         $zipFile = "archive_$randomString.zip";
         $zip->open('./uploads/accounting/attachments/'.$zipFile, ZipArchive::CREATE);
         foreach($attachments as $attachment) {
-            $zip->addFile('./uploads/accounting/attachments/'.$attachment->stored_name, $attachment->uploaded_name.'.'.$attachment->file_extension);
-        }
+            $links = $this->accounting_attachments_model->get_attachment_link_by_attachment_id($attachment->id);
+            if(count($links) > 0) {
+                foreach($links as $link) {
+                    switch($link->type) {
+                        case 'Vendor' :
+                            $folder = '(Unattached documents)';
+                        break;
+                        case 'Expense' :
+                            $expense = $this->vendors_model->get_expense_by_id($link->linked_id);
+                            switch ($expense->payee_type) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($expense->payee_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
 
+                            $amount = '$'.number_format($expense->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Expense/Expense $payeeName $amount";
+                        break;
+                        case 'Check' :
+                            $check = $this->vendors_model->get_check_by_id($link->linked_id);
+                            switch ($check->payee_type) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($check->payee_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
+
+                            $amount = '$'.number_format($check->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Check/Check $payeeName $amount";
+                        break;
+                        case 'Bill' :
+                            $bill = $this->vendors_model->get_bill_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($bill->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Bill/Bill $payeeName $amount";
+                        break;
+                        case 'Bill Payment' :
+                            $billPayment = $this->vendors_model->get_bill_payment_by_id($link->linked_id);
+                            $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+                            $payeeName = $payee->display_name;
+
+                            $amount = '$'.number_format($billPayment->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Bill Payment/Bill Payment $payeeName $amount";
+                        break;
+                        case 'Purchase Order' :
+                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($purchaseOrder->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Purchase Order/Purchase Order $payeeName $amount";
+                        break;
+                        case 'Vendor Credit' :
+                            $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($vCredit->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Vendor Credit/Vendor Credit $payeeName $amount";
+                        break;
+                        case 'CC Credit' :
+                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id);
+                            switch ($ccCredit->payee_type) {
+                                case 'vendor':
+                                    $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                    $payeeName = $payee->display_name;
+                                break;
+                                case 'customer':
+                                    $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                                break;
+                                case 'employee':
+                                    $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                                break;
+                            }
+
+                            $amount = '$'.number_format($ccCredit->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Credit Card Credit/CC-Credit $payeeName $amount";
+                        break;
+                        case 'CC Payment' :
+                            $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($link->linked_id);
+                            $vendor = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+                            $payeeName = $vendor->display_name;
+
+                            $amount = '$'.number_format($ccPayment->amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Credit Card Payment/Credit Card Pmt $payeeName $amount";
+                        break;
+                        case 'Deposit' :
+                            $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id);
+
+                            $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Deposit/Deposit $amount";
+                        break;
+                        case 'Transfer' :
+                            $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id);
+
+                            $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
+                            $amount = str_replace('$-', '-$', $amount);
+
+                            $folder = "Transfer/Transfer $amount";
+                        break;
+                        case 'Journal' :
+                            $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+
+                            if(!in_array($journal->journal_no, [null, '', '0'])) {
+                                $folder = "Journal Entry/Journal #$journal->journal_no";
+                            } else {
+                                $folder = "Journal Entry/Journal";
+                            }
+                        break;
+                    }
+
+                    if($link->type !== 'Vendor') {
+                        if($zip->locateName("$folder/") !== false) {
+                            $folder = "$folder - 1";
+                        }
+                    }
+
+                    $path = "$folder/$attachment->uploaded_name.$attachment->file_extension";
+                    if($zip->locateName($path) !== false) {
+                        $path = "$folder/$attachment->uploaded_name - 1.$attachment->file_extension";
+                    }
+                    $zip->addFile('./uploads/accounting/attachments/'.$attachment->stored_name, $path);
+                }
+            } else {
+                $folder = '(Unattached documents)';
+
+                $path = "$folder/$attachment->uploaded_name.$attachment->file_extension";
+                if($zip->locateName($path) !== false) {
+                    $path = "$folder/$attachment->uploaded_name - 1.$attachment->file_extension";
+                }
+                $zip->addFile('./uploads/accounting/attachments/'.$attachment->stored_name, $path);
+            }
+        }
         $zip->close();
 
-        $blob = file_get_contents('./uploads/accounting/attachments/'.$zipFile);
+        // $blob = file_get_contents('./uploads/accounting/attachments/'.$zipFile);
 
         echo json_encode(['zip' => '/uploads/accounting/attachments/'.$zipFile]);
     }

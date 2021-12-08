@@ -22,10 +22,9 @@ class Contact extends MYF_Controller {
 		$post    = $this->input->post();
 
 		$subject = 'NsmartTrac : Support';
-        $to   = 'bryann.revina03@gmail.com';
-        $cc   = '';
-        //$to   = 'support@nsmartrac.com';
-        //$cc   = 'jpabanil@icloud.com';
+        //$to   = 'bryann.revina03@gmail.com';
+        $to   = 'support@nsmartrac.com';    
+        $cc   = 'jpabanil@icloud.com';
         $body = 'Someone send a support ticket via our app. Below are the details.';
         $body .= '<table>';
         	$body .= '<tr>';
