@@ -1878,16 +1878,10 @@ class Vendors extends MY_Controller
         $this->page_data['expense'] = $expense;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
         $this->page_data['is_copy'] = true;
 
-        $this->load->view('accounting/vendors/view_expense', $this->page_data);
+        $this->load->view('accounting/modals/expense_modal', $this->page_data);
     }
 
     public function copy_check($checkId)
@@ -1930,18 +1924,10 @@ class Vendors extends MY_Controller
         $this->page_data['check'] = $check;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
         $this->page_data['is_copy'] = true;
 
-        $this->load->view('accounting/vendors/view_check', $this->page_data);
+        $this->load->view('accounting/modals/check_modal', $this->page_data);
     }
 
     public function copy_bill($billId)
@@ -1973,15 +1959,9 @@ class Vendors extends MY_Controller
         $this->page_data['bill'] = $bill;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['terms'] = $terms;
         $this->page_data['is_copy'] = true;
 
-        $this->load->view('accounting/vendors/view_bill', $this->page_data);
+        $this->load->view('accounting/modals/bill_modal', $this->page_data);
     }
 
     public function copy_purchase_order($purchOrderId)
@@ -1994,12 +1974,9 @@ class Vendors extends MY_Controller
         $this->page_data['purchaseOrder'] = $purchaseOrder;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['is_copy'] = true;
 
-        $this->load->view('accounting/vendors/view_purchase_order', $this->page_data);
+        $this->load->view('accounting/modals/purchase_order_modal', $this->page_data);
     }
 
     public function copy_vendor_credit($vendorCreditId)
@@ -2012,13 +1989,9 @@ class Vendors extends MY_Controller
         $this->page_data['vendorCredit'] = $vendorCredit;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
-        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['is_copy'] = true;
 
-        $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
+        $this->load->view('accounting/modals/vendor_credit_modal', $this->page_data);
     }
 
     public function copy_to_bill($purchaseOrderId)

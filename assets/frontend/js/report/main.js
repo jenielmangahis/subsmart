@@ -16,6 +16,9 @@ var options = {
   urlFilterCustomerBySource: base_url + "reports/customerBySource",
   urlFilterCustomerSales: base_url + "reports/customerSales",
   urlReportPreview: base_url + "reports/preview",
+  //updates
+  urlFilterReportsExpenseByCategory: base_url + "reports/expenseByCategory",
+
 };
 
 function selectReport(startdate, endDate) {
@@ -76,6 +79,10 @@ function selectReport(startdate, endDate) {
 
     case "customer-sales":
       filterReportsCustomerSales(startdate, endDate);
+      break;
+
+    case "expense-by-category":
+      filterReportsExpenseByCategory(startdate, endDate);
       break;
   }
 }
@@ -260,6 +267,20 @@ function filterReportsByPaymentMonth(startDate, endDate) {
       var obj = JSON.parse(response);
       $("#tableToListReport tbody").empty();
       obj.forEach(paymentByMonthAppend);
+    },
+  });
+}
+
+//updates
+function filterReportsExpenseByCategory(startDate, endDate) {
+  $.ajax({
+    url: options.urlFilterReportsExpenseByCategory,
+    type: "GET",
+    data: { startDate: startDate, endDate: endDate },
+    success: function (response) {
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(customerSalesAppend);
     },
   });
 }

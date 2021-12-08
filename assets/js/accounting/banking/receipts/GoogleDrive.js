@@ -1,6 +1,6 @@
 export class GoogleDrive {
   creds = null;
-  MAX_FILES = 5;
+  MAX_FILES = 3;
 
   constructor() {
     this.$button = $("#googleDriveConnectButton");
@@ -21,9 +21,7 @@ export class GoogleDrive {
 
   addEventListeners() {
     this.$button.on("click", async () => {
-      const scopes = [
-        "https://www.googleapis.com/auth/drive.metadata.readonly",
-      ];
+      const scopes = ["https://www.googleapis.com/auth/drive"];
 
       gapi.auth.authorize(
         {
@@ -67,8 +65,21 @@ export class GoogleDrive {
       return;
     }
 
+    const $loader = $("#googleDriveLoader");
+    $loader.addClass("show");
+
     const docs = data[google.picker.Response.DOCUMENTS];
     const ids = docs.map((doc) => doc[google.picker.Document.ID]);
-    await this.api.googleFilesToReceipt({ ids, auth: authResult });
+    const { data: receipts } = await this.api.googleFilesToReceipt({
+      ids,
+      auth: authResult,
+    });
+
+    const $table = $("#receiptsReview");
+    receipts.forEach((receipt) => {
+      $table.DataTable().row.add(receipt).draw();
+    });
+
+    $loader.removeClass("show");
   }
 }
