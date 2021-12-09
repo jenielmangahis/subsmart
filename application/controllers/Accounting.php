@@ -11526,9 +11526,13 @@ class Accounting extends MY_Controller
         $ctr=1;
         while($the_start_date <= $the_end_date){
             $value = rand(rand(1, $ctr+2), $ctr+2);
+            $amount_received = $this->accounting_receive_payment_model->amount_received_in_a_day($the_start_date )->money_in;
+            $expense = $this->accounting_receive_payment_model->amount_expense_in_a_day($the_start_date )->money_out;
             if($the_start_date <= date("Y-m-d")){
                 $data_labels[]=date("M d",strtotime($the_start_date));
-                $data_values[] = $value;
+                $data_values[] = $amount_received+$expense+0;
+                $data_values_money_in[] =$amount_received+0;
+                $data_values_money_out[] =$expense+0;
                 if($the_start_date < date("Y-m-d")){
                     $data_projected[] = null;
                 }
@@ -11537,6 +11541,9 @@ class Accounting extends MY_Controller
                 if($the_start_date > date("Y-m-d")){
                     $data_labels[]=date("M d",strtotime($the_start_date));
                     $data_values[] = null;
+                    $value = rand(rand(1, $ctr+2), $ctr+2);
+                }else if($the_start_date == date("Y-m-d")){
+                    $value = $amount_received+0;
                 }
                 $data_projected[] = $value;
             }
@@ -11552,7 +11559,8 @@ class Accounting extends MY_Controller
         $data->data_labels = $data_labels;
         $data->data_values = $data_values;
         $data->data_projected = $data_projected;
-        $data->the_end_date = $the_end_date;
+        $data->data_values_money_in = $data_values_money_in;
+        $data->data_values_money_out = $data_values_money_out;
         echo json_encode($data);
     }
 
