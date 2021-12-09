@@ -8,7 +8,7 @@ var options = {
   urlFilterAccountReceivable: base_url + "reports/accountReceivable",
   urlFilterAccountReceivableResCom:
     base_url + "reports/accountReceivableResCom",
-  urlFilterInvoiceByDate: base_url + "reports/invoiceByDate",
+  urlFilterInvoiceByDate_OLD: base_url + "reports/invoiceByDate",
   urlFilterPaymentByCustomer: base_url + "reports/paymentByCustomer",
   urlFilterPaymentByItem: base_url + "reports/paymentByItem",
   urlFilterPaymentByCustomerGroup: base_url + "reports/paymentByCustomerGroup",
@@ -18,6 +18,7 @@ var options = {
   urlReportPreview: base_url + "reports/preview",
   //updates
   urlFilterReportsExpenseByCategory: base_url + "reports/expenseByCategory",
+  urlFilterInvoiceByDate: base_url + "reports/invoiceByDate",
 
 };
 
@@ -84,6 +85,10 @@ function selectReport(startdate, endDate) {
     case "expense-by-category":
       filterReportsExpenseByCategory(startdate, endDate);
       break;
+
+    // case "invoice-by-date":
+    //   filterInvoiceByDate(startdate, endDate);
+    //   break;
   }
 }
 
@@ -275,6 +280,19 @@ function filterReportsByPaymentMonth(startDate, endDate) {
 function filterReportsExpenseByCategory(startDate, endDate) {
   $.ajax({
     url: options.urlFilterReportsExpenseByCategory,
+    type: "GET",
+    data: { startDate: startDate, endDate: endDate },
+    success: function (response) {
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(customerSalesAppend);
+    },
+  });
+}
+
+function filterInvoiceByDate(startDate, endDate) {
+  $.ajax({
+    url: options.urlFilterInvoiceByDate,
     type: "GET",
     data: { startDate: startDate, endDate: endDate },
     success: function (response) {

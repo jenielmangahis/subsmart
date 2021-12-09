@@ -36,6 +36,10 @@ $(function(){
         e.stopPropagation();
     });
 
+    $('#table_rows').select2({
+        minimumResultsForSearch: -1
+    });
+
     var table = $('#attachments_table').DataTable({
         autoWidth: false,
         searching: false,
@@ -548,6 +552,12 @@ $(function(){
 
     $(document).on('change', '#attachments_table thead #select-all-attachments', function() {
         $('#attachments_table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+
+        if($(this).prop('checked')) {
+            $('#attachment-actions').next().children('a.dropdown-item').removeClass('disabled');
+        } else {
+            $('#attachment-actions').next().children('a.dropdown-item').addClass('disabled');
+        }
     });
 
     $(document).on('change', '#attachments_table tbody input[type="checkbox"]', function() {
@@ -613,32 +623,17 @@ $(function(){
 
     $('#export-attachments').on('click', function(e) {
         e.preventDefault();
-
+        var selected = $('#attachments_table tbody input[type="checkbox"]:checked');
+        selected.each(function() {
+            $('#export-form').append(`<input type="hidden" name="ids[]" value="${$(this).val()}">`);
+        });
+        
         $('#export-form').submit();
     });
 
     $('#export-form').on('submit', function(e) {
         e.preventDefault();
-        var selected = $('#attachments_table tbody input[type="checkbox"]:checked');
-        var data = new FormData();
-
-        selected.each(function() {
-            data.append('ids[]', $(this).val());
-        });
-
-        $.ajax({
-            url: '/accounting/attachments/export',
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(res) {
-                var result = JSON.parse(res);
-
-                if(result.zip) {
-                    location.href = result.zip;
-                }
-            }
-        })
+        this.submit();
+        $(this).html('');
     });
 });

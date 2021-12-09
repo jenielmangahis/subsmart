@@ -727,6 +727,10 @@ class Attachments extends MY_Controller {
                     switch($link->type) {
                         case 'Vendor' :
                             $folder = '(Unattached documents)';
+
+                            if($zip->locateName("$folder/") === false) {
+                                $zip->addEmptyDir($folder);
+                            }
                         break;
                         case 'Expense' :
                             $expense = $this->vendors_model->get_expense_by_id($link->linked_id);
@@ -747,6 +751,10 @@ class Attachments extends MY_Controller {
 
                             $amount = '$'.number_format($expense->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
+
+                            if($zip->locateName("Expense/") === false) {
+                                $zip->addEmptyDir("Expense");
+                            }
 
                             $folder = "Expense/Expense $payeeName $amount";
                         break;
@@ -770,6 +778,10 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($check->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
+                            if($zip->locateName("Check/") === false) {
+                                $zip->addEmptyDir("Check");
+                            }
+
                             $folder = "Check/Check $payeeName $amount";
                         break;
                         case 'Bill' :
@@ -779,6 +791,10 @@ class Attachments extends MY_Controller {
 
                             $amount = '$'.number_format($bill->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
+
+                            if($zip->locateName("Bill/") === false) {
+                                $zip->addEmptyDir("Bill");
+                            }
 
                             $folder = "Bill/Bill $payeeName $amount";
                         break;
@@ -790,6 +806,10 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($billPayment->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
+                            if($zip->locateName("Bill Payment/") === false) {
+                                $zip->addEmptyDir("Bill Payment");
+                            }
+
                             $folder = "Bill Payment/Bill Payment $payeeName $amount";
                         break;
                         case 'Purchase Order' :
@@ -800,6 +820,10 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($purchaseOrder->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
+                            if($zip->locateName("Purchase Order/") === false) {
+                                $zip->addEmptyDir("Purchase Order");
+                            }
+
                             $folder = "Purchase Order/Purchase Order $payeeName $amount";
                         break;
                         case 'Vendor Credit' :
@@ -809,6 +833,10 @@ class Attachments extends MY_Controller {
 
                             $amount = '$'.number_format($vCredit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
+
+                            if($zip->locateName("Vendor Credit/") === false) {
+                                $zip->addEmptyDir("Vendor Credit");
+                            }
 
                             $folder = "Vendor Credit/Vendor Credit $payeeName $amount";
                         break;
@@ -832,6 +860,10 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($ccCredit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
+                            if($zip->locateName("Credit Card Credit/") === false) {
+                                $zip->addEmptyDir("Credit Card Credit");
+                            }
+
                             $folder = "Credit Card Credit/CC-Credit $payeeName $amount";
                         break;
                         case 'CC Payment' :
@@ -842,6 +874,10 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($ccPayment->amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
+                            if($zip->locateName("Credit Card Payment/") === false) {
+                                $zip->addEmptyDir("Credit Card Payment");
+                            }
+
                             $folder = "Credit Card Payment/Credit Card Pmt $payeeName $amount";
                         break;
                         case 'Deposit' :
@@ -849,6 +885,10 @@ class Attachments extends MY_Controller {
 
                             $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
+
+                            if($zip->locateName("Deposit/") === false) {
+                                $zip->addEmptyDir("Deposit");
+                            }
 
                             $folder = "Deposit/Deposit $amount";
                         break;
@@ -858,10 +898,18 @@ class Attachments extends MY_Controller {
                             $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
+                            if($zip->locateName("Transfer/") === false) {
+                                $zip->addEmptyDir("Transfer");
+                            }
+
                             $folder = "Transfer/Transfer $amount";
                         break;
                         case 'Journal' :
                             $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+
+                            if($zip->locateName("Journal/") === false) {
+                                $zip->addEmptyDir("Journal");
+                            }
 
                             if(!in_array($journal->journal_no, [null, '', '0'])) {
                                 $folder = "Journal Entry/Journal #$journal->journal_no";
@@ -876,6 +924,8 @@ class Attachments extends MY_Controller {
                             $folder = "$folder - 1";
                         }
                     }
+
+                    $zip->addEmptyDir($folder);
 
                     $path = "$folder/$attachment->uploaded_name.$attachment->file_extension";
                     if($zip->locateName($path) !== false) {
@@ -895,8 +945,15 @@ class Attachments extends MY_Controller {
         }
         $zip->close();
 
-        // $blob = file_get_contents('./uploads/accounting/attachments/'.$zipFile);
+        $file = "./uploads/accounting/attachments/$zipFile";
 
-        echo json_encode(['zip' => '/uploads/accounting/attachments/'.$zipFile]);
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="archive.zip"');
+        header('Content-Length: ' . filesize($file));
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        readfile($file);
+
+        unlink('./uploads/accounting/attachments/'.$zipFile);
     }
 }

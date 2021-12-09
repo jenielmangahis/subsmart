@@ -171,5 +171,18 @@ class Accounting_receive_payment_model extends MY_Model
             return $query->result();
         }
     }
+
+    public function amount_received_in_a_day($date)
+    {
+        $sql="SELECT SUM(amount) as money_in FROM `accounting_receive_payment` WHERE payment_date = '".$date."'";
+        $query = $this->db->query($sql);
+        return $query->row();
+    }
+    public function amount_expense_in_a_day($date)
+    {
+        $sql="SELECT SUM(total_amount) as money_out FROM `accounting_expense` WHERE payment_date = '".$date."'";
+        $query = $this->db->query($sql);
+        return $query->row();
+    }
     
 }
