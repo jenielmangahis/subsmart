@@ -106,13 +106,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <?php 
                                     //print_r($fields); 
                                     foreach($fields as $field){  ?>
-                                    <tr>
+                                    <tr class="cf-row-<?php echo $field->id; ?>">
                                         <td><?php echo $field->name; ?></td>
                                         <td><?php echo $field->date_created; ?></td>
                                         <td><?php echo $field->date_updated; ?></td>
                                         <td>
                                             <a href="#" class="btn btn-primary field" field-id="<?php echo $field->id; ?>"  field-name="<?php echo $field->name; ?>" data-toggle="modal" data-target="#updatecustom_field">Update</a>
-                                            <a href="#" class="btn btn-danger field" field-id="<?php echo $field->id; ?>"  field-name="<?php echo $field->name; ?>" data-toggle="modal" data-target="#updatecustom_field">Delete</a>                                         <!-- <a href="#" class="btn btn-danger" field-id="<?php echo $field->id; ?>">Delete</a> -->
+                                            <a href="javascript:void(0);" class="btn btn-danger field btn-delete-cf" data-id="<?php echo $field->id; ?>"  data-name="<?php echo $field->name; ?>">Delete</a>                                         <!-- <a href="#" class="btn btn-danger" field-id="<?php echo $field->id; ?>">Delete</a> -->
                                         </td>
                                     </tr>
                                     <?php } ?>
@@ -231,7 +231,7 @@ $(function(){
 <script>
 $(document).ready(function(){
 
-$('.field').each(function(e){
+    $('.field').each(function(e){
         $.ajaxSetup({
             headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -248,6 +248,56 @@ $('.field').each(function(e){
         });
     });
 
+    $('.btn-delete-cf').click(function(){
+        var cfid = $(this).attr('data-id');
+        var cname = $(this).attr('data-name')
+        var url = base_url + 'workorder/_delete_custom_field';
+        Swal.fire({
+          title: 'Delete custom field &nbsp<b>' + cname + '</b>?',
+          html: '',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#ea2e4d',
+          cancelButtonColor: '#32243d',
+          confirmButtonText: 'Delete'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             data: {cfid:cfid},
+             success: function(o)
+             {
+               if( o.is_deleted == 1 ){
+                Swal.fire({
+                  title: 'Success',
+                  text: 'Custom Field was successfully deleted',
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#32243d',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Ok'
+                });
+
+                $(".cf-row-"+ cfid).fadeOut("normal", function() {
+                    $(this).remove();
+                });
+
+               }else{
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Cannot find data.',
+                  text: o.msg
+                });
+               }
+             }
+            });
+
+
+          }
+        })
+    });
 
 });
 </script>

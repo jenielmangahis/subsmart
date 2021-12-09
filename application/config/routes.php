@@ -935,6 +935,8 @@ $route['tools/_activate_company_stripe'] = 'Tools/ajax_activate_company_online_p
 $route['tools/_activate_company_paypal'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_get_stripe_api_credentials'] = 'Tools/ajax_load_company_stripe_form';
 $route['tools/_get_paypal_api_credentials'] = 'Tools/ajax_load_company_paypal_form';
+$route['tools/_get_nmi_api_credentials'] = 'Tools/ajax_load_company_nmi_form';
+$route['tools/_activate_company_nmi'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/activate_stripe'] = 'Debug/activateStripe';
 
 //Work Pictures
