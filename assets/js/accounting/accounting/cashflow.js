@@ -40,7 +40,7 @@ function update_cashflow_chart() {
             removeData_chashflow_chart(cash_balance_chart);
             $(".cash-flow-section .chart-x-label ul.months").html(data.bottom_x_labels);
             $(".cash-flow-section .chart-x-label ul.months").attr("class", "months months-" + date_range);
-            addData_chashflow_chart(cash_balance_chart, data.data_labels, [data.data_values, data.data_projected]);
+            addData_chashflow_chart(cash_balance_chart, data.data_labels, [data.data_values, data.data_values_money_in, data.data_values_money_out, data.data_projected]);
         },
     });
 }
@@ -64,6 +64,22 @@ function start_cashflow_chart() {
                 fill: true,
                 radius: 0,
                 borderWidth: 2,
+            }, {
+                label: "Money in",
+                data: null,
+                backgroundColor: ['rgba(82, 183, 2, 0.4)'],
+                borderColor: ['rgba(82, 183, 2, 1)'],
+                fill: false,
+                radius: 0,
+                borderWidth: 0,
+            }, {
+                label: "Money out",
+                data: null,
+                backgroundColor: ['rgba(82, 183, 2, 0.4)'],
+                borderColor: ['rgba(82, 183, 2, 1)'],
+                fill: false,
+                radius: 0,
+                borderWidth: 0,
             }, {
                 label: "Projected",
                 data: null,
