@@ -345,7 +345,7 @@ class Customer extends MY_Controller
         $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
 
         if( $companyApiSetting ){
-            if( $companyApiSetting->converge_merchant_id != && $companyApiSetting->converge_merchant_user_id != '' && $companyApiSetting->converge_merchant_pin != '' ){
+            if( $companyApiSetting->converge_merchant_id != '' && $companyApiSetting->converge_merchant_user_id != '' && $companyApiSetting->converge_merchant_pin != '' ){
                 if( $data['exp_month'] < 10 ){
                     $data['exp_month'] = 0 . $data['exp_month'];
                 }
@@ -397,7 +397,7 @@ class Customer extends MY_Controller
         $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
 
         if( $companyApiSetting ){
-            if( $companyApiSetting->nmi_transaction_key != && $companyApiSetting->nmi_terminal_id != '' ){
+            if( $companyApiSetting->nmi_transaction_key != '' && $companyApiSetting->nmi_terminal_id != '' ){
                 //include APPPATH . 'libraries/nmi/examples/common.php';
                 include_once APPPATH . 'libraries/nmi/src/Client.php';
 
