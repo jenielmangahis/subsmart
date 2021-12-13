@@ -497,7 +497,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <div class="modal-footer-uploadedReceipt" style="display: flex;justify-content:space-between;">
                             <div>
                                 <button type="button" data-dismiss="modal" class="btn btn-default btn-leftSide">Cancel</button>
-                                <button class="btn btn-default btn-leftSide" style="margin-left: 10px" data-action="deletereceipt">Delete this receipt</button>
+                                <button type="button" class="btn btn-default btn-leftSide" style="margin-left: 10px" data-action="deletereceipt">Delete this receipt</button>
                             </div>
 
                             <div class="d-flex align-items-center formActions">

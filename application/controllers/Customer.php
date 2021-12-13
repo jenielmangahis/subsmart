@@ -259,7 +259,7 @@ class Customer extends MY_Controller
                     'address' => $customer->mail_add,
                     'zip' => $customer->zip_code
                 ];
-                $result   = $this->converge_send_sale($converge_data);
+                $result   = $this->nmi_send_sale($converge_data);
                 $is_valid = $result['is_success'];
                 $err_msg  = $result['msg'];
             }
@@ -341,32 +341,110 @@ class Customer extends MY_Controller
 
         $is_success = false;
         $msg = '';
-        if( $data['exp_month'] < 10 ){
-            $data['exp_month'] = 0 . $data['exp_month'];
-        }
-        $year = date("d-m-" . $data['exp_year']);
-        $exp_date = $data['exp_month'] . date("y",strtotime($year));
-        $converge = new \wwwroth\Converge\Converge([
-            'merchant_id' => CONVERGE_MERCHANTID,
-            'user_id' => CONVERGE_MERCHANTUSERID,
-            'pin' => CONVERGE_MERCHANTPIN,
-            'demo' => false,
-        ]);
-        $createSale = $converge->request('ccsale', [
-            'ssl_card_number' => $data['card_number'],
-            'ssl_exp_date' => $exp_date,
-            'ssl_cvv2cvc2' => $data['card_cvc'],
-            'ssl_amount' => $data['amount'],
-            'ssl_avs_address' => $data['address'],
-            'ssl_avs_zip' => $data['zip'],
-        ]);
 
-        if( $createSale['success'] == 1 ){
-            $is_success = true;
-            $msg = '';
+        $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
+
+        if( $companyApiSetting ){
+            if( $companyApiSetting->converge_merchant_id != '' && $companyApiSetting->converge_merchant_user_id != '' && $companyApiSetting->converge_merchant_pin != '' ){
+                if( $data['exp_month'] < 10 ){
+                    $data['exp_month'] = 0 . $data['exp_month'];
+                }
+                $year = date("d-m-" . $data['exp_year']);
+                $exp_date = $data['exp_month'] . date("y",strtotime($year));
+                $converge = new \wwwroth\Converge\Converge([
+                    'merchant_id' => $companyApiSetting->converge_merchant_id,
+                    'user_id' => $companyApiSetting->converge_merchant_user_id,
+                    'pin' => $companyApiSetting->converge_merchant_pin,
+                    'demo' => false,
+                ]);
+
+                $createSale = $converge->request('ccsale', [
+                    'ssl_card_number' => $data['card_number'],
+                    'ssl_exp_date' => $exp_date,
+                    'ssl_cvv2cvc2' => $data['card_cvc'],
+                    'ssl_amount' => $data['amount'],
+                    'ssl_avs_address' => $data['address'],
+                    'ssl_avs_zip' => $data['zip'],
+                ]);
+
+                if( $createSale['success'] == 1 ){
+                    $is_success = true;
+                    $msg = '';
+                }else{
+                    $is_success = false;
+                    $msg = $createSale['errorMessage'];
+                }
+            }else{
+                $msg = 'Please setup your converge api credentials in API Connectors';
+            }
         }else{
-            $is_success = false;
-            $msg = $createSale['errorMessage'];
+            $msg = 'Please setup your converge api credentials in API Connectors';
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
+    }
+
+    public function nmi_send_sale($data){
+        $is_success = 0;
+        $msg = '';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
+
+        if( $companyApiSetting ){
+            if( $companyApiSetting->nmi_transaction_key != '' && $companyApiSetting->nmi_terminal_id != '' ){
+                //include APPPATH . 'libraries/nmi/examples/common.php';
+                include_once APPPATH . 'libraries/nmi/src/Client.php';
+
+                if( $data['exp_month'] < 10 ){
+                    $data['exp_month'] = 0 . $data['exp_month'];
+                }
+                $year = date("d-m-" . $data['exp_year']);
+                $exp_date = date("y",strtotime($year)) . $data['exp_month'];
+
+                // Setup the request.
+                $request = new Request();
+                $request->setSoftwareName(NMI_SOFTWARE_NAME);
+                $request->setSoftwareVersion(NMI_SOFTWARE_VERSION);
+                $request->setTerminalID($companyApiSetting->nmi_terminal_id);
+                $request->setTransactionKey($companyApiSetting->nmi_transaction_key);
+
+                // Setup the request detail.
+                $request->setRequestType(RequestType_Auth);
+                $request->setAmount($data['amount']);
+                $request->setPAN($data['card_number']);
+                $request->setExpiryDate($exp_date);
+
+                // Setup the client.
+                $client = new Client();
+                $client->addServerURL(NMI_TEST_SERVER_URL, 45000);
+                $client->setRequest($request);
+
+                // Process the request.
+                $client->processRequest();
+
+                // Get the response.
+                $response = $client->getResponse();
+
+                if( isset($response->m_errors) ){
+                    $errors = $response->m_errors;
+                    if( isset($errors[0]) ){
+                        $msg = $errors[0]->m_message;
+                    }
+                }else{
+                    $is_success = true;
+                    $msg = '';
+                }
+            }else{
+                $msg = 'Please setup your NMI api credentials in API Connectors';
+            }
+        }else{
+            $msg = 'Please setup your NMI api credentials in API Connectors';
         }
         
         $return = ['is_success' => $is_success, 'msg' => $msg];

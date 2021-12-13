@@ -299,6 +299,12 @@ export class ForReviewTable {
     const $dataTypesStep1 = $modal.find("[data-step=1] [data-type]");
     const $dataTypesStep2 = $modal.find("[data-step=2] [data-type]");
 
+    $modal.find(".formError").removeClass("formError--show");
+
+    const $buttons = $modal.find(".receiptsButton");
+    $buttons.removeClass("receiptsButton--isLoading");
+    $buttons.prop("disabled", false);
+
     const $image = $modal.find("#receiptImage");
     $image.attr("src", `${this.uploadPath}${receipt.receipt_img}`);
 
@@ -319,6 +325,7 @@ export class ForReviewTable {
         value = moment(value).format("YYYY-MM-DD");
       }
 
+      $element.classList.remove("inputError");
       if ($element.classList.contains("select2-hidden-accessible")) {
         $($element).find("option:not(:first-child)").remove(); // remove appended options
         $($element).val("").trigger("change"); // reset value

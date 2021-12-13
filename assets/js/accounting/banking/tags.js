@@ -39,22 +39,101 @@ $('#tags_table').DataTable({
         contentType: 'application/json', 
         type: 'POST',
         data: function(d) {
+            d.columns[0].search.value = $('#search').val();
             return JSON.stringify(d);
         },
         pagingType: 'full_numbers',
     },
     columns: [
         {
+            data: null,
+            name: 'checkbox',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).html(`
+                <div class="d-flex justify-content-center">
+                    <div class="checkbox checkbox-sec m-0">
+                        <input type="checkbox" value="${rowData.id}" id="${rowData.type}-${rowData.id}">
+                        <label for="${rowData.type}-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                    </div>
+                </div>
+                `);
+            }
+        },
+        {
             data: 'name',
             name: 'name',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if(rowData.type === 'group') {
+                    $(td).html(`
+                    <a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-${row}"><i class="fa fa-chevron-down"></i></a>
+                    <span class="${rowData.type}-span-${rowData.id}">${rowData.name} (${rowData.tags.length})</span>
+                    <div class="form-group-${rowData.id} hide">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="group_name" value="${rowData.name}" data-id="${rowData.id}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-success" id="submiteUpdateTag" data-type="group" data-id="${rowData.id}">Save</button>
+                                <button type="button" class="close float-right text-dark" data-type="group" id="closeFormTag" data-id="${rowData.id}" style="transform: translate(0px, -15px);"><span aria-hidden="true">×</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    `);
+                } else {
+                    $(td).html(`
+                    <span class="${rowData.type}-span-${rowData.id}">${rowData.name}</span>
+                    <div class="form-${rowData.type}-${rowData.id} hide">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" name="tags_name" value="${rowData.name}" data-id="${rowData.id}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-success" id="submiteUpdateTag" data-type="${rowData.type}" data-id="${rowData.id}">Save</button>
+                                <button type="button" class="close float-right text-dark" data-type="${rowData.type}" id="closeFormTag" data-id="${rowData.id}" style="transform: translate(0px, -15px);"><span aria-hidden="true">×</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    `);
+                }
+            }
         },
         {
             data: 'transactions',
             name: 'transactions',
         },
         {
-            data: 'actions',
+            data: null,
             name: 'actions',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if(rowData.type === 'group') {
+                    $(td).html(`
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;">Run report</button>
+                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
+                            <span class="fa fa-caret-down"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" data-id="${rowData.id}" data-name="${rowData.name}" data-type="group">
+                            <li><a href="javascript:void(0);" id="addNewTag" class="dropdown-item" >Add tag</a></li>
+                            <li><a href="javascript:void(0);" id="updateTagGroup" class="dropdown-item">Edit group</a></li>
+                            <li><a href="javascript:void(0);" id="deleteGroup" class="dropdown-item">Delete group</a></li>
+                        </ul>
+                    </div>
+                `);
+                } else {
+                    $(td).html(`
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;">Run report</button>
+                        <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
+                            <span class="fa fa-caret-down"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" data-id="${rowData.id}" data-type="${rowData.type}">
+                            <li><a href="javascript:void(0);" class="dropdown-item" id="updateTagGroup">Edit tag</a></li>
+                            <li><a href="javascript:void(0);" class="dropdown-item" id="deleteTag" data-tag_id="${rowData.id}">Delete tag</a></li>
+                        </ul>
+                    </div>
+                    `);
+                }
+            }
         }
     ],
     fnCreatedRow: function(nRow, aData, iDataIndex) {
@@ -306,4 +385,23 @@ $(document).on('click', '#submiteUpdateTag', function(e) {
             }
         }
     });
+});
+
+$(document).on('keyup', '#search', function() {
+    $('#tags_table').DataTable().ajax.reload(null, true);
+});
+
+$(document).on('change', '#tags_table thead input[type="checkbox"]', function() {
+    $('#tags_table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+});
+
+$(document).on('change', '#tags_table tbody input[type="checkbox"]', function() {
+    var flag = true;
+    $('#tags_table tbody tr input[type="checkbox"]').each(function() {
+        if($(this).prop('checked') === false) {
+            flag = false;
+        }
+    });
+
+    $('#tags_table thead input[type="checkbox"]').prop('checked', flag);
 });

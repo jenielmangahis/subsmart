@@ -219,7 +219,7 @@ class Payment_methods extends MY_Controller {
             array_push($status, 0);
         }
 
-        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($order, $status);
+        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($post['order'], $status);
 
         if($search !== "") {
             $paymentMethods = array_filter($paymentMethods, function($method, $key) use ($search) {

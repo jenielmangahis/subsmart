@@ -147,6 +147,13 @@ define('MAIL_FROM', 'noreply@nsmartrac.com');
 
 define('REGISTRATION_MONTHS_DISCOUNTED', 3);
 
-
 //TRAC360
 define('GOOGLE_MAP_API_KEY', 'AIzaSyAXhOG7zvDz1l8tOrdMnmyrhCOL4Uc-Ink');
+
+//NMI
+//Test account
+define('NMI_TERMINAL_ID', '99954615');
+define('NMI_TRANSACTION_KEY', '3DNajYnBtGUSeDyX');
+define('NMI_SOFTWARE_NAME', 'NSMART');
+define('NMI_SOFTWARE_VERSION', '1.0');
+define('NMI_TEST_SERVER_URL', 'https://test.cardeasexml.com/generic.cex');

@@ -176,11 +176,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div> -->
                             <div class="section-above-chart">
                                 <div class="cashflowchart-tab-btns">
-                                    <button class="tablinks">
+                                    <button class="tablinks money_in_out">
                                         <i class="fa fa-line-chart" aria-hidden="true"></i>
                                         Money in/out
                                     </button>
-                                    <button class="tablinks active">
+                                    <button class="tablinks cash_balance active">
                                         <i class="fa fa-bar-chart" aria-hidden="true"></i>
                                         Cash balance
                                     </button>
@@ -202,9 +202,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-md-6">
                             <div class="section-above-chart">
-                                <div style="display: flex;">
+                                <div class="cash_balance_chart_section" style="display: flex;">
                                     <div class="chart-legends">Cash balance</div>
                                     <div class="chart-legends">Projected</div>
+                                </div>
+                                <div class="money_in_out_chart_section" style="display: flex;display:none;">
+                                    <div class="chart-legends">Money in</div>
+                                    <div class="chart-legends">Money out</div>
                                 </div>
                             </div>
                         </div>
@@ -213,24 +217,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
                     <div class="cash-flow-section">
-                        <canvas id="chartContainer" style="height: 370px; width: 100%;"></canvas>
-                        <div class="chart-x-label">
-                            <div class="right-label">THRESHOLD</div>
-                            <ul class="months months-12">
-                                <div class="line-divider"></div>
-                                <li class="moth month-1">JAN</li>
-                                <li class="moth month-2">FEB</li>
-                                <li class="moth month-3">MAR</li>
-                                <li class="moth month-4">APR</li>
-                                <li class="moth month-5">MAY</li>
-                                <li class="moth month-6">JUN</li>
-                                <li class="moth month-7">JUL</li>
-                                <li class="moth month-8">AUG</li>
-                                <li class="moth month-9">SEP</li>
-                                <li class="moth month-10">OCT</li>
-                                <li class="moth month-11">NOV</li>
-                                <li class="moth month-12">DEC</li>
-                            </ul>
+                        <div class="money_in_out_chart_section" style="display: none;">
+                            <canvas id="cash_in_out_chart" style="height: 370px; width: 100%;"></canvas>
+                        </div>
+                        <div class="cash_balance_chart_section">
+                            <canvas id="cash_balance_chart" style="height: 370px; width: 100%;"></canvas>
+                            <div class="chart-x-label">
+                                <div class="right-label">THRESHOLD</div>
+                                <ul class="months months-12">
+                                    <div class="line-divider"></div>
+                                    <li class="moth month-1">JAN</li>
+                                    <li class="moth month-2">FEB</li>
+                                    <li class="moth month-3">MAR</li>
+                                    <li class="moth month-4">APR</li>
+                                    <li class="moth month-5">MAY</li>
+                                    <li class="moth month-6">JUN</li>
+                                    <li class="moth month-7">JUL</li>
+                                    <li class="moth month-8">AUG</li>
+                                    <li class="moth month-9">SEP</li>
+                                    <li class="moth month-10">OCT</li>
+                                    <li class="moth month-11">NOV</li>
+                                    <li class="moth month-12">DEC</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <br><br>
@@ -720,5 +729,51 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 
+
+<script>
+    <?php
+    $data_dates_projected = "[";
+    $data_dates = "[";
+    $data_labels = "[";
+
+    $data_dates_projected_3m = "[";
+    $data_dates_3m = "[";
+    $data_labels_3m = "[";
+    $date_start = date("Y-m-d", strtotime("- 10 months", strtotime(date("Y-m-01"))));
+    $date_end = date("Y-m-t", strtotime("+ 2 months", strtotime(date("Y-m-01"))));
+    $total = 0;
+    $month = date("m", strtotime($date_start));
+    $ctr=0;
+    while ($date_start <= $date_end) {
+        $value = rand(rand(1, $ctr+2), $ctr+2);
+        if ($month == date("m", strtotime($date_start))) {
+            $total+=$value;
+        } else {
+            $month = date("m", strtotime($date_start));
+            $data_dates .= $total.",";
+            $data_dates_projected .= rand(rand(1, $total), $total+2).",";
+            $data_labels .= "'". strtoupper(date("M", strtotime($date_start)))."',";
+            $total = 0;
+        }
+        $date_start = date("Y-m-d", strtotime("+ 1 day", strtotime($date_start)));
+        $ctr++;
+    }
+    $data_dates_projected.="]";
+    $data_dates.="]";
+    $data_labels .= "]";
+
+    $data_dates_projected_3m .= "]";
+    $data_dates_3m .= "]";
+    $data_labels_3m .= "]";
+    ?>
+
+    var labels = <?=$data_labels?> ;
+    var data = <?=$data_dates?> ;
+    var data_projected = <?=$data_dates_projected?> ;
+
+    var labels_3m = <?=$data_labels_3m?> ;
+    var data_3m = <?=$data_dates_3m?> ;
+    var data_projected_3m = <?=$data_dates_projected_3m?> ;
+</script>
 
 <?php include viewPath('includes/footer_accounting');

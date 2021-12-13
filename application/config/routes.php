@@ -391,6 +391,7 @@ $route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/pay
 $route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";
 $route['accounting/terms/update/(:any)']['post'] = "accounting_controllers/payment_terms/update/$1";
 $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payment_terms/ajax_add_term';
+$route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms/print';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -455,6 +456,7 @@ $route['accounting/chart-of-accounts/view-register/(:any)/export-table']['post']
 $route['accounting/chart-of-accounts/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/chart_of_accounts/delete_transaction/$1/$2';
 $route['accounting/chart-of-accounts/(:any)/save-transaction/(:any)']['post'] = 'accounting_controllers/chart_of_accounts/save_transaction/$1/$2';
 $route['accounting/chart-of-accounts/add-attachment']['post'] = 'accounting_controllers/chart_of_accounts/add_attachment';
+$route['accounting/chart-of-accounts/inactive-batch']['post'] = 'accounting_controllers/chart_of_accounts/inactive_batch';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';

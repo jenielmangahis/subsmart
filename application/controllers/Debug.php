@@ -617,6 +617,42 @@
             echo '<p>'.$response->toString();
             exit;
         }
+
+        public function nmi_payment_single_payment()
+        {
+            //include APPPATH . 'libraries/nmi/examples/common.php';
+            include_once APPPATH . 'libraries/nmi/src/Client.php';
+
+            // Setup the request.
+            $request = new Request();
+            $request->setSoftwareName(NMI_SOFTWARE_NAME);
+            $request->setSoftwareVersion(NMI_SOFTWARE_VERSION);
+            $request->setTerminalID(NMI_TERMINAL_ID);
+            $request->setTransactionKey(NMI_TRANSACTION_KEY);
+
+            // Setup the request detail.
+            $request->setRequestType(RequestType_Auth);
+            $request->setAmount('123');
+            $request->setPAN('341111597241002');
+            $request->setExpiryDate('2012');
+
+            //echo '<p>'.$request->toString();
+
+            // Setup the client.
+            $client = new Client();
+            $client->addServerURL('https://test.cardeasexml.com/generic.cex', 45000);
+            $client->setRequest($request);
+
+            // Process the request.
+            $client->processRequest();
+
+            // Get the response.
+            $response = $client->getResponse();
+            echo "<pre>";
+            print_r($response);
+            //echo '<p>'.$response->toString();
+            exit;
+        }
     }
     /* End of file Debug.php */
 

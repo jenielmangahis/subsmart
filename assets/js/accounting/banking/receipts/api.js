@@ -149,6 +149,20 @@ export async function getForwardEmailInfo() {
   return response.json();
 }
 
+export async function uploadGoogleDriveImages(payload) {
+  const endpoint = `${window.prefixURL}/AccountingReceipts/apiUploadGoogleDriveImages`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}
+
 function sleep(seconds) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
