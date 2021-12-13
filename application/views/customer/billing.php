@@ -45,32 +45,55 @@ add_css(array(
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <input type="radio" name="method" class="payment_method" value="CC" checked id="CC">
-                                <span >Credit Card</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="CC" checked id="CC">
+                                    <label class="form-check-label" for="CC" style="position: initial;">Credit Card</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="CASH" id="CASH">
-                                <span >Cash</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="CASH" id="CASH">
+                                    <label class="form-check-label" for="CASH" style="position: initial;">Cash</label>
+                                </div>
 
-                                <input type="radio" name="method"  class="payment_method" value="CHECK" id="CHECK">
-                                <span >Check</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method"  class="form-check-input payment_method" value="CHECK" id="CHECK">
+                                    <label class="form-check-label" for="CHECK" style="position: initial;">Check</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="ACH" id="ACH">
-                                <span >ACH</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="ACH" id="ACH">
+                                    <label class="form-check-label" for="ACH" style="position: initial;">ACH</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="Invoicing" id="Invoicing">
-                                <span >Invoicing</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="Invoicing" id="Invoicing">
+                                    <label class="form-check-label" for="Invoicing" style="position: initial;">Invoicing</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="VENMO" id="VENMO">
-                                <span >Venmo</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="VENMO" id="VENMO">
+                                    <label class="form-check-label" for="VENMO" style="position: initial;">Venmo</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="PP" id="PP">
-                                <span >Paypal</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="PP" id="PP">
+                                    <label class="form-check-label" for="PP" style="position: initial;">Paypal</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="SQ" id="SQ">
-                                <span >Square</span> &nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="SQ" id="SQ">
+                                    <label class="form-check-label" for="SQ" style="position: initial;">Square</label>
+                                </div>
 
-                                <input type="radio" name="method" class="payment_method" value="OPT" id="OPT">
-                                <span>Others</span>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="NMI" id="NMI">
+                                    <label class="form-check-label" for="NMI" style="position: initial;">NMI</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" name="method" class="form-check-input payment_method" value="OPT" id="OPT">
+                                    <label class="form-check-label" for="OPT" style="position: initial;">Others</label>
+                                </div>
                             </div>
                             <br>
 

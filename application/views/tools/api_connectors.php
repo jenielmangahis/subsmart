@@ -451,6 +451,31 @@ svg#svg-sprite-menu-close {
                                     <div class="addon">
                                         <div class="addon__on"></div>
                                         <div class="addon__img" style="margin: 23px 0; height: 100px;">
+                                            <img class="img-responsive" style="max-width: 192px;position: relative;top: 10px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/nmi.png">
+                                        </div>
+                                        <div class="addon__name">NMI</div>
+                                        <div class="addon__description text-ter">
+                                          Payments infrastructure for the internet with NMI. <br>
+                                          <a class="a-sec" data-toggle="popover" title="NMI" data-content="NMI provides payment enablement technology that empowers ISOs, ISVs, VARs and
+payment facilitators to offer branded payment gateway services without building or
+maintaining their technology." href="javascript:void(0)">more...</a>
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-sm-6">
+                                            <div class="apply-container" role="group" aria-label="...">
+                                                  <a class="btn-md btn-nmi-form" href="javascript:void(0);">
+                                                      <span class="fa fa-gear fa-margin-right"></span> Setup
+                                                  </a>
+                                              </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="addon-li">
+                                    <div class="addon">
+                                        <div class="addon__on"></div>
+                                        <div class="addon__img" style="margin: 23px 0; height: 100px;">
                                             <img class="img-responsive" style="max-width: 200px;position: relative;top: 15px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/converge-logo.png">
                                         </div>
                                         <div class="addon__name">
@@ -629,6 +654,25 @@ svg#svg-sprite-menu-close {
                                   </div>
                                 </div>
 
+                                <div class="modal fade bd-example-modal-sm" id="modalNmiApi" tabindex="-1" role="dialog" aria-labelledby="modalNmiApiTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-md" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-form"></i> Setup NMI</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-nmi-account', 'autocomplete' => 'off' ]); ?>
+                                      <div class="modal-body stripe-api-body"></div>
+                                      <div class="modal-footer close-modal-footer">
+                                        <button type="submit" class="btn btn-primary btn-nmi-activate">Save</button>
+                                      </div>
+                                      <?php echo form_close(); ?>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 <div class="modal fade bd-example-modal-sm" id="modalPaypalApi" tabindex="-1" role="dialog" aria-labelledby="modalPaypalApiTitle" aria-hidden="true">
                                   <div class="modal-dialog modal-md" role="document">
                                     <div class="modal-content">
@@ -699,6 +743,23 @@ $(function(){
         }, 800);
     });
 
+    $(".btn-nmi-form").click(function(){
+        $("#modalNmiApi").modal('show');
+
+        var url = base_url + 'tools/_get_nmi_api_credentials';
+        $(".stripe-api-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           success: function(o)
+           {
+             $(".stripe-api-body").html(o);
+           }
+        });
+        }, 800);
+    });
+
     $(".btn-converge-form").click(function(){
         $("#modalConvergeApi").modal('show');
 
@@ -752,28 +813,28 @@ $(function(){
         }, 800);
     });
 
-    $("#form-stripe-account").submit(function(e){
+    $("#form-nmi-account").submit(function(e){
         e.preventDefault();
 
         var url = base_url + 'tools/_activate_company_stripe';
-        $(".btn-stripe-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        $(".btn-nmi-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
         $.ajax({
                type: "POST",
                url: url,
                dataType: "json",
-               data: $("#form-stripe-account").serialize(),
+               data: $("#form-nmi-account").serialize(),
                success: function(o)
                {
                  if( o.is_success ){
                     Swal.fire({
                       icon: 'success',
-                      title: 'Your stripe account was successfully saved',
+                      title: 'Your NMI account was successfully saved',
                       showConfirmButton: false,
                       timer: 1500
                     });
 
-                    $("#modalStripeApi").modal('hide');
+                    $("#modalNmiApi").modal('hide');
                  }else{
                     Swal.fire({
                         icon: 'error',
@@ -782,7 +843,7 @@ $(function(){
                     });
                  }
 
-                 $(".btn-stripe-activate").html('Save');
+                 $(".btn-nmi-activate").html('Save');
                }
             });
         }, 800);

@@ -12,6 +12,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #payment_methods .btn-group .btn {
         padding: 10px;
     }
+    #myTabContent .action-bar ul li a:after {
+        width: 0;
+    }
+    #myTabContent .action-bar ul li a {
+    font-size: 20px;
+    }
+    #myTabContent .action-bar ul li {
+        margin-right: 5px;
+    }
+    #myTabContent .action-bar ul li #cancel-edit-btn {
+        color: #6B6C72;
+        border: 0;
+    }
+    #myTabContent .action-bar ul li #cancel-edit-btn:hover {
+        background: transparent;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -55,39 +71,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row pb-3">
-                                <div class="col-md-6">
-                                    <input type="text" name="search" id="search" class="form-control w-50" placeholder="Filter by name">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="action-bar h-100 d-flex align-items-center">
-                                        <ul class="ml-auto">
-                                            <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
-                                            <li>
-                                                <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fa fa-cog"></i>
-                                                </a>
-                                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
-                                                    <p class="p-padding m-0">Columns</p>
-                                                    <p class="p-padding"><input type="checkbox" id="col_credit" checked="checked" onchange="col(this)"> Credit Card</p>
-                                                    <p class="p-padding m-0">Other</p>
-                                                    <p class="p-padding m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
-                                                    <p class="p-padding m-0">Rows</p>
-                                                    <p class="p-padding m-0">
-                                                        <select name="table_rows" id="table_rows" class="form-control">
-                                                            <option value="50">50</option>
-                                                            <option value="75">75</option>
-                                                            <option value="100">100</option>
-                                                            <option value="150" selected>150</option>
-                                                            <option value="300">300</option>
-                                                        </select>
-                                                    </p>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
             		    <?php if($this->session->flashdata('success')) : ?>
                         <div class="alert alert-success alert-dismissible my-4" role="alert">
@@ -102,6 +85,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php endif; ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-row">
+                                            <div class="col-12">
+                                                <input type="text" name="search" id="search" class="form-control w-50" placeholder="Filter by name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="action-bar h-100 d-flex align-items-center">
+                                            <ul class="ml-auto">
+                                                <li><a href="#" id="print-payment-methods"><i class="fa fa-print"></i></a></li>
+                                                <li>
+                                                    <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fa fa-cog"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
+                                                        <p class="p-padding m-0">Columns</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" checked="checked" onchange="col(this)" name="col_credit" id="col_credit">
+                                                            <label for="col_credit">Credit Card</label>
+                                                        </div>
+                                                        <p class="p-padding m-0">Other</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" name="inc_inactive" id="inc_inactive" value="1">
+                                                            <label for="inc_inactive">Include Inactive</label>
+                                                        </div>
+                                                        <p class="p-padding m-0">Rows</p>
+                                                        <p class="p-padding m-0">
+                                                            <select name="table_rows" id="table_rows" class="form-control">
+                                                                <option value="50">50</option>
+                                                                <option value="75">75</option>
+                                                                <option value="100">100</option>
+                                                                <option value="150" selected>150</option>
+                                                                <option value="300">300</option>
+                                                            </select>
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                                 <table id="payment_methods" class="table table-striped table-bordered" style="width:100%">
 									<thead>
                                         <tr>

@@ -380,3 +380,45 @@ $colorError: #d52b1e;
     color: var(--success);
   }
 }
+
+.receiptForwardingButton {
+  border: 2px solid #d4d7dc;
+  padding: 10px 10px 10px 10px;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+
+.receiptModal {
+  &__emailCopy {
+    font-size: 16px;
+    margin-left: 5px;
+    color: #767676;
+  }
+
+  &__note {
+    font-size: 13px;
+    color: #767676;
+  }
+
+  .input--error {
+    border-color: $colorError;
+  }
+
+  .receiptsButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 36px;
+
+    .spinner-border {
+      display: none;
+    }
+
+    &--isLoading {
+      .spinner-border {
+        display: block;
+      }
+    }
+  }
+}

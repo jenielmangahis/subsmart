@@ -34,7 +34,7 @@
         if(method === 'CASH'){
             hide_all();
             $("#payment_collected").show('slow');
-        }else if(method === 'CC' || method === 'OCCP'){
+        }else if(method === 'CC' || method === 'OCCP' || method === 'NMI'){
             hide_all();
             $("#credit_card").show('slow');
         }else if(method === 'CHECK'){

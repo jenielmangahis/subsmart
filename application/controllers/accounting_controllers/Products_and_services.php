@@ -883,7 +883,7 @@ class Products_and_services extends MY_Controller {
             $expenseAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->expense_account_id) : '';
             $inventoryAccName = !is_null($accountingDetails) ? $this->chart_of_accounts_model->getName($accountingDetails->inv_asset_acc_id) : '';
             $purchDesc = !is_null($accountingDetails) ? $accountingDetails->purchase_description : '';
-            $taxable = !is_null($accountingDetails) && $accountingDetails->tax_rate_id ? "<i class='fa fa-check'></i>" : "";
+            $taxable = !is_null($accountingDetails) && $accountingDetails->tax_rate_id ? "&#10003;" : "";
             $qtyOnPO = !is_null($accountingDetails) ? $accountingDetails->qty_po : '';
 
             if($search !== "") {

@@ -474,4 +474,48 @@ class AccountingReceipts extends MY_Controller
             'client_secret' => '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',
         ];
     }
+
+    public function apiSaveForwardEmail()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['email' => $email] = $payload;
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get('accounting_receipts_forward_emails');
+
+        if ($query->num_rows() > 0) {
+            $this->db->where('company_id', $companyId);
+            $this->db->update('accounting_receipts_forward_emails', ['value' => $email]);
+        } else {
+            $this->db->insert('accounting_receipts_forward_emails', [
+                'company_id' => $companyId,
+                'value' => $email,
+            ]);
+        }
+
+        $this->db->where('company_id', $companyId);
+        $result = $this->db->get('accounting_receipts_forward_emails')->row();
+        echo json_encode(['data' => $result]);
+    }
+
+    public function apiGetForwardEmailInfo()
+    {
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $forwardEmail = $this->db->get('accounting_receipts_forward_emails')->row();
+
+        $this->db->where('id', $companyId);
+        $this->db->select(['business_name']);
+        $company = $this->db->get('clients')->row();
+
+        echo json_encode(['email' => $forwardEmail, 'company' => $company]);
+    }
 }

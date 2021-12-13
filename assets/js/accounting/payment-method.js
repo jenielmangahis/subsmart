@@ -53,8 +53,9 @@ $('#payment_methods').DataTable({
 
                 if(cellData === '1' || cellData === 1) {
                     $(td).html(`
-                    <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                        <input class="m-auto" type="checkbox" checked disabled>
+                    <div class="checkbox checkbox-sec d-flex justify-content-center">
+                        <input type="checkbox" name="is_credit_${rowData.id}" id="is_credit_${rowData.id}" disabled checked>
+                        <label for="is_credit_${rowData.id}"></label>
                     </div>
                     `);
                 }
@@ -112,6 +113,10 @@ $('#search').on('keyup', function() {
 
 $('#table_rows, #inc_inactive').on('change', function() {
     $('#payment_methods').DataTable().ajax.reload();
+});
+
+$('#table_rows').select2({
+    minimumResultsForSearch: -1
 });
 
 $(document).on('click', '#payment_methods .edit-method', function(e) {
@@ -213,4 +218,33 @@ $(document).on('click', '#new-payment-method', function(e) {
 
         $('#modal-container #payment-method-modal').modal('show');
     });
+});
+
+$(document).on('click', '#print-payment-methods', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+    data.set('credit_card', $('#col_credit').prop('checked') === true ? 1 : 0);
+    data.set('inactive', $('#inc_inactive').prop('checked') === true ? 1 : 0);
+    data.set('search', $('input#search').val());
+
+    var tableOrder = $('#payment_methods').DataTable().order();
+    data.set('order', tableOrder[0][1]);
+
+    $.ajax({
+		url: '/accounting/payment-methods/print',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+			let pdfWindow = window.open("");
+			pdfWindow.document.write(`<h3>Payment Methods</h3>`);
+			pdfWindow.document.write(result);
+			$(pdfWindow.document).find('body').css('padding', '0');
+			$(pdfWindow.document).find('body').css('margin', '0');
+			$(pdfWindow.document).find('iframe').css('border', '0');
+			pdfWindow.print();
+		}
+	});
 });

@@ -207,4 +207,54 @@ class Payment_methods extends MY_Controller {
 
         redirect('/accounting/payment-methods');
     }
+
+    public function print()
+    {
+        $post = $this->input->post();
+        $search = $post['search'];
+        $status = [
+            1
+        ];
+        if($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        $paymentMethods = $this->accounting_payment_methods_model->getCompanyPaymentMethods($order, $status);
+
+        if($search !== "") {
+            $paymentMethods = array_filter($paymentMethods, function($method, $key) use ($search) {
+                return stripos($method['name'], $search) !== false;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        usort($paymentMethods, function($a, $b) use ($post) {
+            if($post['order'] === 'asc') {
+                return strcasecmp($a['name'], $b['name']);
+            } else {
+                return strcasecmp($b['name'], $a['name']);
+            }
+        });
+
+        $tableHtml = "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Name</th>";
+        $tableHtml .= $post['credit_card'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Credit Card</th>" : "";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+
+        foreach($paymentMethods as $method) {
+            $name = $method['status'] === "0" ? $method['name']." (deleted)" : $method['name'];
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$name</td>";
+            $tableHtml .= $post['credit_card'] === "1" && $method['credit_card'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>&#10003;</td>" : "<td style='border-bottom: 1px dotted #D5CDB5'></td>";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
+    }
 }

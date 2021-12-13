@@ -6607,6 +6607,19 @@ class Workorder extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_delete_custom_field()
+    {
+        $is_deleted = 0;
+
+        $post = $this->input->post();
+        $this->workorder_model->delete_custom_fields_by_id($post['cfid']);
+        
+        $is_deleted = 1;
+
+        $json = ['is_deleted' => $is_deleted];
+        echo json_encode($json);
+    }
 }
 
 

@@ -1309,6 +1309,13 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function delete_custom_fields_by_id($id)
+    {
+        $this->db->where('id',$id);
+        $this->db->delete('custom_fields');
+        return true;
+    }
+
     public function delete_items($id)
     {
         $where = array(
