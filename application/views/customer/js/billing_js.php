@@ -83,16 +83,16 @@
             success: function(data)
             {
                 if(data === '0'){
-                    sweetalert('Good Job!','Payment has been Captured.','success')
+                    sweetalert('Good Job!','Payment has been Captured.','success', 0)
                 }else{
-                    sweetalert('Sorry',data,'error')
+                    sweetalert('Sorry',data,'error', 1)
                 }
                 console.log(data);
             }
         });
     });
 
-    function sweetalert($title,information,$icon){
+    function sweetalert($title,information,$icon,$is_error){
         Swal.fire({
             title: $title,
             text: information,
@@ -103,7 +103,9 @@
             confirmButtonText: 'Ok'
         }).then((result) => {
             if (result.value) {
-                window.location.reload(true);
+                if( $is_error == 0 ){
+                    window.location.reload(true);
+                }                
             }
         });
     }
