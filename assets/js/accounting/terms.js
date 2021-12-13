@@ -10,6 +10,10 @@ $('#search').on('keyup', function() {
     $('#terms_table').DataTable().ajax.reload();
 });
 
+$('#table_rows').select2({
+    minimumResultsForSearch: -1
+});
+
 var table = $('#terms_table').DataTable({
     autoWidth: false,
     searching: false,
@@ -184,4 +188,32 @@ $(document).on('click', '#new-payment-term', function(e) {
 
         $(`#modal-container #term-modal`).modal('show');
     });
+});
+
+$(document).on('click', '#print-terms', function(e) {
+    e.preventDefault();
+    var data = new FormData();
+    
+    data.set('inactive', $('#inc_inactive').prop('checked') === true ? 1 : 0);
+    data.set('search', $('input#search').val());
+
+    var tableOrder = $('#terms_table').DataTable().order();
+    data.set('order', tableOrder[0][1]);
+
+    $.ajax({
+		url: '/accounting/terms/print',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+			let pdfWindow = window.open("");
+			pdfWindow.document.write(`<h3>Terms</h3>`);
+			pdfWindow.document.write(result);
+			$(pdfWindow.document).find('body').css('padding', '0');
+			$(pdfWindow.document).find('body').css('margin', '0');
+			$(pdfWindow.document).find('iframe').css('border', '0');
+			pdfWindow.print();
+		}
+	});
 });

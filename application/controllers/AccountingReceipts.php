@@ -343,7 +343,9 @@ class AccountingReceipts extends MY_Controller
 
         if (!$this->upload->do_upload("file")) {
             $errors = $this->upload->display_errors();
-            echo json_encode(['success' => false, 'errors' => $errors]);
+
+            header('HTTP/1.1 422 Unprocessable Entity');
+            echo json_encode(['success' => false, 'error' => strip_tags($errors)]);
             return;
         }
 
@@ -417,6 +419,8 @@ class AccountingReceipts extends MY_Controller
         echo json_encode(['data' => $this->getGoogleCreds()]);
     }
 
+    // These methods are not used due to vendors and libraries folder
+    // namespace conflicts. These are just here for future reference.
     public function apiGoogleFilesToReceipt()
     {
         header('content-type: application/json');
@@ -447,7 +451,6 @@ class AccountingReceipts extends MY_Controller
 
         echo json_encode(['data' => $receipts]);
     }
-
     private function createReceiptFromGoogleDrive(Google_Service_Drive $service, string $fileId): stdClass
     {
         $fileProperties = $service->files->get($fileId);
@@ -473,5 +476,85 @@ class AccountingReceipts extends MY_Controller
             'client_id' => '1032522028757-bvqce6102l9122isf078qn88bl6ggb3g.apps.googleusercontent.com',
             'client_secret' => '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',
         ];
+    }
+
+    public function apiSaveForwardEmail()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['email' => $email] = $payload;
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $query = $this->db->get('accounting_receipts_forward_emails');
+
+        if ($query->num_rows() > 0) {
+            $this->db->where('company_id', $companyId);
+            $this->db->update('accounting_receipts_forward_emails', ['value' => $email]);
+        } else {
+            $this->db->insert('accounting_receipts_forward_emails', [
+                'company_id' => $companyId,
+                'value' => $email,
+            ]);
+        }
+
+        $this->db->where('company_id', $companyId);
+        $result = $this->db->get('accounting_receipts_forward_emails')->row();
+        echo json_encode(['data' => $result]);
+    }
+
+    public function apiGetForwardEmailInfo()
+    {
+        $companyId = logged('company_id');
+
+        $this->db->where('company_id', $companyId);
+        $forwardEmail = $this->db->get('accounting_receipts_forward_emails')->row();
+
+        $this->db->where('id', $companyId);
+        $this->db->select(['business_name']);
+        $company = $this->db->get('clients')->row();
+
+        echo json_encode(['email' => $forwardEmail, 'company' => $company]);
+    }
+
+    public function apiUploadGoogleDriveImages()
+    {
+        header('content-type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['files' => $files] = $payload;
+
+        $records = [];
+        foreach ($files as $file) {
+            // https://stackoverflow.com/a/11511605/8062659
+            $base64 = $file['base64'];
+            [$type, $base64] = explode(';', $base64);
+            [, $base64] = explode(',', $base64);
+            $base64 = base64_decode($base64);
+
+            [, $fileType] = explode('/', $type);
+            $fileName = uniqid(rand()) . ".$fileType";
+            file_put_contents(self::$uploadPath . "/$fileName", $base64);
+
+            $receiptData = ['receipt_img' => $fileName, 'user_id' => logged('id')];
+            $this->db->insert('accounting_receipts', $receiptData);
+
+            $this->db->where('id', $this->db->insert_id());
+            $record = $this->db->get('accounting_receipts')->row();
+
+            $this->prepareReceipt($record);
+            array_push($records, $record);
+        }
+
+        echo json_encode(['data' => $records]);
     }
 }

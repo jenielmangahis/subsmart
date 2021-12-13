@@ -29,7 +29,7 @@ export class ReviewedTable {
         const { transaction_date } = row;
         if (transaction_date === null) return fallback;
         if (transaction_date === "0000-00-00") return fallback;
-        return transaction_date;
+        return moment(transaction_date).format("MM/DD/YYYY");
       },
       description: (_, __, row) => {
         return isEmpty(row.description) ? fallback : row.description;

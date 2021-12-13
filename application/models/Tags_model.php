@@ -34,7 +34,7 @@ class Tags_model extends MY_Model
     }
 
     public function update($id, $name, $type = "tag") {
-        if ($type == "tag") {
+        if ($type == "tag" || $type === "group-tag") {
             return $this->db->where('id', $id)
                 ->update('job_tags', ['name' => $name, 'updated_at' => date('Y-m-d h:i:s')]);
         }

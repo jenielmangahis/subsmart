@@ -47,7 +47,7 @@ body {
 }
 
 .cash-flow-section .chart-x-label ul.months-1 li {
-    width: 3.22580645161%;
+    width: 100%;
 }
 
 .cash-flow-section .chart-x-label .line-divider {
@@ -99,6 +99,7 @@ body {
 .section-above-chart .cashflowchart-tab-btns button.active {
     background: rgb(212, 215, 220) !important;
     font-weight: 600;
+    margin-right: -2px;
 }
 
 .section-above-chart .cashflowchart-tab-btns button.active i {
@@ -146,6 +147,31 @@ body {
     border-radius: none;
 }
 
-#chartContainer {
+#cash_balance_chart,
+#cash_in_out_chart {
     height: 370px!important;
+}
+
+.section-above-chart>div {
+    display: flex;
+}
+
+.section-above-chart .money_in_out_chart_section .chart-legends:first-child::before {
+    border: solid 1px #57B814;
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    left: 0;
+    top: 3px;
+    background: #57B814;
+}
+
+.section-above-chart .money_in_out_chart_section .chart-legends:last-child::before {
+    border: solid 1px #06A4B5;
+    height: 9px;
+    width: 10px;
+    border-radius: 10px;
+    left: 0;
+    top: 3px;
+    background: #06A4B5;
 }

@@ -122,7 +122,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                                                     <div class="dropdown-menu" aria-labelledby="attachment-actions">
                                                         <a href="#" class="dropdown-item disabled" id="export-attachments">Export</a>
-                                                        <a href="#" class="dropdown-item disabled" id="create-invoice">Create invoice</a>
+                                                        <!-- <a href="#" class="dropdown-item disabled" id="create-invoice">Create invoice</a> -->
                                                         <a href="#" class="dropdown-item disabled" id="create-expense">Create expense</a>
                                                     </div>
                                                 </div>

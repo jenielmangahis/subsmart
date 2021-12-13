@@ -4,12 +4,14 @@ window.addEventListener("DOMContentLoaded", async () => {
   const { ReviewedTable } = await import("./ReviewedTable.js");
   const { SearchedReceiptsTable } = await import("./SearchedReceiptsTable.js");
   const { GoogleDrive } = await import("./GoogleDrive.js");
+  const { ReceiptForwarding } = await import("./ReceiptForwarding.js");
 
   const api = await import("./api.js");
   const rulesUtils = await import("../rules/utils.js");
 
   new FilterForm();
   new GoogleDrive();
+  new ReceiptForwarding();
   new ForReviewTable($("#receiptsReview"));
   new ReviewedTable($("#receiptsReviewed"));
 
@@ -140,12 +142,19 @@ window.addEventListener("DOMContentLoaded", async () => {
     init: function () {
       const $table = $("#receiptsReview");
 
-      this.on("success", (_, { data }) => {
+      this.on("success", (_, { data, ...rest }) => {
+        if (rest.success === false) return;
         $table.DataTable().row.add(data).draw();
+      });
+
+      this.on("error", (file, { error }) => {
+        const $error = $(file.previewElement).find(".dz-error-message span");
+        $error.text(error);
       });
 
       this.on("removedfile", async (file) => {
         const { data } = JSON.parse(file.xhr.response);
+        if (!data || !data.id) return;
         await api.deleteReceipt(data.id);
         $table.DataTable().row(`#row${data.id}`).remove().draw();
       });

@@ -1,5 +1,20 @@
 var columns = [
     {
+        orderable: false,
+        data: null,
+        name: 'id',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).html(`
+            <div class="d-flex justify-content-center">
+                <div class="checkbox checkbox-sec m-0">
+                    <input type="checkbox" value="${rowData.id}" id="account-${rowData.id}">
+                    <label for="account-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                </div>
+            </div>
+            `);
+        }
+    },
+    {
         data: 'name',
         name: 'name',
         fnCreatedCell: function(td, cellData, rowData, row, col) {
@@ -441,10 +456,12 @@ $('#edit-accounts').on('click', function(e) {
 
     $('#chart-of-accounts-table tbody tr').each(function() {
         var data = $('#chart-of-accounts-table').DataTable().row($(this)).data();
-        $(this).find('td:first-child()').html(`<input type="text" value="${data.name}" name="account_name[]" class="form-control">`);
+        $(this).find('td:first-child()').hide();
+        $(this).find('td:nth-child(2)').html(`<input type="text" value="${data.name}" name="account_name[]" class="form-control">`);
         $(this).find('td:last-child()').hide();
     });
 
+    $('#chart-of-accounts-table thead tr th:first-child()').hide();
     $('#chart-of-accounts-table thead tr th:last-child()').hide();
 
     $('#edit-accounts-buttons').removeClass('d-none');
@@ -455,16 +472,18 @@ $('#edit-accounts').on('click', function(e) {
 $('#cancel-edit-btn').on('click', function(e) {
     e.preventDefault();
 
+    $('#chart-of-accounts-table thead tr th:first-child()').show();
     $('#chart-of-accounts-table thead tr th:last-child()').show();
 
     $('#chart-of-accounts-table tbody tr').each(function() {
         var data = $('#chart-of-accounts-table').DataTable().row($(this)).data();
 
         if(data.is_sub_acc) {
-            $(this).find('td:first-child()').html(`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${data.name}`);
+            $(this).find('td:nth-child(2)').html(`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${data.name}`);
         } else {
-            $(this).find('td:first-child()').html(data.name);
+            $(this).find('td:nth-child(2)').html(data.name);
         }
+        $(this).find('td:first-child()').show();
         $(this).find('td:last-child()').show();
     });
 
@@ -508,4 +527,70 @@ $('#save-table-btn').on('click', function(e) {
             });
 		}
 	});
+});
+
+$(document).on('change', '#chart-of-accounts-table thead #select-all-accounts', function() {
+    $('#chart-of-accounts-table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+
+    if($(this).prop('checked')) {
+        var flag = true;
+        $('#chart-of-accounts-table tbody tr').each(function() {
+            var rowData = $('#chart-of-accounts-table').DataTable().row($(this)).data();
+            if(rowData.status === 0 || rowData.status === "0") {
+                flag = false;
+            }
+        });
+
+        if(flag) {
+            $('#make-inactive-batch.dropdown-item').removeClass('disabled');
+        } else {
+            $('#make-inactive-batch.dropdown-item').addClass('disabled');
+        }
+    } else {
+        $('#make-inactive-batch.dropdown-item').addClass('disabled');
+    }
+});
+
+$(document).on('change', '#chart-of-accounts-table tbody input[type="checkbox"]', function() {
+    var flag = true;
+    $('#chart-of-accounts-table tbody tr').each(function() {
+        var rowData = $('#chart-of-accounts-table').DataTable().row($(this)).data();
+        if($(this).find('input[type="checkbox"]:checked').length > 0) {
+            if(rowData.status === 0 || rowData.status === "0") {
+                flag = false;
+            }
+        }
+    });
+
+    if(flag) {
+        $('#make-inactive-batch.dropdown-item').removeClass('disabled');
+    } else {
+        $('#make-inactive-batch.dropdown-item').addClass('disabled');
+    }
+});
+
+$('#make-inactive-batch').on('click', function(e) {
+    e.preventDefault();
+    if($(this).hasClass('disabled') === false) {
+        var data = new FormData();
+
+        $('#chart-of-accounts-table tbody tr input[type="checkbox"]:checked').each(function() {
+            data.append('ids[]', $(this).val());
+        });
+
+        $.ajax({
+            url:"/accounting/chart-of-accounts/inactive-batch",
+            method:"post",
+            data: data,
+            contentType:false,
+            cache:false,
+            processData:false,
+            success:function(data){
+                $('#chart-of-accounts-table').DataTable().ajax.reload(null, true);
+
+            }
+        });
+
+        $('#chart-of-accounts-table thead #select-all-accounts').prop('checked', false).trigger('change');
+    }
 });

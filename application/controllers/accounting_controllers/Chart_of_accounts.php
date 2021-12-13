@@ -5397,4 +5397,13 @@ class Chart_of_accounts extends MY_Controller {
             echo json_encode('error');
         }
     }
+
+    public function inactive_batch()
+    {
+        $ids = $this->input->post('ids');
+
+        foreach($ids as $id) {
+            $this->chart_of_accounts_model->inactive($id);
+        }
+    }
 }

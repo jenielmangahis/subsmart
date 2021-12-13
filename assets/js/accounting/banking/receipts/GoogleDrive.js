@@ -17,6 +17,7 @@ export class GoogleDrive {
 
     gapi.load("auth");
     gapi.load("picker");
+    gapi.client.load("drive", "v3");
   }
 
   addEventListeners() {
@@ -37,7 +38,7 @@ export class GoogleDrive {
   }
 
   handleAuthResult(result) {
-    this.$button.remove("googleDriveConnectButton--error");
+    this.$button.removeClass("googleDriveConnectButton--error");
 
     if (!result.access_token) {
       console.error(result);
@@ -55,12 +56,12 @@ export class GoogleDrive {
       .setOAuthToken(result.access_token)
       .addView(view)
       .addView(new google.picker.DocsUploadView())
-      .setCallback((data) => this.onPickFile(data, result))
+      .setCallback((data) => this.onPickFile(data))
       .build();
     picker.setVisible(true);
   }
 
-  async onPickFile(data, authResult) {
+  async onPickFile(data) {
     if (data[google.picker.Response.ACTION] !== google.picker.Action.PICKED) {
       return;
     }
@@ -70,9 +71,18 @@ export class GoogleDrive {
 
     const docs = data[google.picker.Response.DOCUMENTS];
     const ids = docs.map((doc) => doc[google.picker.Document.ID]);
-    const { data: receipts } = await this.api.googleFilesToReceipt({
-      ids,
-      auth: authResult,
+
+    const promises = ids.map(async (id) => {
+      const response = await gapi.client.drive.files.get({ fileId: id, alt: "media" }); // prettier-ignore
+      const contentType = response.headers["Content-Type"];
+      const encoded = btoa(response.body);
+      const dataUrl = `data:${contentType};base64,${encoded}`;
+      return { base64: dataUrl };
+    });
+
+    const results = await Promise.all(promises);
+    const { data: receipts } = await this.api.uploadGoogleDriveImages({
+      files: results,
     });
 
     const $table = $("#receiptsReview");

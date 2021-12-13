@@ -249,4 +249,51 @@ class Payment_terms extends MY_Controller {
 
         echo json_encode($return);
     }
+
+    public function print()
+    {
+        $post = $this->input->post();
+        $search = $post['search'];
+        $status = [
+            1
+        ];
+        if($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        $terms = $this->accounting_terms_model->getCompanyTerms($post['order'], $status);
+
+        if($search !== "") {
+            $terms = array_filter($terms, function($term, $key) use ($search) {
+                return stripos($term['name'], $search) !== false;
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        usort($terms, function($a, $b) use ($post) {
+            if($post['order'] === 'asc') {
+                return strcasecmp($a['name'], $b['name']);
+            } else {
+                return strcasecmp($b['name'], $a['name']);
+            }
+        });
+
+        $tableHtml = "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Name</th>";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+        foreach($terms as $term) {
+            $name = $term['status'] === "0" ? $term['name']." (deleted)" : $term['name'];
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$name</td>";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
+    }
 }

@@ -2,6 +2,14 @@ $(document).on("click", ".section-above-chart .cashflowchart-tab-btns button", f
     event.preventDefault();
     $(".section-above-chart .cashflowchart-tab-btns button.active").removeClass("active");
     $(this).addClass("active");
+    if ($(".section-above-chart .cashflowchart-tab-btns button.money_in_out.active").length > 0) {
+        $(".money_in_out_chart_section").show();
+        $(".cash_balance_chart_section").hide();
+        start_money_in_out_chart();
+    } else {
+        $(".cash_balance_chart_section").show();
+        $(".money_in_out_chart_section").hide();
+    }
 });
 
 function addData_chashflow_chart(chart, label, data) {
@@ -48,10 +56,10 @@ function update_cashflow_chart() {
 
 start_cashflow_chart();
 var cash_balance_chart;
-var cashflow_chart = document.getElementById('chartContainer').getContext('2d');
+var cashflow_chart = document.getElementById('cash_balance_chart').getContext('2d');
 
 function start_cashflow_chart() {
-    cashflow_chart = document.getElementById('chartContainer').getContext('2d');
+    cashflow_chart = document.getElementById('cash_balance_chart').getContext('2d');
     const cfg = {
         type: "line",
         data: {
@@ -111,10 +119,12 @@ function start_cashflow_chart() {
                     display: false
                 },
                 y: {
+                    min: 0,
                     ticks: {
                         callback: function(value, index, values) {
                             return "$" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                        }
+                        },
+
                     }
                 }
             }
@@ -122,4 +132,87 @@ function start_cashflow_chart() {
     };
     cash_balance_chart = new Chart(cashflow_chart, cfg);
     update_cashflow_chart();
+}
+
+var money_in_out_chart;
+
+function start_money_in_out_chart() {
+    cashflow_chart = document.getElementById('cash_in_out_chart').getContext('2d');
+    const cfg = {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Money in",
+                data: data,
+                backgroundColor: ['rgba(82, 183, 2, 1)'],
+                borderColor: ['rgba(82, 183, 2, 1)'],
+                fill: true,
+                radius: 2,
+                borderWidth: 2,
+                stack: "money_in"
+            }, {
+                label: "Projected",
+                data: data_projected,
+                backgroundColor: ['rgba(82, 183, 2, 0.2)'],
+                borderColor: ['rgba(82, 183, 2, 1)'],
+                fill: true,
+                radius: 2,
+                borderDash: [2],
+                borderWidth: 2,
+                stack: "money_in"
+            }, {
+                label: "Money out",
+                data: data,
+                backgroundColor: ['rgba(6, 164, 181, 1)'],
+                borderColor: ['rgba(6, 164, 181, 1)'],
+                fill: true,
+                radius: 2,
+                borderWidth: 2,
+                stack: "money_out"
+            }, {
+                label: "Projected",
+                data: data_projected,
+                backgroundColor: ['rgba(6, 164, 181, 0.2)'],
+                borderColor: ['rgba(6, 164, 181, 1)'],
+                fill: true,
+                radius: 2,
+                borderDash: [2],
+                borderWidth: 2,
+                stack: "money_out"
+            }],
+        },
+        options: {
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            plugins: {
+                decimation: {
+                    enabled: false,
+                    algorithm: 'min-max',
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    // display: false,
+                    stacked: true,
+                },
+                y: {
+                    min: 0,
+                    stacked: true,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return "$" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        },
+                    }
+                }
+            }
+        },
+    };
+    var money_in_out_chart = new Chart(cashflow_chart, cfg);
 }

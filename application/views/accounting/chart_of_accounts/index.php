@@ -30,6 +30,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent .action-bar ul li #cancel-edit-btn:hover {
         background: transparent;
     }
+    .btn-transparent:hover {
+        background: #d4d7dc !important;
+        border-color: #6B6C72 !important;
+    }
+    .btn-transparent {
+        color: #6B6C72 !important;
+    }
+    .btn-transparent:focus {
+        border-color: #6B6C72 !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -119,6 +129,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
+                                            <div class="col-2 d-flex align-items-end">
+                                                <div class="arrow-level-down ml-auto">
+                                                    <i class="fa fa-level-down fa-flip-horizontal fa-2x icon-arrow"></i>
+                                                </div>
+                                                <div class="dropdown d-inline-block">
+                                                    <button class="btn btn-transparent" type="button"
+                                                        id="statusDropdownButton" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        Batch actions&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
+                                                    </button>
+
+                                                    <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                                        <a href="#" class="dropdown-item disabled" id="make-inactive-batch">Make inactive</a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-3">
                                                 <input type="text" name="search" id="search" class="form-control" placeholder="Filter by name">
                                             </div>
@@ -182,6 +208,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="chart-of-accounts-table" class="table table-bordered table-hover">
 									<thead>
                                         <tr>
+                                            <th width="2%">
+                                                <div class="d-flex justify-content-center">
+													<div class="checkbox checkbox-sec m-0">
+                                                        <input type="checkbox" id="select-all-accounts">
+														<label for="select-all-accounts" class="p-0" style="width: 24px; height: 24px"></label>
+													</div>
+												</div>
+                                            </th>
                                             <th>NAME</th>
                                             <th class="type">TYPE</th>
                                             <th class="detailtype">DETAIL TYPE</th>

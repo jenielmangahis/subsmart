@@ -97,85 +97,95 @@ class Tags extends MY_Controller {
     public function load_all_tags()
     {
         $post = json_decode(file_get_contents('php://input'), true);
-
+        $search = $post['columns'][0]['search']['value'];
         $getTags = $this->tags_model->getTags();
 
         $tags = [];
         foreach($getTags as $key => $tag) {
-            $nameColumn = '';
-            if($tag['type'] === 'group' && count($tag['tags']) > 0) {
-                $nameColumn .= '<a class="mr-3 cursor-pointer" data-toggle="collapse" data-target="#child-'.$key.'"><i class="fa fa-chevron-down"></i></a>';
-            }
+            if ($search !== "") {
+                if (stripos($tag['name'], $search) !== false) {
+                    if ($tag['type'] === 'group-tag') {
+                        $groupIdExists = array_search($getTags[$tag['parentIndex']]['id'], array_column($tags, 'id'));
 
-            if($tag['type'] === 'group'){
-                $nameColumn .= '<span class="'.$tag['type'].'-span-'.$tag['id'].'">'.$tag['name'].' ('.count($tag['tags']).')</span>';
+                        if ($groupIdExists === false || $groupIdExists !== false && $getTags[$groupIdExists]['type'] !== 'group') {
+                            $childTags = array_filter($getTags[$tag['parentIndex']]['tags'], function($v, $k) use ($search) {
+                                return stripos($v['name'], $search) !== false;
+                            }, ARRAY_FILTER_USE_BOTH);
+
+                            $childs = [];
+                            foreach($childTags as $childTag) {
+                                $childs[] = $childTag;
+                            }
+
+                            $tags[] = [
+                                'id' => $getTags[$tag['parentIndex']]['id'],
+                                'name' => $getTags[$tag['parentIndex']]['name'],
+                                'transactions' => '',
+                                'type' => $getTags[$tag['parentIndex']]['type'],
+                                'parentIndex' => $getTags[$tag['parentIndex']]['parentIndex'],
+                                'tags' => $childs
+                            ];
+                        }
+
+                        $idExists = array_search($tag['id'], array_column($tags, 'id'));
+
+                        if ($idExists === false || $idExists !== false && $getTags[$idExists]['type'] !== 'group-tag') {
+                            $groupIndex = array_key_last($tags);
+                            $tags[] = [
+                                'id' => $tag['id'],
+                                'name' => $tag['name'],
+                                'transactions' => '',
+                                'type' => $tag['type'],
+                                'parentIndex' => $tag['parentIndex']
+                            ];
+                        }
+                    } elseif ($tag['type'] === 'group') {
+                        $groupIdExists = array_search($getTags[$tag['parentIndex']]['id'], array_column($tags, 'id'));
+
+                        if ($groupIdExists === false || $groupIdExists !== false && $getTags[$groupIdExists]['type'] !== 'group') {
+                            $tags[] = [
+                                'id' => $tag['id'],
+                                'name' => $tag['name'],
+                                'transactions' => '',
+                                'type' => $tag['type'],
+                                'parentIndex' => $tag['parentIndex'],
+                                'tags' => $tag['tags']
+                            ];
+
+                            $parentIndex = array_key_last($tags);
+                            foreach ($tag['tags'] as $groupTag) {
+                                $tags[] = [
+                                    'id' => $groupTag['id'],
+                                    'name' => $groupTag['name'],
+                                    'transactions' => '',
+                                    'type' => 'group-tag',
+                                    'parentIndex' => $parentIndex
+                                ];
+                            }
+                        }
+                    } else {
+                        $tags[] = [
+                            'id' => $tag['id'],
+                            'name' => $tag['name'],
+                            'transactions' => '',
+                            'type' => $tag['type'],
+                            'parentIndex' => $tag['parentIndex']
+                        ];
+                    }
+                }
             } else {
-                $nameColumn .= '<span class="'.$tag['type'].'-span-'.$tag['id'].'">'.$tag['name'].'</span>';
+                $tags[] = [
+                    'id' => $tag['id'],
+                    'name' => $tag['name'],
+                    'transactions' => '',
+                    'type' => $tag['type'],
+                    'parentIndex' => $tag['parentIndex'],
+                ];
+
+                if($tag['type'] === 'group') {
+                    $tags[array_key_last($tags)]['tags'] = $tag['tags'];
+                }
             }
-
-            $actionsColumn = '';
-
-            if($tag['type'] === 'group') {
-                $nameColumn .= '
-                <div class="form-group-'.$tag['id'].' hide">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" name="group_name" value="'.$tag['name'].'" data-id="'.$tag['id'].'" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-success" id="submiteUpdateTag" data-type="group" data-id="'.$tag['id'].'">Save</button>
-                            <button type="button" class="close float-right text-dark" data-type="group" id="closeFormTag" data-id="'.$tag['id'].'" style="transform: translate(0px, -15px);"><span aria-hidden="true">×</span></button>
-                        </div>
-                    </div>
-                </div>';
-
-                $actionsColumn .= '
-                <div class="dropdown">
-                    <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;">Run report</button>
-                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
-                        <span class="fa fa-caret-down"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" data-id="'.$tag['id'].'" data-name="'.$tag['name'].'" data-type="group">
-                        <li><a href="javascript:void(0);" id="addNewTag" class="dropdown-item" >Add tag</a></li>
-                        <li><a href="javascript:void(0);" id="updateTagGroup" class="dropdown-item">Edit group</a></li>
-                        <li><a href="javascript:void(0);" id="deleteGroup" class="dropdown-item">Delete group</a></li>
-                    </ul>
-                </div>';
-            } else {
-                $nameColumn .= '
-                <div class="form-'.$tag['type'].'-'.$tag['id'].' hide">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" name="tags_name" value="'.$tag['name'].'" data-id="'.$tag['id'].'" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-success" id="submiteUpdateTag" data-type="'.$tag['type'].'" data-id="'.$tag['id'].'">Save</button>
-                            <button type="button" class="close float-right text-dark" data-type="'.$tag['type'].'" id="closeFormTag" data-id="'.$tag['id'].'" style="transform: translate(0px, -15px);"><span aria-hidden="true">×</span></button>
-                        </div>
-                    </div>
-                </div>';
-
-                $actionsColumn .= '
-                <div class="dropdown">
-                    <button type="button" class="btn btn-success" style="border-radius: 36px 0 0 36px;">Run report</button>
-                    <button class="btn btn-success" type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
-                        <span class="fa fa-caret-down"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right" data-id="'.$tag['id'].'" data-type="'.$tag['type'].'">
-                        <li><a href="javascript:void(0);" class="dropdown-item" id="updateTagGroup">Edit tag</a></li>
-                        <li><a href="javascript:void(0);" class="dropdown-item" id="deleteTag" data-tag_id="'.$tag['id'].'">Delete tag</a></li>
-                    </ul>
-                </div>
-                ';
-            }
-
-            $tags[] = [
-                'name' => $nameColumn,
-                'transactions' => '',
-                'actions' => $actionsColumn,
-                'type' => $tag['type'],
-                'parentIndex' => $tag['parentIndex']
-            ];
         }
 
         $result = [
