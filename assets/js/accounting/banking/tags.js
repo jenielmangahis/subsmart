@@ -393,6 +393,14 @@ $(document).on('keyup', '#search', function() {
 
 $(document).on('change', '#tags_table thead input[type="checkbox"]', function() {
     $('#tags_table tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+
+    if($('#tags_table tbody input[type="checkbox"]:checked').length > 0) {
+        $('.delete-button-cont').removeClass('hide');
+        $('.action-buttons-cont').addClass('hide');
+    } else {
+        $('.delete-button-cont').addClass('hide');
+        $('.action-buttons-cont').removeClass('hide');
+    }
 });
 
 $(document).on('change', '#tags_table tbody input[type="checkbox"]', function() {
@@ -404,4 +412,34 @@ $(document).on('change', '#tags_table tbody input[type="checkbox"]', function() 
     });
 
     $('#tags_table thead input[type="checkbox"]').prop('checked', flag);
+
+    if($('#tags_table tbody input[type="checkbox"]:checked').length > 0) {
+        $('.delete-button-cont').removeClass('hide');
+        $('.action-buttons-cont').addClass('hide');
+    } else {
+        $('.delete-button-cont').addClass('hide');
+        $('.action-buttons-cont').removeClass('hide');
+    }
+});
+
+$(document).on('click', '#delete-tags-button', function() {
+    var data = new FormData();
+
+    $('#tags_table tbody tr input[type="checkbox"]:checked').each(function() {
+        data.append('tags[]', $(this).attr('id'));
+    });
+
+    $.ajax({
+        url: '/accounting/tags/delete-tags',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            $('#tags_table thead input[type="checkbox"]').prop('checked', false);
+            $('.delete-button-cont').addClass('hide');
+            $('.action-buttons-cont').removeClass('hide');
+            reloadTagsTable();
+        }
+    });
 });

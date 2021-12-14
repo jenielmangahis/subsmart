@@ -231,7 +231,7 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         if($input){
             $is_valid = true;
-            $err_msg  = '';            
+            $err_msg  = '';
             if( $input['method'] == 'CC' ){
                 $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
                 $converge_data = [
@@ -250,7 +250,8 @@ class Customer extends MY_Controller
 
             if( $input['method'] == 'NMI' ){
                 $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
-                $converge_data = [
+                $nmi_data = [
+                    'frequency' => $input['frequency'],
                     'amount' => $input['transaction_amount'],
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['exp_month'],
@@ -259,7 +260,7 @@ class Customer extends MY_Controller
                     'address' => $customer->mail_add,
                     'zip' => $customer->zip_code
                 ];
-                $result   = $this->nmi_send_sale($converge_data);
+                $result   = $this->nmi_send_sale($nmi_data);
                 $is_valid = $result['is_success'];
                 $err_msg  = $result['msg'];
             }
@@ -414,11 +415,29 @@ class Customer extends MY_Controller
                 $request->setTerminalID($companyApiSetting->nmi_terminal_id);
                 $request->setTransactionKey($companyApiSetting->nmi_transaction_key);
 
-                // Setup the request detail.
-                $request->setRequestType(RequestType_Auth);
-                $request->setAmount($data['amount']);
-                $request->setPAN($data['card_number']);
-                $request->setExpiryDate($exp_date);
+                if( $data['frequency'] > 0 ){
+                    // Setup the request detail.
+                    //$final_amount = $data['amount'] * $data['frequency'];
+                    $final_amount = $data['amount'];
+                    $request->setRequestType(RequestType_Recurring);
+                    $request->setSubType(SubType_RecurringSetup);
+
+                    $request->setRecurringInitialAmount($data['amount']);
+                    $request->setRecurringRegularAmount($data['amount']);
+                    $request->setRecurringRegularFrequency(Frequency_Monthly);
+                    $request->setRecurringRegularMaximumPayments($data['frequency']);
+                    $request->setRecurringFinalAmount($final_amount);
+                    $request->setPAN($data['card_number']);
+                    $request->setExpiryDate($exp_date);
+                    $request->setUserReference(rand());
+
+                }else{
+                   // Setup the request detail.
+                    $request->setRequestType(RequestType_Auth);
+                    $request->setAmount('123');
+                    $request->setPAN($data['card_number']);
+                    $request->setExpiryDate($exp_date); 
+                }
 
                 // Setup the client.
                 $client = new Client();
@@ -430,11 +449,10 @@ class Customer extends MY_Controller
 
                 // Get the response.
                 $response = $client->getResponse();
-
-                if( isset($response->m_errors) ){
-                    $errors = $response->m_errors;
-                    if( isset($errors[0]) ){
-                        $msg = $errors[0]->m_message;
+                $errors   = $response->getErrors();
+                if ($errors !== null) {
+                    foreach ($errors as $error) {
+                        $msg .= $error->getMessage() . "<br />";
                     }
                 }else{
                     $is_success = true;

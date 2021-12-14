@@ -50,6 +50,10 @@ $('#search').on('keyup', function() {
     $('#recurring_transactions').DataTable().ajax.reload();
 });
 
+$('select').select2({
+    minimumResultsForSearch: -1
+});
+
 var table = $('#recurring_transactions').DataTable({
     autoWidth: false,
     searching: false,

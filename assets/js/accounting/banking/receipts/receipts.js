@@ -15,41 +15,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   new ForReviewTable($("#receiptsReview"));
   new ReviewedTable($("#receiptsReviewed"));
 
-  const $batchActions = $("#batchActions");
-  $batchActions.on("click", async (event) => {
-    event.preventDefault();
-
-    const $selected = $(".receiptsTable__row--selected");
-    const ids = $.map($selected, ($element) => $element.dataset.id);
-
-    if (!ids.length) return;
-
-    const { target: $target } = event;
-    const { action } = $target.dataset;
-
-    if (action === "delete") {
-      const { isConfirmed } = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#2ca01c",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      });
-
-      if (!isConfirmed) return;
-
-      await api.batchDeleteReceipts(ids);
-      window.location.reload();
-    }
-
-    if (action === "confirm") {
-      await api.batchConfirmReceipts(ids);
-      window.location.reload();
-    }
-  });
-
   rulesUtils.initSelect({
     $select: $("[data-select2-type=bank_account]"),
     field: "bank-account",
@@ -160,6 +125,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
     },
   });
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+  if (params.tab && params.tab === "reviewed") {
+    $("[href='#reviewed']").click();
+  }
 });
 
 window.addEventListener("DOMContentLoaded", function () {

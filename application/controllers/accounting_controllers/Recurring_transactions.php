@@ -152,6 +152,39 @@ class Recurring_transactions extends MY_Controller {
             }
         }
 
+        usort($data, function($a, $b) use ($columnName, $order) {
+            switch($columnName) {
+                case 'template_name' :
+                    if($order === 'asc') {
+                        return strcmp($a['template_name'], $b['template_name']);
+                    } else {
+                        return strcmp($b['template_name'], $a['template_name']);
+                    }
+                break;
+                case 'txn_type' :
+                    if($order === 'asc') {
+                        return strcmp($a['txn_type'], $b['txn_type']);
+                    } else {
+                        return strcmp($b['txn_type'], $a['txn_type']);
+                    }
+                break;
+                case 'previous_date' :
+                    if($order === 'asc') {
+                        return strtotime($a['previous_date']) > strtotime($b['previous_date']);
+                    } else {
+                        return strtotime($a['previous_date']) < strtotime($b['previous_date']);
+                    }
+                break;
+                case 'next_date' :
+                    if($order === 'asc') {
+                        return strtotime($a['next_date']) > strtotime($b['next_date']);
+                    } else {
+                        return strtotime($a['next_date']) < strtotime($b['next_date']);
+                    }
+                break;
+            }
+        });
+
         $result = [
             'draw' => $post['draw'],
             'recordsTotal' => count($items),

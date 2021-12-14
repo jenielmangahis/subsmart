@@ -632,9 +632,9 @@
 
             // Setup the request detail.
             $request->setRequestType(RequestType_Auth);
-            $request->setAmount('123');
-            $request->setPAN('341111597241002');
-            $request->setExpiryDate('2012');
+            $request->setAmount(412);
+            $request->setPAN('3001111111111116');
+            $request->setExpiryDate('2212');
 
             //echo '<p>'.$request->toString();
 

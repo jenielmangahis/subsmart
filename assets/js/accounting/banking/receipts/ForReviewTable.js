@@ -97,8 +97,8 @@ export class ForReviewTable {
 
   get actions() {
     return {
-      review: (row, rows) => {
-        this.actions.view(row, rows);
+      review: (row, rows, table) => {
+        this.actions.view(row, rows, table);
       },
       delete: async ({ id }) => {
         const { isConfirmed } = await Swal.fire({
@@ -221,7 +221,7 @@ export class ForReviewTable {
           if (!nextRow) {
             window.location.reload();
           } else if ($handlenextreceipt.is(":checked")) {
-            this.actions.view(nextRow, rows);
+            this.actions.view(nextRow, rows, table);
           }
         });
 
@@ -278,7 +278,7 @@ export class ForReviewTable {
           if (!nextRow) {
             window.location.reload();
           } else {
-            this.actions.view(nextRow, rows);
+            this.actions.view(nextRow, rows, table);
           }
 
           $matchReceipt.removeClass("receiptsButton--isLoading");
@@ -489,6 +489,47 @@ export class ForReviewTable {
 
       if (!func) return;
       func(row, rows, table, event);
+    });
+
+    const $batchActions = $("#batchActions");
+    $batchActions.on("click", async (event) => {
+      event.preventDefault();
+
+      const $selected = $(".receiptsTable__row--selected");
+      const ids = $.map($selected, ($element) => $element.dataset.id);
+
+      if (!ids.length) return;
+
+      const { target: $target } = event;
+      const { action } = $target.dataset;
+
+      if (action === "delete") {
+        const { isConfirmed } = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#2ca01c",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
+
+        if (!isConfirmed) return;
+
+        await this.api.batchDeleteReceipts(ids);
+        window.location.reload();
+      }
+
+      if (action === "confirm") {
+        await this.api.batchConfirmReceipts(ids);
+        window.location.reload();
+      }
+
+      if (action === "review") {
+        const allRows = table.rows().data().toArray();
+        const rows = allRows.filter(({ id }) => ids.includes(id));
+        this.actions.review(rows[0], rows, table);
+      }
     });
   }
 
