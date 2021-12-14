@@ -36,8 +36,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="row align-items-center">
                                 <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-6"><a href="#" class="text-info">See all untagged transactions</a></div>
+                                    <div class="row action-buttons-cont">
+                                        <div class="col-md-6 d-flex align-items-center"><a href="#" class="text-info">See all untagged transactions</a></div>
                                         <div class="col-md-6">
                                             <div class="form-row">
                                                 <div class="col d-flex justify-content-end">
@@ -53,6 +53,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row hide delete-button-cont">
+                                        <div class="col-12">
+                                            <button class="btn btn-success" id="delete-tags-button">Delete tags</button>
                                         </div>
                                     </div>
                                     <!--                        DataTables-->

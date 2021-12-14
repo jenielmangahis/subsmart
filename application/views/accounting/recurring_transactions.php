@@ -133,7 +133,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-6">
                                     <div class="action-bar h-100 d-flex align-items-center">
                                         <ul class="ml-auto">
-                                            <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-print"></i></a></li>
                                             <li>
                                                 <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fa fa-cog"></i>
@@ -142,10 +142,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <p class="p-padding m-0">Rows</p>
                                                     <p class="p-padding m-0">
                                                         <select name="table_rows" id="table_rows" class="form-control">
-                                                            <option value="50">50</option>
+                                                            <option value="50" selected>50</option>
                                                             <option value="75">75</option>
                                                             <option value="100">100</option>
-                                                            <option value="150" selected>150</option>
+                                                            <option value="150">150</option>
                                                             <option value="300">300</option>
                                                         </select>
                                                     </p>

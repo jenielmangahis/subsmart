@@ -11457,65 +11457,147 @@ class Accounting extends MY_Controller
 
         $this->load->view('accounting/cashflowplanner1', $this->page_data);
     }
-    function update_cash_balcnce_chart(){
+
+    public function update_money_in_out_chart()
+    {
+        $date_range = $this->input->post("date_range");
+        $date_base_projected = date("Y-m-d", strtotime("- 3 months", strtotime(date("Y-m-01"))));
+        if ($date_range== "12") {
+            $date_ctr = date("Y-m-d", strtotime("- 9 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 2 months", strtotime(date("Y-m-01"))));
+        } elseif ($date_range== "6") {
+            $date_ctr = date("Y-m-d", strtotime("- 4 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 1 months", strtotime(date("Y-m-01"))));
+        } elseif ($date_range== "3") {
+            $date_ctr = date("Y-m-d", strtotime("- 1 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 1 months", strtotime(date("Y-m-01"))));
+        } elseif ($date_range== "1") {
+            $date_ctr = date("Y-m-01");
+            $date_end = date("Y-m-t");
+        } elseif ($date_range== "24") {
+            $date_ctr = date("Y-m-d", strtotime("- 20 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 3 months", strtotime(date("Y-m-01"))));
+        }
+
+        $data_labels = array();
+        $data_values = array();
+        $data_projected = array();
+
+        $data_start_range = $date_ctr;
+        if ($date_base_projected < $date_ctr) {
+            $date_ctr=$date_base_projected;
+        }
+        $prev_amount = -1;
+        $current_amount = 0;
+        $total_percentage =0;
+        $total_amount =0;
+        $projected_data_ctr=0;
+        $month_ctr=0;
+        $month_indicator= date("m", strtotime($data_start_range));
+        $amount_in_a_month = 0;
+        $amount_mony_in = 0;
+        $amount_mony_out = 0;
+        while ($date_ctr <= $date_end) {
+            $amount_received = $this->accounting_receive_payment_model->amount_received_in_a_day($date_ctr)->money_in;
+            $expense = $this->accounting_receive_payment_model->amount_expense_in_a_day($date_ctr)->money_out;
+            $current_balance = ($amount_received-$expense)+0;
+            if ($date_ctr >= $data_start_range) {
+                if ($month_indicator == date("m", strtotime($date_ctr))) {
+                    $amount_in_a_month+=$current_balance;
+                    $amount_mony_in+=$amount_received;
+                    $amount_mony_out+=$expense;
+                } else {
+                    $data_labels[]=date("M", strtotime($date_ctr));
+                    $data_values[] = $amount_in_a_month;
+                    $data_values_money_in[] =$amount_mony_in+0;
+                    $data_values_money_out[] =$amount_mony_out+0;
+                    $data_projected[]=null;
+                    $amount_in_a_month=$current_balance;
+                    $amount_mony_in = $amount_mony_in;
+                    $amount_mony_out = $amount_mony_out;
+                }
+            }
+            // note: double check the base projection data and fix the logic for the projection
+            
+            if ($date_ctr >= $date_base_projected && $date_ctr <= date("Y-m-d")) {
+                if ($prev_amount == -1) {
+                    $prev_amount = $current_balance;
+                    $total_percentage +=1;
+                } else {
+                    $current_amount = $current_balance;
+                    if ($prev_amount >= $current_amount) {
+                        $total_percentage += 0;
+                    } else {
+                        $total_percentage += 1-($prev_amount/$current_amount);
+                    }
+                    $prev_amount = $current_balance;
+                }
+                $total_amount+=$current_balance;
+                $projected_data_ctr++;
+            }
+            if ($date_ctr >= date("Y-m-d")) {
+                
+            }
+            $date_ctr = date("Y-m-d", strtotime("+ 1 day", strtotime($date_ctr)));
+        }
+    }
+    public function update_cash_balance_chart()
+    {
         $date_range = $this->input->post("date_range");
         $bottom_x_labels = '<div class="line-divider"></div>';
         if ($date_range== "12") {
-            $date_start = date("Y-m-d",strtotime("- 9 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-t",strtotime("+ 2 months",strtotime(date("Y-m-01"))));
+            $date_start = date("Y-m-d", strtotime("- 9 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 2 months", strtotime(date("Y-m-01"))));
             $the_start_date = $date_start;
             $the_end_date = $date_end;
             $ctr=1;
-            while($date_start <= $date_end){
-                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
-                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+            while ($date_start <= $date_end) {
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M", strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d", strtotime("+ 1 month", strtotime($date_start)));
                 $ctr++;
             }
-            
-        } else if ($date_range== "6") {
-            $date_start = date("Y-m-d",strtotime("- 4 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-t",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+        } elseif ($date_range== "6") {
+            $date_start = date("Y-m-d", strtotime("- 4 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 1 months", strtotime(date("Y-m-01"))));
             $the_start_date = $date_start;
             $the_end_date = $date_end;
             $ctr=1;
-            while($date_start <= $date_end){
-                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
-                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+            while ($date_start <= $date_end) {
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M", strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d", strtotime("+ 1 month", strtotime($date_start)));
                 $ctr++;
             }
-
-            
-        } else if ($date_range== "3") {
-            $date_start = date("Y-m-d",strtotime("- 1 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-t",strtotime("+ 1 months",strtotime(date("Y-m-01"))));
+        } elseif ($date_range== "3") {
+            $date_start = date("Y-m-d", strtotime("- 1 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 1 months", strtotime(date("Y-m-01"))));
             $the_start_date = $date_start;
             $the_end_date = $date_end;
             $ctr=1;
-            while($date_start <= $date_end){
-                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
-                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+            while ($date_start <= $date_end) {
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M", strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d", strtotime("+ 1 month", strtotime($date_start)));
                 $ctr++;
             }
-        } else if ($date_range== "1") {
+        } elseif ($date_range== "1") {
             $date_start = date("Y-m-01");
             $date_end = date("Y-m-t");
             $the_start_date = $date_start;
             $the_end_date = $date_end;
             $ctr=1;
-            while($date_start <= $date_end){
-                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
-                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+            while ($date_start <= $date_end) {
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M", strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d", strtotime("+ 1 month", strtotime($date_start)));
                 $ctr++;
             }
-        }else if ($date_range== "24") {
-            $date_start = date("Y-m-d",strtotime("- 20 months",strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-t",strtotime("+ 3 months",strtotime(date("Y-m-01"))));
+        } elseif ($date_range== "24") {
+            $date_start = date("Y-m-d", strtotime("- 20 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 3 months", strtotime(date("Y-m-01"))));
             $the_start_date = $date_start;
             $the_end_date = $date_end;
             $ctr=1;
-            while($date_start <= $date_end){
-                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M",strtotime($date_start)).'</li>';
-                $date_start = date("Y-m-d",strtotime("+ 1 month",strtotime($date_start)));
+            while ($date_start <= $date_end) {
+                $bottom_x_labels .= '<li class="moth month-'.$ctr.'">'.date("M", strtotime($date_start)).'</li>';
+                $date_start = date("Y-m-d", strtotime("+ 1 month", strtotime($date_start)));
                 $ctr++;
             }
         }
@@ -11525,39 +11607,39 @@ class Accounting extends MY_Controller
         $data_projected = array();
         $total_values = array();
         $ctr=1;
-        while($the_start_date <= $the_end_date){
+        while ($the_start_date <= $the_end_date) {
             $value = rand(rand(1, $ctr+2), $ctr+2);
-            $amount_received = $this->accounting_receive_payment_model->amount_received_in_a_day($the_start_date )->money_in;
-            $expense = $this->accounting_receive_payment_model->amount_expense_in_a_day($the_start_date )->money_out;
-            if($the_start_date <= date("Y-m-d")){
+            $amount_received = $this->accounting_receive_payment_model->amount_received_in_a_day($the_start_date)->money_in;
+            $expense = $this->accounting_receive_payment_model->amount_expense_in_a_day($the_start_date)->money_out;
+            if ($the_start_date <= date("Y-m-d")) {
                 $value = ($amount_received-$expense)+0;
-                $data_labels[]=date("M d",strtotime($the_start_date));
+                $data_labels[]=date("M d", strtotime($the_start_date));
                 $data_values[] = $value;
                 $data_values_money_in[] =$amount_received+0;
                 $data_values_money_out[] =$expense+0;
-                if($the_start_date < date("Y-m-d")){
+                if ($the_start_date < date("Y-m-d")) {
                     $data_projected[] = null;
                 }
-                $index = date("d",strtotime($the_start_date));
+                $index = date("d", strtotime($the_start_date));
                 $total_values[$index-1] += $value;
             }
-            if($the_start_date >= date("Y-m-d")){
+            if ($the_start_date >= date("Y-m-d")) {
                 if ($date_range== "1") {
                     $date_range = count($total_values);
                 }
-                $index = date("d",strtotime($the_start_date));
+                $index = date("d", strtotime($the_start_date));
                 $value = $total_values[$index-1]/$date_range;
                 $total_values[$index-1]+=$value;
                 
-                if($the_start_date > date("Y-m-d")){
-                    $data_labels[]=date("M d",strtotime($the_start_date));
+                if ($the_start_date > date("Y-m-d")) {
+                    $data_labels[]=date("M d", strtotime($the_start_date));
                     $data_values[] = null;
-                }else if($the_start_date == date("Y-m-d")){
+                } elseif ($the_start_date == date("Y-m-d")) {
                     $value = $amount_received+0;
                 }
                 $data_projected[] = $value;
             }
-            $the_start_date = date("Y-m-d",strtotime("+ 1 day",strtotime($the_start_date)));
+            $the_start_date = date("Y-m-d", strtotime("+ 1 day", strtotime($the_start_date)));
             $ctr++;
         }
 

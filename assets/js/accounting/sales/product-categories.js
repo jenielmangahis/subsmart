@@ -4,6 +4,9 @@ $('#table_rows').on('change', function() {
 $('.action-bar .dropdown-menu').on('click', function(e) {
     e.stopPropagation();
 });
+$('#table_rows').select2({
+    minimumResultsForSearch: -1
+});
 $('#product-categories-table').DataTable({
     autoWidth: false,
     searching: false,

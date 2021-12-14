@@ -350,7 +350,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             <textarea name="memo" id="memo" cols="15" rows="5" class="memo-textarea" placeholder="Add note (optional)" data-type="memo"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <a href="#" style="font-weight:bolder;color:#0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
+                                            <a href="javascript:;" style="font-weight:bolder;color:#0077c5;" id="toggleRefNumber"><i class="fa fa-caret-right"></i>&nbsp;Additional Fields (optional)</a>
                                         </div>
                                         <div class="form-group" id="refNumber" style="display: none">
                                             <label for="refNumber">Ref no.</label>
@@ -411,7 +411,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     <label for="transaction_type">Transaction type</label>
                                                     <select name="transaction_type" id="transaction_type" class="form-control select2" data-type="transaction_type">
                                                         <option disabled selected value="">Select transaction type</option>
-                                                        <option value="bill">Bill</option>
+                                                        <option value="bill" disabled>Bill</option>
                                                         <option value="expense">Expense</option>
                                                     </select>
                                                 </div>

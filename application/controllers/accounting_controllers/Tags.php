@@ -268,6 +268,20 @@ class Tags extends MY_Controller {
         ];
 
         echo json_encode($return);
+    }
 
+    public function delete_tags()
+    {
+        $tags = $this->input->post('tags');
+
+        foreach($tags as $tag) {
+            $explode = explode('-', $tag);
+            $id = $explode[array_key_last($explode)];
+            if(stripos($tag, 'tag') !== false) {
+                $this->tags_model->delete($id, 'tag');
+            } else {
+                $this->tags_model->delete($id, 'group');
+            }
+        }
     }
 }
