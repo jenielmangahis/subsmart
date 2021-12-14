@@ -311,6 +311,23 @@ class Customer extends MY_Controller
                 $err_msg  = $result['msg'];
             }
 
+            if( $input['method'] == 'NMI' ){
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+                $nmi_data = [
+                    'frequency' => $input['frequency'],
+                    'amount' => $input['transaction_amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['exp_month'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['cvc'],
+                    'address' => $customer->mail_add,
+                    'zip' => $customer->zip_code
+                ];
+                $result   = $this->nmi_send_sale($nmi_data);
+                $is_valid = $result['is_success'];
+                $err_msg  = $result['msg'];
+            }
+
             if( $is_valid ){
                 $subscription_details = array();
                 $subscription_details['customer_id'] = $input['customer_id'];

@@ -796,6 +796,7 @@ $route['workorder/update_checklist'] = 'Workorder/update_checklist';
 $route['workorder/_load_map_routes'] = 'Workorder/ajax_load_map_routes';
 $route['workorder/_load_count_summary'] = 'Workorder/ajax_load_count_summary';
 $route['workorder/_delete_custom_field'] = 'Workorder/ajax_delete_custom_field';
+$route['workorder/_create_checklist'] = 'Workorder/ajax_save_checklist';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
