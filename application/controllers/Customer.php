@@ -467,7 +467,7 @@ class Customer extends MY_Controller
                 // Get the response.
                 $response = $client->getResponse();
                 $errors   = $response->getErrors();
-                if ($errors !== null) {
+                if (!empty($errors)) {
                     foreach ($errors as $error) {
                         $msg .= $error->getMessage() . "<br />";
                     }
