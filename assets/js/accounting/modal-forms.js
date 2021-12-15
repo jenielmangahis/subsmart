@@ -1226,6 +1226,12 @@ $(function() {
                 });
             }
         }
+
+        var modalId = $('div#modal-container form div.modal:first-child()').attr('id');
+
+        $(`div#${modalId} select:not(.select2-hidden-accessible)`).select2({
+            minimumResultsForSearch: -1
+        });
     });
 
     $(document).on('change', 'div.modal select[name="recurring_week"]', function() {
@@ -1288,9 +1294,9 @@ $(function() {
             }
 
             fields = `
-                <span>&nbsp; every &nbsp;</span>
-                <input type="number" value="1" class="form-control" name="recurr_every" style="width: 30%">
-                <span>&nbsp; day(s)</span>
+                <div class="align-items-center col-md-2 d-flex justify-content-center">every</div>
+                <div class="col"><input type="number" value="1" class="form-control" name="recurr_every"></div>
+                <div class="align-items-center col-md-1 d-flex">day</div>
             `;
         } else if ($(this).val() === 'weekly') {
             if ($(this).parent().next().hasClass('col-md-4')) {
@@ -1304,18 +1310,20 @@ $(function() {
             }
 
             fields = `
-                <span>&nbsp; every &nbsp;</span>
-                <input type="number" value="1" class="form-control" name="recurr_every" style="width: 20%">
-                <span>&nbsp; week(s) on &nbsp;</span>
-                <select class="form-control" name="recurring_day" style="width: auto">
-                    <option value="sunday">Sunday</option>
-                    <option value="monday" selected>Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
-                    <option value="saturday">Saturday</option>
-                </select>
+                <div class="align-items-center col-md-1 d-flex justify-content-center">every</div>
+                <div class="col"><input type="number" value="1" class="form-control" name="recurr_every"></div>
+                <div class="align-items-center col-md-2 d-flex justify-content-center">week(s) on</div>
+                <div class="col">
+                    <select class="form-control" name="recurring_day">
+                        <option value="sunday">Sunday</option>
+                        <option value="monday" selected>Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                    </select>
+                </div>
             `;
         } else if ($(this).val() === 'yearly') {
             if ($(this).parent().next().hasClass('col-md-4')) {
@@ -1329,24 +1337,28 @@ $(function() {
             }
 
             fields = `
-                <span>&nbsp; every &nbsp;</span>
-                <select class="form-control" name="recurring_month" style="width: 40%">
-                    <option value="January">January</option>
-                    <option value="February">February</option>
-                    <option value="March">March</option>
-                    <option value="April">April</option>
-                    <option value="May">May</option>
-                    <option value="June">June</option>
-                    <option value="July">July</option>
-                    <option value="August">August</option>
-                    <option value="September">September</option>
-                    <option value="October">October</option>
-                    <option value="November">November</option>
-                    <option value="December">December</option>
-                </select>
-                <select class="form-control" name="recurring_day" style="width: 40%">
-                ${recurringDays}
-                </select>
+                <div class="align-items-center col-md-1 d-flex justify-content-center">every</div>
+                <div class="col">
+                    <select class="form-control" name="recurring_month">
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-control" name="recurring_day">
+                        ${recurringDays}
+                    </select>
+                </div>
             `;
         } else {
             if ($(this).parent().next().hasClass('col-md-3')) {
@@ -1362,7 +1374,13 @@ $(function() {
             fields = monthlyRecurrFields;
         }
 
-        $(this).parent().next().children().children().html(fields);
+        $(this).parent().next().children().html(fields);
+
+        $(this).parent().next().children().find('select').each(function() {
+            $(this).select2({
+                minimumResultsForSearch: -1
+            });
+        });
     });
 
     $(document).on('click', '#showPdfModal button#print-deposit-pdf', function(e) {
@@ -5577,10 +5595,14 @@ const makeRecurring = (modalName) => {
 
         recurrInterval = $(`div#${modalId} div.modal-body div.recurring-interval-container`).html();
         recurringDays = $(`div#${modalId} div.modal-body select[name="recurring_day"]`).html();
-        monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.form-row div.form-group:nth-child(2) div.row div`).html();
+        monthlyRecurrFields = $(`div#${modalId} div.modal-body div.recurring-interval-container div div.form-row div.form-group:nth-child(2) div.form-row`).html();
 
         $(`div#${modalId} input.date`).datepicker({
             uiLibrary: 'bootstrap'
+        });
+        
+        $(`div#${modalId} select:not(.select2-hidden-accessible)`).select2({
+            minimumResultsForSearch: -1
         });
     });
 }

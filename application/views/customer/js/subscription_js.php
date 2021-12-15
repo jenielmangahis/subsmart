@@ -44,7 +44,7 @@
             hide_all();
             $("#payment_collected").show('slow');
             $('#is_collected').prop("required", true);
-        }else if(method === 'CC' || method === 'OCCP'){
+        }else if(method === 'CC' || method === 'OCCP' || method === 'NMI'){
             hide_all();
             $("#credit_card").show('slow');
             $('#exp_month').prop("required", true);

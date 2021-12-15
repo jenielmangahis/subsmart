@@ -34,6 +34,13 @@ class Customer extends MY_Controller
         }
     }
 
+    public function addJSONResponseHeader() {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        header("Content-Type: application/json");
+    }
+
     public function getModulesList()
     {
         $user_id = logged('id');
@@ -311,6 +318,23 @@ class Customer extends MY_Controller
                 $err_msg  = $result['msg'];
             }
 
+            if( $input['method'] == 'NMI' ){
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+                $nmi_data = [
+                    'frequency' => $input['frequency'],
+                    'amount' => $input['transaction_amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['exp_month'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['cvc'],
+                    'address' => $customer->mail_add,
+                    'zip' => $customer->zip_code
+                ];
+                $result   = $this->nmi_send_sale($nmi_data);
+                $is_valid = $result['is_success'];
+                $err_msg  = $result['msg'];
+            }
+
             if( $is_valid ){
                 $subscription_details = array();
                 $subscription_details['customer_id'] = $input['customer_id'];
@@ -450,7 +474,7 @@ class Customer extends MY_Controller
                 // Get the response.
                 $response = $client->getResponse();
                 $errors   = $response->getErrors();
-                if ($errors !== null) {
+                if (!empty($errors)) {
                     foreach ($errors as $error) {
                         $msg .= $error->getMessage() . "<br />";
                     }
@@ -821,24 +845,16 @@ class Customer extends MY_Controller
     }
 
     public function save_customer_profile(){
+        self::addJSONResponseHeader();
+
         $input = $this->input->post();
-        if(isset($input['customer_id'])){
+        if(isset($input['customer_id']) AND !empty($input['customer_id']) ){
             $check_customer='';
         }else{
-            $check_customer= $this->customer_ad_model->check_customer($input);
+            $check_customer = $this->customer_ad_model->check_customer($input);
         }
-        if(empty($check_customer)){
 
-
-            if(isset($input['custom_name']) AND isset($input['custom_value'])) {
-                $custom_field_name = $input['custom_name'];
-                $custom_field_value = $input['custom_value'];
-                $custom_fields_array = array();
-                for ($xx=0;$xx<count($custom_field_name);$xx++) {
-                    $custom_fields_array[$xx]['name'] = $custom_field_name[$xx];
-                    $custom_fields_array[$xx]['value'] = $custom_field_value[$xx];
-                }
-            }
+        if(empty($check_customer) ){
             // customer profile info
             $input_profile = array();
             $input_profile['fk_user_id'] = logged('id');
@@ -865,14 +881,7 @@ class Customer extends MY_Controller
             $input_profile['date_of_birth'] = $input['date_of_birth'];
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
-            $input_profile['custom_fields'] = json_encode($custom_fields_array);
-//            $input_profile['contact_name1'] = $input['contact_name1'];
-//            $input_profile['contact_name2'] = $input['contact_name2'];
-//            $input_profile['contact_name3'] = $input['contact_name3'];
-//            $input_profile['contact_phone1'] = $input['contact_phone1'];
-//            $input_profile['contact_phone2'] = $input['contact_phone2'];
-//            $input_profile['contact_phone3'] = $input['contact_phone3'];
-            //$input_profile['notes'] = $input['notes'];
+            //$input_profile['custom_fields'] = json_encode($custom_fields_array);
             if( $input['bill_method'] == 'CC' ){
                 //Check cc if valid using converge
                 $a_exp_date = explode("/", $input['credit_card_exp']);
@@ -888,6 +897,8 @@ class Customer extends MY_Controller
                     'ssl_zip' => $input['zip_code']
                 ];
                 $is_valid = $this->converge_check_cc_details_valid($data_cc);
+
+                echo $is_valid;
                 if( $is_valid['is_success'] == 1 ){
                     $proceed = 1;
                 }else{
@@ -910,32 +921,25 @@ class Customer extends MY_Controller
                 $save_alarm = $this->save_alarm_information($input,$profile_id);
                 $save_access = $this->save_access_information($input,$profile_id);
                 $save_papers = $this->save_papers_information($input,$profile_id);
-                if($save_billing == 0){
+                if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
                     echo 'Error Occured on Saving Billing Information';
-                }else if($save_office == 0){
-                    echo 'Error Occured on Saving Office Information';
-                }else if($save_alarm == 0){
-                    echo 'Error Occured on Saving Alarm Information';
-                }else if($save_access == 0){
-                    echo 'Error Occured on Saving Access Information';
-                }else if($save_papers == 0){
-                    echo 'Error Occured on Saving Papers Information';
+                    $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
                 }else {
                     if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
                         $this->save_notes($input,$profile_id);
                     }
-                    $this->generate_qr_image($profile_id);
-                    //$this->qrcodeGenerator($profile_id);
+                    //$this->generate_qr_image($profile_id);
                     if(isset($input['customer_id'])){
-                        echo $input['customer_id'];
+                        $data_arr = array("success" => TRUE,"profile_id" => $input['customer_id']);
                     }else{
-                        echo $profile_id;
+                        $data_arr = array("success" => TRUE,"profile_id" => $profile_id);
                     }
                 }
-            }             
+            }
         }else {
-            echo 'Customer Already Exist!';
+            $data_arr = array("success" => FALSE,"message" => 'Customer Already Exist!');
         }
+        die(json_encode($data_arr));
     }
 
     public function converge_check_cc_details_valid($data){

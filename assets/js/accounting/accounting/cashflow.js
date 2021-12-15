@@ -5,7 +5,12 @@ $(document).on("click", ".section-above-chart .cashflowchart-tab-btns button", f
     if ($(".section-above-chart .cashflowchart-tab-btns button.money_in_out.active").length > 0) {
         $(".money_in_out_chart_section").show();
         $(".cash_balance_chart_section").hide();
-        start_money_in_out_chart();
+        if (!money_in_out_chart) {
+            start_money_in_out_chart();
+        } else {
+            update_money_in_out_chart();
+        }
+
     } else {
         $(".cash_balance_chart_section").show();
         $(".money_in_out_chart_section").hide();
@@ -32,6 +37,10 @@ function removeData_chashflow_chart(chart) {
 
 $(document).on("change", ".cash-flow-filter select[name='chart-month-range']", function(event) {
     update_cashflow_chart();
+    if (money_in_out_chart) {
+        update_money_in_out_chart();
+    }
+
 });
 
 
@@ -136,15 +145,32 @@ function start_cashflow_chart() {
 
 var money_in_out_chart;
 
+
+function update_money_in_out_chart() {
+    var date_range = $(".cash-flow-filter select[name='chart-month-range']").val();
+    $.ajax({
+        url: baseURL + "cahsflow/money-in-out/chart/updated",
+        type: "POST",
+        dataType: "json",
+        data: {
+            date_range: date_range
+        },
+        success: function(data) {
+            removeData_chashflow_chart(money_in_out_chart);
+            addData_chashflow_chart(money_in_out_chart, data.data_labels, [data.data_values_money_in, data.data_projected_money_in, data.data_values_money_out, data.data_projected_money_out]);
+        },
+    });
+}
+
 function start_money_in_out_chart() {
     cashflow_chart = document.getElementById('cash_in_out_chart').getContext('2d');
     const cfg = {
         type: "bar",
         data: {
-            labels: labels,
+            labels: null,
             datasets: [{
                 label: "Money in",
-                data: data,
+                data: null,
                 backgroundColor: ['rgba(82, 183, 2, 1)'],
                 borderColor: ['rgba(82, 183, 2, 1)'],
                 fill: true,
@@ -153,7 +179,7 @@ function start_money_in_out_chart() {
                 stack: "money_in"
             }, {
                 label: "Projected",
-                data: data_projected,
+                data: null,
                 backgroundColor: ['rgba(82, 183, 2, 0.2)'],
                 borderColor: ['rgba(82, 183, 2, 1)'],
                 fill: true,
@@ -163,7 +189,7 @@ function start_money_in_out_chart() {
                 stack: "money_in"
             }, {
                 label: "Money out",
-                data: data,
+                data: null,
                 backgroundColor: ['rgba(6, 164, 181, 1)'],
                 borderColor: ['rgba(6, 164, 181, 1)'],
                 fill: true,
@@ -172,7 +198,7 @@ function start_money_in_out_chart() {
                 stack: "money_out"
             }, {
                 label: "Projected",
-                data: data_projected,
+                data: null,
                 backgroundColor: ['rgba(6, 164, 181, 0.2)'],
                 borderColor: ['rgba(6, 164, 181, 1)'],
                 fill: true,
@@ -214,5 +240,6 @@ function start_money_in_out_chart() {
             }
         },
     };
-    var money_in_out_chart = new Chart(cashflow_chart, cfg);
+    money_in_out_chart = new Chart(cashflow_chart, cfg);
+    update_money_in_out_chart();
 }

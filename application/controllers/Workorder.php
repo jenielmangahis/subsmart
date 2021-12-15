@@ -6620,6 +6620,44 @@ class Workorder extends MY_Controller
         $json = ['is_deleted' => $is_deleted];
         echo json_encode($json);
     }
+
+    public function ajax_save_checklist()
+    {
+        $this->load->model('Checklist_model');
+        $this->load->model('ChecklistItem_model');
+
+        $is_success = 0;
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+        $user_id = logged('id');
+
+        $data = [
+            'user_id' => $user_id,
+            'checklist_name' => $post['checklist_name'],
+            'attach_to_work_order' => $post['attach_to_work_order'],
+            'date_created' => date("m-d-Y H:i:s"),
+            'date_modified' => date("m-d-Y H:i:s")
+        ];
+
+        $cid = $this->Checklist_model->create($data);
+
+        if( isset($post['checklistItems']) ){
+            foreach( $post['checklistItems'] as $key => $item ){
+                $data = [
+                    'checklist_id' => $cid,
+                    'item_name' => $item
+                ];
+
+                $this->ChecklistItem_model->create($data);
+            }    
+        }
+
+        $is_success = 1;
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
 }
 
 

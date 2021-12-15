@@ -128,9 +128,20 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
+  const $reviewedTabLink = $("[href='#reviewed']");
+  const $forReviewedTabLink = $("[href='#forReview']");
+
   if (params.tab && params.tab === "reviewed") {
-    $("[href='#reviewed']").click();
+    $reviewedTabLink.click();
   }
+
+  $reviewedTabLink.on("click", () => {
+    window.history.replaceState(null, null, "?tab=reviewed");
+  });
+
+  $forReviewedTabLink.on("click", () => {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  });
 });
 
 window.addEventListener("DOMContentLoaded", function () {

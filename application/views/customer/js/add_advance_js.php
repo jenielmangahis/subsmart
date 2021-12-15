@@ -395,14 +395,14 @@
                 success: function(data)
                 {
                     document.getElementById('overlay').style.display = "none";
-                    if(isNaN(data)){
-                        error(data);
-                    }else{
+                    if(data.success){
                         <?php if(isset($profile_info)): ?>
-                        sucess("Customer Information has been Updated Successfully!",data);
+                        sucess("Customer Information has been Updated Successfully!",data.profile_id);
                         <?php else: ?>
-                        sucess("New Customer has been Added Successfully!",data);
+                        sucess("New Customer has been Added Successfully!",data.profile_id);
                         <?php endif; ?>
+                    }else{
+                        error(data.message);
                     }
                     console.log(data);
                 }, beforeSend: function() {
@@ -435,7 +435,7 @@
                 }
             });
         }
-        function sucess(information,$id){
+        function sucess(information,id){
             Swal.fire({
                 title: 'Good job!',
                 text: information,
@@ -446,7 +446,7 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview_/"+$id;
+                    window.location.href="<?= base_url(); ?>customer/preview_/"+id;
                 }
             });
         }
