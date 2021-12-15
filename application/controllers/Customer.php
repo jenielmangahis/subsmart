@@ -234,7 +234,7 @@ class Customer extends MY_Controller
         $this->load->view('customer/billing', $this->page_data);
     }
 
-    public function save_billing(){
+    public function save_billing(){        
         $input = $this->input->post();
         if($input){
             $is_valid = true;
@@ -258,7 +258,9 @@ class Customer extends MY_Controller
             if( $input['method'] == 'NMI' ){
                 $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
                 $nmi_data = [
+                    'customer_id' => $customer->prof_id,
                     'frequency' => $input['frequency'],
+                    'bill_day' => $input['bill_day'],
                     'amount' => $input['transaction_amount'],
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['exp_month'],
@@ -321,7 +323,9 @@ class Customer extends MY_Controller
             if( $input['method'] == 'NMI' ){
                 $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
                 $nmi_data = [
+                    'customer_id' => $customer->id,
                     'frequency' => $input['frequency'],
+                    'bill_day' => $input['bill_day'],
                     'amount' => $input['transaction_amount'],
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['exp_month'],
@@ -413,6 +417,7 @@ class Customer extends MY_Controller
     public function nmi_send_sale($data){
         $is_success = 0;
         $msg = '';
+        $is_with_error = false;
 
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
@@ -439,17 +444,46 @@ class Customer extends MY_Controller
                 $request->setTerminalID($companyApiSetting->nmi_terminal_id);
                 $request->setTransactionKey($companyApiSetting->nmi_transaction_key);
 
-                if( $data['frequency'] > 0 ){
+                $billing  = $this->customer_ad_model->get_data_by_id('fk_prof_id',$data['customer_id'],"acs_billing");
+                if( $data['frequency'] != '' ){                    
+                    switch ($data['frequency']) {
+                        case 'One Time Only':
+                            $frequency = Frequency_Empty;
+                            break;
+                        case 'Every 1 Month':
+                            $frequency = Frequency_Monthly;                            
+                            break;
+                        case 'Every 3 Months':
+                            $frequency = Frequency_Quarterly;
+                            break;
+                        case 'Every 6 Months':
+                            $frequency = Frequency_HalfYearly;
+                            break;
+                        case 'Every 1 Year':
+                            $frequency = Frequency_Yearly;
+                            break;
+                        default:
+                            $frequency = Frequency_Monthly;     
+                            break;
+                    }
+
+                    $start_date = strtotime($billing->bill_start_date);
+                    $end_date   = strtotime($billing->bill_end_date);
+                    $datediff   = $end_date - $start_date;
+                    $total_payments = round($datediff / (60 * 60 * 24));
+                    
+                    if( $total_payments <= 0 ){
+                        $is_with_error = true;
+                    }
                     // Setup the request detail.
-                    //$final_amount = $data['amount'] * $data['frequency'];
                     $final_amount = $data['amount'];
                     $request->setRequestType(RequestType_Recurring);
                     $request->setSubType(SubType_RecurringSetup);
 
                     $request->setRecurringInitialAmount($data['amount']);
                     $request->setRecurringRegularAmount($data['amount']);
-                    $request->setRecurringRegularFrequency(Frequency_Monthly);
-                    $request->setRecurringRegularMaximumPayments($data['frequency']);
+                    $request->setRecurringRegularFrequency($frequency);
+                    $request->setRecurringRegularMaximumPayments($total_payments);
                     $request->setRecurringFinalAmount($final_amount);
                     $request->setPAN($data['card_number']);
                     $request->setExpiryDate($exp_date);
@@ -458,30 +492,36 @@ class Customer extends MY_Controller
                 }else{
                    // Setup the request detail.
                     $request->setRequestType(RequestType_Auth);
-                    $request->setAmount('123');
+                    $request->setAmount($data['amount']);
                     $request->setPAN($data['card_number']);
                     $request->setExpiryDate($exp_date); 
                 }
 
-                // Setup the client.
-                $client = new Client();
-                $client->addServerURL(NMI_TEST_SERVER_URL, 45000);
-                $client->setRequest($request);
+                if( !$is_with_error ){
+                    // Setup the client.
+                    $client = new Client();
+                    $client->addServerURL(NMI_TEST_SERVER_URL, 45000);
+                    $client->setRequest($request);
 
-                // Process the request.
-                $client->processRequest();
+                    // Process the request.
+                    $client->processRequest();
 
-                // Get the response.
-                $response = $client->getResponse();
-                $errors   = $response->getErrors();
-                if (!empty($errors)) {
-                    foreach ($errors as $error) {
-                        $msg .= $error->getMessage() . "<br />";
+                    // Get the response.
+                    $response = $client->getResponse();
+                    $errors   = $response->getErrors();
+                    if (!empty($errors)) {
+                        foreach ($errors as $error) {
+                            $msg .= $error->getMessage() . "<br />";
+                        }
+                    }else{
+                        $is_success = true;
+                        $msg = '';
                     }
                 }else{
-                    $is_success = true;
-                    $msg = '';
+                    $is_success = false;
+                    $msg = 'Invalid billing start and end date';
                 }
+                
             }else{
                 $msg = 'Please setup your NMI api credentials in API Connectors';
             }

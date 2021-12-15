@@ -589,8 +589,8 @@
             $request->setRequestType(RequestType_Recurring);
             $request->setSubType(SubType_RecurringSetup);
 
-            $request->setRecurringInitialAmount('123');
-            $request->setRecurringRegularAmount('100');
+            $request->setRecurringInitialAmount('50');
+            $request->setRecurringRegularAmount('300');
             $request->setRecurringRegularFrequency(Frequency_Monthly);
             $request->setRecurringRegularMaximumPayments(10);
             $request->setRecurringFinalAmount('10');

@@ -1134,7 +1134,7 @@ class Workorder_model extends MY_Model
         }
     }
 
-    public function getworkorderList( $filters = array() )
+    public function getworkorderList( $filters = array(), $sort = array() )
     {
         $company_id = logged('company_id');
         
@@ -1155,7 +1155,12 @@ class Workorder_model extends MY_Model
             $this->db->where('work_orders.status', ucwords($filters['status']));
         }
 
-        $this->db->order_by('id', 'DESC');
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
         $query = $this->db->get();
         return $query->result();
 
@@ -1168,7 +1173,7 @@ class Workorder_model extends MY_Model
         // return $query;
     }
 
-    public function getFilterworkorderList( $company_id, $filters=array() )
+    public function getFilterworkorderList( $company_id, $filters=array(), $sort = array() )
     {
 
         $where = array(
@@ -1193,7 +1198,12 @@ class Workorder_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'DESC');
+        if( !empty($sort) ){
+            $this->db->order_by($sort['field'], strtoupper($sort['order']));
+        }else{
+            $this->db->order_by('id', 'DESC');    
+        }
+        
         $query = $this->db->get();
         return $query->result();
     }
