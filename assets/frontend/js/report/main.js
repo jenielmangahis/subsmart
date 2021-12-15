@@ -19,6 +19,7 @@ var options = {
   //updates
   urlFilterReportsExpenseByCategory: base_url + "reports/expenseByCategory",
   urlFilterInvoiceByDate: base_url + "reports/invoiceByDate",
+  urlfilterWorkOrderByEmployee: base_url + "reports/workOrderByEmployee",
 
 };
 
@@ -86,9 +87,9 @@ function selectReport(startdate, endDate) {
       filterReportsExpenseByCategory(startdate, endDate);
       break;
 
-    // case "invoice-by-date":
-    //   filterInvoiceByDate(startdate, endDate);
-    //   break;
+    case "work-order-by-employee":
+      filterWorkOrderByEmployee(startdate, endDate);
+      break;
   }
 }
 
@@ -293,6 +294,19 @@ function filterReportsExpenseByCategory(startDate, endDate) {
 function filterInvoiceByDate(startDate, endDate) {
   $.ajax({
     url: options.urlFilterInvoiceByDate,
+    type: "GET",
+    data: { startDate: startDate, endDate: endDate },
+    success: function (response) {
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(customerSalesAppend);
+    },
+  });
+}
+
+function filterWorkOrderByEmployee(startDate, endDate) {
+  $.ajax({
+    url: options.urlfilterWorkOrderByEmployee,
     type: "GET",
     data: { startDate: startDate, endDate: endDate },
     success: function (response) {

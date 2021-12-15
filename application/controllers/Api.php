@@ -12,6 +12,56 @@ class Api extends MYF_Controller
         $this->load->model('general_model');
     }
 
+    public function addJSONResponseHeader() {
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+        header("Content-Type: application/json");
+    }
+
+    public function fetchCategorizerForm()
+    {
+        return $this->load->view('accounting/banking/categorizer-form', '');
+    }
+
+    public function fetchVendors()
+    {
+        self::addJSONResponseHeader();
+        $get_vendors = array(
+            //'where' => array('company_id' => logged('company_id')),
+            'table' => 'vendor',
+            'select' => 'vendor_name,vendor_id',
+        );
+        $vendors = $this->general_model->get_data_with_param($get_vendors);
+        $data_arr = array("success" => TRUE,"vendors" => $vendors);
+        die(json_encode($data_arr));
+    }
+
+    public function fetchCustomers()
+    {
+        self::addJSONResponseHeader();
+        $get_vendors = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'acs_profile',
+            'select' => 'first_name,last_name,prof_id',
+        );
+        $customers = $this->general_model->get_data_with_param($get_vendors);
+        $data_arr = array("success" => TRUE,"customers" => $customers);
+        die(json_encode($data_arr));
+    }
+
+    public function fetchCategories()
+    {
+        self::addJSONResponseHeader();
+        $get_vendors = array(
+            'table' => 'accounting_chart_of_accounts',
+            'select' => 'name,id',
+        );
+        $customers = $this->general_model->get_data_with_param($get_vendors);
+        $data_arr = array("success" => TRUE,"categories" => $customers);
+        die(json_encode($data_arr));
+    }
+
     public function stripe_response()
     {
         $code =  $_GET['code'];
@@ -91,12 +141,6 @@ class Api extends MYF_Controller
                 echo "1";
             }
         }
-    }
-
-    public function paypal_response()
-    {
-        $code = $_GET['code'];
-        $access_token = self::get_paypal_access_token($code);
     }
 
     public function get_paypal_access_token($auth_code)

@@ -183,6 +183,7 @@
         </div>
         <div class="col-md-6">
             <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
+                <option  value="">Select Billing Method</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'CC' ?  'selected' : '';?> value="CC">Credit Card</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'DC' ?  'selected' : '';?> value="DC">Debit Card</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'CHECK' ?  'selected' : '';?> value="CHECK">Check</option>

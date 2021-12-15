@@ -544,6 +544,27 @@ class Reports extends MY_Controller {
         echo json_encode($months);
     }
 
+    public function workOrderByEmployee() {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
+        $months = [];
+        $month_counter = 0;
+
+        $period = $this->getDateInterval($startDate, $endDate);
+        $i = 0;
+        foreach ($period as $dt) {
+            $payments = getworkOrderByEmployee($startDate, $endDate, $dt->format("m"));
+            $month_counter = false;
+
+            foreach ($payments as $payment) {
+                array_push($months, $payment);
+            }
+        }
+
+        echo json_encode($months);
+    }
+
     public function searchByKeyword($type='', $status='', $emp_id=0) {
 
         $this->getUsers();

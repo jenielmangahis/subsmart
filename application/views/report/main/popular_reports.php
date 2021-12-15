@@ -248,7 +248,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "work-order-by-employee") : ?>
-                                <table class="table table-hover table-to-list">
+                                <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
                                         <tr>
                                             <th>Employee</th>
@@ -258,7 +258,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>TC Nguyen</td>
                                             <td class="text-right">105</td>
                                             <td class="text-right">$2,185.46</td>
@@ -281,7 +281,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td class="text-right">51</td>
                                             <td class="text-right">$0.00</td>
                                             <td class="text-right">$0.00</td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "payment-by-method") : ?>
@@ -354,15 +354,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </thead>
                                     <tbody id="">
                                     <!-- <tbody id="reportEstimateBody"> -->
-                                        <!-- <?php //foreach($estimates as $est){ ?>
+                                        <?php foreach($estimates as $est){ ?>
                                         <tr>
-                                            <td class="text-center"><?php //echo date('m-d-Y', strtotime($est->estimate_date)); ?></td>
-                                            <td class="text-center"><?php //echo $est->estimate_number; ?></td>
-                                            <td class="text-center"><?php //echo $est->estimate_type; ?></td>
-                                            <td class="text-center"><?php //echo  date('m-d-Y', strtotime($est->expiry_date)); ?></td>
-                                            <td class="text-center">$<?php //cho number_format($est->grand_total,2); ?></td>
+                                            <td class="text-center"><?php echo date('m-d-Y', strtotime($est->estimate_date)); ?></td>
+                                            <td class="text-center"><?php echo $est->estimate_number; ?></td>
+                                            <td class="text-center"><?php echo $est->estimate_type; ?></td>
+                                            <td class="text-center"><?php echo  date('m-d-Y', strtotime($est->expiry_date)); ?></td>
+                                            <td class="text-center">$<?php echo number_format($est->grand_total,2); ?></td>
                                         </tr>
-                                        <?php //} ?> -->
+                                        <?php } ?> 
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "account-receivable-com-vs-res") : ?>
@@ -408,6 +408,44 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     </tbody>
                                 </table>
+                                <?php elseif ($type === "expense-by-month-by-vendor") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Vendor name</th>
+                                            <!-- <th class="text-left">Type</th> -->
+                                            <th class="text-right">Payment Date</th>
+                                            <th class="text-right">Status</th>
+                                            <th class="text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left">Test Vendor</td>
+                                            <td class="text-right">2021-02-07</td>
+                                            <td class="text-right">0</td>
+                                            <td class="text-right">1,000.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">Honeywell</td>
+                                            <td class="text-right">2020-08-06</td>
+                                            <td class="text-right">0</td>
+                                            <td class="text-right">1,098.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">Alarm.com</td>
+                                            <td class="text-right">2021-02-08</td>
+                                            <td class="text-right">0</td>
+                                            <td class="text-right">500.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">Apple</td>
+                                            <td class="text-right">2021-02-08</td>
+                                            <td class="text-right">1</td>
+                                            <td class="text-right">1,200.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                                 <?php elseif ($type === "expense-by-month-by-customer") : ?>
                                 <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
@@ -420,6 +458,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- <tr>
+                                            <td class="text-left">Customer</td>
+                                            <td class="text-right">Due Date</td>
+                                            <td class="text-right">Status</td>
+                                            <td class="text-right">Total</td>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "expense-by-month-by-category") : ?>
@@ -463,6 +507,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    </tbody>
+                                </table>
+                                <?php elseif ($type === "expense-by-month-by-work-order") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Work Order #</th>
+                                            <th class="text-left">Customer</th>
+                                            <th class="text-right">Date Issued</th>
+                                            <th class="text-right">Invoice #</th>
+                                            <th class="text-right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left">WO-0000020</td>
+                                            <td class="text-left">Stacy Ramos</td>
+                                            <td class="text-right">2021-06-20</td>
+                                            <td class="text-right">INV-000000002</td>
+                                            <td class="text-right">$12,000.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">WO-0000025</td>
+                                            <td class="text-left">Tim George</td>
+                                            <td class="text-right">2021-05-01</td>
+                                            <td class="text-right">INV-000000006</td>
+                                            <td class="text-right">$1,080.00</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "timesheet-entries") : ?>

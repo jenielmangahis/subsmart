@@ -11475,71 +11475,138 @@ class Accounting extends MY_Controller
             $date_ctr = date("Y-m-01");
             $date_end = date("Y-m-t");
         } elseif ($date_range== "24") {
-            $date_ctr = date("Y-m-d", strtotime("- 20 months", strtotime(date("Y-m-01"))));
-            $date_end = date("Y-m-t", strtotime("+ 3 months", strtotime(date("Y-m-01"))));
+            $date_ctr = date("Y-m-d", strtotime("- 9 months", strtotime(date("Y-m-01"))));
+            $date_end = date("Y-m-t", strtotime("+ 14 months", strtotime(date("Y-m-01"))));
         }
 
         $data_labels = array();
         $data_values = array();
-        $data_projected = array();
+        $data_projected_money_in = array();
+        $data_projected_money_out = array();
+        $data_values_money_in =array();
+        $data_values_money_out =array();
 
         $data_start_range = $date_ctr;
         if ($date_base_projected < $date_ctr) {
             $date_ctr=$date_base_projected;
         }
-        $prev_amount = -1;
+        $prev_amount_receive = -1;
+        $prev_amount_expense = -1;
+        $prev_month ="";
         $current_amount = 0;
-        $total_percentage =0;
-        $total_amount =0;
+        $total_percentage_money_in =0;
+        $total_percentage_money_out =0;
+        $total_amount_receive =0;
+        $total_amount_expense =0;
         $projected_data_ctr=0;
         $month_ctr=0;
-        $month_indicator= date("m", strtotime($data_start_range));
+        $month_indicator = "";
         $amount_in_a_month = 0;
         $amount_mony_in = 0;
         $amount_mony_out = 0;
+        
         while ($date_ctr <= $date_end) {
             $amount_received = $this->accounting_receive_payment_model->amount_received_in_a_day($date_ctr)->money_in;
             $expense = $this->accounting_receive_payment_model->amount_expense_in_a_day($date_ctr)->money_out;
             $current_balance = ($amount_received-$expense)+0;
             if ($date_ctr >= $data_start_range) {
+                
                 if ($month_indicator == date("m", strtotime($date_ctr))) {
-                    $amount_in_a_month+=$current_balance;
+                    $amount_in_a_month+=$amount_received;
                     $amount_mony_in+=$amount_received;
                     $amount_mony_out+=$expense;
-                } else {
-                    $data_labels[]=date("M", strtotime($date_ctr));
-                    $data_values[] = $amount_in_a_month;
-                    $data_values_money_in[] =$amount_mony_in+0;
-                    $data_values_money_out[] =$amount_mony_out+0;
-                    $data_projected[]=null;
-                    $amount_in_a_month=$current_balance;
-                    $amount_mony_in = $amount_mony_in;
-                    $amount_mony_out = $amount_mony_out;
+                } else if($month_indicator ==""){
+                    $data_labels[]=strtoupper(date("M", strtotime($date_ctr)));
+                    $month_indicator = date("m", strtotime($date_ctr));
+                }
+                if($date_ctr == $date_end){
+                    $month_indicator="end";
+                }
+                if($date_ctr <= $date_end && $month_indicator != date("m", strtotime($date_ctr)) && $month_indicator!=""){
+                    if($month_indicator!="end"){
+                        $data_labels[]=strtoupper(date("M", strtotime($date_ctr)));
+                    }
+                        $data_values[] = $amount_in_a_month;
+                        $data_values_money_in[] =$amount_mony_in+0;
+                        $data_values_money_out[] =$amount_mony_out+0;
+                    
+
+                    $amount_in_a_month=$amount_received;
+                    $amount_mony_in = $amount_received;
+                    $amount_mony_out = $expense;
+                    if($date_ctr < date("Y-m-d")){
+                        $data_projected_money_in[]=null;
+                        $data_projected_money_out[]=null;
+                    }
+                    
+                    $month_indicator = date("m", strtotime($date_ctr));
                 }
             }
-            // note: double check the base projection data and fix the logic for the projection
             
             if ($date_ctr >= $date_base_projected && $date_ctr <= date("Y-m-d")) {
-                if ($prev_amount == -1) {
-                    $prev_amount = $current_balance;
-                    $total_percentage +=1;
+                if ($prev_amount_receive == -1) {
+                    $prev_amount_receive = $amount_received;
+                    $prev_amount_expense = $expense;
+                    $total_percentage_money_in +=1;
                 } else {
-                    $current_amount = $current_balance;
-                    if ($prev_amount >= $current_amount) {
-                        $total_percentage += 0;
+                    if ($prev_amount_receive >= $amount_received) {
+                        $total_percentage_money_in += 0;
                     } else {
-                        $total_percentage += 1-($prev_amount/$current_amount);
+                        $total_percentage_money_in += 1-($prev_amount_receive/$amount_received);
                     }
-                    $prev_amount = $current_balance;
+                    if ($prev_amount_expense >= $expense) {
+                        $total_percentage_money_out += 0;
+                    } else {
+                        $total_percentage_money_out += 1-($prev_amount_expense/$expense);
+                    }
+                    $prev_amount_receive = $amount_received;
+                    $prev_amount_expense = $expense;
                 }
-                $total_amount+=$current_balance;
+                $total_amount_receive+=$amount_received;
+                $total_amount_expense += $expense;
                 $projected_data_ctr++;
             }
             if ($date_ctr >= date("Y-m-d")) {
-                
+                $projected_money_in = ($total_amount_receive/$projected_data_ctr)+(($total_amount_receive/$projected_data_ctr)*($total_percentage_money_in/$projected_data_ctr));
+                $projected_money_out = ($total_amount_expense/$projected_data_ctr)+(($total_amount_expense/$projected_data_ctr)*($total_percentage_money_out/$projected_data_ctr));
+                if (count($data_projected_money_in) == 0) {
+                    $data_projected_money_in[] = $projected_money_in;
+                } else {
+                    if ($prev_month == date("m", strtotime($date_ctr))) {
+                        $data_projected_money_in[count($data_projected_money_in)-1] += $projected_money_in;
+                    } else {
+                        $data_projected_money_in[] = $projected_money_in;
+                    }
+                }
+
+                if (count($data_projected_money_out) == 0) {
+                    $data_projected_money_out[] = $projected_money_out;
+                } else {
+                    if ($prev_month == date("m", strtotime($date_ctr))) {
+                        $data_projected_money_out[count($data_projected_money_out)-1] += $projected_money_out;
+                    } else {
+                        $data_projected_money_out[] = $projected_money_out;
+                    }
+                }
+                if ($prev_month != date("m", strtotime($date_ctr))) {
+                    $prev_month = date("m", strtotime($date_ctr));
+                }
             }
+            $total_amount_receive+=$projected_money_in;
+            $total_amount_expense+=$projected_money_out;
+            
             $date_ctr = date("Y-m-d", strtotime("+ 1 day", strtotime($date_ctr)));
         }
+        $data = new stdClass();
+        $data->data_values_money_in = $data_values_money_in;
+        $data->data_values_money_out = $data_values_money_out;
+        $data->data_projected_money_in = $data_projected_money_in;
+        $data->data_projected_money_out = $data_projected_money_out;
+        $data->data_labels  =$data_labels;
+        // $data->total_amount_receive=$total_amount_receive;
+        // $data->total_percentage_money_in=$total_percentage_money_in;
+        // $data->projected_data_ctr=$projected_data_ctr;
+        echo json_encode($data);
     }
     public function update_cash_balance_chart()
     {

@@ -125,6 +125,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         align-items: center;
     }
 </style>
+<?php
+add_css(array(
+    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+    //'assets/frontend/css/workorder/main.css',
+    // 'assets/css/beforeafter.css',
+));
+?>
+
+
+
 
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">
@@ -281,7 +294,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane active" id="forReview" style="background: #ffffff; padding: 10px">
-                                <table id="forReview_table" class="table responsive">
+                                <table id="forReview_table" class="table responsive table-striped table-bordered" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" class=""></th>
@@ -294,8 +307,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($banking_payments as $payment) : ?>
-                                            <tr>
+                                        <?php $count = 1; foreach ($banking_payments as $payment) : ?>
+                                            <tr class="accordion" data-bankingId="<?= $payment->id ?>" data-toggle="collapse" href="#multiCollapseExample1">
                                                 <td></td>
                                                 <td ><?=date_format(date_create($payment->date_paid), "m/d/Y"); ?></td>
                                                 <td ><?= $payment->description ?></td>
@@ -304,7 +317,75 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td ><?= $payment->assign_to ?></td>
                                                 <td ><button type="button" class="btn btn-default btn-sm" id="exportCustomers"><span class="fa fa-plus"></span> Add</button></td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                            <tr class="accordion_content">
+                                                <td colspan="7">
+                                                    <div class="row" style="padding-left: 45px;">
+                                                        <div class="col-md-12 form-group">
+                                                            <input type="radio" name="method<?=$count?>" class="payment_method" value="C" checked>
+                                                            <strong >Categorize</strong> &nbsp;&nbsp;
+
+                                                            <input type="radio" name="method<?=$count?>" class="payment_method" value="FM" >
+                                                            <strong >Find Match</strong> &nbsp;&nbsp;
+
+                                                            <input type="radio" name="method<?=$count?>"  class="payment_method" value="RaT" >
+                                                            <strong >Record as Transfer</strong> &nbsp;&nbsp;
+
+                                                            <input type="radio" name="method<?=$count?>" class="payment_method" value="RaCCP">
+                                                            <strong >Record as credit card payment</strong> &nbsp;&nbsp;
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div id="categorize">
+                                                                <form method="post" id="stripe_form" class="row">
+                                                                    <div class="col-md-3">
+                                                                        <label for="">Vendor/Customer</label><br>
+                                                                        <select name="customer" id="" class="form_select vendor-customer">
+                                                                            <option value=""></option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label for="">Category</label><br>
+                                                                        <select name="customer" id="" class="form_select category">
+                                                                            <option value=""></option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label for="">Customer/project</label><br>
+                                                                        <select name="customer" id="" class="form_select customers">
+                                                                            <option value=""></option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <br><br>
+                                                                        <input type="checkbox" name="method" class="" value="CC" id="is_billable">
+                                                                        <label for="is_billable">Billable</label>
+                                                                    </div>
+
+                                                                    <div class="col-md-6">
+                                                                        <label for="">Tags</label><br>
+                                                                        <select name="customer" id="" class="form_select tags_select">
+                                                                            <option value="0">None</option>
+                                                                            <option value="PT5M">5 minutes before</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-6"></div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="">Memo</label><br>
+                                                                        <input type="text" name="id" class="form-control" id="jobid" >
+                                                                        <br>
+                                                                    </div>
+                                                                    <div class="col-md-6"></div>
+
+                                                                    <div class="col-md-12 modal-footer">
+                                                                        <button type="button" class="btn btn-default ">Split</button>
+                                                                        <button type="submit" class="btn btn-success " id="">Add</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php $count++ ; endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -624,7 +705,107 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
+
+<style>
+    .accordion_content {
+        display: none;
+    }
+
+    tr.accordion {
+        display: table-row;
+    }
+
+    .payment_method{
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #2ca01c;
+        transition: 0.2s all linear;
+        margin-right: 5px;
+        position: relative;
+        top: 4px;
+    }
+
+    .payment_method:checked {
+        border: 6px solid #2ca01c;
+        outline: unset !important /* I added this one for Edge (chromium) support */
+    }
+
+</style>
 <script>
+
+    window.onload = function() { // same as window.addEventListener('load', (event) => {
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url() ?>api/fetchVendors",
+            success: function(data) {
+                console.log(data);
+                var template_data = data.vendors;
+                var toAppend = '';
+                $.each(template_data,function(i,o){
+                    toAppend += '<option value='+o.vendor_id+'>'+o.vendor_name+'</option>';
+                });
+                $('.vendor-customer').append(toAppend);
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url() ?>api/fetchCustomers",
+            success: function(data) {
+                console.log(data);
+                var template_data = data.customers;
+                var toAppendCust = '';
+                $.each(template_data,function(i,o){
+                    toAppendCust += '<option value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
+                });
+                $('.customers').append(toAppendCust);
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "<?= base_url() ?>api/fetchCategories",
+            success: function(data) {
+                console.log(data);
+                var template_data = data.categories;
+                var toAppendCust = '';
+                $.each(template_data,function(i,o){
+                    toAppendCust += '<option value='+o.id+'>'+o.name+'</option>';
+                });
+                $('.category').append(toAppendCust);
+            }
+        });
+    };
+
+    $('tr.accordion').click(function(){
+        $('.accordion_content').css('display', 'none');
+        $(this).nextUntil('tr.accordion').css('display', function(i,v){
+            return this.style.display === 'table-row' ? 'none' : 'table-row';
+        });
+    });
+
+
+    $(function(){
+        $(".vendor-customer").select2({
+            placeholder: "Select Payee"
+        });
+        $(".category").select2({
+            placeholder: "Select Category"
+        });
+        $(".customers").select2({
+            placeholder: "Sales Customer/project"
+        });
+        $(".tags_select").select2({
+            placeholder: "Select Tag"
+        });
+    });
+
+
     // DataTable JS
     $(document).ready(function() {
         $('#forReview_table').DataTable({
