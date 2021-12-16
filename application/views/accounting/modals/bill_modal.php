@@ -18,7 +18,7 @@
                         <div class="col">
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
+                                    <div class="row payee-details">
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -126,6 +126,9 @@
                                                 <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
                                         <?php if($is_copy) : ?>
                                         <div class="col-md-12">
                                             <div class="alert alert-info alert-dismissible mb-4" role="alert">
@@ -508,7 +511,7 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex">
-                            <a href="#" class="text-white m-auto">Make Recurring</a>
+                            <a href="#" class="text-white m-auto" onclick="makeRecurring('bill')">Make Recurring</a>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

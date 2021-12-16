@@ -23,3 +23,26 @@ export function isEmail(string) {
   const regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return regex.test(string);
 }
+
+export function isReceiptReviewed(receipt) {
+  const requiredFields = [
+    "transaction_date",
+    "description",
+    "__select2_bank_account",
+    "total_amount",
+    "__select2_category",
+  ];
+
+  for (const field of requiredFields) {
+    if (!isEmpty(receipt[field])) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function isEmpty(string) {
+  if (typeof string !== "string") return true;
+  return string.trim().length === 0;
+}

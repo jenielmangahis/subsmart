@@ -1168,6 +1168,7 @@ $(function() {
     });
 
     $(document).on('change', 'div.modal select#recurringType', function() {
+        var modalId = $('form#modal-form, form#update-recurring-form').children('.modal').attr('id');
         if ($(this).val() === 'reminder') {
             if ($(this).parent().next().hasClass('col-md-3')) {
                 $(this).parent().next().removeClass('col-md-3');
@@ -1183,6 +1184,9 @@ $(function() {
             if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
                 if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
+                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                } else if(vendorModals.includes(`#${modalId}`)) {
+                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-payee-details'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
                 } else {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-details'));
@@ -1215,6 +1219,9 @@ $(function() {
             if ($('form#modal-form div.modal div.modal-body select#recurringInterval, form#update-recurring-form div.modal div.modal-body select#recurringInterval').length === 0) {
                 if ($('form#modal-form, form#update-recurring-form').children('.modal').attr('id') === 'depositModal') {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-bank-account'));
+                    $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
+                } else if(vendorModals.includes(`#${modalId}`)) {
+                    $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-payee-details'));
                     $('div.modal div.modal-body div.recurring-interval-container').html(recurrInterval);
                 } else {
                     $('<div class="row recurring-interval-container"></div>').insertAfter($('div.modal div.modal-body div.recurring-details'));
@@ -5576,15 +5583,37 @@ const showHiddenFields = (el) => {
 const makeRecurring = (modalName) => {
     var modalId = '';
     $.get("/accounting/get-recurring-form-fields/"+modalName, function(res) {
-        if(modalName === 'bank_deposit') {
-            modalId = 'depositModal';
-            $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
-        } else if(modalName === 'transfer') {
-            modalId = 'transferModal';
-            $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
-        } else if(modalName === 'journal_entry') {
-            modalId = 'journalEntryModal';
-            $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();
+        switch(modalName) {
+            case 'bank_deposit' :
+                modalId = 'depositModal';
+                $(`div#${modalId} div.modal-body div.row.bank-account-details`).remove();
+            break;
+            case 'transfer' :
+                modalId = 'transferModal';
+                $(`div#${modalId} div.modal-body #date`).parent().parent().remove();
+            break;
+            case 'journal_entry' :
+                modalId = 'journalEntryModal';
+                $(`div#${modalId} div.modal-body div.row.journal-entry-details`).remove();
+            break;
+            case 'expense' :
+                modalId = 'expenseModal';
+                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
+                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().parent().remove();
+                $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            break;
+            case 'check' :
+                modalId = 'checkModal';
+                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
+                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+            break;
+            case 'bill' :
+                modalId = 'billModal';
+                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
+                $(`div#${modalId} div.modal-body #bill_date`).parent().parent().remove();
+                $(`div#${modalId} div.modal-body #due_date`).parent().parent().remove();
+                $(`div#${modalId} div.modal-body #bill_no`).parent().remove();
+            break;
         }
 
         if($(`div#${modalId} input#templateName`).length === 0) {
@@ -5600,9 +5629,44 @@ const makeRecurring = (modalName) => {
         $(`div#${modalId} input.date`).datepicker({
             uiLibrary: 'bootstrap'
         });
-        
-        $(`div#${modalId} select:not(.select2-hidden-accessible)`).select2({
-            minimumResultsForSearch: -1
+
+        $(`div#${modalId} select:not(.select2-hidden-accessible)`).each(function() {
+            var type = $(this).attr('id');
+            if (type === undefined) {
+                type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
+            } else {
+                type = type.replaceAll('_', '-');
+
+                if (type.includes('transfer')) {
+                    type = 'transfer-account';
+                }
+            }
+
+            if (dropdownFields.includes(type)) {
+                $(this).select2({
+                    ajax: {
+                        url: '/accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function(params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: type,
+                                modal: modalId
+                            }
+
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect
+                });
+            } else {
+                $(this).select2({
+                    minimumResultsForSearch: -1
+                });
+            }
         });
     });
 }

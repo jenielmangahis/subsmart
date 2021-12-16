@@ -23,7 +23,7 @@
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="bankAccount">Account</label>
+                                                        <label for="bank_deposit_account">Account</label>
                                                         <select name="bank_account" id="bank_deposit_account" class="form-control" required>
                                                             <?php if(isset($deposit)) : ?>
                                                             <option value="<?=$account->id?>"><?=$account->name?></option>

@@ -114,13 +114,35 @@ class Workorder extends MY_Controller
             // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
+        $order = $this->input->get();
+        $sort  = ['field' => 'id', 'order' => 'desc'];
+        if( isset($order['order']) ){
+            switch ($order['order']) {
+                case 'date-issued-asc':
+                    $sort = ['field' => 'date_created', 'order' => 'asc'];
+                    break;
+                case 'date-issued-desc':
+                    $sort = ['field' => 'date_created', 'order' => 'desc'];
+                    break;
+                case 'number-asc':
+                    $sort = ['field' => 'work_order_number', 'order' => 'asc'];
+                    break;
+                case 'number-desc':
+                    $sort = ['field' => 'work_order_number', 'order' => 'desc'];
+                    break;
+                default:
+                    $sort = ['field' => 'id', 'order' => 'desc'];
+                    break;
+            }
+        }
+
         if (!empty(get('search'))) {
             $filter['status'] = $workorder_status;
             $filter['search'] = get('search');
             $workorder = $this->workorder_model->getFilterworkorderList($company_id, $filter); 
         }else{
             $filter['status'] = $workorder_status;
-            $workorder = $this->workorder_model->getworkorderList($filter);    
+            $workorder = $this->workorder_model->getworkorderList($filter, $sort);    
         }
 
         
@@ -140,7 +162,6 @@ class Workorder extends MY_Controller
         }
 
 //        print_r($this->page_data['workorders']); die;
-
 
         $this->page_data['tab_status'] = $workorder_status;
         $this->load->view('workorder/list', $this->page_data);
@@ -2934,7 +2955,8 @@ class Workorder extends MY_Controller
         $this->load->helper(array('hashids_helper'));
         $this->load->model('Checklist_model');
 
-        $checklists = $this->Checklist_model->getAllByUserId();
+        $user_id = logged('id');
+        $checklists = $this->Checklist_model->getAllByUserId($user_id);
 
         $this->page_data['checklists'] = $checklists;
         $this->load->view('workorder/checklist/list', $this->page_data);
@@ -2983,8 +3005,10 @@ class Workorder extends MY_Controller
         $checklistAttachType = $this->Checklist_model->getAttachType();
 
         $checklist = $this->Checklist_model->getById($id);
+        $checklistItems = $this->ChecklistItem_model->getAllByChecklistId($checklist->id);
 
         if( $checklist ){
+            $this->page_data['checkListItems'] = $checklistItems;
             $this->page_data['checklist'] = $checklist;
             $this->page_data['checklistAttachType'] = $checklistAttachType;
             $this->load->view('workorder/checklist/edit_checklist', $this->page_data);
@@ -6657,6 +6681,70 @@ class Workorder extends MY_Controller
         $json_data  = ['is_success' => $is_success];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_update_checklist()
+    {
+        $this->load->model('Checklist_model');
+        $this->load->model('ChecklistItem_model');
+
+        $is_success = 0;
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+        $user_id = logged('id');
+
+        $checklist = $this->Checklist_model->getById($post['cid']);
+        
+        if( $checklist ){
+            $data = [
+                'checklist_name' => $post['checklist_name'],
+                'attach_to_work_order' => $post['attach_to_work_order'],
+                'date_modified' => date("m-d-Y H:i:s")
+            ];
+
+            $this->Checklist_model->update($checklist->id, $data);
+
+            $this->ChecklistItem_model->deleteAllByChecklistId($checklist->id);
+
+            if( isset($post['checklistItems']) ){
+                foreach( $post['checklistItems'] as $key => $item ){
+                    $data = [
+                        'checklist_id' => $checklist->id,
+                        'item_name' => $item
+                    ];
+
+                    $this->ChecklistItem_model->create($data);
+                }    
+            }
+
+            $is_success = 1;
+        }
+        
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function delete_checklist(){
+        $this->load->model('ChecklistItem_model');
+        $this->load->model('Checklist_model');
+
+        $post = $this->input->post();
+        $checklist = $this->Checklist_model->getById($post['cid']);
+        if( $checklist ){
+
+            $this->ChecklistItem_model->deleteAllByChecklistId($checklist->id);
+            $this->Checklist_model->deleteById($checklist->id);
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Checklist was successfully deleted');
+        }else{
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot find data');
+        }
+
+        redirect('workorder/checklists');
     }
 }
 

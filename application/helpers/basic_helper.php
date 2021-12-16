@@ -3127,10 +3127,13 @@ function getworkOrderByEmployee($start_date, $end_date, $month)
     $CI =& get_instance();
     // $CI->load->database();
     $CI->load->model('Invoice_model', 'invoice_model');
-    $CI->load->model('Invoice_items_model', 'invoice_items_model');
-    $CI->load->model('Items_model', 'items_model');
+    // $CI->load->model('Invoice_items_model', 'invoice_items_model');
+    // $CI->load->model('Items_model', 'items_model');
     $CI->load->model('Jobs_model', 'jobs_model'); //jobs
+    $CI->load->model('Users_model', 'user_model');
+
     $company_id = logged('company_id');
+    $results = $CI->user_model->getByWhere(array('company_id' => $company_id));
 
     // $CI->db->where('company_id', $company_id);
     // $CI->db->where('date_issued >', $start_date);
@@ -3140,7 +3143,7 @@ function getworkOrderByEmployee($start_date, $end_date, $month)
     // $results = $CI->db->get('invoices');
     
 
-    $results = $CI->jobs_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Completed'));
+    $resultsJobs = $CI->jobs_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Completed'));
     $fn = [];
     $comp_user = [];
     $grand_total = 0;
@@ -3175,27 +3178,81 @@ function getworkOrderByEmployee($start_date, $end_date, $month)
             // array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->first_name,0), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
             
         
-        // $items = $CI->invoice_items_model->getByWhere(array('invoice_id' => $result->id));
-        // foreach($items as $itemDet)
-        // {
-        //     $itemsName = $CI->items_model->getByWhere(array('id' => $itemDet->items_id));
-        //     foreach($itemsName as $name)
-        //     {
-        //         $title = $name->title;
-        //         $grand_total += floatval($itemDet->total);
-        //         $grand_paid_invoice += $itemDet->qty;
+        $items = $CI->invoice_model->getByWhere(array('job_number' => $result->job_number));
+        foreach($items as $itemDet)
+        {
+            // $itemsName = $CI->items_model->getByWhere(array('id' => $itemDet->items_id));
+            // foreach($itemsName as $name)
+            // {
+            //     $title = $name->title;
+            //     $grand_total += floatval($itemDet->total);
+            //     $grand_paid_invoice += $itemDet->qty;
                 
-        //         // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $itemDet->qty));
-        //     }
-        // }
+            //     // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $itemDet->qty));
+            // }
+            array_push($fn, array($result->FName.' '.$result->LName, $result->job_number, dollar_format($itemDet->grand_total), dollar_format($itemDet->grand_total)));
+        }
 
-            array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
+            // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
             // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
         }
+        // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
     }
 
     // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName, "", $grand_paid_invoice, dollar_format($grand_total)));
-    array_push($fn, array($result->job_number, "", "", $grand_paid_invoice, dollar_format($grand_total)));
+    // array_push($fn, array($result->job_number, "", "", $grand_paid_invoice, dollar_format($grand_total)));
+    return $fn;
+}
+
+function getInvoiceEmployee($start_date, $end_date, $month) {
+    $CI =& get_instance();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $company_id = logged('company_id');
+    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status !=' => 'Draft', 'is_recurring' => 0));
+    $fn = [];
+    $day = [];
+    $num_invoice = 0;
+    $total_invoice = 0;
+    $paid_invoice = 0;
+    $due_invoice = 0;
+    $tip_invoice = 0;
+    $fees_invoice = 0;
+
+    foreach ($results as $result) {
+        $date = explode("-",$result->date_issued);
+        if ($date[1] == $month) {
+            if (!in_array($result->date_issued, $day)) {
+                array_push($day, $result->date_issued);
+                $counter = 0;
+                array_push($fn, array(date_format(date_create($result->date_issued),"d-M-Y")));
+                foreach ($results as $result1) {
+                    if ($result->date_issued == $result1->date_issued) {
+                        $monthly_paid = 0;
+                        $monthly_tip = 0;
+                        $monthly_fees = 0;
+                        $num_invoice += 1;
+                        $counter += 1;
+                        $totals = unserialize($result1->grand_total);
+                        $total_invoice += floatval($result1->grand_total);
+                        $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result1->invoice_number));
+                        foreach ($invoices as $inv) {
+                            $tip_invoice += $inv->invoice_tip;
+                            $monthly_tip += $inv->invoice_tip;
+                            $paid_invoice += $inv->grand_total;
+                            $monthly_paid += $inv->grand_total;
+                        }
+                        $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
+                        $due_invoice += $monthly_due;
+                        $new_date=date_format(date_create($result1->date_issued),"d-M-Y");
+                        array_push($fn, array($new_date,"Invoice #".$result1->invoice_number. "(".$result1->status.")", get_customer_by_id($result1->customer_id)->first_name, dollar_format(floatval($result1->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+                    }
+                }
+                $fn[count($fn) - ($counter + 1)] = array_merge($fn[count($fn) - ($counter + 1)], array($num_invoice, "", dollar_format($total_invoice), dollar_format($paid_invoice), dollar_format($due_invoice), dollar_format($tip_invoice), dollar_format($fees_invoice)));
+            }
+        }
+    }
+
     return $fn;
 }
 

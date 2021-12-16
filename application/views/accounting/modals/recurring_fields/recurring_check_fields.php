@@ -1,6 +1,6 @@
 <div class="row recurring-details">
     <div class="col-md-12">
-        <h3>Recurring Bank Deposit</h3>
+        <h3>Recurring Check</h3>
         <div class="form-row">
             <div class="col-md-3 form-group">
                 <label for="templateName">Template name</label>
@@ -26,12 +26,20 @@
         </div>
     </div>
 </div>
-<div class="row recurring-bank-account">
-    <div class="col-md-12">
-        <div class="form-row">
-            <div class="col-md-3 form-group">
-                <label for="bank_deposit_account">Account</label>
-                <select name="bank_account" id="bank_deposit_account" class="form-control" required></select>
+<div class="row recurring-payee-details">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label for="payee">Payee</label>
+                    <select name="payee" id="payee" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="bank_account">Bank account</label>
+                    <select name="bank_account" id="bank_account" class="form-control" required></select>
+                </div>
             </div>
         </div>
     </div>
