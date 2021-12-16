@@ -30,7 +30,7 @@
                         <div class="col">
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
+                                    <div class="row payee-details">
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -101,6 +101,9 @@
                                                 <?php endif; ?>
                                             </h2>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
                                         <?php if($is_copy) : ?>
                                         <div class="col-md-12">
                                             <div class="alert alert-info alert-dismissible mb-4" role="alert">
@@ -424,8 +427,25 @@
                         <div class="col-md-4">
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
-                        <div class="col-md-4 d-flex">
-                            <a href="#" class="text-white m-auto">Make Recurring</a>
+                        <div class="col-md-4">
+                            <div class="row h-100">
+                                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                    <span><a href="#" class="text-white">Print check</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span><a href="#" class="text-white">Order checks</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span><a href="#" class="text-white m-auto" onclick="makeRecurring('check')">Make Recurring</a></span>
+                                    <span class="mx-3 divider"></span>
+                                    <span>
+                                        <div class="dropup">
+                                            <a href="#" class="text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                            <div class="dropdown-menu dropdown-menu-align-right">
+                                                <a class="dropdown-item" href="#">Void</a>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->

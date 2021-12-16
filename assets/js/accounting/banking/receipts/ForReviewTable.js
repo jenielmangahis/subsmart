@@ -17,11 +17,6 @@ export class ForReviewTable {
   get columns() {
     const fallback = "Not Found";
 
-    const isEmpty = (string) => {
-      if (typeof string !== "string") return true;
-      return string.trim().length === 0;
-    };
-
     return {
       checkbox: () => {
         return '<input type="checkbox" class="receiptsTable__checkbox" />';
@@ -36,7 +31,7 @@ export class ForReviewTable {
         return moment(transaction_date).format("MM/DD/YYYY");
       },
       description: (_, __, row) => {
-        return isEmpty(row.description) ? fallback : row.description;
+        return this.utils.isEmpty(row.description) ? fallback : row.description;
       },
       paymentAccount: (_, __, row) => {
         const { __select2_bank_account: account } = row;
@@ -51,9 +46,9 @@ export class ForReviewTable {
       },
       actions: (_, __, row) => {
         const subOptions = {
-          delete: `<li><a href="#" class="action" data-action="review">Review</a></li>`,
-          makeInactive: `<li><a href="#" class="action" data-action="delete">Delete</a></li>`,
-          makeActive: `<li><a href="#" class="action" data-action="findMatch">Find Match</a></li>`,
+          review: `<li><a href="#" class="action" data-action="review">Review</a></li>`,
+          delete: `<li><a href="#" class="action" data-action="delete">Delete</a></li>`,
+          findMatch: `<li><a href="#" class="action" data-action="findMatch">Find Match</a></li>`,
         };
 
         let primaryOption = `
@@ -62,21 +57,15 @@ export class ForReviewTable {
           </a>
         `;
 
-        if (
-          isEmpty(row.transaction_date) &&
-          isEmpty(row.description) &&
-          isEmpty(row.__select2_bank_account) &&
-          isEmpty(row.total_amount) &&
-          isEmpty(row.__select2_category)
-        ) {
+        if (!this.utils.isReceiptReviewed(row)) {
           primaryOption = `
             <a class="receiptsTable__link action" href="#" data-action="review">
               Review
             </a>
           `;
 
-          delete subOptions.makeInactive;
-          delete subOptions.makeActive;
+          delete subOptions.review;
+          delete subOptions.findMatch;
         }
 
         return `
@@ -97,8 +86,8 @@ export class ForReviewTable {
 
   get actions() {
     return {
-      review: (row, rows, table) => {
-        this.actions.view(row, rows, table);
+      review: (...args) => {
+        this.actions.view(...args);
       },
       delete: async ({ id }) => {
         const { isConfirmed } = await Swal.fire({
@@ -115,7 +104,12 @@ export class ForReviewTable {
         await this.api.deleteReceipt(id);
         window.location.reload();
       },
-      findMatch: () => {},
+      findMatch: (...args) => {
+        this.actions.view(...args);
+
+        const $modal = $("#receiptModal");
+        $modal.find("form").attr("data-active-step", 3);
+      },
       view: (row, rows, table) => {
         this.utils.resetStep3();
         this.prepareModal(row);
@@ -155,7 +149,7 @@ export class ForReviewTable {
 
             $element.classList.remove("inputError");
 
-            if (!isEmpty($element.value)) {
+            if (!this.utils.isEmpty($element.value)) {
               continue;
             }
 
@@ -502,6 +496,10 @@ export class ForReviewTable {
 
       const { target: $target } = event;
       const { action } = $target.dataset;
+
+      if ($($target.closest("li")).hasClass("disabled")) {
+        return;
+      }
 
       if (action === "delete") {
         const { isConfirmed } = await Swal.fire({

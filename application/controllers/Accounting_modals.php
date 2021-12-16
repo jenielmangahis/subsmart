@@ -296,34 +296,6 @@ class Accounting_modals extends MY_Controller
 
             $this->page_data['recurringDays'] = $recurringDays;
 
-            if ($modal === 'bank_deposit') {
-                $accounts = $this->chart_of_accounts_model->select();
-                $accountTypes = $this->account_model->getAccounts();
-
-                $bankAccounts = [];
-                $count = 1;
-                foreach ($accountTypes as $accType) {
-                    $accName = strtolower($accType->account_name);
-
-                    foreach ($accounts as $account) {
-                        if ($account->account_id === $accType->id) {
-                            $bankAccounts[$accType->account_name][] = [
-                                'value' => $accName.'-'.$account->id,
-                                'text' => $account->name,
-                                'selected' => $count === 1 ? true : false
-                            ];
-
-                            if ($count === 1) {
-                                $selectedBalance = $account->balance;
-                            }
-                        }
-                        $count++;
-                    }
-                }
-
-                $this->page_data['accounts'] = $bankAccounts;
-            }
-
             $this->load->view("accounting/modals/recurring_fields/recurring_".$modal."_fields", $this->page_data);
         }
     }

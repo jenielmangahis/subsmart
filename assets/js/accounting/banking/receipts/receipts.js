@@ -7,6 +7,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const { ReceiptForwarding } = await import("./ReceiptForwarding.js");
 
   const api = await import("./api.js");
+  const utils = await import("./utils.js");
   const rulesUtils = await import("../rules/utils.js");
 
   new FilterForm();
@@ -142,6 +143,31 @@ window.addEventListener("DOMContentLoaded", async () => {
   $forReviewedTabLink.on("click", () => {
     window.history.replaceState({}, document.title, window.location.pathname);
   });
+
+  const $batchActionsButton = $("#batchActionsButton");
+  $batchActionsButton.on("click", () => {
+    const $table = $("#receiptsReview");
+    const $batchActionsLink = $("#batchActions li");
+    const $actionConfirm = $("#batchActions li:first-child");
+
+    const table = $table.DataTable();
+    const selected = table
+      .rows(".receiptsTable__row--selected")
+      .data()
+      .toArray();
+
+    $batchActionsLink.removeClass("disabled");
+
+    if (!selected.length) {
+      console.log($batchActionsLink);
+      $batchActionsLink.addClass("disabled");
+      return;
+    }
+
+    if (!selected.every((row) => utils.isReceiptReviewed(row))) {
+      $actionConfirm.addClass("disabled");
+    }
+  });
 });
 
 window.addEventListener("DOMContentLoaded", function () {
@@ -159,8 +185,3 @@ window.addEventListener("DOMContentLoaded", function () {
     },
   });
 });
-
-function isEmpty(string) {
-  // https://stackoverflow.com/a/3261380/8062659
-  return !string || string.length === 0;
-}

@@ -59,6 +59,13 @@ $colorError: #d52b1e;
 
 #batchActions {
   width: 100%;
+
+  .disabled {
+    a {
+      cursor: not-allowed;
+      color: #cccccc !important;
+    }
+  }
 }
 
 #receiptModal {

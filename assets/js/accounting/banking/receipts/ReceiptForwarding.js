@@ -22,7 +22,8 @@ export class ReceiptForwarding {
 
   addEventListeners() {
     this.$button.on("click", () => {
-      this.$input.val(this.forwardEmail.value);
+      const email = this.forwardEmail ? this.forwardEmail.value : "";
+      this.$input.val(email);
       this.$input.trigger("input");
       this.$modal.find("#receiptCompany").text(this.company.business_name);
       this.$modal.modal("show");

@@ -120,7 +120,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 <div class="tab-pane active" id="forReview">
                                     <div class="d-flex align-items-center mb-3">
                                         <div class="dropdown mr-2">
-                                            <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;">
+                                            <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" id="batchActionsButton">
                                                 Batch actions&nbsp;<i class="fa fa-angle-down fa-lg"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-left" id="batchActions">
