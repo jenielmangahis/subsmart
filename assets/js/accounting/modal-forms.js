@@ -1243,7 +1243,8 @@ $(function() {
 
     $(document).on('change', 'div.modal select[name="recurring_week"]', function() {
         if ($(this).val() !== 'day') {
-            $(this).next().html(`
+            $(this).parent().next().find('select[name="recurring_day"]').next().remove();
+            $(this).parent().next().find('select[name="recurring_day"]').html(`
                 <option value="sunday">Sunday</option>
                 <option value="monday" selected>Monday</option>
                 <option value="tuesday">Tuesday</option>
@@ -1252,8 +1253,15 @@ $(function() {
                 <option value="friday">Friday</option>
                 <option value="saturday">Saturday</option>
             `);
+            $(this).parent().next().find('select[name="recurring_day"]').select2({
+                minimumResultsForSearch: -1
+            });
         } else {
-            $(this).next().html(recurringDays);
+            $(this).parent().next().find('select[name="recurring_day"]').next().remove();
+            $(this).parent().next().find('select[name="recurring_day"]').html(recurringDays);
+            $(this).parent().next().find('select[name="recurring_day"]').select2({
+                minimumResultsForSearch: -1
+            });
         }
     });
 
@@ -5613,6 +5621,23 @@ const makeRecurring = (modalName) => {
                 $(`div#${modalId} div.modal-body #bill_date`).parent().parent().remove();
                 $(`div#${modalId} div.modal-body #due_date`).parent().parent().remove();
                 $(`div#${modalId} div.modal-body #bill_no`).parent().remove();
+            break;
+            case 'purchase_order' :
+                modalId = 'purchaseOrderModal';
+                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
+                $(`div#${modalId} div.modal-body #purchase_order_date`).parent().parent().remove();
+            break;
+            case 'vendor_credit' :
+                modalId = 'vendorCreditModal';
+                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
+                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+                $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
+            break;
+            case 'credit_card_credit' :
+                modalId = 'creditCardCreditModal';
+                $(`div#${modalId} div.modal-body div.row.payee-details`).remove();
+                $(`div#${modalId} div.modal-body #payment_date`).parent().parent().remove();
+                $(`div#${modalId} div.modal-body #ref_no`).parent().remove();
             break;
         }
 
