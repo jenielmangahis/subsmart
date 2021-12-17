@@ -401,6 +401,7 @@ export class ForReviewTable {
         },
         {
           render: this.columns.actions,
+          class: "actionsColumn",
         },
       ],
       rowId: (row) => `row${row.id}`,
@@ -444,6 +445,7 @@ export class ForReviewTable {
       if ($target.classList.contains("receiptsTable__checkbox")) return;
       if ($target.classList.contains("receiptsTable__selectColumn")) return;
       if ($target.classList.contains("action")) return;
+      if ($($target).closest(".actionsColumn").length) return;
 
       const $parent = $($target).closest("tr");
       const rowId = $parent.data("id");

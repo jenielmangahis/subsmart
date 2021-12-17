@@ -18,7 +18,7 @@
                         <div class="col">
                             <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
-                                    <div class="row">
+                                    <div class="row payee-details">
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-5">
@@ -79,6 +79,9 @@
                                                 </span>
                                             </h2>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
@@ -384,7 +387,7 @@
                             <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex">
-                            <a href="#" class="text-white m-auto">Make Recurring</a>
+                            <a href="#" class="text-white m-auto" onclick="makeRecurring('credit_card_credit')">Make Recurring</a>
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
