@@ -11592,7 +11592,7 @@ class Accounting extends MY_Controller
                 }
             }
             $total_amount_receive+=$projected_money_in;
-            $total_amount_expense+=$projected_money_out;
+            $total_amount_expense-=$projected_money_out;
             
             $date_ctr = date("Y-m-d", strtotime("+ 1 day", strtotime($date_ctr)));
         }

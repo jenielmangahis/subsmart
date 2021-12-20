@@ -129,18 +129,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                             <option value="npcharge">Non-Posting Charge</option>
                                                                             <option value="check">Check</option>
                                                                             <option value="npcredit">Non-Posting Credit</option>
-                                                                            <option value="cccredit">Credit Card Credit</option>
-                                                                            <option value="credit-memo">Credit Memo</option>
+                                                                            <option value="credit card credit">Credit Card Credit</option>
+                                                                            <option value="credit memo">Credit Memo</option>
                                                                             <option value="deposit">Deposit</option>
                                                                             <option value="estimate">Estimate</option>
                                                                             <option value="expense">Expense</option>
                                                                             <option value="invoice">Invoice</option>
                                                                             <option value="journal entry">Journal Entry</option>
                                                                             <option value="refund">Refund</option>
-                                                                            <option value="sales-receipt">Sales Receipt</option>
+                                                                            <option value="sales receipt">Sales Receipt</option>
                                                                             <option value="transfer">Transfer</option>
-                                                                            <option value="vendor-credit">Vendor Credit</option>
-                                                                            <option value="purchase-order">Purchase Order</option>
+                                                                            <option value="vendor credit">Vendor Credit</option>
+                                                                            <option value="purchase order">Purchase Order</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -226,22 +226,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="form-group">
                                                 <label for="type">Transaction Type</label>
                                                 <select name="transaction_type" id="type" class="form-control">
-                                                        <option value="bill">Bill</option>
+                                                        <option value="billModal">Bill</option>
                                                         <option value="npcharge">Non-Posting Charge</option>
-                                                        <option value="check">Check</option>
+                                                        <option value="checkModal">Check</option>
                                                         <option value="npcredit">Non-Posting Credit</option>
-                                                        <option value="cccredit">Credit Card Credit</option>
+                                                        <option value="creditCardCreditModal">Credit Card Credit</option>
                                                         <option value="credit-memo">Credit Memo</option>
                                                         <option value="depositModal">Deposit</option>
                                                         <option value="estimate">Estimate</option>
-                                                        <option value="expense">Expense</option>
+                                                        <option value="expenseModal">Expense</option>
                                                         <option value="invoice">Invoice</option>
                                                         <option value="journalEntryModal">Journal Entry</option>
                                                         <option value="refund">Refund</option>
                                                         <option value="sales-receipt">Sales Receipt</option>
                                                         <option value="transferModal">Transfer</option>
-                                                        <option value="vendor-credit">Vendor Credit</option>
-                                                        <option value="purchase-order">Purchase Order</option>
+                                                        <option value="vendorCreditModal">Vendor Credit</option>
+                                                        <option value="purchaseOrderModal">Purchase Order</option>
                                                 </select>
                                             </div>
                                         </div>

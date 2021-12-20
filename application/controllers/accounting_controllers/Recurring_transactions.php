@@ -10,6 +10,10 @@ class Recurring_transactions extends MY_Controller {
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('accounting_transfer_funds_model');
+        $this->load->model('accounting_journal_entries_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -107,18 +111,160 @@ class Recurring_transactions extends MY_Controller {
 
         if(count($items) > 0) {
             foreach($items as $item) {
+                switch($item['txn_type']) {
+                    case 'expense' :
+                        $expense = $this->vendors_model->get_expense_by_id($item['txn_id']);
+                        $total = number_format($expense->total_amount, 2, '.', ',');
+
+                        switch($expense->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($expense->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    break;
+                    case 'check' :
+                        $check = $this->vendors_model->get_check_by_id($item['txn_id']);
+                        $total = number_format($check->total_amount, 2, '.', ',');
+
+                        switch($check->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($check->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    break;
+                    case 'bill' :
+                        $bill = $this->vendors_model->get_bill_by_id($item['txn_id']);
+                        $total = number_format($bill->total_amount, 2, '.', ',');
+                        $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'purchase order' :
+                        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($item['txn_id']);
+                        $total = number_format($purchaseOrder->total_amount, 2, '.', ',');
+                        $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'vendor credit' :
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($item['txn_id']);
+                        $total = number_format($vCredit->total_amount, 2, '.', ',');
+                        $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'credit card credit' :
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($item['txn_id']);
+                        $total = number_format($ccCredit->total_amount, 2, '.', ',');
+
+                        switch($ccCredit->payee_type) {
+                            case 'vendor':
+                                $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->display_name;
+                            break;
+                            case 'customer':
+                                $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                                $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                            break;
+                            case 'employee':
+                                $payee = $this->users_model->getUser($ccCredit->payee_id);
+                                $payeeName = $payee->FName . ' ' . $payee->LName;
+                            break;
+                        }
+                    break;
+                    case 'deposit' :
+                        $deposit = $this->accounting_bank_deposit_model->getById($item['txn_id']);
+                        $total = number_format($deposit->total_amount, 2, '.', ',');
+                    break;
+                    case 'transfer' :
+                        $transfer = $this->accounting_transfer_funds_model->getById($item['txn_id']);
+                        $total = number_format($transfer->transfer_amount, 2, '.', ',');
+                    break;
+                    case 'journal entry' :
+                        $total = '0.00';
+                    break;
+                }
+
+                $startDate = date("m/d/Y", strtotime($item['start_date']));
+                $currentDate = date("m/d/Y");
+                $every = $item['recurr_every'];
                 switch ($item['recurring_interval']) {
                     case 'daily' :
                         $interval = 'Every Day';
+
+                        if(intval($every) > 1) {
+                            $interval = "Every $every Days";
+                        }
+
+                        $previous = $startDate;
+                        $next = $startDate;
+                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                            $previous = $next;
+                            $next = date("m/d/Y", strtotime("$next +$every days"));
+                        }
                     break;
                     case 'weekly' :
                         $interval = 'Every Week';
+
+                        if(intval($every) > 1) {
+                            $interval = "Every $every Weeks";
+                        }
                     break;
                     case 'monthly' :
                         $interval = 'Every Month';
+
+                        if(intval($every) > 1) {
+                            $interval = "Every $every Months";
+                        }
+
+                        if($item['recurring_week'] === 'day') {
+                            $day = $item['recurring_day'] === 'last' ? 't' : $item['recurring_day'];
+                            $previous = date("m/$day/Y", strtotime($startDate));
+                            $next = date("m/$day/Y", strtotime($startDate));
+                        } else {
+                            $week = $item['recurring_week'];
+                            $day = $item['recurring_day'];
+                            $previous = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                            $next = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                        }
+
+                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                            $previous = $next;
+
+                            if($item['recurring_week'] === 'day') {
+                                $next = date("m/$day/Y", strtotime("$next +$every months"));
+                            } else {
+                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($next))));
+                            }
+                        }
                     break;
                     case 'yearly' :
                         $interval = 'Every Year';
+
+                        // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                        //     $previous = $next;
+                        //     $next = date("m/d/Y", strtotime("$date +$every years"));
+                        // }
+                    break;
+                    default :
+                        $interval = '';
+                        $previous = '';
+                        $next = '';
                     break;
                 }
 
@@ -130,10 +276,10 @@ class Recurring_transactions extends MY_Controller {
                             'recurring_type' => ucfirst($item['recurring_type']),
                             'txn_type' => ucwords($item['txn_type']),
                             'recurring_interval' => $interval,
-                            'previous_date' => $item['previous_date'] !== '' && $item['previous_date'] !== null ? date('m/d/Y', strtotime($item['previous_date'])) : null,
-                            'next_date' => $item['next_date'] !== '' && $item['next_date'] !== null ? date('m/d/Y', strtotime($item['next_date'])) : null,
-                            'customer_vendor' => null,
-                            'amount' => null
+                            'previous_date' => strtotime($next) === strtotime($startDate) ? '' : $previous,
+                            'next_date' => $item['end_type'] === 'by' && strtotime($next)  > strtotime($item['end_date']) || $item['end_type'] === 'after' && $i >= intval($item['max_occurences']) ? '' : $next,
+                            'customer_vendor' => $payeeName,
+                            'amount' => $total
                         ];
                     }
                 } else {
@@ -143,10 +289,10 @@ class Recurring_transactions extends MY_Controller {
                         'recurring_type' => ucfirst($item['recurring_type']),
                         'txn_type' => ucwords($item['txn_type']),
                         'recurring_interval' => $interval,
-                        'previous_date' => $item['previous_date'] !== '' && $item['previous_date'] !== null ? date('m/d/Y', strtotime($item['previous_date'])) : null,
-                        'next_date' => $item['next_date'] !== '' && $item['next_date'] !== null ? date('m/d/Y', strtotime($item['next_date'])) : null,
-                        'customer_vendor' => null,
-                        'amount' => null
+                        'previous_date' => strtotime($startDate) >= strtotime($previous) ? '' : $previous,
+                        'next_date' => $item['end_type'] === 'by' && strtotime($next)  > strtotime($item['end_date']) || $item['end_type'] === 'after' && $i >= intval($item['max_occurences']) ? '' : $next,
+                        'customer_vendor' => $payeeName,
+                        'amount' => $total
                     ];
                 }
             }

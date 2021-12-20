@@ -258,9 +258,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="row pb-2">
                         <div class="col-md-8 banking-tab-container">
                             <div class="tab">
-                                <button class="tablinks active" onclick="openCity(event, 'London')">All</button>
-                                <button class="tablinks" onclick="openCity(event, 'Paris')">Money in</button>
-                                <button class="tablinks" onclick="openCity(event, 'Tokyo')">Money out</button>
+                                <!-- <button class="tablinks all active" onclick="openCity(event, 'London')">All</button>
+                                <button class="tablinks money_in" onclick="openCity(event, 'Paris')">Money in</button>
+                                <button class="tablinks money_out" onclick="openCity(event, 'Tokyo')">Money out</button> -->
+                                <button class="tablinks all active">All</button>
+                                <button class="tablinks money_in">Money in</button>
+                                <button class="tablinks money_out">Money out</button>
                             </div>
                         </div>
                         <div class="col-md-4 banking-tab-container" align="right">
@@ -274,7 +277,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div style="background-color:#f4f5f8;padding:1.5%;display:none;" id="cfp_add_item_area">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="text" id="datepicker" name="item_date" class="form-control date_plan"
+                                <input type="date" id="datepicker" name="item_date" class="form-control date_plan"
                                     placeholder="Date">
                             </div>
                             <div class="col-md-6 input-group" style="">
@@ -301,8 +304,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             value="moneyin" checked> &nbsp; <label>Money in</label>
                                         <!-- <input type="radio" name="item_type" class="form-control"> <label>Money out</label> -->
                                     </div>
-                                    <div class="col-md-6">
-                                        One-time &nbsp; <input type="radio" name="item_type"
+                                    <div class="col-md-6"><input type="radio" name="item_type"
+                                            class="form-control_ plan_one_time">
+                                        One-time &nbsp;<br> <input type="radio" name="item_type"
                                             class="form-control_ plan_repeat"> &nbsp; <label> Repeating</label>
                                     </div>
                                 </div><br>
@@ -320,7 +324,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <br><br>
 
-                    <div id="London" class="tabcontent" style="display: block;">
+                    <div id="London" class="tabcontent all" style="display: block;">
                         <table class="table" id="cashflowtransactions">
                             <thead>
                                 <th>DATE</th>
@@ -430,7 +434,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </table>
                     </div>
 
-                    <div id="Paris" class="tabcontent">
+                    <div id="Paris" class="tabcontent money_in">
                         <table class="table" id="cashflowmoneyin">
                             <thead>
                                 <th>DATE</th>
@@ -475,7 +479,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                 </div>
 
-                <div id="Tokyo" class="tabcontent">
+                <div id="Tokyo" class="tabcontent money_out">
                     <table class="table" id="cashflowmoneyout">
                         <thead>
                             <th>DATE</th>

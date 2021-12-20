@@ -243,3 +243,28 @@ function start_money_in_out_chart() {
     money_in_out_chart = new Chart(cashflow_chart, cfg);
     update_money_in_out_chart();
 }
+
+$(document).on("click", ".tab .tablinks", function(event) {
+    event.preventDefault();
+    $(".tab .tablinks.active").removeClass("active");
+    $(this).addClass("active");
+
+    $(".tabcontent.all").hide();
+    $(".tabcontent.money_in").hide();
+    $(".tabcontent.money_out").hide();
+    if ($(this).hasClass("all")) {
+        $(".tabcontent.all").fadeIn();
+    } else if ($(this).hasClass("money_in")) {
+        $(".tabcontent.money_in").fadeIn();
+    } else if ($(this).hasClass("money_out")) {
+        $(".tabcontent.money_out").fadeIn();
+    }
+});
+$(document).on("click", "button.cfp_add_item", function(event) {
+    event.preventDefault();
+    $("#cfp_add_item_area").fadeIn();
+});
+$(document).on("click", "#cfp_add_item_area .close_add_item", function(event) {
+    event.preventDefault();
+    $("#cfp_add_item_area").fadeOut();
+});
