@@ -290,7 +290,7 @@ class Accounting_modals extends MY_Controller
                     $abbreviation = $i. $ends[$i % 10];
                 }
 
-                $recurringDays[$abbreviation] = $abbreviation;
+                $recurringDays[$i] = $abbreviation;
             }
             $recurringDays['last'] = 'Last';
 
@@ -1171,28 +1171,30 @@ class Accounting_modals extends MY_Controller
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
 
             if ($transferId) {
-                $transferFromAcc = $this->chart_of_accounts_model->getById($data['transfer_from_account']);
-                $transferToAcc = $this->chart_of_accounts_model->getById($data['transfer_to_account']);
+                if(!isset($date['template_name'])) {
+                    $transferFromAcc = $this->chart_of_accounts_model->getById($data['transfer_from_account']);
+                    $transferToAcc = $this->chart_of_accounts_model->getById($data['transfer_to_account']);
 
-                $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($data['transfer_amount']) : floatval($transferFromAcc->balance) + floatval($data['transfer_amount']);
-                $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($data['transfer_amount']) : floatval($transferToAcc->balance) - floatval($data['transfer_amount']);
+                    $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($data['transfer_amount']) : floatval($transferFromAcc->balance) + floatval($data['transfer_amount']);
+                    $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($data['transfer_amount']) : floatval($transferToAcc->balance) - floatval($data['transfer_amount']);
 
-                $transferFromBal = number_format($transferFromBal, 2, '.', ',');
-                $transferToBal = number_format($transferToBal, 2, '.', ',');
+                    $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+                    $transferToBal = number_format($transferToBal, 2, '.', ',');
 
-                $transferFromAccData = [
-                    'id' => $transferFromAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $transferFromBal
-                ];
-                $transferToAccData = [
-                    'id' => $transferToAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $transferToBal
-                ];
+                    $transferFromAccData = [
+                        'id' => $transferFromAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $transferFromBal
+                    ];
+                    $transferToAccData = [
+                        'id' => $transferToAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $transferToBal
+                    ];
 
-                $this->chart_of_accounts_model->updateBalance($transferFromAccData);
-                $this->chart_of_accounts_model->updateBalance($transferToAccData);
+                    $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+                    $this->chart_of_accounts_model->updateBalance($transferToAccData);
+                }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
@@ -1518,24 +1520,26 @@ class Accounting_modals extends MY_Controller
                         'name_id' => $name[1]
                     ];
 
-                    $account = $this->chart_of_accounts_model->getById($value);
-                    if($account->account_id !== "7") {
-                        $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
-                        $newBalance = $newBalance + floatval($data['debits'][$key]);
-                    } else {
-                        $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
-                        $newBalance = $newBalance - floatval($data['debits'][$key]);
+                    if(!isset($date['template_name'])) {
+                        $account = $this->chart_of_accounts_model->getById($value);
+                        if($account->account_id !== "7") {
+                            $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
+                            $newBalance = $newBalance + floatval($data['debits'][$key]);
+                        } else {
+                            $newBalance = floatval($account->balance) + floatval($data['credits'][$key]);
+                            $newBalance = $newBalance - floatval($data['debits'][$key]);
+                        }
+
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $accountData = [
+                            'id' => $account->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($accountData);
                     }
-
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $accountData = [
-                        'id' => $account->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => $newBalance
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($accountData);
                 }
 
                 $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
@@ -1649,6 +1653,25 @@ class Accounting_modals extends MY_Controller
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                } else {
+                    $depositToAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                    $depositData = [
+                        'id' => $depositToAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => floatval($depositToAcc->balance) + floatval($totalAmount)
+                    ];
+                    $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
+
+                    if ($data['cash_back_amount'] !== "") {
+                        $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
+                        $cashBackData = [
+                            'id' => $cashBackAccount->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($data['cash_back_amount']) : floatval($cashBackAccount->balance) - floatval($data['cash_back_amount'])
+                        ];
+
+                        $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+                    }
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -1697,27 +1720,6 @@ class Accounting_modals extends MY_Controller
                 }
 
                 $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
-
-                if (!isset($data['template_name'])) {
-                    $depositToAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
-                    $depositData = [
-                        'id' => $depositToAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => floatval($depositToAcc->balance) + floatval($totalAmount)
-                    ];
-                    $deposit = $this->chart_of_accounts_model->updateBalance($depositData);
-
-                    if ($data['cash_back_amount'] !== "") {
-                        $cashBackAccount = $this->chart_of_accounts_model->getById($data['cash_back_account']);
-                        $cashBackData = [
-                            'id' => $cashBackAccount->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($data['cash_back_amount']) : floatval($cashBackAccount->balance) - floatval($data['cash_back_amount'])
-                        ];
-
-                        $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
-                    }
-                }
             }
 
             $return['data'] = $depositId;
@@ -2703,7 +2705,6 @@ class Accounting_modals extends MY_Controller
     private function check($data)
     {
         $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
-        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
@@ -2713,6 +2714,37 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         }
 
         $return = [];
@@ -2729,41 +2761,13 @@ class Accounting_modals extends MY_Controller
             $payee = explode('-', $data['payee']);
             $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
 
-            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
-
-            $total = 0.00;
-
-            if (isset($data['category_linked'])) {
-                foreach ($data['category_linked'] as $index => $linked) {
-                    if ($linked === "true") {
-                        $total += floatval($data['category_amount'][$index]);
-                    }
-                }
-            }
-
-            if (isset($data['item_linked'])) {
-                foreach ($data['item_linked'] as $index => $linked) {
-                    if ($linked === "true") {
-                        $total += floatval($data['item_total'][$index]);
-                    }
-                }
-            }
-
-            $purchaseOrderData = [
-                'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
-                'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-
-            $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
-
             $checkData = [
                 'company_id' => logged('company_id'),
                 'payee_type' => $payee[0],
                 'payee_id' => $payee[1],
                 'bank_account_id' => $data['bank_account'],
                 'mailing_address' => nl2br($data['mailing_address']),
-                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'check_no' => isset($data['print_later']) ? null : ($data['check_no'] === '' ? null : $data['check_no']),
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
@@ -2771,21 +2775,85 @@ class Accounting_modals extends MY_Controller
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                'recurring' => isset($data['template_name']) ? 1 : 0,
                 'status' => 1
             ];
-    
+
             $checkId = $this->expenses_model->addCheck($checkData);
     
             if ($checkId) {
-                if (!isset($data['print_later']) && $data['check_no'] !== '') {
-                    $assignCheck = [
-                        'check_no' => $checkData['check_no'],
-                        'transaction_type' => 'check',
-                        'transaction_id' => $checkId,
-                        'payment_account_id' => $checkData['bank_account_id']
+                if(!isset($data['template_name'])) {
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+
+                    $total = 0.00;
+
+                    if (isset($data['category_linked'])) {
+                        foreach ($data['category_linked'] as $index => $linked) {
+                            if ($linked === "true") {
+                                $total += floatval($data['category_amount'][$index]);
+                            }
+                        }
+                    }
+
+                    if (isset($data['item_linked'])) {
+                        foreach ($data['item_linked'] as $index => $linked) {
+                            if ($linked === "true") {
+                                $total += floatval($data['item_total'][$index]);
+                            }
+                        }
+                    }
+
+                    $purchaseOrderData = [
+                        'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                        'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                        'updated_at' => date("Y-m-d H:i:s")
                     ];
 
-                    $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+                    $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
+
+                    $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                    $newBalance = floatval($bankAcc->balance) - floatval($data['total_amount']);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $bankAccData = [
+                        'id' => $bankAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($bankAccData);
+
+                    if (!isset($data['print_later']) && $data['check_no'] !== '') {
+                        $assignCheck = [
+                            'check_no' => $checkData['check_no'],
+                            'transaction_type' => 'check',
+                            'transaction_id' => $checkId,
+                            'payment_account_id' => $checkData['bank_account_id']
+                        ];
+    
+                        $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+                    }
+                } else {
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'check',
+                        'txn_id' => $checkId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -2803,18 +2871,6 @@ class Accounting_modals extends MY_Controller
                         $order++;
                     }
                 }
-
-                $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
-                $newBalance = floatval($bankAcc->balance) - floatval($data['total_amount']);
-                $newBalance = number_format($newBalance, 2, '.', ',');
-
-                $bankAccData = [
-                    'id' => $bankAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($bankAccData);
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
@@ -2834,23 +2890,25 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
-                        $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                        if(!isset($data['template_name'])) {
+                            $expenseAcc = $this->chart_of_accounts_model->getById($value);
+                            $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
-                        if ($expenseAccType->account_name === 'Credit Card') {
-                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
-                        } else {
-                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                            if ($expenseAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $expenseAccData = [
+                                'id' => $expenseAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($expenseAccData);
                         }
-                        $newBalance = number_format($newBalance, 2, '.', ',');
-
-                        $expenseAccData = [
-                            'id' => $expenseAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => $newBalance
-                        ];
-
-                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -2873,26 +2931,28 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
-                        $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                        if(!isset($data['template_name'])) {
+                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
-                        $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
 
-                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
 
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if ($itemAccDetails) {
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
-                            $newBalance = number_format($newBalance, 2, '.', ',');
+                            if ($itemAccDetails) {
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
 
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            }
                         }
                     }
     
@@ -2912,8 +2972,6 @@ class Accounting_modals extends MY_Controller
     private function bill($data)
     {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
-        $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
-        $this->form_validation->set_rules('due_date', 'Due date', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
@@ -2923,6 +2981,38 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
+            $this->form_validation->set_rules('due_date', 'Due date', 'required');
         }
 
         $return = [];
@@ -2942,9 +3032,9 @@ class Accounting_modals extends MY_Controller
                 'vendor_id' => $data['vendor_id'],
                 'mailing_address' => nl2br($data['mailing_address']),
                 'term_id' => $data['term'],
-                'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
-                'due_date' => date("Y-m-d", strtotime($data['due_date'])),
-                'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
+                'bill_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['bill_date'])) : null,
+                'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
+                'bill_no' => !isset($data['template_name']) || $data['bill_no'] !== "" ? $data['bill_no'] : null,
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
@@ -2957,33 +3047,56 @@ class Accounting_modals extends MY_Controller
             $billId = $this->expenses_model->addBill($billData);
 
             if ($billId) {
-                $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+                if(!isset($data['template_name'])) {
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
 
-                $total = 0.00;
-
-                if (isset($data['category_linked'])) {
-                    foreach ($data['category_linked'] as $index => $linked) {
-                        if ($linked === "true") {
-                            $total += floatval($data['category_amount'][$index]);
+                    $total = 0.00;
+    
+                    if (isset($data['category_linked'])) {
+                        foreach ($data['category_linked'] as $index => $linked) {
+                            if ($linked === "true") {
+                                $total += floatval($data['category_amount'][$index]);
+                            }
                         }
                     }
-                }
-
-                if (isset($data['item_linked'])) {
-                    foreach ($data['item_linked'] as $index => $linked) {
-                        if ($linked === "true") {
-                            $total += floatval($data['item_total'][$index]);
+    
+                    if (isset($data['item_linked'])) {
+                        foreach ($data['item_linked'] as $index => $linked) {
+                            if ($linked === "true") {
+                                $total += floatval($data['item_total'][$index]);
+                            }
                         }
                     }
+    
+                    $purchaseOrderData = [
+                        'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                        'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+    
+                    $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
+                } else {
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'bill',
+                        'txn_id' => $billId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
                 }
-
-                $purchaseOrderData = [
-                    'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
-                    'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ];
-
-                $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
@@ -3019,23 +3132,25 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => $data['category_linked'] ? $linkedTransaction[1] : null
                         ];
 
-                        $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                        if(!isset($data['template_name'])) {
+                            $expenseAcc = $this->chart_of_accounts_model->getById($value);
+                            $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
-                        if ($expenseAccType->account_name === 'Credit Card') {
-                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
-                        } else {
-                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                            if ($expenseAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $expenseAccData = [
+                                'id' => $expenseAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($expenseAccData);
                         }
-                        $newBalance = number_format($newBalance, 2, '.', ',');
-
-                        $expenseAccData = [
-                            'id' => $expenseAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => $newBalance
-                        ];
-
-                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -3058,26 +3173,28 @@ class Accounting_modals extends MY_Controller
                             'linked_transaction_id' => $data['item_linked'] ? $linkedTransaction[1] : null
                         ];
 
-                        $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                        if(!isset($data['template_name'])) {
+                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
-                        $newQty = intval($location->qty) + intval($data['quantity'][$index]);
+                            $newQty = intval($location->qty) + intval($data['quantity'][$index]);
 
-                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
 
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if ($itemAccDetails) {
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
-                            $newBalance = number_format($newBalance, 2, '.', ',');
+                            if ($itemAccDetails) {
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
 
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            }
                         }
                     }
     
@@ -3428,7 +3545,6 @@ class Accounting_modals extends MY_Controller
     private function vendor_credit($data)
     {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
-        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
@@ -3438,6 +3554,37 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         }
 
         $return = [];
@@ -3455,13 +3602,14 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'vendor_id' => $data['vendor_id'],
                 'mailing_address' => nl2br($data['mailing_address']),
-                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'remaining_balance' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : 0,
                 'status' => 1
             ];
     
@@ -3484,19 +3632,42 @@ class Accounting_modals extends MY_Controller
                     }
                 }
 
-                $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+                if(!isset($data['template_name'])) {
+                    $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
 
-                if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
-                    $vendorCredits = floatval($data['total_amount']);
+                    if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
+                        $vendorCredits = floatval($data['total_amount']);
+                    } else {
+                        $vendorCredits = floatval($data['total_amount']) + floatval($vendor->vendor_credits);
+                    }
+
+                    $vendorData = [
+                        'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+                    ];
+
+                    $this->vendors_model->updateVendor($vendor->id, $vendorData);
                 } else {
-                    $vendorCredits = floatval($data['total_amount']) + floatval($vendor->vendor_credits);
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'vendor credit',
+                        'txn_id' => $vendorCreditId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
                 }
-
-                $vendorData = [
-                    'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
-                ];
-
-                $this->vendors_model->updateVendor($vendor->id, $vendorData);
 
                 if (isset($data['expense_account'])) {
                     $categoryDetails = [];
@@ -3514,23 +3685,25 @@ class Accounting_modals extends MY_Controller
                             'customer_id' => $data['category_customer'][$index]
                         ];
 
-                        $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                        if(!isset($data['template_name'])) {
+                            $expenseAcc = $this->chart_of_accounts_model->getById($value);
+                            $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
-                        if ($expenseAccType->account_name === 'Credit Card') {
-                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
-                        } else {
-                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                            if ($expenseAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $expenseAccData = [
+                                'id' => $expenseAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($expenseAccData);
                         }
-                        $newBalance = number_format($newBalance, 2, '.', ',');
-
-                        $expenseAccData = [
-                            'id' => $expenseAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => $newBalance
-                        ];
-
-                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -3551,28 +3724,30 @@ class Accounting_modals extends MY_Controller
                             'total' => $data['item_total'][$index]
                         ];
 
-                        $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                        if(!isset($data['template_name'])) {
+                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
-                        $newQty = intval($location->qty) - intval($data['quantity'][$index]);
+                            $newQty = intval($location->qty) - intval($data['quantity'][$index]);
 
-                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
 
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if ($itemAccDetails) {
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
-                            $newBalance = floatval($invAssetAcc->balance) + $newBalance;
-                            $newBalance = $newBalance - floatval($data['item_total'][$index]);
-                            $newBalance = number_format($newBalance, 2, '.', ',');
+                            if ($itemAccDetails) {
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
+                                $newBalance = floatval($invAssetAcc->balance) + $newBalance;
+                                $newBalance = $newBalance - floatval($data['item_total'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
 
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            }
                         }
                     }
     
@@ -3612,7 +3787,6 @@ class Accounting_modals extends MY_Controller
     {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
-        $this->form_validation->set_rules('purchase_order_date', 'Purchase order date', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
@@ -3622,6 +3796,37 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('purchase_order_date', 'Purchase order date', 'required');
         }
 
         $return = [];
@@ -3646,19 +3851,43 @@ class Accounting_modals extends MY_Controller
                 'mailing_address' => nl2br($data['mailing_address']),
                 'customer_id' => $data['customer'],
                 'shipping_address' => nl2br($data['shipping_address']),
-                'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
+                'purchase_order_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['purchase_order_date'])) : null,
                 'ship_via' => $data['ship_via'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'message_to_vendor' => $data['message_to_vendor'],
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
-                'status' => $data['status'] === "open" ? 1 : 2
+                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'status' => !isset($data['template_name']) || $data['status'] === "open" ? 1 : 2
             ];
     
             $purchaseOrderId = $this->expenses_model->add_purchase_order($purchaseOrderData);
     
             if ($purchaseOrderId) {
+                if(isset($data['template_name'])) {
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'purchase order',
+                        'txn_id' => $purchaseOrderId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
                     foreach ($data['attachments'] as $attachmentId) {
@@ -3710,11 +3939,13 @@ class Accounting_modals extends MY_Controller
                             'total' => $data['item_total'][$index]
                         ];
 
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                        if(!isset($data['template_name'])) {
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        $newQtyPO = intval($itemAccDetails->qty_po) + intval($data['quantity'][$index]);
+                            $newQtyPO = intval($itemAccDetails->qty_po) + intval($data['quantity'][$index]);
 
-                        $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $value);
+                            $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $value);
+                        }
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -3753,7 +3984,6 @@ class Accounting_modals extends MY_Controller
     private function credit_card_credit($data)
     {
         $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
-        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
@@ -3763,6 +3993,37 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
             $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        if(isset($data['template_name'])) {
+            $this->form_validation->set_rules('template_name', 'Template Name', 'required');
+            $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
+
+            if ($data['recurring_type'] !== 'unscheduled') {
+                $this->form_validation->set_rules('recurring_interval', 'Recurring interval', 'required');
+
+                if ($data['recurring_interval'] !== 'daily') {
+                    if ($data['recurring_interval'] === 'monthly') {
+                        $this->form_validation->set_rules('recurring_week', 'Recurring week', 'required');
+                    } elseif ($data['recurring_interval'] === 'yearly') {
+                        $this->form_validation->set_rules('recurring_month', 'Recurring month', 'required');
+                    }
+
+                    $this->form_validation->set_rules('recurring_day', 'Recurring day', 'required');
+                }
+                if ($data['recurring_interval'] !== 'yearly') {
+                    $this->form_validation->set_rules('recurr_every', 'Recurring interval', 'required');
+                }
+                $this->form_validation->set_rules('end_type', 'Recurring end type', 'required');
+
+                if ($data['end_type'] === 'by') {
+                    $this->form_validation->set_rules('end_date', 'Recurring end date', 'required');
+                } elseif ($data['end_type'] === 'after') {
+                    $this->form_validation->set_rules('max_occurence', 'Recurring max occurence', 'required');
+                }
+            }
+        } else {
+            $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         }
 
         $return = [];
@@ -3782,25 +4043,49 @@ class Accounting_modals extends MY_Controller
                 'payee_type' => $payee[0],
                 'payee_id' => $payee[1],
                 'bank_credit_account_id' => $data['bank_credit_account'],
-                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
+                'recurring' => isset($data['template_name']) ? 1 : 0,
                 'status' => 1
             ];
 
             $creditId = $this->expenses_model->add_credit_card_credit($creditData);
-
-            $creditAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
-
-            $newBalance = floatval($creditAcc->balance) - floatval($data['total_amount']);
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
     
             if ($creditId) {
+                if(!isset($data['template_name'])) {
+                    $creditAcc = $this->chart_of_accounts_model->getById($data['bank_credit_account']);
+
+                    $newBalance = floatval($creditAcc->balance) - floatval($data['total_amount']);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+        
+                    $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+                } else {
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'credit card credit',
+                        'txn_id' => $creditId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'status' => 1
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
                     foreach ($data['attachments'] as $attachmentId) {
@@ -3833,23 +4118,25 @@ class Accounting_modals extends MY_Controller
                             'customer_id' => $data['category_customer'][$index]
                         ];
 
-                        $expenseAcc = $this->chart_of_accounts_model->getById($value);
-                        $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+                        if(!isset($data['template_name'])) {
+                            $expenseAcc = $this->chart_of_accounts_model->getById($value);
+                            $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
 
-                        if ($expenseAccType->account_name === 'Credit Card') {
-                            $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
-                        } else {
-                            $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                            if ($expenseAccType->account_name === 'Credit Card') {
+                                $newBalance = floatval($expenseAcc->balance) + floatval($data['category_amount'][$index]);
+                            } else {
+                                $newBalance = floatval($expenseAcc->balance) - floatval($data['category_amount'][$index]);
+                            }
+                            $newBalance = number_format($newBalance, 2, '.', ',');
+
+                            $expenseAccData = [
+                                'id' => $expenseAcc->id,
+                                'company_id' => logged('company_id'),
+                                'balance' => $newBalance
+                            ];
+
+                            $this->chart_of_accounts_model->updateBalance($expenseAccData);
                         }
-                        $newBalance = number_format($newBalance, 2, '.', ',');
-
-                        $expenseAccData = [
-                            'id' => $expenseAcc->id,
-                            'company_id' => logged('company_id'),
-                            'balance' => $newBalance
-                        ];
-
-                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
     
                     $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
@@ -3870,28 +4157,30 @@ class Accounting_modals extends MY_Controller
                             'total' => $data['item_total'][$index]
                         ];
 
-                        $location = $this->items_model->getItemLocation($data['location'][$index], $value);
+                        if(isset($data['template_name'])) {
+                            $location = $this->items_model->getItemLocation($data['location'][$index], $value);
 
-                        $newQty = intval($location->qty) - intval($data['quantity'][$index]);
+                            $newQty = intval($location->qty) - intval($data['quantity'][$index]);
 
-                        $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
+                            $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
 
-                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+                            $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
 
-                        if ($itemAccDetails) {
-                            $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                            $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
-                            $newBalance = floatval($invAssetAcc->balance) + $newBalance;
-                            $newBalance = $newBalance - floatval($data['item_total'][$index]);
-                            $newBalance = number_format($newBalance, 2, '.', ',');
+                            if ($itemAccDetails) {
+                                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                                $newBalance = floatval($data['item_total'][$index]) - floatval($data['quantity'][$index]);
+                                $newBalance = floatval($invAssetAcc->balance) + $newBalance;
+                                $newBalance = $newBalance - floatval($data['item_total'][$index]);
+                                $newBalance = number_format($newBalance, 2, '.', ',');
 
-                            $invAssetAccData = [
-                                'id' => $invAssetAcc->id,
-                                'company_id' => logged('company_id'),
-                                'balance' => $newBalance
-                            ];
-    
-                            $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                                $invAssetAccData = [
+                                    'id' => $invAssetAcc->id,
+                                    'company_id' => logged('company_id'),
+                                    'balance' => $newBalance
+                                ];
+        
+                                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                            }
                         }
                     }
     

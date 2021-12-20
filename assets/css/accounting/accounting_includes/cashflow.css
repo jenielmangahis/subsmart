@@ -175,3 +175,7 @@ body {
     top: 3px;
     background: #06A4B5;
 }
+
+#cfp_add_item_area .close_add_item {
+    cursor: pointer;
+}
