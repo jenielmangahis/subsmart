@@ -1213,6 +1213,57 @@ class Accounting_modals extends MY_Controller
                 }
 
                 if (isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $item['recurring_day'];
+                                $dayNum = array_search($day, $days);;
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -1221,10 +1272,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'transfer',
                         'txn_id' => $transferId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -1476,10 +1527,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'journal entry',
                         'txn_id' => $entryId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -1641,10 +1692,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'deposit',
                         'txn_id' => $depositId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -2592,10 +2643,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'expense',
                         'txn_id' => $expenseId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -2842,10 +2893,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'check',
                         'txn_id' => $checkId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -3084,10 +3135,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'bill',
                         'txn_id' => $billId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -3655,10 +3706,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'vendor credit',
                         'txn_id' => $vendorCreditId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -3874,10 +3925,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'purchase order',
                         'txn_id' => $purchaseOrderId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -4072,10 +4123,10 @@ class Accounting_modals extends MY_Controller
                         'txn_type' => 'credit card credit',
                         'txn_id' => $creditId,
                         'recurring_interval' => $data['recurring_interval'],
-                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -8988,10 +9039,10 @@ class Accounting_modals extends MY_Controller
                 //         'txn_type' => 'deposit',
                 //         'txn_id' => $depositId,
                 //         'recurring_interval' => $data['recurring_interval'],
-                //         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                //         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                //         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                //         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                //         'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                //         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                //         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                //         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                 //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                 //         'end_type' => $data['end_type'],
                 //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -9305,10 +9356,10 @@ class Accounting_modals extends MY_Controller
                 //         'txn_type' => 'transfer',
                 //         'txn_id' => $transferId,
                 //         'recurring_interval' => $data['recurring_interval'],
-                //         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                //         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                //         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                //         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                //         'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                //         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                //         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                //         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                 //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                 //         'end_type' => $data['end_type'],
                 //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
@@ -9409,10 +9460,10 @@ class Accounting_modals extends MY_Controller
                 //         'txn_type' => 'journal entry',
                 //         'txn_id' => $journalId,
                 //         'recurring_interval' => $data['recurring_interval'],
-                //         'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                //         'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                //         'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                //         'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                //         'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
+                //         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
+                //         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
+                //         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
                 //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                 //         'end_type' => $data['end_type'],
                 //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,

@@ -224,6 +224,42 @@ class Recurring_transactions extends MY_Controller {
                         if(intval($every) > 1) {
                             $interval = "Every $every Weeks";
                         }
+
+                        $days = [
+                            'sunday',
+                            'monday',
+                            'tuesday',
+                            'wednesday',
+                            'thursday',
+                            'friday',
+                            'saturday'
+                        ];
+
+                        $day = $item['recurring_day'];
+                        $dayNum = array_search($day, $days);;
+                        $previous = $startDate;
+                        $next = $startDate;
+
+                        if(strtotime($currentDate) < strtotime($startDate)) {
+                            do {
+                                $previous = date("m/d/Y", strtotime("$previous +1 day"));
+                                $next = date("m/d/Y", strtotime("$next +1 day"));
+                            } while(intval(date("w", strtotime($next))) !== $dayNum);
+                        } else {
+                            if(intval(date("w", strtotime($currentDate))) === $dayNum) {
+                                $previous = date("m/d/Y", strtotime($currentDate));
+                                $next = date("m/d/Y", strtotime($currentDate));
+                            } else {
+                                $previous = date("m/d/Y", strtotime("next $day"));
+                                $next = date("m/d/Y", strtotime("next $day"));
+                            }
+                        }
+
+                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                            $previous = $next;
+
+                            $next = date("m/d/Y", strtotime("$next +$every weeks"));
+                        }
                     break;
                     case 'monthly' :
                         $interval = 'Every Month';
@@ -256,10 +292,15 @@ class Recurring_transactions extends MY_Controller {
                     case 'yearly' :
                         $interval = 'Every Year';
 
-                        // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
-                        //     $previous = $next;
-                        //     $next = date("m/d/Y", strtotime("$date +$every years"));
-                        // }
+                        $month = $item['recurring_month'];
+                        $day = $item['recurring_day'];
+                        $previous = date("$month/$day/Y", strtotime($startDate));
+                        $next = date("$month/$day/Y", strtotime($startDate));
+
+                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                            $previous = $next;
+                            $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                        }
                     break;
                     default :
                         $interval = '';
@@ -276,7 +317,7 @@ class Recurring_transactions extends MY_Controller {
                             'recurring_type' => ucfirst($item['recurring_type']),
                             'txn_type' => ucwords($item['txn_type']),
                             'recurring_interval' => $interval,
-                            'previous_date' => strtotime($next) === strtotime($startDate) ? '' : $previous,
+                            'previous_date' => strtotime($startDate) >= strtotime($previous) || strtotime($previous) === strtotime($next) ? '' : $previous,
                             'next_date' => $item['end_type'] === 'by' && strtotime($next)  > strtotime($item['end_date']) || $item['end_type'] === 'after' && $i >= intval($item['max_occurences']) ? '' : $next,
                             'customer_vendor' => $payeeName,
                             'amount' => $total
@@ -289,7 +330,7 @@ class Recurring_transactions extends MY_Controller {
                         'recurring_type' => ucfirst($item['recurring_type']),
                         'txn_type' => ucwords($item['txn_type']),
                         'recurring_interval' => $interval,
-                        'previous_date' => strtotime($startDate) >= strtotime($previous) ? '' : $previous,
+                        'previous_date' => strtotime($startDate) >= strtotime($previous) || strtotime($previous) === strtotime($next) ? '' : $previous,
                         'next_date' => $item['end_type'] === 'by' && strtotime($next)  > strtotime($item['end_date']) || $item['end_type'] === 'after' && $i >= intval($item['max_occurences']) ? '' : $next,
                         'customer_vendor' => $payeeName,
                         'amount' => $total

@@ -103,14 +103,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   Dropzone.autoDiscover = false;
   new Dropzone("#receiptsUploadDropzone", {
     url: `${api.prefixURL}/AccountingReceipts/uploadImage`,
-    acceptedFiles: "image/*",
+    acceptedFiles: "image/jpeg,image/jpg,image/png",
     addRemoveLinks: true,
     init: function () {
       const $table = $("#receiptsReview");
 
-      this.on("success", (_, { data, ...rest }) => {
+      this.on("success", (file, { data, ...rest }) => {
         if (rest.success === false) return;
         $table.DataTable().row.add(data).draw();
+        file.previewElement.parentNode.removeChild(file.previewElement);
       });
 
       this.on("error", (file, { error }) => {
@@ -119,6 +120,12 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
 
       this.on("removedfile", async (file) => {
+        const $previews = this.element.querySelectorAll(".dz-image-preview");
+        if (!$previews.length) {
+          this.element.classList.remove("dz-started");
+        }
+
+        if (!file.xhr) return;
         const { data } = JSON.parse(file.xhr.response);
         if (!data || !data.id) return;
         await api.deleteReceipt(data.id);
