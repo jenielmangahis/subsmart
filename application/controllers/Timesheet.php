@@ -2292,8 +2292,6 @@ class Timesheet extends MY_Controller
             } elseif ($attendance->status == 0) {
                 $execute = false;
             }
-            $user_location_address = $this->employeeAddress();
-            $usercoords = $this->timesheet_model->employeeCoordinates();
         }
         $clock_out = date('Y-m-d H:i:s');
 
@@ -2323,8 +2321,8 @@ class Timesheet extends MY_Controller
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
-                'user_location' => $usercoords,
-                'user_location_address' => $user_location_address,
+                'user_location' => $this->timesheet_model->employeeCoordinates(),
+                'user_location_address' => $this->employeeAddress(),
                 'entry_type' => $entry_type,
                 'company_id' => getLoggedCompanyID()
             );
@@ -2565,18 +2563,19 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key='.GOOGLE_MAP_API_KEY);
-        $output = json_decode($g_map);
-        $status = $output->status;
-        $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
-        return $address;
+        return $get_location->city." ".$get_location->zip.", ".$get_location->country;
+        // $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key='.GOOGLE_MAP_API_KEY);
+        // $output = json_decode($g_map);
+        // $status = $output->status;
+        // $address = ($status == "OK") ? $output->results[1]->formatted_address : 'Address not found';
+        // return $address;
 
-        $address = ($status == "OK") ? $output->results[1]->address_components : 'Address not found';
-        $longname = "";
-        foreach ($address as $row) {
-            $longname = $row->long_name;
-            break;
-        }
+        // $address = ($status == "OK") ? $output->results[1]->address_components : 'Address not found';
+        // $longname = "";
+        // foreach ($address as $row) {
+        //     $longname = $row->long_name;
+        //     break;
+        // }
     }
     private function employeeLongNameAddress()
     {
@@ -2584,21 +2583,22 @@ class Timesheet extends MY_Controller
         $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
-        $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key='.GOOGLE_MAP_API_KEY);
-        $output = json_decode($g_map);
-        $status = $output->status;
+        // $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key='.GOOGLE_MAP_API_KEY);
+        // $output = json_decode($g_map);
+        // $status = $output->status;
 
-        if ($status == "OK") {
-            $address = $output->results[1]->address_components;
-            $longname = "";
-            foreach ($address as $row) {
-                $longname = $row->long_name;
-                break;
-            }
-            return $longname;
-        } else {
-            return 'Address not found';
-        }
+        // if ($status == "OK") {
+        //     $address = $output->results[1]->address_components;
+        //     $longname = "";
+        //     foreach ($address as $row) {
+        //         $longname = $row->long_name;
+        //         break;
+        //     }
+        //     return $longname;
+        // } else {
+        //     return 'Address not found';
+        // }
+        return $get_location->city;
     }
     public function overtimeApproval()
     {

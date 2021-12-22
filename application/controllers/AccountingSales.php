@@ -581,9 +581,13 @@ SQL;
 
         $data = new stdClass();
         $data->labels = $labels;
-        if ($duration == "This month" || $duration == "Last month") {
+        if ($duration == "This month") {
             $data->prev_year_label = date("M Y", strtotime("-1 year"));
             $data->this_year_label = date("M Y");
+        } elseif ($duration == "Last month") {
+            $last_month = date("Y-m-d", strtotime("-1 month"));
+            $data->prev_year_label = date("M Y", strtotime("-1 year", strtotime($last_month)));
+            $data->this_year_label = date("M Y", strtotime($last_month));
         } else {
             $data->prev_year_label = date("Y", strtotime("-1 year"));
             $data->this_year_label = date("Y");

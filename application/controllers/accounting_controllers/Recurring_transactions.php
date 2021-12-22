@@ -204,7 +204,7 @@ class Recurring_transactions extends MY_Controller {
                 $next = date("m/d/Y", strtotime($item['next_date']));
 
                 // $startDate = date("m/d/Y", strtotime($item['start_date']));
-                $currentDate = date("m/d/Y");
+                // $currentDate = date("m/d/Y");
                 $every = $item['recurr_every'];
                 switch ($item['recurring_interval']) {
                     case 'daily' :
@@ -214,10 +214,10 @@ class Recurring_transactions extends MY_Controller {
                             $interval = "Every $every Days";
                         }
 
-                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
-                            $previous = $next;
-                            $next = date("m/d/Y", strtotime("$next +$every days"));
-                        }
+                        // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                        //     $previous = $next;
+                        //     $next = date("m/d/Y", strtotime("$next +$every days"));
+                        // }
                     break;
                     case 'weekly' :
                         $interval = 'Every Week';
@@ -647,5 +647,222 @@ class Recurring_transactions extends MY_Controller {
         }
 
         echo json_encode($return);
+    }
+
+    public function cron_recurring_transactions()
+    {
+        $transactions = $this->accounting_recurring_transactions_model->get_by_next_date(date('Y-m-d'));
+
+        foreach($transactions as $transaction) {
+            switch($transaction->txn_type) {
+                case 'deposit' :
+                    $this->occur_deposit($transaction->txn_id);
+                break;
+                case 'transfer' :
+                    $this->occur_transfer($transaction->txn_id);
+                break;
+                case 'journal entry' :
+                    $this->occur_journal_entry($transaction->txn_id);
+                break;
+                case 'expense' :
+                    $this->occur_expense($transaction->txn_id);
+                break;
+                case 'check' :
+                    $this->occur_check($transaction->txn_id);
+                break;
+                case 'bill' :
+                    $this->occur_bill($transaction->txn_id);
+                break;
+                case 'purchase order' :
+                    $this->occur_purchase_order($transaction->txn_id);
+                break;
+                case 'vendor credit' :
+                    $this->occur_vendor_credit($transaction->txn_id);
+                break;
+                case 'credit card credit' :
+                    $this->occur_credit_card_credit($transaction->txn_id);
+                break;
+            }
+        }
+    }
+
+    private function occur_deposit($depositId)
+    {
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $depositId);
+        $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
+
+        $insertData = [
+            'company_id' => $deposit->company_id,
+            'account_id' => $deposit->account_id,
+            'date' => date("Y-m-d"),
+            'tags' => $deposit->tags,
+            'total_amount' => $deposit->total_amount,
+            'cash_back_account_id' => $deposit->cash_back_account_id,
+            'cash_back_memo' => $deposit->cash_back_memo,
+            'cash_back_amount' => $deposit->cash_back_amount,
+            'memo' => $deposit->memo,
+            'status' => 1
+        ];
+
+        $newDeposit = $this->accounting_bank_deposit_model->create($insertData);
+
+        if($newDeposit) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Deposit',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newDeposit,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $depositToAcc = $this->chart_of_accounts_model->getById($deposit->account_id);
+            $depositData = [
+                'id' => $depositToAcc->id,
+                'company_id' => $depositToAcc->company_id,
+                'balance' => floatval($depositToAcc->balance) + floatval($deposit->total_amount)
+            ];
+            $this->chart_of_accounts_model->updateBalance($depositData);
+
+            if ($deposit->cash_back_amount !== "") {
+                $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+                $cashBackData = [
+                    'id' => $cashBackAccount->id,
+                    'company_id' => $cashBackAccount->company_id,
+                    'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($deposit->cash_back_amount) : floatval($cashBackAccount->balance) - floatval($deposit->cash_back_amount)
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($cashBackData);
+            }
+
+            $fundsData = [];
+            foreach ($funds as $fund) {
+                $fundsData[] =[
+                    'bank_deposit_id' => $newDeposit,
+                    'received_from_key' => $fund->received_from_key,
+                    'received_from_id' => $fund->received_from_id,
+                    'received_from_account_id' => $fund->received_from_account_id,
+                    'description' => $fund->description,
+                    'payment_method' => $fund->payment_method,
+                    'ref_no' => $fund->ref_no,
+                    'amount' => $fund->amount
+                ];
+
+                $account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+                $accountBalance = $account->account_id !== "7" ? floatval($account->balance) - floatval($fund->amount) : floatval($account->balance) + floatval($fund->amount);
+                $accountBalance = number_format($accountBalance, 2, '.', ',');
+                $accountData = [
+                    'id' => $fund->received_from_account_id,
+                    'company_id' => $account->company_id,
+                    'balance' => $accountBalance
+                ];
+                $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
+            }
+
+            $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+        }
+    }
+
+    private function occur_transfer($transferId)
+    {
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transferId);
+
+        $insertData = [
+            'company_id' => $transfer->company_id,
+            'transfer_from_account_id' => $transfer->transfer_from_account_id,
+            'transfer_to_account_id' => $transfer->transfer_to_account_id,
+            'transfer_amount' => $transfer->transfer_amount,
+            'transfer_date' => date("Y-m-d"),
+            'transfer_memo' => $transfer->memo,
+            'status' => 1
+        ];
+
+        $newTransfer = $this->accounting_transfer_funds_model->create($insertData);
+
+        if($newTransfer) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Transfer',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newTransfer,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $transferFromAcc = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+            $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+            $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($transfer->transfer_amount) : floatval($transferFromAcc->balance) + floatval($transfer->transfer_amount);
+            $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($transfer->transfer_amount) : floatval($transferToAcc->balance) - floatval($transfer->transfer_amount);
+
+            $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+            $transferToBal = number_format($transferToBal, 2, '.', ',');
+
+            $transferFromAccData = [
+                'id' => $transferFromAcc->id,
+                'company_id' => $transferFromAcc->company_id,
+                'balance' => $transferFromBal
+            ];
+            $transferToAccData = [
+                'id' => $transferToAcc->id,
+                'company_id' => $transferToAcc->company_id,
+                'balance' => $transferToBal
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+            $this->chart_of_accounts_model->updateBalance($transferToAccData);
+        }
+    }
+
+    private function occur_journal_entry($journalId)
+    {
+
+    }
+
+    private function occur_expense($expenseId)
+    {
+
+    }
+
+    private function occur_check($checkId)
+    {
+
+    }
+
+    private function occur_bill($billId)
+    {
+
+    }
+
+    private function occur_purchase_order($purchaseOrderId)
+    {
+
+    }
+
+    private function occur_vendor_credit($vCreditId)
+    {
+
+    }
+
+    private function occur_credit_card_credit($ccCreditId)
+    {
+
     }
 }
