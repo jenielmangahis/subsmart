@@ -1171,7 +1171,23 @@ class Accounting_modals extends MY_Controller
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
 
             if ($transferId) {
-                if(!isset($date['template_name'])) {
+                if (isset($data['attachments']) && is_array($data['attachments'])) {
+                    $order = 1;
+                    foreach ($data['attachments'] as $attachmentId) {
+                        $linkAttachmentData = [
+                            'type' => 'Transfer',
+                            'attachment_id' => $attachmentId,
+                            'linked_id' => $transferId,
+                            'order_no' => $order
+                        ];
+
+                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                        $order++;
+                    }
+                }
+
+                if(!isset($data['template_name'])) {
                     $transferFromAcc = $this->chart_of_accounts_model->getById($data['transfer_from_account']);
                     $transferToAcc = $this->chart_of_accounts_model->getById($data['transfer_to_account']);
 
@@ -1194,25 +1210,7 @@ class Accounting_modals extends MY_Controller
 
                     $this->chart_of_accounts_model->updateBalance($transferFromAccData);
                     $this->chart_of_accounts_model->updateBalance($transferToAccData);
-                }
-
-                if (isset($data['attachments']) && is_array($data['attachments'])) {
-                    $order = 1;
-                    foreach ($data['attachments'] as $attachmentId) {
-                        $linkAttachmentData = [
-                            'type' => 'Transfer',
-                            'attachment_id' => $attachmentId,
-                            'linked_id' => $transferId,
-                            'order_no' => $order
-                        ];
-
-                        $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
-
-                        $order++;
-                    }
-                }
-
-                if (isset($data['template_name'])) {
+                } else {
                     if($data['recurring_type'] !== 'unscheduled') {
                         $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
@@ -1233,8 +1231,8 @@ class Accounting_modals extends MY_Controller
                                     'saturday'
                                 ];
         
-                                $day = $item['recurring_day'];
-                                $dayNum = array_search($day, $days);;
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
                                 do {
@@ -1245,10 +1243,18 @@ class Accounting_modals extends MY_Controller
                                 if($data['recurring_week'] === 'day') {
                                     $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
                                     $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
                                 } else {
                                     $week = $data['recurring_week'];
                                     $day = $data['recurring_day'];
-                                    $next = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
                                 }
                             break;
                             case 'yearly' :
@@ -1280,6 +1286,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -1519,6 +1526,65 @@ class Accounting_modals extends MY_Controller
 
             if ($entryId > 0) {
                 if (isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -1535,6 +1601,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -1571,7 +1638,7 @@ class Accounting_modals extends MY_Controller
                         'name_id' => $name[1]
                     ];
 
-                    if(!isset($date['template_name'])) {
+                    if(!isset($data['template_name'])) {
                         $account = $this->chart_of_accounts_model->getById($value);
                         if($account->account_id !== "7") {
                             $newBalance = floatval($account->balance) - floatval($data['credits'][$key]);
@@ -1684,6 +1751,65 @@ class Accounting_modals extends MY_Controller
 
             if ($depositId > 0) {
                 if (isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -1700,6 +1826,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -2635,6 +2762,65 @@ class Accounting_modals extends MY_Controller
 
                     $this->chart_of_accounts_model->updateBalance($paymentAccData);
                 } else {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -2651,6 +2837,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -2885,6 +3072,65 @@ class Accounting_modals extends MY_Controller
                         $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
                     }
                 } else {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -2901,6 +3147,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -3127,6 +3374,65 @@ class Accounting_modals extends MY_Controller
     
                     $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
                 } else {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -3143,6 +3449,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -3698,6 +4005,65 @@ class Accounting_modals extends MY_Controller
 
                     $this->vendors_model->updateVendor($vendor->id, $vendorData);
                 } else {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -3714,6 +4080,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -3917,6 +4284,65 @@ class Accounting_modals extends MY_Controller
     
             if ($purchaseOrderId) {
                 if(isset($data['template_name'])) {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -3933,6 +4359,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     
@@ -4115,6 +4542,65 @@ class Accounting_modals extends MY_Controller
         
                     $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
                 } else {
+                    if($data['recurring_type'] !== 'unscheduled') {
+                        $startDate = date("m/d/Y", strtotime($data['start_date']));
+                        $currentDate = date("m/d/Y");
+                        $every = $data['recurr_every'];
+
+                        switch($data['recurring_interval']) {
+                            case 'daily' :
+                                $next = $startDate;
+                            break;
+                            case 'weekly' :
+                                $days = [
+                                    'sunday',
+                                    'monday',
+                                    'tuesday',
+                                    'wednesday',
+                                    'thursday',
+                                    'friday',
+                                    'saturday'
+                                ];
+        
+                                $day = $data['recurring_day'];
+                                $dayNum = array_search($day, $days);
+                                $next = $startDate;
+        
+                                do {
+                                    $next = date("m/d/Y", strtotime("$next +1 day"));
+                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                            break;
+                            case 'monthly' :
+                                if($data['recurring_week'] === 'day') {
+                                    $day = $data['recurring_day'] === 'last' ? 't' : $data['recurring_day'];
+                                    $next = date("m/$day/Y", strtotime($startDate));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/$day/Y", strtotime("$next +$every months"));
+                                    }
+                                } else {
+                                    $week = $data['recurring_week'];
+                                    $day = $data['recurring_day'];
+                                    $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+
+                                    if(strtotime($currentDate) > strtotime($next)) {
+                                        $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime("$startDate +$every months"))));
+                                    }
+                                }
+                            break;
+                            case 'yearly' :
+                                $month = $data['recurring_month'];
+                                $day = $data['recurring_day'];
+                                $previous = date("$month/$day/Y", strtotime($startDate));
+                                $next = date("$month/$day/Y", strtotime($startDate));
+
+                                if(strtotime($currentDate) > strtotime($next)) {
+                                    $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                                }
+                            break;
+                        }
+                    }
+
                     $recurringData = [
                         'company_id' => getLoggedCompanyID(),
                         'template_name' => $data['template_name'],
@@ -4131,6 +4617,7 @@ class Accounting_modals extends MY_Controller
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'next_date' => $next,
                         'status' => 1
                     ];
     

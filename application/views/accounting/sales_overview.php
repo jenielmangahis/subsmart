@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
 <div class="wrapper" role="wrapper">
 
 	<!-- page wrapper start -->
@@ -94,10 +95,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										more than <?=date("M d", strtotime("first day of previous month"))?>
 										- <?=date("d, Y", strtotime("last day of previous month"))?>
 									</div>
-									<div id="chartContainer1" class="dynamic-graph-container"
-										style="width: 100%; height:200px;">
+									<div id="chartContainer11" class="dynamic-graph-container"
+										style="display:none;width: 100%; height:200px;">
 
 									</div>
+									<canvas id="overview_chart" style="height: 200px; width: 100%;"></canvas>
 									<div class="no-graph">
 										<div class="text">No data found.</div>
 									</div>
@@ -194,37 +196,38 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     }?>">
 										<div class="row">
 											<div class="col-md-6">
-											<div class="invoices-365-segment">
-												<div class="sigments">
-													<div class="last-365days">
-														<div class="bold">$<?=number_format($unpaid_last_365, 2)?>
-															Unpaid</div>
-													</div>
-													<div class="text">
-														<div class="text" style="padding: 0 10px;">Last 365 days</div>
-													</div>
-												</div>
-												<div style="padding: 20px 0;">
-													<div class="row">
-														<div class="col-md-6">
-															<div class="content-monitary-highlight small">
-																$<?=number_format($due_last_365, 2)?>
-															</div>
-															<div class="text">Overdue</div>
+												<div class="invoices-365-segment">
+													<div class="sigments">
+														<div class="last-365days">
+															<div class="bold">$<?=number_format($unpaid_last_365, 2)?>
+																Unpaid</div>
 														</div>
-														<div class="col-md-6">
-															<div class="content-monitary-highlight small"
-																style="text-align: right;">
-																$<?=number_format($not_due_last_365, 2)?>
-															</div>
-															<div class="text" style="text-align: right;">Not due yet
+														<div class="text">
+															<div class="text" style="padding: 0 10px;">Last 365 days
 															</div>
 														</div>
 													</div>
-												</div>
-												<div class="invoices-bars">
-													<div class="progress">
-														<?php
+													<div style="padding: 20px 0;">
+														<div class="row">
+															<div class="col-md-6">
+																<div class="content-monitary-highlight small">
+																	$<?=number_format($due_last_365, 2)?>
+																</div>
+																<div class="text">Overdue</div>
+															</div>
+															<div class="col-md-6">
+																<div class="content-monitary-highlight small"
+																	style="text-align: right;">
+																	$<?=number_format($not_due_last_365, 2)?>
+																</div>
+																<div class="text" style="text-align: right;">Not due yet
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="invoices-bars">
+														<div class="progress">
+															<?php
                                                         if ($due_last_365 == 0 && $not_due_last_365==0) {
                                                             $progress_overdue =50;
                                                             $progress_not_due =50;
@@ -233,17 +236,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $progress_not_due =($not_due_last_365/($not_due_last_365+$due_last_365))*100;
                                                         }
                                                         ?>
-														<div class="progress-bar orange" role="progressbar"
-															style="width: <?=$progress_overdue?>%"
-															aria-valuenow="<?=$progress_overdue?>"
-															aria-valuemin="0" aria-valuemax="100">
+															<div class="progress-bar orange" role="progressbar"
+																style="width: <?=$progress_overdue?>%"
+																aria-valuenow="<?=$progress_overdue?>"
+																aria-valuemin="0" aria-valuemax="100">
+															</div>
+															<div class="progress-bar default" role="progressbar"
+																style="width: <?=$progress_not_due?>%"
+																aria-valuenow="<?=$progress_not_due?>"
+																aria-valuemin="0" aria-valuemax="100"></div>
 														</div>
-														<div class="progress-bar default" role="progressbar"
-															style="width: <?=$progress_not_due?>%"
-															aria-valuenow="<?=$progress_not_due?>"
-															aria-valuemin="0" aria-valuemax="100"></div>
 													</div>
-												</div></div>
+												</div>
 											</div>
 											<div class="col-md-6">
 												<div class="invoices-30-segment">

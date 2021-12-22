@@ -11710,15 +11710,11 @@ class Accounting extends MY_Controller
                     if ($the_start_date < date("Y-m-d")) {
                         $data_projected[]=null;
                     }
-                    $index=date(
-                        "d",
-                        strtotime($the_start_date)
-                    );
+                    $index=date("d",strtotime($the_start_date));
                     $total_values[$index-1] +=$value;
                 }
             }
-            if ($the_start_date>=
-                                    $date_base_projected && $the_start_date <= date("Y-m-d")) {
+            if ($the_start_date>=$date_base_projected && $the_start_date <= date("Y-m-d")) {
                 if ($prev_amount_receive==-1) {
                     $total_balance=$value;
                     $prev_amount_receive=$amount_received;
@@ -11866,14 +11862,16 @@ class Accounting extends MY_Controller
                 $data_values[] = $data_values[count($data_values)-1]+$value;
                 $data_values_money_in[] =$amount_received+0;
                 $data_values_money_out[] =$expense+0;
-                if ($the_start_date < date("Y-m-d")) {
+                if ($the_start_date == date("Y-m-d")) {
+                    $data_projected[] = $data_values[count($data_values)-1] ;
+                }elseif($the_start_date < date("Y-m-d")){
                     $data_projected[] = null;
                 }
                 $index = date("d", strtotime($the_start_date));
                 $total_values[$index-1] += $data_values[count($data_values)-1]+$value;
                 $current_balance=$data_values[count($data_values)-1]+$value;
             }
-            if ($the_start_date >= date("Y-m-d")) {
+            if ($the_start_date > date("Y-m-d")) {
                 if ($date_range== "1") {
                     $date_range = count($total_values);
                 }

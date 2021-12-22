@@ -148,7 +148,6 @@ class Accounting_receive_payment_model extends MY_Model
         $this->db->order_by('accounting_receive_payment.id', 'ASC');
         $query = $this->db->get();
         return $query->result();
-
     }
     public function update_payment_method($data, $receive_payment_id)
     {
@@ -171,6 +170,15 @@ class Accounting_receive_payment_model extends MY_Model
             return $query->result();
         }
     }
+    public function get_sum_received_payments($company_id, $start_date, $end_date)
+    {
+        if ($company_id != "") {
+            $conditions ="AND (payment_date >= '".$start_date."' AND payment_date <=  '".$end_date."')";
+            $sql="SELECT SUM(amount) as total_sum FROM accounting_receive_payment WHERE company_id = ".$company_id." ".$conditions." ORDER BY payment_date ASC";
+            $query = $this->db->query($sql);
+            return $query->row()->total_sum;
+        }
+    }
 
     public function amount_received_in_a_day($date)
     {
@@ -184,17 +192,16 @@ class Accounting_receive_payment_model extends MY_Model
         $query = $this->db->query($sql);
         return $query->row();
     }
-    public function amount_received_in_a_month($from,$to)
+    public function amount_received_in_a_month($from, $to)
     {
         $sql="SELECT SUM(amount) as money_in FROM `accounting_receive_payment` WHERE payment_date >= '".$from."' AND payment_date <= '".$to."'";
         $query = $this->db->query($sql);
         return $query->row();
     }
-    public function amount_expense_in_a_month($from,$to)
+    public function amount_expense_in_a_month($from, $to)
     {
         $sql="SELECT SUM(total_amount) as money_out FROM `accounting_expense` WHERE payment_date >= '".$from."' AND payment_date <= '".$to."'";
         $query = $this->db->query($sql);
         return $query->row();
     }
-    
 }
