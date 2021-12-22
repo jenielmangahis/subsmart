@@ -200,7 +200,10 @@ class Recurring_transactions extends MY_Controller {
                     break;
                 }
 
-                $startDate = date("m/d/Y", strtotime($item['start_date']));
+                $previous = !is_null($item['previous_date']) && $item['previous_date'] !== '' ? date("m/d/Y", strtotime($item['previous_date'])) : null;
+                $next = date("m/d/Y", strtotime($item['next_date']));
+
+                // $startDate = date("m/d/Y", strtotime($item['start_date']));
                 $currentDate = date("m/d/Y");
                 $every = $item['recurr_every'];
                 switch ($item['recurring_interval']) {
@@ -211,8 +214,6 @@ class Recurring_transactions extends MY_Controller {
                             $interval = "Every $every Days";
                         }
 
-                        $previous = $startDate;
-                        $next = $startDate;
                         for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
                             $previous = $next;
                             $next = date("m/d/Y", strtotime("$next +$every days"));
@@ -225,41 +226,41 @@ class Recurring_transactions extends MY_Controller {
                             $interval = "Every $every Weeks";
                         }
 
-                        $days = [
-                            'sunday',
-                            'monday',
-                            'tuesday',
-                            'wednesday',
-                            'thursday',
-                            'friday',
-                            'saturday'
-                        ];
+                        // $days = [
+                        //     'sunday',
+                        //     'monday',
+                        //     'tuesday',
+                        //     'wednesday',
+                        //     'thursday',
+                        //     'friday',
+                        //     'saturday'
+                        // ];
 
-                        $day = $item['recurring_day'];
-                        $dayNum = array_search($day, $days);;
-                        $previous = $startDate;
-                        $next = $startDate;
+                        // $day = $item['recurring_day'];
+                        // $dayNum = array_search($day, $days);;
+                        // $previous = $startDate;
+                        // $next = $startDate;
 
-                        if(strtotime($currentDate) < strtotime($startDate)) {
-                            do {
-                                $previous = date("m/d/Y", strtotime("$previous +1 day"));
-                                $next = date("m/d/Y", strtotime("$next +1 day"));
-                            } while(intval(date("w", strtotime($next))) !== $dayNum);
-                        } else {
-                            if(intval(date("w", strtotime($currentDate))) === $dayNum) {
-                                $previous = date("m/d/Y", strtotime($currentDate));
-                                $next = date("m/d/Y", strtotime($currentDate));
-                            } else {
-                                $previous = date("m/d/Y", strtotime("next $day"));
-                                $next = date("m/d/Y", strtotime("next $day"));
-                            }
-                        }
+                        // if(strtotime($currentDate) < strtotime($startDate)) {
+                        //     do {
+                        //         $previous = date("m/d/Y", strtotime("$previous +1 day"));
+                        //         $next = date("m/d/Y", strtotime("$next +1 day"));
+                        //     } while(intval(date("w", strtotime($next))) !== $dayNum);
+                        // } else {
+                        //     if(intval(date("w", strtotime($currentDate))) === $dayNum) {
+                        //         $previous = date("m/d/Y", strtotime($currentDate));
+                        //         $next = date("m/d/Y", strtotime($currentDate));
+                        //     } else {
+                        //         $previous = date("m/d/Y", strtotime("next $day"));
+                        //         $next = date("m/d/Y", strtotime("next $day"));
+                        //     }
+                        // }
 
-                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
-                            $previous = $next;
+                        // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                        //     $previous = $next;
 
-                            $next = date("m/d/Y", strtotime("$next +$every weeks"));
-                        }
+                        //     $next = date("m/d/Y", strtotime("$next +$every weeks"));
+                        // }
                     break;
                     case 'monthly' :
                         $interval = 'Every Month';
@@ -268,39 +269,39 @@ class Recurring_transactions extends MY_Controller {
                             $interval = "Every $every Months";
                         }
 
-                        if($item['recurring_week'] === 'day') {
-                            $day = $item['recurring_day'] === 'last' ? 't' : $item['recurring_day'];
-                            $previous = date("m/$day/Y", strtotime($startDate));
-                            $next = date("m/$day/Y", strtotime($startDate));
-                        } else {
-                            $week = $item['recurring_week'];
-                            $day = $item['recurring_day'];
-                            $previous = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
-                            $next = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
-                        }
+                        // if($item['recurring_week'] === 'day') {
+                        //     $day = $item['recurring_day'] === 'last' ? 't' : $item['recurring_day'];
+                        //     $previous = date("m/$day/Y", strtotime($startDate));
+                        //     $next = date("m/$day/Y", strtotime($startDate));
+                        // } else {
+                        //     $week = $item['recurring_week'];
+                        //     $day = $item['recurring_day'];
+                        //     $previous = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                        //     $next = date("m/1/Y", strtotime("$week $day ".date("Y-m", strtotime($startDate))));
+                        // }
 
-                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
-                            $previous = $next;
+                        // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                        //     $previous = $next;
 
-                            if($item['recurring_week'] === 'day') {
-                                $next = date("m/$day/Y", strtotime("$next +$every months"));
-                            } else {
-                                $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($next))));
-                            }
-                        }
+                        //     if($item['recurring_week'] === 'day') {
+                        //         $next = date("m/$day/Y", strtotime("$next +$every months"));
+                        //     } else {
+                        //         $next = date("m/d/Y", strtotime("$week $day ".date("Y-m", strtotime($next))));
+                        //     }
+                        // }
                     break;
                     case 'yearly' :
                         $interval = 'Every Year';
 
-                        $month = $item['recurring_month'];
-                        $day = $item['recurring_day'];
-                        $previous = date("$month/$day/Y", strtotime($startDate));
-                        $next = date("$month/$day/Y", strtotime($startDate));
+                        // $month = $item['recurring_month'];
+                        // $day = $item['recurring_day'];
+                        // // $previous = date("$month/$day/Y", strtotime($startDate));
+                        // // $next = date("$month/$day/Y", strtotime($startDate));
 
-                        for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
-                            $previous = $next;
-                            $next = date("$month/$day/Y", strtotime("$next +1 year"));
-                        }
+                        // // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
+                        // //     $previous = $next;
+                        // //     $next = date("$month/$day/Y", strtotime("$next +1 year"));
+                        // // }
                     break;
                     default :
                         $interval = '';
@@ -317,8 +318,8 @@ class Recurring_transactions extends MY_Controller {
                             'recurring_type' => ucfirst($item['recurring_type']),
                             'txn_type' => ucwords($item['txn_type']),
                             'recurring_interval' => $interval,
-                            'previous_date' => strtotime($startDate) >= strtotime($previous) || strtotime($previous) === strtotime($next) ? '' : $previous,
-                            'next_date' => $item['end_type'] === 'by' && strtotime($next)  > strtotime($item['end_date']) || $item['end_type'] === 'after' && $i >= intval($item['max_occurences']) ? '' : $next,
+                            'previous_date' => $previous,
+                            'next_date' => $next,
                             'customer_vendor' => $payeeName,
                             'amount' => $total
                         ];
@@ -330,8 +331,8 @@ class Recurring_transactions extends MY_Controller {
                         'recurring_type' => ucfirst($item['recurring_type']),
                         'txn_type' => ucwords($item['txn_type']),
                         'recurring_interval' => $interval,
-                        'previous_date' => strtotime($startDate) >= strtotime($previous) || strtotime($previous) === strtotime($next) ? '' : $previous,
-                        'next_date' => $item['end_type'] === 'by' && strtotime($next)  > strtotime($item['end_date']) || $item['end_type'] === 'after' && $i >= intval($item['max_occurences']) ? '' : $next,
+                        'previous_date' => $previous,
+                        'next_date' => $next,
                         'customer_vendor' => $payeeName,
                         'amount' => $total
                     ];
