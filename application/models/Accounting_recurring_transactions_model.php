@@ -65,4 +65,12 @@ class Accounting_recurring_transactions_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function get_by_next_date($nextDate)
+    {
+        $this->db->where('next_date', $nextDate);
+        $this->db->where('status', 1);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
 }
