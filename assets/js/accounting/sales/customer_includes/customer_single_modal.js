@@ -740,6 +740,7 @@ function single_customer_get_customers_details(customer_id) {
         dataType: "json",
         data: { customer_id: customer_id },
         success: function(data) {
+            $('#customer-single-modal .customer-details-section .attachement-file-section div.attachement-viewer').html(data.attachements_html);
             $("#customer-single-modal .seaction-above-table .print-export-settings-btns button.export-btn").attr("data-customer-name", data.customer_details[0]['first_name'] + " " + data.customer_details[0]['last_name']);
             $("#customer-single-modal .seaction-above-table .print-export-settings-btns button.print-btn").attr("data-customer-name", data.customer_details[0]['last_name'] + ", " + data.customer_details[0]['first_name']);
             $("#customer-single-modal .seaction-above-table .print-export-settings-btns button.print-btn").attr("data-company-name", data.company_details['business_name']);
@@ -1502,3 +1503,86 @@ $(document).on('click', '#customer-single-modal .single-customer-info-section .b
         get_receive_payment(customer_id, receive_payment_id, invoice_id);
     }
 });
+
+$(document).on("click", "#customer-single-modal .customer-details-section .attachement-file-section button.attachment-btn", function(event) {
+    // $(this).preventDefault();
+    $("#customer-single-modal .customer-details-section input[name='attachment-file']").trigger('click');
+});
+$(document).on("click", "#customer-single-modal .customer-details-section .attachement-file-section .attachement-viewer .delete", function(event) {
+    var file_name = $(this).parent("div").attr("data-file-name");
+    Swal.fire({
+        title: "Delete?",
+        showCancelButton: true,
+        imageUrl: $(this).parent("div").children("img").attr("src"),
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#2ca01c",
+        confirmButtonText: "Delete",
+    }).then((result) => {
+        if (result.value) {
+            $(this).parent("div").remove();
+            $.ajax({
+                url: baseURL + "/accounting/delete_customer_info_attachement",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    filename: file_name,
+                    customer_id: $("#customer-single-modal input[name='customer_id']").val()
+                },
+                success: function(data) {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: "Success",
+                        html: "Deleted!",
+                        icon: "success",
+                    });
+                }
+            });
+        }
+    });
+});
+$(document).on("change", "#customer-single-modal .customer-details-section input[name='attachment-file']", function(event) {;
+    new_customer_info_attachment("#customer-single-modal .customer-details-section", "customer_info");
+});
+
+function new_customer_info_attachment(target_form) {
+    var formDatas = new FormData();
+    $(target_form + " .attachement-file-section input[name='attachement-filenames']").val("");
+    var ctr = 0;
+    for (var i = 0; i < $(target_form + " input[name='attachment-file']").get(0).files.length; ++i) {
+        formDatas.append('file', $(target_form + " input[name='attachment-file']").get(0).files[i]);
+        formDatas.append('customer_id', $("#customer-single-modal input[name='customer_id']").val());
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: baseURL + "/accounting/add_customer_info_attachement",
+            dataType: "json",
+            data: formDatas,
+            processData: false,
+            contentType: false,
+            cache: false,
+            beforeSend: function() {
+                ctr = 0;
+            },
+            success: function(data) {
+                var filenmae_val = $(target_form + " .attachement-file-section input[name='attachement-filenames']").val();
+                if (filenmae_val == "") {
+                    $(target_form + " .attachement-file-section input[name='attachement-filenames']").val(data.uniquesavename + "." + data.ext);
+                } else {
+                    $(target_form + " .attachement-file-section input[name='attachement-filenames']").val(data.uniquesavename + "." + data.ext + "," + filenmae_val);
+                }
+                var viewer_images = $(target_form + ' .attachement-file-section div.attachement-viewer').html();
+                if (data.ext != "jpg" && data.ext != "jpeg" && data.ext != "png" && data.ext != "JPG" && data.ext != "JPEG" && data.ext != "PNG") {
+                    viewer_images += '<div class="img-holder" data-file-name="' + data.uniquesavename + "." + data.ext + '"><div class="delete">x</div><img src="' + baseURL + 'assets/img/accounting/customers/document.png" ></div>';
+                } else {
+                    viewer_images += '<div class="img-holder" data-file-name="' + data.uniquesavename + "." + data.ext + '"><div class="delete">x</div><img src="' + baseURL + data.destination + '"></div>';
+                }
+                $(target_form + ' .attachement-file-section div.attachement-viewer').html(viewer_images);
+
+            },
+            error: function(e) {
+                console.log("ERROR : ", e);
+            }
+        });
+    }
+}

@@ -199,7 +199,7 @@
                                             <div class="info-value" data-for="notes"><textarea name="notes" rows="2"
                                                     placeholder="Add notes"></textarea></div>
                                         </div>
-                                        <div class="file-upload">
+                                        <!-- <div class="file-upload">
                                             <button class="" type="button"
                                                 onclick="$('#customer_receive_payment_modal .file-upload-input').trigger( 'click' )">
                                                 <i class="fa fa-paperclip" aria-hidden="true"></i> Attachments
@@ -219,6 +219,24 @@
                                                     <button type="button" onclick="removeUpload()"
                                                         class="remove-image">Remove <span class="image-title">Uploaded
                                                             File</span></button>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div class="row no-margin">
+                                            <div class="col-md-12 no-padding">
+                                                <div class="attachement-file-section">
+                                                    <div class="label">
+                                                        <i class="fa fa-paperclip" aria-hidden="true"></i> Attachement
+                                                    </div>
+                                                    <button type="button" class="attachment-btn">
+                                                        <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                                                    </button>
+                                                    <input type="file" class="form-control" name="attachment-file"
+                                                        multiple>
+                                                    <div class="attachement-viewer">
+                                                    </div>
+                                                    <input type="text" name="attachement-filenames"
+                                                        style="display: none;">
                                                 </div>
                                             </div>
                                         </div>
@@ -525,7 +543,8 @@
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="tbl-colum-txn-type"
                                                                     id="tbl-colum-txn-type" data-column="txn-type">
-                                                                <label for="tbl-colum-txn-type"><span>Txn Type</span></label>
+                                                                <label for="tbl-colum-txn-type"><span>Txn
+                                                                        Type</span></label>
                                                             </div>
                                                         </div>
 
@@ -533,7 +552,8 @@
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="tbl-colum-interval"
                                                                     id="tbl-colum-interval" data-column="interval">
-                                                                <label for="tbl-colum-interval"><span>Interval</span></label>
+                                                                <label
+                                                                    for="tbl-colum-interval"><span>Interval</span></label>
                                                             </div>
                                                         </div>
 
@@ -541,14 +561,16 @@
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="tbl-colum-prev-date"
                                                                     id="tbl-colum-prev-date" data-column="prev-date">
-                                                                <label for="tbl-colum-prev-date"><span>Previous Date</span></label>
+                                                                <label for="tbl-colum-prev-date"><span>Previous
+                                                                        Date</span></label>
                                                             </div>
                                                         </div>
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="tbl-colum-next-date"
                                                                     id="tbl-colum-next-date" data-column="next-date">
-                                                                <label for="tbl-colum-next-date"><span>Next date</span></label>
+                                                                <label for="tbl-colum-next-date"><span>Next
+                                                                        date</span></label>
                                                             </div>
                                                         </div>
 
@@ -556,7 +578,8 @@
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="checkbox" name="tbl-colum-amount"
                                                                     id="tbl-colum-amount" data-column="amount">
-                                                                <label for="tbl-colum-amount"><span>Amount</span></label>
+                                                                <label
+                                                                    for="tbl-colum-amount"><span>Amount</span></label>
                                                             </div>
                                                         </div>
 

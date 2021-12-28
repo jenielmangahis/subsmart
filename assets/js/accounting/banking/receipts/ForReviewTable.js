@@ -540,6 +540,12 @@ export class ForReviewTable {
       .find("th .receiptsTable__checkbox")
       .get(0);
 
+    if ($rows.length === 0) {
+      $mainCheckbox.indeterminate = false;
+      $mainCheckbox.checked = false;
+      return;
+    }
+
     if ($selected.length === $rows.length) {
       $mainCheckbox.indeterminate = false;
       $mainCheckbox.checked = true;

@@ -10178,11 +10178,26 @@ class Accounting extends MY_Controller
             }
             $open_balance += ($receivable_payment - $total_amount_received);
             $counter++;
+            $attachment = $cus->attachment;
+        }
+        $attachements_html="";
+        if($attachment != ""){
+            $files = explode(",",$attachment);
+            for($i=0;$i<count($files);$i++){
+                $ext=explode(".",$files[$i]);
+                if($ext[1] != "jpg" && $ext[1] != "jpeg" && $ext[1] != "png" && $ext[1] != "JPG" && $ext[1] != "JPEG" && $ext[1] != "PNG"){
+                    $attachements_html.='<div class="img-holder" data-file-name="'.$files[$i].'"><div class="delete">x</div><img src="'.base_url().'assets/img/accounting/customers/document.png" ></div>';
+                }else{
+                    $attachements_html.='<div class="img-holder" data-file-name="'.$files[$i].'"><div class="delete">x</div><img src="'.base_url().'/uploads/accounting/attachments/final-attachments/'.$files[$i].'" ></div>';
+                }
+                
+            }
         }
         $data = new stdClass();
         $data->open_balance = number_format(($open_balance), 2);
         $data->overdue = number_format(($overdue), 2);
         $data->customer_details = $customer;
+        $data->attachements_html = $attachements_html;
         $data->customer_accounting_details = $this->accounting_customers_model->get_customer_accounting_details($customer_id);
         $data->company_details = $this->accounting_customers_model->get_customer_by_id($customer_id);
         echo json_encode($data);
@@ -11710,7 +11725,7 @@ class Accounting extends MY_Controller
                     if ($the_start_date < date("Y-m-d")) {
                         $data_projected[]=null;
                     }
-                    $index=date("d",strtotime($the_start_date));
+                    $index=date("d", strtotime($the_start_date));
                     $total_values[$index-1] +=$value;
                 }
             }
@@ -11864,7 +11879,7 @@ class Accounting extends MY_Controller
                 $data_values_money_out[] =$expense+0;
                 if ($the_start_date == date("Y-m-d")) {
                     $data_projected[] = $data_values[count($data_values)-1] ;
-                }elseif($the_start_date < date("Y-m-d")){
+                } elseif ($the_start_date < date("Y-m-d")) {
                     $data_projected[] = null;
                 }
                 $index = date("d", strtotime($the_start_date));
@@ -11884,7 +11899,8 @@ class Accounting extends MY_Controller
                     $data_values[] = null;
                 } elseif ($the_start_date == date("Y-m-d")) {
                     $value = $amount_received+0;
-                }$current_balance+=$value;
+                }
+                $current_balance+=$value;
                 $data_projected[] = $current_balance;
             }
             $the_start_date = date("Y-m-d", strtotime("+ 1 day", strtotime($the_start_date)));
@@ -11918,6 +11934,69 @@ class Accounting extends MY_Controller
             $data->ext = $ext;
             $data->uniquesavename = $uniquesavename;
         }
+        echo json_encode($data);
+    }
+    public function add_customer_info_attachement()
+    {
+        $data = new stdClass();
+        if (0 < $_FILES['file']['error']) {
+            $data->error = 'Error: ' . $_FILES['file']['error'] . '<br>';
+        } else {
+            $uniquesavename = time() . uniqid(rand());
+            $path = $_FILES['file']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $destination = 'uploads/accounting/attachments/final-attachments/' . $uniquesavename . '.' . $ext;
+            move_uploaded_file($_FILES['file']['tmp_name'], $destination);
+            $sourceFile = $_SERVER['DOCUMENT_ROOT'] . '/' . $destination;
+            //$content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
+
+
+
+            $customer_info=$this->accounting_customers_model->get_customer_by_id($_POST['customer_id']);
+            if ($customer_info->asc_attachment!="") {
+                $files=$customer_info->asc_attachment.",".$uniquesavename.".".$ext;
+            }else{
+                $files=$uniquesavename.".".$ext;
+            }
+            
+            $this->accounting_customers_model->updateCustomer($_POST['customer_id'], array("attachment"=>$files));
+            $data->destination = $destination;
+            $data->ext = $ext;
+            $data->uniquesavename = $uniquesavename;
+        }
+        
+
+        echo json_encode($data);
+    }
+
+    public function delete_customer_info_attachement()
+    {
+        $filename = $this->input->post("filename");
+        $attachments = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"))->asc_attachment;
+        $files=explode(",", $attachments);
+        $status="";
+        $update_data = "";
+        for ($i = 0; $i < count($files); $i++) {
+            $destination = "uploads/accounting/attachments/final-attachments/" . $files[$i];
+            if ($files[$i] == $filename) {
+                if (file_exists($destination)) {
+                    if (!unlink($destination)) {
+                        $status .= "///// $destination cannot be deleted due to an error";
+                    } else {
+                        $status .= "///// $destination has been deleted";
+                    }
+                }
+            }else{
+                if($update_data==""){
+                    $update_data.=$files[$i];
+                }else{
+                    $update_data.=",".$files[$i];
+                }
+            }
+        } 
+        $this->accounting_customers_model->updateCustomer($this->input->post("customer_id"), array("attachment"=>$update_data));
+        $data = new stdClass();
+        $data->status = $status;
         echo json_encode($data);
     }
 

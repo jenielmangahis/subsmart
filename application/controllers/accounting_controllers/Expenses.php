@@ -677,7 +677,7 @@ class Expenses extends MY_Controller
         foreach ($post['transaction_id'] as $index => $transactionId) {
             switch ($post['transaction_type'][$index]) {
                 case 'bill':
-                    $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_bill_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Bill');
                     $category = $category[0];
 
@@ -709,7 +709,7 @@ class Expenses extends MY_Controller
                     }
                 break;
                 case 'expense':
-                    $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
                     $category = $category[0];
 
@@ -741,7 +741,7 @@ class Expenses extends MY_Controller
                     }
                 break;
                 case 'check':
-                    $transaction = $this->vendors_model->get_check_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_check_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Check');
                     $category = $category[0];
 
@@ -773,12 +773,12 @@ class Expenses extends MY_Controller
                     }
                 break;
                 case 'purchase-order':
-                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
                     $category = $category[0];
                 break;
                 case 'vendor-credit':
-                    $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Vendor Credit');
                     $category = $category[0];
 
@@ -810,7 +810,7 @@ class Expenses extends MY_Controller
                     }
                 break;
                 case 'credit-card-credit':
-                    $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Credit Card Credit');
                     $category = $category[0];
 
@@ -871,7 +871,7 @@ class Expenses extends MY_Controller
 
             switch ($transactionType) {
                 case 'expense':
-                    $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
                     $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
                     $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
     
@@ -900,7 +900,7 @@ class Expenses extends MY_Controller
                     }
                 break;
                 case 'purchase-order':
-                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
                     $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
                     $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
     
@@ -999,7 +999,7 @@ class Expenses extends MY_Controller
 
         switch ($transactionType) {
             case 'expense':
-                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
                 $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
                 $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
 
@@ -1028,7 +1028,7 @@ class Expenses extends MY_Controller
                 }
             break;
             case 'purchase-order':
-                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
                 $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
                 $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
 
@@ -1193,25 +1193,25 @@ class Expenses extends MY_Controller
     {
         switch ($transactionType) {
             case 'expense':
-                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
             break;
             case 'check':
-                $transaction = $this->vendors_model->get_check_by_id($transactionId);
+                $transaction = $this->vendors_model->get_check_by_id($transactionId, logged('company_id'));
             break;
             case 'bill':
-                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId, logged('company_id'));
             break;
             case 'bill-payment':
-                $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
+                $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId, logged('company_id'));
             break;
             case 'purchase-order':
-                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
             break;
             case 'vendor-credit':
-                $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+                $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId, logged('company_id'));
             break;
             case 'credit-card-credit':
-                $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+                $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId, logged('company_id'));
             break;
         }
 

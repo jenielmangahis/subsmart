@@ -738,7 +738,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Expense');
         foreach($expenseCategories as $expenseCategory) {
-            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
+            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id, logged('company_id'));
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
             $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
@@ -818,7 +818,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $expenseItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Expense');
         foreach($expenseItems as $expenseItem) {
-            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id);
+            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id, logged('company_id'));
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
             $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
@@ -979,7 +979,7 @@ class Chart_of_accounts extends MY_Controller {
         $checkCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Check');
 
         foreach($checkCategories as $checkCategory) {
-            $check = $this->vendors_model->get_check_by_id($checkCategory->transaction_id);
+            $check = $this->vendors_model->get_check_by_id($checkCategory->transaction_id, logged('company_id'));
             $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
             $items = $this->expenses_model->get_transaction_items($check->id, 'Check');
             $count = count($categories) + count($items);
@@ -1054,7 +1054,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $checkItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Check');
         foreach($checkItems as $checkItem) {
-            $check = $this->vendors_model->get_check_by_id($checkItem->transaction_id);
+            $check = $this->vendors_model->get_check_by_id($checkItem->transaction_id, logged('company_id'));
             $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
             $items = $this->expenses_model->get_transaction_items($check->id, 'Check');
             $count = count($categories) + count($items);
@@ -1145,7 +1145,7 @@ class Chart_of_accounts extends MY_Controller {
         $journalEntries = $this->chart_of_accounts_model->get_journal_entry_registers($accountId);
 
         foreach($journalEntries as $journalEntryItem) {
-            $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id);
+            $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryItem->journal_entry_id, logged('company_id'));
             $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
 
             switch($journalEntryItem->name_key) {
@@ -1233,7 +1233,7 @@ class Chart_of_accounts extends MY_Controller {
         $billCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Bill');
 
         foreach($billCategories as $billCategory) {
-            $bill = $this->vendors_model->get_bill_by_id($billCategory->transaction_id);
+            $bill = $this->vendors_model->get_bill_by_id($billCategory->transaction_id, logged('company_id'));
             $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
             $payeeName = $payee->display_name;
             $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
@@ -1295,7 +1295,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $billItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Bill');
         foreach($billItems as $billItem) {
-            $bill = $this->vendors_model->get_bill_by_id($billItem->transaction_id);
+            $bill = $this->vendors_model->get_bill_by_id($billItem->transaction_id, logged('company_id'));
             $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
             $payeeName = $payee->display_name;
             $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
@@ -1419,7 +1419,7 @@ class Chart_of_accounts extends MY_Controller {
         $ccCreditCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Credit Card Credit');
 
         foreach($ccCreditCategories as $ccCreditCategory) {
-            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditCategory->transaction_id);
+            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditCategory->transaction_id, logged('company_id'));
             $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
             $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
             $count = count($categories) + count($items);
@@ -1494,7 +1494,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $ccCreditItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Credit Card Credit');
         foreach($ccCreditItems as $ccCreditItem) {
-            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditItem->transaction_id);
+            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditItem->transaction_id, logged('company_id'));
             $categories = $this->expenses_model->get_transaction_categories($ccCredit->id, 'Credit Card Credit');
             $items = $this->expenses_model->get_transaction_items($ccCredit->id, 'Credit Card Credit');
             $count = count($categories) + count($items);
@@ -1585,7 +1585,7 @@ class Chart_of_accounts extends MY_Controller {
         $vCreditCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Vendor Credit');
 
         foreach($vCreditCategories as $vCreditCategory) {
-            $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditCategory->transaction_id);
+            $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditCategory->transaction_id, logged('company_id'));
             $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
             $payeeName = $payee->display_name;
             $categories = $this->expenses_model->get_transaction_categories($vCredit->id, 'Vendor Credit');
@@ -1647,7 +1647,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $vCreditItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Vendor Credit');
         foreach($vCreditItems as $vCreditItem) {
-            $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditItem->transaction_id);
+            $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditItem->transaction_id, logged('company_id'));
             $payee = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
             $payeeName = $payee->display_name;
             $categories = $this->expenses_model->get_transaction_categories($vCredit->id, 'Vendor Credit');
@@ -1879,7 +1879,7 @@ class Chart_of_accounts extends MY_Controller {
         $depositFunds = $this->chart_of_accounts_model->get_deposit_payment_registers($accountId);
 
         foreach($depositFunds as $depFund) {
-            $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id);
+            $dep = $this->accounting_bank_deposit_model->getById($depFund->bank_deposit_id, logged('company_id'));
             $depFunds = $this->accounting_bank_deposit_model->getFunds($dep->id);
 
             $transaction = [
@@ -2036,7 +2036,7 @@ class Chart_of_accounts extends MY_Controller {
         $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Expense');
 
         foreach($expenseCategories as $expenseCategory) {
-            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
+            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id, logged('company_id'));
             $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $accountType = $this->account_model->getById($account->account_id);
             $detailType = $this->account_detail_model->getById($account->acc_detail_id);
@@ -2117,7 +2117,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $expenseItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Expense');
         foreach($expenseItems as $expenseItem) {
-            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id);
+            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id, logged('company_id'));
             $account = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $accountType = $this->account_model->getById($account->account_id);
             $detailType = $this->account_detail_model->getById($account->acc_detail_id);
@@ -2426,7 +2426,7 @@ class Chart_of_accounts extends MY_Controller {
         $expenseCategories = $this->chart_of_accounts_model->get_vendor_transaction_category_registers($accountId, 'Expense');
 
         foreach($expenseCategories as $expenseCategory) {
-            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id);
+            $expense = $this->vendors_model->get_expense_by_id($expenseCategory->transaction_id, logged('company_id'));
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
             $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
@@ -2506,7 +2506,7 @@ class Chart_of_accounts extends MY_Controller {
 
         $expenseItems = $this->chart_of_accounts_model->get_vendor_transaction_item_registers($accountId, 'Expense');
         foreach($expenseItems as $expenseItem) {
-            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id);
+            $expense = $this->vendors_model->get_expense_by_id($expenseItem->transaction_id, logged('company_id'));
             $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
             $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
@@ -3572,7 +3572,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_expense($expenseId)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
@@ -3652,7 +3652,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_check($checkId)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
         $newBalance = floatval($paymentAcc->balance) + floatval($check->total_amount);
@@ -3805,7 +3805,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_vendor_credit($vendorCreditId)
     {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
         $vendor = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
 
         if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
@@ -3921,7 +3921,7 @@ class Chart_of_accounts extends MY_Controller {
             $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
             if (!is_null($vCredits)) {
                 foreach ($vCredits as $vCreditId => $amount) {
-                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId, logged('company_id'));
                     $vCreditData = [
                         'status' => 1,
                         'remaining_balance' => floatval($vCredit->remaining_balance) + floatval($amount),
@@ -3978,7 +3978,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_cc_credit($ccCreditId)
     {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
         $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
 
         $newBalance = floatval($creditAcc->balance) + floatval($ccCredit->total_amount);
@@ -4047,7 +4047,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_journal_entry($journalEntryId)
     {
-        $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryId);
+        $journalEntry = $this->accounting_journal_entries_model->getById($journalEntryId, logged('company_id'));
         $entries = $this->accounting_journal_entries_model->getEntries($journalEntryId);
 
         $journalEntryData = [
@@ -4087,7 +4087,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_transfer($transferId)
     {
-        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId, logged('company_id'));
 
         $update = $this->accounting_transfer_funds_model->update($transfer->id, ['status' => 0]);
 
@@ -4123,7 +4123,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function delete_deposit($depositId)
     {
-        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId, logged('company_id'));
         $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
 
         $update = $this->accounting_bank_deposit_model->update($deposit->id, ['status' => 0]);
@@ -4336,7 +4336,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_transfer($accountId, $transferId, $data)
     {
-        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId, logged('company_id'));
         $account = $this->chart_of_accounts_model->getById($accountId);
         $accountType = $this->account_model->getById($account->account_id);
 
@@ -4438,7 +4438,7 @@ class Chart_of_accounts extends MY_Controller {
         $payee = explode('-', $data['payee']);
 
         if ($update) {
-            $journal = $this->accounting_journal_entries_model->getById($journalId);
+            $journal = $this->accounting_journal_entries_model->getById($journalId, logged('company_id'));
 
             $entries = $this->accounting_journal_entries_model->getEntries($journalId);
             foreach($entries as $entry) {
@@ -4495,7 +4495,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_deposit($accountId, $depositId, $data)
     {
-        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId, logged('company_id'));
         $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
         $account = $this->chart_of_accounts_model->getById($accountId);
         $accountType = $this->account_model->getById($account->account_id);
@@ -4602,7 +4602,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_expense($accountId, $expenseId, $data)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
         $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
         $totalCount = count($categories) + count($items);
@@ -4747,7 +4747,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_check($accountId, $checkId, $data)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
         $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
         $totalCount = count($categories) + count($items);
@@ -4893,7 +4893,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_bill($accountId, $billId, $data)
     {
-        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
         $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
         $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
         $totalCount = count($categories) + count($items);
@@ -4983,7 +4983,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_vendor_credit($accountId, $vCreditId, $data)
     {
-        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId, logged('company_id'));
         $categories = $this->expenses_model->get_transaction_categories($vCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vCreditId, 'Vendor Credit');
         $totalCount = count($categories) + count($items);
@@ -5064,7 +5064,7 @@ class Chart_of_accounts extends MY_Controller {
 
     private function save_cc_credit($accountId, $ccCreditId, $data)
     {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
         $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
         $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
         $totalCount = count($categories) + count($items);

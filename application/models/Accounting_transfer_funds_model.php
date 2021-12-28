@@ -16,8 +16,10 @@ class Accounting_transfer_funds_model extends MY_Model {
 	    return $this->db->insert_id();
 	}
 
-	function getById($id) {
-		$this->db->where('company_id', getLoggedCompanyID());
+	function getById($id, $companyId = null) {
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $id);
 		$this->db->where('status', 1);
 
