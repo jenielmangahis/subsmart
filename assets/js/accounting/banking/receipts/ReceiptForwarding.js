@@ -5,6 +5,7 @@ export class ReceiptForwarding {
     this.$input = this.$modal.find("#receiptEmail");
     this.$emailText = this.$modal.find(".receiptModal__emailCopy");
     this.$submit = this.$modal.find(".btn-primary");
+    this.$form = this.$modal.find("form");
 
     this.loadDeps().then(() => {
       this.addEventListeners();
@@ -60,6 +61,11 @@ export class ReceiptForwarding {
       this.$submit.removeClass("receiptsButton--isLoading");
       this.$submit.prop("disabled", false);
       this.$modal.modal("hide");
+    });
+
+    this.$form.on("submit", (event) => {
+      event.preventDefault();
+      this.$submit.click();
     });
   }
 }

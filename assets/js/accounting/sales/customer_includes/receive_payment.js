@@ -741,7 +741,6 @@ $(document).on("change", "div#customer_receive_payment_modal form#receive_paymen
 
 function upload_attachment(target_form) {
     var files = $(target_form + " .attachement-file-section input[name='attachement-filenames']").val();
-    console.log(files);
     $.ajax({
         url: baseURL + "/accounting/delete_file_attachement",
         type: "POST",
@@ -757,6 +756,7 @@ function upload_attachment(target_form) {
     var formDatas = new FormData();
     $(target_form + ' .attachement-file-section div.attachement-viewer').html("");
     $(target_form + " .attachement-file-section input[name='attachement-filenames']").val("");
+    var ctr = 0;
     for (var i = 0; i < $(target_form + " input[name='attachment-file']").get(0).files.length; ++i) {
         formDatas.append('file', $(target_form + " input[name='attachment-file']").get(0).files[i]);
         $.ajax({
@@ -768,7 +768,9 @@ function upload_attachment(target_form) {
             processData: false,
             contentType: false,
             cache: false,
-            beforeSend: function() {},
+            beforeSend: function() {
+                ctr = 0;
+            },
             success: function(data) {
                 var filenmae_val = $(target_form + " .attachement-file-section input[name='attachement-filenames']").val();
                 if (filenmae_val == "") {
@@ -783,6 +785,7 @@ function upload_attachment(target_form) {
                     viewer_images += '<img src="' + baseURL + data.destination + '" alt="">';
                 }
                 $(target_form + ' .attachement-file-section div.attachement-viewer').html(viewer_images);
+
             },
             error: function(e) {
                 console.log("ERROR : ", e);

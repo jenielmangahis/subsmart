@@ -29,7 +29,6 @@ class Accounting_recurring_transactions_model extends MY_Model
 
     public function updateRecurringTransaction($id, $data)
     {
-        $this->db->where('company_id', getLoggedCompanyID());
         $this->db->where('id', $id);
         $update = $this->db->update($this->table, $data);
         if ($update) {

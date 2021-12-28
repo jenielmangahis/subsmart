@@ -1285,7 +1285,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
@@ -1600,7 +1601,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -1825,7 +1827,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -2714,7 +2717,7 @@ class Accounting_modals extends MY_Controller
                 }
 
                 if(!isset($data['template_name'])) {
-                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1], logged('company_id'));
 
                     $total = 0.00;
     
@@ -2836,7 +2839,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -3021,7 +3025,7 @@ class Accounting_modals extends MY_Controller
     
             if ($checkId) {
                 if(!isset($data['template_name'])) {
-                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1], logged('company_id'));
 
                     $total = 0.00;
 
@@ -3146,7 +3150,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -3339,6 +3344,7 @@ class Accounting_modals extends MY_Controller
                 'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                'recurring' => isset($data['template_name']) ? 1 : 0,
                 'status' => 1
             ];
     
@@ -3346,7 +3352,7 @@ class Accounting_modals extends MY_Controller
 
             if ($billId) {
                 if(!isset($data['template_name'])) {
-                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1], logged('company_id'));
 
                     $total = 0.00;
     
@@ -3448,7 +3454,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -4079,7 +4086,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -4358,7 +4366,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -4616,7 +4625,8 @@ class Accounting_modals extends MY_Controller
                         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
+                        'current_occurrence' => 0,
                         'next_date' => $next,
                         'status' => 1
                     ];
@@ -4751,7 +4761,7 @@ class Accounting_modals extends MY_Controller
             $appliedVCredits = [];
             if(isset($data['credits']) && count($data['credits']) > 0) {
                 foreach ($data['credits'] as $index => $credit) {
-                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit);
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit, logged('company_id'));
                     $balance = floatval($vCredit->remaining_balance);
                     $subtracted = floatval($data['credit_payment'][$index]);
                     $appliedVCredits[$vCredit->id] = $subtracted;
@@ -4920,11 +4930,11 @@ class Accounting_modals extends MY_Controller
         switch ($transactionType) {
             case 'purchase-order':
                 $type = 'Purchase Order';
-                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
             break;
             case 'bill':
                 $type = 'Bill';
-                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId, logged('company_id'));
             break;
         }
 
@@ -4949,7 +4959,7 @@ class Accounting_modals extends MY_Controller
     public function bill_payment_form($billId)
     {
         $this->page_data['balance'] = '$0.00';
-        $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId);
+        $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
         $this->load->view('accounting/modals/bill_payment_modal', $this->page_data);
     }
 
@@ -5260,7 +5270,7 @@ class Accounting_modals extends MY_Controller
         $data = [];
         foreach ($post['id'] as $key => $id) {
             if ($post['type'][$key] === 'check') {
-                $check = $this->vendors_model->get_check_by_id($id);
+                $check = $this->vendors_model->get_check_by_id($id, logged('company_id'));
                 $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
 
                 switch ($check->payee_type) {
@@ -5311,7 +5321,7 @@ class Accounting_modals extends MY_Controller
                 if ($check->vendor_credits_applied !== null && $check->vendor_credits_applied !== "[]") {
                     $vCredits = json_decode($check->vendor_credits_applied, true);
                     foreach ($vCredits as $vCreditId => $amount) {
-                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId, logged('company_id'));
 
                         $linked[] = [
                             'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
@@ -5326,7 +5336,7 @@ class Accounting_modals extends MY_Controller
 
                 $paidBills = $this->vendors_model->get_bill_payment_items($id);
                 foreach ($paidBills as $paidBill) {
-                    $bill = $this->vendors_model->get_bill_by_id($paidBill->bill_id);
+                    $bill = $this->vendors_model->get_bill_by_id($paidBill->bill_id, logged('company_id'));
 
                     $linked[] = [
                         'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -7411,7 +7421,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_expense($expenseId)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
 
@@ -7436,7 +7446,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_check($checkId)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
 
         $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
 
@@ -7461,7 +7471,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_bill($billId)
     {
-        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
         $term = $this->accounting_terms_model->getById($bill->term_id);
 
         $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
@@ -7493,7 +7503,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_vendor_credit($vendorCreditId)
     {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
 
         $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
@@ -7516,7 +7526,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_cc_credit($ccCreditId)
     {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
 
         $creditCard = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
 
@@ -7561,7 +7571,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_journal($journalId)
     {
-        $journalEntry = $this->accounting_journal_entries_model->getById($journalId);
+        $journalEntry = $this->accounting_journal_entries_model->getById($journalId, logged('company_id'));
         $entries = $this->accounting_journal_entries_model->getEntries($journalEntry->id);
 
         foreach($entries as $key => $entry) {
@@ -7593,7 +7603,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_transfer($transferId)
     {
-        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId, logged('company_id'));
         $transfer->transfer_from = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
         $transfer->transfer_to = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
 
@@ -7603,7 +7613,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_deposit($depositId)
     {
-        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId, logged('company_id'));
         $account = $this->chart_of_accounts_model->getById($deposit->account_id);
         $balance = '$'.number_format(floatval($account->balance), 2, '.', ',');
         $balance = str_replace('$-', '-$', $balance);
@@ -7677,7 +7687,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_purchase_order($purchaseOrderId)
     {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
 
         $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
         $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
@@ -7810,7 +7820,7 @@ class Accounting_modals extends MY_Controller
 
         $data = [];
         foreach ($credits as $creditId => $creditAmount) {
-            $credit = $this->vendors_model->get_vendor_credit_by_id($creditId);
+            $credit = $this->vendors_model->get_vendor_credit_by_id($creditId, logged('company_id'));
 
             $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
             $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
@@ -7938,7 +7948,7 @@ class Accounting_modals extends MY_Controller
 
     private function update_expense($expenseId, $data)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
         $payee = explode('-', $data['payee']);
         $expenseData = [
             'payee_type' => $payee[0],
@@ -8062,7 +8072,7 @@ class Accounting_modals extends MY_Controller
 
     private function update_check($checkId, $data)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
         $payee = explode('-', $data['payee']);
 
         $checkData = [
@@ -8208,7 +8218,7 @@ class Accounting_modals extends MY_Controller
 
     private function update_bill($billId, $data)
     {
-        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
         $billData = [
             'vendor_id' => $data['vendor_id'],
             'mailing_address' => $data['mailing_address'],
@@ -8281,7 +8291,7 @@ class Accounting_modals extends MY_Controller
 
     private function update_purchase_order($purchaseOrderId, $data)
     {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
 
         $purchOrder = [
             'vendor_id' => $data['vendor_id'],
@@ -8357,7 +8367,7 @@ class Accounting_modals extends MY_Controller
 
     private function update_vendor_credit($vendorCreditId, $data)
     {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
         $vCredit = [
             'vendor_id' => $data['vendor_id'],
             'mailing_address' => $data['mailing_address'],
@@ -8470,7 +8480,7 @@ class Accounting_modals extends MY_Controller
 
     private function update_credit_card_credit($ccCreditId, $data)
     {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
         $payee = explode('-', $data['payee']);
 
         $creditData = [
@@ -8592,7 +8602,7 @@ class Accounting_modals extends MY_Controller
             foreach ($appliedCredits as $creditId => $amount) {
                 $amount = floatval($amount);
     
-                $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditId);
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditId, logged('company_id'));
                 $balance = floatval($vCredit->remaining_balance);
                 $remainingBal = $balance + $amount;
     
@@ -8648,7 +8658,7 @@ class Accounting_modals extends MY_Controller
         $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         if(!is_null($data['credits'])) {
             foreach ($data['credits'] as $key => $id) {
-                $vCredit = $this->vendors_model->get_vendor_credit_by_id($id);
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($id, logged('company_id'));
                 $balance = floatval($vCredit->remaining_balance);
                 $subtracted = floatval($data['credit_payment'][$key]);
                 $remainingBal = $balance - $subtracted;
@@ -9492,7 +9502,7 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
-            $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+            $deposit = $this->accounting_bank_deposit_model->getById($depositId, logged('company_id'));
 
             $totalAmount = array_sum(array_map(function ($item) {
                 return floatval($item);
@@ -9517,29 +9527,6 @@ class Accounting_modals extends MY_Controller
             $update = $this->accounting_bank_deposit_model->update($depositId, $depositData);
 
             if ($update) {
-                // if (isset($data['template_name'])) {
-                //     $recurringData = [
-                //         'company_id' => getLoggedCompanyID(),
-                //         'template_name' => $data['template_name'],
-                //         'recurring_type' => $data['recurring_type'],
-                //         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
-                //         'txn_type' => 'deposit',
-                //         'txn_id' => $depositId,
-                //         'recurring_interval' => $data['recurring_interval'],
-                //         'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
-                //         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
-                //         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
-                //         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
-                //         'end_type' => $data['end_type'],
-                //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                //         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                //         'status' => 1
-                //     ];
-    
-                //     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
-                // }
-
                 // REVERT OLD
                 $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $deposit->id);
 
@@ -9729,7 +9716,7 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+            $transfer = $this->accounting_transfer_funds_model->getById($transferId, logged('company_id'));
 
             $transferData = [
                 'transfer_from_account_id' => $data['transfer_from_account'],
@@ -9833,33 +9820,6 @@ class Accounting_modals extends MY_Controller
                         $order++;
                     }
                 }
-
-                // if (isset($data['template_name'])) {
-                //     $recurringData = [
-                //         'company_id' => getLoggedCompanyID(),
-                //         'template_name' => $data['template_name'],
-                //         'recurring_type' => $data['recurring_type'],
-                //         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? ($data['days_in_advance'] !== '' ? $data['days_in_advance'] : null) : null,
-                //         'txn_type' => 'transfer',
-                //         'txn_id' => $transferId,
-                //         'recurring_interval' => $data['recurring_interval'],
-                //         'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
-                //         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
-                //         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
-                //         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
-                //         'end_type' => $data['end_type'],
-                //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                //         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                //         'status' => 1
-                //     ];
-    
-                //     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
-    
-                //     $return['data'] = $transferId;
-                //     $return['success'] = $transferId && $recurringId ? true : false;
-                //     $return['message'] = $transferId && $recurringId ? 'Template saved!' : 'An unexpected error occured!';
-                // }
             }
 
             $return['data'] = $transferId;
@@ -9938,30 +9898,7 @@ class Accounting_modals extends MY_Controller
             $update = $this->accounting_journal_entries_model->update($journalId, $journalData);
 
             if ($update) {
-                // if (isset($data['template_name'])) {
-                //     $recurringData = [
-                //         'company_id' => getLoggedCompanyID(),
-                //         'template_name' => $data['template_name'],
-                //         'recurring_type' => $data['recurring_type'],
-                //         'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? ($data['days_in_advance'] !== '' ? $data['days_in_advance'] : null) : null,
-                //         'txn_type' => 'journal entry',
-                //         'txn_id' => $journalId,
-                //         'recurring_interval' => $data['recurring_interval'],
-                //         'recurring_month' => $data['recurring_interval'] === 'yearly' ? $data['recurring_month'] : null,
-                //         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
-                //         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
-                //         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                //         'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
-                //         'end_type' => $data['end_type'],
-                //         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                //         'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                //         'status' => 1
-                //     ];
-    
-                //     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
-                // }
-
-                $journal = $this->accounting_journal_entries_model->getById($journalId);
+                $journal = $this->accounting_journal_entries_model->getById($journalId, logged('company_id'));
 
                 // REVERT OLD
                 $attachments = $this->accounting_attachments_model->get_attachments('Journal', $journal->id);

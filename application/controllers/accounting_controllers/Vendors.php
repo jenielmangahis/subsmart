@@ -1221,7 +1221,7 @@ class Vendors extends MY_Controller
 
     private function delete_expense($expenseId)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
@@ -1301,7 +1301,7 @@ class Vendors extends MY_Controller
 
     private function delete_check($checkId)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkI, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
         $newBalance = floatval($paymentAcc->balance) + floatval($check->total_amount);
@@ -1454,7 +1454,7 @@ class Vendors extends MY_Controller
 
     private function delete_vendor_credit($vendorCreditId)
     {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
         $vendor = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
 
         if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
@@ -1581,7 +1581,7 @@ class Vendors extends MY_Controller
             $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
             if (!is_null($vCredits)) {
                 foreach ($vCredits as $vCreditId => $amount) {
-                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId, logged('company_id'));
                     $vCreditData = [
                         'status' => 1,
                         'remaining_balance' => floatval($vCredit->remaining_balance) + floatval($amount),
@@ -1671,7 +1671,7 @@ class Vendors extends MY_Controller
 
     public function view_expense($expenseId)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
 
@@ -1696,7 +1696,7 @@ class Vendors extends MY_Controller
 
     public function view_check($checkId)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
 
         $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
 
@@ -1721,7 +1721,7 @@ class Vendors extends MY_Controller
 
     public function view_bill($billId)
     {
-        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
         $term = $this->accounting_terms_model->getById($bill->term_id);
 
         $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
@@ -1755,7 +1755,7 @@ class Vendors extends MY_Controller
 
     public function view_purchase_order($purchOrderId)
     {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId, logged('company_id'));
 
         $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
         $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
@@ -1769,7 +1769,7 @@ class Vendors extends MY_Controller
 
     public function view_vendor_credit($vendorCreditId)
     {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
 
         $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
@@ -1792,7 +1792,7 @@ class Vendors extends MY_Controller
 
     public function view_cc_credit($ccCreditId)
     {
-        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId, logged('company_id'));
 
         $creditCard = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
 
@@ -1837,7 +1837,7 @@ class Vendors extends MY_Controller
 
     public function copy_expense($expenseId)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
         $paymentAccs = [];
         $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
 
@@ -1886,7 +1886,7 @@ class Vendors extends MY_Controller
 
     public function copy_check($checkId)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
         $bankAccsType = $this->account_model->getAccTypeByName('Bank');
 
         $bankAccs = [];
@@ -1932,7 +1932,7 @@ class Vendors extends MY_Controller
 
     public function copy_bill($billId)
     {
-        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $bill = $this->vendors_model->get_bill_by_id($billId, logged('company_id'));
         $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
 
         $selectedTerm = $terms[0];
@@ -1966,7 +1966,7 @@ class Vendors extends MY_Controller
 
     public function copy_purchase_order($purchOrderId)
     {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId, logged('company_id'));
 
         $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
         $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
@@ -1981,7 +1981,7 @@ class Vendors extends MY_Controller
 
     public function copy_vendor_credit($vendorCreditId)
     {
-        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId, logged('company_id'));
 
         $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
@@ -1996,7 +1996,7 @@ class Vendors extends MY_Controller
 
     public function copy_to_bill($purchaseOrderId)
     {
-        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId, logged('company_id'));
         $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
 
         $selectedTerm = $terms[0];
@@ -2056,7 +2056,7 @@ class Vendors extends MY_Controller
 
     private function void_expense($expenseId)
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $expense = $this->vendors_model->get_expense_by_id($expenseId, logged('company_id'));
 
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
         $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
@@ -2093,7 +2093,7 @@ class Vendors extends MY_Controller
 
     private function void_check($checkId)
     {
-        $check = $this->vendors_model->get_check_by_id($checkId);
+        $check = $this->vendors_model->get_check_by_id($checkId, logged('company_id'));
 
         $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
         $newBalance = floatval($bankAcc->balance) + floatval($check->total_amount);
@@ -2197,7 +2197,7 @@ class Vendors extends MY_Controller
         $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
         if (!is_null($vCredits)) {
             foreach ($vCredits as $vCreditId => $amount) {
-                $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId, logged('company_id'));
                 $vCreditData = [
                     'status' => 1,
                     'remaining_balance' => floatval($vCredit->remaining_balance) + floatval($amount),
@@ -2300,7 +2300,7 @@ class Vendors extends MY_Controller
         foreach ($post['transaction_id'] as $index => $transactionId) {
             switch ($post['transaction_type'][$index]) {
                 case 'bill':
-                    $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_bill_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Bill');
                     $category = $category[0];
 
@@ -2332,7 +2332,7 @@ class Vendors extends MY_Controller
                     }
                 break;
                 case 'expense':
-                    $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
                     $category = $category[0];
 
@@ -2364,7 +2364,7 @@ class Vendors extends MY_Controller
                     }
                 break;
                 case 'check':
-                    $transaction = $this->vendors_model->get_check_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_check_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Check');
                     $category = $category[0];
 
@@ -2396,12 +2396,12 @@ class Vendors extends MY_Controller
                     }
                 break;
                 case 'purchase-order':
-                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
                     $category = $category[0];
                 break;
                 case 'vendor-credit':
-                    $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Vendor Credit');
                     $category = $category[0];
 
@@ -2433,7 +2433,7 @@ class Vendors extends MY_Controller
                     }
                 break;
                 case 'credit-card-credit':
-                    $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId, logged('company_id'));
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Credit Card Credit');
                     $category = $category[0];
 
@@ -2489,7 +2489,7 @@ class Vendors extends MY_Controller
 
         switch ($transactionType) {
             case 'expense':
-                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
                 $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
                 $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
 
@@ -2518,7 +2518,7 @@ class Vendors extends MY_Controller
                 }
             break;
             case 'purchase-order':
-                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
                 $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
                 $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
 
@@ -2621,7 +2621,7 @@ class Vendors extends MY_Controller
 
             switch ($transactionType) {
                 case 'expense':
-                    $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_expense_by_id($transactionId, logged('company_id'));
                     $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
                     $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
     
@@ -2650,7 +2650,7 @@ class Vendors extends MY_Controller
                     }
                 break;
                 case 'purchase-order':
-                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId, logged('company_id'));
                     $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
                     $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
     

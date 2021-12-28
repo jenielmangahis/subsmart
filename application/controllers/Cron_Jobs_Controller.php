@@ -905,4 +905,893 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->invoice_model->change_due_invoice_status($date_now, "Due");
         $this->invoice_model->change_due_invoice_status($date_now, "Overdue");
     }
+
+    public function cron_recurring_transactions()
+    {
+        $this->load->model('accounting_recurring_transactions_model');
+        $transactions = $this->accounting_recurring_transactions_model->get_by_next_date(date('Y-m-d'));
+
+        foreach($transactions as $transaction) {
+            switch($transaction->txn_type) {
+                case 'deposit' :
+                    $success = $this->occur_deposit($transaction->txn_id);
+                break;
+                case 'transfer' :
+                    $success = $this->occur_transfer($transaction->txn_id);
+                break;
+                case 'journal entry' :
+                    $success = $this->occur_journal_entry($transaction->txn_id);
+                break;
+                case 'expense' :
+                    $success = $this->occur_expense($transaction->txn_id);
+                break;
+                case 'check' :
+                    $success = $this->occur_check($transaction->txn_id);
+                break;
+                case 'bill' :
+                    $success = $this->occur_bill($transaction->txn_id);
+                break;
+                case 'purchase order' :
+                    $success = $this->occur_purchase_order($transaction->txn_id);
+                break;
+                case 'vendor credit' :
+                    $success = $this->occur_vendor_credit($transaction->txn_id);
+                break;
+                case 'credit card credit' :
+                    $success = $this->occur_credit_card_credit($transaction->txn_id);
+                break;
+            }
+
+            $currentOccurrence = intval($transaction->current_occurrence) + 1;
+            $every = $transaction->recurr_every;
+            $nextDate = date("m/d/Y", strtotime($transaction->next_date));
+            switch($transaction->recurring_interval) {
+                case 'daily' :
+                    $nextDate = date("Y-m-d", strtotime("$nextDate +$every days"));
+                break;
+                case 'weekly' :
+                    $nextDate = date("Y-m-d", strtotime("$nextDate +$every weeks"));
+                break;
+                case 'monthly' :
+                    if($transaction->recurring_week === 'day') {
+                        $day = $transaction->recurring_day === 'last' ? 't' : $transaction->recurring_day;
+                        $nextDate = date("Y-m-$day", strtotime("$nextDate +$every months"));
+                    } else {
+                        $week = $transaction->recurring_week;
+                        $day = $transaction->recurring_day;
+                        $nextDate = date("Y-m-d", strtotime("$week $day ".date("Y-m", strtotime("$nextDate +$every months"))));
+                    }
+                break;
+                case 'yearly' :
+                    $month = $transaction->recurring_month;
+                    $day = $transaction->recurring_day;
+
+                    $nextDate = date("Y-$month-$day", strtotime("$nextDate +1 year"));
+                break;
+            }
+
+            if($transaction->end_type === 'after') {
+                if($currentOccurrence === intval($transaction->max_occurrences)) {
+                    $nextDate = null;
+                }
+            } else {
+                if($transaction->end_type !== 'none') {
+                    if(strtotime($nextDate) > strtotime($transaction->end_date)) {
+                        $nextDate = null;
+                    }
+                }
+            }
+
+            $recurringData = [
+                'previous_date' => $transaction->next_date,
+                'next_date' => $nextDate,
+                'current_occurrence' => $currentOccurrence
+            ];
+
+            $update = $this->accounting_recurring_transactions_model->updateRecurringTransaction($transaction->id, $recurringData);
+        }
+    }
+
+    private function occur_deposit($depositId)
+    {
+        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $deposit = $this->accounting_bank_deposit_model->getById($depositId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $depositId);
+        $funds = $this->accounting_bank_deposit_model->getFunds($depositId);
+
+        $insertData = [
+            'company_id' => $deposit->company_id,
+            'account_id' => $deposit->account_id,
+            'date' => date("Y-m-d"),
+            'tags' => $deposit->tags,
+            'total_amount' => $deposit->total_amount,
+            'cash_back_account_id' => $deposit->cash_back_account_id,
+            'cash_back_memo' => $deposit->cash_back_memo,
+            'cash_back_amount' => $deposit->cash_back_amount,
+            'memo' => $deposit->memo,
+            'status' => 1
+        ];
+
+        $newDeposit = $this->accounting_bank_deposit_model->create($insertData);
+
+        if($newDeposit) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Deposit',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newDeposit,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $depositToAcc = $this->chart_of_accounts_model->getById($deposit->account_id);
+            $depositData = [
+                'id' => $depositToAcc->id,
+                'company_id' => $depositToAcc->company_id,
+                'balance' => floatval($depositToAcc->balance) + floatval($deposit->total_amount)
+            ];
+            $this->chart_of_accounts_model->updateBalance($depositData);
+
+            if ($deposit->cash_back_amount !== "") {
+                $cashBackAccount = $this->chart_of_accounts_model->getById($deposit->cash_back_account_id);
+                $cashBackData = [
+                    'id' => $cashBackAccount->id,
+                    'company_id' => $cashBackAccount->company_id,
+                    'balance' => $cashBackAccount->account_id !== "7" ? floatval($cashBackAccount->balance) + floatval($deposit->cash_back_amount) : floatval($cashBackAccount->balance) - floatval($deposit->cash_back_amount)
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($cashBackData);
+            }
+
+            $fundsData = [];
+            foreach ($funds as $fund) {
+                $fundsData[] =[
+                    'bank_deposit_id' => $newDeposit,
+                    'received_from_key' => $fund->received_from_key,
+                    'received_from_id' => $fund->received_from_id,
+                    'received_from_account_id' => $fund->received_from_account_id,
+                    'description' => $fund->description,
+                    'payment_method' => $fund->payment_method,
+                    'ref_no' => $fund->ref_no,
+                    'amount' => $fund->amount
+                ];
+
+                $account = $this->chart_of_accounts_model->getById($fund->received_from_account_id);
+
+                $accountBalance = $account->account_id !== "7" ? floatval($account->balance) - floatval($fund->amount) : floatval($account->balance) + floatval($fund->amount);
+                $accountBalance = number_format($accountBalance, 2, '.', ',');
+                $accountData = [
+                    'id' => $fund->received_from_account_id,
+                    'company_id' => $account->company_id,
+                    'balance' => $accountBalance
+                ];
+                $withdraw = $this->chart_of_accounts_model->updateBalance($accountData);
+            }
+
+            $fundsId = $this->accounting_bank_deposit_model->insertFunds($fundsData);
+        }
+
+        return $newDeposit;
+    }
+
+    private function occur_transfer($transferId)
+    {
+        $this->load->model('accounting_transfer_funds_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $transfer = $this->accounting_transfer_funds_model->getById($transferId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transferId);
+
+        $insertData = [
+            'company_id' => $transfer->company_id,
+            'transfer_from_account_id' => $transfer->transfer_from_account_id,
+            'transfer_to_account_id' => $transfer->transfer_to_account_id,
+            'transfer_amount' => $transfer->transfer_amount,
+            'transfer_date' => date("Y-m-d"),
+            'transfer_memo' => $transfer->memo,
+            'status' => 1
+        ];
+
+        $newTransfer = $this->accounting_transfer_funds_model->create($insertData);
+
+        if($newTransfer) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Transfer',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newTransfer,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $transferFromAcc = $this->chart_of_accounts_model->getById($transfer->transfer_from_account_id);
+            $transferToAcc = $this->chart_of_accounts_model->getById($transfer->transfer_to_account_id);
+
+            $transferFromBal = $transferFromAcc->account_id !== "7" ? floatval($transferFromAcc->balance) - floatval($transfer->transfer_amount) : floatval($transferFromAcc->balance) + floatval($transfer->transfer_amount);
+            $transferToBal = $transferToAcc->account_id !== "7" ? floatval($transferToAcc->balance) + floatval($transfer->transfer_amount) : floatval($transferToAcc->balance) - floatval($transfer->transfer_amount);
+
+            $transferFromBal = number_format($transferFromBal, 2, '.', ',');
+            $transferToBal = number_format($transferToBal, 2, '.', ',');
+
+            $transferFromAccData = [
+                'id' => $transferFromAcc->id,
+                'company_id' => $transferFromAcc->company_id,
+                'balance' => $transferFromBal
+            ];
+            $transferToAccData = [
+                'id' => $transferToAcc->id,
+                'company_id' => $transferToAcc->company_id,
+                'balance' => $transferToBal
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($transferFromAccData);
+            $this->chart_of_accounts_model->updateBalance($transferToAccData);
+        }
+
+        return $newTransfer;
+    }
+
+    private function occur_journal_entry($journalId)
+    {
+        $this->load->model('accounting_journal_entries_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $journal = $this->accounting_journal_entries_model->getById($journalId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Journal', $journalId);
+        $entries = $this->accounting_journal_entries_model->getEntries($journalId);
+
+        $insertData = [
+            'company_id' => $journal->company_id,
+            'journal_no' => $journal->journal_no,
+            'journal_date' => date("Y-m-d"),
+            'memo' => $journal->memo,
+            'status' => 1
+        ];
+
+        $newJournal = $this->accounting_journal_entries_model->create($insertData);
+
+        if($newJournal) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Journal',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newJournal,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $entryItems = [];
+            foreach ($entries as $entry) {
+                $entryItems[] = [
+                    'journal_entry_id' => $newJournal,
+                    'account_id' => $entry->account_id,
+                    'debit' => $entry->debit,
+                    'credit' => $entry->credit,
+                    'description' => $entry->decription,
+                    'name_key' => $entry->name_key,
+                    'name_id' => $entry->name_id
+                ];
+
+                $account = $this->chart_of_accounts_model->getById($entry->account_id);
+                if($account->account_id !== "7") {
+                    $newBalance = floatval($account->balance) - floatval($entry->credit);
+                    $newBalance = $newBalance + floatval($entry->debit);
+                } else {
+                    $newBalance = floatval($account->balance) + floatval($entry->credit);
+                    $newBalance = $newBalance - floatval($entry->debit);
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $accountData = [
+                    'id' => $account->id,
+                    'company_id' => $account->company_id,
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($accountData);
+            }
+
+            $entryItemsId = $this->accounting_journal_entries_model->insertEntryItems($entryItems);
+        }
+
+        return $newJournal;
+    }
+
+    private function occur_expense($expenseId)
+    {
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expenseId);
+        $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
+        $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
+
+        $expenseData = [
+            'company_id' => $expense->company_id,
+            'payee_type' => $expense->payee_type,
+            'payee_id' => $expense->payee_id,
+            'payment_account_id' => $expense->payment_account_id,
+            'payment_date' => date("Y-m-d"),
+            'payment_method_id' => $expense->payment_method_id,
+            'ref_no' => $expense->ref_no,
+            'permit_no' => $expense->permit_no,
+            'tags' => $expense->tags,
+            'memo' => $expense->memo,
+            'total_amount' => $expense->total_amount,
+            'linked_purchase_order_id' => $expense->linked_purchase_order_id,
+            'status' => 1
+        ];
+
+        $newExpense = $this->expenses_model->addExpense($expenseData);
+
+        if($newExpense) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Expense',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newExpense,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            // payment account
+            $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+            if ($paymentAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($paymentAcc->balance) + floatval($expense->total_amount);
+            } else {
+                $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $paymentAccData = [
+                'id' => $paymentAcc->id,
+                'company_id' => $paymentAcc->company_id,
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+            if (count($categories) > 0) {
+                $this->insert_categories($newExpense, $categories);
+            }
+
+            if (count($items) > 0) {
+                $this->insert_items($newExpense, $items);
+            }
+        }
+
+        return $newExpense;
+    }
+
+    private function occur_check($checkId)
+    {
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
+        $check = $this->vendors_model->get_check_by_id($checkId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Check', $checkId);
+        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+
+        $checkData = [
+            'company_id' => $check->company_id,
+            'payee_type' => $check->payee_type,
+            'payee_id' => $check->payee_id,
+            'bank_account_id' => $check->bank_account_id,
+            'mailing_address' => $check->mailing_address,
+            'payment_date' => date("Y-m-d"),
+            'check_no' => null,
+            'to_print' => $check->to_print,
+            'permit_no' => $check->permit_no,
+            'tags' => $check->tags,
+            'memo' => $check->memo,
+            'total_amount' => $check->total_amount,
+            'status' => 1
+        ];
+
+        $newCheck = $this->expenses_model->addCheck($checkData);
+
+        if($newCheck) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Check',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newCheck,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+            $newBalance = floatval($bankAcc->balance) - floatval($check->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $bankAccData = [
+                'id' => $bankAcc->id,
+                'company_id' => $bankAcc->company_id,
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($bankAccData);
+
+            // if (is_null($check->to_print)) {
+            //     $assignCheck = [
+            //         'check_no' => $checkData['check_no'],
+            //         'transaction_type' => 'check',
+            //         'transaction_id' => $checkId,
+            //         'payment_account_id' => $checkData['bank_account_id']
+            //     ];
+
+            //     $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+            // }
+
+            if (count($categories) > 0) {
+                $this->insert_categories($newCheck, $categories);
+            }
+
+            if (count($items) > 0) {
+                $this->insert_items($newCheck, $items);
+            }
+        }
+
+        return $newCheck;
+    }
+
+    private function occur_bill($billId)
+    {
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
+        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Bill', $billId);
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        $billData = [
+            'company_id' => $bill->company_id,
+            'vendor_id' => $bill->vendor_id,
+            'mailing_address' => $bill->mailing_address,
+            'term_id' => $bill->term_id,
+            'bill_date' => date("Y-m-d"),
+            'due_date' => date("Y-m-d"),
+            'bill_no' => date("Y-m-d"),
+            'permit_no' => $bill->permit_no,
+            'tags' => $bill->tags,
+            'memo' => $bill->memo,
+            'remaining_balance' => $bill->remaining_balance,
+            'total_amount' => $bill->total_amount,
+            'status' => 1
+        ];
+
+        $newBill = $this->expenses_model->addBill($billData);
+
+        if($newBill) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Bill',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newBill,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            if (count($categories) > 0) {
+                $this->insert_categories($newBill, $categories);
+            }
+
+            if (count($items) > 0) {
+                $this->insert_items($newBill, $items);
+            }
+        }
+
+        return $newBill;
+    }
+
+    private function occur_purchase_order($purchaseOrderId)
+    {
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $purchaseOrderId);
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
+
+        $lastPO = $this->expenses_model->get_last_purchase_order($purchaseOrder->company_id);
+
+        $purchaseOrderData = [
+            'company_id' => $purchaseOrder->company_id,
+            'vendor_id' => $purchaseOrder->vendor_id,
+            'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no)+1,
+            'permit_no' => $purchaseOrder->permit_no,
+            'email' => $purchaseOrder->email,
+            'mailing_address' => $purchaseOrder->mailing_address,
+            'customer_id' => $purchaseOrder->customer_id,
+            'shipping_address' => $purchaseOrder->shipping_address,
+            'purchase_order_date' => date("Y-m-d"),
+            'ship_via' => $purchaseOrder->ship_via,
+            'tags' => $purchaseOrder->tags,
+            'message_to_vendor' => $purchaseOrder->message_to_vendor,
+            'memo' => $purchaseOrder->memo,
+            'total_amount' => $purchaseOrder->total_amount,
+            'remaining_balance' => $purchaseOrder->total_amount,
+            'status' => 1
+        ];
+
+        $newPurchaseOrder = $this->expenses_model->add_purchase_order($purchaseOrderData);
+
+        if($newPurchaseOrder) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Purchase Order',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newPurchaseOrder,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            if (count($categories) > 0) {
+                $this->insert_categories($newPurchaseOrder, $categories);
+            }
+
+            if (count($items) > 0) {
+                $this->insert_items($newPurchaseOrder, $items);
+            }
+        }
+
+        return $newPurchaseOrder;
+    }
+
+    private function occur_vendor_credit($vCreditId)
+    {
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
+        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vCreditId);
+        $categories = $this->expenses_model->get_transaction_categories($vCreditId, 'Vendor Credit');
+        $items = $this->expenses_model->get_transaction_items($vCreditId, 'Vendor Credit');
+
+        $vCreditData = [
+            'company_id' => $vCredit->company_id,
+            'vendor_id' => $vCredit->vendor_id,
+            'mailing_address' => $vCredit->mailing_address,
+            'payment_date' => date("Y-m-d"),
+            'ref_no' => $vCredit->ref_no,
+            'permit_no' => $vCredit->permit_no,
+            'tags' => $vCredit->tags,
+            'memo' => $vCredit->memo,
+            'total_amount' => $vCredit->total_amount,
+            'remaining_balance' => $vCredit->total_amount,
+            'status' => 1
+        ];
+
+        $newvCredit = $this->expenses_model->add_vendor_credit($vCreditData);
+
+        if($newvCredit) {
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'Vendor Credit',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newvCredit,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
+
+            if ($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
+                $vendorCredits = floatval($vCredit->total_amount);
+            } else {
+                $vendorCredits = floatval($vCredit->total_amount) + floatval($vendor->vendor_credits);
+            }
+
+            $vendorData = [
+                'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+            ];
+
+            $this->vendors_model->updateVendor($vendor->id, $vendorData);
+
+            if (count($categories) > 0) {
+                $this->insert_items($newvCredit, $categories);
+            }
+
+            if (count($items) > 0) {
+                $this->insert_items($newvCredit, $items);
+            }
+        }
+
+        return $newvCredit;
+    }
+
+    private function occur_credit_card_credit($ccCreditId)
+    {
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+        $attachments = $this->accounting_attachments_model->get_attachments('Credit Card Credit', $ccCreditId);
+        $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
+        $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
+
+        $creditData = [
+            'company_id' => $ccCredit->company_id,
+            'payee_type' => $ccCredit->payee_type,
+            'payee_id' => $ccCredit->payee_id,
+            'bank_credit_account_id' => $ccCredit->bank_credit_account_id,
+            'payment_date' => date("Y-m-d"),
+            'ref_no' => $ccCredit->ref_no,
+            'permit_no' => $ccCredit->permit_no,
+            'tags' => $ccCredit->tags,
+            'memo' => $ccCredit->memo,
+            'total_amount' => $ccCredit->total_amount,
+            'status' => 1
+        ];
+
+        $newCredit = $this->expenses_model->add_credit_card_credit($creditData);
+
+        if($newCredit) {
+            $creditAcc = $this->chart_of_accounts_model->getById($ccCredit->bank_credit_account_id);
+
+            $newBalance = floatval($creditAcc->balance) - floatval($ccCredit->total_amount);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => $creditAcc->company_id, 'balance' => $newBalance]);
+
+            if (count($attachments) > 0) {
+                $order = 1;
+                foreach ($attachments as $attachment) {
+                    $linkAttachmentData = [
+                        'type' => 'CC Credit',
+                        'attachment_id' => $attachment->id,
+                        'linked_id' => $newCredit,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            if (count($categories) > 0) {
+                $this->insert_categories($newCredit, $categories);
+            }
+
+            if (count($items) > 0) {
+                $this->insert_items($newCredit, $items);
+            }
+        }
+
+        return $newCredit;
+    }
+
+    private function insert_categories($transactionId, $categories)
+    {
+        $categoryDetails = [];
+        foreach ($categories as $category) {
+            $categoryDetails[] = [
+                'transaction_type' => $category->transaction_type,
+                'transaction_id' => $transactionId,
+                'expense_account_id' => $category->expense_account_id,
+                'category' => $category->category,
+                'description' => $category->description,
+                'amount' => $category->amount,
+                'billable' => $category->billable,
+                'markup_percentage' => $category->markup_percentage,
+                'tax' => $category->tax,
+                'customer_id' => $category->customer_id
+            ];
+
+            $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+            $expenseAccType = $this->account_model->getById($expenseAcc->account_id);
+
+            switch($category->transaction_type) {
+                case 'Expense' :
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                    }
+                break;
+                case 'Check' :
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                    }
+                break;
+                case 'Bill' :
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                    }
+                break;
+                case 'Vendor Credit' :
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    }
+                break;
+                case 'Credit Card Credit' :
+                    if ($expenseAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                    } else {
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    }
+                break;
+            }
+
+            if($category->transaction_type !== 'Purchase Order') {
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => $expenseAcc->company_id,
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+            }
+        }
+
+        $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+    }
+
+    private function insert_items($transactionId, $categories)
+    {
+        $itemDetails = [];
+        foreach ($items as $item) {
+            $itemDetails[] = [
+                'transaction_type' => $item->transaction_type,
+                'transaction_id' => $transactionId,
+                'item_id' => $item->item_id,
+                'location_id' => $item->location_id,
+                'quantity' => $item->quantity,
+                'rate' => $item->rate,
+                'discount' => $item->discount,
+                'tax' => $item->tax,
+                'total' => $item->total
+            ];
+
+            $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+            switch($item->transaction_type) {
+                case 'Expense' :
+                    $newQty = intval($location->qty) + intval($item->quantity);
+                break;
+                case 'Check' :
+                    $newQty = intval($location->qty) + intval($item->quantity);
+                break;
+                case 'Bill' :
+                    $newQty = intval($location->qty) + intval($item->quantity);
+                break;
+                case 'Vendor Credit' :
+                    $newQty = intval($location->qty) - intval($item->quantity);
+                break;
+                case 'Credit Card Credit' :
+                    $newQty = intval($location->qty) - intval($item->quantity);
+                break;
+            }
+
+            if($item->transaction_type !== 'Purchase Order') {
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+            }
+
+            if ($itemAccDetails) {
+                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                switch($item->transaction_type) {
+                    case 'Expense' :
+                        $newBalance = floatval($invAssetAcc->balance) + floatval($item->amount);
+                    break;
+                    case 'Check' :
+                        $newBalance = floatval($invAssetAcc->balance) + floatval($item->amount);
+                    break;
+                    case 'Bill' :
+                        $newBalance = floatval($invAssetAcc->balance) + floatval($item->amount);
+                    break;
+                    case 'Purchase Order' :
+                        $newQtyPO = intval($itemAccDetails->qty_po) + intval($item->quantity);
+
+                        $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
+                    break;
+                    case 'Vendor Credit' :
+                        $newBalance = floatval($item->total) - floatval($item->quantity);
+                        $newBalance = floatval($invAssetAcc->balance) + $newBalance;
+                        $newBalance = $newBalance - floatval($item->total);
+                    break;
+                    case 'Credit Card Credit' :
+                        $newBalance = floatval($item->total) - floatval($item->quantity);
+                        $newBalance = floatval($invAssetAcc->balance) + $newBalance;
+                        $newBalance = $newBalance - floatval($item->total);
+                    break;
+                }
+
+                if($item->transaction_type !== 'Purchase Order') {
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => $invAssetAcc->company_id,
+                        'balance' => $newBalance
+                    ];
+    
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
+            }
+        }
+
+        $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+    }
 }

@@ -161,7 +161,7 @@ class Attachments extends MY_Controller {
                             $text .= '</a></p>';
                         break;
                         case 'Expense' :
-                            $expense = $this->vendors_model->get_expense_by_id($link->linked_id);
+                            $expense = $this->vendors_model->get_expense_by_id($link->linked_id, logged('company_id'));
                             switch ($expense->payee_type) {
                                 case 'vendor':
                                     $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -188,7 +188,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Check' :
-                            $check = $this->vendors_model->get_check_by_id($link->linked_id);
+                            $check = $this->vendors_model->get_check_by_id($link->linked_id, logged('company_id'));
                             switch ($check->payee_type) {
                                 case 'vendor':
                                     $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
@@ -215,7 +215,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Bill' :
-                            $bill = $this->vendors_model->get_bill_by_id($link->linked_id);
+                            $bill = $this->vendors_model->get_bill_by_id($link->linked_id, logged('company_id'));
                             $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                             $payeeName = $vendor->display_name;
 
@@ -247,7 +247,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Purchase Order' :
-                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id);
+                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id, logged('company_id'));
                             $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
                             $payeeName = $vendor->display_name;
 
@@ -263,7 +263,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Vendor Credit' :
-                            $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id);
+                            $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id, logged('company_id'));
                             $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                             $payeeName = $vendor->display_name;
 
@@ -279,7 +279,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'CC Credit' :
-                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id);
+                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id, logged('company_id'));
                             switch ($ccCredit->payee_type) {
                                 case 'vendor':
                                     $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
@@ -318,7 +318,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Deposit' :
-                            $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id);
+                            $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id, logged('company_id'));
                             $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
@@ -327,7 +327,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Transfer' :
-                            $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id);
+                            $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id, logged('company_id'));
                             $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
 
@@ -336,7 +336,7 @@ class Attachments extends MY_Controller {
                             $text .= '</p>';
                         break;
                         case 'Journal' :
-                            $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+                            $journal = $this->accounting_journal_entries_model->getById($link->linked_id, logged('company_id'));
                             $amount = '$0.00';
                             
                             $text = '<p class="m-0"><a href="#" class="view-linked-journal text-info" data-id="'.$journal->id.'">';
@@ -498,7 +498,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Expense' :
-                        $expense = $this->vendors_model->get_expense_by_id($link->linked_id);
+                        $expense = $this->vendors_model->get_expense_by_id($link->linked_id, logged('company_id'));
                         switch ($expense->payee_type) {
                             case 'vendor':
                                 $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -525,7 +525,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Check' :
-                        $check = $this->vendors_model->get_check_by_id($link->linked_id);
+                        $check = $this->vendors_model->get_check_by_id($link->linked_id, logged('company_id'));
                         switch ($check->payee_type) {
                             case 'vendor':
                                 $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
@@ -552,7 +552,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Bill' :
-                        $bill = $this->vendors_model->get_bill_by_id($link->linked_id);
+                        $bill = $this->vendors_model->get_bill_by_id($link->linked_id, logged('company_id'));
                         $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                         $payeeName = $vendor->display_name;
 
@@ -584,7 +584,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Purchase Order' :
-                        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id);
+                        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id, logged('company_id'));
                         $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
                         $payeeName = $vendor->display_name;
 
@@ -600,7 +600,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Vendor Credit' :
-                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id);
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id, logged('company_id'));
                         $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                         $payeeName = $vendor->display_name;
 
@@ -616,7 +616,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'CC Credit' :
-                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id);
+                        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id, logged('company_id'));
                         switch ($ccCredit->payee_type) {
                             case 'vendor':
                                 $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
@@ -655,7 +655,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Deposit' :
-                        $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id);
+                        $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id, logged('company_id'));
                         $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
                         $amount = str_replace('$-', '-$', $amount);
 
@@ -664,7 +664,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Transfer' :
-                        $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id);
+                        $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id, logged('company_id'));
                         $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
                         $amount = str_replace('$-', '-$', $amount);
 
@@ -673,7 +673,7 @@ class Attachments extends MY_Controller {
                         $links .= '</p>';
                     break;
                     case 'Journal' :
-                        $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+                        $journal = $this->accounting_journal_entries_model->getById($link->linked_id, logged('company_id'));
                         $amount = '$0.00';
                         
                         $links .= '<p style="margin: 0">';
@@ -733,7 +733,7 @@ class Attachments extends MY_Controller {
                             }
                         break;
                         case 'Expense' :
-                            $expense = $this->vendors_model->get_expense_by_id($link->linked_id);
+                            $expense = $this->vendors_model->get_expense_by_id($link->linked_id, logged('company_id'));
                             switch ($expense->payee_type) {
                                 case 'vendor':
                                     $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
@@ -759,7 +759,7 @@ class Attachments extends MY_Controller {
                             $folder = "Expense/Expense $payeeName $amount";
                         break;
                         case 'Check' :
-                            $check = $this->vendors_model->get_check_by_id($link->linked_id);
+                            $check = $this->vendors_model->get_check_by_id($link->linked_id, logged('company_id'));
                             switch ($check->payee_type) {
                                 case 'vendor':
                                     $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
@@ -785,7 +785,7 @@ class Attachments extends MY_Controller {
                             $folder = "Check/Check $payeeName $amount";
                         break;
                         case 'Bill' :
-                            $bill = $this->vendors_model->get_bill_by_id($link->linked_id);
+                            $bill = $this->vendors_model->get_bill_by_id($link->linked_id, logged('company_id'));
                             $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
                             $payeeName = $vendor->display_name;
 
@@ -813,7 +813,7 @@ class Attachments extends MY_Controller {
                             $folder = "Bill Payment/Bill Payment $payeeName $amount";
                         break;
                         case 'Purchase Order' :
-                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id);
+                            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($link->linked_id, logged('company_id'));
                             $vendor = $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id);
                             $payeeName = $vendor->display_name;
 
@@ -827,7 +827,7 @@ class Attachments extends MY_Controller {
                             $folder = "Purchase Order/Purchase Order $payeeName $amount";
                         break;
                         case 'Vendor Credit' :
-                            $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id);
+                            $vCredit = $this->vendors_model->get_vendor_credit_by_id($link->linked_id, logged('company_id'));
                             $vendor = $this->vendors_model->get_vendor_by_id($vCredit->vendor_id);
                             $payeeName = $vendor->display_name;
 
@@ -841,7 +841,7 @@ class Attachments extends MY_Controller {
                             $folder = "Vendor Credit/Vendor Credit $payeeName $amount";
                         break;
                         case 'CC Credit' :
-                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id);
+                            $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($link->linked_id, logged('company_id'));
                             switch ($ccCredit->payee_type) {
                                 case 'vendor':
                                     $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
@@ -881,7 +881,7 @@ class Attachments extends MY_Controller {
                             $folder = "Credit Card Payment/Credit Card Pmt $payeeName $amount";
                         break;
                         case 'Deposit' :
-                            $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id);
+                            $deposit = $this->accounting_bank_deposit_model->getById($link->linked_id. logged('company_id'));
 
                             $amount = '$'.number_format($deposit->total_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
@@ -893,7 +893,7 @@ class Attachments extends MY_Controller {
                             $folder = "Deposit/Deposit $amount";
                         break;
                         case 'Transfer' :
-                            $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id);
+                            $transfer = $this->accounting_transfer_funds_model->getById($link->linked_id, logged('company_id'));
 
                             $amount = '$'.number_format($transfer->transfer_amount, 2, '.', ',');
                             $amount = str_replace('$-', '-$', $amount);
@@ -905,7 +905,7 @@ class Attachments extends MY_Controller {
                             $folder = "Transfer/Transfer $amount";
                         break;
                         case 'Journal' :
-                            $journal = $this->accounting_journal_entries_model->getById($link->linked_id);
+                            $journal = $this->accounting_journal_entries_model->getById($link->linked_id, logged('company_id'));
 
                             if($zip->locateName("Journal/") === false) {
                                 $zip->addEmptyDir("Journal");

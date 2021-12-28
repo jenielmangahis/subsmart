@@ -548,9 +548,11 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_expense_by_id($expenseId)
+	public function get_expense_by_id($expenseId, $companyId = null)
 	{
-		$this->db->where('company_id', logged('company_id'));
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $expenseId);
 		$query = $this->db->get('accounting_expense');
 		return $query->row();
@@ -564,9 +566,11 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_check_by_id($checkId)
+	public function get_check_by_id($checkId, $companyId = null)
 	{
-		$this->db->where('company_id', logged('company_id'));
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $checkId);
 		$query = $this->db->get('accounting_check');
 		return $query->row();
@@ -587,9 +591,11 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_bill_by_id($billId)
+	public function get_bill_by_id($billId, $companyId = null)
 	{
-		$this->db->where('company_id', logged('company_id'));
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $billId);
 		$query = $this->db->get('accounting_bill');
 		return $query->row();
@@ -651,9 +657,11 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_purchase_order_by_id($purchaseOrderId)
+	public function get_purchase_order_by_id($purchaseOrderId, $companyId = null)
 	{
-		$this->db->where('company_id', logged('company_id'));
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $purchaseOrderId);
 		$query = $this->db->get('accounting_purchase_order');
 		return $query->row();
@@ -667,9 +675,11 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_vendor_credit_by_id($vendorCreditId)
+	public function get_vendor_credit_by_id($vendorCreditId, $companyId = null)
 	{
-		$this->db->where('company_id', logged('company_id'));
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $vendorCreditId);
 		$query = $this->db->get('accounting_vendor_credit');
 		return $query->row();
@@ -699,9 +709,11 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_credit_card_credit_by_id($ccCreditId)
+	public function get_credit_card_credit_by_id($ccCreditId, $companyId = null)
 	{
-		$this->db->where('company_id', logged('company_id'));
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
 		$this->db->where('id', $ccCreditId);
 		$query = $this->db->get('accounting_credit_card_credits');
 		return $query->row();

@@ -543,3 +543,73 @@
     cursor: default;
     color: #A0A09F;
 }
+
+#customer-single-modal .customer-details-section .attachement-file-section {
+    border: dashed 4px #EAF3EE;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section .label {
+    margin-top: -24px;
+    margin-bottom: 10px;
+    background: #fff;
+    position: absolute;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section button.attachment-btn {
+    background: #2CA01C;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 36px;
+    height: auto;
+    border: none;
+    margin: 10px;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section input[name='attachment-file'] {
+    display: none;
+}
+
+#customer-single-modal .customer-details-section .attachement-viewer {
+    display: flow-root;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section .attachement-viewer .img-holder {
+    position: relative;
+    float: left;
+    width: 20%;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section .attachement-viewer .img-holder:hover .delete {
+    display: block;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section .attachement-viewer .delete {
+    position: absolute;
+    z-index: 1;
+    color: #fff;
+    background: #4a4a4af2;
+    padding: 5px 11px;
+    right: -10px;
+    border-radius: 50%;
+    top: -10px;
+    cursor: pointer;
+    display: none;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section .attachement-viewer img {
+    width: 109px;
+    padding: 3px;
+    border: solid 1px #EAF3EE;
+    margin: 3px;
+}
+
+#customer-single-modal .customer-details-section .attachement-file-section button.attachment-btn:hover {
+    background: #238a15;
+}
