@@ -42,6 +42,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
+}
 </style>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
@@ -88,7 +92,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <table id="dataTable1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Id</th>
                                     <th>Title</th>
                                     <th style="width: 10%;">Action</th>
                                 </tr>
@@ -97,28 +100,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <?php if (!empty($priorityList)) { ?>
                                     <?php foreach ($priorityList as $priority): ?>
                                         <tr>
-                                            <td width="60"><?php echo $priority->id ?></td>
+                                            <td><?php echo $priority->title; ?></td>
                                             <td>
-                                                <?php echo $priority->title ?>
-                                            </td>
-                                            <td>
-                                                <?php //if (hasPermissions('plan_edit')): ?>
-                                                    <a href="<?php echo url('workorder/priority/edit/' . $priority->id) ?>"
-                                                       class="btn btn-sm btn-info" title="Edit item"
-                                                       data-toggle="tooltip"><i class="fa fa-pencil"></i> Edit</a>
-                                                <?php //endif ?>
-                                                <?php //if (hasPermissions('plan_delete')): ?>
-                                                    <a href="<?php echo url('workorder/priority/delete/' . $priority->id) ?>"
-                                                       class="btn btn-sm btn-danger remove-data-item"
-                                                       title="Delete item" data-toggle="tooltip"><i
-                                                                class="fa fa-trash"></i> Delete</a>
-                                                <?php //endif ?>
+                                                <div class="dropdown dropdown-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo url('workorder/priority/edit/' . $priority->id) ?>"><i class="fa fa-pencil"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" class="btn-delete-priority" href="javascript:void(0);" data-id="<?php echo $priority->id; ?>" data-name="<?php echo $priority->title;  ?>"><i class="fa fa-trash"></i> Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>
                                 <?php } ?>
                                 </tbody>
                             </table>
+
+                            <!-- Modal Delete -->
+                            <div class="modal fade bd-example-modal-md" id="modalDeletePriority" tabindex="-1" role="dialog" aria-labelledby="modalDeleteChecklistTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-md" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <?php echo form_open_multipart('workorder/delete_priority', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                                  <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
+                                  <div class="modal-body">
+                                      <p>Are you sure you want to delete <span class="priority-name"></span>?</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-danger">Yes</button>
+                                  </div>
+                                  <?php echo form_close(); ?>
+                                </div>
+                              </div>
+                            </div>
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
@@ -137,6 +164,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $('#dataTable1').DataTable()
+    $(function(){
+        $('#dataTable1').DataTable()
+        $(".btn-delete-priority").click(function(){
+            var pname = $(this).attr('data-name');
+            var pid = $(this).attr('data-id');
+
+            $("#pid").val(pid);
+            $(".priority-name").html('<b>'+pname+'</b>');
+            $("#modalDeletePriority").modal('show');
+        });
+    });
 
 </script>

@@ -7,229 +7,201 @@
 .checklist-form .form-control{
     width: 50%;
 }
-.checklist-items-container{
-  margin-top: 15px;
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.checklist-container{
+    padding: 0px;
+    margin: 0px;
+}
+.checklist-container li{
+    width: 50%;
+    padding: 10px;
+    font-size: 17px;
+    background-color: #32243d;
+    color: #ffff;
+    margin: 10px 0px;
+}
+.checklist-container li a{
+    float: right;
 }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
+        <div class="card p-40">
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title"><i class="fa fa-pencil"></i> Edit Checklist</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">Checklists</li>
-                            <li class="breadcrumb-item active">Edit</li>
-                        </ol>
+            <div class="row">
+                    <div class="col">
+                        <h3 class="m-0">Edit Checklist</h3>
+                    </div>
+                    <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;">
+                        Edit workorder checklist.    
                     </div>
                 </div>
-            </div>
             <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
                         <hr />
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('workorder/update_checklist', [ 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
-                          <input type="hidden" value="<?= $checklist->id; ?>" name="cid" id="checklist-cid" />
+                        <?php echo form_open_multipart('workorder/update_checklist', [ 'class' => 'form-validate checklist-form', 'id' => 'frm-update-checklist', 'autocomplete' => 'off' ]); ?>
+                          <input type="hidden" name="cid" value="<?php echo $checklist->id; ?>" id="checklist-id">
+
                           <div class="form-group">
                               <label>Checklist Name</label> <span class="form-required">*</span>
                               <input type="text" name="checklist_name" value="<?= $checklist->checklist_name; ?>"  class="form-control" required="" autocomplete="off" />
                           </div>
-                          <br />
                           <div class="form-group">
-                              <label>Attach this checklist to all Work Orders for</label> <span class="form-required">*</span><br />
-                              <small>Optional, select from the options below if this checklist will be automatically attached when you create a new Work Order.</small><br /><br />
+                              <label>Attach this checklist to all Work Orders for</label> <span class="form-required">*</span><br />                              
+                              <small>Select from the options below to which this checklist will be automatically attached when you create a new Work Order.</small>
+                              <br />
                               <select class="form-control" id="attach-to-work-order" name="attach_to_work_order" required="">
+                                <option value="0">- Select -</option>
                                 <?php foreach($checklistAttachType as $key => $value){ ?>
                                     <option <?= $checklist->attach_to_work_order == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                 <?php } ?>
                               </select>
-                          </div>
+                          </div>          
                           <br />
                           <div class="checklist-items">
-                            <h5>Checklist Items</h5>
-                            <a href="javascript:void(0);" class="btn-add-checklist-item"><span class="fa fa-plus-square fa-margin-right"></span> Add Item</a>
-                            <div class="checklist-items-container"></div>
-                          </div>                          
-                          <div class="col-md-5">
+                            <h5 style="width:50%;">Checklist Items <a href="javascript:void(0);" class="btn-add-checklist-item btn btn-sm btn-primary" style="float:right;"><span class="fa fa-plus-square fa-margin-right"></span> Add Item</a></h5>
+                            
+                            <ul class="checklist-container">
+                              <?php foreach($checkListItems as $ci){ ?>
+                                <li>
+                                  <input type="hidden" name="checklistItems[]" value="<?php echo $ci->item_name; ?>" /><?php echo $ci->item_name; ?><a class="btn-remove-checklist-item btn btn-danger btn-sm" href="javascript:void(0);"><i class="fa fa-trash"></i></a>
+                                </li>
+                              <?php } ?>
+                            </ul>
+                          </div>              
+                          <div class="col-md-5" style="padding: 0px;margin-top: 110px;">                            
+                            <button type="submit" class="btn btn-primary btn-update-checklist">Save</button>
                             <a class="btn btn-default" href="<?php echo base_url('workorder/checklists'); ?>">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
                       </div>
                       <?php echo form_close(); ?>
                     </div>
                     <!-- end card -->
-
-                    <!-- Modal Add Checklist Item --> 
-                    <div class="modal fade bd-example-modal-lg" id="modalAddChecklistItem" tabindex="-1" role="dialog" aria-labelledby="modalAddChecklistItemTitle" aria-hidden="true">
-                      <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-add-checklist-item', 'autocomplete' => 'off' ]); ?>
-                      <input type="hidden" value="<?= $checklist->id; ?>" name="cid" />
-                      <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Add New Item</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-group">
-                                  <label>Item Name</label>
-                                  <input type="text" name="item_name" id="item_name" value="" class="form-control" autocomplete="off" required="">
-                                </div>
-                              </div>          
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Add</button>
-                          </div>
-                        </div>
-                      </div>
-                      <?php echo form_close(); ?>
-                    </div>
-
-                    <!-- Modal Edit Checklist Item --> 
-                    <div class="modal fade bd-example-modal-lg" id="modalEditChecklistItem" tabindex="-1" role="dialog" aria-labelledby="modalEditChecklistItemTitle" aria-hidden="true">
-                      <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-edit-checklist-item', 'autocomplete' => 'off' ]); ?>
-                      <input type="hidden" value="<?= $checklist->id; ?>" name="cid" />
-                      <input type="hidden" value="" name="edit_cheklist_item" id="chk-list-id">
-                      <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Edit Item</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-group">
-                                  <label>Item Name</label>
-                                  <input type="text" name="edit_item_name" id="edit-item-name" value="" class="form-control" autocomplete="off" required="">
-                                </div>
-                              </div>          
-                            </div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                          </div>
-                        </div>
-                      </div>
-                      <?php echo form_close(); ?>
-                    </div>
                 </div>
             </div>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
+
+        <!-- Modal Add Checklist Item --> 
+        <div class="modal fade bd-example-modal-md" id="modalAddChecklistItem" tabindex="-1" role="dialog" aria-labelledby="modalAddChecklistItemTitle" aria-hidden="true">
+          <?php echo form_open_multipart('', [ 'class' => 'form-validate', 'id' => 'frm-add-checklist-item', 'autocomplete' => 'off' ]); ?>
+          <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add New Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="padding: 1px 30px;">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Item Name</label>
+                      <input type="text" name="item_name" id="item_name" value="" class="form-control" autocomplete="off" required="">
+                    </div>
+                  </div>          
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-add-checklist">Add</button>
+              </div>
+            </div>
+          </div>
+          <?php echo form_close(); ?>
+        </div>
+
+        </div>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_plan_builder'); ?>
+<?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-  
-  load_checklist_items();
+    $(".btn-add-checklist-item").click(function(){
+        $("#modalAddChecklistItem").modal("show");
+    });
 
-  $(".btn-add-checklist-item").click(function(){
-    $("#modalAddChecklistItem").modal("show");
-  });
+    $("#frm-add-checklist-item").submit(function(e){
+        e.preventDefault();
+        var item_name = $("#item_name").val();
+        var add_row = '<li><input type="hidden" name="checklistItems[]" value="'+item_name+'" />'+item_name+'<a class="btn-remove-checklist-item btn btn-danger btn-sm" href="javascript:void(0);"><i class="fa fa-trash"></i></a></li>';
 
-  $("#modalAddChecklistItem").submit(function(e){
-      e.preventDefault();
-      var url = base_url + 'workorder/_create_checklist_item';
-      setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             data: $("#frm-add-checklist-item").serialize(),
-             dataType: 'json',
-             success: function(o)
-             {
-                $("#item_name").val("");
-                $("#modalAddChecklistItem").modal("hide");
+        $(".checklist-container").append(add_row).children(':last').hide().fadeIn(300);
 
-                load_checklist_items();
-             }
-          });
-      }, 300);
-  });
+        $("#item_name").val("");
+        $("#modalAddChecklistItem").modal("hide");
 
-  function load_checklist_items(){
-      var msg = '<div class="alert alert-info" role="alert"><img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Loading...</div>';
-      var url = base_url + 'workorder/_load_checklist_items';
-      var cid = $("#checklist-cid").val();
+    });
 
-      $(".checklist-items-container").html(msg);
+    $(document).on('click', '.btn-remove-checklist-item', function(){
+        console.log($(this).parent('ul').find('li'));
+        console.log($(this).closest('li'));
+        $(this).closest('li').fadeOut(300, function(){
+            $(this).remove();
+        });
+    });
 
-      setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             data: {cid:cid},
-             success: function(o)
-             {
-                $(".checklist-items-container").html(o);
+    $("#frm-update-checklist").submit(function(e){
+        e.preventDefault();
+        var url = base_url + 'workorder/_update_checklist';
+        $(".btn-update-checklist").html('<span class="spinner-border spinner-border-sm m-0"></span> Saving');
+        setTimeout(function () {
+            $.ajax({
+                 type: "POST",
+                 url: url,
+                 data: $("#frm-update-checklist").serialize(),
+                 dataType: 'json',
+                 success: function(o)
+                 {
+                    if( o.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Workorder checklist was successfully updated.',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            location.href = base_url + "/workorder/checklists"; 
+                        });
+                    }else{
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Cannot find data.',
+                          text: o.msg
+                        });
+                    }
 
-                $(".btn-edit-checklist-item").click(function(){                  
-                  var eid = $(this).attr("data-id");
-                  var item_name = $(this).attr("data-name");
-
-                  $("#modalEditChecklistItem").modal("show");
-
-                  $("#chk-list-id").val(eid);
-                  $("#edit-item-name").val(item_name);
-                });
-                  
-                $(".btn-delete-checklist-item").click(function(){
-                  var url = base_url + 'workorder/_delete_checklist_items';
-                  var eid = $(this).attr("data-id");
-                  
-                  setTimeout(function () {
-                      $.ajax({
-                         type: "POST",
-                         url: url,
-                         data: {eid:eid},
-                         success: function(o)
-                         {
-                            load_checklist_items();
-                         }
-                      });
-                  }, 1000);
-                });
-
-                $("#frm-edit-checklist-item").submit(function(e){
-                  e.preventDefault();
-
-                  var url = base_url + 'workorder/_update_checklist_item';
-                  setTimeout(function () {
-                      $.ajax({
-                         type: "POST",
-                         url: url,
-                         data: $("#frm-edit-checklist-item").serialize(),
-                         dataType: 'json',
-                         success: function(o)
-                         {
-                            $("#modalEditChecklistItem").modal("hide");
-
-                            load_checklist_items();
-                         }
-                      });
-                  }, 300);
-
-                });
-             }
-          });
-      }, 1000);
-  }
+                    $(".btn-update-checklist").html('Save');
+                 }
+            });
+        }, 300);        
+    });
 });
 </script>

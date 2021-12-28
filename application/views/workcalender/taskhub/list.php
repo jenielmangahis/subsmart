@@ -30,6 +30,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
@@ -41,9 +45,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="row align-items-center">
                         <div class="col-sm-6">
                             <h3 class="page-title">Task Hub</h3>
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item active">Listing tasks associated to the user.</li>
-                            </ol>
                         </div>
                         <div class="col-sm-6 pr-b10">
                             <div class="float-right d-none d-md-block">
@@ -69,7 +70,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <table id="dataTable1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Subject</th>
                                     <th>Status</th>
                                     <th>Date Created</th>
@@ -79,7 +79,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <tbody>
                                     <?php foreach ($tasks as $key => $row) { ?>
                                         <tr>
-                                            <td width="60"><?php echo $row->task_id ?></td>
                                             <td>
                                                <a href="<?php echo url('taskhub/view/' . $row->task_id) ?>"><?php echo $row->subject; ?></a>
                                             </td>
@@ -92,11 +91,22 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 ?>
                                             </td>
                                             <td>
-                                               <a href="<?php echo url('taskhub/entry/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Edit Task" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
-
-                                               <a href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="Add Update" data-toggle="tooltip"><i class="fa fa-sticky-note-o"></i></a>
-
-                                               <a href="<?php echo url('taskhub/view/'.$row->task_id) ?>" class="btn btn-sm btn-default" title="View Comments" data-toggle="tooltip"><i class="fa fa-commenting-o"></i></a>
+                                                <div class="dropdown dropdown-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo url('taskhub/entry/'.$row->task_id) ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo url('taskhub/addupdate/'.$row->task_id) ?>"><i class="fa fa-sticky-note-o"></i> Add Update</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo url('taskhub/view/'.$row->task_id) ?>"><i class="fa fa-commenting-o"></i> View Comments</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </td>
                                          </tr>
                                     <?php } ?>
@@ -185,8 +195,20 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     $(document).ready(function(){
         tasks_table = $('#dataTable1').DataTable({
-                        "order": []
-                      });
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+          "columns": [
+            { "width": "50%" },
+            { "width": "15%" },        
+            { "width": "10%" },                    
+            { "width": "10%" }
+          ]
+        });
 
         $('#btn-th-open-search').click(function(e){
             e.preventDefault();
