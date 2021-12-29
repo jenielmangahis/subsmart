@@ -898,6 +898,7 @@ class Cron_Jobs_Controller extends CI_Controller
     public function cron_job_daily()
     {
         $this->invoice_due_status_checker();
+        $this->cron_recurring_transactions();
     }
     public function invoice_due_status_checker()
     {
@@ -906,7 +907,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->invoice_model->change_due_invoice_status($date_now, "Overdue");
     }
 
-    public function cron_recurring_transactions()
+    private function cron_recurring_transactions()
     {
         $this->load->model('accounting_recurring_transactions_model');
         $transactions = $this->accounting_recurring_transactions_model->get_by_next_date(date('Y-m-d'));
@@ -1226,6 +1227,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('vendors_model');
         $this->load->model('accounting_attachments_model');
         $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
         $expense = $this->vendors_model->get_expense_by_id($expenseId);
         $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expenseId);
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
@@ -1304,10 +1306,13 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('accounting_attachments_model');
         $this->load->model('chart_of_accounts_model');
         $this->load->model('expenses_model');
+        $this->load->model('accounting_assigned_checks_model');
         $check = $this->vendors_model->get_check_by_id($checkId);
         $attachments = $this->accounting_attachments_model->get_attachments('Check', $checkId);
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
         $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+
+        $lastCheck = $this->vendors_model->get_company_last_check($check->company_id);
 
         $checkData = [
             'company_id' => $check->company_id,
@@ -1316,7 +1321,7 @@ class Cron_Jobs_Controller extends CI_Controller
             'bank_account_id' => $check->bank_account_id,
             'mailing_address' => $check->mailing_address,
             'payment_date' => date("Y-m-d"),
-            'check_no' => null,
+            'check_no' => $check->check_no !== "" && !is_null($check->check_no) ? intval($lastCheck->check_no)+1 : $check->check_no,
             'to_print' => $check->to_print,
             'permit_no' => $check->permit_no,
             'tags' => $check->tags,
@@ -1356,16 +1361,16 @@ class Cron_Jobs_Controller extends CI_Controller
 
             $this->chart_of_accounts_model->updateBalance($bankAccData);
 
-            // if (is_null($check->to_print)) {
-            //     $assignCheck = [
-            //         'check_no' => $checkData['check_no'],
-            //         'transaction_type' => 'check',
-            //         'transaction_id' => $checkId,
-            //         'payment_account_id' => $checkData['bank_account_id']
-            //     ];
+            if (is_null($check->to_print)) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $newCheck,
+                    'payment_account_id' => $checkData['bank_account_id']
+                ];
 
-            //     $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
-            // }
+                $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+            }
 
             if (count($categories) > 0) {
                 $this->insert_categories($newCheck, $categories);
@@ -1635,6 +1640,9 @@ class Cron_Jobs_Controller extends CI_Controller
 
     private function insert_categories($transactionId, $categories)
     {
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('account_model');
+        $this->load->model('expenses_model');
         $categoryDetails = [];
         foreach ($categories as $category) {
             $categoryDetails[] = [
@@ -1709,6 +1717,9 @@ class Cron_Jobs_Controller extends CI_Controller
 
     private function insert_items($transactionId, $categories)
     {
+        $this->load->model('items_model');
+        $this->load->model('chart_of_accounts_model');
+        $this->load->model('expenses_model');
         $itemDetails = [];
         foreach ($items as $item) {
             $itemDetails[] = [

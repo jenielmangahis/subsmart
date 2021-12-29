@@ -1212,8 +1212,8 @@ class Accounting_modals extends MY_Controller
                     $this->chart_of_accounts_model->updateBalance($transferToAccData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -1235,9 +1235,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -1282,7 +1284,7 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
@@ -1528,8 +1530,8 @@ class Accounting_modals extends MY_Controller
             if ($entryId > 0) {
                 if (isset($data['template_name'])) {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -1551,9 +1553,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -1598,12 +1602,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -1754,8 +1758,8 @@ class Accounting_modals extends MY_Controller
             if ($depositId > 0) {
                 if (isset($data['template_name'])) {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -1777,9 +1781,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -1824,12 +1830,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -2766,8 +2772,8 @@ class Accounting_modals extends MY_Controller
                     $this->chart_of_accounts_model->updateBalance($paymentAccData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -2789,9 +2795,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -2836,12 +2844,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -3077,8 +3085,8 @@ class Accounting_modals extends MY_Controller
                     }
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -3100,9 +3108,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -3147,12 +3157,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -3381,8 +3391,8 @@ class Accounting_modals extends MY_Controller
                     $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -3404,9 +3414,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -3451,12 +3463,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -4013,8 +4025,8 @@ class Accounting_modals extends MY_Controller
                     $this->vendors_model->updateVendor($vendor->id, $vendorData);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -4036,9 +4048,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -4083,12 +4097,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -4293,8 +4307,8 @@ class Accounting_modals extends MY_Controller
             if ($purchaseOrderId) {
                 if(isset($data['template_name'])) {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -4316,9 +4330,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -4363,12 +4379,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     
@@ -4552,8 +4568,8 @@ class Accounting_modals extends MY_Controller
                     $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
                 } else {
                     if($data['recurring_type'] !== 'unscheduled') {
-                        $startDate = date("m/d/Y", strtotime($data['start_date']));
                         $currentDate = date("m/d/Y");
+                        $startDate = $data['start_date'] === '' ? $currentDate : date("m/d/Y", strtotime($data['start_date']));
                         $every = $data['recurr_every'];
 
                         switch($data['recurring_interval']) {
@@ -4575,9 +4591,11 @@ class Accounting_modals extends MY_Controller
                                 $dayNum = array_search($day, $days);
                                 $next = $startDate;
         
-                                do {
-                                    $next = date("m/d/Y", strtotime("$next +1 day"));
-                                } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                if(intval(date("w", strtotime($next))) !== $dayNum) {
+                                    do {
+                                        $next = date("m/d/Y", strtotime("$next +1 day"));
+                                    } while(intval(date("w", strtotime($next))) !== $dayNum);
+                                }
                             break;
                             case 'monthly' :
                                 if($data['recurring_week'] === 'day') {
@@ -4622,12 +4640,12 @@ class Accounting_modals extends MY_Controller
                         'recurring_week' => $data['recurring_interval'] === 'monthly' ? $data['recurring_week'] : null,
                         'recurring_day' => $data['recurring_interval'] !== 'daily' ? $data['recurring_day'] : null,
                         'recurr_every' => $data['recurring_interval'] !== 'yearly' ? $data['recurr_every'] : null,
-                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? ($data['start_date'] !== '' ? date('Y-m-d', strtotime($data['start_date'])) : null) : null,
                         'end_type' => $data['end_type'],
                         'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
                         'max_occurrences' => $data['end_type'] === 'after' ? $data['max_occurrence'] : null,
                         'current_occurrence' => 0,
-                        'next_date' => $next,
+                        'next_date' => date("Y-m-d", strtotime($next)),
                         'status' => 1
                     ];
     

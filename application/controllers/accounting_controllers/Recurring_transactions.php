@@ -228,16 +228,6 @@ class Recurring_transactions extends MY_Controller {
                     break;
                     case 'yearly' :
                         $interval = 'Every Year';
-
-                        // $month = $item['recurring_month'];
-                        // $day = $item['recurring_day'];
-                        // // $previous = date("$month/$day/Y", strtotime($startDate));
-                        // // $next = date("$month/$day/Y", strtotime($startDate));
-
-                        // // for($i = 0; strtotime($currentDate) > strtotime($next); $i++) {
-                        // //     $previous = $next;
-                        // //     $next = date("$month/$day/Y", strtotime("$next +1 year"));
-                        // // }
                     break;
                     default :
                         $interval = '';
