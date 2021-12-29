@@ -1671,7 +1671,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>Company Overview</td>
-                                                        <td>Loucelle Emperio</td>
+                                                        <td>nSmarTrac</td>
                                                         <td></td>
                                                         <td>
                                                         <select class="form-control " name="filter_date">
@@ -1690,7 +1690,152 @@
                                                             <option>Custom</option>
                                                         </select>
                                                         </td>
-                                                        <td><a href="">View</a></td>
+                                                        <td>
+                                                            <div class="dropdown dropdown-btn">
+                                                                    <a href="">View</a>
+                                                                    <a type="button" id="dropdown-button-icon" data-toggle="dropdown" aria-expanded="true">
+                                                                        <span class="btn-label"><i class="fa fa-chevron-down"></i></span>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu" aria-labelledby="dropdown-edit" x-placement="bottom-end" >
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="created-sales-receipt" data-toggle="modal" data-target="#" >
+                                                                                Edit
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="create-estimate-btn" data-toggle="modal" data-target="#">
+                                                                                Send
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="">
+                                                                                Export as PDF
+                                                                            </a>
+                                                                        </li><li>
+                                                                            <a href="javascript:void(0)" class="create-charge-btn" data-toggle="modal" data-target="#" >
+                                                                                Export as DOCX
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal" data-target="#">
+                                                                                Copy
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Sales Performance</td>
+                                                        <td>nSmarTrac</td>
+                                                        <td></td>
+                                                        <td>
+                                                        <select class="form-control " name="filter_date">
+                                                            <option>All dates</option>
+                                                            <option>Today</option>
+                                                            <option>Yesterday</option>
+                                                            <option>This week</option>
+                                                            <option>This month</option>
+                                                            <option>This quarter</option>
+                                                            <option>This year</option>
+                                                            <option>Last week</option>
+                                                            <option>Last month</option>
+                                                            <option>Last quarter</option>
+                                                            <option>Last year</option>
+                                                            <option selected>Last 365 days</option>
+                                                            <option>Custom</option>
+                                                        </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown dropdown-btn">
+                                                                <a href="">View</a>
+                                                                <a type="button" id="dropdown-button-icon" data-toggle="dropdown" aria-expanded="true">
+                                                                    <span class="btn-label"><i class="fa fa-chevron-down"></i></span>
+                                                                </a>
+                                                                <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu" aria-labelledby="dropdown-edit" x-placement="bottom-end" >
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" class="created-sales-receipt" data-toggle="modal" data-target="#" >
+                                                                            Edit
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" class="create-estimate-btn" data-toggle="modal" data-target="#">
+                                                                            Send
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" class="">
+                                                                            Export as PDF
+                                                                        </a>
+                                                                    </li><li>
+                                                                        <a href="javascript:void(0)" class="create-charge-btn" data-toggle="modal" data-target="#" >
+                                                                            Export as DOCX
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal" data-target="#">
+                                                                            Copy
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Expenses Performance</td>
+                                                        <td>nSmarTrac</td>
+                                                        <td></td>
+                                                        <td>
+                                                        <select class="form-control " name="filter_date">
+                                                            <option>All dates</option>
+                                                            <option>Today</option>
+                                                            <option>Yesterday</option>
+                                                            <option>This week</option>
+                                                            <option>This month</option>
+                                                            <option>This quarter</option>
+                                                            <option>This year</option>
+                                                            <option>Last week</option>
+                                                            <option>Last month</option>
+                                                            <option>Last quarter</option>
+                                                            <option>Last year</option>
+                                                            <option selected>Last 365 days</option>
+                                                            <option>Custom</option>
+                                                        </select>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown dropdown-btn">
+                                                                    <a href="">View</a>
+                                                                    <a type="button" id="dropdown-button-icon" data-toggle="dropdown" aria-expanded="true">
+                                                                        <span class="btn-label"><i class="fa fa-chevron-down"></i></span>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu" aria-labelledby="dropdown-edit" x-placement="bottom-end" >
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="created-sales-receipt" data-toggle="modal" data-target="#" >
+                                                                                Edit
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="create-estimate-btn" data-toggle="modal" data-target="#">
+                                                                                Send
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="">
+                                                                                Export as PDF
+                                                                            </a>
+                                                                        </li><li>
+                                                                            <a href="javascript:void(0)" class="create-charge-btn" data-toggle="modal" data-target="#" >
+                                                                                Export as DOCX
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal" data-target="#">
+                                                                                Copy
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>

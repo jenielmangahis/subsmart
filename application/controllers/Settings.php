@@ -101,13 +101,16 @@ class Settings extends MY_Controller {
 
     public function email_templates()
     {
+        $company_id = logged('company_id');
+
         $get_invoice_template = array(
             'where' => array(
-                'type_id' => 1,
-                'user_id' => logged('id'),
+                'company_id' => $company_id,
             )
         );
-        $this->page_data['invoice_templates'] = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
+
+        $emailTemplates = $this->general_model->get_all_with_keys($get_invoice_template,'settings_email_template');
+        $this->page_data['invoice_templates'] = $emailTemplates;
         $this->page_data['page']->menu = 'email_templates';
         $this->load->view('settings/email_templates', $this->page_data);
     }
@@ -151,8 +154,94 @@ class Settings extends MY_Controller {
         $this->load->view('settings/email_template_create', $this->page_data);
     }
 
-    public function sms_templates()
+
+    public function create_sms_template()
     {
+        $this->load->model('SmsTemplate_model');
+
+        $input = $this->input->post();
+        if ($input) {
+            unset($input['files']);
+            $input['user_id'] = 0;
+            $input['date_created'] = date("d-m-Y h:i A");
+            if($this->general_model->add_($input,"settings_email_template")){
+                redirect(base_url('settings/email_templates'));
+            }
+        }
+
+        $this->page_data['option_template_types'] = $this->SmsTemplate_model->optionTemplateTypes();
+        $this->page_data['option_details'] = $this->SmsTemplate_model->optionDetails();
+        $this->page_data['page']->menu = 'email_templates';
+        $this->load->view('settings/create_sms_template', $this->page_data);
+    }
+
+    public function edit_sms_template($id=null)
+    {
+        $this->load->model('SmsTemplate_model');
+
+        $company_id  = logged('company_id');
+        $smsTemplate = $this->SmsTemplate_model->getByIdAndCompanyId($id, $company_id);
+        if( $smsTemplate ){
+            $this->page_data['smsTemplate'] = $smsTemplate;
+            $this->page_data['option_template_types'] = $this->SmsTemplate_model->optionTemplateTypes();
+            $this->page_data['option_details'] = $this->SmsTemplate_model->optionDetails();
+            $this->page_data['page']->menu = 'email_templates';
+            $this->load->view('settings/edit_sms_template', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect(base_url('settings/sms_templates'));
+        }
+    }
+
+    public function ajax_update_sms_template()
+    {
+        $this->load->model('SmsTemplate_model');
+
+        $is_success = 0;
+
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $smsTemplate = $this->SmsTemplate_model->getByIdAndCompanyId($post['smstid'], $company_id);
+        if( $smsTemplate ){
+            $data = [
+                'type_id' => $post['type_id'],
+                'title' => $post['title'],
+                'details' => $post['details'],
+                'sms_body' => $post['sms_body']
+            ];
+            
+            $this->SmsTemplate_model->update($smsTemplate->id, $data);
+
+            $is_success = 1;
+        }
+        
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function sms_templates()
+    {   
+        $this->load->model('SmsTemplate_model');
+
+        $company_id = logged('company_id');
+        $template_types = $this->SmsTemplate_model->optionTemplateTypes();
+        $smsTemplates   = $this->SmsTemplate_model->getAllByCompanyId($company_id);
+
+        $data_sms_templates = array();
+
+        foreach($template_types as $key => $value){
+            $data_sms_templates[$key]['name'] = $value;
+            $data_sms_templates[$key]['data'] = array();
+            foreach( $smsTemplates as $t ){
+                if( $t->type_id == $key ){
+                    $data_sms_templates[$key]['data'][] = $t;
+                }
+            }
+        }
+
+        $this->page_data['data_sms_templates'] = $data_sms_templates;
         $this->page_data['page']->menu = 'sms_templates';
         $this->load->view('settings/sms_templates', $this->page_data);
     }
@@ -162,8 +251,8 @@ class Settings extends MY_Controller {
         $this->load->model('SettingEmailBranding_model');
 
         $user = $this->session->userdata('logged');
-
-        $settingEmailBranding = $this->SettingEmailBranding_model->findByUserId($user['id']);
+        $company_id = logged('company_id');
+        $settingEmailBranding = $this->SettingEmailBranding_model->findByCompanyId($company_id);
 
         if( $settingEmailBranding ){
             $setting_data = [
@@ -366,6 +455,7 @@ class Settings extends MY_Controller {
 
         $user = $this->session->userdata('logged');
         $post = $this->input->post();
+        $company_id = logged('company_id');
 
         $config['upload_path'] = 'uploads/email_branding/' . $user['id'];
 
@@ -389,7 +479,7 @@ class Settings extends MY_Controller {
         if( !empty($post) ){
             $this->load->model('SettingEmailBranding_model');
 
-            $settingEmailBranding = $this->SettingEmailBranding_model->findByUserId($user['id']);
+            $settingEmailBranding = $this->SettingEmailBranding_model->findByCompanyId($company_id);
             if( $settingEmailBranding ){
                 $data = array(
                     'email_from_name' => post('email_from_name'),
@@ -402,6 +492,7 @@ class Settings extends MY_Controller {
 
             }else{
                 $data = array(
+                    'company_id' => $company_id,
                     'user_id' => $user['id'],
                     'email_from_name' => post('email_from_name'),
                     'email_template_footer_text' => post('email_template_footer_text'),
@@ -761,6 +852,133 @@ class Settings extends MY_Controller {
         $this->session->set_flashdata('alert_class', 'alert-success');
 
         redirect('settings/schedule');
+    }
+
+    public function ajax_create_email_template()
+    {
+        $is_success = 0;
+
+        $post       = $this->input->post();
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+        $post['user_id']      = $user_id;
+        $post['company_id']   = $company_id;
+        $post['date_created'] = date("d-m-Y h:i A");
+        $this->general_model->add_($post,"settings_email_template");
+
+        $is_success = 1;
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_email_template()
+    {
+        $this->load->model('EmailTemplate_model');
+
+        $is_success = 0;
+
+        $post       = $this->input->post();
+
+        $get_template_data = array(
+            'where' => array(
+                'id' => $post['etemplateid'],
+            )
+        );
+
+        $emailTemplate = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
+        if( $emailTemplate ){
+            $data = [
+                'type_id' => $post['type_id'],
+                'title' => $post['title'],
+                'subject' => $post['subject'],
+                'details' => $post['details'],
+                'email_body' => $post['email_body']
+            ];
+            
+            $this->EmailTemplate_model->update($emailTemplate->id, $data);
+
+            $is_success = 1;
+        }
+        
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function delete_email_template()
+    {
+        $this->load->model('EmailTemplate_model');
+
+        $post = $this->input->post();
+        $company_id    =  logged('company_id');
+        
+        $get_template_data = array(
+            'where' => array(
+                'id' => $post['tid'],
+                'company_id' => $company_id
+            )
+        );
+
+        $emailTemplate = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
+
+        if( $emailTemplate ){
+            $this->EmailTemplate_model->delete($post['tid']);
+
+            $this->session->set_flashdata('message', 'Email template has been deleted successfully');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+            $this->activity_model->add("Workstatus #$permission Deleted by User: #".logged('id'));
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+        
+        
+        redirect('settings/email_templates');
+    }
+
+    public function delete_sms_template()
+    {
+        $this->load->model('SmsTemplate_model');
+
+        $post = $this->input->post();
+        $company_id    =  logged('company_id');
+
+        $smsTemplate = $this->SmsTemplate_model->getByIdAndCompanyId($post['smstid'], $company_id);
+
+        if( $smsTemplate ){
+            $this->SmsTemplate_model->delete($post['smstid']);
+
+            $this->session->set_flashdata('message', 'SMS template has been deleted successfully');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+            $this->activity_model->add("Workstatus #$permission Deleted by User: #".logged('id'));
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+        
+        
+        redirect('settings/sms_templates');
+    }
+
+    public function ajax_create_sms_template()
+    {
+        $this->load->model('SmsTemplate_model');
+
+        $is_success = 0;
+
+        $post       = $this->input->post();
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+        $post['user_id']      = $user_id;
+        $post['company_id']   = $company_id;
+        $post['date_created'] = date("d-m-Y h:i A");
+        $this->SmsTemplate_model->create($post);
+
+        $is_success = 1;
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
     }
 }
 

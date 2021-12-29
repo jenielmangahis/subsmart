@@ -3122,7 +3122,89 @@ function getInvoiceByDate($start_date, $end_date, $month) {
     return $fn;
 }
 
-function getworkOrderByEmployee($start_date, $end_date, $month) 
+function getworkOrderByEmployee($start_date, $end_date) 
+{
+    $CI =& get_instance();
+    // $CI->load->database();
+    $CI->load->model('Invoice_model', 'invoice_model');
+    // $CI->load->model('Invoice_items_model', 'invoice_items_model');
+    // $CI->load->model('Items_model', 'items_model');
+    $CI->load->model('Jobs_model', 'jobs_model'); //jobs
+    $CI->load->model('Users_model', 'user_model');
+
+    $company_id = logged('company_id');
+    // $results = $CI->user_model->getByWhere(array('company_id' => $company_id, 'date_hired >=' => $start_date, 'date_hired <=' => $end_date, 'status' => '1'));
+    $results = $CI->user_model->getByWhere(array('company_id' => $company_id));
+
+    // $CI->db->where('company_id', $company_id);
+    // $CI->db->where('date_issued >', $start_date);
+    // $CI->db->where('date_issued <', $end_date);
+    // $CI->db->where('status', 'Paid');
+    // $CI->db->where('is_recurring', 0);
+    // $results = $CI->db->get('invoices');
+    
+
+    $resultsJobs = $CI->jobs_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Completed'));
+    $fn = [];
+    // $comp_user = [];
+    // $grand_total = 0;
+    // $grand_num_invoice = 0;
+    // $grand_paid_invoice = 0;
+    // $item = 0;
+    
+
+    foreach ($results as $result) {
+        // $items = unserialize($result2->invoice_items);
+
+
+        // if (!in_array($result->id, $comp_user)) {
+        //     array_push($comp_user, $result->employee_id);
+        //     $num_invoice = 0;
+        //     $total_invoice = 0;
+        //     $paid_invoice = 0;
+
+            // foreach ($results as $result2) {
+            //     if ($result2->customer_id === $result->customer_id) {
+            //         $item += 1;
+            //         $num_invoice += 1;
+            //         $paid_invoice += 1;
+            //         $grand_num_invoice += 1;
+            //         // $grand_paid_invoice += 1;
+
+            //         $totals1 = unserialize($result2->invoice_totals);
+            //         $total_invoice += floatval($totals1['grand_total']);
+            //         // $grand_total += floatval($result2->grand_total);
+            //     }
+            // }
+            // array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->first_name,0), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
+            
+        
+        $jobs = $CI->jobs_model->getByWhere(array('employee_id' => $result->id));
+        foreach($jobs as $job)
+        {
+            $invoices = $CI->invoice_model->getByWhere(array('job_number' => $job->job_number));
+            foreach($invoices as $inv)
+            {
+                array_push($fn, array($result->FName.' '.$result->LName, $job->job_number, dollar_format($inv->grand_total), dollar_format($inv->grand_total)));
+            }
+            // array_push($fn, array($result->FName.' '.$result->LName, "", dollar_format($itemDet->grand_total), dollar_format($itemDet->grand_total)));
+            // array_push($fn, array($result->FName.' '.$result->LName, $job->job_number, "", ""));
+        }
+
+        // array_push($fn, array($result->FName.' '.$result->LName, $result->job_number, "", ""));
+
+            // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
+            // array_push($fn, array($title, $result->invoice_number, $result->date_issued, $paid_invoice, dollar_format($result->grand_total)));
+        // }
+        // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName , $result->job_number, "", $paid_invoice, dollar_format($result->grand_total)));
+    }
+
+    // array_push($fn, array(get_users_by_id($result->employee_id)->FName.' '.get_users_by_id($result->employee_id)->LName, "", $grand_paid_invoice, dollar_format($grand_total)));
+    // array_push($fn, array($result->job_number, "", "", $grand_paid_invoice, dollar_format($grand_total)));
+    return $fn;
+}
+
+function getworkOrderByEmployee_old($start_date, $end_date, $month) 
 {
     $CI =& get_instance();
     // $CI->load->database();

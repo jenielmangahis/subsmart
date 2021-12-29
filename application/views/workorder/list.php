@@ -75,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=date-issued-asc">Date
                                         Issued: Oldest</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
+                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=event-date-desc">Scheduled
                                         Date: Newest </a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         Date: Newest </a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=date-completed-asc">Completed
-                                        Date: Oldest </a></li>
+                                        Date: Oldest </a></li> -->
                                 <!--                                <li role="presentation"><a role="menuitem" tabindex="-1"-->
                                 <!--                                                           href="<?php echo base_url('workorder') ?>?order=name-asc">Job:-->
                                 <!--                                        A to Z</a></li>-->
@@ -99,12 +99,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=number-desc">Work
                                         Order #: Z to A</a></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1"
+                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=priority-asc">Priority:
                                         A to Z</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1"
                                                            href="<?php echo base_url('workorder') ?>?order=priority-desc">Priority:
-                                        Z to A</a></li>
+                                        Z to A</a></li> -->
                             </ul>
                         </div>
                     </div>

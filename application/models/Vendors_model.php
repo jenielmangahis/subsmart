@@ -566,6 +566,16 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
+	public function get_company_last_check($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('status', 1);
+		$this->db->where_not_in('check_no', ['', null]);
+		$this->db->order_by('created_at', 'desc');
+		$query = $this->db->get('accounting_check');
+		return $query->row();
+	}
+
 	public function get_check_by_id($checkId, $companyId = null)
 	{
 		if($companyId) {

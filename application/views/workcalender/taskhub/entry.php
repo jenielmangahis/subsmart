@@ -2,6 +2,11 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.p-40 {
+  padding-top: 40px !important;
+}
+</style>
 <?php 
     $participants_selected_ids = '';
     $participants_selected_names = '';
@@ -35,24 +40,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title"><?php if(isset($id)){ echo 'Edit Task'; }else{echo 'New Task';} ?></h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active"><?php if(isset($id)){ echo 'Edit your task.'; }else{ echo 'Add your new task.'; } ?></li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary"
-                                   aria-expanded="false">
-                                    <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row p-40">
+                <div class="col">
+                    <h3 class="m-0">
+                        <?php if(isset($task)){ echo 'Edit Task'; }else{echo 'New Task';} ?>
+                        <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary" aria-expanded="false" style="float: right;">
+                        <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
+                    </a>
+                    </h3>
+                </div>
+                <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
+                    <?php if(isset($task)){ echo 'Edit your task.'; }else{ echo 'Create new task.'; } ?>                    
                 </div>
             </div>
             <!-- end row -->

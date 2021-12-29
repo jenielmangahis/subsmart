@@ -683,6 +683,11 @@ $route['settings/_update_enabled_google_calendar'] = 'Settings/ajax_update_enabl
 $route['settings/_update_enabled_google_mini_calendar'] = 'Settings/ajax_update_enabled_google_mini_calendar';
 $route['settings/_get_google_enabled_calendars'] = 'Settings/ajax_get_google_enabled_calendars';
 $route['settings/calendar_unbind_account'] = 'Settings/calendar_unbind_account';
+$route['settings/_create_email_template'] = 'Settings/ajax_create_email_template';
+$route['settings/_update_email_template'] = 'Settings/ajax_update_email_template';
+$route['settings/_create_sms_template'] = 'Settings/ajax_create_sms_template';
+$route['settings/edit_sms_template/(:any)'] = 'Settings/edit_sms_template/$1';
+$route['settings/_update_sms_template'] = 'Settings/ajax_update_sms_template';
 
 //leads
 $route['online_leads'] = 'Inquiries/online_lead';
@@ -798,6 +803,10 @@ $route['workorder/_load_count_summary'] = 'Workorder/ajax_load_count_summary';
 $route['workorder/_delete_custom_field'] = 'Workorder/ajax_delete_custom_field';
 $route['workorder/_create_checklist'] = 'Workorder/ajax_save_checklist';
 $route['workorder/_update_checklist'] = 'Workorder/ajax_update_checklist';
+
+//workstatus
+$route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
+$route['workstatus/_update_workorder_type'] = 'Workstatus/ajax_update_workorder_type';
 
 //Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
