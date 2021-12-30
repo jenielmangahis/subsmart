@@ -34,6 +34,32 @@ class Activity_model extends MY_Model {
 		return $this->db->insert($this->esign_table, $data); 	
 	}
 
+	public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
+    {
+
+        $this->db->select('activity_logs.*, users.id AS uid, users.company_id');
+        $this->db->from($this->table);
+        $this->db->join('users', 'activity_logs.user = users.id', 'LEFT');
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('campaign_name', $filters['search'], 'both');
+            }
+        }
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+
+        $this->db->where('users.company_id', $company_id);
+        $this->db->order_by('activity_logs.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getActivity($userId, $limit=[], $isHistoryActivity = 0){
         $loginActivities = ['User Login', 'User Logout'];
         $this->db->where('user_id', $userId);

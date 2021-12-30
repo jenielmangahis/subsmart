@@ -6726,7 +6726,8 @@ class Workorder extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function delete_checklist(){
+    public function delete_checklist()
+    {
         $this->load->model('ChecklistItem_model');
         $this->load->model('Checklist_model');
 
@@ -6745,6 +6746,24 @@ class Workorder extends MY_Controller
         }
 
         redirect('workorder/checklists');
+    }
+
+    public function delete_priority()
+    {
+        $this->load->model('PriorityList_model');
+        $post = $this->input->post();
+
+        if( $post['pid'] > 0 ){
+            $this->PriorityList_model->delete($post['pid']);
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Data was successfully deleted');
+        }else{
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot find data');
+        }
+
+        redirect('workorder/priority/');
     }
 }
 

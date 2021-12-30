@@ -2,31 +2,28 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
-
+<style>
+.p-40 {
+  padding-top: 40px !important;
+}
+</style>
 <div class="wrapper" role="wrapper">
 	<?php include viewPath('includes/sidebars/schedule'); ?>
 
 	<!-- page wrapper start -->
     <div wrapper__section>
     	<div class="container-fluid">
-    		<div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Add Task Update</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Add notes as updates showing progress of the task</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary"
-                                   aria-expanded="false">
-                                    <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row p-40">
+                <div class="col">
+                    <h3 class="m-0">
+                        Add Task Update
+                        <a href="<?php echo base_url('taskhub') ?>" class="btn btn-primary" aria-expanded="false" style="float: right;">
+                        <i class="mdi mdi-settings mr-2"></i> Go Back to TaskHub
+                    </a>
+                    </h3>
+                </div>
+                <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
+                    Add notes as updates showing progress of the task           
                 </div>
             </div>
             <!-- end row -->
