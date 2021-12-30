@@ -553,14 +553,14 @@ class Reports extends MY_Controller {
 
         $period = $this->getDateInterval($startDate, $endDate);
         $i = 0;
-        foreach ($period as $dt) {
-            $payments = getworkOrderByEmployee($startDate, $endDate, $dt->format("m"));
+        // foreach ($period as $dt) {
+            $payments = getworkOrderByEmployee($startDate, $endDate);
             $month_counter = false;
 
             foreach ($payments as $payment) {
                 array_push($months, $payment);
             }
-        }
+        // }
 
         echo json_encode($months);
     }

@@ -54,6 +54,65 @@ $('select').select2({
     minimumResultsForSearch: -1
 });
 
+const columns = [
+    {
+        data: 'template_name',
+        name: 'template_name'
+    },
+    {
+        data: 'recurring_type',
+        name: 'recurring_type'
+    },
+    {
+        data: 'txn_type',
+        name: 'txn_type'
+    },
+    {
+        data: 'recurring_interval',
+        name: 'recurring_interval'
+    },
+    {
+        data: 'previous_date',
+        name: 'previous_date'
+    },
+    {
+        data: 'next_date',
+        name: 'next_date'
+    },
+    {
+        data: 'customer_vendor',
+        name: 'customer_vendor'
+    },
+    {
+        data: 'amount',
+        name: 'amount'
+    },
+    {
+        data: null,
+        name: 'actions',
+        orderable: false,
+        searchable: false,
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).html(`
+            <div class="btn-group float-right">
+                <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
+
+                <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Use</a>
+                    <a class="dropdown-item" href="#">Duplicate</a>
+                    <a class="dropdown-item" href="#">Pause</a>
+                    <a class="dropdown-item" href="#">Skip next date</a>
+                    <a class="dropdown-item delete-recurring" href="#">Delete</a>
+                </div>
+            </div>
+            `);
+        }
+    }
+];
+
 var table = $('#recurring_transactions').DataTable({
     autoWidth: false,
     searching: false,
@@ -76,64 +135,7 @@ var table = $('#recurring_transactions').DataTable({
         },
         pagingType: 'full_numbers',
     },
-    columns: [
-        {
-            data: 'template_name',
-            name: 'template_name'
-        },
-        {
-            data: 'recurring_type',
-            name: 'recurring_type'
-        },
-        {
-            data: 'txn_type',
-            name: 'txn_type'
-        },
-        {
-            data: 'recurring_interval',
-            name: 'recurring_interval'
-        },
-        {
-            data: 'previous_date',
-            name: 'previous_date'
-        },
-        {
-            data: 'next_date',
-            name: 'next_date'
-        },
-        {
-            data: 'customer_vendor',
-            name: 'customer_vendor'
-        },
-        {
-            data: 'amount',
-            name: 'amount'
-        },
-        {
-            data: null,
-            name: 'actions',
-            orderable: false,
-            searchable: false,
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).html(`
-                <div class="btn-group float-right">
-                    <a href="#" class="edit-recurring btn text-primary d-flex align-items-center justify-content-center">Edit</a>
-
-                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Use</a>
-                        <a class="dropdown-item" href="#">Duplicate</a>
-                        <a class="dropdown-item" href="#">Pause</a>
-                        <a class="dropdown-item" href="#">Skip next date</a>
-                        <a class="dropdown-item delete-recurring" href="#">Delete</a>
-                    </div>
-                </div>
-                `);
-            }
-        }
-    ]
+    columns: columns
 });
 
 $(document).on('click', '#recurring_transactions .delete-recurring', function(e) {
@@ -454,6 +456,37 @@ $(document).on('submit', '#update-recurring-form', function(e) {
             });
 
             $('#recurring_transactions').DataTable().ajax.reload();
+        }
+    });
+});
+
+$(document).on('click', '#print-recurring-transactions', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    data.set('type', $('#template-type').val());
+    data.set('transaction_type', $('#transaction-type').val());
+    data.set('search', $('input#search').val());
+
+    var tableOrder = $('#recurring_transactions').DataTable().order();
+    data.set('column', columns[tableOrder[0][0]].name);
+    data.set('order', tableOrder[0][1]);
+
+    $.ajax({
+        url: '/accounting/recurring-transactions/print-recurring-transactions',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            let pdfWindow = window.open("");
+			pdfWindow.document.write(`<h3>Recurring Transactions</h3>`);
+            pdfWindow.document.write(result);
+            $(pdfWindow.document).find('body').css('padding', '0');
+            $(pdfWindow.document).find('body').css('margin', '0');
+            $(pdfWindow.document).find('iframe').css('border', '0');
+            pdfWindow.print();
         }
     });
 });

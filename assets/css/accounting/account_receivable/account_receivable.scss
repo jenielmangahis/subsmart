@@ -1,0 +1,190 @@
+.accountReceivable {
+  font-family: var(--font-family-sans-serif);
+
+  input,
+  select,
+  button {
+    font-family: inherit !important;
+  }
+
+  .btn {
+    max-height: 37px;
+    padding: 0;
+    padding: 0 1rem;
+
+    &.btn-ghost {
+      border: 1px solid #898989;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: currentColor;
+        background-color: #f1f1f1;
+      }
+    }
+  }
+
+  &__formInner {
+    display: flex;
+  }
+
+  &__header {
+    --color-bg: #f4f5f8;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--color-bg);
+    box-shadow: -50px 0px var(--color-bg), 50px 0px var(--color-bg),
+      0px -50px 0 50px var(--color-bg);
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+
+  &__formTitle,
+  &__back {
+    font-size: 13px;
+    margin-bottom: 8px;
+    border-bottom: 1px dotted;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover,
+    &:focus {
+      color: #0077c5;
+    }
+  }
+
+  &__back {
+    border-bottom: 0;
+    color: #0077c5;
+  }
+
+  &__formGroup {
+    margin-bottom: 1rem;
+
+    .form-group {
+      margin-bottom: 0 !important;
+      min-width: 150px;
+    }
+
+    .form-control {
+      height: 38px !important;
+    }
+  }
+
+  &__reportPeriod {
+    width: fit-content;
+
+    &Body {
+      display: grid;
+      grid-template-columns: 209px auto 1fr;
+      align-items: flex-end;
+      gap: 8px;
+
+      .accountReceivable__reportPeriodAsOf {
+        position: relative;
+        bottom: 9px;
+      }
+    }
+  }
+
+  &__nonZeroActiveOnly {
+    display: grid;
+    grid-template-columns: 1fr auto repeat(3, 1fr);
+    align-items: flex-end;
+    gap: 8px;
+
+    label {
+      font-size: 13px;
+      margin-bottom: 8px;
+      display: inline-block;
+      font-weight: 500;
+    }
+
+    .accountReceivable__agingMethodBtn {
+      border-left: 1px solid #e0e0e0;
+      padding-left: 1rem;
+      margin-left: 1rem;
+    }
+
+    .accountReceivable__agingMethod {
+      label {
+        margin-bottom: 0;
+      }
+
+      .accountReceivable__formTitle {
+        border: 0;
+        cursor: default;
+
+        &:hover,
+        &:focus {
+          color: currentColor;
+        }
+      }
+
+      &Inner {
+        height: 38px;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+      }
+    }
+  }
+}
+
+.nonZeroActiveOnly {
+  font-family: var(--font-family-sans-serif);
+  position: relative;
+
+  &__btn {
+    height: 38px;
+    max-width: 209px;
+    min-width: 209px;
+    background-color: #fff;
+    border-radius: 2px;
+    border: 2px solid #e0e0e0;
+  }
+
+  .fa {
+    color: #8a8a8a;
+  }
+
+  &__options {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: #fff;
+    border: 2px solid #e0e0e0;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  label {
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+
+  &__group:first-child {
+    margin-bottom: 8px;
+  }
+
+  &--open {
+    .nonZeroActiveOnly__btn {
+      border-color: #0bd4ad;
+    }
+
+    .nonZeroActiveOnly__options {
+      display: block;
+    }
+  }
+}
