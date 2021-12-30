@@ -159,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#"><i class="fa fa-print"></i></a></li>
+                                                <li><a href="#" id="print-recurring-transactions"><i class="fa fa-print"></i></a></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>

@@ -921,6 +921,15 @@ class Accounting extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomersInv();
         $this->page_data['page_title'] = "A/R Aging Summary Report";
+        
+        add_css([
+            'assets/css/accounting/account_receivable/account_receivable.css'
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/account_receivable/account_receivable.js'
+        ]);
+
         $this->load->view('accounting/reports/aging_summary_report', $this->page_data);
     }
 

@@ -570,4 +570,216 @@ class Recurring_transactions extends MY_Controller {
 
         echo json_encode($return);
     }
+
+    public function print()
+    {
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $search = $post['search'];
+
+        $where = [
+            'company_id' => getLoggedCompanyID(),
+            'status' => 1
+        ];
+
+        if($post['type'] !== "all") {
+            $where['recurring_type'] = $post['type'];
+        }
+
+        if($post['transaction_type'] !== "all") {
+            $where['txn_type'] = $post['transaction_type'];
+        }
+
+        $items = $this->accounting_recurring_transactions_model->getCompanyRecurringTransactions($where, $columnName, $order);
+
+        $tableHtml = "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Template Name</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Txn Type</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Interval</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Previous Date</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Next Date</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Customer/Vendor</th>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Amount</th>";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+
+        $data = [];
+        foreach($items as $item) {
+            switch($item['txn_type']) {
+                case 'expense' :
+                    $expense = $this->vendors_model->get_expense_by_id($item['txn_id']);
+                    $total = number_format($expense->total_amount, 2, '.', ',');
+
+                    switch($expense->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                            $payeeName = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($expense->payee_id);
+                            $payeeName = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+                break;
+                case 'check' :
+                    $check = $this->vendors_model->get_check_by_id($item['txn_id'], logged('company_id'));
+                    $total = number_format($check->total_amount, 2, '.', ',');
+
+                    switch($check->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                            $payeeName = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($check->payee_id);
+                            $payeeName = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+                break;
+                case 'bill' :
+                    $bill = $this->vendors_model->get_bill_by_id($item['txn_id'], logged('company_id'));
+                    $total = number_format($bill->total_amount, 2, '.', ',');
+                    $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'purchase order' :
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($item['txn_id'], logged('company_id'));
+                    $total = number_format($purchaseOrder->total_amount, 2, '.', ',');
+                    $payee = $this->vendors_model->get_vendor_by_id($purchaseOrder->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'vendor credit' :
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($item['txn_id'], logged('company_id'));
+                    $total = number_format($vCredit->total_amount, 2, '.', ',');
+                    $payee = $this->vendors_model->get_vendor_by_id($vCredit->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'credit card credit' :
+                    $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($item['txn_id'], logged('company_id'));
+                    $total = number_format($ccCredit->total_amount, 2, '.', ',');
+
+                    switch($ccCredit->payee_type) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                            $payeeName = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                            $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($ccCredit->payee_id);
+                            $payeeName = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+                break;
+                case 'deposit' :
+                    $deposit = $this->accounting_bank_deposit_model->getById($item['txn_id'], logged('company_id'));
+                    $total = number_format($deposit->total_amount, 2, '.', ',');
+                break;
+                case 'transfer' :
+                    $transfer = $this->accounting_transfer_funds_model->getById($item['txn_id'], logged('company_id'));
+                    $total = number_format($transfer->transfer_amount, 2, '.', ',');
+                break;
+                case 'journal entry' :
+                    $total = '0.00';
+                break;
+            }
+
+            $previous = !is_null($item['previous_date']) && $item['previous_date'] !== '' ? date("m/d/Y", strtotime($item['previous_date'])) : null;
+            $next = date("m/d/Y", strtotime($item['next_date']));
+
+            $every = $item['recurr_every'];
+            switch ($item['recurring_interval']) {
+                case 'daily' :
+                    $interval = 'Every Day';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Days";
+                    }
+                break;
+                case 'weekly' :
+                    $interval = 'Every Week';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Weeks";
+                    }
+                break;
+                case 'monthly' :
+                    $interval = 'Every Month';
+
+                    if(intval($every) > 1) {
+                        $interval = "Every $every Months";
+                    }
+                break;
+                case 'yearly' :
+                    $interval = 'Every Year';
+                break;
+                default :
+                    $interval = '';
+                    $previous = '';
+                    $next = '';
+                break;
+            }
+
+            if($search !== "") {
+                if(stripos($item['template_name'], $search) !== false) {
+                    $data[] = [
+                        'id' => $item['id'],
+                        'template_name' => $item['template_name'],
+                        'recurring_type' => ucfirst($item['recurring_type']),
+                        'txn_type' => ucwords($item['txn_type']),
+                        'recurring_interval' => $interval,
+                        'previous_date' => $previous,
+                        'next_date' => $next,
+                        'customer_vendor' => $payeeName,
+                        'amount' => $total
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $item['id'],
+                    'template_name' => $item['template_name'],
+                    'recurring_type' => ucfirst($item['recurring_type']),
+                    'txn_type' => ucwords($item['txn_type']),
+                    'recurring_interval' => $interval,
+                    'previous_date' => $previous,
+                    'next_date' => $next,
+                    'customer_vendor' => $payeeName,
+                    'amount' => $total
+                ];
+            }
+        }
+
+        foreach($data as $d) {
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['template_name']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['recurring_type']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['txn_type']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['recurring_interval']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['previous_date']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['next_date']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['customer_vendor']."</td>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$d['amount']."</td>";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
+    }
 }
