@@ -382,6 +382,7 @@ $route['accounting/recurring-transactions/load-recurring-transactions']['post'] 
 $route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accounting_controllers/recurring_transactions/delete/$1";
 $route['accounting/recurring-transactions/get-details/(:any)'] = "accounting_controllers/recurring_transactions/get/$1";
 $route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting_controllers/recurring_transactions/update/$1/$2";
+$route['accounting/recurring-transactions/print-recurring-transactions']['post'] = "accounting_controllers/recurring_transactions/print";
 
 // Accounting payment terms
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";
