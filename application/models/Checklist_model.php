@@ -27,9 +27,8 @@ class Checklist_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByUserId($filters=array())
-    {
-        $user_id = logged('id');
+    public function getAllByUserId($user_id, $filters=array())
+    {        
 
         $this->db->select('*');
         $this->db->from($this->table);
@@ -70,6 +69,10 @@ class Checklist_model extends MY_Model
         ];
 
         return $types;
+    }
+
+    public function deleteById($id){
+        $this->db->delete($this->table, array('id' => $id));
     }
 }
 

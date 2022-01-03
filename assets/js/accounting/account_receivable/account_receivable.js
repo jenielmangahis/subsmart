@@ -1,4 +1,8 @@
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
+  const { ReportsTable } = await import("./ReportsTable.js");
+
+  new ReportsTable($("#reportsTable"));
+
   const $nonZeroActiveOnly = document.getElementById("nonZeroActiveOnly");
   const $nonZeroActiveOnlyBtn = $nonZeroActiveOnly.querySelector(
     ".nonZeroActiveOnly__btn"

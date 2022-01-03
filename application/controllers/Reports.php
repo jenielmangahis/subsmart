@@ -208,7 +208,7 @@ class Reports extends MY_Controller {
     }
 
     public function setProfitLoss($startDate, $endDate) {
-        $invoice = get_invoice_amount_by_date('paid', $startDate, $endDate);
+        $invoice = get_invoice_amount_by_date('Paid', $startDate, $endDate);
         $expenses = 0;
         $revenue = $invoice;  
         $net_profit = floatval($invoice) - floatval($expenses);
@@ -247,7 +247,7 @@ class Reports extends MY_Controller {
         $startDate = $this->input->get('startDate');
         $endDate = $this->input->get('endDate');
 
-        $invoice = get_invoice_amount_by_date('paid', $startDate, $endDate);
+        $invoice = get_invoice_amount_by_date('Paid', $startDate, $endDate);
         $expenses = 0;
         $revenue = $invoice;  
         $net_profit = floatval($invoice) - floatval($expenses);
@@ -561,6 +561,49 @@ class Reports extends MY_Controller {
                 array_push($months, $payment);
             }
         // }
+
+        echo json_encode($months);
+    }
+    
+    public function workOrderByStatus() {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
+        $months = [];
+        $month_counter = 0;
+
+        $period = $this->getDateInterval($startDate, $endDate);
+        $i = 0;
+        // foreach ($period as $dt) {
+            $payments = getworkOrderByStatus($startDate, $endDate);
+            $month_counter = false;
+
+            foreach ($payments as $payment) {
+                array_push($months, $payment);
+            }
+        // }
+
+        echo json_encode($months);
+    }
+
+    public function customerTaxByMonth()
+    {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
+        $months = [];
+        $month_counter = 0;
+
+        $period = $this->getDateInterval($startDate, $endDate);
+        $i = 0;
+        foreach ($period as $dt) {
+            $payments = getcustomerTaxByMonth($startDate, $endDate, $dt->format("m"));
+            $month_counter = false;
+
+            foreach ($payments as $payment) {
+                array_push($months, $payment);
+            }
+        }
 
         echo json_encode($months);
     }

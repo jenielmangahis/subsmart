@@ -39,11 +39,27 @@ class Workstatus extends MY_Controller {
 	}
 
 	public function add(){
+		add_css(array(
+            'assets/css/bootstrap-colorpicker.min.css'
+        ));
+
+        add_footer_js(array(
+            'assets/js/bootstrap-colorpicker.min.js'
+        ));
+
 		$this->load->view('workstatus/add', $this->page_data);
 	}
 
 
 	public function edit($id){
+		add_css(array(
+            'assets/css/bootstrap-colorpicker.min.css'
+        ));
+
+        add_footer_js(array(
+            'assets/js/bootstrap-colorpicker.min.js'
+        ));
+
 		$this->page_data['workstatus'] = $this->Workstatus_model->getById($id);
 		$this->load->view('workstatus/edit', $this->page_data);
 	}
@@ -92,15 +108,67 @@ class Workstatus extends MY_Controller {
 		redirect('workstatus');
 	}
 
-	public function delete($id){
+	public function delete()
+	{
 
+		$post = $this->input->post();
+		$company_id    =  logged('company_id');
+        $workorderType = $this->Workstatus_model->getWorkStatusByIdAndCompanyId($post['wtid'], $company_id);
+        if( $workorderType ){
+        	$this->Workstatus_model->delete($post['wtid']);
 
-		$this->Workstatus_model->delete($id);
-		$this->session->set_flashdata('alert-type', 'success');
-		$this->session->set_flashdata('alert', 'Workstatus has been Deleted Successfully');
-		$this->activity_model->add("Workstatus #$permission Deleted by User: #".logged('id'));
+        	$this->session->set_flashdata('message', 'Workstatus has been deleted successfully');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+			$this->activity_model->add("Workstatus #$permission Deleted by User: #".logged('id'));
+        }else{
+        	$this->session->set_flashdata('message', 'Cannot find data.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+		
+		
 		redirect('workstatus');
 	}
+
+	public function ajax_save_workorder_type()
+    {
+        $is_success = 0;
+
+        $post 		   = $this->input->post();
+        $company_id    =  logged('company_id');
+		$workorderType = $this->Workstatus_model->create([
+			'company_id' => $company_id,
+			'title' => $post['title'],
+			'color' => $post['color']
+		]);
+
+        $is_success = 1;
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_workorder_type()
+    {
+        $is_success = 0;
+
+        $post 		   = $this->input->post();
+        $company_id    =  logged('company_id');
+        $workorderType = $this->Workstatus_model->getWorkStatusByIdAndCompanyId($post['wtid'], $company_id);
+        if( $workorderType ){
+			$data = [
+				'title' => $post['title'],
+				'color' => $post['color']
+			];
+
+			$this->Workstatus_model->update($workorderType->id, $data);
+
+	        $is_success = 1;
+        }
+        
+        $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
 
 }
 
