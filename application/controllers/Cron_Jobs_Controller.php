@@ -1391,6 +1391,7 @@ class Cron_Jobs_Controller extends CI_Controller
         $this->load->model('chart_of_accounts_model');
         $this->load->model('expenses_model');
         $bill = $this->vendors_model->get_bill_by_id($billId);
+        $lastBill = $this->vendors_model->get_company_last_bill($bill->company_id);
         $attachments = $this->accounting_attachments_model->get_attachments('Bill', $billId);
         $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
         $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
@@ -1402,7 +1403,7 @@ class Cron_Jobs_Controller extends CI_Controller
             'term_id' => $bill->term_id,
             'bill_date' => date("Y-m-d"),
             'due_date' => date("Y-m-d"),
-            'bill_no' => date("Y-m-d"),
+            'bill_no' => is_null($bill->bill_no) || $bill->bill_no === '' ? null : intval($lastBill->bill_no) + 1,
             'permit_no' => $bill->permit_no,
             'tags' => $bill->tags,
             'memo' => $bill->memo,

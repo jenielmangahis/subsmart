@@ -16,6 +16,526 @@ $('.dropdown-menu').on('click', function(e) {
     e.stopPropagation();
 });
 
+const columns = [
+    {
+        orderable: false,
+        data: null,
+        name: 'checkbox',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            var id = 'select-';
+            switch(rowData.type) {
+                case 'Bill' :
+                    id += 'bill-';
+                break;
+                case 'Bill Payment (Check)' :
+                    id += 'bill-payment-';
+                break;
+                case 'Bill Payment (Credit Card)' :
+                    id += 'bill-payment-';
+                break;
+                case 'Check' :
+                    id += 'check-';
+                break;
+                case 'Credit Card Credit' :
+                    id += 'cc-credit-';
+                break;
+                case 'Credit Card Payment' :
+                    id += 'cc-payment-';
+                break;
+                case 'Expense' :
+                    id += 'expense-';
+                break;
+                case 'Purchase Order' :
+                    id += 'purchase-order-';
+                break;
+                case 'Vendor Credit' :
+                    id += 'vendor-credit-';
+                break;
+            }
+            id += rowData.id;
+
+            $(td).html(`
+            <div class="d-flex justify-content-center">
+                <div class="checkbox checkbox-sec m-0">
+                    <input type="checkbox" value="${rowData.id}" id="${id}">
+                    <label for="${id}" class="p-0" style="width: 24px; height: 24px"></label>
+                </div>
+            </div>
+            `);
+        }
+    },
+    {
+        data: 'date',
+        name: 'date'
+    },
+    {
+        data: 'type',
+        name: 'type',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('type');
+
+            if($('#trans_type').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'number',
+        name: 'number',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('number');
+
+            if($('#trans_number').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'payee',
+        name: 'payee',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('payee');
+
+            if($('#trans_payee').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'method',
+        name: 'method',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('method');
+
+            if($('#trans_method').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'source',
+        name: 'source',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('source');
+
+            if($('#trans_source').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'category',
+        name: 'category',
+        fnCreatedCell: function(td, cellData, rowData,row, col) {
+            $(td).html(cellData);
+
+            if($(td).find('select').length > 0) {
+                $(td).find('select').select2();
+            }
+            
+            $(td).addClass('category');
+
+            if($('#trans_category').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'memo',
+        name: 'memo',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('memo');
+
+            if($('#trans_memo').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'due_date',
+        name: 'due_date',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('due_date');
+
+            if($('#trans_due_date').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'balance',
+        name: 'balance',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('balance');
+
+            if($('#trans_balance').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        data: 'total',
+        name: 'total'
+    },
+    {
+        data: 'status',
+        name: 'status',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('status');
+
+            if($('#trans_status').prop('checked') === false) {
+                $(td).hide();
+            }
+        }
+    },
+    {
+        orderable: false,
+        data: 'attachments',
+        name: 'attachments',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('attachments');
+            if($('#trans_attachments').prop('checked') === false) {
+                $(td).hide();
+            }
+
+            if(cellData.length > 0) {
+                var imgExt = ['jpg', 'jpeg', 'png'];
+                var dropdownItem = '';
+                var noPreview = `
+                <div class="bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white">
+                    <p class="m-0">NO PREVIEW AVAILABLE</p>
+                </div>
+                `;
+
+                $.each(cellData, function(index, attachment) {
+                    dropdownItem += `
+                        <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/${attachment.stored_name}">
+                            <div class="row">
+                                <div class="col-5 pr-0">
+                                    ${imgExt.includes(attachment.file_extension) ? `<img src="/uploads/accounting/attachments/${attachment.stored_name}" class="m-auto">` : noPreview }
+                                </div>
+                                <div class="col-7">
+                                    <div class="d-flex align-items-center h-100 w-100">
+                                        <span class="overflow-hidden" style="text-overflow: ellipsis">${attachment.uploaded_name}.${attachment.file_extension}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                $(td).html(`
+                <div class="dropdown">
+                    <button class="btn btn-block dropdown-toggle hide-toggle" type="button" id="attachments-${rowData.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="text-info">${cellData.length}</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-align-right" aria-labelledby="attachments-${rowData.id}">
+                        <div class="row m-0">${dropdownItem}</div>
+                    </div>
+                </div>
+                `);
+            }
+        }
+    },
+    {
+        orderable: false,
+        data: null,
+        name: 'action',
+        fnCreatedCell: function(td, cellData, rowData,row, col) {
+            switch (rowData.type) {
+                case 'Expense' :
+                    if(rowData.status === 'Voided') {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
+                                <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
+                                <a class="dropdown-item copy-expense" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
+                                <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
+                                <a class="dropdown-item copy-expense" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item void-expense" href="#">Void</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                break;
+                case 'Check' :
+                    if(rowData.status === 'Voided') {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
+                                <a class="dropdown-item copy-check" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
+                                <a class="dropdown-item copy-check" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item void-check" href="#">Void</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                break;
+                case 'Bill' :
+                    if(rowData.status === 'Open') {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                                Schedule payment
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item" href="#">Mark as paid</a>
+                                <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
+                                <a class="dropdown-item copy-bill" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill">
+                                View/Edit
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item copy-bill" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                break;
+                case 'Bill Payment (Check)' :
+                    if(rowData.status === 'Voided') {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item" href="#">View/Edit</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item" href="#">View/Edit</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item void-bill-payment" href="#">Void</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                break;
+                case 'Bill Payment (Credit Card)' :
+                    if(rowData.status === 'Voided') {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item" href="#">View/Edit</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                                Attach a file
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item" href="#">View/Edit</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item void-bill-payment" href="#">Void</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                break;
+                case 'Credit Card Payment' :
+                    $(td).html(`
+                    <div class="btn-group float-right">
+                        <button class="btn d-flex align-items-center justify-content-center text-info view-edit-cc-payment">
+                            View/Edit
+                        </button>
+
+                        <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                            <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                            <a class="dropdown-item void-cc-payment" href="#">Void</a>
+                        </div>
+                    </div>
+                    `);
+                break;
+                case 'Purchase Order' : 
+                    if(rowData.status === 'Open') {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                                Send
+                            </button>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>
+                                <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
+                                <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
+                                <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).html(`
+                        <div class="btn-group float-right">
+                            <a class="btn d-flex align-items-center justify-content-center text-info" href="/accounting/vendors/print-transaction/purchase-order/${rowData.id}" target="_blank">
+                                Print
+                            </a>
+
+                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                                <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
+                                <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item attach-file" href="#">Attach a file</a>
+                            </div>
+                        </div>
+                        `);
+                    }
+                break;
+                case 'Vendor Credit' :
+                    $(td).html(`
+                    <div class="btn-group float-right">
+                        <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
+                            Attach a file
+                        </button>
+
+                        <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+
+                        <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
+                            <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
+                            <a class="dropdown-item copy-vendor-credit" href="#">Copy</a>
+                            <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                        </div>
+                    </div>
+                    `);
+                break;
+                case 'Credit Card Credit' :
+                    $(td).html(`
+                    <button class="btn d-flex align-items-center justify-content-center text-info float-right attach-file">
+                        Attach a file
+                    </button>
+                    `);
+                break;
+                default :
+                    $(td).html('');
+                break;
+            }
+        }
+    }
+];
+
 var table = $('#transactions-table').DataTable({
     autoWidth: false,
     searching: false,
@@ -44,525 +564,7 @@ var table = $('#transactions-table').DataTable({
         },
         pagingType: 'full_numbers'
     },
-    columns: [
-        {
-            orderable: false,
-			data: null,
-			name: 'checkbox',
-			fnCreatedCell: function(td, cellData, rowData, row, col) {
-                var id = 'select-';
-                switch(rowData.type) {
-                    case 'Bill' :
-                        id += 'bill-';
-                    break;
-                    case 'Bill Payment (Check)' :
-                        id += 'bill-payment-';
-                    break;
-                    case 'Bill Payment (Credit Card)' :
-                        id += 'bill-payment-';
-                    break;
-                    case 'Check' :
-                        id += 'check-';
-                    break;
-                    case 'Credit Card Credit' :
-                        id += 'cc-credit-';
-                    break;
-                    case 'Credit Card Payment' :
-                        id += 'cc-payment-';
-                    break;
-                    case 'Expense' :
-                        id += 'expense-';
-                    break;
-                    case 'Purchase Order' :
-                        id += 'purchase-order-';
-                    break;
-                    case 'Vendor Credit' :
-                        id += 'vendor-credit-';
-                    break;
-                }
-                id += rowData.id;
-
-                $(td).html(`
-                <div class="d-flex justify-content-center">
-                    <div class="checkbox checkbox-sec m-0">
-                        <input type="checkbox" value="${rowData.id}" id="${id}">
-                        <label for="${id}" class="p-0" style="width: 24px; height: 24px"></label>
-                    </div>
-                </div>
-                `);
-			}
-		},
-        {
-            data: 'date',
-            name: 'date'
-        },
-        {
-            data: 'type',
-            name: 'type',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('type');
-
-                if($('#trans_type').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'number',
-            name: 'number',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('number');
-
-                if($('#trans_number').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'payee',
-            name: 'payee',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('payee');
-
-                if($('#trans_payee').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'method',
-            name: 'method',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('method');
-
-                if($('#trans_method').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'source',
-            name: 'source',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('source');
-
-                if($('#trans_source').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'category',
-            name: 'category',
-            fnCreatedCell: function(td, cellData, rowData,row, col) {
-                $(td).html(cellData);
-
-                if($(td).find('select').length > 0) {
-                    $(td).find('select').select2();
-                }
-                
-                $(td).addClass('category');
-
-                if($('#trans_category').prop('checked') === false) {
-					$(td).hide();
-				}
-            }
-        },
-        {
-            data: 'memo',
-            name: 'memo',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('memo');
-
-                if($('#trans_memo').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'due_date',
-            name: 'due_date',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('due_date');
-
-                if($('#trans_due_date').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'balance',
-            name: 'balance',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('balance');
-
-                if($('#trans_balance').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            data: 'total',
-            name: 'total'
-        },
-        {
-            data: 'status',
-            name: 'status',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('status');
-
-                if($('#trans_status').prop('checked') === false) {
-					$(td).hide();
-				}
-			}
-        },
-        {
-            orderable: false,
-            data: 'attachments',
-            name: 'attachments',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('attachments');
-                if($('#trans_attachments').prop('checked') === false) {
-					$(td).hide();
-				}
-
-                if(cellData.length > 0) {
-                    var imgExt = ['jpg', 'jpeg', 'png'];
-                    var dropdownItem = '';
-                    var noPreview = `
-                    <div class="bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white">
-                        <p class="m-0">NO PREVIEW AVAILABLE</p>
-                    </div>
-                    `;
-
-                    $.each(cellData, function(index, attachment) {
-                        dropdownItem += `
-                            <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/${attachment.stored_name}">
-                                <div class="row">
-                                    <div class="col-5 pr-0">
-                                        ${imgExt.includes(attachment.file_extension) ? `<img src="/uploads/accounting/attachments/${attachment.stored_name}" class="m-auto">` : noPreview }
-                                    </div>
-                                    <div class="col-7">
-                                        <div class="d-flex align-items-center h-100 w-100">
-                                            <span class="overflow-hidden" style="text-overflow: ellipsis">${attachment.uploaded_name}.${attachment.file_extension}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    $(td).html(`
-                    <div class="dropdown">
-                        <button class="btn btn-block dropdown-toggle hide-toggle" type="button" id="attachments-${rowData.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="text-info">${cellData.length}</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-align-right" aria-labelledby="attachments-${rowData.id}">
-                            <div class="row m-0">${dropdownItem}</div>
-                        </div>
-                    </div>
-                    `);
-                }
-			}
-        },
-        {
-            orderable: false,
-			data: null,
-			name: 'action',
-			fnCreatedCell: function(td, cellData, rowData,row, col) {
-                switch (rowData.type) {
-                    case 'Expense' :
-                        if(rowData.status === 'Voided') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
-                                    <a class="dropdown-item copy-expense" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
-                                    <a class="dropdown-item copy-expense" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item void-expense" href="#">Void</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
-                    case 'Check' :
-                        if(rowData.status === 'Voided') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
-                                    <a class="dropdown-item copy-check" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
-                                    <a class="dropdown-item copy-check" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item void-check" href="#">Void</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
-                    case 'Bill' :
-                        if(rowData.status === 'Open') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
-                                    Schedule payment
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">Mark as paid</a>
-                                    <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
-                                    <a class="dropdown-item copy-bill" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill">
-                                    View/Edit
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item copy-bill" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
-                    case 'Bill Payment (Check)' :
-                        if(rowData.status === 'Voided') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item void-bill-payment" href="#">Void</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
-                    case 'Bill Payment (Credit Card)' :
-                        if(rowData.status === 'Voided') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                    Attach a file
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item void-bill-payment" href="#">Void</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
-                    case 'Credit Card Payment' :
-                        $(td).html(`
-                        <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-cc-payment">
-                                View/Edit
-                            </button>
-
-                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                <a class="dropdown-item void-cc-payment" href="#">Void</a>
-                            </div>
-                        </div>
-                        `);
-                    break;
-                    case 'Purchase Order' : 
-                        if(rowData.status === 'Open') {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
-                                    Send
-                                </button>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>
-                                    <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
-                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
-                                    <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
-                                </div>
-                            </div>
-                            `);
-                        } else {
-                            $(td).html(`
-                            <div class="btn-group float-right">
-                                <a class="btn d-flex align-items-center justify-content-center text-info" href="/accounting/vendors/print-transaction/purchase-order/${rowData.id}" target="_blank">
-                                    Print
-                                </a>
-
-                                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-
-                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
-                                    <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
-                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
-                                </div>
-                            </div>
-                            `);
-                        }
-                    break;
-                    case 'Vendor Credit' :
-                        $(td).html(`
-                        <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
-                                Attach a file
-                            </button>
-
-                            <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
-                                <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
-                                <a class="dropdown-item copy-vendor-credit" href="#">Copy</a>
-                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                            </div>
-                        </div>
-                        `);
-                    break;
-                    case 'Credit Card Credit' :
-                        $(td).html(`
-                        <button class="btn d-flex align-items-center justify-content-center text-info float-right attach-file">
-                            Attach a file
-                        </button>
-                        `);
-                    break;
-                    default :
-                        $(td).html('');
-                    break;
-                }
-            }
-        }
-    ]
+    columns: columns
 });
 
 $(document).on('change', '#type', function() {
@@ -1461,4 +1463,82 @@ $(document).on('click', '#transactions-table .view-attachment', function(e) {
     var data = e.currentTarget.dataset;
 
     window.open(data.href, "_blank");
+});
+
+$(document).on('click', '#print-table', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    data.set('type', $('#type').val());
+    data.set('status', $('#status').val());
+    data.set('delivery_method', $('#del-method').val());
+    data.set('date', $('#date').val());
+    data.set('from_date', $('#from-date').val());
+    data.set('to_date', $('#to-date').val());
+    data.set('payee', $('#payee').val());
+    data.set('category', $('#category').val());
+
+    data.set('chk_type', $('#trans_type').prop('checked') ? 1 : 0);
+    data.set('chk_number', $('#trans_number').prop('checked') ? 1 : 0);
+    data.set('chk_payee', $('#trans_payee').prop('checked') ? 1 : 0);
+    data.set('chk_method', $('#trans_method').prop('checked') ? 1 : 0);
+    data.set('chk_source', $('#trans_source').prop('checked') ? 1 : 0);
+    data.set('chk_category', $('#trans_category').prop('checked') ? 1 : 0);
+    data.set('chk_memo', $('#trans_memo').prop('checked') ? 1 : 0);
+    data.set('chk_due_date', $('#trans_due_date').prop('checked') ? 1 : 0);
+    data.set('chk_balance', $('#trans_balance').prop('checked') ? 1 : 0);
+    data.set('chk_status', $('#trans_status').prop('checked') ? 1 : 0);
+    data.set('chk_attachments', $('#trans_attachments').prop('checked') ? 1 : 0);
+
+    var tableOrder = table.order();
+    data.set('column', columns[tableOrder[0][0]].name);
+    data.set('order', tableOrder[0][1]);
+
+    $.ajax({
+        url: '/accounting/expenses/print-transactions',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write(result);
+            $(pdfWindow.document).find('body').css('padding', '0');
+            $(pdfWindow.document).find('body').css('margin', '0');
+            $(pdfWindow.document).find('iframe').css('border', '0');
+            pdfWindow.print();
+        }
+    });
+});
+
+$(document).on('click', '#export-transactions', function(e) {
+    e.preventDefault();
+
+    var fields = $('#myTabContent .action-bar .dropdown-menu input[type="checkbox"]:checked');
+    fields.each(function() {
+        if($(this).attr('id').includes('trans_')) {
+            $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('trans_', '')}">`);
+        }
+    });
+    $('#export-form').append(`<input type="hidden" name="type" value="${$('#type').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="status" value="${$('#status').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="delivery_method" value="${$('#del-method').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="date" value="${$('#date').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="from_date" value="${$('#from-date').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="to_date" value="${$('#to-date').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="payee" value="${$('#payee').val()}">`);
+    $('#export-form').append(`<input type="hidden" name="category" value="${$('#category').val()}">`);
+
+    var tableOrder = table.order();
+    $('#export-form').append(`<input type="hidden" name="column" value="${columns[tableOrder[0][0]].name}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${tableOrder[0][1]}">`);
+
+    $('#export-form').submit();
+})
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).find('input').remove();
 });

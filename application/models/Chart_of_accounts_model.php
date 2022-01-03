@@ -330,6 +330,7 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('bank_account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$query = $this->db->get('accounting_check');
 		return $query->result();
 	}
@@ -340,6 +341,7 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->from('accounting_journal_entry_items');
 		$this->db->where('accounting_journal_entry_items.account_id', $accountId);
 		$this->db->where('accounting_journal_entries.status !=', 0);
+		$this->db->where('accounting_journal_entries.recurring', null);
 		$this->db->join('accounting_journal_entries', 'accounting_journal_entries.id = accounting_journal_entry_items.journal_entry_id');
 		$query = $this->db->get();
 		return $query->result();
@@ -356,26 +358,32 @@ class Chart_of_accounts_model extends MY_Model {
 		switch($transactionType) {
 			case 'Expense' :
 				$this->db->where('accounting_expense.status !=', 0);
+				$this->db->where('accounting_expense.recurring', null);
 				$this->db->join('accounting_expense', 'accounting_expense.id = accounting_vendor_transaction_items.transaction_id');
 			break;
 			case 'Check' :
 				$this->db->where('accounting_check.status !=', 0);
+				$this->db->where('accounting_check.recurring', null);
 				$this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_items.transaction_id');
 			break;
 			case 'Bill' :
 				$this->db->where('accounting_bill.status !=', 0);
+				$this->db->where('accounting_bill.recurring', null);
 				$this->db->join('accounting_bill', 'accounting_bill.id = accounting_vendor_transaction_items.transaction_id');
 			break;
 			case 'Purchase Order' :
 				$this->db->where('accounting_purchase_order.status !=', 0);
+				$this->db->where('accounting_purchase_order.recurring', null);
 				$this->db->join('accounting_purchase_order', 'accounting_purchase_order.id = accounting_vendor_transaction_items.transaction_id');
 			break;
 			case 'Vendor Credit' :
 				$this->db->where('accounting_vendor_credit.status !=', 0);
+				$this->db->where('accounting_vendor_credit.recurring', null);
 				$this->db->join('accounting_vendor_credit', 'accounting_vendor_credit.id = accounting_vendor_transaction_items.transaction_id');
 			break;
 			case 'Credit Card Credit' :
 				$this->db->where('accounting_credit_card_credits.status !=', 0);
+				$this->db->where('accounting_credit_card_credits.recurring', null);
 				$this->db->join('accounting_credit_card_credits', 'accounting_credit_card_credits.id = accounting_vendor_transaction_items.transaction_id');
 			break;
 		}
@@ -393,26 +401,32 @@ class Chart_of_accounts_model extends MY_Model {
 		switch($transactionType) {
 			case 'Expense' :
 				$this->db->where('accounting_expense.status !=', 0);
+				$this->db->where('accounting_expense.recurring', null);
 				$this->db->join('accounting_expense', 'accounting_expense.id = accounting_vendor_transaction_categories.transaction_id');
 			break;
 			case 'Check' :
 				$this->db->where('accounting_check.status !=', 0);
+				$this->db->where('accounting_check.recurring', null);
 				$this->db->join('accounting_check', 'accounting_check.id = accounting_vendor_transaction_categories.transaction_id');
 			break;
 			case 'Bill' :
 				$this->db->where('accounting_bill.status !=', 0);
+				$this->db->where('accounting_bill.recurring', null);
 				$this->db->join('accounting_bill', 'accounting_bill.id = accounting_vendor_transaction_categories.transaction_id');
 			break;
 			case 'Purchase Order' :
 				$this->db->where('accounting_purchase_order.status !=', 0);
+				$this->db->where('accounting_purchase_order.recurring', null);
 				$this->db->join('accounting_purchase_order', 'accounting_purchase_order.id = accounting_vendor_transaction_categories.transaction_id');
 			break;
 			case 'Vendor Credit' :
 				$this->db->where('accounting_vendor_credit.status !=', 0);
+				$this->db->where('accounting_vendor_credit.recurring', null);
 				$this->db->join('accounting_vendor_credit', 'accounting_vendor_credit.id = accounting_vendor_transaction_categories.transaction_id');
 			break;
 			case 'Credit Card Credit' :
 				$this->db->where('accounting_credit_card_credits.status !=', 0);
+				$this->db->where('accounting_credit_card_credits.recurring', null);
 				$this->db->join('accounting_credit_card_credits', 'accounting_credit_card_credits.id = accounting_vendor_transaction_categories.transaction_id');
 			break;
 		}
@@ -424,6 +438,7 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('bank_credit_account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$query = $this->db->get('accounting_credit_card_credits');
 		return $query->result();
 	}
@@ -432,8 +447,10 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('transfer_from_account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$this->db->or_where('transfer_to_account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$query = $this->db->get('accounting_transfer_funds_transaction');
 		return $query->result();
 	}
@@ -442,8 +459,10 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$this->db->or_where('cash_back_account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$query = $this->db->get('accounting_bank_deposit');
 		return $query->result();
 	}
@@ -454,6 +473,7 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->from('accounting_bank_deposit_funds');
 		$this->db->where('accounting_bank_deposit_funds.received_from_account_id', $accountId);
 		$this->db->where('accounting_bank_deposit.status !=', 0);
+		$this->db->where('accounting_bank_deposit.recurring', null);
 		$this->db->join('accounting_bank_deposit', 'accounting_bank_deposit.id = accounting_bank_deposit_funds.bank_deposit_id');
 		$query = $this->db->get();
 		return $query->result();
@@ -483,6 +503,7 @@ class Chart_of_accounts_model extends MY_Model {
 	{
 		$this->db->where('payment_account_id', $accountId);
 		$this->db->where('status !=', 0);
+		$this->db->where('recurring', null);
 		$query = $this->db->get('accounting_expense');
 		return $query->result();
 	}
