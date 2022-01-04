@@ -1436,7 +1436,7 @@ class Expenses extends MY_Controller
 
     public function export()
     {
-        $this->load->library("excel");
+        $this->load->library('PHPXLSXWriter');
         $post = $this->input->post();
         $order = $post['order'];
         $columnName = $post['column'];
@@ -1500,26 +1500,20 @@ class Expenses extends MY_Controller
             break;
         }
 
-        // $status = $post['status'] === 'all' ? 'All statuses' : ucfirst($post['status']);
-        // $excelHead = "Type: $type · Status: $status · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
-        // $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
-        // $this->excel->setActiveSheetIndex(0);
-        // $this->excel->getActiveSheet()->setCellValue('A1', "@Test");
+        $status = $post['status'] === 'all' ? 'All statuses' : ucfirst($post['status']);
+        $excelHead = "Type: $type · Status: $status · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
+        $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
 
-        // header('Content-Type: application/vnd.ms-excel'); //mime type
-        // header('Content-Disposition: attachment;filename="expenses.xls"'); //tell browser what's the file name
-        // header('Cache-Control: max-age=0'); //no cache
+        // $writer = $this->phpxlsxwriter;
+        $this->load->helper('string');
 
-        // $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
-        // $objWriter->save('php://output');
+        $randString = random_string('numeric');
+        $fileName = "expenses_$randString.xlsx";
+        $file = "./uploads/accounting/$fileName";
 
-
-        header("Content-Description: File Transfer"); 
-        header("Content-Disposition: attachment; filename=expenses.csv"); 
-        header("Content-Type: application/csv;");
-
-        // file creation 
-        $file = fopen('php://output', 'w');
+        $writer = new XLSXWriter();
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center']);
+        $writer->markMergedCell('Sheet1', 0, 0, 0, 12);
         $headers = [];
 
         $headers[] = "Date";
@@ -1557,21 +1551,43 @@ class Expenses extends MY_Controller
         if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Attachments";
         }
-        fputcsv($file, $headers);
+        $writer->writeSheetRow('Sheet1', $headers);
 
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);
 
             foreach($keys as $key) {
-                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields'])) {
+                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
                     unset($transaction[$key]);
                 }
             }
 
-            fputcsv($file, $transaction);
+            $writer->writeSheetRow('Sheet1', $transaction);
         }
+        $writer->writeToFile($file);
 
-        fclose($file); 
-        exit;
+        // header("Content-Description: File Transfer"); 
+        // header("Content-Disposition: attachment; filename=expenses.csv"); 
+        // header("Content-Type: application/csv;");
+
+        // // file creation 
+        // $file = fopen('php://output', 'w');
+        
+        // fputcsv($file, $headers);
+
+        // foreach($transactions as $transaction) {
+        //     $keys = array_keys($transaction);
+
+        //     foreach($keys as $key) {
+        //         if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields'])) {
+        //             unset($transaction[$key]);
+        //         }
+        //     }
+
+        //     fputcsv($file, $transaction);
+        // }
+
+        // fclose($file); 
+        // exit;
     }
 }

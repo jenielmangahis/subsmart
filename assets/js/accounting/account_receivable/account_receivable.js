@@ -3,18 +3,21 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   new ReportsTable($("#reportsTable"));
 
-  const $nonZeroActiveOnly = document.getElementById("nonZeroActiveOnly");
-  const $nonZeroActiveOnlyBtn = $nonZeroActiveOnly.querySelector(
-    ".nonZeroActiveOnly__btn"
-  );
-  $nonZeroActiveOnlyBtn.addEventListener("click", (event) => {
-    event.preventDefault();
-    $nonZeroActiveOnly.classList.toggle("nonZeroActiveOnly--open");
+  const $customDropdown = $(".customDropdown__btn");
+  $customDropdown.on("click", (event) => {
+    const $btn = $(event.currentTarget);
+    const $parent = $btn.closest(".customDropdown");
+
+    if ($parent.hasClass("open")) {
+      $parent.removeClass("open");
+    } else {
+      $parent.addClass("open");
+    }
   });
 
   document.addEventListener("click", (event) => {
-    if (!$nonZeroActiveOnly.contains(event.target)) {
-      $nonZeroActiveOnly.classList.remove("nonZeroActiveOnly--open");
+    if (!$(event.target).closest(".customDropdown").length) {
+      $(".customDropdown").removeClass("open");
     }
   });
 });

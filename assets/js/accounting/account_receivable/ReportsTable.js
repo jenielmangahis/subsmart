@@ -1,6 +1,8 @@
 export class ReportsTable {
   constructor($table) {
     this.$table = $($table);
+    this.$orderRadios = $("[name=sortTable]");
+    this.$rowDensityCheckbox = $("#tableCompact");
 
     this.loadDeps().then(() => {
       this.init();
@@ -38,7 +40,7 @@ export class ReportsTable {
   }
 
   async init() {
-    this.$table.DataTable({
+    const table = this.$table.DataTable({
       ajax: `${window.prefixURL}/AccountingARSummary/apiGetReports`,
       filter: false,
       searching: false,
@@ -85,6 +87,28 @@ export class ReportsTable {
           className: "text-right",
         },
       ],
+    });
+
+    this.$orderRadios.on("change", (event) => {
+      const { value } = event.target;
+      const columnKeys = Object.keys(this.columns);
+      const totalIndex = columnKeys.findIndex((key) => key === "total");
+
+      if (value === "default") {
+        table.order([0, "asc"]);
+      } else {
+        table.order([totalIndex, value === "total_ascending" ? "asc" : "desc"]);
+      }
+
+      table.draw();
+    });
+
+    this.$rowDensityCheckbox.on("change", (event) => {
+      if (event.target.checked) {
+        this.$table.addClass("table-sm");
+      } else {
+        this.$table.removeClass("table-sm");
+      }
     });
   }
 }

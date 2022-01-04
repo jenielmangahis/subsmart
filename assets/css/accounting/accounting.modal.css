@@ -5,7 +5,6 @@
 
 .full-screen-modal .modal .modal-dialog {
     width: 100%;
-    max-width: none;
     height: 100%;
     margin: 0;
 }

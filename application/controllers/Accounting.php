@@ -57,7 +57,7 @@ class Accounting extends MY_Controller
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            "assets/css/accounting/accounting.modal.css?2021",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -917,6 +917,7 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/reports/management_reports.js'
         ]);
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";

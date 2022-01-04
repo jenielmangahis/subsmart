@@ -276,3 +276,156 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
 #company_overview_modal .the-content .report-pages ul li .mr_icon.icon5 {
     background-position: 0 -462px;
 }
+
+#company_overview_modal #cover-page-section,
+#company_overview_modal #preliminary-page,
+#company_overview_modal #table-of-contents,
+#company_overview_modal #preliminary-page,
+#company_overview_modal #reports,
+#company_overview_modal #end-notes {
+    padding: 20px 10px;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img {
+    display: flex;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style,
+#company_overview_modal #cover-page-section .page-styles-img .logo-style {
+    padding: 5px;
+    border: solid 1px #CCCCCC;
+    margin-right: 30px;
+    position: relative;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .style-icon,
+#company_overview_modal #cover-page-section .page-styles-img .logo-style .style-icon {
+    height: 80px;
+    width: 80px;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .logo-style .style-icon {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .dropdown-icon,
+#company_overview_modal #cover-page-section .page-styles-img .logo-style .dropdown-icon {
+    padding: 0px 8px;
+    border: solid 1px #ccc;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #fff;
+    cursor: pointer;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section,
+#company_overview_modal #cover-page-section .page-styles-img .logo-style .styles-option-section {
+    border: solid 1px #ccc;
+    background: #fff;
+    position: absolute;
+    width: auto;
+    z-index: 1;
+    top: calc(100% + 5px);
+    padding: 10px;
+    display: none;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .section-row {
+    display: flex;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option {
+    cursor: pointer;
+    margin: 0 10px 15px 15px;
+    height: 110px;
+    width: 80px;
+    display: inline-block;
+    border: 1px solid #CCCCCC;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option:hover {
+    border: 1px solid #1F497D;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option.option-3 {
+    background-position: 0 -904px;
+}
+
+#company_overview_modal #cover-page-section .page-styles-img .logo-style .styles-option-section .style-option {
+    width: 100%;
+    background-color: #F4F5F8;
+    padding: 10px;
+}
+
+#company_overview_modal #cover-page-section .cover-page-fields {
+    margin-top: 20px;
+}
+
+#company_overview_modal #cover-page-section .cover-page-fields .form-group {
+    margin-bottom: 20px!important;
+}
+
+#company_overview_modal #cover-page-section .cover-page-fields .form-group .label {
+    font-size: 12px;
+}
+
+#company_overview_modal #cover-page-section .cover-page-fields .form-group label.info {
+    color: #8E9095;
+    font-size: 10px;
+}
+
+#company_overview_modal #table-of-contents .page-content .page-content-preview {
+    border: solid 1px #CCCCCC;
+    padding: 30px;
+}
+
+#company_overview_modal #table-of-contents .page-content .page-content-preview .content-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#company_overview_modal #table-of-contents .page-content .page-content-preview .norm {
+    font-size: 12px;
+}
+
+#company_overview_modal #table-of-contents .page-content .page-content-preview .divider {
+    border: solid 1px #404040;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#company_overview_modal .form-check label {
+    font-size: 12px;
+}
+
+#company_overview_modal #table-of-contents input[name="page-title"],
+#company_overview_modal #preliminary-page input[name="preliminary-page-title[]"] {
+    width: 400px;
+}
+
+#company_overview_modal #preliminary-page a.add-new-page {
+    color: #0277C5;
+}
+
+#company_overview_modal #preliminary-page a.add-new-page:hover {
+    text-decoration: underline;
+}
+
+#company_overview_modal #preliminary-page .delete-page-btn:hover {
+    opacity: 0.7;
+}
+
+#company_overview_modal #preliminary-page .delete-page-btn {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+    color: #393B3E;
+}
+
+#company_overview_modal #preliminary-page .page-divider {
+    border-top: solid 1px #B5BCC7;
+    margin: 10px 0;
+}
