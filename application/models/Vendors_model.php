@@ -353,6 +353,7 @@ class Vendors_model extends MY_Model {
 	{
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('recurring', null);
 		if($filters['start-date']) {
 			$this->db->where('bill_date >=', $filters['start-date']);
 			$this->db->where('bill_date <=', $filters['end-date']);
@@ -377,6 +378,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('payee_type', 'vendor');
 		$this->db->where('payee_id', $vendorId);
+		$this->db->where('recurring', null);
 		if($filters['start-date']) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
@@ -401,6 +403,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('payee_type', 'vendor');
 		$this->db->where('payee_id', $vendorId);
+		$this->db->where('recurring', null);
 		if(isset($filters['start-date'])) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
@@ -441,6 +444,7 @@ class Vendors_model extends MY_Model {
 	public function get_vendor_purchase_orders($vendorId, $filters = [])
 	{
 		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('recurring', null);
 		if(isset($filters['start-date'])) {
 			$this->db->where('purchase_order_date >=', $filters['start-date']);
 			$this->db->where('purchase_order_date <=', $filters['end-date']);
@@ -477,6 +481,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
+		$this->db->where('recurring', null);
 		if(isset($filters['start-date'])) {
 			$this->db->where('bill_date >=', $filters['start-date']);
 			$this->db->where('bill_date <=', $filters['end-date']);
@@ -511,6 +516,7 @@ class Vendors_model extends MY_Model {
 	{
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('recurring', null);
 		if(isset($filters['start-date'])) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
@@ -528,6 +534,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('payee_type', 'vendor');
 		$this->db->where('payee_id', $vendorId);
+		$this->db->where('recurring', null);
 		if(isset($filters['start-date'])) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
@@ -599,6 +606,16 @@ class Vendors_model extends MY_Model {
 		$this->db->where('id', $checkId);
 		$update = $this->db->update('accounting_check', $data);
 		return $update;
+	}
+
+	public function get_company_last_bill($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('status', 1);
+		$this->db->where_not_in('check_no', ['', null]);
+		$this->db->order_by('created_at', 'desc');
+		$query = $this->db->get('accounting_bill');
+		return $query->row();
 	}
 
 	public function get_bill_by_id($billId, $companyId = null)

@@ -128,7 +128,7 @@ class Expenses extends MY_Controller
 
         return $categoryAccs;
     }
-
+//
     public function load_transactions()
     {
         $post = json_decode(file_get_contents('php://input'), true);
@@ -175,7 +175,7 @@ class Expenses extends MY_Controller
         echo json_encode($result);
     }
 
-    private function get_transactions($filters)
+    private function get_transactions($filters, $for = 'table')
     {
         switch ($filters['type']) {
             case 'all':
@@ -230,13 +230,13 @@ class Expenses extends MY_Controller
                     'payee' => $payee->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($bill->id, 'Bill'),
+                    'category' => $this->category_col($bill->id, 'Bill', $for),
                     'memo' => $bill->memo,
                     'due_date' => '',
                     'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
                 ];
             }
@@ -266,7 +266,7 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
                     'status' => 'Applied',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
                 ];
             }
@@ -299,13 +299,13 @@ class Expenses extends MY_Controller
                     'payee' => $payeeName,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($check->id, 'Check'),
+                    'category' => $this->category_col($check->id, 'Check', $for),
                     'memo' => $check->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === "1" ? "Paid" : "Voided",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
                 ];
             }
@@ -338,13 +338,13 @@ class Expenses extends MY_Controller
                     'payee' => $payeeName,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit'),
+                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit', $for),
                     'memo' => $creditCardCredit->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
                     'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
                 ];
             }
@@ -370,7 +370,7 @@ class Expenses extends MY_Controller
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
                 ];
             }
@@ -405,13 +405,13 @@ class Expenses extends MY_Controller
                     'payee' => $payeeName,
                     'method' => $method->name,
                     'source' => '',
-                    'category' => $this->category_col($expense->id, 'Expense'),
+                    'category' => $this->category_col($expense->id, 'Expense', $for),
                     'memo' => $expense->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
                     'status' => $expense->status === "1" ? 'Paid' : 'Voided',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
             }
@@ -431,13 +431,13 @@ class Expenses extends MY_Controller
                     'payee' => $payee->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($purchOrder->id, 'Purchase Order'),
+                    'category' => $this->category_col($purchOrder->id, 'Purchase Order', $for),
                     'memo' => $purchOrder->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($purchOrder->total_amount), 2, '.', ','),
                     'status' => $purchOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($purchOrder->created_at))
                 ];
             }
@@ -457,13 +457,13 @@ class Expenses extends MY_Controller
                     'payee' => $payee->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
+                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit', $for),
                     'memo' => $vendorCredit->memo,
                     'due_date' => '',
                     'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
                     'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
                 ];
             }
@@ -589,7 +589,7 @@ class Expenses extends MY_Controller
         return $filters;
     }
 
-    private function category_col($transactionId, $transactionType)
+    private function category_col($transactionId, $transactionType, $for = 'table')
     {
         $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
         $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
@@ -620,7 +620,9 @@ class Expenses extends MY_Controller
                         'Other Expense'
                     ];
 
-                    $category = '<select class="form-control" name="category[]">';
+                    if($for === 'table') {
+                        $category = '<select class="form-control" name="category[]">';
+                    }
 
                     foreach ($accountTypes as $typeName) {
                         $accType = $this->account_model->getAccTypeByName($typeName);
@@ -628,35 +630,41 @@ class Expenses extends MY_Controller
                         $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
                         if (count($accounts) > 0) {
-                            $category .= '<optgroup label="'.$typeName.'">';
-                            foreach ($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+                            if($for === 'table') {
+                                $category .= '<optgroup label="'.$typeName.'">';
+                                foreach ($accounts as $account) {
+                                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
-                                if ($account->id === $expenseAcc) {
-                                    $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                } else {
-                                    $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                }
-
-                                if (count($childAccs) > 0) {
-                                    $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-
-                                    foreach ($childAccs as $childAcc) {
-                                        if ($childAcc->id === $expenseAcc) {
-                                            $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                        }
+                                    if ($account->id === $expenseAcc) {
+                                        $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
+                                    } else {
+                                        $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
                                     }
 
-                                    $category .= '</optgroup>';
+                                    if (count($childAccs) > 0) {
+                                        $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
+
+                                        foreach ($childAccs as $childAcc) {
+                                            if ($childAcc->id === $expenseAcc) {
+                                                $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                            } else {
+                                                $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                            }
+                                        }
+
+                                        $category .= '</optgroup>';
+                                    }
                                 }
+                                $category .= '</optgroup>';
+                            } else {
+                                $category = $this->chart_of_accounts_model->getName($expenseAcc);
                             }
-                            $category .= '</optgroup>';
                         }
                     }
 
-                    $category .= '</select>';
+                    if($for === 'table') {
+                        $category .= '</select>';
+                    }
                 } else {
                     $itemId = $items[0]->item_id;
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
@@ -1309,5 +1317,277 @@ class Expenses extends MY_Controller
         }
 
         redirect('accounting/expenses');
+    }
+
+    public function print_transactions()
+    {
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+
+        $filters = $this->set_filters($post);
+
+        $transactions = $this->get_transactions($filters, 'print');
+
+        usort($transactions, function ($a, $b) use ($order, $columnName) {
+            if ($columnName !== 'date') {
+                if($a[$columnName] === $b[$columnName]) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
+                if ($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
+                } else {
+                    return strcmp($b[$columnName], $a[$columnName]);
+                }
+            } else {
+                if ($order === 'asc') {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) > strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
+                } else {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) < strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
+                }
+            }
+        });
+
+        switch($post['type']) {
+            case 'all' :
+                $type = 'All transactions';
+            break;
+            case 'expenses' :
+                $type = 'Expense';
+            break;
+            case 'bill' :
+                $type = 'Bill';
+            break;
+            case 'bill-payments' :
+                $type = 'Bill payments';
+            break;
+            case 'check' :
+                $type = 'Check';
+            break;
+            case 'purchase-order' :
+                $type = 'Purchase order';
+            break;
+            case 'recently-paid' :
+                $type = 'Recently paid';
+            break;
+            case 'vendor-credit' :
+                $type = 'Vendor Credit';
+            break;
+            case 'credit-card-payment' :
+                $type = 'Credit Card Payment';
+            break;
+        }
+
+        $status = $post['status'] === 'all' ? 'All statuses' : ucfirst($post['status']);
+
+        $tableHtml = "<h3 style='text-align: center;'>";
+        $tableHtml .= "Type: $type · Status: $status";
+        $tableHtml .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : " · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
+        $tableHtml .= "</h3>";
+        $tableHtml .= "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Date</th>";
+        $tableHtml .= $post['chk_type'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>" : "";
+        $tableHtml .= $post['chk_number'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>No.</th>" : "";
+        $tableHtml .= $post['chk_payee'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Payee</th>" : "";
+        $tableHtml .= $post['chk_method'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Method</th>" : "";
+        $tableHtml .= $post['chk_source'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Source</th>" : "";
+        $tableHtml .= $post['chk_category'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Category</th>" : "";
+        $tableHtml .= $post['chk_memo'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Memo</th>" : "";
+        $tableHtml .= $post['chk_due_date'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Due date</th>" : "";
+        $tableHtml .= $post['chk_balance'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Balance</th>" : "";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Total</th>";
+        $tableHtml .= $post['chk_status'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Status</th>" : "";
+        $tableHtml .= $post['chk_attachments'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Attachments</th>" : "";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+
+        foreach($transactions as $transaction) {
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['date']."</td>";
+            $tableHtml .= $post['chk_type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['type']."</td>" : "";
+            $tableHtml .= $post['chk_number'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['number']."</td>" : "";
+            $tableHtml .= $post['chk_payee'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['payee']."</td>" : "";
+            $tableHtml .= $post['chk_method'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['method']."</td>" : "";
+            $tableHtml .= $post['chk_source'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['source']."</td>" : "";
+            $tableHtml .= $post['chk_category'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['category']."</td>" : "";
+            $tableHtml .= $post['chk_memo'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['memo']."</td>" : "";
+            $tableHtml .= $post['chk_due_date'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['due_date']."</td>" : "";
+            $tableHtml .= $post['chk_balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['balance']."</td>" : "";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['total']."</td>";
+            $tableHtml .= $post['chk_status'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['status']."</td>" : "";
+            $tableHtml .= $post['chk_attachments'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['attachments']."</td>" : "";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
+    }
+
+    public function export()
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+
+        $filters = $this->set_filters($post);
+
+        $transactions = $this->get_transactions($filters, 'print');
+
+        usort($transactions, function ($a, $b) use ($order, $columnName) {
+            if ($columnName !== 'date') {
+                if($a[$columnName] === $b[$columnName]) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
+                if ($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
+                } else {
+                    return strcmp($b[$columnName], $a[$columnName]);
+                }
+            } else {
+                if ($order === 'asc') {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) > strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
+                } else {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) < strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
+                }
+            }
+        });
+
+        switch($post['type']) {
+            case 'all' :
+                $type = 'All transactions';
+            break;
+            case 'expenses' :
+                $type = 'Expense';
+            break;
+            case 'bill' :
+                $type = 'Bill';
+            break;
+            case 'bill-payments' :
+                $type = 'Bill payments';
+            break;
+            case 'check' :
+                $type = 'Check';
+            break;
+            case 'purchase-order' :
+                $type = 'Purchase order';
+            break;
+            case 'recently-paid' :
+                $type = 'Recently paid';
+            break;
+            case 'vendor-credit' :
+                $type = 'Vendor Credit';
+            break;
+            case 'credit-card-payment' :
+                $type = 'Credit Card Payment';
+            break;
+        }
+
+        $status = $post['status'] === 'all' ? 'All statuses' : ucfirst($post['status']);
+        $excelHead = "Type: $type · Status: $status · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
+        $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
+
+        // $writer = $this->phpxlsxwriter;
+        $this->load->helper('string');
+
+        $randString = random_string('numeric');
+        $fileName = "expenses_$randString.xlsx";
+        $file = "./uploads/accounting/$fileName";
+
+        $writer = new XLSXWriter();
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center']);
+        $writer->markMergedCell('Sheet1', 0, 0, 0, 12);
+        $headers = [];
+
+        $headers[] = "Date";
+        if(in_array('type', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Type";
+        }
+        if(in_array('number', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "No.";
+        }
+        if(in_array('payee', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Payee";
+        }
+        if(in_array('method', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Method";
+        }
+        if(in_array('source', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Source";
+        }
+        if(in_array('category', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Category";
+        }
+        if(in_array('memo', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Memo";
+        }
+        if(in_array('due_date', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Due date";
+        }
+        if(in_array('balance', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Balance";
+        }
+        $headers[] = "Total";
+        if(in_array('status', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Status";
+        }
+        if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Attachments";
+        }
+        $writer->writeSheetRow('Sheet1', $headers);
+
+        foreach($transactions as $transaction) {
+            $keys = array_keys($transaction);
+
+            foreach($keys as $key) {
+                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
+                    unset($transaction[$key]);
+                }
+            }
+
+            $writer->writeSheetRow('Sheet1', $transaction);
+        }
+        $writer->writeToFile($file);
+
+        // header("Content-Description: File Transfer"); 
+        // header("Content-Disposition: attachment; filename=expenses.csv"); 
+        // header("Content-Type: application/csv;");
+
+        // // file creation 
+        // $file = fopen('php://output', 'w');
+        
+        // fputcsv($file, $headers);
+
+        // foreach($transactions as $transaction) {
+        //     $keys = array_keys($transaction);
+
+        //     foreach($keys as $key) {
+        //         if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields'])) {
+        //             unset($transaction[$key]);
+        //         }
+        //     }
+
+        //     fputcsv($file, $transaction);
+        // }
+
+        // fclose($file); 
+        // exit;
     }
 }

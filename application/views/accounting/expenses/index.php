@@ -51,6 +51,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         background-color: #365ebf;
         color: #fff;
     }
+    #myTabContent .action-bar ul li a:after {
+        width: 0;
+    }
+    #myTabContent .action-bar ul li a {
+    font-size: 20px;
+    }
+    #myTabContent .action-bar ul li {
+        margin-right: 5px;
+    }
+	#myTabContent .action-bar ul li .dropdown-menu a {
+		font-size: 14px;
+	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -172,12 +184,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     <option value="bill">Bill</option>
                                                                     <option value="bill-payments">Bill payments</option>
                                                                     <option value="check">Check</option>
-                                                                    <option value="purchase-order">Purchase order
-                                                                    </option>
+                                                                    <option value="purchase-order">Purchase order</option>
                                                                     <option value="recently-paid">Recently paid</option>
                                                                     <option value="vendor-credit">Vendor credit</option>
-                                                                    <option value="credit-card-payment">Credit Card
-                                                                        Payment</option>
+                                                                    <option value="credit-card-payment">Credit Card Payment</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -342,9 +352,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#" onclick="window.print()"><i class="fa fa-print"></i></a>
+                                                <li><a href="#" id="print-table"><i class="fa fa-print"></i></a></li>
+                                                <li>
+                                                    <form action="/accounting/expenses/export" method="post" id="export-form">
+                                                        <a href="#" id="export-transactions"><i class="fa fa-download"></i></a>
+                                                    </form>
                                                 </li>
-                                                <li><a href="#"><i class="fa fa-download"></i></a></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button"
                                                         id="dropdownMenuButton" data-toggle="dropdown"

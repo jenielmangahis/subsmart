@@ -57,7 +57,7 @@ class Accounting extends MY_Controller
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            "assets/css/accounting/accounting.modal.css?2021",
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -910,6 +910,14 @@ class Accounting extends MY_Controller
 
     public function reports()
     {
+        add_css([
+            'assets/css/accounting/reports/management_reports.css'
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/reports/management_reports.js'
+        ]);
+        $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
@@ -10190,16 +10198,15 @@ class Accounting extends MY_Controller
             $attachment = $cus->attachment;
         }
         $attachements_html="";
-        if($attachment != ""){
-            $files = explode(",",$attachment);
-            for($i=0;$i<count($files);$i++){
-                $ext=explode(".",$files[$i]);
-                if($ext[1] != "jpg" && $ext[1] != "jpeg" && $ext[1] != "png" && $ext[1] != "JPG" && $ext[1] != "JPEG" && $ext[1] != "PNG"){
+        if ($attachment != "") {
+            $files = explode(",", $attachment);
+            for ($i=0;$i<count($files);$i++) {
+                $ext=explode(".", $files[$i]);
+                if ($ext[1] != "jpg" && $ext[1] != "jpeg" && $ext[1] != "png" && $ext[1] != "JPG" && $ext[1] != "JPEG" && $ext[1] != "PNG") {
                     $attachements_html.='<div class="img-holder" data-file-name="'.$files[$i].'"><div class="delete">x</div><img src="'.base_url().'assets/img/accounting/customers/document.png" ></div>';
-                }else{
+                } else {
                     $attachements_html.='<div class="img-holder" data-file-name="'.$files[$i].'"><div class="delete">x</div><img src="'.base_url().'/uploads/accounting/attachments/final-attachments/'.$files[$i].'" ></div>';
                 }
-                
             }
         }
         $data = new stdClass();
@@ -11964,7 +11971,7 @@ class Accounting extends MY_Controller
             $customer_info=$this->accounting_customers_model->get_customer_by_id($_POST['customer_id']);
             if ($customer_info->asc_attachment!="") {
                 $files=$customer_info->asc_attachment.",".$uniquesavename.".".$ext;
-            }else{
+            } else {
                 $files=$uniquesavename.".".$ext;
             }
             
@@ -11995,14 +12002,14 @@ class Accounting extends MY_Controller
                         $status .= "///// $destination has been deleted";
                     }
                 }
-            }else{
-                if($update_data==""){
+            } else {
+                if ($update_data=="") {
                     $update_data.=$files[$i];
-                }else{
+                } else {
                     $update_data.=",".$files[$i];
                 }
             }
-        } 
+        }
         $this->accounting_customers_model->updateCustomer($this->input->post("customer_id"), array("attachment"=>$update_data));
         $data = new stdClass();
         $data->status = $status;

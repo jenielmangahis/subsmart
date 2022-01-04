@@ -687,7 +687,7 @@ class Vendors extends MY_Controller
         echo json_encode($result);
     }
 
-    private function get_transactions($vendorId, $filters)
+    private function get_transactions($vendorId, $filters, $for = 'table')
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
         switch ($filters['type']) {
@@ -746,13 +746,13 @@ class Vendors extends MY_Controller
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($bill->id, 'Bill'),
+                    'category' => $this->category_col($bill->id, 'Bill', $for),
                     'memo' => $bill->memo,
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
                 ];
             }
@@ -780,7 +780,7 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval($payment->total_amount), 2, '.', ','),
                     'status' => $payment->status === "4" ? 'Voided' : 'Applied',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at))
                 ];
             }
@@ -798,13 +798,13 @@ class Vendors extends MY_Controller
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($check->id, 'Check'),
+                    'category' => $this->category_col($check->id, 'Check', $for),
                     'memo' => $check->memo,
                     'due_date' => '',
                     'balance' => '0.00',
                     'total' => number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
                 ];
             }
@@ -822,13 +822,13 @@ class Vendors extends MY_Controller
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit'),
+                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit', $for),
                     'memo' => $creditCardCredits->memo,
                     'due_date' => '',
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
                 ];
             }
@@ -852,7 +852,7 @@ class Vendors extends MY_Controller
                     'balance' => '0.00',
                     'total' => number_format(floatval($cardPayment->amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($cardPayment->created_at))
                 ];
             }
@@ -872,13 +872,13 @@ class Vendors extends MY_Controller
                     'payee' => $vendor->display_name,
                     'method' => $method->name,
                     'source' => '',
-                    'category' => $this->category_col($expense->id, 'Expense'),
+                    'category' => $this->category_col($expense->id, 'Expense', $for),
                     'memo' => $expense->memo,
                     'due_date' => '',
                     'balance' => '0.00',
                     'total' => number_format(floatval($expense->total_amount), 2, '.', ','),
                     'status' => $expense->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
                 ];
             }
@@ -896,13 +896,13 @@ class Vendors extends MY_Controller
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($purchaseOrder->id, 'Purchase Order'),
+                    'category' => $this->category_col($purchaseOrder->id, 'Purchase Order', $for),
                     'memo' => $purchaseOrder->memo,
                     'due_date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                     'balance' => '0.00',
                     'total' => number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
                     'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($purchaseOrder->created_at))
                 ];
             }
@@ -920,13 +920,13 @@ class Vendors extends MY_Controller
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
+                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit', $for),
                     'memo' => $vendorCredits->memo,
                     'due_date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
                     'balance' => number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
                     'total' => '-'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
-                    'attachments' => $attachments,
+                    'attachments' => $for === 'table' ? $attachments : count($attachments),
                     'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
                 ];
             }
@@ -935,7 +935,7 @@ class Vendors extends MY_Controller
         return $transactions;
     }
 
-    private function category_col($transactionId, $transactionType)
+    private function category_col($transactionId, $transactionType, $for = 'table')
     {
         $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
         $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
@@ -966,7 +966,9 @@ class Vendors extends MY_Controller
                         'Other Expense'
                     ];
 
-                    $category = '<select class="form-control" name="category[]">';
+                    if($for === 'table') {
+                        $category = '<select class="form-control" name="category[]">';
+                    }
 
                     foreach ($accountTypes as $typeName) {
                         $accType = $this->account_model->getAccTypeByName($typeName);
@@ -974,35 +976,41 @@ class Vendors extends MY_Controller
                         $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
                         if (count($accounts) > 0) {
-                            $category .= '<optgroup label="'.$typeName.'">';
-                            foreach ($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+                            if($for === 'table') {
+                                $category .= '<optgroup label="'.$typeName.'">';
+                                foreach ($accounts as $account) {
+                                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
-                                if ($account->id === $expenseAcc) {
-                                    $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                } else {
-                                    $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                }
-
-                                if (count($childAccs) > 0) {
-                                    $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-
-                                    foreach ($childAccs as $childAcc) {
-                                        if ($childAcc->id === $expenseAcc) {
-                                            $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                        }
+                                    if ($account->id === $expenseAcc) {
+                                        $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
+                                    } else {
+                                        $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
                                     }
 
-                                    $category .= '</optgroup>';
+                                    if (count($childAccs) > 0) {
+                                        $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
+
+                                        foreach ($childAccs as $childAcc) {
+                                            if ($childAcc->id === $expenseAcc) {
+                                                $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                            } else {
+                                                $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                            }
+                                        }
+
+                                        $category .= '</optgroup>';
+                                    }
                                 }
+                                $category .= '</optgroup>';
+                            } else {
+                                $category = $this->chart_of_accounts_model->getName($expenseAcc);
                             }
-                            $category .= '</optgroup>';
                         }
                     }
 
-                    $category .= '</select>';
+                    if($for === 'table') {
+                        $category .= '</select>';
+                    }
                 } else {
                     $itemId = $items[0]->item_id;
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
@@ -2736,6 +2744,455 @@ class Vendors extends MY_Controller
         ob_clean();
         flush();
         echo $pdf;
+        exit;
+    }
+
+    public function print_transactions($vendorId)
+    {
+        $post = $this->input->post();
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $type = $post['type'];
+        $date = $post['date'];
+
+        $filters = [
+            'type' => $type,
+            'order' => $order
+        ];
+
+        switch ($date) {
+            case 'today':
+                $filters['start-date'] = date("Y-m-d");
+                $filters['end-date'] = date("Y-m-d");
+            break;
+            case 'yesterday':
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+            break;
+            case 'this-week':
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+            break;
+            case 'this-month':
+                $filters['start-date'] = date("Y-m-01");
+                $filters['end-date'] = date("Y-m-t");
+            break;
+            case 'this-quarter':
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+                
+                $filters['start-date'] = $quarters[$quarter]['start'];
+                $filters['end-date'] = $quarters[$quarter]['end'];
+            break;
+            case 'this-year':
+                $filters['start-date'] = date("Y-01-01");
+                $filters['end-date'] = date("Y-12-t");
+            break;
+            case 'last-week':
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+            break;
+            case 'last-month':
+                $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+            break;
+            case 'last-quarter':
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+
+                $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+            break;
+            case 'last-year':
+                $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+            break;
+            case 'last-365-days':
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                $filters['end-date'] = date("Y-m-d");
+            break;
+        }
+
+        $transactions = $this->get_transactions($vendorId, $filters, 'print');
+
+        usort($transactions, function ($a, $b) use ($order, $columnName) {
+            if ($columnName !== 'date') {
+                if($a[$columnName] === $b[$columnName]) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
+                if ($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
+                } else {
+                    return strcmp($b[$columnName], $a[$columnName]);
+                }
+            } else {
+                if ($order === 'asc') {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) > strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
+                } else {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) < strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
+                }
+            }
+        });
+
+        switch($post['type']) {
+            case 'all' :
+                $type = 'All transactions';
+                $status = 'All statuses';
+            break;
+            case 'expenses' :
+                $type = 'Expense';
+            break;
+            case 'all-bills' :
+                $type = 'Bill';
+                $status = 'All statuses';
+            break;
+            case 'open-bills' :
+                $type = 'Bill';
+                $status = 'Open';
+            break;
+            case 'overdue-bills' :
+                $type = 'Bill';
+                $status = 'Overdue';
+            break;
+            case 'bill-payments' :
+                $type = 'Bill payments';
+            break;
+            case 'check' :
+                $type = 'Check';
+            break;
+            case 'purchase-orders' :
+                $type = 'Purchase order';
+            break;
+            case 'recently-paid' :
+                $type = 'Recently paid';
+            break;
+            case 'vendor-credits' :
+                $type = 'Vendor Credit';
+            break;
+        }
+
+        $tableHtml = "<h3 style='text-align: center;'>";
+        $tableHtml .= "Type: $type";
+        $tableHtml .= isset($status) ? "· Status: $status" : "";
+        $tableHtml .= "· Name: $vendor->display_name";
+        $tableHtml .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : " · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
+        $tableHtml .= "</h3>";
+
+        $tableHtml .= "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Date</th>";
+        $tableHtml .= $post['chk_type'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Type</th>" : "";
+        $tableHtml .= $post['chk_number'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>No.</th>" : "";
+        $tableHtml .= $post['chk_payee'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Payee</th>" : "";
+        $tableHtml .= $post['chk_method'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Method</th>" : "";
+        $tableHtml .= $post['chk_source'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Source</th>" : "";
+        $tableHtml .= $post['chk_category'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Category</th>" : "";
+        $tableHtml .= $post['chk_memo'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Memo</th>" : "";
+        $tableHtml .= $post['chk_due_date'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Due date</th>" : "";
+        $tableHtml .= $post['chk_balance'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Balance</th>" : "";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Total</th>";
+        $tableHtml .= $post['chk_status'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Status</th>" : "";
+        $tableHtml .= $post['chk_attachments'] === "1" ? "<th style='border-bottom: 2px solid #BFBFBF'>Attachments</th>" : "";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+
+        foreach($transactions as $transaction) {
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['date']."</td>";
+            $tableHtml .= $post['chk_type'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['type']."</td>" : "";
+            $tableHtml .= $post['chk_number'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['number']."</td>" : "";
+            $tableHtml .= $post['chk_payee'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['payee']."</td>" : "";
+            $tableHtml .= $post['chk_method'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['method']."</td>" : "";
+            $tableHtml .= $post['chk_source'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['source']."</td>" : "";
+            $tableHtml .= $post['chk_category'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['category']."</td>" : "";
+            $tableHtml .= $post['chk_memo'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['memo']."</td>" : "";
+            $tableHtml .= $post['chk_due_date'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['due_date']."</td>" : "";
+            $tableHtml .= $post['chk_balance'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['balance']."</td>" : "";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['total']."</td>";
+            $tableHtml .= $post['chk_status'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['status']."</td>" : "";
+            $tableHtml .= $post['chk_attachments'] === "1" ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$transaction['attachments']."</td>" : "";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
+    }
+
+    public function export($vendorId)
+    {
+        $post = $this->input->post();
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $type = $post['type'];
+        $date = $post['date'];
+
+        $filters = [
+            'type' => $type,
+            'order' => $order
+        ];
+
+        switch ($date) {
+            case 'today':
+                $filters['start-date'] = date("Y-m-d");
+                $filters['end-date'] = date("Y-m-d");
+            break;
+            case 'yesterday':
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+            break;
+            case 'this-week':
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+            break;
+            case 'this-month':
+                $filters['start-date'] = date("Y-m-01");
+                $filters['end-date'] = date("Y-m-t");
+            break;
+            case 'this-quarter':
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+                
+                $filters['start-date'] = $quarters[$quarter]['start'];
+                $filters['end-date'] = $quarters[$quarter]['end'];
+            break;
+            case 'this-year':
+                $filters['start-date'] = date("Y-01-01");
+                $filters['end-date'] = date("Y-12-t");
+            break;
+            case 'last-week':
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+            break;
+            case 'last-month':
+                $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+            break;
+            case 'last-quarter':
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+
+                $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+            break;
+            case 'last-year':
+                $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+            break;
+            case 'last-365-days':
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                $filters['end-date'] = date("Y-m-d");
+            break;
+        }
+
+        $transactions = $this->get_transactions($vendorId, $filters, 'print');
+
+        usort($transactions, function ($a, $b) use ($order, $columnName) {
+            if ($columnName !== 'date') {
+                if($a[$columnName] === $b[$columnName]) {
+                    return strtotime($a['date_created']) > strtotime($b['date_created']);
+                }
+                if ($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
+                } else {
+                    return strcmp($b[$columnName], $a[$columnName]);
+                }
+            } else {
+                if ($order === 'asc') {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) > strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
+                } else {
+                    if(strtotime($a[$columnName]) === strtotime($b[$columnName])) {
+                        return strtotime($a['date_created']) < strtotime($b['date_created']);
+                    }
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
+                }
+            }
+        });
+
+        switch($post['type']) {
+            case 'all' :
+                $type = 'All transactions';
+                $status = 'All statuses';
+            break;
+            case 'expenses' :
+                $type = 'Expense';
+            break;
+            case 'all-bills' :
+                $type = 'Bill';
+                $status = 'All statuses';
+            break;
+            case 'open-bills' :
+                $type = 'Bill';
+                $status = 'Open';
+            break;
+            case 'overdue-bills' :
+                $type = 'Bill';
+                $status = 'Overdue';
+            break;
+            case 'bill-payments' :
+                $type = 'Bill payments';
+            break;
+            case 'check' :
+                $type = 'Check';
+            break;
+            case 'purchase-orders' :
+                $type = 'Purchase order';
+            break;
+            case 'recently-paid' :
+                $type = 'Recently paid';
+            break;
+            case 'vendor-credits' :
+                $type = 'Vendor Credit';
+            break;
+        }
+
+        // $excelHead = "Type: $type · Status: $status · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
+        // $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
+
+        header("Content-Description: File Transfer"); 
+        header("Content-Disposition: attachment; filename=expenses.csv"); 
+        header("Content-Type: application/csv;");
+
+        // file creation 
+        $file = fopen('php://output', 'w');
+        $headers = [];
+
+        $headers[] = "Date";
+        if(in_array('type', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Type";
+        }
+        if(in_array('number', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "No.";
+        }
+        if(in_array('payee', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Payee";
+        }
+        if(in_array('method', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Method";
+        }
+        if(in_array('source', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Source";
+        }
+        if(in_array('category', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Category";
+        }
+        if(in_array('memo', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Memo";
+        }
+        if(in_array('due_date', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Due date";
+        }
+        if(in_array('balance', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Balance";
+        }
+        $headers[] = "Total";
+        if(in_array('status', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Status";
+        }
+        if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
+            $headers[] = "Attachments";
+        }
+        fputcsv($file, $headers);
+
+        foreach($transactions as $transaction) {
+            $keys = array_keys($transaction);
+
+            foreach($keys as $key) {
+                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields'])) {
+                    unset($transaction[$key]);
+                }
+            }
+
+            fputcsv($file, $transaction);
+        }
+
+        fclose($file); 
         exit;
     }
 }

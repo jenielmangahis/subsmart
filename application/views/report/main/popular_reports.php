@@ -213,7 +213,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tbody>
                                     </table>
                                 <?php elseif($type === "profit-loss") : ?>
-                                <table class="table table-hover table-to-list">
+                                <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
                                         <tr>
                                             <th class="text-left">Name</th>
@@ -579,17 +579,45 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     </tbody>
                                 </table>
+                                <?php elseif ($type === "customer-tax-by-month") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Name</th>
+                                            <th class="text-left">Rate</th>
+                                            <!-- <th class="text-right">Detail type</th> -->
+                                            <th class="text-right">Amount</th>
+                                            <th class="text-right"></th>
+                                            <th class="text-right"></th>
+                                            <!-- <th class="text-right">Bank Balance</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                                 <?php elseif ($type === "work-order-status") : ?>
                                 <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
                                         <tr>
                                             <th class="text-left">Work Order #</th>
-                                            <th class="text-left">Date Issued</th>
+                                            <th class="text-right">Date Issued</th>
                                             <th class="text-right">Customer</th>
                                             <th class="text-right">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- <tr>
+                                            <td class="text-left">WO-0000008</td>
+                                            <td class="text-right">2021-04-20</td>
+                                            <td class="text-right">Sarah Lastname</td>
+                                            <td class="text-right">Invoiced</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">WO-0000020</td>
+                                            <td class="text-right">2021-05-01</td>
+                                            <td class="text-right">Loucelle Emperio</td>
+                                            <td class="text-right">Scheduled</td>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "invoice-items-no-tax") : ?>

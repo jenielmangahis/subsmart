@@ -374,9 +374,20 @@ add_css(array(
                                                                         <br>
                                                                     </div>
                                                                     <div class="col-md-6"></div>
+                                                                    <div class="col-md-12">
+                                                                        <strong>Bank Detail</strong> <small>Test Debit Card</small>
+                                                                    </div>
+                                                                    <br><br>
+                                                                    <div class="col-md-12">
+                                                                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-file"></span> Add Attachment</a>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-gavel"></span> Create Rule</a>
+                                                                        &nbsp;&nbsp;&nbsp;
+                                                                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-remove"></span> Exclude</a>
+                                                                    </div>
 
                                                                     <div class="col-md-12 modal-footer">
-                                                                        <button type="button" class="btn btn-default ">Split</button>
+                                                                        <button type="button" class="btn btn-default splitTransBtn">Split</button>
                                                                         <button type="submit" class="btn btn-success " id="">Add</button>
                                                                     </div>
                                                                 </form>
@@ -462,6 +473,94 @@ add_css(array(
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>
 
+
+<div class="modal fade" id="split_transaction_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Split Transaction</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <strong>Downloaded transaction</strong><br>
+                        <p >Beach</p>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="">Payee</label><br>
+                        <select name="customer" id="" class="form_select vendor-customer">
+                            <option value=""></option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <br><br>
+                    <div class="col-md-12">
+                        <table id="split_transaction_table" class="table  table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th >Description</th>
+                                    <th >Customer</th>
+                                    <th>Billable</th>
+                                    <th>Amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="split_transaction_items">
+                                <tr>
+                                    <td>
+                                        <select name="customer" id="" class="form_select category">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="id" class="form-control" id="jobid" >
+                                    </td>
+                                    <td>
+                                        <select name="customer" id="" class="form_select customers">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" name="method" class="" value="CC" id="is_billable">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="id" class="form-control" id="jobid" >
+                                    </td>
+                                    <td>
+                                        <span class="fa fa-trash remove_item" ></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-default btn-sm" id="add_field"><span class="fa fa-plus"></span> Add Line</button>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="">Memo</label><br>
+                        <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <br>
+                        <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 14px;"><span class="fa fa-file"></span> Add Attachment</a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm">Apply and Accept</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal for add account-->
 <div class="full-screen-modal">
@@ -719,7 +818,6 @@ add_css(array(
     .payment_method{
         -webkit-appearance: none;
         -moz-appearance: none;
-        appearance: none;
         border-radius: 50%;
         width: 16px;
         height: 16px;
@@ -733,6 +831,12 @@ add_css(array(
     .payment_method:checked {
         border: 6px solid #2ca01c;
         outline: unset !important /* I added this one for Edge (chromium) support */
+    }
+
+    .full-screen-modal .modal .modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: auto !important;
     }
 
 </style>
@@ -782,11 +886,8 @@ add_css(array(
         });
     };
 
-    $('tr.accordion').click(function(){
-        $('.accordion_content').css('display', 'none');
-        $(this).nextUntil('tr.accordion').css('display', function(i,v){
-            return this.style.display === 'table-row' ? 'none' : 'table-row';
-        });
+    $('.splitTransBtn').click(function(){
+        $('#split_transaction_modal').modal('show');
     });
 
 
@@ -808,6 +909,27 @@ add_css(array(
 
     // DataTable JS
     $(document).ready(function() {
+        $("body").delegate("#add_field", "click", function(){
+            //$('#split_transaction_items').append($('#item').html());
+            var tableBody = $('#split_transaction_table').find("tbody"),
+                $trLast = tableBody.find("tr:last"),
+                $trNew = $trLast.clone();
+
+            $trLast.after($trNew);
+        });
+
+        $("body").delegate(".remove_item", "click", function(){
+            $(this).parent().parent().remove();
+        });
+
+        $('tr.accordion').click(function(){
+            $('.accordion_content').css('display', 'none');
+            $(this).nextUntil('tr.accordion').css('display', function(i,v){
+                return this.style.display === 'table-row' ? 'none' : 'table-row';
+            });
+        });
+
+
         $('#forReview_table').DataTable({
             "paging": true,
             "filter":true,

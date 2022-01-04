@@ -23,12 +23,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                 <div class="accountReceivable__reportPeriodBody">
                                     <div>
                                         <div
-                                            class="accountReceivable__formTitle popover-dismiss" 
+                                            class="accountReceivable__formTitle popover-dismiss"
                                             tabindex="0"
                                             data-toggle="popover"
                                             data-trigger="hover"
                                             title="See a snapshot in time"
-                                            data-content="Choose a time period to see where things stood at the end of it." 
+                                            data-content="Choose a time period to see where things stood at the end of it."
                                         >Report period</div>
                                         <div class="form-group">
                                             <select class="form-control">
@@ -76,23 +76,23 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             <div class="accountReceivable__formGroup">
                                 <div class="accountReceivable__nonZeroActiveOnly">
                                     <div>
-                                        <div 
-                                            class="accountReceivable__formTitle popover-dismiss" 
+                                        <div
+                                            class="accountReceivable__formTitle popover-dismiss"
                                             tabindex="0"
                                             data-toggle="popover"
                                             data-trigger="hover"
                                             title="Declutter your report"
-                                            data-content="Choose Active to hide empty rows or columns. Choose Non-zero to also hide ones where the total is zero. Find out more." 
+                                            data-content="Choose Active to hide empty rows or columns. Choose Non-zero to also hide ones where the total is zero. Find out more."
                                         >Show non-zero or active only</div>
                                         <div class="form-group">
-                                            <div class="nonZeroActiveOnly" id="nonZeroActiveOnly">
-                                                <button class="nonZeroActiveOnly__btn" type="button">
+                                            <div class="customDropdown">
+                                                <button class="customDropdown__btn" type="button">
                                                     <span>Active rows/active columns</span>
                                                     <i class="fa fa-angle-down"></i>
                                                 </button>
-                                                <div class="nonZeroActiveOnly__options">
-                                                    <div class="nonZeroActiveOnly__group">
-                                                        <div class="nonZeroActiveOnly__title">Show rows</div>
+                                                <div class="customDropdown__options">
+                                                    <div class="customDropdown__group">
+                                                        <div class="customDropdown__title">Show rows</div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows1" value="option1" checked>
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows1">
@@ -105,21 +105,21 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                                 All
                                                             </label>
                                                         </div>
-                                                        <div class="form-check disabled">
+                                                        <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows3" value="option3">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows3">
                                                                 Non-zero
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="nonZeroActiveOnly__group">
-                                                        <div class="nonZeroActiveOnly__title">Show columns</div>
+                                                    <div class="customDropdown__group">
+                                                        <div class="customDropdown__title">Show columns</div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns1" value="option1" checked>
                                                             <label class="form-check-label" for="nonZeroActiveOnlyColumns1">
                                                                 Active
                                                             </label>
-                                                        </div> 
+                                                        </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns2" value="option2">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyColumns2">
@@ -172,90 +172,101 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     </div>
                 </form>
             </div>
-            <div class="" style="margin-top:6px;margin:0 20% 0 20%;border: solid gray 1px;">
-                <div class="row" style="padding:5px;">
-                    <div class="col-md-3">
-                        <a href="#" style="color:#479cd4;">Collapse</a>&emsp;
-                        <a href="#" style="color:#479cd4;">Sort <i class="fa fa-angle-down"></i></a>&emsp;
-                        <a href="#" style="color:#479cd4;"> Add notes</a>
+
+            <div class="accountReceivableTable">
+                <div class="accountReceivableTable__topBar">
+                    <div class="accountReceivableTable__actions">
+                        <button class="accountReceivableTable__btn">
+                            Collapse
+                        </button>
+                        <div class="customDropdown sortTable">
+                            <button class="customDropdown__btn">
+                                Sort <i class="fa fa-angle-down"></i>
+                            </button>
+                            <div class="customDropdown__options">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortTable" id="sortTable1" value="default" checked>
+                                    <label class="form-check-label" for="sortTable1">
+                                        Default
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortTable" id="sortTable2" value="total_ascending">
+                                    <label class="form-check-label" for="sortTable2">
+                                        Total in ascending order
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortTable" id="sortTable3" value="total_descending">
+                                    <label class="form-check-label" for="sortTable3">
+                                        Total in descending order
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="accountReceivableTable__btn">
+                            Add notes
+                        </button>
                     </div>
-                    <div class="col-md-7">
-                    </div>
-                    <div class="col-md-2">
-                        <i class="fa fa-envelope" style="font-size:24px"></i>&nbsp;
-                        <i class="material-icons">local_printshop</i>&nbsp;
-                        <i class="fa fa-upload" style="font-size:24px"></i>&nbsp;
-                        <i class="material-icons">settings</i>&nbsp;
+                    <div class="accountReceivableTable__actions">
+                        <button class="accountReceivableTable__btn">
+                            <i class="material-icons">email</i>
+                        </button>
+                        <button class="accountReceivableTable__btn">
+                            <i class="material-icons">local_printshop</i>
+                        </button>
+                        <button class="accountReceivableTable__btn">
+                            <i class="material-icons">cloud_upload</i>
+                        </button>
+                        <div class="customDropdown">
+                            <button class="customDropdown__btn accountReceivableTable__btn">
+                                <i class="material-icons">settings</i>
+                            </button>
+                            <div class="customDropdown__options">
+                                <div class="customDropdown__group">
+                                    <div class="customDropdown__title">Display density</div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="tableCompact">
+                                        <label class="form-check-label" for="tableCompact">
+                                            Compact
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <center>
-                    <h4>nSmarTrac <i class="material-icons" style="font-size:16px">edit</i></h4>
-                    <p>A/R Aging Summary <br> As of <?php echo date('F d, Y'); ?></p>
-                </center>
 
-                <table class="table" style="width: 100%;">
-                    <thead>
-                        <th></th>
-                        <th>CURRENT</th>
-                        <th>1 - 30</th>
-                        <th>31 - 60</th>
-                        <th>61 - 90</th>
-                        <th>91 AND OVER</th>
-                        <th>TOTAL</th>
+                <div class="accountReceivableTable__header">
+                    <div class="accountReceivableTable__headerInner">
+                        <div>
+                            <span class="accountReceivableTable__companyName">nSmarTrac</span>
+                            <button class="accountReceivableTable__btn accountReceivableTable__btn--header">
+                                <i class="material-icons">edit</i>
+                            </button>
+                        </div>
+                        <div class="accountReceivableTable__tableName">A/R Aging Summary</div>
+                        <div>As of <?php echo date('F d, Y'); ?></div>
+                    </div>
+                </div>
+
+                <table class="table table-hover reportsTable" id="reportsTable">
+                    <thead class="reportsTable__header">
+                        <tr>
+                            <th></th>
+                            <th>CURRENT</th>
+                            <th>1 - 30</th>
+                            <th>31 - 60</th>
+                            <th>61 - 90</th>
+                            <th>91 AND OVER</th>
+                            <th>TOTAL</th>
+                        </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($customers as $customer) {
-                            $dateNow = date('Y-m-d');
-                            $dueDate = date('Y-m-d', strtotime($customer->due_date));
-                            // $interval = $dateNow->diff($dueDate);
-                            // $diff = abs(strtotime($dateNow) - strtotime($dueDate));
-                            // $datediff = abs($dateNow - $dueDate);
-                            // $datediff = abs($dateNow - $dueDate);
-
-                            // $no_of_days =  floor($datediff / (60 * 60 * 24));
-                            // $diff=date_diff($dateNow,$dueDate);
-
-                            $diff = abs($dateNow - $dueDate);
-
-                            // To get the year divide the resultant date into
-                            // total seconds in a year (365*60*60*24)
-                            $years = floor($diff / (365 * 60 * 60 * 24));
-
-                            // To get the month, subtract it with years and
-                            // divide the resultant date into
-                            // total seconds in a month (30*60*60*24)
-                            $months = floor(($diff - $years * 365 * 60 * 60 * 24)
-                                / (30 * 60 * 60 * 24));
-
-                            // To get the day, subtract it with years and
-                            // months and divide the resultant date into
-                            // total seconds in a days (60*60*24)
-                            $days = floor(($diff - $years * 365 * 60 * 60 * 24 -
-                                $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-                        ?>
-                        <tr>
-                            <td><?php echo $customer->first_name . ' ' . $customer->last_name; ?></td>
-                            <td><?php echo number_format($customer->grand_total, 2); ?></td>
-                            <td><?php echo $days; ?></td>
-                            <td></td>
-                            <td></td>
-                            <td>$0.00</td>
-                            <td><?php echo number_format($customer->grand_total, 2); ?></td>
-                        </tr>
-                        <?php }?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td><b>Total</b></td>
-                            <td><b>$0.00</b></td>
-                            <td><b>$0.00</b></td>
-                            <td><b>$0.00</b></td>
-                            <td><b>$0.00</b></td>
-                            <td><b>$0.00</b></td>
-                            <td><b>$0.00</b></td>
-                        </tr>
-                    </tfoot>
                 </table>
+
+                <div class="accountReceivableTable__footer">
+                    <?php echo date('l, F d, Y h:i A e'); ?>
+                </div>
             </div>
         </div>
     </div>

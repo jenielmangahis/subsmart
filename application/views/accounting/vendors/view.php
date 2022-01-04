@@ -32,6 +32,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent #details .card:hover h5.edit-icon {
         display: block;
     }
+    #myTabContent .action-bar ul li a:after {
+        width: 0;
+    }
+    #myTabContent .action-bar ul li a {
+    font-size: 20px;
+    }
+    #myTabContent .action-bar ul li {
+        margin-right: 5px;
+    }
+	#myTabContent .action-bar ul li .dropdown-menu a {
+		font-size: 14px;
+	}
     .btn-transparent:hover {
         background: #d4d7dc !important;
         border-color: #6B6C72 !important;
@@ -240,8 +252,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-6">
                                                 <div class="action-bar h-100 d-flex align-items-center">
                                                     <ul class="ml-auto">
-                                                        <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-download"></i></a></li>
+                                                        <li><a href="#" id="print-transactions"><i class="fa fa-print"></i></a></li>
+                                                        <li>
+                                                            <form action="/accounting/vendors/<?=$vendorDetails->id?>/export" method="post" id="export-transactions-form">
+                                                                <a href="#" id="export-vendor-transactions"><i class="fa fa-download"></i></a>
+                                                            </form>
+                                                        </li>
                                                         <li>
                                                             <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 <i class="fa fa-cog"></i>

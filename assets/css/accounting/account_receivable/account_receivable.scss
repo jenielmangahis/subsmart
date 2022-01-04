@@ -136,7 +136,7 @@
   }
 }
 
-.nonZeroActiveOnly {
+.customDropdown {
   font-family: var(--font-family-sans-serif);
   position: relative;
 
@@ -159,9 +159,11 @@
     left: 0;
     top: 100%;
     width: 100%;
+    min-width: max-content;
     padding: 0.8rem 1rem;
     background-color: #fff;
     border: 2px solid #e0e0e0;
+    z-index: 1;
   }
 
   &__title {
@@ -172,19 +174,118 @@
   label {
     font-weight: 400;
     margin-bottom: 0;
+    font-size: 13px;
   }
 
   &__group:first-child {
     margin-bottom: 8px;
   }
 
-  &--open {
-    .nonZeroActiveOnly__btn {
+  &.open {
+    .customDropdown__btn {
       border-color: #0bd4ad;
     }
 
-    .nonZeroActiveOnly__options {
+    .customDropdown__options {
       display: block;
     }
+  }
+}
+
+.sortTable {
+  margin-right: 1rem;
+
+  .customDropdown__btn {
+    height: 100%;
+    max-width: unset;
+    min-width: unset;
+    border: 0;
+    color: #6e8ba8;
+
+    &:hover {
+      color: #0098cd;
+
+      .fa {
+        color: currentColor;
+      }
+    }
+  }
+}
+
+.accountReceivableTable {
+  max-width: 1000px;
+  margin: auto;
+  border: 1px solid #e3eaf3;
+
+  &__topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    border-bottom: 1px solid #e3eaf3;
+  }
+
+  &__actions {
+    display: flex;
+  }
+
+  &__btn {
+    background-color: transparent;
+    border: 0;
+    height: 40px;
+    min-width: unset;
+    color: #6e8ba8;
+
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+
+    .material-icons {
+      color: #393a3d;
+      font-size: 20px;
+    }
+
+    &:hover {
+      color: #0098cd;
+
+      .material-icons {
+        color: currentColor;
+      }
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+
+    &Inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__companyName {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  &__tableName {
+    font-weight: 500;
+  }
+
+  .table {
+    margin: 0;
+    max-width: calc(100% - 2rem);
+    margin: auto;
+  }
+
+  &__footer {
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
   }
 }

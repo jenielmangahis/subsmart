@@ -535,6 +535,8 @@ $route['accounting/vendors/void-transaction/(:any)/(:any)'] = 'accounting_contro
 $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'accounting_controllers/vendors/categorize_transactions/$1/$2';
 $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';
 $route['accounting/vendors/print-multiple-transactions']['post'] = 'accounting_controllers/vendors/print_multiple';
+$route['accounting/vendors/(:any)/print-transactions']['post'] = 'accounting_controllers/vendors/print_transactions/$1';
+$route['accounting/vendors/(:any)/export']['post'] = 'accounting_controllers/vendors/export/$1';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';
@@ -544,6 +546,8 @@ $route['accounting/expenses/print-transaction/(:any)/(:any)'] = 'accounting_cont
 $route['accounting/expenses/get-attach-file-modal/(:any)/(:any)'] = 'accounting_controllers/expenses/attach_file_modal/$1/$2';
 $route['accounting/expenses/attach-files/(:any)/(:any)']['post'] = 'accounting_controllers/expenses/attach_files/$1/$2';
 $route['accounting/expenses/attach/(:any)/(:any)']['post'] = 'accounting_controllers/expenses/attach/$1/$2';
+$route['accounting/expenses/print-transactions']['post'] = 'accounting_controllers/expenses/print_transactions';
+$route['accounting/expenses/export']['post'] = 'accounting_controllers/expenses/export';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
