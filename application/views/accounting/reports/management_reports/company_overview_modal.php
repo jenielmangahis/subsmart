@@ -70,40 +70,292 @@
                 <div class="col-md-2" style="height: 100%;">
                     <div class="report-pages">
                         <ul>
-                            <li class="active">
+                            <li class="active" data-target="cover-page-section">
                                 <center>
-                                    <div class="mr_icon icon1" style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')"></div>
+                                    <div class="mr_icon icon1"
+                                        style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                    </div>
                                     <label for="img">Cover page</label>
                                 </center>
                             </li>
-                            <li>
+                            <li data-target="table-of-contents">
                                 <center>
-                                    <div class="mr_icon icon2" style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')"></div>
+                                    <div class="mr_icon icon2"
+                                        style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                    </div>
                                     <label for="img">Table of contents</label>
                                 </center>
                             </li>
-                            <li>
+                            <li data-target="preliminary-page">
                                 <center>
-                                    <div class="mr_icon icon3" style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')"></div>
+                                    <div class="mr_icon icon3"
+                                        style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                    </div>
                                     <label for="img">Preliminary pages</label>
                                 </center>
                             </li>
-                            <li>
+                            <li data-target="reports">
                                 <center>
-                                    <div class="mr_icon icon4" style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')"></div>
+                                    <div class="mr_icon icon4"
+                                        style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                    </div>
                                     <label for="img">Reports</label>
                                 </center>
                             </li>
-                            <li>
+                            <li data-target="end-notes">
                                 <center>
-                                    <div class="mr_icon icon5" style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')"></div>
+                                    <div class="mr_icon icon5"
+                                        style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                    </div>
                                     <label for="img">End notes</label>
                                 </center>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-9"></div>
+                <div class="col-md-9">
+                    <div id="cover-page-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="page-styles-img">
+                                    <div class="cover-style">
+                                        <div class="style-icon"
+                                            style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                        </div>
+                                        <div class="dropdown-icon">
+                                            <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="styles-option-section">
+                                            <div class="section-row">
+
+                                                <div class="style-option option-1"
+                                                    style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                                </div>
+
+                                                <div class="style-option option-2"
+                                                    style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                                </div>
+                                            </div>
+                                            <div class="section-row">
+
+                                                <div class="style-option option-3"
+                                                    style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                                </div>
+
+                                                <div class="style-option option-4"
+                                                    style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="logo-style">
+                                        <div class="style-icon"
+                                            style="background-image: url('<?=base_url("/uploads/users/business_profile/".$company_details->logo_folder_id."/".$company_details->business_image)?>')">
+                                        </div>
+                                        <div class="dropdown-icon">
+                                            <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="styles-option-section">
+                                            <div class="form-check" style="padding: 0 12px;">
+                                                <div class="checkbox checkbox-sec margin-right">
+                                                    <input type="checkbox" name="show-logo" id="show-logo"
+                                                        class="show-logo">
+                                                    <label for="show-logo">Show logo</label>
+                                                </div>
+                                            </div>
+                                            <div class="section-row">
+                                                <div class="style-option">
+                                                    <img src="<?=base_url("/uploads/users/business_profile/".$company_details->logo_folder_id."/".$company_details->business_image)?>"
+                                                        alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cover-page-fields">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Cover title
+                                        </div>
+                                        <input type="text" class="form-control " name="shared_invoice_link">
+                                        <label class="info">100 characters max</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Subtitle
+                                        </div>
+                                        <input type="text" class="form-control " name="shared_invoice_link">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Report period
+                                        </div>
+                                        <input type="text" class="form-control " name="shared_invoice_link">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Prepared by
+                                        </div>
+                                        <input type="text" class="form-control " name="shared_invoice_link">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Prepared date
+                                        </div>
+                                        <input type="text" class="form-control " name="shared_invoice_link">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Disclaimer
+                                        </div>
+                                        <input type="text" class="form-control " name="shared_invoice_link">
+                                        <label class="info">90 characters max</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="table-of-contents" style="display: none;">
+                        <div class="form-check" style="padding: 0 12px;">
+                            <div class="checkbox checkbox-sec margin-right">
+                                <input type="checkbox" name="show-logo" id="show-logo" class="show-logo">
+                                <label for="show-logo">Include Table of Contents</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="label">
+                                Page title
+                            </div>
+                            <input type="text" class="form-control " name="page-title" value="Table of Contents">
+                        </div>
+                        <div class="page-content">
+                            <div class="form-group">
+                                <div class="label">
+                                    Page content
+                                </div>
+                            </div>
+                            <div class="page-content-preview">
+                                <div class="content-title">Table of Contents</div>
+                                <div class="divider"></div>
+                                <div class="norm">Profit and Loss</div>
+                                <div class="norm">Balance Sheet</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="preliminary-page" style="display: none;">
+                        <div class="page">
+                            <div class="form-check" style="padding: 0 12px;">
+                                <div class="checkbox checkbox-sec margin-right">
+                                    <input type="checkbox" name="show-logo" id="show-logo" class="show-logo">
+                                    <label for="show-logo">Include this page</label>
+                                </div>
+                                <i class="fa fa-trash-o delete-page-btn" aria-hidden="true"></i>
+                            </div>
+                            <div class="form-group">
+                                <div class="label">
+                                    Page title
+                                </div>
+                                <input type="text" class="form-control " name="preliminary-page-title[]" placeholder="">
+                            </div>
+                            <div class="page-content">
+                                <div class="form-group">
+                                    <div class="label">
+                                        Page content
+                                    </div>
+                                </div>
+                                <div class="page-content-field">
+                                    <textarea class="form-control ckeditor" name="update_header_content" id="" cols="40"
+                                        rows="20"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-divider"></div>
+                        <a href="#" class="add-new-page">Add new page</a>
+                    </div>
+                    <div id="reports" style="display: none;">
+                        <div class="report-section">
+                        <i class="fa fa-pencil report-edit-btn" aria-hidden="true"></i>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h3 class="report-title">Profit and Loss</h3>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="closed-content-view">
+                                        <div class="title">Profit and Loss</div>
+                                        <div class="period">This year</div>
+                                    </div>
+                                    <div class="content-collapse">
+                                        <div class="form-group">
+                                            <div class="label">
+                                                Title
+                                            </div>
+                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <label class="info">100 characters max</label>
+                                        </div>
+                                        <div class="form-group report-period">
+                                            <div class="label">
+                                                Report period
+                                            </div>
+                                            <select class="form-control" name="filter_type">
+                                                <option>All Dates</option>
+                                                <option>Custom</option>
+                                                <option>Today </option>
+                                                <option>This Week </option>
+                                                <option>This Week-to-date </option>
+                                                <option>This Month </option>
+                                                <option>This Month-to-date </option>
+                                                <option>This Quarter </option>
+                                                <option>This Quarter-to-date </option>
+                                                <option>This Year </option>
+                                                <option>This Year-to-date </option>
+                                                <option>This Year-to-last-month </option>
+                                                <option>Yesterday </option>
+                                                <option>Recent </option>
+                                                <option>Last Week </option>
+                                                <option>Last Week-to-date </option>
+                                                <option>Last Month </option>
+                                                <option>Last Month-to-date </option>
+                                                <option>Last Quarter </option>
+                                                <option>Last Quarter-to-date </option>
+                                                <option>Last Year </option>
+                                                <option>Last Year-to-date </option>
+                                                <option>Since 30 Days Ago </option>
+                                                <option>Since 60 Days Ago </option>
+                                                <option>Since 90 Days Ago </option>
+                                                <option>Since 365 Days Ago </option>
+                                                <option>Next Week </option>
+                                                <option>Next 4 Weeks </option>
+                                                <option>Next Month </option>
+                                                <option>Next Quarter </option>
+                                                <option>Next Year </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-check" style="padding: 0 12px;">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="show-logo" id="show-logo"
+                                                    class="show-logo">
+                                                <label for="show-logo">Compare previous year</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-check" style="padding: 0 12px;">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="show-logo" id="show-logo"
+                                                    class="show-logo">
+                                                <label for="show-logo">Compare previous period</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="end-notes" style="display: none;">
+                        end-notes
+                    </div>
+                </div>
             </div>
         </div>
         <div class="the-footer">

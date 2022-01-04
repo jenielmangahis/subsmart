@@ -85,14 +85,14 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             data-content="Choose Active to hide empty rows or columns. Choose Non-zero to also hide ones where the total is zero. Find out more."
                                         >Show non-zero or active only</div>
                                         <div class="form-group">
-                                            <div class="nonZeroActiveOnly" id="nonZeroActiveOnly">
-                                                <button class="nonZeroActiveOnly__btn" type="button">
+                                            <div class="customDropdown">
+                                                <button class="customDropdown__btn" type="button">
                                                     <span>Active rows/active columns</span>
                                                     <i class="fa fa-angle-down"></i>
                                                 </button>
-                                                <div class="nonZeroActiveOnly__options">
-                                                    <div class="nonZeroActiveOnly__group">
-                                                        <div class="nonZeroActiveOnly__title">Show rows</div>
+                                                <div class="customDropdown__options">
+                                                    <div class="customDropdown__group">
+                                                        <div class="customDropdown__title">Show rows</div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows1" value="option1" checked>
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows1">
@@ -105,15 +105,15 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                                 All
                                                             </label>
                                                         </div>
-                                                        <div class="form-check disabled">
+                                                        <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows3" value="option3">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows3">
                                                                 Non-zero
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="nonZeroActiveOnly__group">
-                                                        <div class="nonZeroActiveOnly__title">Show columns</div>
+                                                    <div class="customDropdown__group">
+                                                        <div class="customDropdown__title">Show columns</div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns1" value="option1" checked>
                                                             <label class="form-check-label" for="nonZeroActiveOnlyColumns1">
@@ -179,9 +179,31 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <button class="accountReceivableTable__btn">
                             Collapse
                         </button>
-                        <button class="accountReceivableTable__btn">
-                            Sort <i class="fa fa-angle-down"></i>
-                        </button>
+                        <div class="customDropdown sortTable">
+                            <button class="customDropdown__btn">
+                                Sort <i class="fa fa-angle-down"></i>
+                            </button>
+                            <div class="customDropdown__options">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortTable" id="sortTable1" value="default" checked>
+                                    <label class="form-check-label" for="sortTable1">
+                                        Default
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortTable" id="sortTable2" value="total_ascending">
+                                    <label class="form-check-label" for="sortTable2">
+                                        Total in ascending order
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortTable" id="sortTable3" value="total_descending">
+                                    <label class="form-check-label" for="sortTable3">
+                                        Total in descending order
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <button class="accountReceivableTable__btn">
                             Add notes
                         </button>
@@ -196,9 +218,22 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         <button class="accountReceivableTable__btn">
                             <i class="material-icons">cloud_upload</i>
                         </button>
-                        <button class="accountReceivableTable__btn">
-                            <i class="material-icons">settings</i>
-                        </button>
+                        <div class="customDropdown">
+                            <button class="customDropdown__btn accountReceivableTable__btn">
+                                <i class="material-icons">settings</i>
+                            </button>
+                            <div class="customDropdown__options">
+                                <div class="customDropdown__group">
+                                    <div class="customDropdown__title">Display density</div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="tableCompact">
+                                        <label class="form-check-label" for="tableCompact">
+                                            Compact
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
