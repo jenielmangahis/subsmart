@@ -35,6 +35,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/schedule'); ?>
@@ -72,8 +76,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                         <td><?= $a->name; ?></td>
                                         <td>
-                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('appointment_types/edit/'.$a->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
-                                            <a class="btn btn-sm btn-primary btn-delete-appointment-type" href="javascript:void(0);" data-id="<?= $a->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                            <div class="dropdown dropdown-btn">
+                                                <?php $eid = hashids_encrypt($ch->id, '', 15); ?>
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                    <li role="presentation">
+                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('appointment_types/edit/'.$a->id); ?>">
+                                                            <span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="btn-delete-appointment-type" href="javascript:void(0);" data-name="<?php echo $a->name; ?>" data-id="<?php echo $a->id; ?>"><span class="fa fa-trash-o"></span> Delete</a>
+                                                </ul>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -119,7 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script type="text/javascript">
 $(function(){
     var table = $('#dtSettings').DataTable({
-        "searching" : false,
+        "searching" : true,
         "pageLength": 10,
         "order": [],
          "aoColumnDefs": [

@@ -763,9 +763,11 @@ class Users extends MY_Controller {
 		
 		$role_id = logged('role');
 		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['show_pass'] = 1;
 			$this->page_data['users'] = $this->users_model->getAllUsers();
 			$this->page_data['payscale'] = $this->PayScale_model->getAll();
 		}else{
+			$this->page_data['show_pass'] = 0;
 			$this->page_data['users'] = $this->users_model->getCompanyUsers($cid);
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
@@ -1435,23 +1437,29 @@ class Users extends MY_Controller {
 		die(json_encode($users));
 	}
 
-	public function ajaxUpdateEmployeeProfilePhoto(){
+	public function ajaxUpdateEmployeeProfilePhoto(){    	
+        $post 		  = $this->input->post();
+        $upload_photo = $this->profilePhoto();
+        $upload_data  = json_decode($upload_photo);
 
-    	$user_id = $this->input->post('values[user_id_prof]');
-        $profile_img = $this->input->post('values[profile_img]');
+        if (!empty($_FILES['user_photo']['name'])){			
+			$target_dir = "./uploads/users/user-profile/";
+			
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
 
-        $user = $this->Users_model->getUser($user_id);
+			$tmp_name = $_FILES['user_photo']['tmp_name'];
+			$name = basename($_FILES["user_photo"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
+			$image_name = $name;
+			
+	        $user = $this->Users_model->update($post['user_id_prof'],array('profile_img' => $image_name));
+        	echo json_encode(1);
 
-        if( $profile_img == '' ){
-        	$profile_img = $user->profile_img;
-        }
-        $data = array(            
-			'profile_img' => $profile_img
-        );
-
-        $user = $this->Users_model->update($user_id,$data);
-
-        echo json_encode(1);
+		}else{
+			echo json_encode(0);
+		}
     }
 
 	public function ajaxUpdateEmployee(){
@@ -1743,9 +1751,15 @@ class Users extends MY_Controller {
 	public function user_export()
     {
     	$this->load->model('users_model');
+    	$this->load->model('roles_model');
 
-        $cid   = logged('company_id');
-        $users = $this->users_model->getCompanyUsers($cid);        
+    	$role_id = logged('role');
+        $cid     = logged('company_id');           
+        if( $role_id == 1 || $role_id == 2 ){
+			$users = $this->users_model->getAllUsers();     
+		}else{
+			$users = $this->users_model->getCompanyUsers($cid);     
+		}
 
         $delimiter = ",";
         $time      = time();
@@ -1753,7 +1767,7 @@ class Users extends MY_Controller {
 
         $f = fopen('php://memory', 'w');
 
-        $fields = array('Last Name', 'First Name', 'Role', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State');
+        $fields = array('Last Name', 'First Name', 'Role', 'Title', 'Email', 'Phone', 'Mobile', 'Address', 'City', 'State');
         fputcsv($f, $fields, $delimiter);
 
         if (!empty($users)) {
@@ -1762,6 +1776,7 @@ class Users extends MY_Controller {
                     $u->LName,
                     $u->FName,
                     getUserType($u->user_type),
+                    ucfirst($this->roles_model->getById($u->role)->title),
                     $u->email,
                     $u->phone,
                     $u->mobile,

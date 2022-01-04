@@ -40,30 +40,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card p-20" style="min-height: 400px !important;">
-                      <div class="page-title-box">
-                          <div class="row align-items-center">
-                              <div class="col-sm-12">
-                                  <h3 class="page-title"><i class="fa fa-plus"></i> Edit Color</h3>
-                              </div>
-                            </div>
+                      <div class="row">
+                        <div class="col-sm-6 left">
+                          <h3 class="page-title mt-0"><i class="fa fa-edit"></i> Edit Color</h3>
                         </div>
-                        <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('color_settings/update_color_setting', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-                          <input type="hidden" name="cid" value="<?= $colorSetting->id; ?>">
-                          <div class="form-group">
-                              <label>Name</label> <span class="form-required">*</span>
-                              <input type="text" name="color_name" value="<?= $colorSetting->color_name; ?>"  class="form-control" required="" autocomplete="off" />
-                          </div>
-                          <div class="form-group">
-                              <label>Color Code</label> <span class="form-required">*</span>
-                              <input type="text" name="color_code" value="<?= $colorSetting->color_code; ?>" class="form-control colorpicker" required="" autocomplete="off">
-                          </div>
-
-                          <div class="col-md-">
-                            <a class="btn btn-default" href="<?php echo base_url('color_settings/index'); ?>">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </div>
                       </div>
+                      <div class="alert alert-warning mt-1 mb-4" role="alert">
+                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                            Edit color for your events and job types
+                          </span>
+                      </div>
+                      <br />
+                      <?php include viewPath('flash'); ?>
+                      <?php echo form_open_multipart('color_settings/update_color_setting', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                        <input type="hidden" name="cid" value="<?= $colorSetting->id; ?>">
+                        <div class="form-group">
+                            <label>Name</label> <span class="form-required">*</span>
+                            <input type="text" name="color_name" value="<?= $colorSetting->color_name; ?>"  class="form-control" required="" autocomplete="off" />
+                        </div>
+                        <div class="form-group">
+                            <label>Color Code</label> <span class="form-required">*</span>
+                            <input type="text" name="color_code" value="<?= $colorSetting->color_code; ?>" class="form-control colorpicker" required="" autocomplete="off">
+                        </div>
+
+                        <div class="col-md-">                          
+                          <button type="submit" class="btn btn-primary">Save</button>
+                          <a class="btn btn-default" href="<?php echo base_url('color_settings/index'); ?>">Cancel</a>
+                        </div>                    
                       <?php echo form_close(); ?>
                     </div>
                     <!-- end card -->

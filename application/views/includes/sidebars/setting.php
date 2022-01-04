@@ -42,7 +42,7 @@
                 Email/SMS Templates
             </a>
         </li>  
-        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'Email Branding')  ? "active" : ""; ?>">
+        <li class="submenus <?php echo (!empty($page->menu) && $page->menu === 'email_branding')  ? "active" : ""; ?>">
             <a href="<?php echo base_url('settings/email_branding') ?>" title="Email Branding">
                 <span class="fa fa-sliders"></span>
                 Email Branding
