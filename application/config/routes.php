@@ -518,6 +518,7 @@ $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 $route['accounting/vendors/make-inactive']['post'] = 'accounting_controllers/vendors/make_inactive';
+$route['accounting/vendors/print-vendors']['post'] = 'accounting_controllers/vendors/print';
 $route['accounting/vendors/(:any)/edit'] = 'accounting_controllers/vendors/edit/$1';
 $route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/vendors/update/$1';
 $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_controllers/vendors/update_attachments/$1';
