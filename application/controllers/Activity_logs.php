@@ -38,21 +38,26 @@ class Activity_logs extends MY_Controller {
 
 	public function index()
 	{
-		ifPermissions('activity_log_list');
+		//ifPermissions('activity_log_list');
+		$company_id = logged('company_id');     
 		$ip = !empty(get('ip')) ? urldecode(get('ip')) : false;
 		$user = !empty(get('user')) ? urldecode(get('user')) : false;
-
 		$arg = [];
 
-		if($ip)
+		if($ip){
 			$arg['ip_address'] = $ip;
+		}
 
-		if($user)
+		if($user){
 			$arg['user'] = $user;
+		}
 
-		$this->page_data['activity_logs'] = $this->activity_model->getByWhere($arg, [
+		$activityLogs = $this->activity_model->getAllByCompanyId($company_id, array(), $arg); 
+		/*$this->page_data['activity_logs'] = $this->activity_model->getByWhere($arg, [
 			'order' => [ 'id', 'desc' ]
-		]);
+		]);*/
+		$this->page_data['activity_logs'] = $activityLogs;
+
 		$this->page_data['filter_ip'] = $ip;
 		$this->page_data['filter_user'] = $user;
 		$this->load->view('activity_logs/list', $this->page_data);

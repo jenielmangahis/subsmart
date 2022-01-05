@@ -59,9 +59,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                               <label>Name</label> <span class="form-required">*</span>
                               <input type="text" name="appointment_type_name" value="<?= $appointmentType->name; ?>"  class="form-control" required="" autocomplete="off" />
                           </div>
-                          <div class="col-md-">
+                          <div class="col-md-">                            
+                            <button type="submit" class="btn btn-primary">Save</button>
                             <a class="btn btn-default" href="<?php echo base_url('appointment_types/index'); ?>">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Submit</button>
                           </div>
                       </div>
                       <?php echo form_close(); ?>
