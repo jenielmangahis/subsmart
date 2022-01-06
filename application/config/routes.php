@@ -519,6 +519,7 @@ $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 $route['accounting/vendors/make-inactive']['post'] = 'accounting_controllers/vendors/make_inactive';
 $route['accounting/vendors/print-vendors']['post'] = 'accounting_controllers/vendors/print';
+$route['accounting/vendors/export-vendors']['post'] = 'accounting_controllers/vendors/export';
 $route['accounting/vendors/(:any)/edit'] = 'accounting_controllers/vendors/edit/$1';
 $route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/vendors/update/$1';
 $route['accounting/vendors/update-attachments/(:any)']['post'] = 'accounting_controllers/vendors/update_attachments/$1';
@@ -537,7 +538,7 @@ $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'ac
 $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';
 $route['accounting/vendors/print-multiple-transactions']['post'] = 'accounting_controllers/vendors/print_multiple';
 $route['accounting/vendors/(:any)/print-transactions']['post'] = 'accounting_controllers/vendors/print_transactions/$1';
-$route['accounting/vendors/(:any)/export']['post'] = 'accounting_controllers/vendors/export/$1';
+$route['accounting/vendors/(:any)/export-transactions']['post'] = 'accounting_controllers/vendors/export_transactions/$1';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';

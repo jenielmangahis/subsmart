@@ -5,6 +5,13 @@ class AccountingARSummary extends MY_Controller
 {
     public function apiGetReports()
     {
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getReports()]);
+    }
+
+    private function getReports()
+    {
         $this->load->model('accounting_invoices_model');
         $customers = $this->accounting_invoices_model->getCustomersInv();
 
@@ -59,7 +66,48 @@ class AccountingARSummary extends MY_Controller
             'total' => '$0.00',
         ]);
 
-        header('content-type: application/json');
-        echo json_encode(['data' => $retval]);
+        return $retval;
+    }
+
+    public function apiExportExcel()
+    {
+        $storePath = FCPATH . 'uploads/rulesxlsx/';
+        if (!file_exists($storePath)) {
+            mkdir($storePath, 0777, true);
+        }
+
+        $results = $this->getReports();
+
+        require_once FCPATH . 'packages/xlsxwriter/xlsxwriter.class.php';
+        $fileName = md5(uniqid(logged('id'), true)) . '.xlsx';
+        $filePath = $storePath . '/' . $fileName;
+        $sheetname = 'Worksheet';
+        $header = [
+            '' => 'string',
+            'Current' => 'string',
+            '1 - 30' => 'string',
+            '31 - 60' => 'string',
+            '61 - 90' => 'string',
+            '91 and over' => 'string',
+            'Total' => 'string',
+        ];
+
+        $writer = new XLSXWriter();
+        $writer->writeSheetHeader($sheetname, $header);
+        $writer->writeSheet($results, $sheetname);
+        $writer->writeToFile($filePath);
+
+        if (file_exists($filePath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+            unlink($filePath);
+            exit;
+        }
     }
 }

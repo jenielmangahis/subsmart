@@ -2965,7 +2965,7 @@ class Vendors extends MY_Controller
         echo $tableHtml;
     }
 
-    public function export($vendorId)
+    public function export_transactions($vendorId)
     {
         $this->load->library('PHPXLSXWriter');
         $post = $this->input->post();
@@ -3303,5 +3303,117 @@ class Vendors extends MY_Controller
         $tableHtml .= "</table>";
 
         echo $tableHtml;
+    }
+
+    public function export()
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $search = $post['search'];
+
+        $status = [
+            1
+        ];
+
+        if ($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        if (!isset($post['transaction'])) {
+            $vendors = $this->vendors_model->getAllByCompany($status);
+        } else {
+            switch ($post['transaction']) {
+                case 'purchase-orders':
+                    $vendors = $this->vendors_model->get_vendors_with_unbilled_po($status);
+                break;
+                case 'open-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_open_bills($status);
+                break;
+                case 'overdue-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_overdue_bills($status);
+                break;
+                case 'payments':
+                    $vendors = $this->vendors_model->get_vendors_with_payments($status);
+                break;
+            }
+        }
+
+        $data = [];
+        foreach($vendors as $vendor) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id);
+            if ($search !== "") {
+                if (stripos($vendor->display_name, $search) !== false) {
+                    $data[] = [
+                        'name' => $vendor->display_name,
+                        'company_name' => $vendor->company,
+                        'address' => "$vendor->street",
+                        'city' => $vendor->city,
+                        'state' => $vendor->state,
+                        'country' => $vendor->country,
+                        'zip' => $vendor->zip,
+                        'phone' => $vendor->phone,
+                        'email' => $vendor->email,
+                        'attachments' => count($attachments),
+                        'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ','),
+                        'status' => $vendor->status
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'name' => $vendor->display_name,
+                    'company_name' => $vendor->company,
+                    'address' => "$vendor->street",
+                    'city' => $vendor->city,
+                    'state' => $vendor->state,
+                    'country' => $vendor->country,
+                    'zip' => $vendor->zip,
+                    'phone' => $vendor->phone,
+                    'email' => $vendor->email,
+                    'attachments' => count($attachments),
+                    'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ','),
+                    'status' => $vendor->status
+                ];
+            }
+        }
+    
+        usort($data, function ($a, $b) use ($order, $columnName) {
+            if ($order === 'asc') {
+                return strcmp($a[$columnName], $b[$columnName]);
+            } else {
+                return strcmp($b[$columnName], $a[$columnName]);
+            }
+        });
+
+        $writer = new XLSXWriter();
+        $headers = [
+            "Vendor",
+            "Company",
+            "Address",
+            "City",
+            "State",
+            "Country",
+            "Zip",
+            "Phone",
+            "Email",
+            "Attachments",
+            "Open Balance"
+        ];
+        $writer->writeSheetRow('Sheet1', $headers);
+
+        foreach($data as $v) {
+            $name = $v['name'];
+            $name .= $v['status'] === '0' ? ' (deleted)' : '';
+            $v['name'] = $name;
+            unset($v['status']);
+
+            $writer->writeSheetRow('Sheet1', $v);
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="vendors.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }

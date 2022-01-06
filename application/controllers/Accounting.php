@@ -935,7 +935,14 @@ class Accounting extends MY_Controller
         ]);
 
         add_footer_js([
-            'assets/js/accounting/account_receivable/account_receivable.js'
+            'assets/js/accounting/account_receivable/account_receivable.js',
+
+            // download
+            'assets/js/accounting/banking/rules/libs/download/download.min.js',
+
+            // print
+            'https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js',
+            'https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js',
         ]);
 
         $this->load->view('accounting/reports/aging_summary_report', $this->page_data);

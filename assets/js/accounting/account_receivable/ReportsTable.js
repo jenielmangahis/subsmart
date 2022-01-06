@@ -47,6 +47,20 @@ export class ReportsTable {
       bInfo: false,
       paging: false,
       processing: true,
+      dom: "Bfrtip",
+      buttons: [
+        {
+          extend: "print",
+          className: "hidden",
+          title: "",
+        },
+        {
+          extend: "pdf",
+          className: "hidden",
+          title: "",
+          filename: `${new Date().getTime()}`,
+        },
+      ],
       language: {
         processing:
           '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>',
@@ -88,6 +102,8 @@ export class ReportsTable {
         },
       ],
     });
+
+    table.buttons(".hidden").nodes().css("display", "none");
 
     this.$orderRadios.on("change", (event) => {
       const { value } = event.target;
