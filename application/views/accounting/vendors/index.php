@@ -236,7 +236,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
                                                 <li><a href="#" id="print-vendors"><i class="fa fa-print"></i></a></li>
-                                                <li><a href="#" id="export-vendors"><i class="fa fa-download"></i></a></li>
+                                                <li>
+                                                    <form action="/accounting/vendors/export-vendors" method="post" id="export-form">
+                                                        <a href="#" id="export-vendors"><i class="fa fa-download"></i></a>
+                                                    </form>
+                                                </li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>

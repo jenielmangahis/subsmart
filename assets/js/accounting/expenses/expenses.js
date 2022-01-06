@@ -1535,7 +1535,7 @@ $(document).on('click', '#export-transactions', function(e) {
     $('#export-form').append(`<input type="hidden" name="order" value="${tableOrder[0][1]}">`);
 
     $('#export-form').submit();
-})
+});
 
 $('#export-form').on('submit', function(e) {
     e.preventDefault();

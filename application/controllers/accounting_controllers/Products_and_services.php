@@ -932,6 +932,7 @@ class Products_and_services extends MY_Controller {
 
     public function export_table()
     {
+        $this->load->library('PHPXLSXWriter');
         $post = $this->input->post();
 
         $filters = [];
@@ -998,7 +999,7 @@ class Products_and_services extends MY_Controller {
         $this->load->helper('string');
 
         $randString = random_string('numeric');
-        $filename = 'ProductsServicesList__'.$randString.'_'.date('m').'_'.date('d').'_'.date('Y').'.csv';
+        $filename = 'ProductsServicesList__'.$randString.'_'.date('m').'_'.date('d').'_'.date('Y').'.xlsx';
         header("Content-Description: File Transfer"); 
         header("Content-Disposition: attachment; filename=$filename"); 
         header("Content-Type: application/csv;");
@@ -1021,6 +1022,10 @@ class Products_and_services extends MY_Controller {
             "Inventory Asset Account",
             "Quantity as-of Date"
         ];
+
+        // $writer = new XLSXWriter();
+        // $writer->writeSheetRow('Sheet1', $header);
+
         fputcsv($file, $header);
 
         $qtyAsOfDate = date("m/d/Y");
@@ -1053,10 +1058,15 @@ class Products_and_services extends MY_Controller {
                 $qtyAsOfDate
             ];
 
+            // $writer->writeSheetRow('Sheet1', $data);
             fputcsv($file, $data);
         }
 
-        fclose($file); 
-        exit; 
+        fclose($file);
+        exit;
+        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        // header('Content-Disposition: attachment;filename="ProductsServicesList.xlsx"');
+        // header('Cache-Control: max-age=0');
+        // $writer->writeToStdOut();
     }
 }

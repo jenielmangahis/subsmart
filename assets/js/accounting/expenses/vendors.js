@@ -802,3 +802,25 @@ $(document).on('click', '#print-vendors', function(e) {
         }
     });
 });
+
+$(document).on('click', '#export-vendors', function(e) {
+    e.preventDefault();
+
+    $('#export-form').append(`<input type="hidden" name="inactive" value="${$('#inc_inactive').prop('checked') ? 1 : 0}">`);
+    $('#export-form').append(`<input type="hidden" name="search" value="${$('input#search').val()}">`);
+    if($('.selected').length > 0) {
+        $('#export-form').append(`<input type="hidden" name="transaction" value="${$('.selected').attr('id')}">`);
+    }
+
+    var tableOrder = table.order();
+    $('#export-form').append(`<input type="hidden" name="column" value="${columns[tableOrder[0][0]].name}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${tableOrder[0][1]}">`);
+
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).find('input').remove();
+});

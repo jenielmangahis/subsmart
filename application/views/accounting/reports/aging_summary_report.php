@@ -209,15 +209,26 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         </button>
                     </div>
                     <div class="accountReceivableTable__actions">
-                        <button class="accountReceivableTable__btn">
+                        <button class="accountReceivableTable__btn" data-toggle="modal" data-target="#emailReportModal">
                             <i class="material-icons">email</i>
                         </button>
-                        <button class="accountReceivableTable__btn">
+                        <button data-action="print" class="accountReceivableTable__btn">
                             <i class="material-icons">local_printshop</i>
                         </button>
-                        <button class="accountReceivableTable__btn">
-                            <i class="material-icons">cloud_upload</i>
-                        </button>
+                        <div class="customDropdown">
+                            <button class="customDropdown__btn accountReceivableTable__btn">
+                                <i class="material-icons">cloud_upload</i>
+                            </button>
+                            <div class="customDropdown__options">
+                                <div class="customDropdown__optionItem">
+                                    <a data-action="export_excel" href="#">Export to Excel</a>
+                                </div>
+                                <div class="customDropdown__optionItem">
+                                    <a data-action="export_pdf" href="#">Export to PDF</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="customDropdown">
                             <button class="customDropdown__btn accountReceivableTable__btn">
                                 <i class="material-icons">settings</i>
@@ -270,6 +281,47 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="emailReportModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Email Report</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="emailReportTo">To</label>
+                            <input type="email" class="form-control" id="emailReportTo">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailReportSubject">Subject</label>
+                            <input type="text" class="form-control" id="emailReportSubject">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailReportBody">Body</label>
+                            <textarea class="form-control" id="emailReportBody" rows="3"></textarea>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="form-group w-100">
+                                <label for="emailReportReport">Report</label>
+                                <input type="text" class="form-control" id="emailReportReport">
+                            </div>
+                            <div>.pdf</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
 <?php include viewPath('includes/footer_accounting');?>

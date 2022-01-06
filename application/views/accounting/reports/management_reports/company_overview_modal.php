@@ -221,8 +221,8 @@
                     <div id="table-of-contents" style="display: none;">
                         <div class="form-check" style="padding: 0 12px;">
                             <div class="checkbox checkbox-sec margin-right">
-                                <input type="checkbox" name="show-logo" id="show-logo" class="show-logo">
-                                <label for="show-logo">Include Table of Contents</label>
+                                <input type="checkbox" name="include_table_of_contents" id="include-table-of-contents">
+                                <label for="include-table-of-contents">Include Table of Contents</label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -246,38 +246,40 @@
                         </div>
                     </div>
                     <div id="preliminary-page" style="display: none;">
-                        <div class="page">
-                            <div class="form-check" style="padding: 0 12px;">
-                                <div class="checkbox checkbox-sec margin-right">
-                                    <input type="checkbox" name="show-logo" id="show-logo" class="show-logo">
-                                    <label for="show-logo">Include this page</label>
+                        <div class="pages">
+                            <div class="page" data-count="1">
+                                <div class="form-check" style="padding: 0 12px;">
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="checkbox" name="include_this_page[]" id="include_this_page">
+                                        <label for="include_this_page">Include this page</label>
+                                    </div>
+                                    <i class="fa fa-trash-o delete-page-btn" aria-hidden="true"></i>
                                 </div>
-                                <i class="fa fa-trash-o delete-page-btn" aria-hidden="true"></i>
-                            </div>
-                            <div class="form-group">
-                                <div class="label">
-                                    Page title
-                                </div>
-                                <input type="text" class="form-control " name="preliminary-page-title[]" placeholder="">
-                            </div>
-                            <div class="page-content">
                                 <div class="form-group">
                                     <div class="label">
-                                        Page content
+                                        Page title
                                     </div>
+                                    <input type="text" class="form-control " name="preliminary-page-title[]"
+                                        placeholder="">
                                 </div>
-                                <div class="page-content-field">
-                                    <textarea class="form-control ckeditor" name="update_header_content" id="" cols="40"
-                                        rows="20"></textarea>
+                                <div class="page-content">
+                                    <div class="form-group">
+                                        <div class="label">
+                                            Page content
+                                        </div>
+                                    </div>
+                                    <div class="page-content-field">
+                                        <textarea class="form-control ckeditor" name="update_header_content[]" id=""
+                                            cols="40" rows="20"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="page-divider"></div>
                         <a href="#" class="add-new-page">Add new page</a>
                     </div>
                     <div id="reports" style="display: none;">
-                        <div class="report-section">
-                        <i class="fa fa-pencil report-edit-btn" aria-hidden="true"></i>
+                        <div class="report-section" data-count="1">
+                            <i class="fa fa-pencil report-edit-btn" aria-hidden="true"></i>
                             <div class="row">
                                 <div class="col-md-2">
                                     <h3 class="report-title">Profit and Loss</h3>
@@ -287,7 +289,7 @@
                                         <div class="title">Profit and Loss</div>
                                         <div class="period">This year</div>
                                     </div>
-                                    <div class="content-collapse">
+                                    <div class="content-collapse hide">
                                         <div class="form-group">
                                             <div class="label">
                                                 Title
@@ -335,25 +337,133 @@
                                         </div>
                                         <div class="form-check" style="padding: 0 12px;">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="show-logo" id="show-logo"
-                                                    class="show-logo">
-                                                <label for="show-logo">Compare previous year</label>
+                                                <input type="checkbox" name="compare_prev_year" id="compare_prev_year">
+                                                <label for="compare_prev_year">Compare previous year</label>
                                             </div>
                                         </div>
                                         <div class="form-check" style="padding: 0 12px;">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="show-logo" id="show-logo"
-                                                    class="show-logo">
-                                                <label for="show-logo">Compare previous period</label>
+                                                <input type="checkbox" name="compare_prev_period"
+                                                    id="compare_prev_period">
+                                                <label for="compare_prev_period">Compare previous period</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="report-section" data-count="2">
+                            <i class="fa fa-pencil report-edit-btn" aria-hidden="true"></i>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h3 class="report-title">Balance Sheet</h3>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="closed-content-view">
+                                        <div class="title">Balance Sheet</div>
+                                        <div class="period">This year</div>
+                                    </div>
+                                    <div class="content-collapse hide">
+                                        <div class="form-group">
+                                            <div class="label">
+                                                Title
+                                            </div>
+                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <label class="info">100 characters max</label>
+                                        </div>
+                                        <div class="form-group report-period">
+                                            <div class="label">
+                                                Report period
+                                            </div>
+                                            <select class="form-control" name="filter_type">
+                                                <option>All Dates</option>
+                                                <option>Custom</option>
+                                                <option>Today </option>
+                                                <option>This Week </option>
+                                                <option>This Week-to-date </option>
+                                                <option>This Month </option>
+                                                <option>This Month-to-date </option>
+                                                <option>This Quarter </option>
+                                                <option>This Quarter-to-date </option>
+                                                <option>This Year </option>
+                                                <option>This Year-to-date </option>
+                                                <option>This Year-to-last-month </option>
+                                                <option>Yesterday </option>
+                                                <option>Recent </option>
+                                                <option>Last Week </option>
+                                                <option>Last Week-to-date </option>
+                                                <option>Last Month </option>
+                                                <option>Last Month-to-date </option>
+                                                <option>Last Quarter </option>
+                                                <option>Last Quarter-to-date </option>
+                                                <option>Last Year </option>
+                                                <option>Last Year-to-date </option>
+                                                <option>Since 30 Days Ago </option>
+                                                <option>Since 60 Days Ago </option>
+                                                <option>Since 90 Days Ago </option>
+                                                <option>Since 365 Days Ago </option>
+                                                <option>Next Week </option>
+                                                <option>Next 4 Weeks </option>
+                                                <option>Next Month </option>
+                                                <option>Next Quarter </option>
+                                                <option>Next Year </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-check" style="padding: 0 12px;">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="report_compare_prev_year"
+                                                    id="report_compare_prev_year">
+                                                <label for="report_compare_prev_year">Compare previous year</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-check" style="padding: 0 12px;">
+                                            <div class="checkbox checkbox-sec margin-right">
+                                                <input type="checkbox" name="report_compare_prev_period[]"
+                                                    id="report_compare_prev_period">
+                                                <label for="report_compare_prev_period">Compare previous period</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="add-report-btn">Add new report</a>
                     </div>
                     <div id="end-notes" style="display: none;">
-                        end-notes
+                        <div class="page">
+                            <div class="form-check" style="padding: 0 12px;">
+                                <div class="checkbox checkbox-sec margin-right">
+                                    <input type="checkbox" name="end_notes_include_this_page"
+                                        id="end_notes_include_this_page">
+                                    <label for="end_notes_include_this_page">Include this page</label>
+                                </div>
+                            </div>
+                            <div class="form-check" style="padding: 0 12px;">
+                                <div class="checkbox checkbox-sec margin-right">
+                                    <input type="checkbox" name="end_notes_include_breakdown_of_sub_accounts"
+                                        id="end_notes_include_breakdown_of_sub_accounts">
+                                    <label for="end_notes_include_breakdown_of_sub_accounts">Include breakdown of
+                                        sub-accounts</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="label">
+                                    Page title
+                                </div>
+                                <input type="text" class="form-control " name="preliminary-page-title[]" placeholder="">
+                            </div>
+                            <div class="page-content">
+                                <div class="form-group">
+                                    <div class="label">
+                                        Page content
+                                    </div>
+                                </div>
+                                <div class="page-content-field">
+                                    <textarea class="form-control ckeditor" name="update_header_content" id="" cols="40"
+                                        rows="20"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
