@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <ul class="ml-auto">
                                                         <li><a href="#" id="print-transactions"><i class="fa fa-print"></i></a></li>
                                                         <li>
-                                                            <form action="/accounting/vendors/<?=$vendorDetails->id?>/export" method="post" id="export-transactions-form">
+                                                            <form action="/accounting/vendors/<?=$vendorDetails->id?>/export-transactions" method="post" id="export-transactions-form">
                                                                 <a href="#" id="export-vendor-transactions"><i class="fa fa-download"></i></a>
                                                             </form>
                                                         </li>

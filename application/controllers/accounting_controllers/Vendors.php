@@ -2965,8 +2965,9 @@ class Vendors extends MY_Controller
         echo $tableHtml;
     }
 
-    public function export($vendorId)
+    public function export_transactions($vendorId)
     {
+        $this->load->library('PHPXLSXWriter');
         $post = $this->input->post();
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
         $order = $post['order'];
@@ -3132,15 +3133,14 @@ class Vendors extends MY_Controller
             break;
         }
 
-        // $excelHead = "Type: $type · Status: $status · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
-        // $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
+        $excelHead .= "Type: $type";
+        $excelHead .= isset($status) ? "· Status: $status" : "";
+        $excelHead .= "· Name: $vendor->display_name";
+        $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : " · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
 
-        header("Content-Description: File Transfer"); 
-        header("Content-Disposition: attachment; filename=expenses.csv"); 
-        header("Content-Type: application/csv;");
+        $writer = new XLSXWriter();
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center']);
 
-        // file creation 
-        $file = fopen('php://output', 'w');
         $headers = [];
 
         $headers[] = "Date";
@@ -3178,21 +3178,242 @@ class Vendors extends MY_Controller
         if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Attachments";
         }
-        fputcsv($file, $headers);
+
+        $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
+        $writer->writeSheetRow('Sheet1', $headers);
 
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);
 
             foreach($keys as $key) {
-                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields'])) {
+                if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields']) && !in_array($key, ['date', 'total'])) {
                     unset($transaction[$key]);
                 }
             }
 
-            fputcsv($file, $transaction);
+            $writer->writeSheetRow('Sheet1', $transaction);
+        }
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="expenses.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
+    }
+
+    public function print()
+    {
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $search = $post['search'];
+        $fields = $post['fields'];
+
+        $status = [
+            1
+        ];
+
+        if ($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
         }
 
-        fclose($file); 
-        exit;
+        if (!isset($post['transaction'])) {
+            $vendors = $this->vendors_model->getAllByCompany($status);
+        } else {
+            switch ($post['transaction']) {
+                case 'purchase-orders':
+                    $vendors = $this->vendors_model->get_vendors_with_unbilled_po($status);
+                break;
+                case 'open-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_open_bills($status);
+                break;
+                case 'overdue-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_overdue_bills($status);
+                break;
+                case 'payments':
+                    $vendors = $this->vendors_model->get_vendors_with_payments($status);
+                break;
+            }
+        }
+
+        $data = [];
+        foreach($vendors as $vendor) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id);
+            if ($search !== "") {
+                if (stripos($vendor->display_name, $search) !== false) {
+                    $data[] = [
+                        'id' => $vendor->id,
+                        'name' => $vendor->display_name,
+                        'company_name' => $vendor->company,
+                        'address' => "$vendor->street<br>$vendor->city $vendor->state $vendor->zip",
+                        'phone' => $vendor->phone,
+                        'email' => $vendor->email,
+                        'attachments' => count($attachments),
+                        'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',')
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $vendor->id,
+                    'name' => $vendor->display_name,
+                    'company_name' => $vendor->company,
+                    'address' => "$vendor->street<br>$vendor->city $vendor->state $vendor->zip",
+                    'phone' => $vendor->phone,
+                    'email' => $vendor->email,
+                    'attachments' => count($attachments),
+                    'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',')
+                ];
+            }
+        }
+    
+        usort($data, function ($a, $b) use ($order, $columnName) {
+            if ($order === 'asc') {
+                return strcmp($a[$columnName], $b[$columnName]);
+            } else {
+                return strcmp($b[$columnName], $a[$columnName]);
+            }
+        });
+
+        $tableHtml .= "<table width='100%'>";
+        $tableHtml .= "<thead>";
+        $tableHtml .= "<tr style='text-align: left;'>";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Vendor</th>";
+        $tableHtml .= in_array('address', $post['fields']) ? "<th style='border-bottom: 2px solid #BFBFBF'>Address</th>" : "";
+        $tableHtml .= in_array('phone', $post['fields']) ? "<th style='border-bottom: 2px solid #BFBFBF'>Phone</th>" : "";
+        $tableHtml .= in_array('email', $post['fields']) ? "<th style='border-bottom: 2px solid #BFBFBF'>Email</th>" : "";
+        $tableHtml .= in_array('attachments', $post['fields']) ? "<th style='border-bottom: 2px solid #BFBFBF'>Attachments</th>" : "";
+        $tableHtml .= "<th style='border-bottom: 2px solid #BFBFBF'>Open Balance</th>";
+        $tableHtml .= "</tr>";
+        $tableHtml .= "</thead>";
+        $tableHtml .= "<tbody>";
+
+        foreach($data as $v) {
+            $tableHtml .= "<tr>";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>";
+            $tableHtml .= $v['name'];
+            $tableHtml .= $v['company_name'] !== "" && !is_null($v['company_name']) ? "<p style='margin: 0'>".$v['company_name']."</p>" : "";
+            $tableHtml .= "</td>";
+            $tableHtml .= in_array('address', $post['fields']) ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$v['address']."</td>" : "";
+            $tableHtml .= in_array('phone', $post['fields']) ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$v['phone']."</td>" : "";
+            $tableHtml .= in_array('email', $post['fields']) ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$v['email']."</td>" : "";
+            $tableHtml .= in_array('attachments', $post['fields']) ? "<td style='border-bottom: 1px dotted #D5CDB5'>".$v['attachments']."</td>" : "";
+            $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>".$v['open_balance']."</td>";
+            $tableHtml .= "</tr>";
+        }
+
+        $tableHtml .= "</tbody>";
+        $tableHtml .= "</table>";
+
+        echo $tableHtml;
+    }
+
+    public function export()
+    {
+        $this->load->library('PHPXLSXWriter');
+        $post = $this->input->post();
+        $order = $post['order'];
+        $columnName = $post['column'];
+        $search = $post['search'];
+
+        $status = [
+            1
+        ];
+
+        if ($post['inactive'] === '1' || $post['inactive'] === 1) {
+            array_push($status, 0);
+        }
+
+        if (!isset($post['transaction'])) {
+            $vendors = $this->vendors_model->getAllByCompany($status);
+        } else {
+            switch ($post['transaction']) {
+                case 'purchase-orders':
+                    $vendors = $this->vendors_model->get_vendors_with_unbilled_po($status);
+                break;
+                case 'open-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_open_bills($status);
+                break;
+                case 'overdue-bills':
+                    $vendors = $this->vendors_model->get_vendors_with_overdue_bills($status);
+                break;
+                case 'payments':
+                    $vendors = $this->vendors_model->get_vendors_with_payments($status);
+                break;
+            }
+        }
+
+        $data = [];
+        foreach($vendors as $vendor) {
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendor->id);
+            if ($search !== "") {
+                if (stripos($vendor->display_name, $search) !== false) {
+                    $data[] = [
+                        'name' => $vendor->display_name,
+                        'company_name' => $vendor->company,
+                        'address' => "$vendor->street",
+                        'city' => $vendor->city,
+                        'state' => $vendor->state,
+                        'country' => $vendor->country,
+                        'zip' => $vendor->zip,
+                        'phone' => $vendor->phone,
+                        'email' => $vendor->email,
+                        'attachments' => count($attachments),
+                        'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ','),
+                        'status' => $vendor->status
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'name' => $vendor->display_name,
+                    'company_name' => $vendor->company,
+                    'address' => "$vendor->street",
+                    'city' => $vendor->city,
+                    'state' => $vendor->state,
+                    'country' => $vendor->country,
+                    'zip' => $vendor->zip,
+                    'phone' => $vendor->phone,
+                    'email' => $vendor->email,
+                    'attachments' => count($attachments),
+                    'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ','),
+                    'status' => $vendor->status
+                ];
+            }
+        }
+    
+        usort($data, function ($a, $b) use ($order, $columnName) {
+            if ($order === 'asc') {
+                return strcmp($a[$columnName], $b[$columnName]);
+            } else {
+                return strcmp($b[$columnName], $a[$columnName]);
+            }
+        });
+
+        $writer = new XLSXWriter();
+        $headers = [
+            "Vendor",
+            "Company",
+            "Address",
+            "City",
+            "State",
+            "Country",
+            "Zip",
+            "Phone",
+            "Email",
+            "Attachments",
+            "Open Balance"
+        ];
+        $writer->writeSheetRow('Sheet1', $headers);
+
+        foreach($data as $v) {
+            $name = $v['name'];
+            $name .= $v['status'] === '0' ? ' (deleted)' : '';
+            $v['name'] = $name;
+            unset($v['status']);
+
+            $writer->writeSheetRow('Sheet1', $v);
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="vendors.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }

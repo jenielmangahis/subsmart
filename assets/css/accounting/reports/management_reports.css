@@ -425,7 +425,55 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     color: #393B3E;
 }
 
-#company_overview_modal #preliminary-page .page-divider {
-    border-top: solid 1px #B5BCC7;
-    margin: 10px 0;
+#company_overview_modal #preliminary-page .page {
+    border-bottom: solid 1px #B5BCC7;
+    padding: 10px 0;
+}
+
+#company_overview_modal #reports .report-section .report-edit-btn {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+    color: #393B3E;
+}
+
+#company_overview_modal #reports .report-section .report-edit-btn:hover {
+    opacity: 0.7;
+}
+
+#company_overview_modal #reports .report-section {
+    padding: 30px;
+    border-top: solid 1px #D8D8D7;
+    border-bottom: solid 1px #D8D8D7;
+}
+
+#company_overview_modal #reports .report-section h3.report-title {
+    font-size: 18px;
+    padding: 0;
+}
+
+#company_overview_modal #reports .report-section .closed-content-view {
+    display: block;
+}
+
+#company_overview_modal #reports .report-section .content-collapse {
+    display: none;
+}
+
+#company_overview_modal #reports .report-section:hover {
+    background-color: #F3F8FE;
+    cursor: pointer;
+}
+
+#company_overview_modal #reports .report-section .content-collapse .form-group .info {
+    font-size: 10px;
+    color: #A6A9AF;
+}
+
+#company_overview_modal #reports .add-report-btn {
+    color: #0277C5;
+}
+
+#company_overview_modal #reports .add-report-btn:hover {
+    text-decoration: underline;
 }

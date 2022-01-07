@@ -77,6 +77,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         border-bottom: 6px solid rgba(0,0,0,.35);
         transform: translateY(-7px);
     }
+    #myTabContent .action-bar ul li a:after {
+        width: 0;
+    }
+    #myTabContent .action-bar ul li a {
+    font-size: 20px;
+    }
+    #myTabContent .action-bar ul li {
+        margin-right: 5px;
+    }
+	#myTabContent .action-bar ul li .dropdown-menu a {
+		font-size: 14px;
+	}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -223,8 +235,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><a href="#" onclick = "window.print()"><i class="fa fa-print"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-download"></i></a></li>
+                                                <li><a href="#" id="print-vendors"><i class="fa fa-print"></i></a></li>
+                                                <li>
+                                                    <form action="/accounting/vendors/export-vendors" method="post" id="export-form">
+                                                        <a href="#" id="export-vendors"><i class="fa fa-download"></i></a>
+                                                    </form>
+                                                </li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>

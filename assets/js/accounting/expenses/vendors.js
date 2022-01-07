@@ -180,6 +180,141 @@ $(document).on('click', '#make-inactive', function(e) {
     });
 });
 
+const columns = [
+    {
+        orderable: false,
+        data: null,
+        name: 'checkbox',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).html(`
+            <div class="d-flex justify-content-center">
+                <div class="checkbox checkbox-sec m-0">
+                    <input type="checkbox" value="${rowData.id}" id="select-${rowData.id}">
+                    <label for="select-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
+                </div>
+            </div>
+            `);
+        }
+    },
+    {
+        data: 'name',
+        name: 'name',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).html(`<a href="/accounting/vendors/view/${rowData.id}">${cellData}</a>`);
+
+            if(rowData.company_name !== "" && rowData.company_name !== null) {
+                $(td).append(`<p class="m-0 text-muted">${rowData.company_name}</p>`);
+            }
+        }
+    },
+    {
+        data: 'address',
+        name: 'address',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('address');
+            if($('#address_chk').prop('checked') === false) {
+                $(td).addClass('hide');
+            }
+        }
+    },
+    {
+        data: 'phone',
+        name: 'phone',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('phone');
+            if($('#phone_chk').prop('checked') === false) {
+                $(td).addClass('hide');
+            }
+        }
+    },
+    {
+        data: 'email',
+        name: 'email',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('email');
+            if($('#email_chk').prop('checked') === false) {
+                $(td).addClass('hide');
+            }
+        }
+    },
+    {
+        data: 'attachments',
+        name: 'attachments',
+        orderable: false,
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            $(td).addClass('attachments');
+            if($('#attachments_chk').prop('checked') === false) {
+                $(td).addClass('hide');
+            }
+
+            if(cellData.length > 0) {
+                var imgExt = ['jpg', 'jpeg', 'png'];
+                var dropdownItem = '';
+                var noPreview = `
+                <div class="bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white">
+                    <p class="m-0">NO PREVIEW AVAILABLE</p>
+                </div>
+                `;
+
+                $.each(cellData, function(index, attachment) {
+                    dropdownItem += `
+                        <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/${attachment.stored_name}">
+                            <div class="row">
+                                <div class="col-5 pr-0">
+                                    ${imgExt.includes(attachment.file_extension) ? `<img src="/uploads/accounting/attachments/${attachment.stored_name}" class="m-auto">` : noPreview }
+                                </div>
+                                <div class="col-7">
+                                    <div class="d-flex align-items-center h-100 w-100">
+                                        <span class="overflow-hidden" style="text-overflow: ellipsis">${attachment.uploaded_name}.${attachment.file_extension}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                $(td).html(`
+                <div class="dropdown">
+                    <button class="btn btn-block dropdown-toggle hide-toggle" type="button" id="attachments-${rowData.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="text-info">${cellData.length}</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg" aria-labelledby="attachments-${rowData.id}">
+                        <div class="row m-0">${dropdownItem}</div>
+                    </div>
+                </div>
+                `);
+            }
+        }
+    },
+    {
+        data: 'open_balance',
+        name: 'open_balance'
+    },
+    {
+        orderable: false,
+        data: null,
+        name: 'action',
+        fnCreatedCell: function(td, cellData, rowData,row, col) {
+            $(td).html(`
+            <div class="btn-group float-right">
+                <button class="btn d-flex align-items-center justify-content-center text-info create-bill">
+                    Create bill
+                </button>
+
+                <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                    <a class="dropdown-item create-expense" href="#">Create expense</a>
+                    <a class="dropdown-item write-check" href="#">Write check</a>
+                    <a class="dropdown-item create-purchase-order" href="#">Create purchase order</a>
+                    <a class="dropdown-item make-inactive" href="#">Make inactive</a>
+                </div>
+            </div>
+            `);
+        }
+    }
+];
 var table = $('#vendors-table').DataTable({
     autoWidth: false,
     searching: false,
@@ -203,141 +338,7 @@ var table = $('#vendors-table').DataTable({
         },
         pagingType: 'full_numbers'
     },
-    columns: [
-        {
-            orderable: false,
-			data: null,
-			name: 'checkbox',
-			fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).html(`
-                <div class="d-flex justify-content-center">
-                    <div class="checkbox checkbox-sec m-0">
-                        <input type="checkbox" value="${rowData.id}" id="select-${rowData.id}">
-                        <label for="select-${rowData.id}" class="p-0" style="width: 24px; height: 24px"></label>
-                    </div>
-                </div>
-                `);
-			}
-		},
-        {
-            data: 'name',
-            name: 'name',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).html(`<a href="/accounting/vendors/view/${rowData.id}">${cellData}</a>`);
-
-                if(rowData.company_name !== "" && rowData.company_name !== null) {
-                    $(td).append(`<p class="m-0 text-muted">${rowData.company_name}</p>`);
-                }
-            }
-        },
-        {
-            data: 'address',
-            name: 'address',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('address');
-                if($('#address_chk').prop('checked') === false) {
-                    $(td).addClass('hide');
-                }
-            }
-        },
-        {
-            data: 'phone',
-            name: 'phone',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('phone');
-                if($('#phone_chk').prop('checked') === false) {
-                    $(td).addClass('hide');
-                }
-            }
-        },
-        {
-            data: 'email',
-            name: 'email',
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('email');
-                if($('#email_chk').prop('checked') === false) {
-                    $(td).addClass('hide');
-                }
-            }
-        },
-        {
-            data: 'attachments',
-            name: 'attachments',
-            orderable: false,
-            fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).addClass('attachments');
-                if($('#attachments_chk').prop('checked') === false) {
-                    $(td).addClass('hide');
-                }
-
-                if(cellData.length > 0) {
-                    var imgExt = ['jpg', 'jpeg', 'png'];
-                    var dropdownItem = '';
-                    var noPreview = `
-                    <div class="bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white">
-                        <p class="m-0">NO PREVIEW AVAILABLE</p>
-                    </div>
-                    `;
-
-                    $.each(cellData, function(index, attachment) {
-                        dropdownItem += `
-                            <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/${attachment.stored_name}">
-                                <div class="row">
-                                    <div class="col-5 pr-0">
-                                        ${imgExt.includes(attachment.file_extension) ? `<img src="/uploads/accounting/attachments/${attachment.stored_name}" class="m-auto">` : noPreview }
-                                    </div>
-                                    <div class="col-7">
-                                        <div class="d-flex align-items-center h-100 w-100">
-                                            <span class="overflow-hidden" style="text-overflow: ellipsis">${attachment.uploaded_name}.${attachment.file_extension}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    $(td).html(`
-                    <div class="dropdown">
-                        <button class="btn btn-block dropdown-toggle hide-toggle" type="button" id="attachments-${rowData.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="text-info">${cellData.length}</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-lg" aria-labelledby="attachments-${rowData.id}">
-                            <div class="row m-0">${dropdownItem}</div>
-                        </div>
-                    </div>
-                    `);
-                }
-            }
-        },
-        {
-            data: 'open_balance',
-            name: 'open_balance'
-        },
-        {
-            orderable: false,
-			data: null,
-			name: 'action',
-			fnCreatedCell: function(td, cellData, rowData,row, col) {
-                $(td).html(`
-                <div class="btn-group float-right">
-                    <button class="btn d-flex align-items-center justify-content-center text-info create-bill">
-                        Create bill
-                    </button>
-
-                    <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-
-                    <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                        <a class="dropdown-item create-expense" href="#">Create expense</a>
-                        <a class="dropdown-item write-check" href="#">Write check</a>
-                        <a class="dropdown-item create-purchase-order" href="#">Create purchase order</a>
-                        <a class="dropdown-item make-inactive" href="#">Make inactive</a>
-                    </div>
-                </div>
-                `);
-            }
-        }
-    ]
+    columns: columns
 });
 
 $(document).on('click', '#vendors-table .create-bill', function(e) {
@@ -761,4 +762,65 @@ $(document).on('click', '#vendors-table .view-attachment', function(e) {
     var data = e.currentTarget.dataset;
 
     window.open(data.href, "_blank");
+});
+
+$(document).on('click', '#print-vendors', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    data.set('inactive', $('#inc_inactive').prop('checked') ? 1 : 0);
+    data.set('search', $('input#search').val());
+    if($('.selected').length > 0) {
+        data.set('transaction', $('.selected').attr('id'));
+    }
+
+    var fields = $('#myTabContent .action-bar .dropdown-menu input[type="checkbox"]:checked');
+    fields.each(function() {
+        if($(this).attr('id').includes('_chk')) {
+            data.append('fields[]', $(this).attr('id').replace('_chk', ''));
+        }
+    });
+
+    var tableOrder = table.order();
+    data.set('column', columns[tableOrder[0][0]].name);
+    data.set('order', tableOrder[0][1]);
+
+    $.ajax({
+        url: '/accounting/vendors/print-vendors',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write(result);
+            $(pdfWindow.document).find('body').css('padding', '0');
+            $(pdfWindow.document).find('body').css('margin', '0');
+            $(pdfWindow.document).find('iframe').css('border', '0');
+            pdfWindow.print();
+        }
+    });
+});
+
+$(document).on('click', '#export-vendors', function(e) {
+    e.preventDefault();
+
+    $('#export-form').append(`<input type="hidden" name="inactive" value="${$('#inc_inactive').prop('checked') ? 1 : 0}">`);
+    $('#export-form').append(`<input type="hidden" name="search" value="${$('input#search').val()}">`);
+    if($('.selected').length > 0) {
+        $('#export-form').append(`<input type="hidden" name="transaction" value="${$('.selected').attr('id')}">`);
+    }
+
+    var tableOrder = table.order();
+    $('#export-form').append(`<input type="hidden" name="column" value="${columns[tableOrder[0][0]].name}">`);
+    $('#export-form').append(`<input type="hidden" name="order" value="${tableOrder[0][1]}">`);
+
+    $('#export-form').submit();
+});
+
+$('#export-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).find('input').remove();
 });

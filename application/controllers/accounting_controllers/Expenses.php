@@ -1504,16 +1504,8 @@ class Expenses extends MY_Controller
         $excelHead = "Type: $type · Status: $status · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
         $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
 
-        // $writer = $this->phpxlsxwriter;
-        $this->load->helper('string');
-
-        $randString = random_string('numeric');
-        $fileName = "expenses_$randString.xlsx";
-        $file = "./uploads/accounting/$fileName";
-
         $writer = new XLSXWriter();
         $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center']);
-        $writer->markMergedCell('Sheet1', 0, 0, 0, 12);
         $headers = [];
 
         $headers[] = "Date";
@@ -1551,6 +1543,7 @@ class Expenses extends MY_Controller
         if(in_array('attachments', $post['fields']) || is_null($post['fields'])) {
             $headers[] = "Attachments";
         }
+        $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
         $writer->writeSheetRow('Sheet1', $headers);
 
         foreach($transactions as $transaction) {
@@ -1564,30 +1557,9 @@ class Expenses extends MY_Controller
 
             $writer->writeSheetRow('Sheet1', $transaction);
         }
-        $writer->writeToFile($file);
-
-        // header("Content-Description: File Transfer"); 
-        // header("Content-Disposition: attachment; filename=expenses.csv"); 
-        // header("Content-Type: application/csv;");
-
-        // // file creation 
-        // $file = fopen('php://output', 'w');
-        
-        // fputcsv($file, $headers);
-
-        // foreach($transactions as $transaction) {
-        //     $keys = array_keys($transaction);
-
-        //     foreach($keys as $key) {
-        //         if(!in_array($key, ['date', 'total']) && !in_array($key, $post['fields']) || is_null($post['fields'])) {
-        //             unset($transaction[$key]);
-        //         }
-        //     }
-
-        //     fputcsv($file, $transaction);
-        // }
-
-        // fclose($file); 
-        // exit;
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="expenses.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }
