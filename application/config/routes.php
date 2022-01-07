@@ -970,6 +970,9 @@ $route['users/_update_work_image_caption'] = 'Users/ajax_update_company_work_pic
 
 //Profile Setting
 $route['users/update_profile_setting'] = 'Users/update_profile_setting';
+$route['users/load_edit_profile'] = 'Users/ajax_edit_profile';
+$route['users/_update_profile'] = 'Users/ajax_update_profile';
+$route['users/_update_user_signature'] = 'Users/ajax_update_user_signature';
 
 //Job Front View
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';

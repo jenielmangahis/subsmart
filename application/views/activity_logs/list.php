@@ -40,7 +40,7 @@ label>input {
 
           <tr>
             <th>IP Address</th>
-            <th>Message</th>
+            <th style="width: 70%;">Message</th>
             <th>Date Time</th>
             <th>Action</th>
           </tr>
@@ -52,12 +52,19 @@ label>input {
               <td><a href="<?php echo url('activity_logs/view/'.$row->id) ?>"><?php echo $row->title ?></a></td>
               <td><?php echo date( setting('datetime_format') , strtotime($row->created_at)) ?></td>
               <td>
-                <?php //if (hasPermissions('activity_log_view')): ?>
-                  <a href="<?php echo url('activity_logs/view/'.$row->id) ?>" class="btn btn-sm btn-default" title="View Activity" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
-                  <?php if ($row->user > 0): ?>
-                    <a href="<?php echo url('users/view/'.$row->user) ?>" class="btn btn-sm btn-default" title="View User" target="_blank" data-toggle="tooltip"><i class="fa fa-user"></i></a>
-                  <?php endif ?>
-                <?php //endif ?>
+                <div class="dropdown dropdown-btn">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
+                      <li role="presentation">
+                          <a role="menuitem" tabindex="-1" href="<?php echo url('activity_logs/view/'.$row->id) ?>"><span class="fa fa-eye icon"></span> View Activity</a>
+                      </li> 
+                        <li role="presentation">
+                          <a role="menuitem" tabindex="-1" href="<?php echo url('users/view/'.$row->user) ?>"><span class="fa fa-user icon"></span> View User</a>
+                      </li> 
+                    </ul>
+                </div>
               </td>
             </tr>
           <?php endforeach ?>
