@@ -98,6 +98,24 @@ if (!function_exists('userProfile')) {
     }
 }
 
+if (!function_exists('userSignature')) {
+
+    function userSignature($uid)
+    {
+        $CI  = &get_instance();
+        $url = base_url('uploads/image/noimage.jpg');        
+        if ($uid > 0){            
+            $signature_image = $CI->users_model->getRowById($uid, 'img_signature');
+            if( file_exists(FCPATH."uploads/signatures/user/$uid/" . $signature_image) ){
+                $url = base_url('uploads/signatures/user/'.$uid.'/'.$signature_image);
+            }
+        }
+
+        return $url;
+    }
+}
+
+
 
 if (!function_exists('userProfileImage')) {
 

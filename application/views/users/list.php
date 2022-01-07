@@ -142,7 +142,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 
     .section-title {
-        background-color: #38a4f8;
+        background-color: #32243d;
         color: #ffffff !important;
         padding: 10px;
         margin-bottom: 27px;
@@ -265,7 +265,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <tr>
                                                 <th>User</th>
                                                 <th>Email</th>
-                                                <th>Password</th>
+                                                <?php if( $show_pass == 1 ){ ?>
+                                                    <th>Password</th>
+                                                <?php } ?>
                                                 <th>Title</th>
                                                 <th>Rights</th>
                                                 <th>Last Login</th>
@@ -279,7 +281,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             <?php foreach ($users as $cnt => $row) : ?>
                                                 <tr>
                                                     <td class="center">
-                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Edit User Profile" data-toggle="tooltip">
+                                                        <?php 
+                                                            if( $row->profile_img != '' ){
+                                                                $data_img = $row->profile_img;
+                                                            }else{
+                                                                $data_img = 'default.png';
+                                                            }
+                                                        ?>
+                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployeeProfile" title="Change User Photo" data-toggle="tooltip" data-img="<?php echo $data_img; ?>">
                                                             <span>
                                                                 <img src="<?php echo userProfileImage($row->id); ?>" width="40" height="40" alt="" class="img-avatar img-center" style="display:inline;" />
                                                                 <i class="fa fa-pencil"></i>
@@ -298,7 +307,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         </div>
                                                     </td>
                                                     <td class="center"><?php echo $row->email ?></td>
-                                                    <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
+                                                    <?php if( $show_pass == 1 ){ ?>
+                                                        <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
+                                                    <?php } ?>
                                                     <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                                     <td class="center"><?php echo getUserType($row->user_type); ?></td>
                                                     <td class="center"><?php echo date('M d,Y', strtotime($row->last_login)); ?></td>
@@ -392,7 +403,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Cancel</button>
-                    <button type="button" class="btn btn-success" id="updateEmployee">Save</button>
+                    <button type="button" class="btn btn-primary" id="updateEmployee">Save</button>
                 </div>
             </form>
 
@@ -405,21 +416,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Employee Profile</h4>
+                <h4 class="modal-title"><i class="fa fa-image"></i> Change Employee Photo</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
             <form action="" id="editEmployeeProfileForm">
-                <div class="modal-body modal-edit-employee-profile">
-                    <div class="form-group">
+                <div class="modal-body modal-edit-employee-profile" style="padding-bottom: 0px;">
+                    <div class="form-group" style="margin-bottom: 0px !important;">
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="">Profile Image</label>
-                                <div id="employeeProfilePhotoUpdate" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                    <div class="dz-message" style="margin: 20px;border">
-                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                    </div>
+                                <img style="margin:0 auto; height: 300px;" id="img_profile" src="">
+                                <div class="margin-bottom" style="text-align: center;margin-top: 10px;">
+                                    <input type="file" class="form-control" style="margin-left: 77px; width: auto;" name="user_photo" id="upload-employee-photo" placeholder="Upload Image" accept="image/*" required="">
                                 </div>
                                 <input type="hidden" name="user_id_prof" id="user_id_prof">
                                 <input type="hidden" name="img_id" id="photoId">
@@ -431,7 +439,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
-                    <button type="button" class="btn btn-success" id="updateEmployeeProfilePhoto">Save & exit</button>
+                    <button type="button" class="btn btn-primary" id="updateEmployeeProfilePhoto">Save</button>
                 </div>
             </form>
 
@@ -476,7 +484,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
-                    <button type="button" class="btn btn-success" id="updatePassword">Save & exit</button>
+                    <button type="button" class="btn btn-primary" id="updatePassword">Save & exit</button>
                 </div>
             </form>
 
@@ -789,6 +797,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $(".label-public-url").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
         });
 
+        $(document).on('change', '#upload-employee-photo', function(e){
+          var reader = new FileReader();
+          reader.onload = function(){
+            var output = document.getElementById('img_profile');
+            output.src = reader.result;
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        });
+
         $("#btn-modal-delete-user").click(function(){
             var eid = $("#eid").val();
             $.ajax({
@@ -839,6 +856,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
         });
         $(document).on('click', '#editEmployeeProfile', function() {
+            var data_img = $(this).attr('data-img');
+            if( data_img == 'default.png' ){
+                var default_img = base_url + 'uploads/users/' + data_img;
+            }else{
+                var default_img = base_url + 'uploads/users/user-profile/' + data_img;
+            }
+
+            $("#img_profile").attr("src",default_img);
+
             $('#modalEditEmployeeProfile').modal({
                 backdrop: 'static',
                 keyboard: false
@@ -1127,54 +1153,40 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
 
         $(document).on('click', '#updateEmployeeProfilePhoto', function() {
-            let values = {};
-            $.each($('#editEmployeeProfileForm').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-            });
-            if (values['profile_img']) {
-                $.ajax({
-                    url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        values: values
-                    },
-                    success: function(data) {
-                        if (data == 1) {
-                            $("#modalEditEmployeeProfile").modal('hide');
-                            Swal.fire({
-                                title: 'Success',
-                                text: "Employee record has been Updated.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#32243d',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: 'Failed',
-                                text: "Something is wrong in the process",
-                                icon: 'warning'
-                            });
-                        }
+            var formData = new FormData($("#editEmployeeProfileForm")[0]);   
+            $.ajax({
+                url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
+                type: "POST",
+                dataType: "json",
+                contentType: false,
+                cache: false,
+                processData:false,
+                data: formData,
+                success: function(data) {
+                    if (data == 1) {
+                        $("#modalEditEmployeeProfile").modal('hide');
+                        Swal.fire({
+                            title: 'Success',
+                            text: "Employee photo has been Updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Please select a valid image",
+                            icon: 'warning'
+                        });
                     }
-                });
-            } else {
-                Swal.fire({
-                    showConfirmButton: false,
-                    timer: 2000,
-                    title: 'Failed',
-                    text: "Something is wrong in the process",
-                    icon: 'warning'
-                });
-            }
+                }
+            });
         });
 
         $(document).on('click', '#updatePassword', function() {

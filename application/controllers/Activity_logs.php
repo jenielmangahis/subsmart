@@ -45,11 +45,11 @@ class Activity_logs extends MY_Controller {
 		$arg = [];
 
 		if($ip){
-			$arg['ip_address'] = $ip;
+			$arg[] = ['field' => 'ip_address', 'value' => $ip];
 		}
 
 		if($user){
-			$arg['user'] = $user;
+			$arg[] = ['field' => 'user', 'value' => $user];
 		}
 
 		$activityLogs = $this->activity_model->getAllByCompanyId($company_id, array(), $arg); 
@@ -66,7 +66,7 @@ class Activity_logs extends MY_Controller {
 
 	public function view($id)
 	{
-		ifPermissions('activity_log_view');
+		//ifPermissions('activity_log_view');
 		$this->page_data['activity'] = $this->activity_model->getById($id);
 		$this->load->view('activity_logs/view', $this->page_data);
 

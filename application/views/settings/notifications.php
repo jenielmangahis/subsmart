@@ -1,19 +1,25 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.p-40 {
+  padding-top: 40px !important;
+}
+.fileinput-button{
+    width: 100%;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/setting'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Notifications</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage your notification options.</li>
-                        </ol>
-                    </div>
+            <div class="row p-40">
+                <div class="col">
+                    <h3 class="m-0">Notifications</h3>
+                </div>
+                <div style="background-color:#fdeac3;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px; width:100%;margin-left: 10px;">
+                    Manage your notification options.
                 </div>
             </div>
             <!-- end row -->

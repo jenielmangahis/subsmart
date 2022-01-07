@@ -81,7 +81,7 @@
     }
 
     .section-title {
-        background-color: #38a4f8;
+        background-color: #32243d;
         color: #ffffff !important;
         padding: 10px;
         margin-bottom: 27px;
@@ -142,8 +142,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                           <h4><?= $User->FName . ' ' . $User->LName; ?></h4>
                                           <p class="text-secondary mb-1"><?php echo getUserType($User->user_type); ?></p>
                                           <br />
-                                          <a class="btn btn-outline-primary btn-primary" href="javascript:void(0)" data-name="<?php echo $User->FName . ' ' . $User->LName; ?>" data-id="<?php echo $User->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip">Change Password</a>
-                                          <a class="btn btn-outline-primary btn-primary" id="editEmployee" data-id="<?= $User->id; ?>" href="javascript:void(0);">Edit Profile</a>
+                                          <a class="btn btn-outline-primary btn-primary" href="javascript:void(0)" data-name="<?php echo $User->FName . ' ' . $User->LName; ?>" data-id="<?php echo $User->id ?>" id="changePassword" style="width: 100%; margin-bottom: 10px;">Change Password</a>
+                                          <a class="btn btn-outline-primary btn-primary" id="editEmployee" data-id="<?= $User->id; ?>" href="javascript:void(0);" style="width: 100%;">Edit Profile</a>
                                         </div>
                                       </div>
                                     </div>
