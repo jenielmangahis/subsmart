@@ -367,7 +367,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="checkbox checkbox-sec margin-right">
-                                                <input type="checkbox" name="hide_item_tax" value="1" <?php echo ($setting && $setting->hide_item_tax) ? 'checked' : ''?> id="hide_item_tax">
+                                            <input type="checkbox" name="hide_item_tax" value="1" <?php echo ($setting && $setting->hide_item_tax) ? 'checked' : ''?> id="hide_item_tax">
                                                 <label for="hide_item_tax"><span>Hide item tax</span></label>
                                             </div>
                                         </div>

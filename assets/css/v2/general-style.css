@@ -34,7 +34,7 @@
 
 .nsm-badge{
     padding: 1px 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     width: max-content;
     font-size: 10px;
     font-weight: bold;
@@ -103,6 +103,11 @@
 .nsm-link{
 	color: #549cde;
 	text-decoration: none !important;
+	cursor: pointer !important;
+}
+
+.nsm-link.default{
+	color: inherit !important;
 }
 
 .nsm-img{
@@ -184,4 +189,12 @@
 
 .nsm-alert.warning > button{
 	color: #c7951c;
+}
+
+.disable-select{
+	user-select: none;
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
 }

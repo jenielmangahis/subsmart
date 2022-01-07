@@ -1067,8 +1067,6 @@ class Job extends MY_Controller
 
     public function bird_eye_view()
     {
-		$this->page_data['page']->title = 'Bird\'s Eye View';
-        $this->page_data['page']->parent = 'Sales';
         $this->page_data['title'] = 'Bird Eye View';
         $this->load->view('job/job_settings/bird_eye_view', $this->page_data);
     }
@@ -1177,7 +1175,7 @@ class Job extends MY_Controller
 
     public function settings()
     {
-		$this->page_data['page']->title = 'Settings';
+		$this->page_data['page']->title = 'Job Settings';
         $this->page_data['page']->parent = 'Sales';
 
         $comp_id = logged('company_id');

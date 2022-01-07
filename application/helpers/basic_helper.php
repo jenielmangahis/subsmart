@@ -2704,6 +2704,10 @@ function getPaymentByMethod($start_date, $end_date, $month) {
                 case "check":
                     $check += floatval($result->invoice_amount);
                     break;
+                    
+                case "paypal":
+                    $paypal += floatval($result->invoice_amount);
+                    break;
             }
         }
 
@@ -2714,6 +2718,7 @@ function getPaymentByMethod($start_date, $end_date, $month) {
     ($cc > 0) ? array_push($fn, array("Credit Card", dollar_format($cc))) : $cc = 0;
     ($cash > 0) ? array_push($fn, array("Cash", dollar_format($cash))) : $cash = 0;
     ($check > 0) ? array_push($fn, array("Check", dollar_format($check))) : $check = 0;
+    ($paypal > 0) ? array_push($fn, array("Paypal", dollar_format($paypal))) : $paypal = 0;
 
     return $fn;
 }
@@ -2731,13 +2736,13 @@ function getPaymentByMonth($start_date, $end_date, $month) {
         $date = explode("-",$result->payment_date);
         if ($date[1] == $month) {
             $total += floatval($result->invoice_amount);
-            if (!in_array($result->customer_id, $company_id)) {
-                array_push($company_id, $result->customer_id);
-                array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, '', '', ''));
+            // if (!in_array($result->customer_id, $company_id)) {
+            //     array_push($company_id, $result->customer_id);
+            //     array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, '', '', ''));
+            //     array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
+            // } else {
                 array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
-            } else {
-                array_push($fn, array('', $result->payment_date, $result->invoice_number, getPaymentType($result->payment_method), dollar_format($result->invoice_amount)));
-            }
+            // }
         }
     }
     if (count($fn) > 0) {
@@ -2769,7 +2774,7 @@ function getAccountReceivable($start_date, $end_date, $month) {
             $monthly_fees = 0;
             $num_invoice += 1;
             $totals = unserialize($result->invoice_totals);
-            $total_invoice += floatval($totals['grand_total']);
+            $total_invoice += floatval($result->grand_total);
             $invoices = $CI->payment_records_model->getByWhere(array("invoice_number" => $result->invoice_number));
             foreach ($invoices as $inv) {
                 $tip_invoice += $inv->invoice_tip;
@@ -2777,10 +2782,10 @@ function getAccountReceivable($start_date, $end_date, $month) {
                 $paid_invoice += $inv->invoice_amount;
                 $monthly_paid += $inv->invoice_amount;
             }
-            $monthly_due = floatval(floatval($totals['grand_total']) - floatval($monthly_paid));
+            $monthly_due = floatval(floatval($result->grand_total) - floatval($monthly_paid));
             $due_invoice += $monthly_due;
             $new_date=date_format(date_create($result->date_issued),"d-M-Y");
-            array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->contact_name, dollar_format(floatval($totals['grand_total'])), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
+            array_push($fn, array($new_date,"Invoice #".$result->invoice_number. "(".$result->status.")", get_customer_by_id($result->customer_id)->first_name .' '.get_customer_by_id($result->customer_id)->last_name, dollar_format(floatval($result->grand_total)), dollar_format($monthly_paid), dollar_format($monthly_due), dollar_format($monthly_tip), dollar_format($monthly_fees)));
         }
     }
     if (count($results) > 0 && count($fn) > 1) {
@@ -2944,11 +2949,13 @@ function getPaymentByCustomer($start_date, $end_date) {
                     $grand_paid_invoice += 1;
 
                     $totals1 = unserialize($result2->invoice_totals);
-                    $total_invoice += floatval($totals1['grand_total']);
-                    $grand_total += floatval($totals1['grand_total']);
+                    // $total_invoice += floatval($totals1['grand_total']);
+                    $total_invoice += floatval($result->grand_total);
+                    // $grand_total += floatval($totals1['grand_total']);
+                    $grand_total += floatval($result->grand_total);
                 }
             }
-            array_push($fn, array(get_customer_by_id($result->customer_id)->contact_name, substr(get_customer_by_id($result->customer_id)->customer_type,0,1), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
+            array_push($fn, array(get_customer_by_id($result->customer_id)->first_name .' '.get_customer_by_id($result->customer_id)->last_name, substr(get_customer_by_id($result->customer_id)->customer_type,0,1), $num_invoice, $paid_invoice, dollar_format($total_invoice)));
         }
     }
 
@@ -3646,6 +3653,9 @@ function getPaymentType($type) {
 
         case "cash":
             return "Cash";
+
+        case "paypal":
+            return "Paypal";
     }
 }
 

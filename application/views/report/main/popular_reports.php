@@ -301,7 +301,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tr>
                                             <th>Month / Customer</th>
                                             <th>Paid Date</th>
-                                            <th>Details</th>
+                                            <th>Invoice No.</th>
                                             <th>Payment Method</th>
                                             <th class="text-right">Total Sales</th>
                                         </tr>

@@ -676,47 +676,55 @@ $(document).on('click', '#download-transactions', function(e) {
     e.preventDefault();
 
     var data = new FormData();
-    data.set('from_date', $('#from').val());
-    data.set('to_date', $('#to').val());
-    data.set('search', $('#search').val());
-    data.set('reconcile_status', $('#reconcile_status').val());
-	data.set('transaction_type', $('#transaction_type').val());
-	data.set('payee', $('#payee').val());
+    $('#export-transactions-form').append(`<input type="hidden" name="from_date" value="${$('#from').val()}">`);
+    $('#export-transactions-form').append(`<input type="hidden" name="to_date" value="${$('#to').val()}">`);
+    $('#export-transactions-form').append(`<input type="hidden" name="search" value="${$('#search').val()}">`);
+    $('#export-transactions-form').append(`<input type="hidden" name="reconcile_status" value="${$('#reconcile_status').val()}">`);
+    $('#export-transactions-form').append(`<input type="hidden" name="transaction_type" value="${$('#transaction_type').val()}">`);
+    $('#export-transactions-form').append(`<input type="hidden" name="payee" value="${$('#payee').val()}">`);
 
     if($('#registers-table thead tr').length > 1) {
-        data.set('column', columns[orderIndex].name);
-        data.set('order', order);
+        $('#export-transactions-form').append(`<input type="hidden" name="column" value="${columns[orderIndex].name}">`);
+        $('#export-transactions-form').append(`<input type="hidden" name="order" value="${order}">`);
     } else {
         var tableOrder = $('#registers-table').DataTable().order();
-        data.set('column', columns[tableOrder[0][0]].name);
-        data.set('order', tableOrder[0][1]);
+        $('#export-transactions-form').append(`<input type="hidden" name="column" value="${columns[tableOrder[0][0]].name}">`);
+        $('#export-transactions-form').append(`<input type="hidden" name="order" value="${tableOrder[0][1]}">`);
     }
 
     $('div[aria-labelledby="dropdownMenuLink"] input[type="checkbox"]').each(function() {
         var id = $(this).attr('id');
-        data.set(id, $(this).prop('checked') ? 1 : 0);
+        $('#export-transactions-form').append(`<input type="hidden" name="${id}" value="${$(this).prop('checked') ? 1 : 0}">`);
     });
 
-    $.ajax({
-		url: `/accounting/chart-of-accounts/view-register/${accountId}/export-table`,
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        xhrFields: {
-            responseType: 'blob'
-        },
-        success: function(data) {
-			var a = document.createElement('a');
-            var url = window.URL.createObjectURL(data);
-            a.href = url;
-            a.download = 'Register.csv';
-            document.body.append(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-		}
-	});
+    // $.ajax({
+	// 	url: `/accounting/chart-of-accounts/view-register/${accountId}/export-table`,
+    //     data: data,
+    //     type: 'post',
+    //     processData: false,
+    //     contentType: false,
+    //     xhrFields: {
+    //         responseType: 'blob'
+    //     },
+    //     success: function(data) {
+	// 		var a = document.createElement('a');
+    //         var url = window.URL.createObjectURL(data);
+    //         a.href = url;
+    //         a.download = 'Register.csv';
+    //         document.body.append(a);
+    //         a.click();
+    //         a.remove();
+    //         window.URL.revokeObjectURL(url);
+	// 	}
+	// });
+
+    $('#export-transactions-form').submit();
+});
+
+$('#export-transactions-form').on('submit', function(e) {
+    e.preventDefault();
+    this.submit();
+    $(this).find('input').remove();
 });
 
 $(document).on('click', '#print-transactions', function(e) {

@@ -295,27 +295,32 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     <form>
                         <div class="form-group">
                             <label for="emailReportTo">To</label>
-                            <input type="email" class="form-control" id="emailReportTo">
+                            <input type="email" class="form-control" id="emailReportTo" data-type="to">
                         </div>
                         <div class="form-group">
                             <label for="emailReportSubject">Subject</label>
-                            <input type="text" class="form-control" id="emailReportSubject">
+                            <input type="text" class="form-control" id="emailReportSubject" data-type="subject">
                         </div>
                         <div class="form-group">
                             <label for="emailReportBody">Body</label>
-                            <textarea class="form-control" id="emailReportBody" rows="3"></textarea>
+                            <textarea class="form-control" id="emailReportBody" rows="3" data-type="body"></textarea>
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="form-group w-100">
                                 <label for="emailReportReport">Report</label>
-                                <input type="text" class="form-control" id="emailReportReport">
+                                <input type="text" class="form-control" id="emailReportReport" data-type="file_name">
                             </div>
                             <div>.pdf</div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Send</button>
+                    <button type="button" class="btn btn-primary arBtn">
+                        <div class="spinner-border spinner-border-sm m-0 mr-1" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        Send
+                    </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
