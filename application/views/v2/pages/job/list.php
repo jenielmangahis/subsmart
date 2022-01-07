@@ -96,6 +96,23 @@ foreach ($jobs as $job) {
                         ?>
                             <?php
                             foreach ($jobs as $job) :
+                                switch($job->status):
+                                    case "Scheduled":
+                                        $badge = "secondary";
+                                        break;
+                                    case "Started":
+                                        $badge = "primary";
+                                        break;
+                                    case "Approved":
+                                        $badge = "success";
+                                        break;
+                                    case "Invoiced":
+                                        $badge = "primary";
+                                        break;
+                                    case "Completed":
+                                        $badge = "success";
+                                        break;
+                                endswitch;
                             ?>
                                 <tr>
                                     <td>
@@ -107,7 +124,7 @@ foreach ($jobs as $job) {
                                     <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
                                     <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
                                     <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                    <td><?= $job->status; ?></td>
+                                    <td><span class="nsm-badge <?= $badge ?>"><?= $job->status; ?></span></td>
                                     <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
                                     <td><?php echo $job->job_type; ?></td>
                                     <td><?php echo $job->name; ?></td>
@@ -140,7 +157,7 @@ foreach ($jobs as $job) {
                             <tr>
                                 <td colspan="11">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Jobs yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -216,7 +233,7 @@ foreach ($jobs as $job) {
                                 <tr>
                                     <td colspan="11">
                                         <div class="nsm-empty">
-                                            <span>No scheduled jobs found.</span>
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -229,7 +246,7 @@ foreach ($jobs as $job) {
                             <tr>
                                 <td colspan="11">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Jobs yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -305,7 +322,7 @@ foreach ($jobs as $job) {
                                 <tr>
                                     <td colspan="11">
                                         <div class="nsm-empty">
-                                            <span>No started jobs found.</span>
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -318,7 +335,7 @@ foreach ($jobs as $job) {
                             <tr>
                                 <td colspan="11">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Jobs yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -394,7 +411,7 @@ foreach ($jobs as $job) {
                                 <tr>
                                     <td colspan="11">
                                         <div class="nsm-empty">
-                                            <span>No approved jobs found.</span>
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -407,7 +424,7 @@ foreach ($jobs as $job) {
                             <tr>
                                 <td colspan="11">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Jobs yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -483,7 +500,7 @@ foreach ($jobs as $job) {
                                 <tr>
                                     <td colspan="11">
                                         <div class="nsm-empty">
-                                            <span>No invoiced jobs found.</span>
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -496,7 +513,7 @@ foreach ($jobs as $job) {
                             <tr>
                                 <td colspan="11">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Jobs yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -572,7 +589,7 @@ foreach ($jobs as $job) {
                                 <tr>
                                     <td colspan="11">
                                         <div class="nsm-empty">
-                                            <span>No completed jobs found.</span>
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -585,7 +602,7 @@ foreach ($jobs as $job) {
                             <tr>
                                 <td colspan="11">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Jobs yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>

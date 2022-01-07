@@ -3339,6 +3339,7 @@ class Chart_of_accounts extends MY_Controller {
 
     public function export_transactions($accountId)
     {
+        $this->load->library('PHPXLSXWriter');
         $account = $this->chart_of_accounts_model->getById($accountId);
         $accountType = $this->account_model->getById($account->account_id);
         if(stripos($accountType->account_name, 'Asset') !== false) {
@@ -3363,25 +3364,30 @@ class Chart_of_accounts extends MY_Controller {
 
         $data = $this->get_transactions($accountId, $post, $sort);
 
-        header("Content-Description: File Transfer"); 
-        header("Content-Disposition: attachment; filename=Register.csv"); 
-        header("Content-Type: application/csv;");
-        $file = fopen('php://output', 'w');
+        // header("Content-Description: File Transfer"); 
+        // header("Content-Disposition: attachment; filename=Register.csv"); 
+        // header("Content-Type: application/csv;");
+        // $file = fopen('php://output', 'w');
+        // $topHeader = [
+        //     $account->name,
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     'Ending Balance:',
+        //     $balance
+        // ];
+        $writer = new XLSXWriter();
         $topHeader = [
-            $account->name,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            'Ending Balance:',
-            $balance
+            "$account->name · Ending Balance: $balance"
         ];
+        $writer->writeSheetRow('Sheet1', $topHeader, ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
 
         switch($accType) {
             case 'Credit Card' :
@@ -3460,8 +3466,10 @@ class Chart_of_accounts extends MY_Controller {
             unset($topHeader[12]);
         }
 
-        fputcsv($file, $topHeader);
-        fputcsv($file, $header);
+        $writer->markMergedCell('Sheet1', 0, 0, 0, count($header) - 1);
+        $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
+        // fputcsv($file, $topHeader);
+        // fputcsv($file, $header);
 
         foreach($data as $register) {
             $entry = [
@@ -3518,11 +3526,16 @@ class Chart_of_accounts extends MY_Controller {
                 }
             }
 
-            fputcsv($file, $entry);
+            $writer->writeSheetRow('Sheet1', $entry);
+            // fputcsv($file, $entry);
         }
 
-        fclose($file); 
-        exit; 
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Register.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
+        // fclose($file); 
+        // exit; 
     }
 
     public function delete_transaction($transactionType, $transactionId)

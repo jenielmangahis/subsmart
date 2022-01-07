@@ -333,6 +333,9 @@ class Settings extends MY_Controller {
 
     public function tax_rates()
     {
+		$this->page_data['page']->title = 'Tax Rates';
+        $this->page_data['page']->parent = 'Sales';
+
         $this->load->model('TaxRates_model');
         $this->load->model('Users_model');
 
@@ -343,7 +346,7 @@ class Settings extends MY_Controller {
 
         $this->page_data['taxRates'] = $taxRates;
         $this->page_data['page']->menu = 'tax_rates';
-        $this->load->view('settings/tax_rates', $this->page_data);
+        $this->load->view('v2/pages/settings/tax_rates', $this->page_data);
     }
 
     public function create_tax_rate()
@@ -395,7 +398,7 @@ class Settings extends MY_Controller {
         $taxRate = $this->TaxRates_model->getById($post['tid']);
 
         $this->page_data['taxRate'] = $taxRate;
-        $this->load->view('settings/ajax_edit_tax_rate', $this->page_data);
+        $this->load->view('v2/pages/settings/ajax_edit_tax_rate', $this->page_data);
     }
 
     public function update_tax_rate()

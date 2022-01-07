@@ -106,7 +106,7 @@ function getCollapsedColumns(_this) {
                     attrValue = this.value;
 
                     if (this.name == "class")
-                        attrValue = "nsm-button btn-sm m-0 me-2 " + this.value;
+                        attrValue = "nsm-button btn-sm m-0 me-2 d-inline-block mb-2 " + this.value;
 
                     extraAttrs += " " + this.name + '="' + attrValue + '"';
                 }
@@ -194,4 +194,28 @@ function getPaginationPages(page, length){
         start = parseInt(page) - 3;
 
     return Array.from({ length: length}, (_, i) => start + (i));
+}
+
+function tableSearch(_this){
+    let text = _this.val().toLowerCase().trim();
+    let table = _this.attr("for") != undefined && _this.attr("for") != "" ? $("#"+_this.attr("for")) : _this.closest(".nsm-page-content").find(".nsm-table");
+    let tableContent = table.find("tbody tr");
+    let colspan = table.find("thead tr:first-child td").length;
+    let count = 0;
+
+    table.find("tbody .nsm-noresult").remove();
+    tableContent.each(function(idx){
+        let _row = $(this);
+        let target = _row.find(".nsm-text-primary").text().toLowerCase().trim();
+        
+        _row.toggle(target.indexOf(text) !== -1);
+
+        if(target.indexOf(text) !== -1)
+            count++;
+    });
+
+    if(count == 0){
+        let emptyPlaceholder = '<tr class="nsm-noresult"><td colspan="'+colspan+'"><div class="nsm-empty"><span>No results found.</span></div></td></tr>';
+        table.find("tbody").append(emptyPlaceholder);
+    }
 }

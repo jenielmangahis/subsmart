@@ -232,7 +232,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
                                                 <li><a href="#" id="print-transactions"><i class="fa fa-print"></i></a></li>
-                                                <li><a href="#" id="download-transactions"><i class="fa fa-download"></i></a></li>
+                                                <li>
+                                                    <form action="/accounting/chart-of-accounts/view-register/<?=$account->id?>/export-table" method="post" id="export-transactions-form">
+                                                        <a href="#" id="download-transactions"><i class="fa fa-download"></i></a>
+                                                    </form>
+                                                </li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>

@@ -18,6 +18,9 @@ class Workstatus extends MY_Controller {
 
 	public function index()
 	{
+		$this->page_data['page']->title = 'Workorder Type';
+        $this->page_data['page']->parent = 'Sales';
+
 		// ifPermissions('plan_list');
 		$is_allowed = $this->isAllowedModuleAccess(30);
         if( !$is_allowed ){
@@ -35,7 +38,7 @@ class Workstatus extends MY_Controller {
 		}
 
 		//$this->page_data['workstatus'] = array();
-		$this->load->view('workstatus/list', $this->page_data);
+		$this->load->view('v2/pages/workstatus/list', $this->page_data);
 	}
 
 	public function add(){

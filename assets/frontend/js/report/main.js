@@ -6,8 +6,7 @@ var options = {
   urlFilterPaymentByMethod: base_url + "reports/paymentByMethod",
   urlFilterPaymentByMonth: base_url + "reports/paymentByMonth",
   urlFilterAccountReceivable: base_url + "reports/accountReceivable",
-  urlFilterAccountReceivableResCom:
-    base_url + "reports/accountReceivableResCom",
+  urlFilterAccountReceivableResCom: base_url + "reports/accountReceivableResCom",
   urlFilterInvoiceByDate_OLD: base_url + "reports/invoiceByDate",
   urlFilterPaymentByCustomer: base_url + "reports/paymentByCustomer",
   urlFilterPaymentByItem: base_url + "reports/paymentByItem",

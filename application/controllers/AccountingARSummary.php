@@ -110,4 +110,27 @@ class AccountingARSummary extends MY_Controller
             exit;
         }
     }
+
+    public function apiGetCurrentUser()
+    {
+        $this->db->where('id', logged('id'));
+        $user = $this->db->get('users')->row();
+        $user->fullName = $user->FName . ' ' . $user->LName;
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $user]);
+    }
+
+    public function apiSendEmail()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        echo json_encode(['data' => $payload]);
+    }
 }

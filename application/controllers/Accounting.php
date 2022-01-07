@@ -923,6 +923,7 @@ class Accounting extends MY_Controller
         $this->page_data['page_title'] = "Reports";
         $this->load->view('accounting/reports', $this->page_data);
     }
+   
 
     public function aging_summary_report()
     {
@@ -1381,7 +1382,22 @@ class Accounting extends MY_Controller
         $data->check_category = ($check_category->num_rows() > 0) ? true : false;
         echo json_encode($data);
     }
-
+    public function comp_overview_add_prelim_page()
+    {
+        $this->page_data['data_count'] = $this->input->post("data_count");
+        $new_page =$this->load->view('accounting/reports/management_reports/preliminary_pages', $this->page_data,true);
+        $data = new stdClass();
+        $data->new_page = $new_page;
+        echo json_encode($data);
+    }
+    public function comp_overview_add_new_report_section()
+    {
+        $this->page_data['data_count'] = $this->input->post("data_count");
+        $new_report =$this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data,true);
+        $data = new stdClass();
+        $data->new_report = $new_report;
+        echo json_encode($data);
+    }
     public function editBillData()
     {
         $new_data = array(

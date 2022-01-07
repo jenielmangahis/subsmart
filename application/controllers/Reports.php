@@ -301,7 +301,7 @@ class Reports extends MY_Controller {
             foreach ($payments as $payment) {
                 if (!$month_counter) {
                     $month_counter = true;
-                    $grand_total += floatval($payment[5]);
+                    $grand_total += floatval($payment[6]);
                     array_push($months, array($dt->format("M, Y"), '', '', '', ''));
                     array_push($months, $payment);
                 } else {

@@ -1505,7 +1505,7 @@ class Expenses extends MY_Controller
         $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : "";
 
         $writer = new XLSXWriter();
-        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center']);
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
         $headers = [];
 
         $headers[] = "Date";
@@ -1544,7 +1544,7 @@ class Expenses extends MY_Controller
             $headers[] = "Attachments";
         }
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
-        $writer->writeSheetRow('Sheet1', $headers);
+        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);

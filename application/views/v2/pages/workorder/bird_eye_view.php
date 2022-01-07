@@ -1,19 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
 
-<div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
-        <i class="bx bx-plus"></i>
-    </div>
-    <ul class="nsm-fab-options">
-        <li onclick="location.href='<?php echo base_url('customer/add_advance') ?>'">
-            <div class="nsm-fab-icon">
-                <i class="bx bx-user-plus"></i>
-            </div>
-            <span class="nsm-fab-label">Add Customer</span>
-        </li>
-    </ul>
-</div>
-
 <div class="row">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/job_tabs'); ?>
@@ -25,93 +11,110 @@
                     <div class="col-12">
                         <div class="nsm-alert warning">
                             <button><i class='bx bx-x'></i></button>
-                            In our software, jobs are project that an invoice will need to be issued for payment. This will help organize your projects into categories and will help you see the profitability of your business based on the various job type.
+                            For any business, getting customers is only half the battle; creating a job workflow will help track each scheduled ticket from draft to receiving payment.
                         </div>
                     </div>
                 </div>
+                <form id="map-filter">
+                    <div class="row gx-3">
+                        <div class="col-12 col-md-2">
+                            <div class="nsm-field-group calendar">
+                                <input type="text" class="nsm-field form-control datepicker mb-2" placeholder="Date From">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <div class="nsm-field-group calendar">
+                                <input type="text" class="nsm-field form-control datepicker mb-2" placeholder="Date To">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md grid-mb text-end">
+                            <input type="hidden" name="job_status">
+                            <div class="dropdown d-inline">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" id="select_status">
+                                    <li><a class="dropdown-item" href="#" data-value="all">All</a></li>
+                                    <?php
+                                    foreach ($job_status as $key => $value) :
+                                    ?>
+                                        <li><a class="dropdown-item" href="#" data-value="<?= $key; ?>"><?= $value; ?></a></li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+                            </div>
+                            <input type="hidden" name="user">
+                            <div class="dropdown d-inline">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span>Select Employee</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" id="select_employee">
+                                    <li><a class="dropdown-item" href="#" data-value="all">All Employees</a></li>
+                                    <?php
+                                    foreach ($companyUsers as $user) :
+                                    ?>
+                                        <li><a class="dropdown-item" href="#" data-value="<?= $user->id; ?>"><?= $user->FName . ' ' . $user->LName; ?></a></li>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('job/add_new_job_type'); ?>'">
-                                <i class='bx bx-fw bx-book'></i> New Job Type
-                            </button>
-                        </div>
+                    <div class="col-12">
+                        <div class="map-container nsm-map"></div>
                     </div>
                 </div>
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Job Type Name">Job Type Name</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($job_types)) :
-                        ?>
-                            <?php
-                            foreach ($job_types as $types) :
-                            ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        if ($types->icon_marker != '') :
-                                            if ($types->is_marker_icon_default_list == 1) :
-                                                $marker = base_url("uploads/icons/" . $types->icon_marker);
-                                            else :
-                                                $marker = base_url("uploads/job_types/" . $types->company_id . "/" . $types->icon_marker);
-                                            endif;
-                                        else :
-                                            $marker = base_url("uploads/job_types/default_no_image.jpg");
-                                        endif;
-                                        ?>
-                                        <div class="table-row-icon img" style="background-image: url('<?php echo $marker ?>')"></div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $types->title; ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/edit_job_type/' . $types->id); ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $types->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="nsm-empty">
-                                        <span>You haven't yet added Job Types yet.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 </div>
 
-
 <script type="text/javascript">
     $(document).ready(function() {
+        load_map_route();
         
+        $(".datepicker").datepicker({
+            format: 'mm/dd/yyyy',
+            orientation: "bottom",
+            autoclose: true
+        });
+        $(".datepicker").datepicker("setDate", new Date());
+
+        $(".datepicker").on("changeDate", function(){
+            load_map_route();
+        });
+
+        $("#select_status .dropdown-item").on("click", function(){
+           $("input[name=job_status]").val($(this).attr("data-value"));
+           load_map_route();
+        });
+
+        $("#select_employee .dropdown-item").on("click", function(){
+           $("input[name=user]").val($(this).attr("data-value"));
+           load_map_route();
+        });
     });
+
+    function load_map_route() {
+        var msg = '<div class="nsm-loader"><i class="bx bx-loader-alt bx-spin"></i></div>';
+        var url = "<?= base_url('/workorder/_load_map_routes') ?>";
+
+        $(".map-container").html(msg);
+        setTimeout(function() {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#map-filter").serialize(),
+                success: function(o) {
+                    $(".map-container").html(o);
+                    resizeSidebar();
+                }
+            });
+        }, 1000);
+    }
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

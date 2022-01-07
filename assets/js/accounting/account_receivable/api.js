@@ -22,3 +22,23 @@ export async function exportAsExcel() {
   const blob = await response.blob();
   download(blob, filename, "application/octet-stream");
 }
+
+export async function getUser() {
+  const endpoint = `${prefixURL}/AccountingARSummary/apiGetCurrentUser`;
+  const response = await fetch(endpoint);
+  return response.json();
+}
+
+export async function sendEmail(payload) {
+  const endpoint = `${prefixURL}/AccountingARSummary/apiSendEmail`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  return response.json();
+}

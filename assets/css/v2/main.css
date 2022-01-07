@@ -15,7 +15,7 @@ html, body{
 	padding: 0 !important;
 	width:  100%;
 	height: 100%;
-	overflow: auto;
+	/* overflow: auto; */
 	position: relative;
 }
 
@@ -1080,6 +1080,10 @@ a.nsm-button{
 	margin-top: 1px;
 }
 
+.nsm-table .nsm-button.btn-sm{
+	padding: 0.5rem;
+}
+
 .nsm-field{
 	font-size: 14px !important;
 	width: 100%;
@@ -1090,27 +1094,36 @@ a.nsm-button{
     box-shadow: 0 0 0 0.25rem rgb(156 39 176 / 17%) !important;
 }
 
-.nsm-search{
-	width: 100%;
-	max-width: 375px;
-}
-
 .nsm-field-group{
 	position: relative;
+	display: inline-block;
+	width: 100%;
 } 
 
 .nsm-field-group::before{
     font-family: boxicons!important;
-	content: "\ee5a";
     position: absolute;
-    font-size: 20px;
+    font-size: 18px;
     color: #9b9b9b;
-    top: 5%;
+    top: 10%;
     left: 10px;
 }
 
+.nsm-field-group.search{
+	max-width: 375px;
+}
+
+.nsm-field-group.search::before{
+	content: "\ee5a";
+}
+
+.nsm-field-group.calendar::before{
+	content: "\ec82";
+}
+
 .nsm-field-group .nsm-field{
-	padding-left: 2.2rem;
+	padding-left: 2.4rem;
+	line-height: 1.75;
 }
 
 .nsm-table .nsm-table-pagination{
@@ -1159,12 +1172,19 @@ a.nsm-button{
 .nsm-table .table-row-icon{
 	width: 35px;
     height: 35px;
-    background-color: #dad1e0;
-    border-radius: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 	font-size: 18px;
+}
+
+.nsm-table .table-checkbox > input[type=checkbox]{
+	margin: unset;
+}
+
+.nsm-table .table-row-icon:not(.table-checkbox){
+    background-color: #dad1e0;
+    border-radius: 100%;
 }
 
 .nsm-table .table-row-icon.img{
@@ -1248,4 +1268,66 @@ a.nsm-button{
 	color: #888888;
 	padding-top: .5rem;
 	padding-bottom: .5rem;
+}
+
+.nsm-map{
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.datepicker-dropdown{
+	padding: 0.75rem !important;
+}
+
+.nsm-tab .nav-tabs{
+	border: unset !important;
+}
+
+
+.nsm-tab .nav-tabs > .nav-link{
+	color: inherit !important;
+	border: unset;
+    border-bottom: 3px solid lightgray;
+}
+
+.nsm-tab .nav-tabs > .nav-link.active{
+	border: unset;
+	border-bottom: 3px solid #6a4a86;
+}
+
+.nsm-table .table-select{
+	font-size: 18px;
+	margin: unset !important;
+}
+
+.nsm-img-upload{
+	width: 100%;
+    height: 200px;
+    border: 2px dashed #c7c7c7;
+    border-radius: 5px;
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative;
+}
+
+.nsm-img-upload .nsm-upload{
+	position: absolute;
+	opacity: 0;
+    width: 100%;
+    height: 100%;
+	cursor: pointer;
+}
+
+.nsm-img-upload .nsm-upload-label{
+	position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: max-content;
+    height: max-content;
+    margin: auto;
+	font-size: 13px;
+	color: #c7c7c7;
 }

@@ -3139,7 +3139,7 @@ class Vendors extends MY_Controller
         $excelHead .= $post['date'] !== 'custom' ? " · Date: ".ucfirst(str_replace("-", " ", $post['date'])) : " · Delivery method: ".ucfirst(str_replace("-", " ", $post['delivery_method']));
 
         $writer = new XLSXWriter();
-        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center']);
+        $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
 
         $headers = [];
 
@@ -3180,7 +3180,7 @@ class Vendors extends MY_Controller
         }
 
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
-        $writer->writeSheetRow('Sheet1', $headers);
+        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
         foreach($transactions as $transaction) {
             $keys = array_keys($transaction);
@@ -3400,7 +3400,7 @@ class Vendors extends MY_Controller
             "Attachments",
             "Open Balance"
         ];
-        $writer->writeSheetRow('Sheet1', $headers);
+        $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
         foreach($data as $v) {
             $name = $v['name'];

@@ -232,9 +232,10 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
 }
 
 #company_overview_modal .the-content .report-pages {
-    height: 100%;
+    height: calc(100vh - 205px);
     overflow: scroll;
     overflow-x: hidden;
+    position: fixed;
 }
 
 #company_overview_modal .the-content .report-pages ul li:hover,
@@ -430,14 +431,16 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     padding: 10px 0;
 }
 
-#company_overview_modal #reports .report-section .report-edit-btn {
+#company_overview_modal #reports .report-section .report-edit-btn,
+#company_overview_modal #reports .report-section .report-delete-btn {
     float: right;
     cursor: pointer;
     font-size: 20px;
     color: #393B3E;
 }
 
-#company_overview_modal #reports .report-section .report-edit-btn:hover {
+#company_overview_modal #reports .report-section .report-edit-btn:hover,
+#company_overview_modal #reports .report-section .report-delete-btn:hover {
     opacity: 0.7;
 }
 
@@ -468,6 +471,18 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
 #company_overview_modal #reports .report-section .content-collapse .form-group .info {
     font-size: 10px;
     color: #A6A9AF;
+}
+
+#company_overview_modal #reports .report-section .content-collapse .form-group select[name="report_type[]"] {
+    width: 200px;
+}
+
+#company_overview_modal #reports .report-section .content-collapse .form-group input[name="report_title[]"] {
+    width: 300px;
+}
+
+#company_overview_modal #reports .report-section .content-collapse .form-group select[name="report_period[]"] {
+    width: 180px;
 }
 
 #company_overview_modal #reports .add-report-btn {

@@ -46,6 +46,9 @@ class Invoice extends MY_Controller
 
     public function index($tab = '')
     {
+		$this->page_data['page']->title = 'Invoices & Payments';
+        $this->page_data['page']->parent = 'Sales';
+
         $is_allowed = $this->isAllowedModuleAccess(35);
         if (!$is_allowed) {
             $this->page_data['module'] = 'invoice';
@@ -95,11 +98,15 @@ class Invoice extends MY_Controller
         }
 
 
-        $this->load->view('invoice/invoice_new', $this->page_data);
+        $this->load->view('v2/pages/invoice/invoice_new', $this->page_data);
     }
 
     public function recurring($tab = '')
     {
+		$this->page_data['page']->title = 'Recurring Invoices';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = $tab;
+
         $is_allowed = $this->isAllowedModuleAccess(37);
         if (!$is_allowed) {
             $this->page_data['module'] = 'recurring_invoices';
@@ -130,7 +137,7 @@ class Invoice extends MY_Controller
             }
         }
 
-        $this->load->view('invoice/recurring', $this->page_data);
+        $this->load->view('v2/pages/invoice/recurring', $this->page_data);
     }
 
     public function add()
@@ -357,6 +364,9 @@ class Invoice extends MY_Controller
 
     public function settings()
     {
+        $this->page_data['page']->title = 'Invoice Settings';
+        $this->page_data['page']->parent = 'Sales';
+
         $is_allowed = $this->isAllowedModuleAccess(38);
         if (!$is_allowed) {
             $this->page_data['module'] = 'settings3';
@@ -379,7 +389,7 @@ class Invoice extends MY_Controller
         }
 
 
-        $this->load->view('invoice/settings', $this->page_data);
+        $this->load->view('v2/pages/invoice/settings', $this->page_data);
     }
 
 

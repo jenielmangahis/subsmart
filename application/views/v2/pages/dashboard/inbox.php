@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-12 col-md-6 grid-mb">
-        <div class="nsm-field-group">
+        <div class="nsm-field-group search">
             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Mail">
         </div>
     </div>

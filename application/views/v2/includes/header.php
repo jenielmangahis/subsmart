@@ -30,6 +30,8 @@ if ($this->session->userdata('usertimezone') == null) {
     <link href="<?= base_url("assets/css/v2/google-font.css") ?>" rel="stylesheet">
     <!-- Sweet Alert --> 
     <link rel="stylesheet" href="<?= base_url("assets/css/v2/sweetalert2.min.css") ?>">
+    <!-- Datepicker -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datepicker.min.css") ?>">
 
     <!-- Jquery JS -->
     <script src="<?= base_url("assets/js/v2/jquery-3.6.0.min.js") ?>"></script>
@@ -102,27 +104,27 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-calendar-event'></i> Events
                             </a>
                         </li>
-                        <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird Eye View' || $page->title == 'Checklist' || $page->title == 'Settings'): echo 'selected'; endif; ?>">
+                        <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("job") ?>">
                                 <i class='bx bx-fw bx-message-square-error'></i> Jobs
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Estimates' || $page->title == 'Plans' || $page->title == 'Estimate Settings'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("estimate") ?>">
                                 <i class='bx bx-fw bx-chart'></i> Estimates
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Workorder' || $page->title == 'Workorder Settings' || $page->title == 'Workorder Checklist'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("workorder") ?>">
                                 <i class='bx bx-fw bx-task'></i> Work Orders
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Invoices & Payments' || $page->title == 'Recurring Invoices' || $page->title == 'Tax Rates' || $page->title == 'Invoice Settings'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("invoice") ?>">
                                 <i class='bx bx-fw bx-receipt'></i> Invoices
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Tickets'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("customer/ticketslist") ?>">
                                 <i class='bx bx-fw bx-note'></i> Tickets
                             </a>
@@ -137,7 +139,7 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-notepad'></i> Leads
                             </a>
                         </li>
-                        <li>
+                        <li class="<?php if($page->title == 'Workorder Type'): echo 'selected'; endif; ?>">
                             <a href="<?= base_url("workstatus") ?>">
                                 <i class='bx bx-fw bx-checkbox-square'></i> Status
                             </a>

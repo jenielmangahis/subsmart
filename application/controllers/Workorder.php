@@ -51,8 +51,12 @@ class Workorder extends MY_Controller
     public function index($tab_index = 0)
     {
         $this->hasAccessModule(24); 
-
+        
         $role = logged('role');
+        
+		$this->page_data['page']->title = 'Workorder';
+		$this->page_data['page']->parent = 'Sales';
+        
         $company_id = logged('company_id');        
 
         $query = $this->input->get();        
@@ -164,7 +168,7 @@ class Workorder extends MY_Controller
 //        print_r($this->page_data['workorders']); die;
 
         $this->page_data['tab_status'] = $workorder_status;
-        $this->load->view('workorder/list', $this->page_data);
+        $this->load->view('v2/pages/workorder/list', $this->page_data);
     }
 
     public function add()
@@ -2222,6 +2226,8 @@ class Workorder extends MY_Controller
      */
     public function map()
     {
+		$this->page_data['page']->title = 'Bird\'s Eye View';
+        $this->page_data['page']->parent = 'Sales';
         $this->hasAccessModule(25); 
 
         $this->load->model('Event_model');
@@ -2259,7 +2265,7 @@ class Workorder extends MY_Controller
         $this->page_data['map_type'] = $map_type;
         $this->page_data['job_status'] = $this->Jobs_model->getAllStatus();
         $this->page_data['companyUsers'] = $companyUsers;
-        $this->load->view('workorder/bird-eye-view', $this->page_data);
+        $this->load->view('v2/pages/workorder/bird_eye_view', $this->page_data);
     }
 
     /**
@@ -2531,6 +2537,9 @@ class Workorder extends MY_Controller
 
     public function settings()
     {
+		$this->page_data['page']->title = 'Workorder Settings';
+		$this->page_data['page']->parent = 'Sales';
+
         $is_allowed = $this->isAllowedModuleAccess(28);
         if( !$is_allowed ){
             $this->page_data['module'] = 'settings2';
@@ -2563,7 +2572,7 @@ class Workorder extends MY_Controller
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
 
-        $this->load->view('workorder/settings', $this->page_data);
+        $this->load->view('v2/pages/workorder/settings', $this->page_data);
     }
 
     public function addheader()
@@ -2951,6 +2960,9 @@ class Workorder extends MY_Controller
     }
 
     public function checklists(){
+		$this->page_data['page']->title = 'Workorder Checklist';
+		$this->page_data['page']->parent = 'Sales';
+
         $this->hasAccessModule(29); 
         $this->load->helper(array('hashids_helper'));
         $this->load->model('Checklist_model');
@@ -2959,7 +2971,7 @@ class Workorder extends MY_Controller
         $checklists = $this->Checklist_model->getAllByUserId($user_id);
 
         $this->page_data['checklists'] = $checklists;
-        $this->load->view('workorder/checklist/list', $this->page_data);
+        $this->load->view('v2/pages/workorder/checklist/list', $this->page_data);
     }
 
     public function add_checklist(){
