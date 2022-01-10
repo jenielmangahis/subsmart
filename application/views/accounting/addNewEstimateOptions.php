@@ -531,7 +531,7 @@ input:checked + .slider:before {
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_listOptions" style="color:#02A32C;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                 </div>
                             </div>
 
@@ -813,7 +813,7 @@ input:checked + .slider:before {
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+            <div class="modal fade" id="item_listOptions" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1062,11 +1062,11 @@ $(".toggle").each(function () {
                 sucess("Rebate Updated Successfully!");
                 // $('.lamesa').load(window.location.href +  ' .lamesa');
                 // location.reload();
-                $('#item_list').modal('toggle');
+                $('#item_listOptions').modal('toggle');
                 // $("#item_list .modal-body").load(target, function() { 
                 // $("#item_list").modal("show"); 
                 // });
-                $('#item_list').on('hidden.bs.modal', function (e) {
+                $('#item_listOptions').on('hidden.bs.modal', function (e) {
                     location.reload();
                     });
             },

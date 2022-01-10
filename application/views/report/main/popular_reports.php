@@ -295,6 +295,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tbody>
                                     </tbody>
                                 </table>
+                                <?php elseif ($type === "expense-by-category") : ?>
+                                <table id="tableToListReport" class="table table-hover table-to-list">
+                                    <thead>
+                                        <tr>
+                                            <th>Vendor</th>
+                                            <th class="text-right">Payment Date</th>
+                                            <th class="text-right">Payment Method</th>
+                                            <th class="text-right">Ref. No.</th>
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                                 <?php elseif ($type === "payment-by-month") : ?>
                                 <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>

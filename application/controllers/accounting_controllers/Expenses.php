@@ -128,7 +128,7 @@ class Expenses extends MY_Controller
 
         return $categoryAccs;
     }
-//
+
     public function load_transactions()
     {
         $post = json_decode(file_get_contents('php://input'), true);
@@ -190,6 +190,7 @@ class Expenses extends MY_Controller
                     $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
                     $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
                     $creditCardCredits = $this->expenses_model->get_company_cc_credit_transactions($filters);
+                    $transfers = $this->expenses_model->get_company_transfers($filters);
                 }
             break;
             case 'bill':
@@ -216,29 +217,32 @@ class Expenses extends MY_Controller
         }
 
         $transactions = [];
-        if (isset($bills) && count($bills) > 0) {
+        if (isset($bills) && count($bills) > 0 && $filters['delivery_method'] === 'any') {
             foreach ($bills as $bill) {
                 $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
+                $category = $this->category_col($bill->id, 'Bill', $for);
 
                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
 
-                $transactions[] = [
-                    'id' => $bill->id,
-                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
-                    'type' => 'Bill',
-                    'number' => $bill->bill_no,
-                    'payee' => $payee->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($bill->id, 'Bill', $for),
-                    'memo' => $bill->memo,
-                    'due_date' => '',
-                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                    'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
-                ];
+                if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id']) {
+                    $transactions[] = [
+                        'id' => $bill->id,
+                        'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                        'type' => 'Bill',
+                        'number' => $bill->bill_no,
+                        'payee' => $payee->display_name,
+                        'method' => '',
+                        'source' => '',
+                        'category' => $category,
+                        'memo' => $bill->memo,
+                        'due_date' => '',
+                        'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                        'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'status' => $bill->status === "2" ? "Paid" : "Open",
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($bill->created_at))
+                    ];
+                }
             }
         }
 
@@ -252,29 +256,32 @@ class Expenses extends MY_Controller
 
                 $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
 
-                $transactions[] = [
-                    'id' => $billPayment->id,
-                    'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
-                    'type' => "Bill Payment ($paymentType)",
-                    'number' => $billPayment->check_no,
-                    'payee' => $payee->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => '',
-                    'memo' => $billPayment->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
-                    'status' => 'Applied',
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
-                ];
+                if($filters['category'] === 'all') {
+                    $transactions[] = [
+                        'id' => $billPayment->id,
+                        'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                        'type' => "Bill Payment ($paymentType)",
+                        'number' => $billPayment->check_no,
+                        'payee' => $payee->display_name,
+                        'method' => '',
+                        'source' => '',
+                        'category' => '',
+                        'memo' => $billPayment->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
+                        'status' => 'Applied',
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($billPayment->created_at))
+                    ];
+                }
             }
         }
 
         if (isset($checks) && count($checks) > 0) {
             foreach ($checks as $check) {
                 $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
+                $category = $this->category_col($check->id, 'Check', $for);
 
                 switch ($check->payee_type) {
                     case 'vendor':
@@ -291,29 +298,32 @@ class Expenses extends MY_Controller
                     break;
                 }
 
-                $transactions[] = [
-                    'id' => $check->id,
-                    'date' => date("m/d/Y", strtotime($check->payment_date)),
-                    'type' => 'Check',
-                    'number' => $check->check_no,
-                    'payee' => $payeeName,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($check->id, 'Check', $for),
-                    'memo' => $check->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
-                    'status' => $check->status === "1" ? "Paid" : "Voided",
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
-                ];
+                if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id'] || $filters['category'] === $check->bank_account_id) {
+                    $transactions[] = [
+                        'id' => $check->id,
+                        'date' => date("m/d/Y", strtotime($check->payment_date)),
+                        'type' => 'Check',
+                        'number' => $check->check_no,
+                        'payee' => $payeeName,
+                        'method' => '',
+                        'source' => '',
+                        'category' => $category,
+                        'memo' => $check->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
+                        'status' => $check->status === "1" ? "Paid" : "Voided",
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($check->created_at))
+                    ];
+                }
             }
         }
 
-        if (isset($creditCardCredits) && count($creditCardCredits) > 0) {
+        if (isset($creditCardCredits) && count($creditCardCredits) > 0 && $filters['delivery_method'] === 'any') {
             foreach ($creditCardCredits as $creditCardCredit) {
                 $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $creditCardCredit->id);
+                $category = $this->category_col($creditCardCredit->id, 'Credit Card Credit', $for);
 
                 switch ($creditCardCredit->payee_type) {
                     case 'vendor':
@@ -330,55 +340,60 @@ class Expenses extends MY_Controller
                     break;
                 }
 
-                $transactions[] = [
-                    'id' => $creditCardCredit->id,
-                    'date' => date("m/d/Y", strtotime($creditCardCredit->payment_date)),
-                    'type' => 'Credit Card Credit',
-                    'number' => $creditCardCredit->ref_no,
-                    'payee' => $payeeName,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit', $for),
-                    'memo' => $creditCardCredit->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
-                    'status' => '',
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
-                ];
+                if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id'] || $filters['category'] === $creditCardCredit->bank_credit_account_id) {
+                    $transactions[] = [
+                        'id' => $creditCardCredit->id,
+                        'date' => date("m/d/Y", strtotime($creditCardCredit->payment_date)),
+                        'type' => 'Credit Card Credit',
+                        'number' => $creditCardCredit->ref_no,
+                        'payee' => $payeeName,
+                        'method' => '',
+                        'source' => '',
+                        'category' => $category,
+                        'memo' => $creditCardCredit->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
+                        'status' => '',
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($creditCardCredit->created_at))
+                    ];
+                }
             }
         }
 
-        if (isset($ccPayments) && count($ccPayments) > 0) {
+        if (isset($ccPayments) && count($ccPayments) > 0 && $filters['delivery_method'] === 'any') {
             foreach ($ccPayments as $ccPayment) {
                 $attachments = $this->accounting_attachments_model->get_attachments('CC Payment', $ccPayment->id);
 
                 $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
 
-                $transactions[] = [
-                    'id' => $ccPayment->id,
-                    'date' => date("m/d/Y", strtotime($ccPayment->date)),
-                    'type' => 'Credit Card Payment',
-                    'number' => '',
-                    'payee' => $payee->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => '',
-                    'memo' => $ccPayment->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
-                    'status' => '',
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
-                ];
+                if($filters['category'] === 'all' || $filters['category'] === $ccPayment->credit_card_id || $filters['category'] === $ccPayment->bank_account_id) {
+                    $transactions[] = [
+                        'id' => $ccPayment->id,
+                        'date' => date("m/d/Y", strtotime($ccPayment->date)),
+                        'type' => 'Credit Card Payment',
+                        'number' => '',
+                        'payee' => $payee->display_name,
+                        'method' => '',
+                        'source' => '',
+                        'category' => '',
+                        'memo' => $ccPayment->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
+                        'status' => '',
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($ccPayment->created_at))
+                    ];
+                }
             }
         }
 
-        if (isset($expenses) && count($expenses) > 0) {
+        if (isset($expenses) && count($expenses) > 0 && $filters['delivery_method'] === 'any') {
             foreach ($expenses as $expense) {
                 $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+                $category = $this->category_col($expense->id, 'Expense', $for);
 
                 switch ($expense->payee_type) {
                     case 'vendor':
@@ -397,75 +412,109 @@ class Expenses extends MY_Controller
 
                 $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
 
-                $transactions[] = [
-                    'id' => $expense->id,
-                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                    'type' => 'Expense',
-                    'number' => $expense->ref_no,
-                    'payee' => $payeeName,
-                    'method' => $method->name,
-                    'source' => '',
-                    'category' => $this->category_col($expense->id, 'Expense', $for),
-                    'memo' => $expense->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'status' => $expense->status === "1" ? 'Paid' : 'Voided',
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
-                ];
+                if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id'] || $filters['category'] === $expense->payment_account_id) {
+                        $transactions[] = [
+                        'id' => $expense->id,
+                        'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                        'type' => 'Expense',
+                        'number' => $expense->ref_no,
+                        'payee' => $payeeName,
+                        'method' => $method->name,
+                        'source' => '',
+                        'category' => $category,
+                        'memo' => $expense->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
+                        'status' => $expense->status === "1" ? 'Paid' : 'Voided',
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($expense->created_at))
+                    ];
+                }
             }
         }
 
-        if (isset($purchOrders) && count($purchOrders) > 0) {
+        if (isset($purchOrders) && count($purchOrders) > 0 && $filters['delivery_method'] === 'any') {
             foreach ($purchOrders as $purchOrder) {
                 $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $purchOrder->id);
+                $category = $this->category_col($purchOrder->id, 'Purchase Order', $for);
 
                 $payee = $this->vendors_model->get_vendor_by_id($purchOrder->vendor_id);
 
-                $transactions[] = [
-                    'id' => $purchOrder->id,
-                    'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
-                    'type' => 'Purchase Order',
-                    'number' => $purchOrder->purchase_order_number,
-                    'payee' => $payee->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($purchOrder->id, 'Purchase Order', $for),
-                    'memo' => $purchOrder->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($purchOrder->total_amount), 2, '.', ','),
-                    'status' => $purchOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($purchOrder->created_at))
-                ];
+                if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id']) {
+                    $transactions[] = [
+                        'id' => $purchOrder->id,
+                        'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
+                        'type' => 'Purchase Order',
+                        'number' => $purchOrder->purchase_order_number,
+                        'payee' => $payee->display_name,
+                        'method' => '',
+                        'source' => '',
+                        'category' => $category,
+                        'memo' => $purchOrder->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '$'.number_format(floatval($purchOrder->total_amount), 2, '.', ','),
+                        'status' => $purchOrder->status === "1" ? "Open" : "Closed",
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($purchOrder->created_at))
+                    ];
+                }
             }
         }
 
-        if (isset($vendorCredits) && count($vendorCredits) > 0) {
+        if(isset($transfers) && count($transfers) > 0 && is_null($filters['payee']) && $filters['delivery_method'] === 'any') {
+            foreach($transfers as $transfer) {
+                $attachments = $this->accounting_attachments_model->get_attachments('Transfer', $transfer->id);
+
+                if($filters['category'] === 'all' || $filters['category'] === $transfer->transfer_from_account_id || $filters['category'] === $transfer->transfer_to_account_id) {
+                    $transactions[] = [
+                        'id' => $transfer->id,
+                        'date' => date("m/d/Y", strtotime($transfer->transfer_date)),
+                        'type' => 'Transfer',
+                        'number' => '',
+                        'payee' => '',
+                        'method' => '',
+                        'source' => '',
+                        'category' => '',
+                        'memo' => $transfer->transfer_memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '-$'.number_format(floatval($transfer->transfer_amount), 2, '.', ','),
+                        'status' => '',
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($transfer->created_at))
+                    ];
+                }
+            }
+        }
+
+        if (isset($vendorCredits) && count($vendorCredits) > 0 && $filters['delivery_method'] === 'any') {
             foreach ($vendorCredits as $vendorCredit) {
                 $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vendorCredit->id);
+                $category = $this->category_col($vendorCredit->id, 'Vendor Credit', $for);
 
                 $payee = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
 
-                $transactions[] = [
-                    'id' => $vendorCredit->id,
-                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
-                    'type' => 'Vendor Credit',
-                    'number' => $vendorCredit->ref_no,
-                    'payee' => $payee->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit', $for),
-                    'memo' => $vendorCredit->memo,
-                    'due_date' => '',
-                    'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
-                    'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
-                    'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
-                    'attachments' => $for === 'table' ? $attachments : count($attachments),
-                    'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
-                ];
+                if($filters['category'] === 'all' || is_array($category) && $filters['category'] === $category['id']) {
+                    $transactions[] = [
+                        'id' => $vendorCredit->id,
+                        'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                        'type' => 'Vendor Credit',
+                        'number' => $vendorCredit->ref_no,
+                        'payee' => $payee->display_name,
+                        'method' => '',
+                        'source' => '',
+                        'category' => $category,
+                        'memo' => $vendorCredit->memo,
+                        'due_date' => '',
+                        'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
+                        'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                        'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
+                        'attachments' => $for === 'table' ? $attachments : count($attachments),
+                        'date_created' => date("m/d/Y H:i:s", strtotime($vendorCredit->created_at))
+                    ];
+                }
             }
         }
 
@@ -602,73 +651,18 @@ class Expenses extends MY_Controller
             if ($totalCount === 1) {
                 if (count($categories) === 1 && count($items) === 0) {
                     $expenseAcc = $categories[0]->expense_account_id;
-
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    if($for === 'table') {
-                        $category = '<select class="form-control" name="category[]">';
-                    }
-
-                    foreach ($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if (count($accounts) > 0) {
-                            if($for === 'table') {
-                                $category .= '<optgroup label="'.$typeName.'">';
-                                foreach ($accounts as $account) {
-                                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                    if ($account->id === $expenseAcc) {
-                                        $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                    } else {
-                                        $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                    }
-
-                                    if (count($childAccs) > 0) {
-                                        $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-
-                                        foreach ($childAccs as $childAcc) {
-                                            if ($childAcc->id === $expenseAcc) {
-                                                $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                            } else {
-                                                $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                            }
-                                        }
-
-                                        $category .= '</optgroup>';
-                                    }
-                                }
-                                $category .= '</optgroup>';
-                            } else {
-                                $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                            }
-                        }
-                    }
-
-                    if($for === 'table') {
-                        $category .= '</select>';
-                    }
                 } else {
                     $itemId = $items[0]->item_id;
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
                     $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                }
+
+                if($for === 'table') {
+                    $category = [
+                        'id' => $expenseAcc,
+                        'name' => $this->chart_of_accounts_model->getName($expenseAcc)
+                    ];
+                } else {
                     $category = $this->chart_of_accounts_model->getName($expenseAcc);
                 }
             }

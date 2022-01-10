@@ -3571,6 +3571,53 @@ function getExpenseCategory($start_date, $end_date) {
     return $fn;
 }
 
+function getExpense($start_date, $end_date) {
+    $CI =& get_instance();
+    $CI->load->model('Accounting_expense', 'accounting_expense');
+    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
+    $company_id = logged('company_id');
+    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+
+    foreach ($results as $result) {
+        // if (!in_array($result->customer_id, $comp_user)) {
+        //     array_push($comp_user, $result->customer_id);
+        //     $num_invoice = 0;
+        //     $total_invoice = 0;
+        //     $paid_invoice = 0;
+
+        //     foreach ($results as $result2) {
+        //         if ($result2->customer_id === $result->customer_id) {
+        //             $num_invoice += 1;
+        //             $paid_invoice += 1;
+        //             $grand_num_invoice += 1;
+        //             $grand_paid_invoice += 1;
+
+        //             $totals1 = unserialize($result2->invoice_totals);
+        //             // $total_invoice += floatval($totals1['grand_total']);
+        //             $total_invoice += floatval($result->grand_total);
+        //             // $grand_total += floatval($totals1['grand_total']);
+        //             $grand_total += floatval($result->grand_total);
+        //         }
+        //     }
+        $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+        foreach($vendors as $vendor) 
+        {
+            array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        }
+
+            // array_push($fn, array($result->vendor_id, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        // }
+    }
+
+    // array_push($fn, array("Total", "", "", "", ""));
+    return $fn;
+}
+
 function getSalesTax($start_date, $end_date, $month) {
     $CI =& get_instance();
     $CI->load->model('Invoice_model', 'invoice_model');

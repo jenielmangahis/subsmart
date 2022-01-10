@@ -600,7 +600,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
                                         <!-- <a href="#" id="add_another_new_invoice" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a> -->
                                         <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal"
-                                            data-target="#item_list"><span
+                                            data-target="#item_listInvoice"><span
                                                 class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
                                         <!-- <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> -->
                                         <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".modal-add-by-group"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
@@ -1169,7 +1169,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
             <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel"
+            <div class="modal fade" id="item_listInvoice" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document"
                     style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">

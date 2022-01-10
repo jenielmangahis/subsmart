@@ -2817,25 +2817,52 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php
+                                                    foreach ($management_reports as $report) {
+                                                        ?>
                                                     <tr>
-                                                        <td>Company Overview</td>
-                                                        <td>nSmarTrac</td>
+                                                        <td><?=$report->template_name?>
+                                                        </td>
+                                                        <td><?php if ($report->created_by == 0) {
+                                                            echo "nSmarTrac";
+                                                        } else {
+                                                            echo $report->first_name." ".strtoupper(substr($report->last_name, -1)).".";
+                                                        } ?>
+                                                        </td>
                                                         <td></td>
                                                         <td>
                                                             <select class="form-control " name="filter_date">
-                                                                <option>All dates</option>
-                                                                <option>Today</option>
-                                                                <option>Yesterday</option>
-                                                                <option>This week</option>
-                                                                <option>This month</option>
-                                                                <option>This quarter</option>
-                                                                <option>This year</option>
-                                                                <option>Last week</option>
-                                                                <option>Last month</option>
-                                                                <option>Last quarter</option>
-                                                                <option>Last year</option>
-                                                                <option selected>Last 365 days</option>
+                                                                <option>All Dates</option>
                                                                 <option>Custom</option>
+                                                                <option>Today </option>
+                                                                <option>This Week </option>
+                                                                <option>This Week-to-date </option>
+                                                                <option>This Month </option>
+                                                                <option>This Month-to-date </option>
+                                                                <option>This Quarter </option>
+                                                                <option>This Quarter-to-date </option>
+                                                                <option>This Year </option>
+                                                                <option>This Year-to-date </option>
+                                                                <option>This Year-to-last-month </option>
+                                                                <option>Yesterday </option>
+                                                                <option>Recent </option>
+                                                                <option>Last Week </option>
+                                                                <option>Last Week-to-date </option>
+                                                                <option>Last Month </option>
+                                                                <option>Last Month-to-date </option>
+                                                                <option>Last Quarter </option>
+                                                                <option>Last Quarter-to-date </option>
+                                                                <option>Last Year </option>
+                                                                <option>Last Year-to-date </option>
+                                                                <option>Since 30 Days Ago </option>
+                                                                <option>Since 60 Days Ago </option>
+                                                                <option>Since 90 Days Ago </option>
+                                                                <option>Since 365 Days Ago </option>
+                                                                <option>Next Week </option>
+                                                                <option>Next 4 Weeks </option>
+                                                                <option>Next Month </option>
+                                                                <option>Next Quarter </option>
+                                                                <option>Next Year </option>
                                                             </select>
                                                         </td>
                                                         <td>
@@ -2850,8 +2877,9 @@
                                                                     role="menu" aria-labelledby="dropdown-edit"
                                                                     x-placement="bottom-end">
                                                                     <li class="edit"
-                                                                        data-target="#company_overview_modal">
-                                                                        <a href="javascript:void(0)">
+                                                                        data-target="#management_reports_modal">
+                                                                        <a href="javascript:void(0)"
+                                                                            data-id="<?=$report->id?>">
                                                                             Edit
                                                                         </a>
                                                                     </li>
@@ -2885,144 +2913,9 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>Sales Performance</td>
-                                                        <td>nSmarTrac</td>
-                                                        <td></td>
-                                                        <td>
-                                                            <select class="form-control " name="filter_date">
-                                                                <option>All dates</option>
-                                                                <option>Today</option>
-                                                                <option>Yesterday</option>
-                                                                <option>This week</option>
-                                                                <option>This month</option>
-                                                                <option>This quarter</option>
-                                                                <option>This year</option>
-                                                                <option>Last week</option>
-                                                                <option>Last month</option>
-                                                                <option>Last quarter</option>
-                                                                <option>Last year</option>
-                                                                <option selected>Last 365 days</option>
-                                                                <option>Custom</option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <div class="dropdown dropdown-btn">
-                                                                <a href="">View</a>
-                                                                <a type="button" id="dropdown-button-icon"
-                                                                    data-toggle="dropdown" aria-expanded="true">
-                                                                    <span class="btn-label"><i
-                                                                            class="fa fa-chevron-down"></i></span>
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-right report_options"
-                                                                    role="menu" aria-labelledby="dropdown-edit"
-                                                                    x-placement="bottom-end">
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="created-sales-receipt"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Edit
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="create-estimate-btn"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Send
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)" class="">
-                                                                            Export as PDF
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="create-charge-btn"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Export as DOCX
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="time-activity-btn"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Copy
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Expenses Performance</td>
-                                                        <td>nSmarTrac</td>
-                                                        <td></td>
-                                                        <td>
-                                                            <select class="form-control " name="filter_date">
-                                                                <option>All dates</option>
-                                                                <option>Today</option>
-                                                                <option>Yesterday</option>
-                                                                <option>This week</option>
-                                                                <option>This month</option>
-                                                                <option>This quarter</option>
-                                                                <option>This year</option>
-                                                                <option>Last week</option>
-                                                                <option>Last month</option>
-                                                                <option>Last quarter</option>
-                                                                <option>Last year</option>
-                                                                <option selected>Last 365 days</option>
-                                                                <option>Custom</option>
-                                                            </select>
-                                                        </td>
-                                                        <td>
-                                                            <div class="dropdown dropdown-btn">
-                                                                <a href="">View</a>
-                                                                <a type="button" id="dropdown-button-icon"
-                                                                    data-toggle="dropdown" aria-expanded="true">
-                                                                    <span class="btn-label"><i
-                                                                            class="fa fa-chevron-down"></i></span>
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-right report_options"
-                                                                    role="menu" aria-labelledby="dropdown-edit"
-                                                                    x-placement="bottom-end">
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="created-sales-receipt"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Edit
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="create-estimate-btn"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Send
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)" class="">
-                                                                            Export as PDF
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="create-charge-btn"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Export as DOCX
-                                                                        </a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="javascript:void(0)"
-                                                                            class="time-activity-btn"
-                                                                            data-toggle="modal" data-target="#">
-                                                                            Copy
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -3731,7 +3624,7 @@
 <!-- page wrapper end -->
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php include viewPath('accounting/reports/management_reports/company_overview_modal'); ?>
+<?php include viewPath('accounting/reports/management_reports/management_reports_modal'); ?>
 <?php include viewPath('includes/footer_accounting'); ?>
 
 
