@@ -26,10 +26,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 		max-height: 52px;
 	}
 
-	#products-services-table tbody tr td:first-child {
-		padding: 10px 18px;
-	}
-
 	.type-icon {
 		height: 100%;
 		background-position: center;

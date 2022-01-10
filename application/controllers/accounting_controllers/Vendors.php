@@ -948,73 +948,18 @@ class Vendors extends MY_Controller
             if ($totalCount === 1) {
                 if (count($categories) === 1 && count($items) === 0) {
                     $expenseAcc = $categories[0]->expense_account_id;
-
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    if($for === 'table') {
-                        $category = '<select class="form-control" name="category[]">';
-                    }
-
-                    foreach ($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if (count($accounts) > 0) {
-                            if($for === 'table') {
-                                $category .= '<optgroup label="'.$typeName.'">';
-                                foreach ($accounts as $account) {
-                                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                    if ($account->id === $expenseAcc) {
-                                        $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                    } else {
-                                        $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                    }
-
-                                    if (count($childAccs) > 0) {
-                                        $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-
-                                        foreach ($childAccs as $childAcc) {
-                                            if ($childAcc->id === $expenseAcc) {
-                                                $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                            } else {
-                                                $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                            }
-                                        }
-
-                                        $category .= '</optgroup>';
-                                    }
-                                }
-                                $category .= '</optgroup>';
-                            } else {
-                                $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                            }
-                        }
-                    }
-
-                    if($for === 'table') {
-                        $category .= '</select>';
-                    }
                 } else {
                     $itemId = $items[0]->item_id;
                     $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
                     $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                }
+
+                if($for === 'table') {
+                    $category = [
+                        'id' => $expenseAcc,
+                        'name' => $this->chart_of_accounts_model->getName($expenseAcc)
+                    ];
+                } else {
                     $category = $this->chart_of_accounts_model->getName($expenseAcc);
                 }
             }

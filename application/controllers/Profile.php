@@ -17,10 +17,11 @@ class Profile extends MY_Controller {
 
 	public function index($tab = 'profile')
 	{
-		$this->page_data['user'] = $this->users_model->getById(logged('id'));
+		$user = $this->users_model->getById(logged('id'));
+		$this->page_data['user'] = $user;
 		$this->page_data['user']->role = $this->roles_model->getById( logged('role') );
 		$this->page_data['activeTab'] = $tab;
-
+		
 		add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
 		]);

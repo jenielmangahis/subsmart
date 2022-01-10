@@ -143,11 +143,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Show columns</p>
-                                                        <p class="m-0"><input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_pay_rate" id="chk-pay-rate"> Pay rate</p>
-                                                        <p class="m-0"><input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_pay_method" id="chk-pay-method"> Pay method</p>
-                                                        <p class="m-0"><input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_status" id="chk-status"> Status</p>
-                                                        <p class="m-0"><input type="checkbox" onchange="showCol(this)" name="chk_email_address" id="chk-email-address"> Email Address</p>
-                                                        <p class="m-0"><input type="checkbox" onchange="showCol(this)" name="chk_phone_num" id="chk-phone-num"> Phone number</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_pay_rate" id="chk-pay-rate">
+                                                            <label for="chk-pay-rate">Pay rate</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_pay_method" id="chk-pay-method">
+                                                            <label for="chk-pay-method">Pay method</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" checked="checked" name="chk_status" id="chk-status">
+                                                            <label for="chk-status">Status</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" name="chk_email_address" id="chk-email-address">
+                                                            <label for="chk-email-address">Email Address</label>
+                                                        </div>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" onchange="showCol(this)" name="chk_phone_num" id="chk-phone-num">
+                                                            <label for="chk-phone-num">Phone number</label>
+                                                        </div>
                                                     </div>
                                                 </li>
                                             </ul>

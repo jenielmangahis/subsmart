@@ -52,6 +52,7 @@ class Accounting extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
         $this->load->model('Accounting_statements_model', 'accounting_statements_model');
+        $this->load->model('Accounting_management_reports', 'accounting_management_reports');
         $this->load->library('excel');
         $this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -921,6 +922,8 @@ class Accounting extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports(logged('company_id'));;
+        // var_dump($this->page_data['management_reports']);
         $this->load->view('accounting/reports', $this->page_data);
     }
    

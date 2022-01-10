@@ -296,7 +296,7 @@ function filterReportsExpenseByCategory(startDate, endDate) {
     success: function (response) {
       var obj = JSON.parse(response);
       $("#tableToListReport tbody").empty();
-      obj.forEach(expenseByCategoryAppend);
+      obj.forEach(expenseAppend);
     },
   });
 }
@@ -657,6 +657,47 @@ function expenseByCategoryAppend(item)
         "</td>" +
         "<td class='text-right'>" +
         item[3] +
+        "</td></tr>"
+    );
+  }
+}
+
+function expenseAppend(item)
+{
+  if (item[0] == "Total") {
+    $("#tableToListReport").append(
+      "<tr style='background-color:#ededed; font-weight: bold;'><td>" +
+        item[0] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[1] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[2] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[3] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[4] +
+        "</td></tr>"
+    );
+  } else {
+    $("#tableToListReport").append(
+      "<tr><td>" +
+        item[0] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[1] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[2] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[3] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[4] +
         "</td></tr>"
     );
   }

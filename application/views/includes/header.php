@@ -85,8 +85,6 @@ if ($this->session->userdata('usertimezone') == null) {
 
     <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.11.3/ckeditor.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.11.3/adapters/jquery.js"></script>
     <?php
     if ($this->uri->segment(2) != "tracklocation" && $this->uri->segment(1) != "trac360") {
         echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU" async></script>';

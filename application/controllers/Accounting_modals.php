@@ -6057,10 +6057,16 @@ class Accounting_modals extends MY_Controller
             }
         }
 
-        if ($field === 'pay-bills-vendor' || $field === 'payee' && is_null($this->input->get('modal'))) {
+        if ($field === 'pay-bills-vendor' ||
+        $field === 'payee' && is_null($this->input->get('modal')) ||
+        $field === 'payee' && $this->input->get('for') === 'filter' ||
+        $field === 'expense-account' && $this->input->get('for') === 'filter') {
             array_unshift($return['results'], ['id' => 'all', 'text' => 'All']);
         } else {
-            if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) && $this->input->get('modal') !== 'printChecksModal' && $field !== 'sales-tax-category') {
+            if(!in_array($field, ['account-type', 'detail-type', 'parent-account', 'item']) &&
+            $this->input->get('modal') !== 'printChecksModal' &&
+            $field !== 'sales-tax-category' &&
+            $field === 'expense-account' && !is_null($this->input->get('modal'))) {
                 array_unshift($return['results'], ['id' => 'add-new', 'text' => '+ Add new']);
             }
         }

@@ -935,6 +935,7 @@ class Users extends MY_Controller {
 	    echo json_encode($info);
 
     }
+
     public function ajax_edit_employee(){
 	    $user_id = $this->input->post('user_id');
 	    $get_user = $this->Users_model->getUser($user_id);
@@ -1826,6 +1827,66 @@ class Users extends MY_Controller {
 
     	echo json_encode($json_data);
 	}
+
+	public function ajax_edit_profile(){
+	    $user_id  = $this->input->post('user_id');
+	    $cid      = logged('company_id');		
+	    $get_user = $this->Users_model->getUser($user_id);
+	    $get_role = $this->db->get_where('roles',array('id' => $get_user->role));
+
+	    $this->page_data['user'] = $get_user;
+	    $this->load->view('users/modal_edit_profile', $this->page_data);
+    }
+
+    public function ajax_update_profile(){
+    	$post = $this->input->post();
+
+        $data = array(
+            'FName' => $post['firstname'],
+            'LName' => $post['lastname'],
+            'address' => $post['address'],
+            'state' => $post['state'],
+            'city' => $city,
+            'postal_code' => $post['postal_code'],
+            'employee_number' => $post['emp_number'],
+            'phone' => $post['phone_number'],
+            'mobile' => $post['mobile_number']
+        );
+
+        $user = $this->Users_model->update($post['user_id'],$data);
+
+        echo json_encode(1);
+    }
+
+    public function ajax_update_user_signature(){
+    	$post = $this->input->post();
+    	$uid  = logged('id');
+    	echo "<pre>";
+    	print_r($post);
+    	if(!empty($post['user_approval_signature1aM_web'])){
+
+    		$folderPath = "./uploads/Signatures/user/$uid/";
+			
+			if(!file_exists($folderPath)) {
+				mkdir($folderPath, 0777, true);
+			}
+
+            $rand1  = rand(10,10000000);
+            $datasig            = $post['user_approval_signature1aM_web'];
+            $image_parts        = explode(";base64,", $datasig);
+            $image_type_aux     = explode("image/", $image_parts[0]);
+            $image_type         = $image_type_aux[1];
+            $image_base64       = base64_decode($image_parts[1]);
+            $filename           = $rand1 . $wo_id . '_user' . '.'.$image_type;
+            $file               = $folderPath. $filename;            
+            file_put_contents($file, $image_base64);
+
+            $data = array('img_signature' => $filename);
+        	$user = $this->Users_model->update($uid,$data);
+        }
+
+        echo $filename;
+    }
 }
 
 

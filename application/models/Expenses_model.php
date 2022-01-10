@@ -740,6 +740,11 @@ class Expenses_model extends MY_Model
             $this->db->where('payee_id', $filters['payee']['id']);
         }
 
+        if($filters['delivery_method'] === 'print-later') {
+            $this->db->where('to_print', 1);
+            $this->db->where('check_no', null);
+        }
+
         $query = $this->db->get('accounting_check');
         return $query->result();
     }
@@ -826,6 +831,23 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
+    public function get_company_transfers($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+
+        if(isset($filters['start-date'])) {
+            $this->db->where('transfer_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
+            $this->db->where('transfer_date <=', $filters['end-date']);
+        }
+
+        $query = $this->db->get('accounting_transfer_funds_transaction');
+        return $query->result();
+    }
+
     public function get_company_bill_payment_items($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
@@ -841,6 +863,11 @@ class Expenses_model extends MY_Model
         if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
             $this->db->where('payee_id', $filters['payee']['id']);
         }
+
+        if($filters['delivery_method'] === 'print-later') {
+            $this->db->where('to_print_check_no', 1);
+            $this->db->where('check_no', null);
+        }
         $query = $this->db->get('accounting_bill_payments');
         return $query->result();
     }
@@ -850,6 +877,7 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
         $this->db->where('status', 1);
+		$this->db->where('recurring', null);
         $this->db->order_by('purchase_order_date', 'desc');
         $query = $this->db->get('accounting_purchase_order');
         return $query->result();
@@ -860,6 +888,7 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
         $this->db->where('status', 1);
+		$this->db->where('recurring', null);
         $this->db->order_by('due_date', 'desc');
         $query = $this->db->get('accounting_bill');
         return $query->result();
@@ -870,6 +899,7 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
         $this->db->where('status', 1);
+		$this->db->where('recurring', null);
         $this->db->order_by('payment_date', 'desc');
         $query = $this->db->get('accounting_vendor_credit');
         return $query->result();
