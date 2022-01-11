@@ -29,7 +29,7 @@ class Accounting extends MY_Controller
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_sales_time_activity_model');
-        $this->load->model('accounting_customers_model');
+        $this->load->model('Accounting_customers_model','accounting_customers_model');
         $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_delayed_credit_model');
         $this->load->model('accounting_purchase_order_model');
@@ -52,6 +52,7 @@ class Accounting extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
         $this->load->model('Accounting_statements_model', 'accounting_statements_model');
+        $this->load->model('Accounting_management_reports', 'accounting_management_reports');
         $this->load->library('excel');
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -917,11 +918,47 @@ class Accounting extends MY_Controller
         add_footer_js([
             'assets/js/accounting/reports/management_reports.js'
         ]);
+        $this->load->model('accounting_customers_model');
         $this->page_data['company_details'] = $this->timesheet_model->get_user_and_company_details(logged('id'));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['employees'] = $this->vendors_model->getEmployees(logged('company_id'));
         $this->page_data['page_title'] = "Reports";
+        $this->page_data['management_reports'] = $this->accounting_management_reports->get_management_reports_by_company(logged('company_id'));
+        ;
+        // var_dump($this->page_data['management_reports']);
         $this->load->view('accounting/reports', $this->page_data);
+    }
+    public function get_management_report()
+    {
+        $management_report_id = $this->input->post("management_report_id");
+        $management_report=$this->accounting_management_reports->get_management_reports_by_id($management_report_id);
+        $preliminary_pages=$this->accounting_management_reports->get_management_reports_preliminary_pages_by_id($management_report_id);
+
+        $data = new stdClass();
+        $data->	created_by = $management_report->created_by;
+        $data->template_name = $management_report->template_name;
+        $data->report_period = $management_report->report_period;
+        $data->cover_show_logo = $management_report->cover_show_logo;
+        $data->cover_style = $management_report->cover_style;
+        $data->cover_title = $management_report->cover_title;
+        $data->cover_subtitle = $management_report->cover_subtitle;
+        $data->cover_report_period = $management_report->cover_report_period;
+        $data->cover_prepared_by = $management_report->cover_prepared_by;
+        $data->cover_prepared_date = $management_report->cover_prepared_date;
+        $data->cover_disclaimer = $management_report->cover_disclaimer;
+        $data->table_include_table_of_contents = $management_report->table_include_table_of_contents;
+        $data->table_page_title = $management_report->table_page_title;
+        $data->endnotes_include_page = $management_report->endnotes_include_page;
+        $data->endnotes_break_down = $management_report->endnotes_break_down;
+        $data->endnote_page_title = $management_report->endnote_page_title;
+        $data->endnote_page_content = $management_report->endnote_page_content;
+        $data->status = $management_report->status;
+        $data->date_created	 = $management_report->date_created;
+        $data->date_updated = $management_report->date_updated;
+        $data->updated_by = $management_report->updated_by;
+        $data->preliminary_pages_ctr = count($preliminary_pages);
+        
+        echo json_encode($data);
     }
 
     public function aging_summary_report()
@@ -1381,7 +1418,22 @@ class Accounting extends MY_Controller
         $data->check_category = ($check_category->num_rows() > 0) ? true : false;
         echo json_encode($data);
     }
-
+    public function comp_overview_add_prelim_page()
+    {
+        $this->page_data['data_count'] = $this->input->post("data_count");
+        $new_page =$this->load->view('accounting/reports/management_reports/preliminary_pages', $this->page_data, true);
+        $data = new stdClass();
+        $data->new_page = $new_page;
+        echo json_encode($data);
+    }
+    public function comp_overview_add_new_report_section()
+    {
+        $this->page_data['data_count'] = $this->input->post("data_count");
+        $new_report =$this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
+        $data = new stdClass();
+        $data->new_report = $new_report;
+        echo json_encode($data);
+    }
     public function editBillData()
     {
         $new_data = array(

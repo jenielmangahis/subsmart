@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="row align-items-center">
                                 <div class="col-md-12">
                                     <div class="row action-buttons-cont">
-                                        <div class="col-md-6 d-flex align-items-center"><a href="#" class="text-info">See all untagged transactions</a></div>
+                                        <div class="col-md-6 d-flex align-items-center"><a href="#" class="text-info" id="see-untagged-transactions">See all untagged transactions</a></div>
                                         <div class="col-md-6">
                                             <div class="form-row">
                                                 <div class="col d-flex justify-content-end">

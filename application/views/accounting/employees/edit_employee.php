@@ -2,7 +2,7 @@
 <div class="full-screen-modal">
 <form action="/accounting/employees/update/<?=$employee->id?>" method="post" id="modal-form">
     <div id="edit-employee-modal" class="modal fade modal-fluid" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="max-width: 100%">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">

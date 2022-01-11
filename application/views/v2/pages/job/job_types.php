@@ -86,7 +86,7 @@
                             <tr>
                                 <td colspan="3">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Job Types yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>

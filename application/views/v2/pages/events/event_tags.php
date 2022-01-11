@@ -86,7 +86,7 @@
                             <tr>
                                 <td colspan="3">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Event Tags yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
@@ -94,19 +94,6 @@
                         endif;
                         ?>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3">
-                                <nav class="nsm-table-pagination">
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link disabled" href="#">Prev</a></li>
-                                        <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link disabled" href="#">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>

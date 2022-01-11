@@ -15,6 +15,8 @@ class Plans extends MY_Controller {
 	 
 	public function index()
 	{ 		
+		$this->page_data['page']->title = 'Plans';
+        $this->page_data['page']->parent = 'Sales';
         $role = logged('role');
         if( $role == 1 || $role == 2 ){
         	$this->page_data['plans'] = $this->plans_model->getByWhere([]);
@@ -30,7 +32,7 @@ class Plans extends MY_Controller {
 		// $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
 		//$this->page_data['plans'] = array();
 		/* echo "<pre>"; print_r($this->page_data['items']); die; */
-		$this->load->view('plans/list', $this->page_data);
+		$this->load->view('v2/pages/plans/list', $this->page_data);
 	}
 	
 	public function add(){
@@ -170,6 +172,14 @@ class Plans extends MY_Controller {
 		$this->session->set_flashdata('alert', 'item has been Deleted Successfully');
 		$this->activity_model->add("Item #$permission Deleted by User: #".logged('id'));
 		redirect('items');
+	}
+
+	public function delete_plan_v2(){
+		// Delete plan via ajax request
+
+		$id = $this->input->post('id');
+		$delete = $this->plans_model->deletePlan($id);
+        echo true;
 	}
 
 	public function checkIfUnique(){		

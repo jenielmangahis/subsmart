@@ -32,7 +32,7 @@
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_tax_rate_modal">
-                                <i class='bx bx-fw bx-receipt'></i> Tax Rate
+                                <i class='bx bx-fw bx-receipt'></i> Add Tax Rate
                             </button>
                             <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#job_settings_modal">
                                 <i class='bx bx-fw bx-cog'></i>
@@ -88,7 +88,7 @@
                             <tr>
                                 <td colspan="5">
                                     <div class="nsm-empty">
-                                        <span>You haven't yet added Job Rates yet.</span>
+                                        <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>

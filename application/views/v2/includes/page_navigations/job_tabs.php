@@ -18,10 +18,10 @@
                 <span>Job Tags</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Bird Eye View'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Bird\'s Eye View'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('job/bird_eye_view') ?>">
                 <i class='bx bx-fw bx-map-alt'></i>
-                <span>Bird Eye View</span>
+                <span>Bird's Eye View</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Checklist'): echo 'active'; endif; ?>">

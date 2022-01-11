@@ -548,7 +548,7 @@ input:checked + .slider:before {
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_listEstimate"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
                                     <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg_package"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
                                     <hr>
                                 </div>
@@ -839,7 +839,7 @@ input:checked + .slider:before {
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+            <div class="modal fade" id="item_listEstimate" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1012,11 +1012,11 @@ $(".toggle").each(function () {
                 sucess("Rebate Updated Successfully!");
                 // $('.lamesa').load(window.location.href +  ' .lamesa');
                 // location.reload();
-                $('#item_list').modal('toggle');
+                $('#item_listEstimate').modal('toggle');
                 // $("#item_list .modal-body").load(target, function() { 
                 // $("#item_list").modal("show"); 
                 // });
-                $('#item_list').on('hidden.bs.modal', function (e) {
+                $('#item_listEstimate').on('hidden.bs.modal', function (e) {
                     location.reload();
                     });
             },

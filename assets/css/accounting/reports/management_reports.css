@@ -1,4 +1,4 @@
-div#company_overview_modal {
+div#management_reports_modal {
     display: none;
     background-color: #F4F5F8;
     position: absolute;
@@ -9,22 +9,22 @@ div#company_overview_modal {
     color: #393A3D;
 }
 
-div#company_overview_modal .the-modal-body {
+div#management_reports_modal .the-modal-body {
     height: 100%;
 }
 
-div#company_overview_modal .the-modal-body .the-header {
+div#management_reports_modal .the-modal-body .the-header {
     padding: 10px 20px;
     padding-bottom: 10px;
     border-bottom: solid 1px #D8D8D7;
 }
 
-div#company_overview_modal .the-modal-body .the-header .title h1 {
+div#management_reports_modal .the-modal-body .the-header .title h1 {
     font-size: 30px;
     font-weight: lighter;
 }
 
-div#company_overview_modal .the-modal-body .the-header .icons {
+div#management_reports_modal .the-modal-body .the-header .icons {
     display: flex;
     font-size: 30px;
     text-align: right;
@@ -32,34 +32,34 @@ div#company_overview_modal .the-modal-body .the-header .icons {
     padding-right: 20px;
 }
 
-div#company_overview_modal .the-modal-body .the-header .icons div {
+div#management_reports_modal .the-modal-body .the-header .icons div {
     padding: 0 10px;
 }
 
-div#company_overview_modal .the-modal-body .the-header .icons div.close-modal {
+div#management_reports_modal .the-modal-body .the-header .icons div.close-modal {
     cursor: pointer;
 }
 
-div#company_overview_modal .the-modal-body .the-header .form-group {
+div#management_reports_modal .the-modal-body .the-header .form-group {
     width: 300px;
     padding-top: 20px;
     margin-bottom: 10px!important;
 }
 
-div#company_overview_modal .the-modal-body .the-header .form-group .label {
+div#management_reports_modal .the-modal-body .the-header .form-group .label {
     font-weight: 600;
 }
 
-div#company_overview_modal .the-modal-body .the-header .form-group.report-period {
+div#management_reports_modal .the-modal-body .the-header .form-group.report-period {
     float: right;
 }
 
-#company_overview_modal select,
-#company_overview_modal input[type="text"],
-#company_overview_modal input[type="email"],
-#company_overview_modal input[type="number"],
-#company_overview_modal input[type="date"],
-#company_overview_modal textarea {
+#management_reports_modal select,
+#management_reports_modal input[type="text"],
+#management_reports_modal input[type="email"],
+#management_reports_modal input[type="number"],
+#management_reports_modal input[type="date"],
+#management_reports_modal textarea {
     font-size: 12px;
     font-weight: lighter;
     padding: 8px;
@@ -71,7 +71,7 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     color: #333333;
 }
 
-#company_overview_modal select {
+#management_reports_modal select {
     display: block;
     visibility: visible;
     clip: auto;
@@ -81,9 +81,9 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     width: 100%;
 }
 
-#company_overview_modal input:focus,
-#company_overview_modal select:focus,
-#company_overview_modal textarea:focus {
+#management_reports_modal input:focus,
+#management_reports_modal select:focus,
+#management_reports_modal textarea:focus {
     border-color: rgba(126, 239, 104, 0.8)!important;
     box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
     outline: 0 none;
@@ -92,7 +92,7 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     font-style: normal;
 }
 
-#company_overview_modal .modal-footer-check button.cancel-button {
+#management_reports_modal .modal-footer-check button.cancel-button {
     background-color: transparent;
     background: transparent;
     font-size: 13px;
@@ -104,7 +104,7 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     font-weight: 700;
 }
 
-#company_overview_modal .modal-footer-check .middle-links {
+#management_reports_modal .modal-footer-check .middle-links {
     width: 50%;
     float: left;
     text-align: right;
@@ -114,11 +114,11 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     padding-bottom: 10px;
 }
 
-#company_overview_modal .modal-footer-check .middle-links {
+#management_reports_modal .modal-footer-check .middle-links {
     position: relative;
 }
 
-#company_overview_modal .pint-pries-option-section {
+#management_reports_modal .pint-pries-option-section {
     position: absolute;
     z-index: 1;
     top: -100px;
@@ -132,25 +132,25 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     display: none;
 }
 
-#company_overview_modal .pint-pries-option-section ul li {
+#management_reports_modal .pint-pries-option-section ul li {
     padding: 10px;
 }
 
-#company_overview_modal .pint-pries-option-section ul li a {
+#management_reports_modal .pint-pries-option-section ul li a {
     color: #000;
 }
 
-#company_overview_modal .middle-links a {
+#management_reports_modal .middle-links a {
     color: #ffffff;
     font-size: 12px;
 }
 
-#company_overview_modal .modal-footer-check {
+#management_reports_modal .modal-footer-check {
     padding: 10px 20px;
     margin-top: 0px;
 }
 
-#company_overview_modal .modal-footer-check .pint-pries-option-section .anchor-holder {
+#management_reports_modal .modal-footer-check .pint-pries-option-section .anchor-holder {
     position: absolute;
     z-index: 1;
     width: 20px;
@@ -158,12 +158,12 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     left: 50px;
 }
 
-#company_overview_modal .modal-footer-check .middle-links.end {
+#management_reports_modal .modal-footer-check .middle-links.end {
     text-align: left;
     border-left: solid 1px #6A6B70;
 }
 
-#company_overview_modal .modal-footer-check .middle-links {
+#management_reports_modal .modal-footer-check .middle-links {
     width: 50%;
     float: left;
     text-align: right;
@@ -174,10 +174,10 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     position: relative;
 }
 
-#company_overview_modal .modal-footer-check button[data-submit-type='save-send'],
-#company_overview_modal .modal-footer-check button[data-toggle='dropdown'],
-#company_overview_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown'],
-#company_overview_modal .modal-footer button[data-submit-type='send-new'] {
+#management_reports_modal .modal-footer-check button[data-submit-type='save-send'],
+#management_reports_modal .modal-footer-check button[data-toggle='dropdown'],
+#management_reports_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown'],
+#management_reports_modal .modal-footer button[data-submit-type='send-new'] {
     background-image: none;
     background-color: #2CA01C;
     color: #FFFFFF;
@@ -191,127 +191,128 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     margin-right: -5px;
 }
 
-#company_overview_modal .modal-footer-check .submit-submenu>li button,
-#company_overview_modal .modal-footer .submit-submenu>li button {
+#management_reports_modal .modal-footer-check .submit-submenu>li button,
+#management_reports_modal .modal-footer .submit-submenu>li button {
     color: #333333;
 }
 
-#company_overview_modal .modal-footer-check button.cancel-button:hover {
+#management_reports_modal .modal-footer-check button.cancel-button:hover {
     background-color: #2A2B2D;
 }
 
-#company_overview_modal .pint-pries-option-section ul li:hover,
-#company_overview_modal .pint-pries-option-section ul li:hover a {
+#management_reports_modal .pint-pries-option-section ul li:hover,
+#management_reports_modal .pint-pries-option-section ul li:hover a {
     background-color: #299A1C;
     color: #fff;
 }
 
-#company_overview_modal .modal-footer-check .middle-links:hover {
+#management_reports_modal .modal-footer-check .middle-links:hover {
     text-shadow: 0 10px 20px #fff;
 }
 
-#company_overview_modal .modal-footer-check .submit-submenu>li:hover,
-#company_overview_modal .modal-footer .submit-submenu>li:hover {
+#management_reports_modal .modal-footer-check .submit-submenu>li:hover,
+#management_reports_modal .modal-footer .submit-submenu>li:hover {
     background-color: #ECEDF1;
     color: #008A00;
 }
 
-#company_overview_modal .modal-footer-check button[data-submit-type='save-send']:hover,
-#company_overview_modal .modal-footer-check button[data-toggle='dropdown']:hover,
-#company_overview_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown']:hover,
-#company_overview_modal .modal-footer button[data-submit-type='send-new']:hover {
+#management_reports_modal .modal-footer-check button[data-submit-type='save-send']:hover,
+#management_reports_modal .modal-footer-check button[data-toggle='dropdown']:hover,
+#management_reports_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown']:hover,
+#management_reports_modal .modal-footer button[data-submit-type='send-new']:hover {
     background-image: none;
     background-color: #108000;
 }
 
-#company_overview_modal .the-content {
+#management_reports_modal .the-content {
     height: calc(100% - 225px);
     background: #F4F5F8;
     overflow: scroll;
     overflow-x: hidden;
 }
 
-#company_overview_modal .the-content .report-pages {
-    height: 100%;
+#management_reports_modal .the-content .report-pages {
+    height: calc(100vh - 205px);
     overflow: scroll;
     overflow-x: hidden;
+    position: fixed;
 }
 
-#company_overview_modal .the-content .report-pages ul li:hover,
-#company_overview_modal .the-content .report-pages ul li.active {
+#management_reports_modal .the-content .report-pages ul li:hover,
+#management_reports_modal .the-content .report-pages ul li.active {
     background: #D4D7DC;
 }
 
-#company_overview_modal .the-content .report-pages ul li {
+#management_reports_modal .the-content .report-pages ul li {
     cursor: pointer;
     padding: 10px;
 }
 
-#company_overview_modal .the-content .report-pages ul li .mr_icon {
+#management_reports_modal .the-content .report-pages ul li .mr_icon {
     width: 82px;
     height: 112px;
     margin: 15px 42px 8px;
 }
 
-#company_overview_modal .the-content .report-pages ul li label {
+#management_reports_modal .the-content .report-pages ul li label {
     font-size: 13px;
 }
 
-#company_overview_modal .the-content .report-pages ul li .mr_icon.icon2 {
+#management_reports_modal .the-content .report-pages ul li .mr_icon.icon2 {
     background-position: 0 -112px;
 }
 
-#company_overview_modal .the-content .report-pages ul li .mr_icon.icon3 {
+#management_reports_modal .the-content .report-pages ul li .mr_icon.icon3 {
     background-position: 0 -224px;
     width: 89px;
     height: 119px;
 }
 
-#company_overview_modal .the-content .report-pages ul li .mr_icon.icon4 {
+#management_reports_modal .the-content .report-pages ul li .mr_icon.icon4 {
     background-position: 0 -343px;
     width: 89px;
     height: 119px;
 }
 
-#company_overview_modal .the-content .report-pages ul li .mr_icon.icon5 {
+#management_reports_modal .the-content .report-pages ul li .mr_icon.icon5 {
     background-position: 0 -462px;
 }
 
-#company_overview_modal #cover-page-section,
-#company_overview_modal #preliminary-page,
-#company_overview_modal #table-of-contents,
-#company_overview_modal #preliminary-page,
-#company_overview_modal #reports,
-#company_overview_modal #end-notes {
+#management_reports_modal #cover-page-section,
+#management_reports_modal #preliminary-page,
+#management_reports_modal #table-of-contents,
+#management_reports_modal #preliminary-page,
+#management_reports_modal #reports,
+#management_reports_modal #end-notes {
     padding: 20px 10px;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img {
+#management_reports_modal #cover-page-section .page-styles-img {
     display: flex;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style,
-#company_overview_modal #cover-page-section .page-styles-img .logo-style {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style,
+#management_reports_modal #cover-page-section .page-styles-img .logo-style {
     padding: 5px;
     border: solid 1px #CCCCCC;
     margin-right: 30px;
     position: relative;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .style-icon,
-#company_overview_modal #cover-page-section .page-styles-img .logo-style .style-icon {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon,
+#management_reports_modal #cover-page-section .page-styles-img .logo-style .style-icon {
     height: 80px;
     width: 80px;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .logo-style .style-icon {
+#management_reports_modal #cover-page-section .page-styles-img .logo-style .style-icon {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .dropdown-icon,
-#company_overview_modal #cover-page-section .page-styles-img .logo-style .dropdown-icon {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .dropdown-icon,
+#management_reports_modal #cover-page-section .page-styles-img .logo-style .dropdown-icon {
     padding: 0px 8px;
     border: solid 1px #ccc;
     position: absolute;
@@ -321,8 +322,8 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     cursor: pointer;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section,
-#company_overview_modal #cover-page-section .page-styles-img .logo-style .styles-option-section {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section,
+#management_reports_modal #cover-page-section .page-styles-img .logo-style .styles-option-section {
     border: solid 1px #ccc;
     background: #fff;
     position: absolute;
@@ -333,11 +334,11 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     display: none;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .section-row {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .section-row {
     display: flex;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option {
     cursor: pointer;
     margin: 0 10px 15px 15px;
     height: 110px;
@@ -346,134 +347,160 @@ div#company_overview_modal .the-modal-body .the-header .form-group.report-period
     border: 1px solid #CCCCCC;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option:hover {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option:hover {
     border: 1px solid #1F497D;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option.option-3 {
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option.option-3 {
     background-position: 0 -904px;
 }
 
-#company_overview_modal #cover-page-section .page-styles-img .logo-style .styles-option-section .style-option {
+#management_reports_modal #cover-page-section .page-styles-img .logo-style .styles-option-section .style-option {
     width: 100%;
     background-color: #F4F5F8;
     padding: 10px;
 }
 
-#company_overview_modal #cover-page-section .cover-page-fields {
+#management_reports_modal #cover-page-section .cover-page-fields {
     margin-top: 20px;
 }
 
-#company_overview_modal #cover-page-section .cover-page-fields .form-group {
+#management_reports_modal #cover-page-section .cover-page-fields .form-group {
     margin-bottom: 20px!important;
 }
 
-#company_overview_modal #cover-page-section .cover-page-fields .form-group .label {
+#management_reports_modal #cover-page-section .cover-page-fields .form-group .label {
     font-size: 12px;
 }
 
-#company_overview_modal #cover-page-section .cover-page-fields .form-group label.info {
+#management_reports_modal #cover-page-section .cover-page-fields .form-group label.info {
     color: #8E9095;
     font-size: 10px;
 }
 
-#company_overview_modal #table-of-contents .page-content .page-content-preview {
+#management_reports_modal #table-of-contents .page-content .page-content-preview {
     border: solid 1px #CCCCCC;
     padding: 30px;
 }
 
-#company_overview_modal #table-of-contents .page-content .page-content-preview .content-title {
+#management_reports_modal #table-of-contents .page-content .page-content-preview .content-title {
     font-size: 16px;
     font-weight: 600;
 }
 
-#company_overview_modal #table-of-contents .page-content .page-content-preview .norm {
+#management_reports_modal #table-of-contents .page-content .page-content-preview .norm {
     font-size: 12px;
 }
 
-#company_overview_modal #table-of-contents .page-content .page-content-preview .divider {
+#management_reports_modal #table-of-contents .page-content .page-content-preview .divider {
     border: solid 1px #404040;
     margin-bottom: 20px;
     width: 100%;
 }
 
-#company_overview_modal .form-check label {
+#management_reports_modal .form-check label {
     font-size: 12px;
 }
 
-#company_overview_modal #table-of-contents input[name="page-title"],
-#company_overview_modal #preliminary-page input[name="preliminary-page-title[]"] {
+#management_reports_modal #table-of-contents input[name="page-title"],
+#management_reports_modal #preliminary-page input[name="preliminary-page-title[]"] {
     width: 400px;
 }
 
-#company_overview_modal #preliminary-page a.add-new-page {
+#management_reports_modal #preliminary-page a.add-new-page {
     color: #0277C5;
 }
 
-#company_overview_modal #preliminary-page a.add-new-page:hover {
+#management_reports_modal #preliminary-page a.add-new-page:hover {
     text-decoration: underline;
 }
 
-#company_overview_modal #preliminary-page .delete-page-btn:hover {
+#management_reports_modal #preliminary-page .delete-page-btn:hover {
     opacity: 0.7;
 }
 
-#company_overview_modal #preliminary-page .delete-page-btn {
+#management_reports_modal #preliminary-page .delete-page-btn {
     float: right;
     cursor: pointer;
     font-size: 20px;
     color: #393B3E;
 }
 
-#company_overview_modal #preliminary-page .page {
+#management_reports_modal #preliminary-page .page {
     border-bottom: solid 1px #B5BCC7;
     padding: 10px 0;
 }
 
-#company_overview_modal #reports .report-section .report-edit-btn {
+#management_reports_modal #reports .report-section .report-edit-btn,
+#management_reports_modal #reports .report-section .report-delete-btn {
     float: right;
     cursor: pointer;
     font-size: 20px;
     color: #393B3E;
 }
 
-#company_overview_modal #reports .report-section .report-edit-btn:hover {
+#management_reports_modal #reports .report-section .report-edit-btn:hover,
+#management_reports_modal #reports .report-section .report-delete-btn:hover {
     opacity: 0.7;
 }
 
-#company_overview_modal #reports .report-section {
+#management_reports_modal #reports .report-section {
     padding: 30px;
     border-top: solid 1px #D8D8D7;
     border-bottom: solid 1px #D8D8D7;
 }
 
-#company_overview_modal #reports .report-section h3.report-title {
+#management_reports_modal #reports .report-section h3.report-title {
     font-size: 18px;
     padding: 0;
 }
 
-#company_overview_modal #reports .report-section .closed-content-view {
+#management_reports_modal #reports .report-section .closed-content-view {
     display: block;
 }
 
-#company_overview_modal #reports .report-section .content-collapse {
+#management_reports_modal #reports .report-section .content-collapse {
     display: none;
 }
 
-#company_overview_modal #reports .report-section:hover {
+#management_reports_modal #reports .report-section:hover {
     background-color: #F3F8FE;
     cursor: pointer;
 }
 
-#company_overview_modal #reports .report-section .content-collapse .form-group .info {
+#management_reports_modal #reports .report-section .content-collapse .form-group .info {
     font-size: 10px;
     color: #A6A9AF;
 }
 
-#company_overview_modal #reports .add-report-btn {
+#management_reports_modal #reports .report-section .content-collapse .form-group select[name="report_type[]"] {
+    width: 200px;
+}
+
+#management_reports_modal #reports .report-section .content-collapse .form-group input[name="report_title[]"] {
+    width: 300px;
+}
+
+#management_reports_modal #reports .report-section .content-collapse .form-group select[name="report_period[]"] {
+    width: 180px;
+}
+
+#management_reports_modal #reports .add-report-btn {
     color: #0277C5;
 }
 
-#company_overview_modal #reports .add-report-btn:hover {
+#management_reports_modal #reports .add-report-btn:hover {
     text-decoration: underline;
+}
+
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-3 {
+    background-position: 0 -904px;
+}
+
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-2 {
+    background-position: 0 -684px;
+}
+
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-4 {
+    background-position: 0 -794px;
 }

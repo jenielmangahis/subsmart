@@ -17,6 +17,8 @@
     <script src="<?= base_url("assets/js/v2/sweetalert2.min.js") ?>"></script>
     <!-- Pusher JS -->
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <!-- Datepicker -->
+    <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datepicker.min.js") ?>"></script>
     <!-- Main Script -->
     <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
     <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>

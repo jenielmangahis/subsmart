@@ -236,7 +236,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <label for="from-date">From</label>
                                                                 <input type="text" id="from-date"
                                                                     class="form-control datepicker"
-                                                                    value="<?=date("m/d/Y")?>">
+                                                                    value="<?=date("m/d/Y", strtotime("-1 year"))?>">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -251,36 +251,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <label for="payee">Payee</label>
                                                                 <select id="payee" class="form-control">
                                                                     <option value="all">All</option>
-                                                                    <?php if (count($dropdown['vendors']) > 0) : ?>
-                                                                    <optgroup label="Vendors">
-                                                                        <?php foreach ($dropdown['vendors'] as $vendor) : ?>
-                                                                        <option
-                                                                            value="vendor-<?=$vendor->id?>">
-                                                                            <?=$vendor->display_name?>
-                                                                        </option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                    <?php endif; ?>
-                                                                    <?php if (count($dropdown['customers']) > 0) : ?>
-                                                                    <optgroup label="Customers">
-                                                                        <?php foreach ($dropdown['customers'] as $customer) : ?>
-                                                                        <option
-                                                                            value="customer-<?=$customer->prof_id?>">
-                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                        </option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                    <?php endif; ?>
-                                                                    <?php if (count($dropdown['employees']) > 0) : ?>
-                                                                    <optgroup label="Employees">
-                                                                        <?php foreach ($dropdown['employees'] as $employee) : ?>
-                                                                        <option
-                                                                            value="employee-<?=$employee->id?>">
-                                                                            <?=$employee->FName . ' ' . $employee->LName?>
-                                                                        </option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                    <?php endif; ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -289,29 +259,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <label for="category">Category</label>
                                                                 <select id="category" class="form-control">
                                                                     <option value="all">All</option>
-                                                                    <?php foreach ($dropdown['categories'] as $accType => $accounts) : ?>
-                                                                    <optgroup
-                                                                        label="<?=$accType?>">
-                                                                        <?php foreach ($accounts as $account) : ?>
-                                                                        <option
-                                                                            value="<?=$account->id?>">
-                                                                            <?=$account->name?>
-                                                                        </option>
-
-                                                                        <?php if (count($account->childAccs) > 0) : ?>
-                                                                    <optgroup
-                                                                        label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                        <?php foreach ($account->childAccs as $childAcc) : ?>
-                                                                        <option
-                                                                            value="<?=$childAcc->id?>">
-                                                                            &nbsp;&nbsp;&nbsp;<?=$childAcc->name?>
-                                                                        </option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                    <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                    <?php endforeach; ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -426,8 +373,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <option value="300">300</option>
                                                             </select>
                                                         </p>
-                                                        <p class="m-0"><input type="checkbox" id="compact-table">
-                                                            Compact</p>
+                                                        <div class="checkbox checkbox-sec d-block my-2">
+                                                            <input type="checkbox" id="compact-table">
+                                                            <label for="compact-table">Compact</label>
+                                                        </div>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -497,33 +446,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group" style="margin-bottom: 0 !important">
-                                                    <select name="category_id" id="category-id" class="form-control"
-                                                        required>
-                                                        <option value="" selected disabled>Select category</option>
-                                                        <?php foreach ($categoryAccs as $accType => $accounts) : ?>
-                                                        <optgroup
-                                                            label="<?=$accType?>">
-                                                            <?php foreach ($accounts as $account) : ?>
-                                                            <option
-                                                                value="<?=$account->id?>">
-                                                                <?=$account->name?>
-                                                            </option>
-
-                                                            <?php if (count($account->childAccs) > 0) : ?>
-                                                        <optgroup
-                                                            label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                            <?php foreach ($account->childAccs as $childAcc) : ?>
-                                                            <option
-                                                                value="<?=$childAcc->id?>">
-                                                                &nbsp;&nbsp;&nbsp;<?=$childAcc->name?>
-                                                            </option>
-                                                            <?php endforeach; ?>
-                                                        </optgroup>
-                                                        <?php endif; ?>
-                                                        <?php endforeach; ?>
-                                                        </optgroup>
-                                                        <?php endforeach; ?>
-                                                    </select>
+                                                    <select name="category_id" id="category-id" class="form-control" required></select>
                                                 </div>
                                             </div>
                                         </div>

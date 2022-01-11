@@ -1,5 +1,7 @@
+let mobileWidth = 768;
+let windowWidth = $(window).innerWidth();
+
 $(document).ready(function () {
-	let windowWidth = $(window).innerWidth();
 
 	initializeWindow();
 	resizeSidebar();
@@ -7,8 +9,8 @@ $(document).ready(function () {
 	$(".sidebar-toggler").on("click", function () {
 		toggleSidebar();
 	});
-	
-	$(".nsm-sidebar-bg").on("click", function(){
+
+	$(".nsm-sidebar-bg").on("click", function () {
 		toggleSidebar();
 	});
 
@@ -38,20 +40,43 @@ $(document).ready(function () {
 		_this.find(".bx").removeClass("bx-x").addClass("bx-plus");
 	});
 
-	$(".nsm-sidebar-menu > li > a").on("click", function(e){
+	$(".nsm-sidebar-menu > li > a").on("click", function (e) {
 		let _this = $(this);
 		let _menuParentList = _this.closest("li");
 		let _menuList = $(".nsm-sidebar-menu").find("li");
-		
-		if(!_menuParentList.hasClass("shown")){
+
+		if (!_menuParentList.hasClass("shown")) {
 			_menuList.removeClass("shown");
 			_menuParentList.addClass("shown");
 			e.preventDefault();
 		}
-		else{
+		else {
 			_menuParentList.removeClass("shown");
 		}
 		resizeSidebar();
+	});
+
+	$(".nsm-alert button").on("click", function () {
+		let _alert = $(this).closest(".nsm-alert");
+		_alert.fadeOut(300, function () {
+			resizeSidebar();
+		});
+	});
+
+	$(".nsm-img-upload").on("click", function(){
+		let fileInput = $(this).find("input[type=file]");
+
+	});
+
+	$(".nsm-img-upload .nsm-upload").on("change", function(e){
+		let _this = $(this);
+		let reader = new FileReader(); 
+
+		reader.onload = function(){
+			let imgPreview = _this.closest(".nsm-img-upload");
+			imgPreview.css("background-image", "url('"+ reader.result +"')");
+		};
+		reader.readAsDataURL(e.target.files[0]);
 	});
 });
 
@@ -92,14 +117,14 @@ function initializeWindow() {
 	}
 }
 
-function resizeSidebar(){
+function resizeSidebar() {
 	$(".nsm-sidebar").css("height", "auto");
-	$(".nsm-sidebar").css("min-height", $(".nsm-container").innerHeight() + "px");
-	$(".nsm-sidebar-bg").css("height", $(".nsm-sidebar").innerHeight() + "px");
+	$(".nsm-sidebar").css("min-height", $(".nsm-main").innerHeight() + "px");
+	$(".nsm-sidebar-bg").css("height", $(".nsm-main").innerHeight() + "px");
 }
 
-function initializeChart(chartType="all") {
-	switch(chartType){
+function initializeChart(chartType = "all") {
+	switch (chartType) {
 		case "sales":
 			initializeSalesChart();
 			break;
@@ -127,3 +152,25 @@ function initializeChart(chartType="all") {
 
 	resizeSidebar();
 }
+
+function debounce(func, wait, immediate) {
+	var timeout;
+
+	return function executedFunction() {
+		var context = this;
+		var args = arguments;
+
+		var later = function () {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+
+		var callNow = immediate && !timeout;
+
+		clearTimeout(timeout);
+
+		timeout = setTimeout(later, wait);
+
+		if (callNow) func.apply(context, args);
+	};
+};

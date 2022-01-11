@@ -88,7 +88,8 @@ Chartist Chart-->
 <link href="https://cdn.rawgit.com/atatanasov/gijgo/master/dist/combined/css/gijgo.min.css" rel="stylesheet"
 	type="text/css" />
 
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.11.3/ckeditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.11.3/adapters/jquery.js"></script>
 
 <!--Accounting JS-->
 <?php echo put_footer_assets();?>

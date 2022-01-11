@@ -410,6 +410,9 @@ $route['accounting/customer-reminder/send/by-batch'] = 'accounting/send_customer
 $route['accounting/transaction/send/by-batch'] = 'accounting/send_transaction_by_batch';
 $route['cahsflow/chash-balance/chart/updated'] = 'accounting/update_cash_balance_chart';
 $route['cahsflow/money-in-out/chart/updated'] = 'accounting/update_money_in_out_chart';
+$route['management-report/company_overview/add-preliminary-page'] = 'accounting/comp_overview_add_prelim_page';
+$route['management-report/company-overview/add-new-report-section'] = 'accounting/comp_overview_add_new_report_section';
+$route['management-report/get-management-report'] = 'accounting/get_management_report';
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';

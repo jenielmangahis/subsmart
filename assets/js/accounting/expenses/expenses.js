@@ -1,7 +1,59 @@
-$('select:not(#category-id)').select2();
+const noAjax = [
+    'type',
+    'status',
+    'del-method',
+    'date',
+    'table_rows'
+];
+
+$('select:not(#category-id)').each(function() {
+    if(noAjax.includes($(this).attr('id'))) {
+        $(this).select2({
+            minimumResultsForSearch: -1
+        });
+    } else {
+        var field = $(this).attr('id') === 'payee' ? 'payee' : 'expense-account';
+        $(this).select2({
+            ajax: {
+                url: '/accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: field,
+                        for: 'filter'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect
+        });
+    }
+});
 
 $('#category-id').select2({
-    dropdownParent: $('#select_category_modal')
+    dropdownParent: $('#select_category_modal'),
+    placeholder: 'Select category',
+    ajax: {
+        url: '/accounting/get-dropdown-choices',
+        dataType: 'json',
+        data: function(params) {
+            var query = {
+                search: params.term,
+                type: 'public',
+                field: 'expense-account'
+            }
+
+            // Query parameters will be ?search=[term]&type=public&field=[type]
+            return query;
+        }
+    },
+    templateResult: formatResult,
+    templateSelection: optionSelect
 });
 
 $('.datepicker').each(function() {
@@ -127,10 +179,35 @@ const columns = [
         data: 'category',
         name: 'category',
         fnCreatedCell: function(td, cellData, rowData,row, col) {
-            $(td).html(cellData);
+            if(cellData !== '-Split-' && cellData !== '') {
+                $(td).html(`
+                <select name="expense_account[]" class="form-control">
+                    <option value="${cellData.id}">${cellData.name}</option>
+                </select>
+                `);
 
-            if($(td).find('select').length > 0) {
-                $(td).find('select').select2();
+                if($(td).find('select').length > 0) {
+                    $(td).find('select').select2({
+                        ajax: {
+                            url: '/accounting/get-dropdown-choices',
+                            dataType: 'json',
+                            data: function(params) {
+                                var query = {
+                                    search: params.term,
+                                    type: 'public',
+                                    field: 'expense-account'
+                                }
+
+                                // Query parameters will be ?search=[term]&type=public&field=[type]
+                                return query;
+                            }
+                        },
+                        templateResult: formatResult,
+                        templateSelection: optionSelect
+                    });
+                }
+            } else {
+                $(td).html(cellData);
             }
             
             $(td).addClass('category');
@@ -777,7 +854,7 @@ $(document).on('change', '#transactions-table tbody input[type="checkbox"]', fun
     var printable = true;
 
     $('#transactions-table tbody input[type="checkbox"]').each(function() {
-        var row = $(this).parent().parent().parent();
+        var row = $(this).parent().parent().parent().parent();
         var categoryCell = row.find('td:nth-child(8)');
         var data = $('#transactions-table').DataTable().row(row).data();
 

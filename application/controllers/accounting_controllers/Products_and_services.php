@@ -1000,12 +1000,7 @@ class Products_and_services extends MY_Controller {
 
         $randString = random_string('numeric');
         $filename = 'ProductsServicesList__'.$randString.'_'.date('m').'_'.date('d').'_'.date('Y').'.xlsx';
-        header("Content-Description: File Transfer"); 
-        header("Content-Disposition: attachment; filename=$filename"); 
-        header("Content-Type: application/csv;");
 
-        // file creation 
-        $file = fopen('php://output', 'w');
         $header = [
             "Product/Service Name",
             "Sales Description",
@@ -1023,10 +1018,8 @@ class Products_and_services extends MY_Controller {
             "Quantity as-of Date"
         ];
 
-        // $writer = new XLSXWriter();
-        // $writer->writeSheetRow('Sheet1', $header);
-
-        fputcsv($file, $header);
+        $writer = new XLSXWriter();
+        $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom']);
 
         $qtyAsOfDate = date("m/d/Y");
         foreach($items as $item) {
@@ -1058,15 +1051,12 @@ class Products_and_services extends MY_Controller {
                 $qtyAsOfDate
             ];
 
-            // $writer->writeSheetRow('Sheet1', $data);
-            fputcsv($file, $data);
+            $writer->writeSheetRow('Sheet1', $data);
         }
 
-        fclose($file);
-        exit;
-        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        // header('Content-Disposition: attachment;filename="ProductsServicesList.xlsx"');
-        // header('Cache-Control: max-age=0');
-        // $writer->writeToStdOut();
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        $writer->writeToStdOut();
     }
 }

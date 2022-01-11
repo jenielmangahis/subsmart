@@ -2927,10 +2927,13 @@ class Customer extends MY_Controller
     }
 
     public function ticketslist(){
+        $this->page_data['page']->title = 'Tickets';
+        $this->page_data['page']->parent = 'Sales';
+
         $this->hasAccessModule(39);
         // $user_id = logged('id');
         // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
-        $this->load->view('tickets/list', $this->page_data);
+        $this->load->view('v2/pages/tickets/list', $this->page_data);
     }
 
     public function addTicket()

@@ -301,7 +301,7 @@ class Reports extends MY_Controller {
             foreach ($payments as $payment) {
                 if (!$month_counter) {
                     $month_counter = true;
-                    $grand_total += floatval($payment[5]);
+                    $grand_total += floatval($payment[6]);
                     array_push($months, array($dt->format("M, Y"), '', '', '', ''));
                     array_push($months, $payment);
                 } else {
@@ -398,6 +398,15 @@ class Reports extends MY_Controller {
         $endDate = $this->input->get('endDate');
 
         $payments = getPaymentByCustomer($startDate, $endDate);
+
+        echo json_encode($payments);
+    }
+
+    public function expenseByCategory() {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
+        $payments = getExpense($startDate, $endDate);
 
         echo json_encode($payments);
     }

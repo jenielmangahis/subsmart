@@ -3,7 +3,7 @@
 <form action="/accounting/employees/create" method="post" id="modal-form">
 <!-- <form onsubmit="submitModalForm(event, this)" id="modal-form"> -->
     <div id="add-employee-modal" class="modal fade modal-fluid" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="max-width: 100%">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">

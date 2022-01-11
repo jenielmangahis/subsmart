@@ -252,6 +252,10 @@
         color: currentColor;
       }
     }
+
+    &--header {
+      display: none;
+    }
   }
 
   &__header {
@@ -263,6 +267,28 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+
+    &InnerEdit {
+      flex-direction: column;
+      align-items: center;
+      display: none;
+    }
+
+    &:hover {
+      .accountReceivableTable__btn--header {
+        display: inline-block;
+      }
+    }
+
+    &--edit {
+      .accountReceivableTable__headerInner {
+        display: none;
+      }
+
+      .accountReceivableTable__headerInnerEdit {
+        display: flex;
+      }
     }
   }
 
@@ -287,5 +313,35 @@
     align-items: center;
     justify-content: center;
     font-size: 13px;
+  }
+}
+
+$colorError: #d52b1e;
+
+@mixin input-error {
+  background: rgba(213, 43, 30, 0.1) !important;
+  border-color: $colorError !important;
+}
+
+.inputError {
+  @include input-error;
+
+  & + .select2 .select2-selection {
+    @include input-error;
+  }
+}
+
+.arBtn {
+  display: flex;
+  align-items: center;
+
+  .spinner-border {
+    display: none;
+  }
+
+  &--isLoading {
+    .spinner-border {
+      display: block;
+    }
   }
 }
