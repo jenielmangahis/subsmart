@@ -252,6 +252,10 @@
         color: currentColor;
       }
     }
+
+    &--header {
+      display: none;
+    }
   }
 
   &__header {
@@ -263,6 +267,28 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+
+    &InnerEdit {
+      flex-direction: column;
+      align-items: center;
+      display: none;
+    }
+
+    &:hover {
+      .accountReceivableTable__btn--header {
+        display: inline-block;
+      }
+    }
+
+    &--edit {
+      .accountReceivableTable__headerInner {
+        display: none;
+      }
+
+      .accountReceivableTable__headerInnerEdit {
+        display: flex;
+      }
     }
   }
 

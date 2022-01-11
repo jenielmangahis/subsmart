@@ -129,21 +129,21 @@
                                             <div class="styles-option-section">
                                                 <div class="section-row">
 
-                                                    <div class="style-option option-1"
+                                                    <div class="style-option option-1" data-count="1"
                                                         style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
                                                     </div>
 
-                                                    <div class="style-option option-2"
+                                                    <div class="style-option option-2" data-count="2"
                                                         style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
                                                     </div>
                                                 </div>
                                                 <div class="section-row">
 
-                                                    <div class="style-option option-3"
+                                                    <div class="style-option option-3" data-count="3"
                                                         style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
                                                     </div>
 
-                                                    <div class="style-option option-4"
+                                                    <div class="style-option option-4" data-count="4"
                                                         style="background-image: url('<?=base_url("assets/img/accounting/reports/management_reports_img.png")?>')">
                                                     </div>
                                                 </div>
@@ -178,38 +178,38 @@
                                             <div class="label">
                                                 Cover title
                                             </div>
-                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <input type="text" class="form-control " name="cover_page_cover_title">
                                             <label class="info">100 characters max</label>
                                         </div>
                                         <div class="form-group">
                                             <div class="label">
                                                 Subtitle
                                             </div>
-                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <input type="text" class="form-control " name="cover_page_subtitle">
                                         </div>
                                         <div class="form-group">
                                             <div class="label">
                                                 Report period
                                             </div>
-                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <input type="text" class="form-control " name="cover_page_report_period">
                                         </div>
                                         <div class="form-group">
                                             <div class="label">
                                                 Prepared by
                                             </div>
-                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <input type="text" class="form-control " name="cover_page_prepared_by">
                                         </div>
                                         <div class="form-group">
                                             <div class="label">
                                                 Prepared date
                                             </div>
-                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <input type="text" class="form-control " name="cover_page_prepared_date">
                                         </div>
                                         <div class="form-group">
                                             <div class="label">
                                                 Disclaimer
                                             </div>
-                                            <input type="text" class="form-control " name="shared_invoice_link">
+                                            <input type="text" class="form-control " name="cover_page_disclaimer">
                                             <label class="info">90 characters max</label>
                                         </div>
                                     </div>
@@ -231,7 +231,7 @@
                                 <div class="label">
                                     Page title
                                 </div>
-                                <input type="text" class="form-control " name="page-title" value="Table of Contents">
+                                <input type="text" class="form-control " name="table_of_contents_page_title" value="Table of Contents">
                             </div>
                             <div class="page-content">
                                 <div class="form-group">
@@ -461,7 +461,7 @@
                                     <div class="label">
                                         Page title
                                     </div>
-                                    <input type="text" class="form-control " name="preliminary-page-title[]"
+                                    <input type="text" class="form-control " name="end_notes_page_title"
                                         placeholder="">
                                 </div>
                                 <div class="page-content">
@@ -471,7 +471,7 @@
                                         </div>
                                     </div>
                                     <div class="page-content-field">
-                                        <textarea class="form-control ckeditor" name="update_header_content" id=""
+                                        <textarea class="form-control ckeditor" name="end_notes_page_content" id=""
                                             cols="40" rows="20"></textarea>
                                     </div>
                                 </div>

@@ -131,6 +131,75 @@ class AccountingARSummary extends MY_Controller
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
+
+        include APPPATH . 'controllers/DocuSign.php';
+
+        $mail = getMailInstance();
+        $templatePath = VIEWPATH . 'esign/docusign/email/ar-summary.html';
+        $template = file_get_contents($templatePath);
+
+        $data = [
+            '%message%' => $payload['body'],
+        ];
+        $message = strtr($template, $data);
+
+        $mail->Subject = $payload['subject'];
+        $mail->MsgHTML($message);
+        $mail->addAddress($payload['to']);
+        $mail->send();
+        $mail->ClearAllRecipients();
+
         echo json_encode(['data' => $payload]);
+    }
+
+    public function apiGetTableInfo()
+    {
+        $this->db->where('company_id', logged('id'));
+        $this->db->select('id');
+        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
+
+        if (is_null($currInfo)) {
+            $this->db->where('id', logged('id'));
+            $client = $this->db->get('clients')->row();
+            $this->db->insert('accounting_ar_summary_info', [
+                'company_id' => $client->id,
+                'title' => $client->business_name,
+                'subtitle' => 'A/R Aging Summary',
+            ]);
+        }
+
+        $this->db->where('company_id', logged('id'));
+        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $currInfo]);
+    }
+
+    public function apiSaveTableInfo()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        $this->db->where('company_id', logged('id'));
+        $this->db->select('id');
+        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
+
+        if (is_null($currInfo)) {
+            $payload['company_id'] = logged('id');
+            $this->db->insert('accounting_ar_summary_info', $payload);
+        } else {
+            $this->db->where('id', $currInfo->id);
+            $this->db->update('accounting_ar_summary_info', $payload);
+        }
+
+        $this->db->where('company_id', logged('id'));
+        $currInfo = $this->db->get('accounting_ar_summary_info')->row();
+        echo json_encode(['data' => $currInfo]);
     }
 }

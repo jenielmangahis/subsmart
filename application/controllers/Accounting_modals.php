@@ -1163,7 +1163,7 @@ class Accounting_modals extends MY_Controller
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'created_by' => logged('id'),
                 'status' => 1
             ];
@@ -1742,13 +1742,13 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'account_id' => $data['bank_account'],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
                 'cash_back_account_id' => $data['cash_back_account'],
                 'cash_back_memo' => $data['cash_back_memo'],
                 'cash_back_amount' => $data['cash_back_amount'],
                 'memo' => $data['memo'],
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'created_by' => logged('id'),
                 'status' => 1
             ];
@@ -1858,6 +1858,22 @@ class Accounting_modals extends MY_Controller
                         ];
 
                         $cashBack = $this->chart_of_accounts_model->updateBalance($cashBackData);
+                    }
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Deposit',
+                            'transaction_id' => $depositId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
                     }
                 }
 
@@ -2695,17 +2711,33 @@ class Accounting_modals extends MY_Controller
                 'payment_method_id' => $data['payment_method'],
                 'ref_no' => !isset($data['template_name']) || $data['ref_no'] === '' ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
-    
+
             $expenseId = $this->expenses_model->addExpense($expenseData);
 
             if ($expenseId) {
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expenseId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
                     foreach ($data['attachments'] as $attachmentId) {
@@ -3021,11 +3053,11 @@ class Accounting_modals extends MY_Controller
                 'check_no' => isset($data['print_later']) ? null : ($data['check_no'] === '' ? null : $data['check_no']),
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
 
@@ -3167,6 +3199,22 @@ class Accounting_modals extends MY_Controller
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $checkId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -3349,12 +3397,12 @@ class Accounting_modals extends MY_Controller
                 'due_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['due_date'])) : null,
                 'bill_no' => !isset($data['template_name']) || $data['bill_no'] !== "" ? $data['bill_no'] : null,
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
                 'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
     
@@ -3473,6 +3521,22 @@ class Accounting_modals extends MY_Controller
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $billId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -3982,17 +4046,33 @@ class Accounting_modals extends MY_Controller
                 'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'remaining_balance' => $data['total_amount'],
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
     
             $vendorCreditId = $this->expenses_model->add_vendor_credit($vendorCredit);
     
             if ($vendorCreditId) {
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vendorCreditId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
+                }
+
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
                     $order = 1;
                     foreach ($data['attachments'] as $attachmentId) {
@@ -4293,12 +4373,12 @@ class Accounting_modals extends MY_Controller
                 'shipping_address' => nl2br($data['shipping_address']),
                 'purchase_order_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['purchase_order_date'])) : null,
                 'ship_via' => $data['ship_via'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'message_to_vendor' => $data['message_to_vendor'],
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
                 'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => !isset($data['template_name']) || $data['status'] === "open" ? 1 : 2
             ];
     
@@ -4389,6 +4469,22 @@ class Accounting_modals extends MY_Controller
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Purchase Order',
+                            'transaction_id' => $purchaseOrderId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -4549,10 +4645,10 @@ class Accounting_modals extends MY_Controller
                 'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
                 'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'total_amount' => $data['total_amount'],
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
                 'status' => 1
             ];
 
@@ -4650,6 +4746,22 @@ class Accounting_modals extends MY_Controller
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'CC Credit',
+                            'transaction_id' => $creditId,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+
+                        $order++;
+                    }
                 }
 
                 if (isset($data['attachments']) && is_array($data['attachments'])) {
@@ -7460,6 +7572,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
         $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
 
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Expense', $expenseId);
         $this->page_data['expense'] = $expense;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
@@ -7485,6 +7598,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
         $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
 
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Check', $checkId);
         $this->page_data['check'] = $check;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
@@ -7514,6 +7628,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
         $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
 
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Bill', $billId);
         $this->page_data['bill_payments'] = $billPayments;
         $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
         $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
@@ -7532,6 +7647,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
 
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Vendor Credit', $vendorCreditId);
         $this->page_data['vendorCredit'] = $vendorCredit;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
@@ -7565,6 +7681,7 @@ class Accounting_modals extends MY_Controller
         $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
         $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
 
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('CC Credit', $ccCreditId);
         $this->page_data['ccCredit'] = $ccCredit;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
@@ -7665,6 +7782,7 @@ class Accounting_modals extends MY_Controller
             $funds[$key]->payment = $this->accounting_payment_methods_model->getById($fund->payment_method);
         }
 
+        $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Deposit', $depositId);
         $this->page_data['deposit'] = $deposit;
         $this->page_data['funds'] = $funds;
         $this->page_data['account'] = $account;
@@ -7981,7 +8099,7 @@ class Accounting_modals extends MY_Controller
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'payment_method_id' => $data['payment_method'],
             'ref_no' => $data['ref_no'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
@@ -9545,7 +9663,7 @@ class Accounting_modals extends MY_Controller
                 'cash_back_amount' => $data['cash_back_amount'],
                 'memo' => $data['memo'],
                 // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
             ];
 
             $update = $this->accounting_bank_deposit_model->update($depositId, $depositData);
@@ -9749,7 +9867,7 @@ class Accounting_modals extends MY_Controller
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
                 // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'recurring' => isset($data['template_name']) ? 1 : 0,
+                'recurring' => isset($data['template_name']) ? 1 : null,
             ];
 
             $update = $this->accounting_transfer_funds_model->update($transferId, $transferData);
@@ -9916,7 +10034,7 @@ class Accounting_modals extends MY_Controller
                 'journal_date' => (!isset($data['template_name'])) ? date('Y-m-d', strtotime($data['journal_date'])) : null,
                 'memo' => $data['memo'],
                 // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'recurring' => isset($data['template_name']) ? 1 : 0
+                'recurring' => isset($data['template_name']) ? 1 : null
             ];
 
             $update = $this->accounting_journal_entries_model->update($journalId, $journalData);

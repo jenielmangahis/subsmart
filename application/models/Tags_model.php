@@ -96,4 +96,20 @@ class Tags_model extends MY_Model
     public function getTagById($id) {
         return $this->db->where(['company_id' => getLoggedCompanyID(), 'status' => 1, 'id' => $id])->get('job_tags')->row();
     }
+
+    public function link_tag($data) {
+        $this->db->insert('accounting_transaction_tags', $data);
+	    return $this->db->insert_id();
+    }
+
+    public function get_transaction_tags($transactionType, $transactionId) {
+		$this->db->select('job_tags.*');
+        $this->db->from('job_tags');
+        $this->db->where('accounting_transaction_tags.transaction_type', $transactionType);
+        $this->db->where('accounting_transaction_tags.transaction_id', $transactionId);
+        $this->db->order_by('accounting_transaction_tags.order_no', 'asc');
+		$this->db->join('accounting_transaction_tags', 'accounting_transaction_tags.tag_id = job_tags.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
