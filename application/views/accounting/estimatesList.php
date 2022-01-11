@@ -307,7 +307,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </td>
                                         <td>
                                                 <?php 
-                                                $total1 = $estimate->option1_total + $estimate->option2_total;
+                                                $total1 = floatval($estimate->option1_total) + floatval($estimate->option2_total);
                                                 $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
 
                                                 if($estimate->estimate_type == 'Option')

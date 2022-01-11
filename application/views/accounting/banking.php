@@ -189,7 +189,7 @@ add_css(array(
                                     </a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="<?= base_url('accounting/manage_connection') ?>" class="editJobTypeBtn editItemBtn">
+                                    <a href="<?= base_url('accounting/manage_connection'); ?>" class="editJobTypeBtn editItemBtn">
                                         <span class="fa fa-upload"></span> Manage Connections
                                     </a>
                                 </li>
@@ -204,7 +204,7 @@ add_css(array(
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="" class="editItemBtn">
+                                    <a href="<?= base_url('accounting/banking_export'); ?>" class="editItemBtn">
                                         <span class="fa fa-download"></span> Export to Excel
                                     </a>
                                 </li>

@@ -53,7 +53,7 @@ class Accounting extends MY_Controller
         $this->load->model('Accounting_account_settings_model', 'accounting_account_settings_model');
         $this->load->model('Accounting_statements_model', 'accounting_statements_model');
         $this->load->library('excel');
-        $this->load->library('pdf');
+        //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css",
@@ -13297,6 +13297,49 @@ class Accounting extends MY_Controller
         $this->page_data['roles'] = $this->vendors_model->getRoleAmount($roleID);
 
         echo json_encode($this->page_data);
+    }
+
+    public function banking_export()
+    {
+        $comp_id = logged('company_id');
+        $get_company_banking_payment = array(
+            'table' => 'banking_payments',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $banking_payments = $this->general_model->get_data_with_param($get_company_banking_payment);
+
+        $delimiter = ",";
+        $time      = time();
+        $filename  = "banking_payments".$time.".csv";
+
+        $f = fopen('php://memory', 'w');
+
+        $fields = array('Date Paid', 'Description', 'Payee', 'Amount', 'Assign To');
+        fputcsv($f, $fields, $delimiter);
+
+        if (!empty($banking_payments)) {
+            foreach ($banking_payments as $item) {
+                $csvData = array(
+                    date_format(date_create($item->date_paid), "m/d/Y"),
+                    $item->description,
+                    $item->payee,
+                    number_format($item->amount,2),
+                    $item->assign_to
+                );
+                fputcsv($f, $csvData, $delimiter);
+            }
+        } else {
+            $csvData = array('');
+            fputcsv($f, $csvData, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
     }
 }
 
