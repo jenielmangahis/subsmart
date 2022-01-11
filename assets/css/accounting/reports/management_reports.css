@@ -492,3 +492,15 @@ div#management_reports_modal .the-modal-body .the-header .form-group.report-peri
 #management_reports_modal #reports .add-report-btn:hover {
     text-decoration: underline;
 }
+
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-3 {
+    background-position: 0 -904px;
+}
+
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-2 {
+    background-position: 0 -684px;
+}
+
+#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon.icon-4 {
+    background-position: 0 -794px;
+}

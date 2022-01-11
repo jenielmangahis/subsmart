@@ -2829,7 +2829,14 @@
                                                             echo $report->first_name." ".strtoupper(substr($report->last_name, -1)).".";
                                                         } ?>
                                                         </td>
-                                                        <td></td>
+                                                        <td>
+
+                                                        <?php
+                                                        if ($report->updated_by > 0) {
+                                                            $customer_details = $this->accounting_customers_model->get_customer_by_id($report->updated_by);
+                                                                echo $customer_details->first_name." ".$customer_details->last_name;
+                                                        }?>
+                                                        </td>
                                                         <td>
                                                             <select class="form-control " name="filter_date">
                                                                 <option>All Dates</option>
@@ -2876,10 +2883,9 @@
                                                                 <ul class="dropdown-menu dropdown-menu-right report_options"
                                                                     role="menu" aria-labelledby="dropdown-edit"
                                                                     x-placement="bottom-end">
-                                                                    <li class="edit"
+                                                                    <li class="edit" data-id="<?=$report->id?>"
                                                                         data-target="#management_reports_modal">
-                                                                        <a href="javascript:void(0)"
-                                                                            data-id="<?=$report->id?>">
+                                                                        <a href="javascript:void(0)">
                                                                             Edit
                                                                         </a>
                                                                     </li>

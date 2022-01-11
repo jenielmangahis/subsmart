@@ -94,20 +94,17 @@
                                                     <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                                 </div>
                                                 <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                                    <?php if(isset($vendorCredit)) : ?>
-                                                        <?php if($vendorCredit->tags !== null && $vendorCredit->tags !== "") : ?>
-                                                            <?php foreach(json_decode($vendorCredit->tags, true) as $tagId) : ?>
-                                                                <?php 
-                                                                    $tag = $this->tags_model->getTagById($tagId);
-                                                                    $name = $tag->name;
-                                                                    if($tag->group_tag_id !== null) {
-                                                                        $group = $this->tags_model->getGroupById($tag->group_tag_id);
-                                                                        $name = $group->name.': '.$tag->name;
-                                                                    }
-                                                                ?>
-                                                                <option value="<?=$tag->id?>" selected><?=$name?></option>
-                                                            <?php endforeach; ?>
-                                                        <?php endif; ?>
+                                                    <?php if(isset($tags) && count($tags) > 0) : ?>
+                                                        <?php foreach($tags as $tag) : ?>
+                                                            <?php 
+                                                                $name = $tag->name;
+                                                                if($tag->group_tag_id !== null) {
+                                                                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                                                                    $name = $group->name.': '.$tag->name;
+                                                                }
+                                                            ?>
+                                                            <option value="<?=$tag->id?>" selected><?=$name?></option>
+                                                        <?php endforeach; ?>
                                                     <?php endif; ?>
                                                 </select>
                                             </div>

@@ -9,10 +9,6 @@ $(document).on("click", function(event) {
         $("#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section").hide();
     }
 });
-
-$(document).on('click', 'table#manage_reports_table ul.report_options li.edit', function() {
-    $($(this).attr("data-target")).fadeIn();
-});
 $(document).on('click', 'div#management_reports_modal .the-modal-body .the-header .icons div.close-modal', function() {
     $("#management_reports_modal").fadeOut();
 });
@@ -151,3 +147,56 @@ function company_overview_add_preliminary_page() {
         },
     });
 }
+$(document).on("click", "#management_reports_modal #cover-page-section .page-styles-img .cover-style .styles-option-section .style-option", function(event) {
+    $("#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon").attr("class", "style-icon icon-" + $(this).attr("data-count"));
+});
+
+$(document).on('click', 'table#manage_reports_table ul.report_options li.edit', function() {
+    $($(this).attr("data-target")).fadeIn();
+    var management_report_id = $(this).attr("data-id");
+    $.ajax({
+        url: baseURL + "/management-report/get-management-report",
+        type: "POST",
+        dataType: "json",
+        data: {
+            management_report_id: management_report_id
+        },
+        success: function(data) {
+            $("#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon").attr("class", "style-icon icon-" + data.cover_style);
+            $('#management_reports_modal input[name="template_name"]').val(data.template_name);
+            $('#management_reports_modal input[name="cover_page_cover_title"]').val(data.cover_title);
+            $('#management_reports_modal input[name="cover_page_subtitle"]').val(data.cover_subtitle);
+            $('#management_reports_modal input[name="cover_page_report_period"]').val(data.cover_report_period);
+            $('#management_reports_modal input[name="cover_page_prepared_by"]').val(data.cover_prepared_by);
+            $('#management_reports_modal input[name="cover_page_prepared_date"]').val(data.cover_prepared_date);
+            $('#management_reports_modal input[name="cover_page_disclaimer"]').val(data.cover_disclaimer);
+            $('#management_reports_modal input[name="include_table_of_contents"]').val(data.table_include_table_of_contents);
+            $('#management_reports_modal input[name="cover_page_disclaimer"]').val(data.cover_disclaimer);
+            $('#management_reports_modal input[name="table_of_contents_page_title"]').val(data.table_page_title);
+            $('#management_reports_modal input[name="end_notes_page_title"]').val(data.endnote_page_title);
+            $('#management_reports_modal input[name="end_notes_page_content"]').val(data.endnote_page_content);
+
+            console.log(data.cover_show_logo);
+            if (data.cover_show_logo == "0") {
+                $('#management_reports_modal input[name="show-logo"]').prop("checked", false);
+            } else {
+                $('#management_reports_modal input[name="show-logo"]').prop("checked", true);
+            }
+            if (data.cover_disclaimer == "0") {
+                $('#management_reports_modal input[name="cover_page_disclaimer"]').prop("checked", false);
+            } else {
+                $('#management_reports_modal input[name="cover_page_disclaimer"]').prop("checked", true);
+            }
+            if (data.endnotes_include_page == "0") {
+                $('#management_reports_modal input[name="end_notes_include_this_page"]').prop("checked", false);
+            } else {
+                $('#management_reports_modal input[name="end_notes_include_this_page"]').prop("checked", true);
+            }
+            if (data.endnotes_break_down == "0") {
+                $('#management_reports_modal input[name="end_notes_include_breakdown_of_sub_accounts"]').prop("checked", false);
+            } else {
+                $('#management_reports_modal input[name="end_notes_include_breakdown_of_sub_accounts"]').prop("checked", true);
+            }
+        },
+    });
+});
