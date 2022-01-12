@@ -112,4 +112,21 @@ class Tags_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function unlink_tag($data)
+    {
+        $this->db->where('transaction_type', $data['transaction_type']);
+		$this->db->where('transaction_id', $data['transaction_id']);
+		$this->db->where('tag_id', $data['tag_id']);
+		return $this->db->delete('accounting_transaction_tags');
+    }
+
+    public function update_link($data)
+    {
+        $this->db->where('transaction_type', $data['transaction_type']);
+		$this->db->where('transaction_id', $data['transaction_id']);
+		$this->db->where('order_no', $data['order_no']);
+		$update = $this->db->update('accounting_transaction_tags', ['tag_id' => $data['tag_id']]);
+		return $update ? true : false;
+    }
 }

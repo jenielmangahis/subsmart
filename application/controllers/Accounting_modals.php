@@ -8109,6 +8109,35 @@ class Accounting_modals extends MY_Controller
 
         if ($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Expense', $expense->id);
+            $tags = $this->tags_model->get_transaction_tags('Expense', $expense->id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Expense', 'tag_id' => $tag->id, 'transaction_id' => $expense->id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Expense',
+                        'transaction_id' => $expense->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
 
             if(count($attachments) > 0) {
                 foreach($attachments as $attachment) {
@@ -8225,7 +8254,7 @@ class Accounting_modals extends MY_Controller
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
             'to_print' => $data['print_later'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
@@ -8235,6 +8264,35 @@ class Accounting_modals extends MY_Controller
 
         if ($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Check', $check->id);
+            $tags = $this->tags_model->get_transaction_tags('Check', $check->id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Check', 'tag_id' => $tag->id, 'transaction_id' => $check->id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Check',
+                        'transaction_id' => $check->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
 
             if(count($attachments) > 0) {
                 foreach($attachments as $attachment) {
@@ -8368,7 +8426,7 @@ class Accounting_modals extends MY_Controller
             'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
             'due_date' => date("Y-m-d", strtotime($data['due_date'])),
             'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'remaining_balance' => $data['total_amount'],
@@ -8379,6 +8437,35 @@ class Accounting_modals extends MY_Controller
 
         if ($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Bill', $bill->id);
+            $tags = $this->tags_model->get_transaction_tags('Bill', $bill->id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Bill', 'tag_id' => $tag->id, 'transaction_id' => $bill->id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Bill',
+                        'transaction_id' => $bill->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
 
             if(count($attachments) > 0) {
                 foreach($attachments as $attachment) {
@@ -8444,7 +8531,7 @@ class Accounting_modals extends MY_Controller
             'shipping_address' => nl2br($data['shipping_address']),
             'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
             'ship_via' => $data['ship_via'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'message_to_vendor' => $data['message_to_vendor'],
             'memo' => $data['memo'],
             // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -8455,6 +8542,35 @@ class Accounting_modals extends MY_Controller
 
         if ($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Purchase Order', $purchaseOrder->id);
+            $tags = $this->tags_model->get_transaction_tags('Purchase Order', $purchaseOrder->id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Purchase Order', 'tag_id' => $tag->id, 'transaction_id' => $purchaseOrder->id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Purchase Order',
+                        'transaction_id' => $purchaseOrder->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
 
             if(count($attachments) > 0) {
                 foreach($attachments as $attachment) {
@@ -8515,7 +8631,7 @@ class Accounting_modals extends MY_Controller
             'mailing_address' => $data['mailing_address'],
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'ref_no' => $data['ref_no'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
@@ -8525,6 +8641,35 @@ class Accounting_modals extends MY_Controller
 
         if ($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('Vendor Credit', $vendorCredit->id);
+            $tags = $this->tags_model->get_transaction_tags('Vendor Credit', $vendorCredit->id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'Vendor Credit', 'tag_id' => $tag->id, 'transaction_id' => $vendorCredit->id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'Vendor Credit',
+                        'transaction_id' => $vendorCredit->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
 
             if(count($attachments) > 0) {
                 foreach($attachments as $attachment) {
@@ -8631,7 +8776,7 @@ class Accounting_modals extends MY_Controller
             'bank_credit_account_id' => $data['bank_credit_account'],
             'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
             'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
             'memo' => $data['memo'],
             // 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
             'total_amount' => $data['total_amount']
@@ -8641,6 +8786,35 @@ class Accounting_modals extends MY_Controller
 
         if ($update) {
             $attachments = $this->accounting_attachments_model->get_attachments('CC Credit', $ccCredit->id);
+            $tags = $this->tags_model->get_transaction_tags('CC Credit', $ccCredit->id);
+
+            if(count($tags) > 0) {
+                foreach($tags as $key => $tag) {
+                    if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                        $this->tags_model->unlink_tag(['transaction_type' => 'CC Credit', 'tag_id' => $tag->id, 'transaction_id' => $ccCredit->id]);
+                    }
+                }
+            }
+
+            if(isset($data['tags']) && is_array($data['tags'])) {
+                $order = 1;
+                foreach($data['tags'] as $key => $tagId) {
+                    $linkTagData = [
+                        'transaction_type' => 'CC Credit',
+                        'transaction_id' => $ccCredit->id,
+                        'tag_id' => $tagId,
+                        'order_no' => $order
+                    ];
+
+                    if($tags[$key] === null) {
+                        $linkTagId = $this->tags_model->link_tag($linkTagData);
+                    } else {
+                        $updateOrder = $this->tags_model->update_link($linkTagData);
+                    }
+
+                    $order++;
+                }
+            }
 
             if(count($attachments) > 0) {
                 foreach($attachments as $attachment) {
@@ -9656,7 +9830,7 @@ class Accounting_modals extends MY_Controller
                 'company_id' => logged('company_id'),
                 'account_id' => $data['bank_account'],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                // 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
                 'cash_back_account_id' => floatval($data['cash_back_amount']) > 0.00 ? $data['cash_back_account'] : null,
                 'cash_back_memo' => $data['cash_back_memo'],
@@ -9671,6 +9845,35 @@ class Accounting_modals extends MY_Controller
             if ($update) {
                 // REVERT OLD
                 $attachments = $this->accounting_attachments_model->get_attachments('Deposit', $deposit->id);
+                $tags = $this->tags_model->get_transaction_tags('Deposit', $deposit->id);
+
+                if(count($tags) > 0) {
+                    foreach($tags as $key => $tag) {
+                        if(!isset($data['tags']) || !isset($data['tags'][$key])) {
+                            $this->tags_model->unlink_tag(['transaction_type' => 'Deposit', 'tag_id' => $tag->id, 'transaction_id' => $deposit->id]);
+                        }
+                    }
+                }
+    
+                if(isset($data['tags']) && is_array($data['tags'])) {
+                    $order = 1;
+                    foreach($data['tags'] as $key => $tagId) {
+                        $linkTagData = [
+                            'transaction_type' => 'Deposit',
+                            'transaction_id' => $deposit->id,
+                            'tag_id' => $tagId,
+                            'order_no' => $order
+                        ];
+    
+                        if($tags[$key] === null) {
+                            $linkTagId = $this->tags_model->link_tag($linkTagData);
+                        } else {
+                            $updateOrder = $this->tags_model->update_link($linkTagData);
+                        }
+    
+                        $order++;
+                    }
+                }
 
                 if(count($attachments) > 0) {
                     foreach($attachments as $attachment) {
