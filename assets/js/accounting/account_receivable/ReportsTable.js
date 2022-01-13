@@ -52,7 +52,17 @@ export class ReportsTable {
         {
           extend: "print",
           className: "hidden",
-          title: "",
+          title: () => {
+            const title = $("[data-type=title]").text();
+            const subtitle = $("[data-type=subtitle]").text();
+            return `<div>
+              <center><h1 style="margin:0;">${title}</h1></center>
+              <center><h3 style="margin:0;">${subtitle}</h3></center>
+            </div>`;
+          },
+          customize: (pageWindow) => {
+            pageWindow.document.querySelector("head > title").textContent = "";
+          },
         },
         {
           extend: "pdf",

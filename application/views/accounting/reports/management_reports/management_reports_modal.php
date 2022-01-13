@@ -1,5 +1,7 @@
 <div id="management_reports_modal">
     <form action="#" id="management_report_form">
+        <input type="text" name="management_report_id" style="display: none;">
+        <input type="text" name="cover_style" style="display: none;">
         <div class="the-modal-body">
             <div class="the-header">
                 <div class="row">
@@ -67,7 +69,7 @@
                 </div>
             </div>
             <div class="the-content">
-                <div class="row" style="height: 100%;">
+                <div class="row" style="height: 100%; padding-bottom:61px;">
                     <div class="col-md-2" style="height: 100%;">
                         <div class="report-pages">
                             <ul>
@@ -249,33 +251,6 @@
                         </div>
                         <div id="preliminary-page" style="display: none;">
                             <div class="pages">
-                                <div class="page template" data-count="1" style="display: none;">
-                                    <div class="form-check" style="padding: 0 12px;">
-                                        <div class="checkbox checkbox-sec margin-right">
-                                            <input type="checkbox" name="include_this_page[]" id="include_this_page">
-                                            <label for="include_this_page">Include this page</label>
-                                        </div>
-                                        <i class="fa fa-trash-o delete-page-btn" aria-hidden="true"></i>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="label">
-                                            Page title
-                                        </div>
-                                        <input type="text" class="form-control " name="preliminary_page_title[]"
-                                            placeholder="">
-                                    </div>
-                                    <div class="page-content">
-                                        <div class="form-group">
-                                            <div class="label">
-                                                Page content
-                                            </div>
-                                        </div>
-                                        <div class="page-content-field">
-                                            <textarea class="form-control" name="prelimenary_page_content[]"
-                                                id="prelimenary_page_content_1" cols="40" rows="20"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
 
                             </div>
                             <a href="#" class="add-new-page">Add new page</a>
@@ -462,7 +437,7 @@
                                         Page title
                                     </div>
                                     <input type="text" class="form-control " name="end_notes_page_title"
-                                        placeholder="">
+                                        placeholder="e.g. Notes to the Financial Statements">
                                 </div>
                                 <div class="page-content">
                                     <div class="form-group">
@@ -471,7 +446,7 @@
                                         </div>
                                     </div>
                                     <div class="page-content-field">
-                                        <textarea class="form-control ckeditor" name="end_notes_page_content" id=""
+                                        <textarea class="form-control ckeditor" name="end_notes_page_content" id="end_notes_page_content"
                                             cols="40" rows="20"></textarea>
                                     </div>
                                 </div>

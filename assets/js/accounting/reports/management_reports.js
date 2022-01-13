@@ -26,7 +26,10 @@ $(document).on("click", "#management_reports_modal .modal-footer-check .middle-l
 
 $(document).on("click", "#management_reports_modal .modal-footer-check button.cancel-button", function(event) {
     event.preventDefault();
-    $("#management_reports_modal").fadeOut();
+    if ($(this).attr("data-submit-type") == null) {
+        $("#management_reports_modal").fadeOut();
+    }
+
 });
 
 $(document).on("click", "#management_reports_modal #cover-page-section .page-styles-img .cover-style .dropdown-icon", function(event) {
@@ -115,11 +118,22 @@ $(document).on("change", '#management_reports_modal #reports .report-section.new
 });
 
 $(document).on("click", "#management_reports_modal #preliminary-page a.add-new-page", function(event) {
+    event.preventDefault();
     company_overview_add_preliminary_page();
 });
 
 $(document).on("click", "#management_reports_modal #preliminary-page .delete-page-btn", function(event) {
     if ($("#management_reports_modal #preliminary-page .pages .page").length > 1) {
+        var preliminary_page_id = $(this).attr("data-id");
+        $.ajax({
+            url: baseURL + "/management-report/preliminary-page/delete",
+            type: "POST",
+            dataType: "json",
+            data: {
+                preliminary_page_id: preliminary_page_id
+            },
+            success: function(data) {},
+        });
         $(this).parent("div.form-check").parent(".page").remove();
     }
 });
@@ -163,6 +177,7 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
         },
         success: function(data) {
             $("#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon").attr("class", "style-icon icon-" + data.cover_style);
+            $('#management_reports_modal input[name="cover_style"]').val(data.cover_style);
             $('#management_reports_modal input[name="template_name"]').val(data.template_name);
             $('#management_reports_modal input[name="cover_page_cover_title"]').val(data.cover_title);
             $('#management_reports_modal input[name="cover_page_subtitle"]').val(data.cover_subtitle);
@@ -175,8 +190,7 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
             $('#management_reports_modal input[name="table_of_contents_page_title"]').val(data.table_page_title);
             $('#management_reports_modal input[name="end_notes_page_title"]').val(data.endnote_page_title);
             $('#management_reports_modal input[name="end_notes_page_content"]').val(data.endnote_page_content);
-
-            console.log(data.cover_show_logo);
+            $('#management_reports_modal input[name="management_report_id"]').val(management_report_id);
             if (data.cover_show_logo == "0") {
                 $('#management_reports_modal input[name="show-logo"]').prop("checked", false);
             } else {
@@ -198,5 +212,47 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
                 $('#management_reports_modal input[name="end_notes_include_breakdown_of_sub_accounts"]').prop("checked", true);
             }
         },
+    });
+});
+
+
+$(document).on('click', '#management_reports_modal .modal-footer-check button[data-submit-type="save"]', function(event) {
+    event.preventDefault();
+    $('#management_reports_modal textarea[name="end_notes_page_content"]').html(CKEDITOR.instances["end_notes_page_content"].getData());
+    var ctr = 1;
+    $("#management_reports_modal textarea[name='prelimenary_page_content[]']").map(function() {
+        $(this).html(CKEDITOR.instances["prelimenary_page_content_" + ctr].getData());
+        ctr++;
+    }).get();
+
+    Swal.fire({
+        title: "",
+        html: "Save?",
+        showCancelButton: true,
+        imageUrl: baseURL + "/assets/img/accounting/customers/folder.png",
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#2ca01c",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                url: baseURL + "/management-report/update",
+                type: "POST",
+                dataType: "json",
+                data: $("#management_reports_modal #management_report_form").serialize(),
+                success: function(data) {
+                    if (data.result == "success") {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Success",
+                            html: "Management report has been saved.",
+                            icon: "success",
+                        });
+                    }
+                },
+            });
+        }
     });
 });

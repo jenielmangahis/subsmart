@@ -31,7 +31,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             data-content="Choose a time period to see where things stood at the end of it."
                                         >Report period</div>
                                         <div class="form-group">
-                                            <select class="form-control">
+                                            <select class="form-control" data-type="report_period">
                                                 <option value="all_dates">All Dates</option>
                                                 <option value="custom">Custom</option>
                                                 <option value="today">Today</option>
@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         >Show non-zero or active only</div>
                                         <div class="form-group">
                                             <div class="customDropdown">
-                                                <button class="customDropdown__btn" type="button">
+                                                <button class="customDropdown__btn" type="button" data-type="show_non_zero_or_active_only">
                                                     <span>Active rows/active columns</span>
                                                     <i class="fa fa-angle-down"></i>
                                                 </button>
@@ -94,19 +94,19 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     <div class="customDropdown__group">
                                                         <div class="customDropdown__title">Show rows</div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows1" value="option1" checked>
+                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows1" value="active_rows" checked>
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows1">
                                                                 Active
                                                             </label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows2" value="option2">
+                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows2" value="all_rows">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows2">
                                                                 All
                                                             </label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows3" value="option3">
+                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyRows" id="nonZeroActiveOnlyRows3" value="non-zero_rows">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyRows3">
                                                                 Non-zero
                                                             </label>
@@ -115,19 +115,19 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                                     <div class="customDropdown__group">
                                                         <div class="customDropdown__title">Show columns</div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns1" value="option1" checked>
+                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns1" value="active_columns" checked>
                                                             <label class="form-check-label" for="nonZeroActiveOnlyColumns1">
                                                                 Active
                                                             </label>
                                                         </div>
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns2" value="option2">
+                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns2" value="all_columns">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyColumns2">
                                                                 All
                                                             </label>
                                                         </div>
                                                         <div class="form-check disabled">
-                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns3" value="option3">
+                                                            <input class="form-check-input" type="radio" name="nonZeroActiveOnlyColumns" id="nonZeroActiveOnlyColumns3" value="non-zero_columns">
                                                             <label class="form-check-label" for="nonZeroActiveOnlyColumns3">
                                                                 Non-zero
                                                             </label>
@@ -141,7 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <div class="accountReceivable__formTitle">Aging method</div>
                                         <div class="accountReceivable__agingMethodInner">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodCurrent" value="current">
+                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodCurrent" value="current" checked>
                                                 <label class="form-check-label" for="agingMethodCurrent">Current</label>
                                             </div>
                                             <div class="form-check form-check-inline">
@@ -150,17 +150,19 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group inputErrorWrapper">
                                         <label for="daysPerAgingPeriod">Days per aging period</label>
-                                        <input type="number" class="form-control">
+                                        <input type="number" class="form-control" data-type="days_per_aging_period" min="1" max="500" required>
+                                        <span class="inputError__message">Please enter a number between 1 to 500</span>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group inputErrorWrapper">
                                         <label for="numberOfPeriods">Number of periods</label>
-                                        <input type="number" class="form-control">
+                                        <input type="number" class="form-control" data-type="number_of_periods" min="1" max="50" required>
+                                        <span class="inputError__message">Please enter a number between 1 to 50</span>
                                     </div>
 
                                     <div class="accountReceivable__agingMethodBtn">
-                                        <button type="button" class="btn btn-ghost">Run report</button>
+                                        <button type="button" class="btn btn-ghost" id="runReport">Run report</button>
                                     </div>
                                 </div>
                             </div>
