@@ -1,11 +1,16 @@
-
+<?php 
+if($data_count == "NaN"){
+    $data_count=1;
+}
+?>
+<input type="text" name="preliminary_page_id[]" value="1" style="display: none;">
 <div class="page" data-count="<?=$data_count?>">
     <div class="form-check" style="padding: 0 12px;">
         <div class="checkbox checkbox-sec margin-right">
             <input type="checkbox" name="include_this_page[]" id="include_this_page_<?=$data_count?>" checked>
             <label for="include_this_page_<?=$data_count?>">Include this page</label>
         </div>
-        <i class="fa fa-trash-o delete-page-btn" aria-hidden="true"></i>
+        <i class="fa fa-trash-o delete-page-btn" aria-hidden="true" data-id="1"></i>
     </div>
     <div class="form-group">
         <div class="label">

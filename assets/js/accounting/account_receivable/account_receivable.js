@@ -131,6 +131,170 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
     }
   });
+
+  $("[data-type=days_per_aging_period], [data-type=number_of_periods]") //
+    .on("input", function (event) {
+      const $target = $(event.target);
+      const $parent = $target.closest(".inputErrorWrapper");
+      const value = Number($target.val());
+      const min = Number($target.prop("min"));
+      const max = Number($target.prop("max"));
+
+      $target.removeClass("inputError");
+      $parent.removeClass("inputErrorWrapper--active");
+
+      if (value < min || value > max || isNaN(value)) {
+        $target.addClass("inputError");
+        $parent.addClass("inputErrorWrapper--active");
+      }
+    });
+
+  const $runReport = $("#runReport");
+  const $arForm = $(".accountReceivable__form");
+  $runReport.on("click", () => {
+    const $dataTypes = $arForm.find("[data-type]");
+    for (let index = 0; index < $dataTypes.length; index++) {
+      const $dataType = $($dataTypes[index]);
+      const $parentError = $dataType.closest(".inputErrorWrapper");
+      const value = $dataType.val();
+
+      if (
+        ($dataType.prop("required") && isEmpty(value)) ||
+        $dataType.hasClass("inputError")
+      ) {
+        $dataType.addClass("inputError");
+        $parentError.addClass("inputErrorWrapper--active");
+        $dataType.focus();
+        return;
+      }
+
+      $dataType.removeClass("inputError");
+      $parentError.removeClass("inputErrorWrapper--active");
+    }
+  });
+
+  $("[name=nonZeroActiveOnlyRows], [name=nonZeroActiveOnlyColumns]") //
+    .on("change", function () {
+      const $button = $("[data-type=show_non_zero_or_active_only]");
+      const $rowChecked = $("[name=nonZeroActiveOnlyRows]:checked");
+      const $colChecked = $("[name=nonZeroActiveOnlyColumns]:checked");
+
+      const rowValue = $rowChecked.val();
+      const colValue = $colChecked.val();
+      const rowValueCapitalized = capitalize(rowValue.split("_").join(" "));
+      const colValueCapitalized = capitalize(colValue.split("_").join(" "));
+
+      $button.text(`${rowValueCapitalized}/${colValueCapitalized}`);
+      $button.val(`${rowValue}/${colValue}`);
+    });
+
+  $("[data-type=report_period]").on("change", (event) => {
+    const $siblings = $(".accountReceivable__reportPeriodBody > div:not(:first-child)"); // prettier-ignore
+    const $date = $(".accountReceivable__reportPeriodBody [type=date]");
+
+    const format = (momentObject) => {
+      return momentObject.format("YYYY-MM-DD");
+    };
+
+    const handlers = {
+      all_dates: () => {
+        $siblings.css({ visibility: "hidden" });
+      },
+      custom: () => {
+        $date.val("");
+      },
+      today: () => {
+        $date.val(format(moment()));
+      },
+      this_week: () => {
+        $date.val(format(moment().endOf("week")));
+      },
+      this_week_to_date: () => {
+        handlers.today();
+      },
+      this_month: () => {
+        $date.val(format(moment().endOf("month")));
+      },
+      this_month_to_date: () => {
+        handlers.today();
+      },
+      this_quarter: () => {
+        $date.val(format(moment().endOf("quarter")));
+      },
+      this_quarter_to_date: () => {
+        handlers.today();
+      },
+      this_year: () => {
+        $date.val(format(moment().endOf("year")));
+      },
+      this_year_to_date: () => {
+        handlers.today();
+      },
+      this_year_to_last_month: () => {
+        $date.val(format(moment().startOf("year")));
+      },
+      yesterday: () => {
+        $date.val(format(moment().subtract(1, "day")));
+      },
+      recent: () => {
+        handlers.today();
+      },
+      last_week: () => {
+        $date.val(format(moment().startOf("week").subtract(1, "day")));
+      },
+      last_week_to_date: () => {
+        $date.val(format(moment().subtract(1, "week")));
+      },
+      last_month: () => {
+        $date.val(format(moment().startOf("month").subtract(1, "day")));
+      },
+      last_month_to_date: () => {
+        $date.val(format(moment().subtract(1, "month")));
+      },
+      last_quarter: () => {
+        $date.val(format(moment().subtract(1, "quarter").endOf("quarter")));
+      },
+      last_quarter_to_date: () => {
+        $date.val(format(moment().subtract(1, "quarter")));
+      },
+      last_year: () => {
+        $date.val(format(moment().subtract(1, "year").endOf("year")));
+      },
+      last_year_to_date: () => {
+        $date.val(format(moment().subtract(1, "year")));
+      },
+      since_30_days_ago: () => {
+        handlers.all_dates();
+      },
+      since_60_days_ago: () => {
+        handlers.all_dates();
+      },
+      since_90_days_ago: () => {
+        handlers.all_dates();
+      },
+      since_365_days_ago: () => {
+        handlers.all_dates();
+      },
+      next_week: () => {
+        $date.val(format(moment().add(1, "week").endOf("week")));
+      },
+      next_4_week: () => {
+        $date.val(format(moment().add(4, "week").endOf("week")));
+      },
+      next_month: () => {
+        $date.val(format(moment().add(1, "month").endOf("month")));
+      },
+      next_quarter: () => {
+        $date.val(format(moment().add(1, "quarter").endOf("quarter")));
+      },
+      next_year: () => {
+        $date.val(format(moment().add(1, "year").endOf("year")));
+      },
+    };
+
+    $siblings.css({ visibility: "visible" });
+    handlers[event.target.value]();
+  });
 });
 
 function isEmpty(value) {
@@ -144,4 +308,8 @@ function isEmpty(value) {
 function isEmail(string) {
   const regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   return regex.test(string);
+}
+
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }

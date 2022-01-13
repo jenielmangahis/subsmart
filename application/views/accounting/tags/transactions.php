@@ -116,7 +116,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <span class="fa fa-filter"></span> Filter
                                                     </a>
 
-                                                    <div class="dropdown-menu p-3" aria-labelledby="filterDropdown" style="width: 650px">
+                                                    <div class="dropdown-menu p-3" id="filter-dropdown" aria-labelledby="filterDropdown" style="width: 650px">
                                                         <div class="inner-filter-list">
                                                             <div class="row">
                                                                 <div class="col-12">
@@ -187,7 +187,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <span class="fa fa-tag"></span> Tags
                                                     </a>
 
-                                                    <div class="dropdown-menu p-3" aria-labelledby="filterDropdown" style="max-width: 650px">
+                                                    <div class="dropdown-menu p-3" id="tags-filter-dropdown" aria-labelledby="filterDropdown" style="max-width: 650px">
                                                         <div class="inner-filter-list">
                                                             <div class="row">
                                                                 <div class="col">
@@ -196,11 +196,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                         <label for="untagged">Show untagged transactions</label>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
-                                                                    <label for="ungrouped">Ungrouped</label>
-                                                                    <select id="ungrouped" class="form-control">
-                                                                        <option value="all">All ungrouped tags</option>
-                                                                    </select>
+                                                                <?php foreach($groups as $group) : ?>
+                                                                <div class="col-12">
+                                                                    <div class="form-group" >
+                                                                        <label for="group-<?=$group['id']?>"><?=$group['name']?></label>
+                                                                        <select id="group-<?=$group['id']?>" class="form-control" multiple="multiple">
+                                                                            <option value="all-<?=$group['name']?>-tags">All <?=$group['name']?> tags</option>
+                                                                            <?php foreach($group['tags'] as $tag) : ?>
+                                                                            <option value="<?=$tag->id?>"><?=$tag->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <?php endforeach; ?>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="ungrouped">Ungrouped</label>
+                                                                        <select id="ungrouped" class="form-control" multiple="multiple">
+                                                                            <option value="all">All ungrouped tags</option>
+                                                                            <?php foreach($ungrouped as $uTag) : ?>
+                                                                                <option value="<?=$uTag->id?>"><?=$uTag->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -222,8 +240,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <table id="transactions-table" class="table table-bordered table-hover"
-                                    style="width:100%">
+                                <table id="transactions-table" class="table table-bordered table-hover" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>

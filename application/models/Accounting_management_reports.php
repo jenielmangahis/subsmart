@@ -35,4 +35,33 @@ class Accounting_management_reports extends MY_Model
         $query = $this->db->query($sql);
         return $query->result();
     }
+    public function update_management_report($data,$id)
+    {
+        $this->db->where('id', $id);
+        $vendor = $this->db->update('accounting_management_reports', $data);
+        if ($vendor) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function update_preliminary_page($data,$id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update('accounting_management_reports_preliminary_pages', $data);
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function insert_preliminary_page($data)
+    {
+        $this->db->insert('accounting_management_reports_preliminary_pages', $data);
+        $insert_id = $this->db->insert_id();
+    }
+    public function delete_preliminary_page($id)
+    {
+        $this->db->delete('accounting_management_reports_preliminary_pages', array('id' => $id));
+    }
 }
