@@ -309,4 +309,9 @@ class Tags extends MY_Controller {
         $this->page_data['untagged'] = $this->input->get('untagged') === 'true';
         $this->load->view('accounting/tags/transactions', $this->page_data);
     }
+
+    public function load_transactions()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+    }
 }

@@ -20,7 +20,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     <div class="accountReceivable__formInner">
                         <div>
                             <div class="accountReceivable__formGroup accountReceivable__reportPeriod">
-                                <div class="accountReceivable__reportPeriodBody">
+                                <div class="accountReceivable__reportPeriodBody reportPeriodParent">
                                     <div>
                                         <div
                                             class="accountReceivable__formTitle popover-dismiss"
@@ -66,8 +66,8 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="accountReceivable__reportPeriodAsOf">as of</div>
-                                    <div class="form-group">
+                                    <div class="accountReceivable__reportPeriodAsOf reportPeriodParent__hide">as of</div>
+                                    <div class="form-group reportPeriodParent__hide">
                                         <input type="date" class="form-control">
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                             </div>
                         </div>
                         <div class="ml-auto">
-                            <button type="button" class="btn btn-ghost">Customize</button>
+                            <button type="button" class="btn btn-ghost" data-action="customize_toggle">Customize</button>
                             <button type="button" class="btn btn-primary">Save customization</button>
                         </div>
                     </div>
@@ -332,6 +332,100 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                         Send
                     </button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="customizeReport">
+        <div>
+            <div class="customizeReport__header">
+                <div class="customizeReport__title">Customize report</div>
+                <button class="customizeReport__close" data-action="customize_hide">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div>
+                <button class="customizeReport__toggle" type="button" data-toggle="collapse" data-target="#customizeGeneral" aria-expanded="false" aria-controls="customizeGeneral">
+                    <i class="fa fa-caret-right"></i>
+                    General
+                </button>
+                <div class="customizeReport__panel collapse" id="customizeGeneral">
+                    <div class="customizeReport__reportPeriod reportPeriodParent">
+                        <label>Report period</label>
+                        <div class="customizeReport__reportPeriodInner">
+                            <div class="form-group">
+                                <select class="form-control" data-type="report_period">
+                                    <option value="all_dates">All Dates</option>
+                                    <option value="custom">Custom</option>
+                                    <option value="today">Today</option>
+                                    <option value="this_week">This Week</option>
+                                    <option value="this_week_to_date">This Week-to-date</option>
+                                    <option value="this_month">This Month</option>
+                                    <option value="this_month_to_date">This Month-to-date</option>
+                                    <option value="this_quarter">This Quarter</option>
+                                    <option value="this_quarter_to_date">This Quarter-to-date</option>
+                                    <option value="this_year">This Year</option>
+                                    <option value="this_year_to_date">This Year-to-date</option>
+                                    <option value="this_year_to_last_month">This Year-to-last-month</option>
+                                    <option value="yesterday">Yesterday</option>
+                                    <option value="recent">Recent</option>
+                                    <option value="last_week">Last Week</option>
+                                    <option value="last_week_to_date">Last Week-to-date</option>
+                                    <option value="last_month">Last Month</option>
+                                    <option value="last_month_to_date">Last Month-to-date</option>
+                                    <option value="last_quarter">Last Quarter</option>
+                                    <option value="last_quarter_to_date">Last Quarter-to-date</option>
+                                    <option value="last_year">Last Year</option>
+                                    <option value="last_year_to_date">Last Year-to-date</option>
+                                    <option value="since_30_days_ago">Since 30 Days Ago</option>
+                                    <option value="since_60_days_ago">Since 60 Days Ago</option>
+                                    <option value="since_90_days_ago">Since 90 Days Ago</option>
+                                    <option value="since_365_days_ago">Since 365 Days Ago</option>
+                                    <option value="next_week">Next Week</option>
+                                    <option value="next_4_week">Next 4 Weeks</option>
+                                    <option value="next_month">Next Month</option>
+                                    <option value="next_quarter">Next Quarter</option>
+                                    <option value="next_year">Next Year</option>
+                                </select>
+                            </div>
+                            <div class="reportPeriodParent__hide">as of</div>
+                            <div class="form-group reportPeriodParent__hide">
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="customizeReport__numberFormat">
+                            <label>Number format</label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="numberFormat1" value="divide_by_1000">
+                                <label class="form-check-label" for="numberFormat1">Divide by 1000</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="numberFormat2" value="without_cents">
+                                <label class="form-check-label" for="numberFormat2">Without cents</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="numberFormat3" value="except_zero_amount">
+                                <label class="form-check-label" for="numberFormat3">Except zero amount</label>
+                            </div>
+                        </div>
+                        <div class="customizeReport__negativeNumbers">
+                            <label>Negative numbers</label>
+                            <div class="form-group mb-2">
+                                <select class="form-control">
+                                    <option value="-100">-100</option>
+                                    <option value="100">(100)</option>
+                                    <option value="100-">100-</option>
+                                </select>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="negativeNumbers" value="show_in_red">
+                                <label class="form-check-label" for="negativeNumbers">Show in red</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
