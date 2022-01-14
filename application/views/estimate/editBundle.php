@@ -320,8 +320,8 @@ input:checked + .slider:before {
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
                                     <div id="sel-customerdiv">
-                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                                        <option value="0">- none -</option>
+                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select" required="">
+                                        <option value="">- Select Customer -</option>
                                         <?php foreach($customers as $c){ ?>
                                             <option <?php if(isset($c)){ if($c->prof_id == $estimate->customer_id){echo "selected";} } ?> value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
@@ -858,7 +858,7 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-danger but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
+                                    <button type="submit" class="btn btn-primary but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                     <a href="<?php echo url('estimate') ?>" class="btn but-red">Cancel this</a>
                                 </div>

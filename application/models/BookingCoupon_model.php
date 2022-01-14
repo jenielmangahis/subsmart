@@ -29,13 +29,22 @@ class BookingCoupon_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
-        $this->db->where('user_id', $user_id);
         $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get()->row();
         return $query;
@@ -80,6 +89,10 @@ class BookingCoupon_model extends MY_Model
         $user_id = logged('id');
 
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
+    }
+
+    public function deleteCouponByIdAndCompanyId($id, $company_id){
+        $this->db->delete($this->table, array('company_id' => $company_id, 'id' => $id));
     }
 
     public function getAllActive($filters=array())

@@ -293,7 +293,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <!-- Modal footer -->
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-success" id="updatePassword">Save & exit</button>
                                 </div>
                             </form>

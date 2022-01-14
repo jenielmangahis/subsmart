@@ -85,7 +85,13 @@ class BookingServiceItem_model extends MY_Model
     {
         $user_id = logged('id');
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
-    } 
+    }
+
+     public function deleteServiceItemByIdAndCompanyId($id, $company_id)
+    {
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('id' => $id, 'company_id' => $company_id));
+    }
 
     public function deleteServiceItemViaCategory($id) {
         $user_id = logged('id');

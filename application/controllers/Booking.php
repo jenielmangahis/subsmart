@@ -64,7 +64,8 @@ class Booking extends MY_Controller {
 	public function time() {
         $user = $this->session->userdata('logged');
 
-        $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByUserId($user['id']);
+        $cid = logged('company_id');
+        $bookingTimeSlots = $this->BookingTimeSlot_model->findAllByCompanyId($cid);
 
         $this->page_data['bookingTimeSlots'] = $bookingTimeSlots;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -323,8 +324,9 @@ class Booking extends MY_Controller {
     public function ajax_edit_coupon()
     {
 
-    	$id = post('cid');
-    	$coupon = $this->BookingCoupon_model->getById($id);
+    	$id  = post('cid');
+    	$cid = logged('company_id');
+    	$coupon = $this->BookingCoupon_model->getByIdAndCompanyId($id, $cid);
 
     	$this->page_data['coupon'] = $coupon;
 		$this->load->view('online_booking/ajax_edit_coupon', $this->page_data);
@@ -332,7 +334,8 @@ class Booking extends MY_Controller {
 
     public function delete_coupon()
     {
-    	$id = $this->BookingCoupon_model->deleteUserCoupon(post('cid'));
+    	$cid = logged('company_id');
+    	$id  = $this->BookingCoupon_model->deleteCouponByIdAndCompanyId(post('cid'), $cid);
 
 		$this->activity_model->add("Coupon #$id Deleted by User:".logged('name'));
 
@@ -546,6 +549,7 @@ class Booking extends MY_Controller {
         	$this->load->model('BookingServiceItem_model');
 
         	$data = array(
+        		'company_id' => logged('company_id'),
         		'user_id' => $user['id'],
         		'category_id' => post('category_id'),
         		'name' => post('name'),
@@ -643,7 +647,8 @@ class Booking extends MY_Controller {
 
     public function delete_service_item()
     {
-    	$id = $this->BookingServiceItem_model->deleteServiceItem(post('siid'));
+    	$cid = logged('company_id');
+    	$id  = $this->BookingServiceItem_model->deleteServiceItemByIdAndCompanyId(post('siid'), $cid);
 
 		$this->activity_model->add("Service/Item #$id Deleted by User:".logged('name'));
 
@@ -751,6 +756,7 @@ class Booking extends MY_Controller {
         	if(!empty($t['days'])) {
 	            $days = serialize($t['days']);
 	            $data = array(
+	            	'company_id' => logged('company_id'),
 	                'user_id' => $user['id'],
 	                'time_start' => $t['time_start'],
 	                'time_end' => $t['time_end'],

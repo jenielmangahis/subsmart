@@ -41,6 +41,17 @@ class BookingTimeSlot_model extends MY_Model
         return $query->result();
     }
 
+    public function findAllByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function countTotal()
     {
         $id = logged('id');

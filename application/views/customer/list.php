@@ -703,6 +703,13 @@ add_css(array(
                                                                 </a>
                                                             </li>
                                                             <li>
+                                                                <a href="<?= base_url('customer/billing/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-file icon"></span>
+                                                                    Billing
+                                                                </a>
+                                                            </li>
+                                                            <li>
                                                                 <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>"
                                                                     class="editItemBtn">
                                                                     <span class="fa fa-dashboard icon"></span>
