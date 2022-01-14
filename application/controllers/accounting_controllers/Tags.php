@@ -72,10 +72,10 @@ class Tags extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/banking/tags.js"
+            "assets/js/accounting/banking/tags/tags.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('accounting/tags', $this->page_data);
+        $this->load->view('accounting/tags/index', $this->page_data);
     }
 
     public function get_group_tags()
@@ -283,5 +283,35 @@ class Tags extends MY_Controller {
                 $this->tags_model->delete($id, 'group');
             }
         }
+    }
+    
+    public function transactions()
+    {
+        add_footer_js(array(
+            "assets/js/accounting/banking/tags/tags-transactions.js"
+        ));
+
+        $groups = [];
+        $tagGroups = $this->tags_model->getGroup();
+
+        foreach($tagGroups as $group) {
+            $groupTags = $this->tags_model->get_group_tags($group['id']);
+
+            if(count($groupTags) > 0) {
+                $group['tags'] = $groupTags;
+
+                $groups[] = $group;
+            }
+        }
+
+        $this->page_data['groups'] = $groups;
+        $this->page_data['ungrouped'] = $this->tags_model->get_ungrouped();
+        $this->page_data['untagged'] = $this->input->get('untagged') === 'true';
+        $this->load->view('accounting/tags/transactions', $this->page_data);
+    }
+
+    public function load_transactions()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
     }
 }

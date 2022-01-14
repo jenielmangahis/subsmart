@@ -285,6 +285,8 @@ $route['accounting/tags/update/(:any)/(:any)']['POST'] = "accounting_controllers
 $route['accounting/tags/add-group-tag']['POST'] = "accounting_controllers/tags/add_group_tag";
 $route['accounting/tags/add-tag']['POST'] = "accounting_controllers/tags/add_tag";
 $route['accounting/tags/delete-tags']['POST'] = "accounting_controllers/tags/delete_tags";
+$route['accounting/tags/transactions'] = "accounting_controllers/tags/transactions";
+$route['accounting/tags/load-transactions']['post'] = "accounting_controllers/tags/load_transactions";
 
 // Modals
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
@@ -413,6 +415,9 @@ $route['cahsflow/money-in-out/chart/updated'] = 'accounting/update_money_in_out_
 $route['management-report/company_overview/add-preliminary-page'] = 'accounting/comp_overview_add_prelim_page';
 $route['management-report/company-overview/add-new-report-section'] = 'accounting/comp_overview_add_new_report_section';
 $route['management-report/get-management-report'] = 'accounting/get_management_report';
+$route['management-report/update'] = 'accounting/update_management_report';
+$route['management-report/preliminary-page/delete'] = 'accounting/delete_preliminary_page';
+
 
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';

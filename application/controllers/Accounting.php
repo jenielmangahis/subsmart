@@ -29,7 +29,7 @@ class Accounting extends MY_Controller
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_delayed_charge_model');
         $this->load->model('accounting_sales_time_activity_model');
-        $this->load->model('Accounting_customers_model','accounting_customers_model');
+        $this->load->model('Accounting_customers_model', 'accounting_customers_model');
         $this->load->model('accounting_refund_receipt_model');
         $this->load->model('accounting_delayed_credit_model');
         $this->load->model('accounting_purchase_order_model');
@@ -960,6 +960,88 @@ class Accounting extends MY_Controller
         
         echo json_encode($data);
     }
+    public function update_management_report()
+    {
+        $management_report_id = $this->input->post("management_report_id");
+        $cover_show_logo = 0;
+        if($this->input->post("show-logo") == "on"){
+            $cover_show_logo = 1;
+        }
+        $include_table_of_contents=0;
+        if($this->input->post("include_table_of_contents") == "on"){
+            $include_table_of_contents=1;
+        }
+        $end_notes_include_this_page =0;
+        if($this->input->post("end_notes_include_this_page") == "on"){
+            $end_notes_include_this_page =1;
+        }
+        $end_notes_include_breakdown_of_sub_accounts=0;
+        if($this->input->post("end_notes_include_breakdown_of_sub_accounts") == "on"){
+            $end_notes_include_breakdown_of_sub_accounts=1;
+        }
+        $data = array(
+            "company_id" =>logged("company_id"),
+            "template_name" =>$this->input->post("template_name"),
+            "report_period" =>$this->input->post("template_report_period"),
+            "cover_style" =>$this->input->post("cover_style"),
+            "cover_show_logo" =>$cover_show_logo,
+            "cover_title" =>$this->input->post("cover_page_cover_title"),
+            "cover_subtitle" =>$this->input->post("cover_page_subtitle"),
+            "cover_report_period" =>$this->input->post("cover_page_report_period"),
+            "cover_prepared_by" =>$this->input->post("cover_page_prepared_by"),
+            "cover_prepared_date" =>$this->input->post("cover_page_prepared_date"),
+            "cover_disclaimer" =>$this->input->post("cover_page_disclaimer"),
+            "table_include_table_of_contents" =>$include_table_of_contents,
+            "table_page_title" =>$this->input->post("table_of_contents_page_title"),
+            "endnotes_include_page" =>$end_notes_include_this_page,
+            "endnotes_break_down" =>$end_notes_include_breakdown_of_sub_accounts,
+            "endnote_page_title" =>$this->input->post("end_notes_page_title"),
+            "endnote_page_content" =>$this->input->post("end_notes_page_content"),
+            "status" =>1,
+            "date_updated" =>date("Y-m-d h:s:i"),
+            "updated_by" =>logged("id"),
+        );
+        $this->accounting_management_reports->update_management_report($data,$management_report_id);
+
+        $preliminary_content = $this->input->post("prelimenary_page_content");
+        $include_this_page = $this->input->post("include_this_page");
+        $preliminary_page_title = $this->input->post("preliminary_page_title");
+        $preliminary_page_ids = $this->input->post("preliminary_page_ids");
+
+        for($i = 0; $i < count($preliminary_content);$i++){
+            $id=$preliminary_page_ids[$i];
+            $includded =0;
+            if($include_this_page[$i] == "on"){
+                $includded =1;
+            }
+            $data = array(
+                "management_report_id"=>$management_report_id,
+                "include_this_page"=>$includded,
+                "page_title"=>$preliminary_page_title[$i],
+                "page_content"=>$preliminary_content[$i],
+                "date_updated"=>date("Y-m-d h:i:s"),
+            );
+            $success=$this->accounting_management_reports->update_preliminary_page($data,$id);
+            if(!$success){
+                $data["date_created"]=date("Y-m-d h:i:s");
+                $this->accounting_management_reports->insert_preliminary_page($data);
+            }
+        }
+
+
+        $data = new stdClass();
+        $data->result = "success";
+        echo json_encode($data);
+    }
+    public function delete_preliminary_page()
+    {
+        $preliminary_page = $this->input->post("preliminary_page_id");
+        $this->accounting_management_reports->delete_preliminary_page($preliminary_page);
+
+        $data = new stdClass();
+        $data->result = "success";
+        echo json_encode($data);
+    }
 
     public function aging_summary_report()
     {
@@ -980,6 +1062,8 @@ class Accounting extends MY_Controller
             // print
             'https://cdn.datatables.net/buttons/2.1.0/js/buttons.print.min.js',
             'https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js',
+
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
 
         $this->load->view('accounting/reports/aging_summary_report', $this->page_data);

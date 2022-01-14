@@ -2,7 +2,7 @@ div#management_reports_modal {
     display: none;
     background-color: #F4F5F8;
     position: absolute;
-    z-index: 1964;
+    z-index: 1000;
     width: 100%;
     top: 0;
     height: 100%;
