@@ -189,8 +189,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
   $("[data-type=report_period]").on("change", (event) => {
-    const $siblings = $(".accountReceivable__reportPeriodBody > div:not(:first-child)"); // prettier-ignore
-    const $date = $(".accountReceivable__reportPeriodBody [type=date]");
+    const $target = $(event.target);
+    const $parent = $target.closest(".reportPeriodParent");
+    const $siblings = $parent.find(".reportPeriodParent__hide");
+    const $date = $parent.find("[type=date]");
 
     const format = (momentObject) => {
       return momentObject.format("YYYY-MM-DD");
@@ -294,6 +296,16 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     $siblings.css({ visibility: "visible" });
     handlers[event.target.value]();
+  });
+
+  const $customizeReport = $(".customizeReport");
+  $("[data-action=customize_toggle]").on("click", () => {
+    $customizeReport.addClass("customizeReport--show");
+    $customizeReport.find(".collapse::first").collapse({ toggle: true });
+  });
+  $("[data-action=customize_hide]").on("click", () => {
+    $customizeReport.removeClass("customizeReport--show");
+    $customizeReport.find(".collapse").collapse({ toggle: false });
   });
 });
 

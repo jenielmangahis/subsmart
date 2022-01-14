@@ -6091,6 +6091,10 @@ class Accounting_modals extends MY_Controller
 
                 $return = $this->get_account_choices($return, $search, $accountTypes);
             break;
+            case 'transaction-contact' :
+                $return = $this->get_customer_choices($return, $search, 'contact');
+                $return = $this->get_vendor_choices($return, $search, 'contact');
+            break;
         }
 
         if ($search !== null && $search !== '') {
@@ -6100,7 +6104,7 @@ class Accounting_modals extends MY_Controller
                 return $indexA - $indexB;
             });
 
-            if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+            if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'transaction-contact') {
                 $results = $return['results'];
                 $return['results'] = [];
                 for ($i = 0; $i < count($results); $i++) {
@@ -6205,7 +6209,7 @@ class Accounting_modals extends MY_Controller
             if ($search !== null && $search !== '') {
                 $stripos = stripos($vendor->display_name, $search);
                 if ($stripos !== false) {
-                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'contact') {
                         $searched = substr($vendor->display_name, $stripos, strlen($search));
                         $choices['results'][] = [
                             'id' => 'vendor-'.$vendor->id,
@@ -6220,7 +6224,7 @@ class Accounting_modals extends MY_Controller
                     }
                 }
             } else {
-                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'person-tracking' || $field === 'contact') {
                     if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Vendors') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Vendors';
                     } else {
@@ -6261,7 +6265,7 @@ class Accounting_modals extends MY_Controller
                     ];
                 }
             } else {
-                if ($field === 'payee' || $field === 'received-from' || $field === 'names') {
+                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact') {
                     if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
                         $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
                     } else {
