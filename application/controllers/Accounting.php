@@ -1033,13 +1033,37 @@ class Accounting extends MY_Controller
         $data->result = "success";
         echo json_encode($data);
     }
-    public function delete_preliminary_page()
+    public function managenent_report_delete_preliminary_page()
     {
         $preliminary_page = $this->input->post("preliminary_page_id");
         $this->accounting_management_reports->delete_preliminary_page($preliminary_page);
 
         $data = new stdClass();
         $data->result = "success";
+        echo json_encode($data);
+    }
+
+    public function management_report_add_prelim_page_html()
+    {
+        
+        if($this->input->post("count") == 0){
+            $this->page_data['data_count'] = $this->input->post("data_count");
+        }else{
+            $this->page_data['prelim_pages'] = $this->accounting_management_reports->get_management_reports_preliminary_pages_by_id( $this->input->post("management_report_id"));
+        }
+
+
+        $new_page =$this->load->view('accounting/reports/management_reports/preliminary_pages', $this->page_data, true);
+        $data = new stdClass();
+        $data->new_page = $new_page;
+        echo json_encode($data);
+    }
+    public function management_report_add_new_report_section_html()
+    {
+        $this->page_data['data_count'] = $this->input->post("data_count");
+        $new_report =$this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
+        $data = new stdClass();
+        $data->new_report = $new_report;
         echo json_encode($data);
     }
 
@@ -1500,22 +1524,6 @@ class Accounting extends MY_Controller
         $data->permit_number = $bills->row()->permit_number;
         $data->memo = $bills->row()->memo;
         $data->check_category = ($check_category->num_rows() > 0) ? true : false;
-        echo json_encode($data);
-    }
-    public function comp_overview_add_prelim_page()
-    {
-        $this->page_data['data_count'] = $this->input->post("data_count");
-        $new_page =$this->load->view('accounting/reports/management_reports/preliminary_pages', $this->page_data, true);
-        $data = new stdClass();
-        $data->new_page = $new_page;
-        echo json_encode($data);
-    }
-    public function comp_overview_add_new_report_section()
-    {
-        $this->page_data['data_count'] = $this->input->post("data_count");
-        $new_report =$this->load->view('accounting/reports/management_reports/new_report_secitons', $this->page_data, true);
-        $data = new stdClass();
-        $data->new_report = $new_report;
         echo json_encode($data);
     }
     public function editBillData()

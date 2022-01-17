@@ -174,7 +174,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             </div>
 
                                                             <div class="btn-group d-block">
-                                                                <a href="#" class="btn-main" onclick="resetbtn()">Reset Filters</a>
+                                                                <a href="#" class="btn-main" onclick="resetfilters()">Reset Filters</a>
                                                                 <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applybtn()">Apply</a>
                                                             </div>
                                                         </div>
@@ -223,7 +223,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             </div>
 
                                                             <div class="btn-group d-block">
-                                                                <a href="#" class="btn-main" onclick="resetbtn()">Reset</a>
+                                                                <a href="#" class="btn-main" onclick="resettags()">Reset</a>
                                                                 <a href="#" id="apply-btn" class="btn-main apply-btn m-auto" onclick="applybtn()">Apply</a>
                                                             </div>
                                                         </div>

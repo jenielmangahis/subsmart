@@ -406,7 +406,25 @@ class Reports extends MY_Controller {
         $startDate = $this->input->get('startDate');
         $endDate = $this->input->get('endDate');
 
+        $payments = getExpenseCategory($startDate, $endDate);
+
+        echo json_encode($payments);
+    }
+
+    public function expenseByCategoryMonth() {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
         $payments = getExpense($startDate, $endDate);
+
+        echo json_encode($payments);
+    }
+
+    public function expenseByCategoryMonthVendor() {
+        $startDate = $this->input->get('startDate');
+        $endDate = $this->input->get('endDate');
+
+        $payments = getExpenseVendor($startDate, $endDate);
 
         echo json_encode($payments);
     }
