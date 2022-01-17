@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | 				However, this may cause high memory usage, especially if you run
 | 				a lot of SQL queries ... disable this to avoid that problem.
 |
-| The $active_group variable lets you choose which connection group to
+| The $active_group variable lets you choose which connection group to 
 | make active.  By default there is only one group (the 'default' group).
 |
 | The $query_builder variables lets you determine whether or not to load

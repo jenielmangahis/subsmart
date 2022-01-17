@@ -378,15 +378,30 @@ $colorError: #d52b1e;
   height: 100vh;
   padding: 1rem 1.5rem;
   box-sizing: border-box;
-  z-index: 951;
+  z-index: 952;
   background-color: #fff;
   transform: translateX(100%);
   transition: transform 0.3s;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
+    z-index: 951;
+  }
+
   &--show {
     transform: translateX(0);
+
+    & + .customizeReport__backdrop {
+      visibility: visible;
+    }
   }
 
   &__header {

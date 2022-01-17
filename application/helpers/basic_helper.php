@@ -2658,6 +2658,10 @@ function setPageName($type) {
         case "invoice-items-no-tax":
             $title = "Non Taxable Sales";
             break;
+
+        case "expense-by-month-by-vendor":
+            $title = "Expense by Vendor";
+            break;
     }
 
     return $title;
@@ -3536,42 +3540,139 @@ function getCustomerSource($start_date, $end_date) {
 
 //A
 function getExpenseCategory($start_date, $end_date) {
-    $CI =& get_instance();
-    $CI->load->model('Invoice_model', 'invoice_model');
-    $company_id = logged('company_id');
-    $cusGroups = get_customer_groups();
-    $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
-    $fn = [];
-    $grand_count = 0;
-    $grand_total = 0;
+    // $CI =& get_instance();
+    // $CI->load->model('Invoice_model', 'invoice_model');
+    // $company_id = logged('company_id');
+    // $cusGroups = get_customer_groups();
+    // $results = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Paid', 'is_recurring' => 0));
+    // $fn = [];
+    // $grand_count = 0;
+    // $grand_total = 0;
 
-    foreach ($cusGroups as $cusGroup) {
-        $count = 0;
-        $total_sales = 0;
-        foreach ($results as $result) {
-            if (get_customer_by_id($result->customer_id)->customer_group) {
-                $groups = unserialize(get_customer_by_id($result->customer_id)->customer_group);
-                foreach ($groups as $group) {
-                    if ($group === $cusGroup->title) {
-                        $count += 1;
-                        $grand_count += 1;
-                        $totals1 = unserialize($result2->invoice_totals);
-                        $total_invoice += floatval($totals1['grand_total']);
-                        $total_sales += floatval($totals1['grand_total']);
-                        $grand_total += floatval($totals1['grand_total']);
+    // foreach ($cusGroups as $cusGroup) {
+    //     $count = 0;
+    //     $total_sales = 0;
+    //     foreach ($results as $result) {
+    //         if (get_customer_by_id($result->customer_id)->customer_group) {
+    //             $groups = unserialize(get_customer_by_id($result->customer_id)->customer_group);
+    //             foreach ($groups as $group) {
+    //                 if ($group === $cusGroup->title) {
+    //                     $count += 1;
+    //                     $grand_count += 1;
+    //                     $totals1 = unserialize($result2->invoice_totals);
+    //                     $total_invoice += floatval($totals1['grand_total']);
+    //                     $total_sales += floatval($totals1['grand_total']);
+    //                     $grand_total += floatval($totals1['grand_total']);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     array_push($fn, array($cusGroup->title, $count, dollar_format($total_sales)));
+    // }
+
+
+    // array_push($fn, array("Total", $grand_count, dollar_format($grand_total)));
+    // return $fn;
+
+    $CI =& get_instance();
+    $CI->load->model('Accounting_expense', 'accounting_expense');
+    $CI->load->model('Accounting_expense_category', 'accounting_expense_category');
+    $CI->load->model('Accounting_list_category', 'accounting_list_category');
+    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
+    $company_id = logged('company_id');
+    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+
+    
+        
+        // $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+        // foreach($vendors as $vendor) 
+        // {
+        //     array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        // }
+
+
+        $lists = $CI->accounting_list_category->get();
+        foreach($lists as $list) 
+        {
+            array_push($fn, array("-",$list->category_name, "", "", "", "", ""));
+            
+            foreach ($results as $result) {
+                $categories = $CI->accounting_expense_category->getByWhere(array('category_id' => $list->id,'expenses_id' => $result->vendor_id));
+                foreach($categories as $category) 
+                {
+
+                //array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+                // $lists = $CI->accounting_list_category->getByWhere(array('id' => $category->category_id));
+                // foreach($lists as $list) 
+                // {
+                    //array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+                    $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+                    foreach($vendors as $vendor) 
+                    {
+                        array_push($fn, array(" "," ", $vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
                     }
                 }
-            }
         }
-        array_push($fn, array($cusGroup->title, $count, dollar_format($total_sales)));
+
     }
 
-
-    array_push($fn, array("Total", $grand_count, dollar_format($grand_total)));
+    // array_push($fn, array("Total", "", "", "", ""));
     return $fn;
 }
 
 function getExpense($start_date, $end_date) {
+    $CI =& get_instance();
+    $CI->load->model('Accounting_expense', 'accounting_expense');
+    $CI->load->model('AccountingVendors_model', 'accountingVendors_model');
+    $company_id = logged('company_id');
+    $results = $CI->accounting_expense->getByWhere(array('company_id' => $company_id, 'payment_date >=' => $start_date, 'payment_date <=' => $end_date));
+    $fn = [];
+    $comp_user = [];
+    $grand_total = 0;
+    $grand_num_invoice = 0;
+    $grand_paid_invoice = 0;
+
+    foreach ($results as $result) {
+        // if (!in_array($result->customer_id, $comp_user)) {
+        //     array_push($comp_user, $result->customer_id);
+        //     $num_invoice = 0;
+        //     $total_invoice = 0;
+        //     $paid_invoice = 0;
+
+        //     foreach ($results as $result2) {
+        //         if ($result2->customer_id === $result->customer_id) {
+        //             $num_invoice += 1;
+        //             $paid_invoice += 1;
+        //             $grand_num_invoice += 1;
+        //             $grand_paid_invoice += 1;
+
+        //             $totals1 = unserialize($result2->invoice_totals);
+        //             // $total_invoice += floatval($totals1['grand_total']);
+        //             $total_invoice += floatval($result->grand_total);
+        //             // $grand_total += floatval($totals1['grand_total']);
+        //             $grand_total += floatval($result->grand_total);
+        //         }
+        //     }
+        $vendors = $CI->accountingVendors_model->getByWhere(array('vendor_id' => $result->vendor_id));
+        foreach($vendors as $vendor) 
+        {
+            array_push($fn, array($vendor->f_name. ' ' .$vendor->l_name, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        }
+
+            // array_push($fn, array($result->vendor_id, $result->payment_date, $result->payment_method, $result->ref_number, dollar_format($result->amount)));
+        // }
+    }
+
+    // array_push($fn, array("Total", "", "", "", ""));
+    return $fn;
+}
+
+function getExpenseVendor($start_date, $end_date) {
     $CI =& get_instance();
     $CI->load->model('Accounting_expense', 'accounting_expense');
     $CI->load->model('AccountingVendors_model', 'accountingVendors_model');

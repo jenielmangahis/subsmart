@@ -137,9 +137,9 @@ $(document).on("click", "#management_reports_modal #preliminary-page .delete-pag
         $(this).parent("div.form-check").parent(".page").remove();
     }
 });
-company_overview_add_preliminary_page();
 
-function company_overview_add_preliminary_page() {
+
+function company_overview_add_preliminary_page(count = 0) {
     var data_count;
     var new_elements;
     if ($("#management_reports_modal #preliminary-page .pages .page:last-child").length > 0) {
@@ -147,13 +147,15 @@ function company_overview_add_preliminary_page() {
     } else {
         data_count = parseInt($("#management_reports_modal #preliminary-page .pages .page:first-child").attr("data-count")) + 1;
     }
-
+    var management_report_id = $("#management_reports_modal input[name='management_report_id']").val();
     $.ajax({
         url: baseURL + "/management-report/company_overview/add-preliminary-page",
         type: "POST",
         dataType: "json",
         data: {
-            data_count: data_count
+            data_count: data_count,
+            management_report_id: management_report_id,
+            count: count
         },
         success: function(data) {
             $("#management_reports_modal #preliminary-page .pages").append(data.new_page);
@@ -210,6 +212,11 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
                 $('#management_reports_modal input[name="end_notes_include_breakdown_of_sub_accounts"]').prop("checked", false);
             } else {
                 $('#management_reports_modal input[name="end_notes_include_breakdown_of_sub_accounts"]').prop("checked", true);
+            }
+            if (data.preliminary_pages_ctr == 0) {
+                company_overview_add_preliminary_page();
+            } else {
+                company_overview_add_preliminary_page(data.preliminary_pages_ctr);
             }
         },
     });

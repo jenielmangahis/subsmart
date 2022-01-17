@@ -17,11 +17,13 @@ var options = {
   urlReportPreview: base_url + "reports/preview",
   //updates
   urlFilterReportsExpenseByCategory: base_url + "reports/expenseByCategory",
+  urlfilterReportsExpenseByCategoryMonth: base_url + "reports/expenseByCategoryMonth",
   urlFilterInvoiceByDate: base_url + "reports/invoiceByDate",
   urlfilterWorkOrderByEmployee: base_url + "reports/workOrderByEmployee",
   urlfilterWorkOrderByStatus: base_url + "reports/workOrderByStatus",
-  filterCustomerTaxByMonth: base_url + "reports/customerTaxByMonth",
-
+  urlfilterCustomerTaxByMonth: base_url + "reports/customerTaxByMonth",
+  urlfilterReportsExpenseByMonthByVendor: base_url + "reports/expenseByCategoryMonthVendor",
+  
 };
 
 function selectReport(startdate, endDate) {
@@ -98,6 +100,14 @@ function selectReport(startdate, endDate) {
     
     case "customer-tax-by-month":
       filterCustomerTaxByMonth(startdate, endDate);
+      break;
+
+    case "expense-by-month-by-category":
+      filterReportsExpenseByCategoryMonth(startdate, endDate);
+      break;
+
+    case "expense-by-month-by-vendor":
+      filterReportsExpenseByMonthByVendor(startdate, endDate);
       break;
 
   }
@@ -297,6 +307,32 @@ function filterReportsExpenseByCategory(startDate, endDate) {
       var obj = JSON.parse(response);
       $("#tableToListReport tbody").empty();
       obj.forEach(expenseAppend);
+    },
+  });
+}
+
+function filterReportsExpenseByCategoryMonth(startDate, endDate) {
+  $.ajax({
+    url: options.urlFilterReportsExpenseByCategoryMonth,
+    type: "GET",
+    data: { startDate: startDate, endDate: endDate },
+    success: function (response) {
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(expenseMonthAppend);
+    },
+  });
+}
+
+function filterReportsExpenseByMonthByVendor(startDate, endDate) {
+  $.ajax({
+    url: options.urlfilterReportsExpenseByMonthByVendor,
+    type: "GET",
+    data: { startDate: startDate, endDate: endDate },
+    success: function (response) {
+      var obj = JSON.parse(response);
+      $("#tableToListReport tbody").empty();
+      obj.forEach(expenseVendorAppend);
     },
   });
 }
@@ -664,6 +700,58 @@ function expenseByCategoryAppend(item)
 
 function expenseAppend(item)
 {
+  if (item[0] == "-") {
+    $("#tableToListReport").append(
+      "<tr style='background-color:#ededed;'><td class='tr--primary tr--bold'><strong>" +
+        item[0] +
+        "</strong></td>" +
+        "<td class='text-left tr--primary tr--bold'><strong>" +
+        item[1] +
+        "</strong></td>" +
+        "<td class='text-right'>" +
+        item[2] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[3] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[4] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[5] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[6] +
+        "</td></tr>"
+    );
+  } else {
+    $("#tableToListReport").append(
+      "<tr><td>" +
+        item[0] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[1] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[2] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[3] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[4] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[5] +
+        "<td class='text-right'>" +
+        item[6] +
+        "</td></tr>"
+    );
+  }
+}
+
+function expenseMonthAppend(item)
+{
   if (item[0] == "Total") {
     $("#tableToListReport").append(
       "<tr style='background-color:#ededed; font-weight: bold;'><td>" +
@@ -676,7 +764,7 @@ function expenseAppend(item)
         item[2] +
         "</td>" +
         "<td class='text-right'>" +
-        item[3] +
+        item[3]  +
         "</td>" +
         "<td class='text-right'>" +
         item[4] +
@@ -698,6 +786,41 @@ function expenseAppend(item)
         "</td>" +
         "<td class='text-right'>" +
         item[4] +
+        "</td></tr>"
+    );
+  }
+}
+
+function expenseVendorAppend(item)
+{
+  if (item[0] == "Total") {
+    $("#tableToListReport").append(
+      "<tr style='background-color:#ededed; font-weight: bold;'><td>" +
+        item[0] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[1] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[2] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[3] +
+        "</td></tr>"
+    );
+  } else {
+    $("#tableToListReport").append(
+      "<tr><td>" +
+        item[0] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[1] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[2] +
+        "</td>" +
+        "<td class='text-right'>" +
+        item[3] +
         "</td></tr>"
     );
   }

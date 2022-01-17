@@ -313,5 +313,114 @@ class Tags extends MY_Controller {
     public function load_transactions()
     {
         $post = json_decode(file_get_contents('php://input'), true);
+        $order = $post['order'][0]['dir'];
+        $column = $post['order'][0]['column'];
+        $columnName = $post['columns'][$column]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
+        $date = $post['date'];
+        $from = $post['from'];
+        $to = $post['to'];
+        $contact = $post['contact'];
+
+        $ungrouped = array_filter($post['ungrouped'], function($v, $k) {
+            return $v !== 'all';
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $grouped = array_filter($post['groups'], function($v, $k) {
+            return count($v) > 0;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $tags = [];
+        foreach($grouped as $group) {
+            foreach($group as $id) {
+                if(stripos($id, "all") === false) {
+                    $tags[] = $id;
+                }
+            }
+        }
+
+        foreach($ungrouped as $tagId) {
+            $tags[] = $tagId;
+        }
+
+        $filter = [
+            'company_id' => logged('company_id'),
+            'untagged' => $post['untagged'],
+            'tags' => $tags,
+            'type' => $post['type']
+        ];
+
+        if($date !== 'all') {
+            $filter['from'] = $from === '' ? null : date("Y-m-d", strtotime($from));
+            $filter['to'] = $to === '' ? null : date("Y-m-d", strtotime($to));
+        }
+
+        if($contact !== '') {
+            $cont = explode('-', $contact);
+            $filter['contact_type'] = $cont[0];
+            $filter['contact_id'] = $cont[1];
+        }
+        
+        $data = $this->get_transactions($filter);
+    }
+
+    private function get_transactions($filter)
+    {
+        $data = [];
+        switch($filter['type']) {
+            case 'all' :
+                $ccCredits = $this->get_cc_credits($data, $filter);
+                $vCredits = $this->get_vendor_credits($data, $filter);
+                $deposits = $this->get_deposits($data, $filter);
+                $expenses = $this->get_expenses($data, $filter);
+                $bills = $this->get_bills($data, $filter);
+                $checks = $this->get_checks($data, $filter);
+                $purchaseOrder = $this->get_purchase_orders($data, $filter);
+            break;
+            case 'money-in' :
+
+            break;
+            case 'money-out' :
+
+            break;
+        }
+
+        return $data;
+    }
+
+    private function get_cc_credits($data = [], $filter)
+    {
+        $ccCredits = $this->tags_model->get_cc_credits($filter);
+    }
+
+    private function get_vendor_credits($data = [], $filter)
+    {
+        $vCredits = $this->tags_model->get_vendor_credits($filter);
+    }
+    
+    private function get_deposits($data = [], $filter)
+    {
+        $deposits = $this->tags_model->get_deposits($filter);
+    }
+
+    private function get_expenses($data = [], $filter)
+    {
+        $expenses = $this->tags_model->get_expenses($filter);
+    }
+
+    private function get_bills($data = [], $filter)
+    {
+        $bills = $this->tags_model->get_bills($filter);
+    }
+
+    private function get_checks($data = [], $filter)
+    {
+        $checks = $this->tags_model->get_checks($filter);
+    }
+
+    private function get_purchase_orders($data = [], $filter)
+    {
+        $purchaseOrders = $this->tags_model->get_purchase_order($filter);
     }
 }
