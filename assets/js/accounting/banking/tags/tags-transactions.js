@@ -211,21 +211,22 @@ $('#type').on('change', function() {
             column.next().remove();
         break;
         case 'money-in' :
+            var options = `<option value="all" selected>All money in</option>
+            <option value="invoice">Invoice</option>
+            <option value="sales-receipt">Sales receipt</option>
+            <option value="estimate">Estimate</option>
+            <option value="cc-credit">Credit card credit</option>
+            <option value="vendor-credit">Vendor credit</option>
+            <option value="credit-memo">Credit memo</option>
+            <option value="activity-charge">Activity charge</option>
+            <option value="deposit">Deposit</option>`;
             var field = `<div class="col-12">
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
                             <label for="money-in">Money in transactions</label>
                             <select id="money-in" class="form-control">
-                                <option value="all" selected>All money in</option>
-                                <option value="invoice">Invoice</option>
-                                <option value="sales-receipt">Sales receipt</option>
-                                <option value="estimate">Estimate</option>
-                                <option value="cc-credit">Credit card credit</option>
-                                <option value="vendor-credit">Vendor credit</option>
-                                <option value="credit-memo">Credit memo</option>
-                                <option value="activity-charge">Activity charge</option>
-                                <option value="deposit">Deposit</option>
+                                ${options}
                             </select>
                         </div>
                     </div>
@@ -235,17 +236,7 @@ $('#type').on('change', function() {
             if($('#money-out').length > 0) {
                 $('#money-out').prev().attr('money-in');
                 $('#money-out').prev().html('Money in transactions');
-                $('#money-out').html(`
-                <option value="all" selected>All money in</option>
-                <option value="invoice">Invoice</option>
-                <option value="sales-receipt">Sales receipt</option>
-                <option value="estimate">Estimate</option>
-                <option value="cc-credit">Credit card credit</option>
-                <option value="vendor-credit">Vendor credit</option>
-                <option value="credit-memo">Credit memo</option>
-                <option value="activity-charge">Activity charge</option>
-                <option value="deposit">Deposit</option>
-                `);
+                $('#money-out').html(options);
                 $('#money-out').attr('id', 'money-in');
             } else {
                 $(field).insertAfter(column);
@@ -256,23 +247,24 @@ $('#type').on('change', function() {
             });
         break;
         case 'money-out' :
+            var options = `<option value="all" selected>All money out</option>
+            <option value="expense">Expense</option>
+            <option value="bill">Bill</option>
+            <option value="credit-memo">Credit memo</option>
+            <option value="refund-receipt">Refund receipt</option>
+            <option value="cash-purchase">Cash purchase</option>
+            <option value="check">Check</option>
+            <option value="cc-expense">Credit card expense</option>
+            <option value="purchase-order">Purchase order</option>
+            <option value="vendor-credit">Vendor credit</option>
+            <option value="activity-credit">Activity credit</option>`;
             var field = `<div class="col-12">
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
                             <label for="money-out">Money out transactions</label>
                             <select id="money-out" class="form-control">
-                                <option value="all" selected>All money out</option>
-                                <option value="expense">Expense</option>
-                                <option value="bill">Bill</option>
-                                <option value="credit-memo">Credit memo</option>
-                                <option value="refund-receipt">Refund receipt</option>
-                                <option value="cash-purchase">Cash purchase</option>
-                                <option value="check">Check</option>
-                                <option value="cc-expense">Credit card expense</option>
-                                <option value="purchase-order">Purchase order</option>
-                                <option value="vendor-credit">Vendor credit</option>
-                                <option value="activity-credit">Activity credit</option>
+                                ${options}
                             </select>
                         </div>
                     </div>
@@ -282,19 +274,7 @@ $('#type').on('change', function() {
             if($('#money-in').length > 0) {
                 $('#money-in').prev().attr('money-out');
                 $('#money-in').prev().html('Money out transactions');
-                $('#money-in').html(`
-                <option value="all" selected>All money out</option>
-                <option value="expense">Expense</option>
-                <option value="bill">Bill</option>
-                <option value="credit-memo">Credit memo</option>
-                <option value="refund-receipt">Refund receipt</option>
-                <option value="cash-purchase">Cash purchase</option>
-                <option value="check">Check</option>
-                <option value="cc-expense">Credit card expense</option>
-                <option value="purchase-order">Purchase order</option>
-                <option value="vendor-credit">Vendor credit</option>
-                <option value="activity-credit">Activity credit</option>
-                `);
+                $('#money-in').html(options);
                 $('#money-in').attr('id', 'money-out');
             } else {
                 $(field).insertAfter(column);
@@ -354,6 +334,7 @@ const columns = [
         name: 'date'
     },
     {
+        orderable: false,
         data: 'from_to',
         name: 'from_to'
     },
@@ -370,10 +351,12 @@ const columns = [
         name: 'type'
     },
     {
+        orderable: false,
         data: 'amount',
         name: 'amount'
     },
     {
+        orderable: false,
         data: 'tags',
         name: 'tags'
     }
@@ -386,7 +369,7 @@ $('#transactions-table').DataTable({
     lengthChange: false,
     pageLength: 150,
     info: false,
-	order: [[1, 'asc']],
+	order: [[1, 'desc']],
     ajax: {
 		url: '/accounting/tags/load-transactions',
 		dataType: 'json',

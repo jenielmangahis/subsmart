@@ -301,11 +301,43 @@ window.addEventListener("DOMContentLoaded", async () => {
   const $customizeReport = $(".customizeReport");
   $("[data-action=customize_toggle]").on("click", () => {
     $customizeReport.addClass("customizeReport--show");
-    $customizeReport.find(".collapse::first").collapse({ toggle: true });
+    $customizeReport.find(".collapse").first().collapse("show");
   });
-  $("[data-action=customize_hide]").on("click", () => {
-    $customizeReport.removeClass("customizeReport--show");
-    $customizeReport.find(".collapse").collapse({ toggle: false });
+  $("[data-action=customize_hide], .customizeReport__backdrop") //
+    .on("click", () => {
+      $customizeReport.removeClass("customizeReport--show");
+      $customizeReport.find(".collapse").collapse("hide");
+    });
+  $customizeReport.find(".btn-primary").on("click", () => {
+    const $dataTypes = $customizeReport.find("[data-type]");
+    const payload = {};
+
+    const $error = $customizeReport.find(".inputError");
+    if ($error.length) {
+      $error.closest(".collapse").collapse("show");
+      $error.first().focus();
+      return;
+    }
+
+    for (let index = 0; index < $dataTypes.length; index++) {
+      const $dataType = $($dataTypes[index]);
+      const $group = $dataType.closest("[data-type-group]");
+      const name = $dataType.data("type");
+      const group = $group.data("type-group");
+
+      if (!payload[group]) {
+        payload[group] = {};
+      }
+
+      if ($dataType.is(":checkbox") || $dataType.is(":radio")) {
+        payload[group][name] = $dataType.is(":checked");
+      } else {
+        payload[group][name] = $dataType.val();
+      }
+    }
+
+    console.clear();
+    console.log(payload);
   });
 });
 

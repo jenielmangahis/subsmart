@@ -156,10 +156,12 @@ class Tags_model extends MY_Model
         if($filters['untagged'] === 1) {
             $transactionsWithTags = $this->get_tagged_ids('Deposit');
         }
+        $multiFunds = $this->get_deposit_ids_with_multiple_funds();
 
         $this->db->select('accounting_bank_deposit.*');
         $this->db->from('accounting_bank_deposit');
         $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
+        $this->db->where('accounting_bank_deposit.status', 1);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('accounting_bank_deposit.date >=', $filters['from']);
         }
@@ -167,6 +169,7 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_bank_deposit.date <=', $filters['to']);
         }
         if(!is_null($filters['contact_id'])) {
+            $this->db->where_not_in('accounting_bank_deposit.id', $multiFunds);
             $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
             $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
         }
@@ -208,6 +211,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_expense');
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_expense.status', 1);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -255,6 +259,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_check');
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_check.status', 1);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -301,6 +306,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_bill');
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where_in('accounting_bill.status', [1, 2]);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('bill_date >=', $filters['from']);
         }
@@ -346,6 +352,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_purchase_order');
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where_in('accounting_purchase_order.status', [1, 2]);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('purchase_order_date >=', $filters['from']);
         }
@@ -391,6 +398,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_vendor_credit');
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where_in('accounting_vendor_credit.status', [1, 2]);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -435,6 +443,7 @@ class Tags_model extends MY_Model
         $this->db->select('*');
         $this->db->from('accounting_credit_card_credits');
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_credit_card_credits.status', 1);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('payment_date >=', $filters['from']);
         }
@@ -496,6 +505,23 @@ class Tags_model extends MY_Model
         $return = [];
         foreach($result as $res) {
             $return[] = $res->transaction_id;
+        }
+
+        return $return;
+    }
+
+    public function get_deposit_ids_with_multiple_funds()
+    {
+        $this->db->select('bank_deposit_id, COUNT(*) as cnt');
+        $this->db->group_by('bank_deposit_id');
+        $query = $this->db->get('accounting_bank_deposit_funds');
+        $result = $query->result();
+
+        $return = [];
+        foreach($result as $res) {
+            if(intval($res->cnt) > 1) {
+                $return[] = $res->bank_deposit_id;
+            }
         }
 
         return $return;
