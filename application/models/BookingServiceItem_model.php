@@ -5,16 +5,22 @@ class BookingServiceItem_model extends MY_Model
 {
     public $table = 'booking_service_items';
 
-    public function getAll($filters=array())
+    public function getAll($search=array(), $filters=array())
     {
         $id = logged('id');
 
         $this->db->select('*');
         $this->db->from($this->table);
 
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
-                $this->db->like('name', $filters['search'], 'both');
+        if ( !empty($search) ) {
+            if ( !empty($search['search']) ) {
+                $this->db->like('name', $search['search'], 'both');
+            }
+        }
+
+        if( $filters ){
+            foreach( $filters as $filter ){
+                $this->db->where($filter['field'], $filter['value']);
             }
         }
 
@@ -79,13 +85,32 @@ class BookingServiceItem_model extends MY_Model
 
         $num_rows = $this->db->count_all_results();
         return $num_rows;
+    } 
+
+    public function countTotalByCompanyId($company_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+
+        $num_rows = $this->db->count_all_results();
+        return $num_rows;
     }       
 
     public function deleteServiceItem($id)
     {
         $user_id = logged('id');
         $this->db->delete($this->table, array('user_id' => $user_id, 'id' => $id));
-    } 
+    }
+
+     public function deleteServiceItemByIdAndCompanyId($id, $company_id)
+    {
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('id' => $id, 'company_id' => $company_id));
+    }
 
     public function deleteServiceItemViaCategory($id) {
         $user_id = logged('id');
@@ -116,6 +141,24 @@ class BookingServiceItem_model extends MY_Model
 
         $this->db->where('category_id', $category_id);
         $this->db->where('user_id', $user_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllCompanyProductsByCategoryId( $company_id , $category_id, $filters=array() )
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('name', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->where('category_id', $category_id);
+        $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();

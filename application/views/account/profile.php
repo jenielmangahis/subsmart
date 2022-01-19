@@ -125,7 +125,6 @@
     <!-- Profile Image -->
 
     <div class="box box-primary">
-
       <div class="box-body box-profile text-center">
         <div class="card">
             <div class="card-body">
@@ -138,7 +137,14 @@
                   <a class="btn btn-outline-primary btn-primary" id="editProfile" data-id="<?= $user->id; ?>" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">Edit Profile</a>
                    <a class="btn btn-outline-primary btn-primary" id="createSignatureButton" href="javascript:void(0);" style="width: 100%;margin-bottom: 10px;">Create Signature</a>
                   <a class="btn btn-outline-primary btn-primary" href="javascript:void(0)" data-name="<?php echo $user->FName . ' ' . $user->LName; ?>" data-id="<?php echo $user->id ?>" id="changePassword" style="width: 100%; margin-bottom: 10px;">Change Password</a>
-                  <a class="btn btn-outline-primary btn-primary" id="editEmployee" data-id="<?= $user->id; ?>" href="javascript:void(0);" style="width: 100%;">Change Profile Picture</a>
+                  <?php 
+                      if( $user->profile_img != '' ){
+                          $data_img = $user->profile_img;
+                      }else{
+                          $data_img = 'default.png';
+                      }
+                  ?>
+                  <a class="btn btn-outline-primary btn-primary" id="changeProfilePhoto" data-id="<?= $user->id; ?>" data-img="<?= $data_img; ?>" href="javascript:void(0);" style="width: 100%;">Change Profile Picture</a>
                 </div>
               </div>
             </div>
@@ -322,7 +328,7 @@
                             <!-- Modal footer -->
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" id="closedChangePasswordModal">Close</button>
-                                <button type="button" class="btn btn-success" id="updatePassword">Save & exit</button>
+                                <button type="button" class="btn btn-success" id="updatePassword">Save</button>
                             </div>
                         </form>
 
@@ -340,6 +346,42 @@
 </div>
 
 <!-- /.row -->
+  
+  <!--Change Employee Profile Photo modal-->
+<div class="modal fade" id="modalEditEmployeeProfile">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-image"></i> Change Employee Photo</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="editEmployeeProfileForm">
+                <div class="modal-body modal-edit-employee-profile" style="padding-bottom: 0px;">
+                    <div class="form-group" style="margin-bottom: 0px !important;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img style="margin:0 auto; height: 300px;" id="img_profile" src="">
+                                <div class="margin-bottom" style="text-align: center;margin-top: 10px;">
+                                    <input type="file" class="form-control" style="margin-left: 77px; width: auto;" name="user_photo" id="upload-employee-photo" placeholder="Upload Image" accept="image/*" required="">
+                                </div>
+                                <input type="hidden" name="user_id_prof" id="user_id_prof" value="<?= $user->id; ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="closeEditEmployeeModalProfilePhoto">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateEmployeeProfilePhoto">Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
   <div class="modal fade fillAndSign__modal" id="updateSignature" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -434,6 +476,10 @@
       $('#signArea').signaturePad().clearCanvas();
     });
 
+    $(document).on('click', '#closedChangePasswordModal', function() {
+      $("#modalChangePassword").modal('hide');
+    });
+
     $(document).on('click touchstart','#canvas-a',function(){
         // alert('test');
         var canvas_web = document.getElementById("canvas-a");    
@@ -515,6 +561,142 @@
                 $("#updateProfile").html('Save');
             }
         });
+    });
+
+    $(document).on('click', '#updatePassword', function() {
+        let values = {};
+        $.each($('#changePasswordForm').serializeArray(), function(i, field) {
+            values[field.name] = field.value;
+        });
+        if (values['new_password'] && values['re_password']) {
+            $.ajax({
+                url: base_url + 'users/_update_employee_password',
+                type: "POST",
+                dataType: "json",
+                data: {
+                    values: values
+                },
+                success: function(data) {
+                    if (data.is_success) {
+                        $("#modalChangePassword").modal('hide');
+                        Swal.fire({
+                            title: 'Success',
+                            text: "Your password has been Updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: data.msg,
+                            icon: 'warning'
+                        });
+                    }
+                }
+            });
+        } else {
+            Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: 'Failed',
+                text: "Please fillup form entries",
+                icon: 'warning'
+            });
+        }
+    });
+
+    $(document).on('change', '#upload-employee-photo', function(e){
+      var reader = new FileReader();
+      reader.onload = function(){
+        var output = document.getElementById('img_profile');
+        output.src = reader.result;
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    });
+
+    $(document).on('click', '#changeProfilePhoto', function() {
+        var data_img = $(this).attr('data-img');
+        if( data_img == 'default.png' ){
+            var default_img = base_url + 'uploads/users/' + data_img;
+        }else{
+            var default_img = base_url + 'uploads/users/user-profile/' + data_img;
+        }
+
+        $("#img_profile").attr("src",default_img);
+
+        $('#modalEditEmployeeProfile').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    });
+
+    $(document).on('click', '#closeEditEmployeeModalProfilePhoto', function() {
+      $("#modalEditEmployeeProfile").modal('hide');
+    });
+
+    $(document).on('click', '#updateEmployeeProfilePhoto', function() {
+            var formData = new FormData($("#editEmployeeProfileForm")[0]);   
+            $.ajax({
+                url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
+                type: "POST",
+                dataType: "json",
+                contentType: false,
+                cache: false,
+                processData:false,
+                data: formData,
+                success: function(data) {
+                    if (data == 1) {
+                        $("#modalEditEmployeeProfile").modal('hide');
+                        Swal.fire({
+                            title: 'Success',
+                            text: "Employee photo has been Updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Please select a valid image",
+                            icon: 'warning'
+                        });
+                    }
+                }
+            });
+        });
+
+    $('.showPass').click(function() {
+        $(this).toggleClass('fa-eye-slash');
+        if ($(this).prev('input[type="password"]').length == 1) {
+            $(this).prev('input[type="password"]').attr('type', 'text');
+            $(this).attr('title', 'Hide password').attr('data-original-title', 'Hide password').tooltip('update').tooltip('show');
+        } else {
+            $(this).prev('input[type="text"]').attr('type', 'password');
+            $(this).attr('title', 'Show password').attr('data-original-title', 'Show password').tooltip('update').tooltip('show');
+        }
+    });
+    $('.showConfirmPass').click(function() {
+        $(this).toggleClass('fa-eye-slash');
+        if ($(this).prev('input[type="password"]').length == 1) {
+            $(this).prev('input[type="password"]').attr('type', 'text');
+            $(this).attr('title', 'Hide password').attr('data-original-title', 'Hide password').tooltip('update').tooltip('show');
+        } else {
+            $(this).prev('input[type="text"]').attr('type', 'password');
+            $(this).attr('title', 'Show password').attr('data-original-title', 'Show password').tooltip('update').tooltip('show');
+        }
     });
 
 

@@ -9,7 +9,7 @@
 	<?php if($page_title) { ?>
 			<title><?php echo $page_title; ?></title>
 	<?php } else { ?>
-		<title>Dashboards</title>
+		<title>Nsmart</title>
 	<?php } ?>
 
     <meta content="<?php echo $page_title; ?>" name="description">

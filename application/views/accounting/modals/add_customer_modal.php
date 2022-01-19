@@ -407,3 +407,22 @@
         </form>
     </div>
 </div>
+
+<script>
+Dropzone.autoDiscover = false;
+    var fname = [];
+    var selected = [];
+    var custAttachment = new Dropzone('#custAttachment', {
+        url: base_url + 'users/profilePhoto',
+        acceptedFiles: "image/*",
+        maxFilesize:20,
+        maxFiles: 1,
+        addRemoveLinks:true,
+        init: function() {
+            
+        },
+        removedfile:function (file) {
+            
+        }
+    });
+</script>

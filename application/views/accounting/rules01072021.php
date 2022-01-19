@@ -141,11 +141,30 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     </div>
                                     <span style="margin-right: 5px;margin-left: 5px;">in</span>
                                     <div class="tab-select">
-                                        <select name="apply_type" class="form-control" data-type="apply_type" required="">
-                                            <option value="">Select Bank Account</option>
-                                            <option value="all-bank-account">All bank accounts</option>
-                                            <option value="checking">Checking</option>
-                                        </select>
+                                        <div class="selectWithCheckbox" id="transactionsBankSelect">
+                                            <button type="button" class="selectWithCheckbox__btn">
+                                                <span class="selectWithCheckbox__text">No bank account selected</span>
+                                                <i class="fa fa-angle-down"></i>
+                                            </button>
+
+                                            <div class="selectWithCheckbox__options">
+                                                <div class="form-group selectWithCheckbox__optionsItem">
+                                                    <input
+                                                        name="banks"
+                                                        type="checkbox"
+                                                        class="form-check-input"
+                                                        id="allBankAccountsCb"
+                                                        data-type="banks"
+                                                    >
+                                                    <label class="form-check-label" for="allBankAccountsCb">All bank accounts</label>
+                                                </div>
+
+                                                <div class="form-group selectWithCheckbox__optionsItem2">
+                                                    <input type="checkbox" class="form-check-input" id="checkingCb">
+                                                    <label class="form-check-label" for="checkingCb">Checking</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
