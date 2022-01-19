@@ -209,7 +209,7 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">%</span>
                           </div>
-                          <input type="text" name="discount_percent" value="" class="form-control" />
+                          <input type="number" name="discount_percent" value="" class="form-control" />
                         </div>
                     </div>
                     <div id="discount_amount_cnt" class="hide">
@@ -217,7 +217,7 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">$</span>
                           </div>
-                          <input type="text" name="discount_amount" value="" class="form-control" autocomplete="off" />
+                          <input type="number" name="discount_amount" value="" class="form-control" autocomplete="off" />
                         </div>
                     </div>
                   </div>
@@ -249,7 +249,7 @@
           </div>
           <div class="form-group">
             <label>Uses per coupon</label>
-            <input type="text" name="uses_max" value="" required="" class="form-control" autocomplete="off" />
+            <input type="number" name="uses_max" value="" required="" class="form-control" autocomplete="off" />
           </div>
 
           <div class="row margin-bottom-sec">

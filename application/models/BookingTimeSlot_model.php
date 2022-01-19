@@ -63,7 +63,20 @@ class BookingTimeSlot_model extends MY_Model
 
         $num_rows = $this->db->count_all_results();
         return $num_rows;
-    }     
+    } 
+
+    public function countTotalByCompanyId($company_id)
+    {
+        $id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+
+        $num_rows = $this->db->count_all_results();
+        return $num_rows;
+    }         
 
     public function deleteAllUserTimeSlots($user_id){
         $this->db->delete($this->table, array('user_id' => $user_id));

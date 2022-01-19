@@ -13,7 +13,7 @@
     <a href="<?php echo base_url('more/addon/booking') ?>" class="nav-link <?= ($this->uri->uri_string() == 'more/addon/booking') ? "active" : "booking-tab";  ?>">Dashboard</a>
   </li>
   <li class="nav-item">
-    <a href="<?php echo base_url('more/addon/booking/products') ?>" class="nav-link <?= ($this->uri->uri_string() == 'more/addon/booking/products') ? "active" : "booking-tab";  ?>">My Service/Items</a>
+    <a href="<?php echo base_url('more/addon/booking/products') ?>" class="nav-link <?= ($this->uri->uri_string() == 'more/addon/booking/products') ? "active" : "booking-tab";  ?>">My Service / Items</a>
   </li>
   <li class="nav-item">
     <a href="<?php echo base_url('more/addon/booking/time') ?>" class="nav-link booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/time') ? "active" : "booking-tab";  ?>">Time Slots</a>
@@ -22,7 +22,7 @@
     <a href="<?php echo base_url('more/addon/booking/form') ?>" class="nav-link booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/form') ? "active" : "booking-tab";  ?>">Booking Form</a>
   </li>
   <li class="nav-item">
-    <a href="<?php echo base_url('more/addon/booking/coupons') ?>" class="nav-link booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/coupons') ? "active" : "booking-tab";  ?>">Coupons</a>
+    <a href="<?php echo base_url('more/addon/booking/coupons') ?>" class="nav-link booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/coupons') || ($this->uri->uri_string() == 'more/addon/booking/coupons/coupon_tab/closed') || ($this->uri->uri_string() == 'more/addon/booking/coupons/coupon_tab/active') ? "active" : "booking-tab";  ?>">Coupons</a>
   </li>
   <li class="nav-item">
     <a href="<?php echo base_url('more/addon/booking/settings') ?>" class="nav-link booking-tab <?= ($this->uri->uri_string() == 'more/addon/booking/settings') ? "active" : "booking-tab";  ?>">Settings</a>

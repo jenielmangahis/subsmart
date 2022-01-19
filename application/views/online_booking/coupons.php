@@ -77,7 +77,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php $discount_type = ""; ?>
                                         <?php $discount_type = $c->discount_from_total_type == 1 ? '%' : '$'; ?>
                                         <td><?php echo $c->discount_from_total . " " . $discount_type; ?></td>
-                                        <td>Active</td>
+                                        <td>
+                                            <?php if( $c->status == 1 ){ ?>
+                                                <span class="badge badge-primary" style="background-color:#007bff; padding:10px;font-size: 14px;">Active</span>
+                                            <?php }else{ ?>
+                                                <span class="badge badge-danger" style="background-color: #ec4561; padding: 10px;font-size: 14px;">Closed</span>
+                                            <?php } ?>
+                                        </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
                                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
@@ -115,6 +121,9 @@ $(function(){
 
     $("#coupon_valid_from").datepicker();
     $("#coupon_valid_to").datepicker();
+
+    $("#edit_coupon_valid_from").datepicker();
+    $("#edit_coupon_valid_to").datepicker();
 
     $(".coupon-discount-type").change(function(){
         var type = $(this).val();

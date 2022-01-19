@@ -631,7 +631,7 @@ $route['booking/update_inquiry_status'] = 'booking/update_inquiry_status';
 $route['booking/_inquiry_edit_details'] = 'booking/ajax_inquiry_edit_details';
 $route['booking/update_inquiry_details'] = 'booking/update_inquiry_details';
 //$route['booking/products'] = 'booking/front_items';
-$route['booking/products/(:any)'] = 'booking/front_items/$1';
+//$route['booking/products/(:any)'] = 'booking/front_items/$1';
 $route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1';
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
 $route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item';
@@ -1129,3 +1129,6 @@ $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 $route['support'] = 'Support/index';
 $route['support/_send_email'] = 'Support/ajax_send_email';
 $route['contact/_support_send_email'] = 'Contact/ajax_support_send_email';
+
+//Front company booking page
+$route['booking/products/(:any)'] = 'Pages/external_booking_page/$1';

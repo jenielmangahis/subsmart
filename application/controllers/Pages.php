@@ -658,4 +658,68 @@ class Pages extends MYF_Controller {
     	echo json_encode($json_data);
     }
 
+    /**
+	*
+	*
+	* @param eid hash company_id
+    */
+    public function external_booking_page( $eid )
+    {    	
+    	$this->load->model('BookingCategory_model');
+		$this->load->model('BookingForms_model');
+		$this->load->model('BookingServiceItem_model');
+		$this->load->model('BookingCoupon_model');
+		$this->load->model('BookingSetting_model');
+        $this->load->model('BookingTimeSlot_model');
+        $this->load->model('Users_model');
+        $this->load->model('BookingScheduleAssignedUser_model');
+        $this->load->model('BookingInquiry_model');
+        $this->load->model('BookingInfo_model');
+        $this->load->model('BookingWorkOrder_model');
+        
+    	$this->load->helper(array('form', 'url', 'hashids_helper'));
+    	$cid = hashids_decrypt($eid, '', 15);
+
+    	$filter[] = ['field' => 'company_id', 'value' => $cid];
+		$categories       = $this->BookingCategory_model->getAllCategories($filter);
+		$booking_settings = $this->BookingSetting_model->findByCompanyId($cid);
+
+		$uri_segment_method_name = $this->uri->segment(2);
+		$products = array();
+
+		$search_query = '';
+		$filters      = array();
+
+		if( isset($post['search']) && $post['search'] !== '' ){
+			$filters['search'] = $post['search'];
+			$search_query      = $post['search'];
+		}
+
+		foreach( $categories as $c ){
+			$serviceItems = $this->BookingServiceItem_model->getAllCompanyProductsByCategoryId($cid, $c->id, $filters);
+			if( $serviceItems ){
+				$products[] = ['category' => $c, 'products' => $serviceItems];
+			}
+		}
+		
+		if( $this->input->get('style') != '' ){
+			$view = 'grid_items';
+		}else{
+			$view = 'front_items';
+		}
+
+		$cart_items = $this->session->userdata('cartItems');
+		$cart_data  = $this->BookingServiceItem_model->getUserCartSummary($cart_items);
+
+		$this->page_data['uri_segment_method_name'] = $uri_segment_method_name;
+		$this->page_data['booking_settings'] = $booking_settings;
+		$this->page_data['search_query'] = $search_query;
+		$this->page_data['cart_data']    = $cart_data;
+		$this->page_data['userProfile']  = $userProfile;
+		$this->page_data['products']     = $products;
+		$this->page_data['eid'] = $eid;
+
+		$this->load->view('online_booking/' . $view, $this->page_data);
+    }
+
 }

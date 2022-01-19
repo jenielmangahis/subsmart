@@ -29,10 +29,11 @@ class Booking extends MY_Controller {
 	public function index() {
 		$user = $this->session->userdata('logged');
     	$eid = hashids_encrypt($user['id'], '', 15);
+    	$cid = logged('company_id');
 
-		$total_category = $this->BookingCategory_model->countTotal();
-		$total_products = $this->BookingServiceItem_model->countTotal();
-		$total_timeslots = $this->BookingTimeSlot_model->countTotal();
+		$total_category = $this->BookingCategory_model->countTotalByCompanyId($cid);
+		$total_products = $this->BookingServiceItem_model->countTotalByCompanyId($cid);
+		$total_timeslots = $this->BookingTimeSlot_model->countTotalByCompanyId($cid);
 
 		$this->page_data['eid']   = $eid;
 		$this->page_data['total_category']  = $total_category;
@@ -45,12 +46,8 @@ class Booking extends MY_Controller {
 	public function products() {
 		$user_id = logged('id');
         $role_id = logged('role');
-        if( $role_id == 1 || $role_id == 2 ){
-            $args = array();
-        }else{
-            $args = array('company_id' => logged('company_id'));
-        }
-
+        
+        $args = array('company_id' => logged('company_id'));
 		$category = $this->BookingCategory_model->getByWhere($args);
 		$service_items = $this->BookingServiceItem_model->getAllItemsGroupByCategoryArray();
 
@@ -191,14 +188,16 @@ class Booking extends MY_Controller {
 			$param = 'active';
 		}
 
-		if( $param == 'active' ){
-			$coupons = $this->BookingCoupon_model->getAllActive();
-		}else{
-			$coupons = $this->BookingCoupon_model->getAllClosed();
-		}
+		$filters[] = ['field' => 'company_id', 'value' => logged('company_id')];
 
-		$total_active = $this->BookingCoupon_model->totalActive();
-		$total_closed = $this->BookingCoupon_model->totalClosed();
+		if( $param == 'active' ){
+			$coupons = $this->BookingCoupon_model->getAllActive($filters);
+		}else{
+			$coupons = $this->BookingCoupon_model->getAllClosed($filters);
+		}
+		
+		$total_active = $this->BookingCoupon_model->totalActive($filters);
+		$total_closed = $this->BookingCoupon_model->totalClosed($filters);
 
 		$this->page_data['total_active'] = $total_active;
 		$this->page_data['total_closed'] = $total_closed;
@@ -271,7 +270,9 @@ class Booking extends MY_Controller {
 
 	public function preview() {
 		$user = $this->session->userdata('logged');
-    	$eid = hashids_encrypt($user['id'], '', 15);
+		$cid  = logged('company_id');
+    	//$eid  = hashids_encrypt($user['id'], '', 15);
+    	$eid  = hashids_encrypt($cid, '', 15);
 
     	$this->page_data['eid']   = $eid;
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -705,6 +706,7 @@ class Booking extends MY_Controller {
 
         }else{
         	$data = array(
+        		'company_id' => logged('company_id'),
         		'user_id' => $user['id'],
         		'page_title' => post('page_title'),
         		'page_instruction' => post('page_intro'),
@@ -722,7 +724,7 @@ class Booking extends MY_Controller {
         		'widget_status' => post('status')
         	);
 
-        	$last_id = $this->BookingSetting_model->createSetting($data);
+        	$last_id = $this->BookingSetting_model->create($data);
 
         	if( post('convert_lead_to_work_order') == 1 ){
         		$assigned_batch_data = array();
