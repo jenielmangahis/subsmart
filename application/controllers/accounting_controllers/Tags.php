@@ -500,13 +500,22 @@ class Tags extends MY_Controller {
                     $payeeName = $payee->display_name;
                 break;
                 case 'customer':
-                    $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                    $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
                     $payeeName = $payee->first_name . ' ' . $payee->last_name;
                 break;
                 case 'employee':
                     $payee = $this->users_model->getUser($ccCredit->payee_id);
                     $payeeName = $payee->FName . ' ' . $payee->LName;
                 break;
+            }
+
+            $tags = $this->tags_model->get_transaction_tags('CC Credit', $ccCredit->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
             }
 
             $data[] = [
@@ -516,7 +525,7 @@ class Tags extends MY_Controller {
                 'memo' => $ccCredit->memo,
                 'type' => 'CC Credit',
                 'amount' => $ccCredit->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 
@@ -528,6 +537,15 @@ class Tags extends MY_Controller {
         $vCredits = $this->tags_model->get_vendor_credits($filter);
 
         foreach($vCredits as $vCredit) {
+            $tags = $this->tags_model->get_transaction_tags('Vendor Credit', $vCredit->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+            }
+
             $data[] = [
                 'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($vCredit->vendor_id)->display_name,
@@ -535,7 +553,7 @@ class Tags extends MY_Controller {
                 'memo' => $vCredit->memo,
                 'type' => 'Vendor Credit',
                 'amount' => $vCredit->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 
@@ -558,7 +576,7 @@ class Tags extends MY_Controller {
                         $from = $payee->display_name;
                     break;
                     case 'customer':
-                        $payee = $this->accounting_customers_model->get_customer_by_id($funds[0]->received_from_id);
+                        $payee = $this->accounting_customers_model->get_by_id($funds[0]->received_from_id);
                         $from = $payee->first_name . ' ' . $payee->last_name;
                     break;
                     case 'employee':
@@ -577,7 +595,7 @@ class Tags extends MY_Controller {
                             $payee = $payee->display_name;
                         break;
                         case 'customer':
-                            $payee = $this->accounting_customers_model->get_customer_by_id($fund->received_from_id);
+                            $payee = $this->accounting_customers_model->get_by_id($fund->received_from_id);
                             $payee = $payee->first_name . ' ' . $payee->last_name;
                         break;
                         case 'employee':
@@ -596,6 +614,15 @@ class Tags extends MY_Controller {
                 }
             }
 
+            $tags = $this->tags_model->get_transaction_tags('Deposit', $deposit->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+            }
+
             $data[] = [
                 'date' => date("m/d/Y", strtotime($deposit->date)),
                 'from_to' => $from,
@@ -603,7 +630,7 @@ class Tags extends MY_Controller {
                 'memo' => $deposit->memo,
                 'type' => 'Deposit',
                 'amount' => $deposit->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 
@@ -621,13 +648,22 @@ class Tags extends MY_Controller {
                     $payeeName = $payee->display_name;
                 break;
                 case 'customer':
-                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
                     $payeeName = $payee->first_name . ' ' . $payee->last_name;
                 break;
                 case 'employee':
                     $payee = $this->users_model->getUser($expense->payee_id);
                     $payeeName = $payee->FName . ' ' . $payee->LName;
                 break;
+            }
+
+            $tags = $this->tags_model->get_transaction_tags('Expense', $expense->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
             }
 
             $data[] = [
@@ -637,7 +673,7 @@ class Tags extends MY_Controller {
                 'memo' => $expense->memo,
                 'type' => 'Expense',
                 'amount' => $expense->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 
@@ -649,6 +685,15 @@ class Tags extends MY_Controller {
         $bills = $this->tags_model->get_bills($filter);
 
         foreach($bills as $bill) {
+            $tags = $this->tags_model->get_transaction_tags('Bill', $bill->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+            }
+
             $data[] = [
                 'date' => date("m/d/Y", strtotime($bill->bill_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($bill->vendor_id)->display_name,
@@ -656,7 +701,7 @@ class Tags extends MY_Controller {
                 'memo' => $bill->memo,
                 'type' => 'Bill',
                 'amount' => $bill->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 
@@ -674,13 +719,22 @@ class Tags extends MY_Controller {
                     $payeeName = $payee->display_name;
                 break;
                 case 'customer':
-                    $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                    $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
                     $payeeName = $payee->first_name . ' ' . $payee->last_name;
                 break;
                 case 'employee':
                     $payee = $this->users_model->getUser($check->payee_id);
                     $payeeName = $payee->FName . ' ' . $payee->LName;
                 break;
+            }
+
+            $tags = $this->tags_model->get_transaction_tags('Check', $check->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
             }
 
             $data[] = [
@@ -690,7 +744,7 @@ class Tags extends MY_Controller {
                 'memo' => $check->memo,
                 'type' => 'Check',
                 'amount' => $check->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 
@@ -702,6 +756,15 @@ class Tags extends MY_Controller {
         $purchaseOrders = $this->tags_model->get_purchase_orders($filter);
 
         foreach($purchaseOrders as $purchaseOrder) {
+            $tags = $this->tags_model->get_transaction_tags('Purchase Order', $purchaseOrder->id);
+
+            foreach($tags as $key => $tag) {
+                if($tag->group_tag_id !== "0" && $tag->group_tag_id !== "" && !is_null($tag->group_tag_id)) {
+                    $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                    $tags[$key]->group_name = $group->name;
+                }
+            }
+
             $data[] = [
                 'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                 'from_to' => $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id)->display_name,
@@ -709,7 +772,7 @@ class Tags extends MY_Controller {
                 'memo' => $purchaseOrder->memo,
                 'type' => 'Purchase Order',
                 'amount' => $purchaseOrder->total_amount,
-                'tags' => ''
+                'tags' => $tags
             ];
         }
 

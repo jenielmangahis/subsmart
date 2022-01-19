@@ -57,6 +57,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 	#myTabContent .action-bar ul li .dropdown-menu a {
 		font-size: 14px;
 	}
+    #transactions-table .badge {
+        padding: .25em .4em;
+        line-height: 1;
+        font-weight: 600;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

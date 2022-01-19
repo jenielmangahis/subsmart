@@ -153,10 +153,10 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Deposit');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('Deposit');
+        $transactionsWithTags = $this->get_tagged_ids('Deposit');
+        if(!is_null($filters['contact_id'])) {
+            $ids = $this->get_deposit_ids_with_contact($filters['contact_type'], $filters['contact_id']);
         }
-        $multiFunds = $this->get_deposit_ids_with_multiple_funds();
 
         $this->db->select('accounting_bank_deposit.*');
         $this->db->from('accounting_bank_deposit');
@@ -169,15 +169,17 @@ class Tags_model extends MY_Model
             $this->db->where('accounting_bank_deposit.date <=', $filters['to']);
         }
         if(!is_null($filters['contact_id'])) {
-            $this->db->where_not_in('accounting_bank_deposit.id', $multiFunds);
+            $this->db->where_in('accounting_bank_deposit.id', $ids);
             $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
             $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('accounting_bank_deposit.id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('accounting_bank_deposit.id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('accounting_bank_deposit.id', $taggedIds);
                 $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -194,6 +196,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('accounting_bank_deposit.id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_bank_deposit.id');
         $this->db->join('accounting_bank_deposit_funds', 'accounting_bank_deposit_funds.bank_deposit_id = accounting_bank_deposit.id');
         $query = $this->db->get();
         return $query->result();
@@ -204,9 +207,7 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Expense');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('Expense');
-        }
+        $transactionsWithTags = $this->get_tagged_ids('Expense');
 
         $this->db->select('*');
         $this->db->from('accounting_expense');
@@ -222,11 +223,13 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -243,6 +246,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_expense.id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -252,9 +256,7 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Check');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('Check');
-        }
+        $transactionsWithTags = $this->get_tagged_ids('Check');
 
         $this->db->select('*');
         $this->db->from('accounting_check');
@@ -270,11 +272,13 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -291,6 +295,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_check.id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -300,9 +305,8 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Bill');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('Bill');
-        }
+        $transactionsWithTags = $this->get_tagged_ids('Bill');
+
         $this->db->select('*');
         $this->db->from('accounting_bill');
         $this->db->where('company_id', $filters['company_id']);
@@ -316,11 +320,13 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -336,6 +342,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_bill.id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -345,9 +352,7 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Purchase Order');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('Purchase Order');
-        }
+        $transactionsWithTags = $this->get_tagged_ids('Purchase Order');
         
         $this->db->select('*');
         $this->db->from('accounting_purchase_order');
@@ -362,11 +367,13 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -382,6 +389,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_purchase_order.id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -391,9 +399,7 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Vendor Credit');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('Vendor Credit');
-        }
+        $transactionsWithTags = $this->get_tagged_ids('Vendor Credit');
 
         $this->db->select('*');
         $this->db->from('accounting_vendor_credit');
@@ -408,11 +414,13 @@ class Tags_model extends MY_Model
         if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -428,6 +436,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_vendor_credit.id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -437,9 +446,8 @@ class Tags_model extends MY_Model
         if(count($filters['tags']) > 0) {
             $taggedIds = $this->get_ids_with_tags($filters['tags'], 'CC Credit');
         }
-        if($filters['untagged'] === 1) {
-            $transactionsWithTags = $this->get_tagged_ids('CC Credit');
-        }
+        $transactionsWithTags = $this->get_tagged_ids('CC Credit');
+
         $this->db->select('*');
         $this->db->from('accounting_credit_card_credits');
         $this->db->where('company_id', $filters['company_id']);
@@ -454,11 +462,13 @@ class Tags_model extends MY_Model
             $this->db->where('payee_type', $filters['contact_type']);
             $this->db->where('payee_id', $filters['contact_id']);
         }
-        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if($filters['untagged'] === 1) {
             $this->db->where_not_in('id', $transactionsWithTags);
+        } else {
+            $this->db->where_in('id', $transactionsWithTags);
         }
-        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
-            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+        if(count($filters['tags']) > 0) {
+            if($filters['untagged'] === 1) {
                 $this->db->or_where_in('id', $taggedIds);
                 $this->db->where('company_id', $filters['company_id']);
                 if(isset($filters['from']) && !is_null($filters['from'])) {
@@ -475,6 +485,7 @@ class Tags_model extends MY_Model
                 $this->db->where_in('id', $taggedIds);
             }
         }
+        $this->db->group_by('accounting_credit_card_credits.id');
         $query = $this->db->get();
         return $query->result();
     }
@@ -484,10 +495,14 @@ class Tags_model extends MY_Model
         $this->db->select('transaction_id');
         $this->db->where('transaction_type', $type);
         $this->db->where_in('tag_id', $tags);
+        $this->db->group_by('transaction_id');
         $query = $this->db->get('accounting_transaction_tags');
         $result = $query->result();
 
-        $return = [];
+        $return = [
+            0,
+            ''
+        ];
         foreach($result as $res) {
             $return[] = $res->transaction_id;
         }
@@ -499,10 +514,14 @@ class Tags_model extends MY_Model
     {
         $this->db->select('transaction_id');
         $this->db->where('transaction_type', $type);
+        $this->db->group_by('transaction_id');
         $query = $this->db->get('accounting_transaction_tags');
         $result = $query->result();
 
-        $return = [];
+        $return = [
+            0,
+            ''
+        ];
         foreach($result as $res) {
             $return[] = $res->transaction_id;
         }
@@ -510,16 +529,22 @@ class Tags_model extends MY_Model
         return $return;
     }
 
-    public function get_deposit_ids_with_multiple_funds()
+    public function get_deposit_ids_with_contact($type, $id)
     {
         $this->db->select('bank_deposit_id, COUNT(*) as cnt');
+        $this->db->where('received_from_key', $type);
+        $this->db->where('received_from_id', $id);
         $this->db->group_by('bank_deposit_id');
         $query = $this->db->get('accounting_bank_deposit_funds');
         $result = $query->result();
 
         $return = [];
         foreach($result as $res) {
-            if(intval($res->cnt) > 1) {
+            $this->db->where('bank_deposit_id', $res->bank_deposit_id);
+            $q = $this->db->get('accounting_bank_deposit_funds');
+            $funds = $q->result();
+
+            if(count($funds) === intval($res->cnt)) {
                 $return[] = $res->bank_deposit_id;
             }
         }

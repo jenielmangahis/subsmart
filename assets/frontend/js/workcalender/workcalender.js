@@ -116,7 +116,7 @@ $(document).ready(function() {
             $(this).find('i').remove();
         });
 
-        //console.log($(this).attr('data-calendar-color-id'));
+        console.log($(this).attr('data-calendar-color-id'));
         var color_name = $(this).attr('data-calendar-color-name');
         $(this).html('<i class="calendar-modal-color-icon fa fa-check " aria-hidden="true"></i><span class="color-name">'+color_name+'</span>');
 
@@ -155,14 +155,14 @@ $(document).ready(function() {
               },
               success: function(response) {
 
-                  //console.log(response);
+                  console.log(response);
 
                   jQuery.ajax({
                       url: options.urlEvents,
                       type: 'GET',
                       success: function(response) {
 
-                          //console.log(response);
+                          console.log(response);
 
                           $(".event-form-description").html('');
 
@@ -223,7 +223,7 @@ $(document).ready(function() {
 
         var button = $(this);
 
-        //console.log($(this).parent().parent().find('.modal-body input[name="hid_event_id"]').val());
+        console.log($(this).parent().parent().find('.modal-body input[name="hid_event_id"]').val());
 
         if ( confirm("Are you sure to remove the schedule?") ) {
 
@@ -239,14 +239,14 @@ $(document).ready(function() {
                 },
                 success: function(response) {
 
-                    //console.log(response);
+                    console.log(response);
 
                     jQuery.ajax({
                         url: options.urlEvents,
                         type: 'GET',
                         success: function(response) {
 
-                            //console.log(response);
+                            console.log(response);
 
                             $("#calendar").css('opacity', '1');
                             $("#calendar").attr('disabled', false);
@@ -525,7 +525,7 @@ function open_create_event_modal_for_event(event_id, open_edit_modal) {
 
 function formatRepo (repo) {
 
-    //console.log(repo);
+    console.log(repo);
     if (repo) {
       return repo.contact_name;
     }
@@ -546,13 +546,13 @@ function formatRepo (repo) {
 
 
 function formatRepoSelection (repo) {
-    //console.log(repo);
+      console.log(repo);
     return repo.contact_name || repo.text;
 }
 
 function formatRepoUser (repo) {
 
-    //console.log(repo);
+    console.log(repo);
     if (repo) {
       return repo.FName + ' ' + repo.LName;
     }
@@ -573,6 +573,6 @@ function formatRepoUser (repo) {
 
 
 function formatRepoSelectionUser (repo) {
-    //console.log(repo);
+      console.log(repo);
     return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
 }

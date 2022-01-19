@@ -62,3 +62,37 @@ export async function saveTableInfo(payload) {
 
   return response.json();
 }
+
+export async function runReport(payload) {
+  const endpoint = `${prefixURL}/AccountingARSummary/apiRunReport`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  await sleep(3);
+  return response.json();
+}
+
+export async function runReportCustomize(payload) {
+  const endpoint = `${prefixURL}/AccountingARSummary/apiRunReportCustomize`;
+  const response = await fetch(endpoint, {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+  });
+
+  await sleep(3);
+  return response.json();
+}
+
+function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time * 1000));
+}

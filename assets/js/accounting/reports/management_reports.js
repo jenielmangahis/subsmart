@@ -11,6 +11,7 @@ $(document).on("click", function(event) {
 });
 $(document).on('click', 'div#management_reports_modal .the-modal-body .the-header .icons div.close-modal', function() {
     $("#management_reports_modal").fadeOut();
+    $('#management_reports_modal form').trigger("reset");
 });
 $(document).on("click", "#management_reports_modal .modal-footer-check .middle-links.end a", function(event) {
     event.preventDefault();
@@ -28,6 +29,7 @@ $(document).on("click", "#management_reports_modal .modal-footer-check button.ca
     event.preventDefault();
     if ($(this).attr("data-submit-type") == null) {
         $("#management_reports_modal").fadeOut();
+        $('#management_reports_modal form').trigger("reset");
     }
 
 });
@@ -44,12 +46,12 @@ $(document).on("click", "#management_reports_modal #cover-page-section .page-sty
 $(document).on("click", "#management_reports_modal .the-content .report-pages ul li", function(event) {
     $("#" + $("#management_reports_modal .the-content .report-pages ul li.active").attr("data-target")).hide();
     $("#management_reports_modal .the-content .report-pages ul li.active").removeClass("active");
+    update_table_contents_sample_page_div();
     $("#" + $(this).attr("data-target")).fadeIn();
     $(this).addClass("active");
 });
 
 $(document).on("click", "#management_reports_modal #reports .report-section", function(event) {
-    console.log($(this).children(".row").children(".col-md-10").children(".content-collapse.hide").length);
     if ($(this).children(".row").children(".col-md-10").children(".content-collapse.hide").length > 0) {
         remove_empty_report();
         close_reports_sections(this);
@@ -57,25 +59,36 @@ $(document).on("click", "#management_reports_modal #reports .report-section", fu
 });
 
 $(document).on("click", "#management_reports_modal #reports .report-section .report-delete-btn", function(event) {
+    var report_id = $(this).attr("data-id");
+    var deleted = report_id + "," + $("#management_reports_modal input[name='deleted_reports_pages']").val();
+    $("#management_reports_modal input[name='deleted_reports_pages']").val(deleted);
     $(this).parents(".report-section").remove();
 });
 
 $(document).on("click", "#management_reports_modal #reports .add-report-btn", function(event) {
     remove_empty_report();
     close_reports_sections(this);
-    var data_count = parseInt($("#management_reports_modal #reports .report-section:last-child").attr("data-count")) + 1;;
+    add_report_page();
+});
+
+function add_report_page(count = 0) {
+    var management_report_id = $("#management_reports_modal input[name='management_report_id']").val();
+    var data_count = parseInt($("#management_reports_modal #reports .report-section:last-child").attr("data-count")) + 1;
     $.ajax({
         url: baseURL + "/management-report/company-overview/add-new-report-section",
         type: "POST",
         dataType: "json",
         data: {
-            data_count: data_count
+            data_count: data_count,
+            count: count,
+            management_report_id: management_report_id
         },
         success: function(data) {
             $("#management_reports_modal #reports .sections").append(data.new_report);
+            update_table_contents_sample_page_div();
         },
     });
-});
+}
 
 function remove_empty_report() {
     if ($('#management_reports_modal #reports .report-section.new_report:last-child select[name="report_type[]"]').val() == "") {
@@ -123,19 +136,21 @@ $(document).on("click", "#management_reports_modal #preliminary-page a.add-new-p
 });
 
 $(document).on("click", "#management_reports_modal #preliminary-page .delete-page-btn", function(event) {
-    if ($("#management_reports_modal #preliminary-page .pages .page").length > 1) {
-        var preliminary_page_id = $(this).attr("data-id");
-        $.ajax({
-            url: baseURL + "/management-report/preliminary-page/delete",
-            type: "POST",
-            dataType: "json",
-            data: {
-                preliminary_page_id: preliminary_page_id
-            },
-            success: function(data) {},
-        });
-        $(this).parent("div.form-check").parent(".page").remove();
-    }
+    var preliminary_page_id = $(this).attr("data-id");
+    var deleted = preliminary_page_id + "," + $("#management_reports_modal input[name='deleted_preliminary_pages']").val();
+    $("#management_reports_modal input[name='deleted_preliminary_pages']").val(deleted);
+    $(this).parents(".page").remove();
+    // $.ajax({
+    //     url: baseURL + "/management-report/preliminary-page/delete",
+    //     type: "POST",
+    //     dataType: "json",
+    //     data: {
+    //         preliminary_page_id: preliminary_page_id
+    //     },
+    //     success: function(data) {},
+    // });
+    // $(this).parent("div.form-check").parent(".page").remove();
+
 });
 
 
@@ -159,7 +174,11 @@ function company_overview_add_preliminary_page(count = 0) {
         },
         success: function(data) {
             $("#management_reports_modal #preliminary-page .pages").append(data.new_page);
-            $("#management_reports_modal #preliminary-page .pages .page:last-child textarea").ckeditor();
+            if (count > 0) {
+                $("#management_reports_modal #preliminary-page .pages .page textarea").ckeditor();
+            } else {
+                $("#management_reports_modal #preliminary-page .pages .page:last-child textarea").ckeditor();
+            }
         },
     });
 }
@@ -181,13 +200,13 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
             $("#management_reports_modal #cover-page-section .page-styles-img .cover-style .style-icon").attr("class", "style-icon icon-" + data.cover_style);
             $('#management_reports_modal input[name="cover_style"]').val(data.cover_style);
             $('#management_reports_modal input[name="template_name"]').val(data.template_name);
+            $('#management_reports_modal select[name="template_report_period"]').val(data.report_period);
             $('#management_reports_modal input[name="cover_page_cover_title"]').val(data.cover_title);
             $('#management_reports_modal input[name="cover_page_subtitle"]').val(data.cover_subtitle);
             $('#management_reports_modal input[name="cover_page_report_period"]').val(data.cover_report_period);
             $('#management_reports_modal input[name="cover_page_prepared_by"]').val(data.cover_prepared_by);
             $('#management_reports_modal input[name="cover_page_prepared_date"]').val(data.cover_prepared_date);
             $('#management_reports_modal input[name="cover_page_disclaimer"]').val(data.cover_disclaimer);
-            $('#management_reports_modal input[name="include_table_of_contents"]').val(data.table_include_table_of_contents);
             $('#management_reports_modal input[name="cover_page_disclaimer"]').val(data.cover_disclaimer);
             $('#management_reports_modal input[name="table_of_contents_page_title"]').val(data.table_page_title);
             $('#management_reports_modal input[name="end_notes_page_title"]').val(data.endnote_page_title);
@@ -197,6 +216,11 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
                 $('#management_reports_modal input[name="show-logo"]').prop("checked", false);
             } else {
                 $('#management_reports_modal input[name="show-logo"]').prop("checked", true);
+            }
+            if (data.table_include_table_of_contents == "0") {
+                $('#management_reports_modal input[name="include_table_of_contents"]').prop("checked", false);
+            } else {
+                $('#management_reports_modal input[name="include_table_of_contents"]').prop("checked", true);
             }
             if (data.cover_disclaimer == "0") {
                 $('#management_reports_modal input[name="cover_page_disclaimer"]').prop("checked", false);
@@ -213,10 +237,17 @@ $(document).on('click', 'table#manage_reports_table ul.report_options li.edit', 
             } else {
                 $('#management_reports_modal input[name="end_notes_include_breakdown_of_sub_accounts"]').prop("checked", true);
             }
+            $("#management_reports_modal #preliminary-page .pages").html("");
             if (data.preliminary_pages_ctr == 0) {
                 company_overview_add_preliminary_page();
             } else {
                 company_overview_add_preliminary_page(data.preliminary_pages_ctr);
+            }
+            $("#management_reports_modal #reports .sections").html("");
+            if (data.reports_ctr == 0) {
+                add_report_page();
+            } else {
+                add_report_page(data.reports_ctr);
             }
         },
     });
@@ -263,3 +294,41 @@ $(document).on('click', '#management_reports_modal .modal-footer-check button[da
         }
     });
 });
+
+$(document).on("change", '#management_reports_modal input[name="report_compare_prev_year[]"]', function(event) {
+
+    var val = 0;
+    if ($(this).is(":checked")) {
+        val = 1;
+    }
+    $(this).parents(".report-section").children('input[name="input_report_compare_prev_year[]"]').val(val);
+});
+$(document).on('change', '#management_reports_modal input[name="report_compare_prev_period[]"]', function(event) {
+    var val = 0;
+    if ($(this).is(":checked")) {
+        val = 1;
+    }
+    $(this).parents(".report-section").children('input[name="input_report_compare_prev_period[]"]').val(val);
+});
+
+
+$(document).on('change', '#management_reports_modal input[name="include_this_page[]"]', function(event) {
+    var val = 0;
+    if ($(this).is(":checked")) {
+        val = 1;
+    }
+    $(this).parents(".page").children('input[name="input_include_this_page[]"]').val(val);
+});
+$(document).on('change', '#management_reports_modal input[name="table_of_contents_page_title"]', function(event) {
+    $("#management_reports_modal #table-of-contents .page-content .page-content-preview .content-title").html($(this).val());
+});
+
+function update_table_contents_sample_page_div() {
+    $("#management_reports_modal #table-of-contents .page-content .page-content-preview .norms").html("");
+    var htmls_ = "";
+    $("#management_reports_modal input[name='report_title[]']")
+        .map(function() {
+            htmls_ += '<div class="norm">' + $(this).val() + '</div>';
+        });
+    $("#management_reports_modal #table-of-contents .page-content .page-content-preview .norms").html(htmls_);
+}

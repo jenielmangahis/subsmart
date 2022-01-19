@@ -353,12 +353,28 @@ const columns = [
     {
         orderable: false,
         data: 'amount',
-        name: 'amount'
+        name: 'amount',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            var amount = '$'+cellData;
+            $(td).html(amount.replace('$-', '-$'));
+        }
     },
     {
         orderable: false,
         data: 'tags',
-        name: 'tags'
+        name: 'tags',
+        fnCreatedCell: function(td, cellData, rowData, row, col) {
+            var html = '<h5>';
+            for(i = 0; i < cellData.length; i++) {
+                var name = cellData[i].name;
+                if(cellData[i].group_name !== undefined) {
+                    name = `${cellData[i].group_name}: ${cellData[i].name}`;
+                }
+                html += `<span class="badge badge-light bg-light mr-1">${name}</span>`;
+            }
+            html += '</h5>'
+            $(td).html(html);
+        }
     }
 ];
 $('#transactions-table').DataTable({

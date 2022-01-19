@@ -122,7 +122,7 @@ class Recurring_transactions extends MY_Controller {
                                 $payeeName = $payee->display_name;
                             break;
                             case 'customer':
-                                $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                                $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
                                 $payeeName = $payee->first_name . ' ' . $payee->last_name;
                             break;
                             case 'employee':
@@ -141,7 +141,7 @@ class Recurring_transactions extends MY_Controller {
                                 $payeeName = $payee->display_name;
                             break;
                             case 'customer':
-                                $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                                $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
                                 $payeeName = $payee->first_name . ' ' . $payee->last_name;
                             break;
                             case 'employee':
@@ -178,7 +178,7 @@ class Recurring_transactions extends MY_Controller {
                                 $payeeName = $payee->display_name;
                             break;
                             case 'customer':
-                                $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                                $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
                                 $payeeName = $payee->first_name . ' ' . $payee->last_name;
                             break;
                             case 'employee':
@@ -621,7 +621,7 @@ class Recurring_transactions extends MY_Controller {
                             $payeeName = $payee->display_name;
                         break;
                         case 'customer':
-                            $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                            $payee = $this->accounting_customers_model->get_by_id($expense->payee_id);
                             $payeeName = $payee->first_name . ' ' . $payee->last_name;
                         break;
                         case 'employee':
@@ -640,7 +640,7 @@ class Recurring_transactions extends MY_Controller {
                             $payeeName = $payee->display_name;
                         break;
                         case 'customer':
-                            $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                            $payee = $this->accounting_customers_model->get_by_id($check->payee_id);
                             $payeeName = $payee->first_name . ' ' . $payee->last_name;
                         break;
                         case 'employee':
@@ -677,7 +677,7 @@ class Recurring_transactions extends MY_Controller {
                             $payeeName = $payee->display_name;
                         break;
                         case 'customer':
-                            $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                            $payee = $this->accounting_customers_model->get_by_id($ccCredit->payee_id);
                             $payeeName = $payee->first_name . ' ' . $payee->last_name;
                         break;
                         case 'employee':

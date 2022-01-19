@@ -417,6 +417,7 @@ $route['management-report/company-overview/add-new-report-section'] = 'accountin
 $route['management-report/get-management-report'] = 'accounting/get_management_report';
 $route['management-report/update'] = 'accounting/update_management_report';
 $route['management-report/preliminary-page/delete'] = 'accounting/managenent_report_delete_preliminary_page';
+$route['management-report/delete-report-page'] = 'accounting/managenent_report_delete_report_page';
 
 
 // Accounting products and services

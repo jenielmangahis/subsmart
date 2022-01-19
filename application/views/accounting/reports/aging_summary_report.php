@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     </div>
                                     <div class="accountReceivable__reportPeriodAsOf reportPeriodParent__hide">as of</div>
                                     <div class="form-group reportPeriodParent__hide">
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" data-type="report_period_date">
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         >Show non-zero or active only</div>
                                         <div class="form-group">
                                             <div class="customDropdown">
-                                                <button class="customDropdown__btn" type="button" data-type="show_non_zero_or_active_only">
+                                                <button class="customDropdown__btn" type="button" data-type="show_non_zero_or_active_only" value="active_rows/active_columns">
                                                     <span>Active rows/active columns</span>
                                                     <i class="fa fa-angle-down"></i>
                                                 </button>
@@ -141,11 +141,11 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                         <div class="accountReceivable__formTitle">Aging method</div>
                                         <div class="accountReceivable__agingMethodInner">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodCurrent" value="current" checked>
+                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodCurrent" value="current" data-type="aging_method_current" checked>
                                                 <label class="form-check-label" for="agingMethodCurrent">Current</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodReportDate" value="report_date">
+                                                <input class="form-check-input" type="radio" name="agingMethod" id="agingMethodReportDate" value="report_date" data-type="aging_method_report_date">
                                                 <label class="form-check-label" for="agingMethodReportDate">Report Date</label>
                                             </div>
                                         </div>
@@ -162,7 +162,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                                     </div>
 
                                     <div class="accountReceivable__agingMethodBtn">
-                                        <button type="button" class="btn btn-ghost" id="runReport">Run report</button>
+                                        <button type="button" class="btn btn-ghost buttonSubmit" id="runReport">
+                                            <div class="spinner-border spinner-border-sm" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            Run report
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -325,8 +330,8 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary arBtn">
-                        <div class="spinner-border spinner-border-sm m-0 mr-1" role="status">
+                    <button type="button buttonSubmit" class="btn btn-primary arBtn">
+                        <div class="spinner-border spinner-border-sm" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                         Send
@@ -609,7 +614,12 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
                 </div>
             </div>
             <div class="customizeReport__footer">
-                <button type="button" class="btn btn-primary" id="customizeRunReport">Run report</button>
+                <button type="button" class="btn btn-primary buttonSubmit" id="customizeRunReport">
+                    <div class="spinner-border spinner-border-sm" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Run report
+                </button>
             </div>
         </div>
         <div class="customizeReport__backdrop"></div>

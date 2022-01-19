@@ -2293,7 +2293,7 @@ class Vendors extends MY_Controller
                         $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
                     break;
                     case 'customer':
-                        $payee = $this->accounting_customers_model->get_customer_by_id($transaction->payee_id);
+                        $payee = $this->accounting_customers_model->get_by_id($transaction->payee_id);
                         $payeeName = $payee->first_name !== null && $payee->first_name !== ""  ? $payee->first_name : "";
                         $payeeName .= $payee->middle_name !== null && $payee->middle_name !== ""  ? " $payee->middle_name" : "";
                         $payeeName .= $payee->last_name !== null && $payee->last_name !== ""  ? " $payee->last_name" : "";
@@ -2425,7 +2425,7 @@ class Vendors extends MY_Controller
                             $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
                         break;
                         case 'customer':
-                            $payee = $this->accounting_customers_model->get_customer_by_id($transaction->payee_id);
+                            $payee = $this->accounting_customers_model->get_by_id($transaction->payee_id);
                             $payeeName = $payee->first_name !== null && $payee->first_name !== ""  ? $payee->first_name : "";
                             $payeeName .= $payee->middle_name !== null && $payee->middle_name !== ""  ? " $payee->middle_name" : "";
                             $payeeName .= $payee->last_name !== null && $payee->last_name !== ""  ? " $payee->last_name" : "";
