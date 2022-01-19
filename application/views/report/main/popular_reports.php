@@ -299,7 +299,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="tableToListReport" class="table table-hover table-to-list">
                                     <thead>
                                         <tr>
-                                            <th>Vendor</th>
+                                            <th></th>
+                                            <th>Category</th>
+                                            <th class="text-right">Vendor</th>
                                             <th class="text-right">Payment Date</th>
                                             <th class="text-right">Payment Method</th>
                                             <th class="text-right">Ref. No.</th>
@@ -434,30 +436,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td class="text-left">Test Vendor</td>
-                                            <td class="text-right">2021-02-07</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">1,000.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">Honeywell</td>
-                                            <td class="text-right">2020-08-06</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">1,098.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">Alarm.com</td>
-                                            <td class="text-right">2021-02-08</td>
-                                            <td class="text-right">0</td>
-                                            <td class="text-right">500.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">Apple</td>
-                                            <td class="text-right">2021-02-08</td>
-                                            <td class="text-right">1</td>
-                                            <td class="text-right">1,200.00</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                                 <?php elseif ($type === "expense-by-month-by-customer") : ?>

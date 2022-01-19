@@ -10,6 +10,9 @@ class Tags extends MY_Controller {
         $this->load->model('tags_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_bank_deposit_model');
+        $this->load->model('expenses_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -313,5 +316,418 @@ class Tags extends MY_Controller {
     public function load_transactions()
     {
         $post = json_decode(file_get_contents('php://input'), true);
+        $order = $post['order'][0]['dir'];
+        $column = $post['order'][0]['column'];
+        $columnName = $post['columns'][$column]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
+        $date = $post['date'];
+        $from = $post['from'];
+        $to = $post['to'];
+        $contact = $post['contact'];
+
+        $ungrouped = array_filter($post['ungrouped'], function($v, $k) {
+            return $v !== 'all';
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $grouped = array_filter($post['groups'], function($v, $k) {
+            return count($v) > 0;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $tags = [];
+        foreach($grouped as $group) {
+            foreach($group as $id) {
+                if(stripos($id, "all") === false) {
+                    $tags[] = $id;
+                }
+            }
+        }
+
+        foreach($ungrouped as $tagId) {
+            $tags[] = $tagId;
+        }
+
+        $filter = [
+            'company_id' => logged('company_id'),
+            'untagged' => $post['untagged'],
+            'tags' => $tags,
+            'type' => $post['type'],
+            'money-in' => $post['money_in'],
+            'money-out' => $post['money_out']
+        ];
+
+        if($date !== 'all') {
+            $filter['from'] = $from === '' ? null : date("Y-m-d", strtotime($from));
+            $filter['to'] = $to === '' ? null : date("Y-m-d", strtotime($to));
+        }
+
+        if($contact !== '') {
+            $cont = explode('-', $contact);
+            $filter['contact_type'] = $cont[0];
+            $filter['contact_id'] = $cont[1];
+        }
+        
+        $data = $this->get_transactions($filter);
+
+        usort($data, function($a, $b) use ($order, $columnName) {
+            switch($columnName) {
+                case 'date' :
+                    if($order === 'asc') {
+                        return strtotime($a['date']) > strtotime($b['date']);
+                    } else {
+                        return strtotime($a['date']) < strtotime($b['date']);
+                    }
+                break;
+                default :
+                    if($order === 'asc') {
+                        return strcmp($a[$columnName], $b[$columnName]);
+                    } else {
+                        return strcmp($b[$columnName], $a[$columnName]);
+                    }
+                break;
+            }
+        });
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($data),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, 0, 50)
+        ];
+
+        echo json_encode($result);
+    }
+
+    private function get_transactions($filter)
+    {
+        $data = [];
+        switch($filter['type']) {
+            case 'all' :
+                $data = $this->get_cc_credits($data, $filter);
+                $data = $this->get_vendor_credits($data, $filter);
+                $data = $this->get_deposits($data, $filter);
+                $data = $this->get_expenses($data, $filter);
+                $data = $this->get_bills($data, $filter);
+                $data = $this->get_checks($data, $filter);
+                $data = $this->get_purchase_orders($data, $filter);
+            break;
+            case 'money-in' :
+                switch($filter['money-in']) {
+                    case 'all' :
+                        $data = $this->get_cc_credits($data, $filter);
+                        $data = $this->get_vendor_credits($data, $filter);
+                        $data = $this->get_deposits($data, $filter);
+                    break;
+                    case 'invoice' :
+
+                    break;
+                    case 'sales-receipt' :
+
+                    break;
+                    case 'estimate' :
+
+                    break;
+                    case 'cc-credit' :
+                        $data = $this->get_cc_credits($data, $filter);
+                    break;
+                    case 'vendor-credit' :
+                        $data = $this->get_vendor_credits($data, $filter);
+                    break;
+                    case 'credit-memo' :
+
+                    break;
+                    case 'activity-charge' :
+
+                    break;
+                    case 'deposit' :
+                        $data = $this->get_deposits($data, $filter);
+                    break;
+                }
+            break;
+            case 'money-out' :
+                switch($filter['money-out']) {
+                    case 'all' :
+                        $data = $this->get_expenses($data, $filter);
+                        $data = $this->get_bills($data, $filter);
+                        $data = $this->get_checks($data, $filter);
+                        $data = $this->get_purchase_orders($data, $filter);
+                    break;
+                    case 'expense' :
+                        $data = $this->get_expenses($data, $filter);
+                    break;
+                    case 'bill' :
+                        $data = $this->get_bills($data, $filter);
+                    break;
+                    case 'credit-memo' :
+
+                    break;
+                    case 'refund-receipt' :
+
+                    break;
+                    case 'cash-purchase' :
+
+                    break;
+                    case 'check' :
+                        $data = $this->get_checks($data, $filter);
+                    break;
+                    case 'cc-expense' :
+
+                    break;
+                    case 'purchase-order' :
+                        $data = $this->get_purchase_orders($data, $filter);
+                    break;
+                    case 'vendor-credit' :
+                        $data = $this->get_vendor_credits($data, $filter);
+                    break;
+                    case 'activity-credit' :
+
+                    break;
+                }
+            break;
+        }
+
+        return $data;
+    }
+
+    private function get_cc_credits($data = [], $filter)
+    {
+        $ccCredits = $this->tags_model->get_cc_credits($filter);
+
+        foreach($ccCredits as $ccCredit) {
+            switch ($ccCredit->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($ccCredit->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($ccCredit->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($ccCredit->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($ccCredit->payment_date)),
+                'from_to' => $payeeName,
+                'category' => $this->category_col('Credit Card Credit', $ccCredit->id),
+                'memo' => $ccCredit->memo,
+                'type' => 'CC Credit',
+                'amount' => $ccCredit->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_vendor_credits($data = [], $filter)
+    {
+        $vCredits = $this->tags_model->get_vendor_credits($filter);
+
+        foreach($vCredits as $vCredit) {
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                'from_to' => $this->vendors_model->get_vendor_by_id($vCredit->vendor_id)->display_name,
+                'category' => $this->category_col('Vendor Credit', $vCredit->id),
+                'memo' => $vCredit->memo,
+                'type' => 'Vendor Credit',
+                'amount' => $vCredit->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+    
+    private function get_deposits($data = [], $filter)
+    {
+        $deposits = $this->tags_model->get_deposits($filter);
+
+        foreach($deposits as $deposit) {
+            $funds = $this->accounting_bank_deposit_model->getFunds($deposit->id);
+
+            $from = '';
+            if(count($funds) === 1) {
+                $category = $this->chart_of_accounts_model->getName($funds[0]->received_from_account_id);
+                switch ($funds[0]->received_from_key) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($funds[0]->received_from_id);
+                        $from = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_customer_by_id($funds[0]->received_from_id);
+                        $from = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($funds[0]->received_from_id);
+                        $from = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+            } else if(count($funds) > 1) {
+                $category = '-Split-';
+
+                $flag = true;
+                foreach($funds as $fund) {
+                    switch ($fund->received_from_key) {
+                        case 'vendor':
+                            $payee = $this->vendors_model->get_vendor_by_id($fund->received_from_id);
+                            $payee = $payee->display_name;
+                        break;
+                        case 'customer':
+                            $payee = $this->accounting_customers_model->get_customer_by_id($fund->received_from_id);
+                            $payee = $payee->first_name . ' ' . $payee->last_name;
+                        break;
+                        case 'employee':
+                            $payee = $this->users_model->getUser($fund->received_from_id);
+                            $payee = $payee->FName . ' ' . $payee->LName;
+                        break;
+                    }
+                    if($from === '') {
+                        $from = $payee;
+                    }
+
+                    if($from !== $payee) {
+                        $from = '';
+                        break;
+                    }
+                }
+            }
+
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($deposit->date)),
+                'from_to' => $from,
+                'category' => $category,
+                'memo' => $deposit->memo,
+                'type' => 'Deposit',
+                'amount' => $deposit->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_expenses($data = [], $filter)
+    {
+        $expenses = $this->tags_model->get_expenses($filter);
+
+        foreach($expenses as $expense) {
+            switch ($expense->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($expense->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                'from_to' => $payeeName,
+                'category' => $this->category_col('Expense', $expense->id),
+                'memo' => $expense->memo,
+                'type' => 'Expense',
+                'amount' => $expense->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_bills($data = [], $filter)
+    {
+        $bills = $this->tags_model->get_bills($filter);
+
+        foreach($bills as $bill) {
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                'from_to' => $this->vendors_model->get_vendor_by_id($bill->vendor_id)->display_name,
+                'category' => $this->category_col('Bill', $bill->id),
+                'memo' => $bill->memo,
+                'type' => 'Bill',
+                'amount' => $bill->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_checks($data = [], $filter)
+    {
+        $checks = $this->tags_model->get_checks($filter);
+
+        foreach($checks as $check) {
+            switch ($check->payee_type) {
+                case 'vendor':
+                    $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                    $payeeName = $payee->display_name;
+                break;
+                case 'customer':
+                    $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                    $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                break;
+                case 'employee':
+                    $payee = $this->users_model->getUser($check->payee_id);
+                    $payeeName = $payee->FName . ' ' . $payee->LName;
+                break;
+            }
+
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($check->payment_date)),
+                'from_to' => $payeeName,
+                'category' => $this->category_col('Check', $check->id),
+                'memo' => $check->memo,
+                'type' => 'Check',
+                'amount' => $check->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+
+    private function get_purchase_orders($data = [], $filter)
+    {
+        $purchaseOrders = $this->tags_model->get_purchase_orders($filter);
+
+        foreach($purchaseOrders as $purchaseOrder) {
+            $data[] = [
+                'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                'from_to' => $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id)->display_name,
+                'category' => $this->category_col('Purchase Order', $purchaseOrder->id),
+                'memo' => $purchaseOrder->memo,
+                'type' => 'Purchase Order',
+                'amount' => $purchaseOrder->total_amount,
+                'tags' => ''
+            ];
+        }
+
+        return $data;
+    }
+
+    private function category_col($transactionType, $transactionId)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+        
+        $category = '';
+
+        if(count($categories) > 1) {
+            $category = '-Split-';
+        } else if(count($categories) === 1) {
+            $category = $this->chart_of_accounts_model->getName($categories[0]->expense_account_id);
+        }
+
+        return $category;
     }
 }

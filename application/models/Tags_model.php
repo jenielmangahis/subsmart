@@ -147,4 +147,383 @@ class Tags_model extends MY_Model
         $query = $this->db->get('job_tags');
         return $query->result();
     }
+
+    public function get_deposits($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Deposit');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('Deposit');
+        }
+        $multiFunds = $this->get_deposit_ids_with_multiple_funds();
+
+        $this->db->select('accounting_bank_deposit.*');
+        $this->db->from('accounting_bank_deposit');
+        $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
+        $this->db->where('accounting_bank_deposit.status', 1);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('accounting_bank_deposit.date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('accounting_bank_deposit.date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id'])) {
+            $this->db->where_not_in('accounting_bank_deposit.id', $multiFunds);
+            $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
+            $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('accounting_bank_deposit.id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('accounting_bank_deposit.id', $taggedIds);
+                $this->db->where('accounting_bank_deposit.company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('accounting_bank_deposit.date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('accounting_bank_deposit.date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id'])) {
+                    $this->db->where('accounting_bank_deposit_funds.received_from_key', $filters['contact_type']);
+                    $this->db->where('accounting_bank_deposit_funds.received_from_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('accounting_bank_deposit.id', $taggedIds);
+            }
+        }
+        $this->db->join('accounting_bank_deposit_funds', 'accounting_bank_deposit_funds.bank_deposit_id = accounting_bank_deposit.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_expenses($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Expense');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('Expense');
+        }
+
+        $this->db->select('*');
+        $this->db->from('accounting_expense');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_expense.status', 1);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('payment_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('payment_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id'])) {
+            $this->db->where('payee_type', $filters['contact_type']);
+            $this->db->where('payee_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('payment_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('payment_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id'])) {
+                    $this->db->where('payee_type', $filters['contact_type']);
+                    $this->db->where('payee_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_checks($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Check');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('Check');
+        }
+
+        $this->db->select('*');
+        $this->db->from('accounting_check');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_check.status', 1);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('payment_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('payment_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id'])) {
+            $this->db->where('payee_type', $filters['contact_type']);
+            $this->db->where('payee_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('payment_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('payment_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id'])) {
+                    $this->db->where('payee_type', $filters['contact_type']);
+                    $this->db->where('payee_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_bills($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Bill');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('Bill');
+        }
+        $this->db->select('*');
+        $this->db->from('accounting_bill');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where_in('accounting_bill.status', [1, 2]);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('bill_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('bill_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+            $this->db->where('vendor_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('bill_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('bill_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+                    $this->db->where('vendor_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_purchase_orders($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Purchase Order');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('Purchase Order');
+        }
+        
+        $this->db->select('*');
+        $this->db->from('accounting_purchase_order');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where_in('accounting_purchase_order.status', [1, 2]);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('purchase_order_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('purchase_order_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+            $this->db->where('vendor_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('purchase_order_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('purchase_order_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+                    $this->db->where('vendor_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_vendor_credits($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'Vendor Credit');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('Vendor Credit');
+        }
+
+        $this->db->select('*');
+        $this->db->from('accounting_vendor_credit');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where_in('accounting_vendor_credit.status', [1, 2]);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('payment_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('payment_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+            $this->db->where('vendor_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('payment_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('payment_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id']) && $filters['contact_type'] === 'vendor') {
+                    $this->db->where('vendor_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+    public function get_cc_credits($filters = [])
+    {
+        if(count($filters['tags']) > 0) {
+            $taggedIds = $this->get_ids_with_tags($filters['tags'], 'CC Credit');
+        }
+        if($filters['untagged'] === 1) {
+            $transactionsWithTags = $this->get_tagged_ids('CC Credit');
+        }
+        $this->db->select('*');
+        $this->db->from('accounting_credit_card_credits');
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('accounting_credit_card_credits.status', 1);
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('payment_date >=', $filters['from']);
+        }
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('payment_date <=', $filters['to']);
+        }
+        if(!is_null($filters['contact_id'])) {
+            $this->db->where('payee_type', $filters['contact_type']);
+            $this->db->where('payee_id', $filters['contact_id']);
+        }
+        if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+            $this->db->where_not_in('id', $transactionsWithTags);
+        }
+        if(count($filters['tags']) > 0 && count($taggedIds) > 0) {
+            if($filters['untagged'] === 1 && count($transactionsWithTags) > 0) {
+                $this->db->or_where_in('id', $taggedIds);
+                $this->db->where('company_id', $filters['company_id']);
+                if(isset($filters['from']) && !is_null($filters['from'])) {
+                    $this->db->where('payment_date >=', $filters['from']);
+                }
+                if(isset($filters['to']) && !is_null($filters['to'])) {
+                    $this->db->where('payment_date <=', $filters['to']);
+                }
+                if(!is_null($filters['contact_id'])) {
+                    $this->db->where('payee_type', $filters['contact_type']);
+                    $this->db->where('payee_id', $filters['contact_id']);
+                }
+            } else {
+                $this->db->where_in('id', $taggedIds);
+            }
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function get_ids_with_tags($tags, $type = '')
+    {
+        $this->db->select('transaction_id');
+        $this->db->where('transaction_type', $type);
+        $this->db->where_in('tag_id', $tags);
+        $query = $this->db->get('accounting_transaction_tags');
+        $result = $query->result();
+
+        $return = [];
+        foreach($result as $res) {
+            $return[] = $res->transaction_id;
+        }
+
+        return $return;
+    }
+
+    public function get_tagged_ids($type = '')
+    {
+        $this->db->select('transaction_id');
+        $this->db->where('transaction_type', $type);
+        $query = $this->db->get('accounting_transaction_tags');
+        $result = $query->result();
+
+        $return = [];
+        foreach($result as $res) {
+            $return[] = $res->transaction_id;
+        }
+
+        return $return;
+    }
+
+    public function get_deposit_ids_with_multiple_funds()
+    {
+        $this->db->select('bank_deposit_id, COUNT(*) as cnt');
+        $this->db->group_by('bank_deposit_id');
+        $query = $this->db->get('accounting_bank_deposit_funds');
+        $result = $query->result();
+
+        $return = [];
+        foreach($result as $res) {
+            if(intval($res->cnt) > 1) {
+                $return[] = $res->bank_deposit_id;
+            }
+        }
+
+        return $return;
+    }
 }
